@@ -234,6 +234,7 @@ MondayConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     graphql_body={'type': 'graphql', 'query': 'query {\n  users {\n    id\n    name\n    email\n    enabled\n    birthday\n    country_code\n    created_at\n    join_date\n    is_admin\n    is_guest\n    is_pending\n    is_view_only\n    is_verified\n    location\n    mobile_phone\n    phone\n    photo_original\n    photo_small\n    photo_thumb\n    photo_thumb_small\n    photo_tiny\n    time_zone_identifier\n    title\n    url\n    utc_hours_diff\n  }\n}\n'},
                     record_extractor='$.data.users',
+                    no_pagination='Monday.com GraphQL users() field accepts page/limit variables but the response exposes no next-page cursor or total count; pagination termination is derived client-side from page-size exhaustion.',
                     preferred_for_check=True,
                 ),
                 Action.GET: EndpointDefinition(
@@ -711,6 +712,7 @@ MondayConnectorModel: ConnectorModel = ConnectorModel(
                         'variables': {'page': '{{ page }}', 'limit': '{{ limit }}'},
                     },
                     record_extractor='$.data.boards',
+                    no_pagination='Monday.com GraphQL boards() field accepts page/limit variables but the response exposes no next-page cursor or total count; pagination termination is derived client-side from page-size exhaustion.',
                 ),
                 Action.GET: EndpointDefinition(
                     method='POST',
@@ -1276,6 +1278,7 @@ MondayConnectorModel: ConnectorModel = ConnectorModel(
                         'variables': {'boardId': '{{ board_id }}', 'limit': '{{ limit }}'},
                     },
                     record_extractor='$.data.boards[*].items_page.items',
+                    no_pagination='Monday.com GraphQL items_page connection returns a cursor, but this list endpoint queries the top-level items() field via boards; response contains no next-page metadata extractable to a fixed JSONPath.',
                 ),
                 Action.GET: EndpointDefinition(
                     method='POST',
@@ -1561,6 +1564,7 @@ MondayConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     graphql_body={'type': 'graphql', 'query': 'query {\n  teams {\n    id\n    name\n    picture_url\n    users {\n      id\n    }\n  }\n}\n'},
                     record_extractor='$.data.teams',
+                    no_pagination='Monday.com GraphQL teams() field returns the full collection in a single response; the API does not expose pagination on this endpoint.',
                 ),
                 Action.GET: EndpointDefinition(
                     method='POST',
@@ -1708,6 +1712,7 @@ MondayConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     graphql_body={'type': 'graphql', 'query': 'query {\n  tags {\n    id\n    name\n    color\n  }\n}\n'},
                     record_extractor='$.data.tags',
+                    no_pagination='Monday.com GraphQL tags() field returns the full collection in a single response; the API does not expose pagination on this endpoint.',
                 ),
             },
             entity_schema={
@@ -1883,6 +1888,7 @@ MondayConnectorModel: ConnectorModel = ConnectorModel(
                         'variables': {'page': '{{ page }}', 'limit': '{{ limit }}'},
                     },
                     record_extractor='$.data.updates',
+                    no_pagination='Monday.com GraphQL updates() field accepts page/limit variables but the response exposes no next-page cursor or total count; pagination termination is derived client-side from page-size exhaustion.',
                 ),
                 Action.GET: EndpointDefinition(
                     method='POST',
@@ -2279,6 +2285,7 @@ MondayConnectorModel: ConnectorModel = ConnectorModel(
                         'variables': {'page': '{{ page }}', 'limit': '{{ limit }}'},
                     },
                     record_extractor='$.data.workspaces',
+                    no_pagination='Monday.com GraphQL workspaces() field accepts page/limit variables but the response exposes no next-page cursor or total count; pagination termination is derived client-side from page-size exhaustion.',
                 ),
                 Action.GET: EndpointDefinition(
                     method='POST',
@@ -2620,6 +2627,7 @@ MondayConnectorModel: ConnectorModel = ConnectorModel(
                         'variables': {'boardIds': '{{ board_id }}'},
                     },
                     record_extractor='$.data.boards[*].activity_logs',
+                    no_pagination='Monday.com GraphQL activity_logs() field accepts page/limit variables but the response exposes no next-page cursor or total count; pagination termination is derived client-side from page-size exhaustion.',
                 ),
             },
             entity_schema={

@@ -591,7 +591,7 @@ paths:
       x-airbyte-action: list
       x-airbyte-record-extractor: $.incidents
       x-airbyte-meta-extractor:
-        pagination: $.pagination_meta
+        next_cursor: $.pagination_meta.after
       parameters:
         - name: page_size
           in: query
@@ -659,7 +659,7 @@ paths:
       x-airbyte-action: list
       x-airbyte-record-extractor: $.alerts
       x-airbyte-meta-extractor:
-        pagination: $.pagination_meta
+        next_cursor: $.pagination_meta.after
       parameters:
         - name: page_size
           in: query
@@ -727,7 +727,7 @@ paths:
       x-airbyte-action: list
       x-airbyte-record-extractor: $.escalations
       x-airbyte-meta-extractor:
-        pagination: $.pagination_meta
+        next_cursor: $.pagination_meta.after
       parameters:
         - name: page_size
           in: query
@@ -796,7 +796,7 @@ paths:
       x-airbyte-preferred-for-check: true
       x-airbyte-record-extractor: $.users
       x-airbyte-meta-extractor:
-        pagination: $.pagination_meta
+        next_cursor: $.pagination_meta.after
       parameters:
         - name: page_size
           in: query
@@ -864,7 +864,7 @@ paths:
       x-airbyte-action: list
       x-airbyte-record-extractor: $.incident_updates
       x-airbyte-meta-extractor:
-        pagination: $.pagination_meta
+        next_cursor: $.pagination_meta.after
       parameters:
         - name: page_size
           in: query
@@ -905,6 +905,7 @@ paths:
       x-airbyte-entity: incident_roles
       x-airbyte-action: list
       x-airbyte-record-extractor: $.incident_roles
+      x-airbyte-no-pagination: "incident.io incident roles endpoint returns the full bounded configuration set; the API does not expose pagination on this endpoint."
       responses:
         "200":
           description: List of incident roles
@@ -953,6 +954,7 @@ paths:
       x-airbyte-entity: incident_statuses
       x-airbyte-action: list
       x-airbyte-record-extractor: $.incident_statuses
+      x-airbyte-no-pagination: "incident.io incident statuses endpoint returns the full bounded configuration set; the API does not expose pagination on this endpoint."
       responses:
         "200":
           description: List of incident statuses
@@ -1001,6 +1003,7 @@ paths:
       x-airbyte-entity: incident_timestamps
       x-airbyte-action: list
       x-airbyte-record-extractor: $.incident_timestamps
+      x-airbyte-no-pagination: "incident.io incident timestamps endpoint returns the full bounded configuration set; the API does not expose pagination on this endpoint."
       responses:
         "200":
           description: List of incident timestamps
@@ -1049,6 +1052,7 @@ paths:
       x-airbyte-entity: severities
       x-airbyte-action: list
       x-airbyte-record-extractor: $.severities
+      x-airbyte-no-pagination: "incident.io severities endpoint returns the full bounded configuration set; the API does not expose pagination on this endpoint."
       responses:
         "200":
           description: List of severities
@@ -1097,6 +1101,7 @@ paths:
       x-airbyte-entity: custom_fields
       x-airbyte-action: list
       x-airbyte-record-extractor: $.custom_fields
+      x-airbyte-no-pagination: "incident.io custom fields endpoint returns the full bounded configuration set; the API does not expose pagination on this endpoint."
       responses:
         "200":
           description: List of custom fields
@@ -1145,6 +1150,7 @@ paths:
       x-airbyte-entity: catalog_types
       x-airbyte-action: list
       x-airbyte-record-extractor: $.catalog_types
+      x-airbyte-no-pagination: "incident.io catalog types endpoint returns the full bounded collection; the API does not expose pagination on this endpoint."
       responses:
         "200":
           description: List of catalog types
@@ -1194,7 +1200,7 @@ paths:
       x-airbyte-action: list
       x-airbyte-record-extractor: $.schedules
       x-airbyte-meta-extractor:
-        pagination: $.pagination_meta
+        next_cursor: $.pagination_meta.after
       parameters:
         - name: page_size
           in: query

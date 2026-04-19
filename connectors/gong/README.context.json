@@ -102,17 +102,41 @@
     "description": "Returns a list of all users in the Gong account",
     "record_extractor": "$.users",
     "meta_extractor": {
-      "pagination": "$.records"
+      "cursor": "$.records.cursor",
+      "total_records": "$.records.totalRecords",
+      "current_page_number": "$.records.currentPageNumber"
     },
     "needs_envelope": true,
     "record_type": "list[User]",
     "meta_fields": [
       {
-        "name": "pagination",
-        "python_name": "pagination",
-        "type": "PaginationRecords",
+        "name": "cursor",
+        "python_name": "cursor",
+        "type": "str | None",
         "schema": {
-          "$ref": "#/components/schemas/PaginationRecords"
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Opaque cursor to fetch the next page; absent when there are no more pages"
+        }
+      },
+      {
+        "name": "total_records",
+        "python_name": "total_records",
+        "type": "int",
+        "schema": {
+          "type": "integer",
+          "description": "Total number of records"
+        }
+      },
+      {
+        "name": "current_page_number",
+        "python_name": "current_page_number",
+        "type": "int",
+        "schema": {
+          "type": "integer",
+          "description": "Current page number"
         }
       }
     ],
@@ -144,17 +168,41 @@
         "description": "Returns a list of all users in the Gong account",
         "record_extractor": "$.users",
         "meta_extractor": {
-          "pagination": "$.records"
+          "cursor": "$.records.cursor",
+          "total_records": "$.records.totalRecords",
+          "current_page_number": "$.records.currentPageNumber"
         },
         "needs_envelope": true,
         "record_type": "list[User]",
         "meta_fields": [
           {
-            "name": "pagination",
-            "python_name": "pagination",
-            "type": "PaginationRecords",
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str | None",
             "schema": {
-              "$ref": "#/components/schemas/PaginationRecords"
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Opaque cursor to fetch the next page; absent when there are no more pages"
+            }
+          },
+          {
+            "name": "total_records",
+            "python_name": "total_records",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Total number of records"
+            }
+          },
+          {
+            "name": "current_page_number",
+            "python_name": "current_page_number",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Current page number"
             }
           }
         ],
@@ -238,17 +286,41 @@
         "description": "Retrieve calls data by date range",
         "record_extractor": "$.calls",
         "meta_extractor": {
-          "pagination": "$.records"
+          "cursor": "$.records.cursor",
+          "total_records": "$.records.totalRecords",
+          "current_page_number": "$.records.currentPageNumber"
         },
         "needs_envelope": true,
         "record_type": "list[Call]",
         "meta_fields": [
           {
-            "name": "pagination",
-            "python_name": "pagination",
-            "type": "PaginationRecords",
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str | None",
             "schema": {
-              "$ref": "#/components/schemas/PaginationRecords"
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Opaque cursor to fetch the next page; absent when there are no more pages"
+            }
+          },
+          {
+            "name": "total_records",
+            "python_name": "total_records",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Total number of records"
+            }
+          },
+          {
+            "name": "current_page_number",
+            "python_name": "current_page_number",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Current page number"
             }
           }
         ],
@@ -461,17 +533,41 @@
         "description": "Retrieve detailed call data including participants, interaction stats, and content",
         "record_extractor": "$.calls",
         "meta_extractor": {
-          "pagination": "$.records"
+          "cursor": "$.records.cursor",
+          "total_records": "$.records.totalRecords",
+          "current_page_number": "$.records.currentPageNumber"
         },
         "needs_envelope": true,
         "record_type": "list[ExtensiveCall]",
         "meta_fields": [
           {
-            "name": "pagination",
-            "python_name": "pagination",
-            "type": "PaginationRecords",
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str | None",
             "schema": {
-              "$ref": "#/components/schemas/PaginationRecords"
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Opaque cursor to fetch the next page; absent when there are no more pages"
+            }
+          },
+          {
+            "name": "total_records",
+            "python_name": "total_records",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Total number of records"
+            }
+          },
+          {
+            "name": "current_page_number",
+            "python_name": "current_page_number",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Current page number"
             }
           }
         ],
@@ -693,17 +789,41 @@
         "description": "Returns transcripts for calls in a specified date range or specific call IDs",
         "record_extractor": "$.callTranscripts",
         "meta_extractor": {
-          "pagination": "$.records"
+          "cursor": "$.records.cursor",
+          "total_records": "$.records.totalRecords",
+          "current_page_number": "$.records.currentPageNumber"
         },
         "needs_envelope": true,
         "record_type": "list[CallTranscript]",
         "meta_fields": [
           {
-            "name": "pagination",
-            "python_name": "pagination",
-            "type": "PaginationRecords",
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str | None",
             "schema": {
-              "$ref": "#/components/schemas/PaginationRecords"
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Opaque cursor to fetch the next page; absent when there are no more pages"
+            }
+          },
+          {
+            "name": "total_records",
+            "python_name": "total_records",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Total number of records"
+            }
+          },
+          {
+            "name": "current_page_number",
+            "python_name": "current_page_number",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Current page number"
             }
           }
         ],
@@ -753,17 +873,41 @@
         "description": "Provides aggregated user activity metrics across a specified period",
         "record_extractor": "$.usersAggregateActivityStats",
         "meta_extractor": {
-          "pagination": "$.records"
+          "cursor": "$.records.cursor",
+          "total_records": "$.records.totalRecords",
+          "current_page_number": "$.records.currentPageNumber"
         },
         "needs_envelope": true,
         "record_type": "list[UserAggregateActivity]",
         "meta_fields": [
           {
-            "name": "pagination",
-            "python_name": "pagination",
-            "type": "PaginationRecords",
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str | None",
             "schema": {
-              "$ref": "#/components/schemas/PaginationRecords"
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Opaque cursor to fetch the next page; absent when there are no more pages"
+            }
+          },
+          {
+            "name": "total_records",
+            "python_name": "total_records",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Total number of records"
+            }
+          },
+          {
+            "name": "current_page_number",
+            "python_name": "current_page_number",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Current page number"
             }
           }
         ],
@@ -813,17 +957,41 @@
         "description": "Delivers daily user activity metrics across a specified date range",
         "record_extractor": "$.usersDetailedActivities",
         "meta_extractor": {
-          "pagination": "$.records"
+          "cursor": "$.records.cursor",
+          "total_records": "$.records.totalRecords",
+          "current_page_number": "$.records.currentPageNumber"
         },
         "needs_envelope": true,
         "record_type": "list[UserDetailedActivity]",
         "meta_fields": [
           {
-            "name": "pagination",
-            "python_name": "pagination",
-            "type": "PaginationRecords",
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str | None",
             "schema": {
-              "$ref": "#/components/schemas/PaginationRecords"
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Opaque cursor to fetch the next page; absent when there are no more pages"
+            }
+          },
+          {
+            "name": "total_records",
+            "python_name": "total_records",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Total number of records"
+            }
+          },
+          {
+            "name": "current_page_number",
+            "python_name": "current_page_number",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Current page number"
             }
           }
         ],
@@ -873,17 +1041,41 @@
         "description": "Returns interaction stats for users based on calls that have Whisper turned on",
         "record_extractor": "$.peopleInteractionStats",
         "meta_extractor": {
-          "pagination": "$.records"
+          "cursor": "$.records.cursor",
+          "total_records": "$.records.totalRecords",
+          "current_page_number": "$.records.currentPageNumber"
         },
         "needs_envelope": true,
         "record_type": "list[UserInteractionStats]",
         "meta_fields": [
           {
-            "name": "pagination",
-            "python_name": "pagination",
-            "type": "PaginationRecords",
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str | None",
             "schema": {
-              "$ref": "#/components/schemas/PaginationRecords"
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Opaque cursor to fetch the next page; absent when there are no more pages"
+            }
+          },
+          {
+            "name": "total_records",
+            "python_name": "total_records",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Total number of records"
+            }
+          },
+          {
+            "name": "current_page_number",
+            "python_name": "current_page_number",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Current page number"
             }
           }
         ],
@@ -1019,17 +1211,41 @@
         "description": "Retrieve calls in a specific library folder",
         "record_extractor": "$.calls",
         "meta_extractor": {
-          "pagination": "$.records"
+          "cursor": "$.records.cursor",
+          "total_records": "$.records.totalRecords",
+          "current_page_number": "$.records.currentPageNumber"
         },
         "needs_envelope": true,
         "record_type": "list[FolderCall]",
         "meta_fields": [
           {
-            "name": "pagination",
-            "python_name": "pagination",
-            "type": "PaginationRecords",
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str | None",
             "schema": {
-              "$ref": "#/components/schemas/PaginationRecords"
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Opaque cursor to fetch the next page; absent when there are no more pages"
+            }
+          },
+          {
+            "name": "total_records",
+            "python_name": "total_records",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Total number of records"
+            }
+          },
+          {
+            "name": "current_page_number",
+            "python_name": "current_page_number",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Current page number"
             }
           }
         ],
@@ -1177,17 +1393,41 @@
         "description": "Retrieve answered scorecards for applicable reviewed users or scorecards for a date range",
         "record_extractor": "$.answeredScorecards",
         "meta_extractor": {
-          "pagination": "$.records"
+          "cursor": "$.records.cursor",
+          "total_records": "$.records.totalRecords",
+          "current_page_number": "$.records.currentPageNumber"
         },
         "needs_envelope": true,
         "record_type": "list[AnsweredScorecard]",
         "meta_fields": [
           {
-            "name": "pagination",
-            "python_name": "pagination",
-            "type": "PaginationRecords",
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str | None",
             "schema": {
-              "$ref": "#/components/schemas/PaginationRecords"
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Opaque cursor to fetch the next page; absent when there are no more pages"
+            }
+          },
+          {
+            "name": "total_records",
+            "python_name": "total_records",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Total number of records"
+            }
+          },
+          {
+            "name": "current_page_number",
+            "python_name": "current_page_number",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Current page number"
             }
           }
         ],

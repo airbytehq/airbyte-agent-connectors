@@ -1916,6 +1916,7 @@ JiraConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-entity-name': 'users',
                         },
                     },
+                    no_pagination='Jira Cloud /users endpoint paginates via startAt/maxResults query parameters but returns a raw JSON array with no wrapper object, so the response exposes no next-page cursor or total count; pagination termination is derived client-side from page-size exhaustion (fewer than maxResults users returned).',
                     preferred_for_check=True,
                 ),
                 Action.API_SEARCH: EndpointDefinition(
@@ -2293,6 +2294,7 @@ JiraConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-entity-name': 'issue_fields',
                         },
                     },
+                    no_pagination='Jira Cloud /field endpoint returns the full collection of system and custom fields in a single response; the API does not expose pagination on this endpoint.',
                 ),
                 Action.API_SEARCH: EndpointDefinition(
                     method='GET',
@@ -2704,8 +2706,8 @@ JiraConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.comments',
                     meta_extractor={
-                        'startAt': '$.startAt',
-                        'maxResults': '$.maxResults',
+                        'next_offset': '$.startAt',
+                        'max_results': '$.maxResults',
                         'total': '$.total',
                     },
                 ),
@@ -3546,8 +3548,8 @@ JiraConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.worklogs',
                     meta_extractor={
-                        'startAt': '$.startAt',
-                        'maxResults': '$.maxResults',
+                        'next_offset': '$.startAt',
+                        'max_results': '$.maxResults',
                         'total': '$.total',
                     },
                 ),

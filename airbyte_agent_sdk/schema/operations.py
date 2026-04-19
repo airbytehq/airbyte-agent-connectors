@@ -85,6 +85,18 @@ class Operation(BaseModel):
             "Validation will generate a warning instead of an error when cassettes are missing."
         ),
     )
+    x_airbyte_no_pagination: str | None = Field(
+        None,
+        alias="x-airbyte-no-pagination",
+        description=(
+            "Opt a list operation out of the pagination readiness check with a justification. "
+            "By default, every list operation must declare x-airbyte-meta-extractor with a "
+            "next-page / cursor field so the executor can continue paginating. Set this to a "
+            "non-empty string explaining why the underlying API genuinely does not paginate "
+            "(e.g., 'API returns the full resource list in a single response; no pagination'). "
+            "Empty strings are treated as missing and will fail validation."
+        ),
+    )
     x_airbyte_preferred_for_check: bool | None = Field(
         None,
         alias="x-airbyte-preferred-for-check",

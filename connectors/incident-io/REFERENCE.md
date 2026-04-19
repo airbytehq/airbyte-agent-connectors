@@ -93,9 +93,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 | Field Name | Type | Description |
 |------------|------|-------------|
-| `pagination` | `object` |  |
-| `pagination.after` | `null \| string` |  |
-| `pagination.page_size` | `null \| integer` |  |
+| `next_cursor` | `null \| string` |  |
 
 </details>
 
@@ -334,9 +332,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 | Field Name | Type | Description |
 |------------|------|-------------|
-| `pagination` | `object` |  |
-| `pagination.after` | `null \| string` |  |
-| `pagination.page_size` | `null \| integer` |  |
+| `next_cursor` | `null \| string` |  |
 
 </details>
 
@@ -532,9 +528,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 | Field Name | Type | Description |
 |------------|------|-------------|
-| `pagination` | `object` |  |
-| `pagination.after` | `null \| string` |  |
-| `pagination.page_size` | `null \| integer` |  |
+| `next_cursor` | `null \| string` |  |
 
 </details>
 
@@ -726,9 +720,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 | Field Name | Type | Description |
 |------------|------|-------------|
-| `pagination` | `object` |  |
-| `pagination.after` | `null \| string` |  |
-| `pagination.page_size` | `null \| integer` |  |
+| `next_cursor` | `null \| string` |  |
 
 </details>
 
@@ -908,9 +900,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 | Field Name | Type | Description |
 |------------|------|-------------|
-| `pagination` | `object` |  |
-| `pagination.after` | `null \| string` |  |
-| `pagination.page_size` | `null \| integer` |  |
+| `next_cursor` | `null \| string` |  |
 
 </details>
 
@@ -2068,9 +2058,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 | Field Name | Type | Description |
 |------------|------|-------------|
-| `pagination` | `object` |  |
-| `pagination.after` | `null \| string` |  |
-| `pagination.page_size` | `null \| integer` |  |
+| `next_cursor` | `null \| string` |  |
 
 </details>
 

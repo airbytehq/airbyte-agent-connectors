@@ -556,6 +556,7 @@ paths:
       operationId: listWebhooks
       x-airbyte-entity: webhooks
       x-airbyte-action: list
+      x-airbyte-no-pagination: "Typeform GET /forms/{form_id}/webhooks returns all webhooks configured on the form in a single response; the endpoint exposes no pagination cursor, offset, or page parameter."
       x-airbyte-record-extractor: $.items
       parameters:
       - name: form_id
@@ -620,6 +621,7 @@ paths:
       operationId: listImages
       x-airbyte-entity: images
       x-airbyte-action: list
+      x-airbyte-no-pagination: "Typeform GET /images returns the full list of images uploaded to the account as a flat array in a single response; the endpoint exposes no pagination cursor, offset, or page parameter."
       parameters: []
       responses:
         "200":

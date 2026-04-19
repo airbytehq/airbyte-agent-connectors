@@ -152,6 +152,7 @@ SalesforceConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.sobjects',
+                    no_pagination='Salesforce /sobjects returns the full list of SObject metadata available to the authenticated user in a single response; no pagination parameters are supported.',
                     preferred_for_check=True,
                 ),
             },
@@ -1744,6 +1745,7 @@ SalesforceConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-entity-name': 'reports',
                         },
                     },
+                    no_pagination='Salesforce Analytics /analytics/reports returns the full list of report metadata in a single response; the Analytics Reports listing endpoint does not expose pagination parameters.',
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',

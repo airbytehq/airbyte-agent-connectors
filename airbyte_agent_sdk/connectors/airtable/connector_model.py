@@ -99,6 +99,7 @@ AirtableConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.bases',
+                    meta_extractor={'offset': '$.offset'},
                 ),
             },
             entity_schema={
@@ -211,6 +212,7 @@ AirtableConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.tables',
+                    no_pagination='Airtable Metadata API returns all tables for a base in a single response with no pagination support.',
                 ),
             },
             entity_schema={
@@ -311,6 +313,7 @@ AirtableConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.records',
+                    meta_extractor={'offset': '$.offset'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',

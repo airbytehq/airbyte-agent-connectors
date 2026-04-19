@@ -275,6 +275,8 @@ paths:
       x-airbyte-entity: bases
       x-airbyte-action: list
       x-airbyte-record-extractor: $.bases
+      x-airbyte-meta-extractor:
+        offset: $.offset
       parameters:
         - name: offset
           in: query
@@ -301,6 +303,7 @@ paths:
       x-airbyte-entity: tables
       x-airbyte-action: list
       x-airbyte-record-extractor: $.tables
+      x-airbyte-no-pagination: "Airtable Metadata API returns all tables for a base in a single response with no pagination support."
       parameters:
         - name: base_id
           in: path
@@ -330,6 +333,8 @@ paths:
       x-airbyte-entity: records
       x-airbyte-action: list
       x-airbyte-record-extractor: $.records
+      x-airbyte-meta-extractor:
+        offset: $.offset
       parameters:
         - name: base_id
           in: path

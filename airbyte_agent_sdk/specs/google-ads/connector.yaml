@@ -453,6 +453,7 @@ paths:
       x-airbyte-entity: accessible_customers
       x-airbyte-action: list
       x-airbyte-preferred-for-check: true
+      x-airbyte-no-pagination: "Google Ads GET /v20/customers:listAccessibleCustomers returns the full list of customer resource names directly accessible to the authenticated user in a single response; the endpoint exposes no pagination cursor, offset, or next-page token."
       parameters: []
       responses:
         "200":

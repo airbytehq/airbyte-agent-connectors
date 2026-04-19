@@ -2198,6 +2198,7 @@ HubspotConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.results',
+                    no_pagination='HubSpot GET /crm-object-schemas/v3/schemas returns all custom object schemas defined on the portal in a single response; unlike the paged CRM object endpoints this discovery endpoint exposes no paging.next cursor or after token.',
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',

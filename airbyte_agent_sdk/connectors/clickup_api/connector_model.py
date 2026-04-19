@@ -229,6 +229,7 @@ ClickupApiConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.teams',
+                    no_pagination='ClickUp GET /api/v2/team returns all workspaces accessible to the authenticated user in a single response; no pagination cursor or offset is exposed.',
                 ),
             },
             entity_schema={
@@ -539,6 +540,7 @@ ClickupApiConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.spaces',
+                    no_pagination='ClickUp GET /api/v2/team/{team_id}/space returns all spaces in the workspace in a single response; no pagination cursor or offset is exposed.',
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -1134,6 +1136,7 @@ ClickupApiConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.folders',
+                    no_pagination='ClickUp GET /api/v2/space/{space_id}/folder returns all folders in the space in a single response; no pagination cursor or offset is exposed.',
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -1540,6 +1543,7 @@ ClickupApiConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.lists',
+                    no_pagination='ClickUp GET /api/v2/folder/{folder_id}/list returns all lists in the folder in a single response; no pagination cursor or offset is exposed.',
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -2768,6 +2772,7 @@ ClickupApiConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.comments',
+                    no_pagination='ClickUp GET /api/v2/task/{task_id}/comment returns all comments on the task in a single response; cursor-based pagination is only available on alternate start/start_id query params not modelled here.',
                 ),
                 Action.CREATE: EndpointDefinition(
                     method='POST',
@@ -2999,6 +3004,7 @@ ClickupApiConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.goals',
+                    no_pagination='ClickUp GET /api/v2/team/{team_id}/goal returns all goals in the workspace in a single response; no pagination cursor or offset is exposed.',
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -3245,6 +3251,7 @@ ClickupApiConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.views',
+                    no_pagination='ClickUp GET /api/v2/team/{team_id}/view returns all workspace-level views in a single response; no pagination cursor or offset is exposed.',
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -3709,6 +3716,7 @@ ClickupApiConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.data',
+                    no_pagination='ClickUp GET /api/v2/team/{team_id}/time_entries returns a bounded set of time entries scoped to the requested start_date/end_date window; no pagination cursor or offset is exposed.',
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -3853,6 +3861,7 @@ ClickupApiConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.members',
+                    no_pagination='ClickUp GET /api/v2/task/{task_id}/member returns all members assigned to the task in a single response; no pagination cursor or offset is exposed.',
                 ),
             },
             entity_schema={

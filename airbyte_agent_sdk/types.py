@@ -299,6 +299,15 @@ class EndpointDefinition(BaseModel):
         description="Mark operation as untested to skip cassette validation (from x-airbyte-untested extension)",
     )
 
+    # Pagination opt-out (Airbyte extension)
+    no_pagination: str | None = Field(
+        None,
+        description=(
+            "Justification for opting a list operation out of the pagination readiness check "
+            "(from x-airbyte-no-pagination extension). Non-empty string means the API does not paginate."
+        ),
+    )
+
     # Health check support (Airbyte extension)
     preferred_for_check: bool = Field(
         False,

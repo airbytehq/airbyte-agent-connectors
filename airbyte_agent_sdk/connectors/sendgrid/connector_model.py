@@ -161,10 +161,18 @@ SendgridConnectorModel: ConnectorModel = ConnectorModel(
                                 },
                             },
                             'contact_count': {'type': 'integer', 'description': 'Total number of contacts'},
+                            '_metadata': {
+                                'type': 'object',
+                                'properties': {
+                                    'next': {
+                                        'type': ['null', 'string'],
+                                    },
+                                },
+                            },
                         },
                     },
                     record_extractor='$.result',
-                    meta_extractor={'contact_count': '$.contact_count'},
+                    meta_extractor={'next': '$._metadata.next', 'contact_count': '$.contact_count'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -536,6 +544,7 @@ SendgridConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.results',
+                    no_pagination='The SendGrid /v3/marketing/segments/2.0 endpoint returns the full list of segments in a single response; the API does not expose pagination parameters.',
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -1090,9 +1099,18 @@ SendgridConnectorModel: ConnectorModel = ConnectorModel(
                                     'x-airbyte-stream-name': 'templates',
                                 },
                             },
+                            '_metadata': {
+                                'type': 'object',
+                                'properties': {
+                                    'next': {
+                                        'type': ['null', 'string'],
+                                    },
+                                },
+                            },
                         },
                     },
                     record_extractor='$.templates',
+                    meta_extractor={'next': '$._metadata.next'},
                     preferred_for_check=True,
                 ),
                 Action.GET: EndpointDefinition(
@@ -1311,6 +1329,7 @@ SendgridConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-stream-name': 'bounces',
                         },
                     },
+                    meta_extractor={'next': '@link.next'},
                 ),
             },
             entity_schema={
@@ -1364,6 +1383,7 @@ SendgridConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-stream-name': 'blocks',
                         },
                     },
+                    meta_extractor={'next': '@link.next'},
                 ),
             },
             entity_schema={
@@ -1416,6 +1436,7 @@ SendgridConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-stream-name': 'spam_reports',
                         },
                     },
+                    meta_extractor={'next': '@link.next'},
                 ),
             },
             entity_schema={
@@ -1467,6 +1488,7 @@ SendgridConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-stream-name': 'invalid_emails',
                         },
                     },
+                    meta_extractor={'next': '@link.next'},
                 ),
             },
             entity_schema={
@@ -1517,6 +1539,7 @@ SendgridConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-stream-name': 'global_suppressions',
                         },
                     },
+                    meta_extractor={'next': '@link.next'},
                 ),
             },
             entity_schema={
@@ -1556,6 +1579,7 @@ SendgridConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-stream-name': 'suppression_groups',
                         },
                     },
+                    no_pagination='The SendGrid /v3/asm/groups endpoint returns the full list of suppression groups in a single response; the API does not expose pagination parameters.',
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -1633,6 +1657,7 @@ SendgridConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-stream-name': 'suppression_group_members',
                         },
                     },
+                    meta_extractor={'next': '@link.next'},
                 ),
             },
             entity_schema={

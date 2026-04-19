@@ -72,17 +72,21 @@
     "description": "List all incidents for the organisation with cursor-based pagination.",
     "record_extractor": "$.incidents",
     "meta_extractor": {
-      "pagination": "$.pagination_meta"
+      "next_cursor": "$.pagination_meta.after"
     },
     "needs_envelope": true,
     "record_type": "list[Incident]",
     "meta_fields": [
       {
-        "name": "pagination",
-        "python_name": "pagination",
-        "type": "PaginationMeta",
+        "name": "next_cursor",
+        "python_name": "next_cursor",
+        "type": "str | None",
         "schema": {
-          "$ref": "#/components/schemas/PaginationMeta"
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "Cursor to pass as the after parameter to get the next page"
         }
       }
     ],
@@ -128,17 +132,21 @@
         "description": "List all incidents for the organisation with cursor-based pagination.",
         "record_extractor": "$.incidents",
         "meta_extractor": {
-          "pagination": "$.pagination_meta"
+          "next_cursor": "$.pagination_meta.after"
         },
         "needs_envelope": true,
         "record_type": "list[Incident]",
         "meta_fields": [
           {
-            "name": "pagination",
-            "python_name": "pagination",
-            "type": "PaginationMeta",
+            "name": "next_cursor",
+            "python_name": "next_cursor",
+            "type": "str | None",
             "schema": {
-              "$ref": "#/components/schemas/PaginationMeta"
+              "type": [
+                "null",
+                "string"
+              ],
+              "description": "Cursor to pass as the after parameter to get the next page"
             }
           }
         ],
@@ -212,17 +220,21 @@
         "description": "List all alerts for the account with cursor-based pagination.",
         "record_extractor": "$.alerts",
         "meta_extractor": {
-          "pagination": "$.pagination_meta"
+          "next_cursor": "$.pagination_meta.after"
         },
         "needs_envelope": true,
         "record_type": "list[Alert]",
         "meta_fields": [
           {
-            "name": "pagination",
-            "python_name": "pagination",
-            "type": "PaginationMeta",
+            "name": "next_cursor",
+            "python_name": "next_cursor",
+            "type": "str | None",
             "schema": {
-              "$ref": "#/components/schemas/PaginationMeta"
+              "type": [
+                "null",
+                "string"
+              ],
+              "description": "Cursor to pass as the after parameter to get the next page"
             }
           }
         ],
@@ -296,17 +308,21 @@
         "description": "List all escalations for the account with cursor-based pagination.",
         "record_extractor": "$.escalations",
         "meta_extractor": {
-          "pagination": "$.pagination_meta"
+          "next_cursor": "$.pagination_meta.after"
         },
         "needs_envelope": true,
         "record_type": "list[Escalation]",
         "meta_fields": [
           {
-            "name": "pagination",
-            "python_name": "pagination",
-            "type": "PaginationMeta",
+            "name": "next_cursor",
+            "python_name": "next_cursor",
+            "type": "str | None",
             "schema": {
-              "$ref": "#/components/schemas/PaginationMeta"
+              "type": [
+                "null",
+                "string"
+              ],
+              "description": "Cursor to pass as the after parameter to get the next page"
             }
           }
         ],
@@ -380,17 +396,21 @@
         "description": "List all users for the organisation with cursor-based pagination.",
         "record_extractor": "$.users",
         "meta_extractor": {
-          "pagination": "$.pagination_meta"
+          "next_cursor": "$.pagination_meta.after"
         },
         "needs_envelope": true,
         "record_type": "list[User]",
         "meta_fields": [
           {
-            "name": "pagination",
-            "python_name": "pagination",
-            "type": "PaginationMeta",
+            "name": "next_cursor",
+            "python_name": "next_cursor",
+            "type": "str | None",
             "schema": {
-              "$ref": "#/components/schemas/PaginationMeta"
+              "type": [
+                "null",
+                "string"
+              ],
+              "description": "Cursor to pass as the after parameter to get the next page"
             }
           }
         ],
@@ -464,17 +484,21 @@
         "description": "List all incident updates for the organisation with cursor-based pagination.",
         "record_extractor": "$.incident_updates",
         "meta_extractor": {
-          "pagination": "$.pagination_meta"
+          "next_cursor": "$.pagination_meta.after"
         },
         "needs_envelope": true,
         "record_type": "list[IncidentUpdate]",
         "meta_fields": [
           {
-            "name": "pagination",
-            "python_name": "pagination",
-            "type": "PaginationMeta",
+            "name": "next_cursor",
+            "python_name": "next_cursor",
+            "type": "str | None",
             "schema": {
-              "$ref": "#/components/schemas/PaginationMeta"
+              "type": [
+                "null",
+                "string"
+              ],
+              "description": "Cursor to pass as the after parameter to get the next page"
             }
           }
         ],
@@ -802,17 +826,21 @@
         "description": "List all on-call schedules with cursor-based pagination.",
         "record_extractor": "$.schedules",
         "meta_extractor": {
-          "pagination": "$.pagination_meta"
+          "next_cursor": "$.pagination_meta.after"
         },
         "needs_envelope": true,
         "record_type": "list[Schedule]",
         "meta_fields": [
           {
-            "name": "pagination",
-            "python_name": "pagination",
-            "type": "PaginationMeta",
+            "name": "next_cursor",
+            "python_name": "next_cursor",
+            "type": "str | None",
             "schema": {
-              "$ref": "#/components/schemas/PaginationMeta"
+              "type": [
+                "null",
+                "string"
+              ],
+              "description": "Cursor to pass as the after parameter to get the next page"
             }
           }
         ],

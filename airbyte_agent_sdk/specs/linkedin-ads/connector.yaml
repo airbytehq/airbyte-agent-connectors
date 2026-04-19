@@ -1152,6 +1152,7 @@ paths:
       x-airbyte-entity: ad_campaign_analytics
       x-airbyte-action: list
       x-airbyte-untested: true
+      x-airbyte-no-pagination: "Analytics endpoint returns a bounded aggregation scoped to the requested dateRange and campaigns URNs; LinkedIn does not return a next-page cursor for /adAnalytics."
       x-airbyte-record-extractor: $.elements
       x-airbyte-path-override:
         path: /adAnalytics
@@ -1226,6 +1227,7 @@ paths:
       x-airbyte-entity: ad_creative_analytics
       x-airbyte-action: list
       x-airbyte-untested: true
+      x-airbyte-no-pagination: "Analytics endpoint returns a bounded aggregation scoped to the requested dateRange and creatives URNs; LinkedIn does not return a next-page cursor for /adAnalytics."
       x-airbyte-record-extractor: $.elements
       x-airbyte-path-override:
         path: /adAnalytics

@@ -3590,6 +3590,7 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                         'default_fields': 'name type oid path',
                     },
                     record_extractor='$.data.repository.object.entries',
+                    no_pagination='The GitHub GraphQL Tree.entries connection returns the full set of directory entries for the requested path in a single response and does not expose pagination arguments.',
                 ),
             },
         ),

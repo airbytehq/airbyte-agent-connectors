@@ -285,6 +285,66 @@ within a campaign.
 # ===== METADATA TYPE DEFINITIONS (PYDANTIC) =====
 # Meta types for operations that extract metadata (e.g., pagination info)
 
+class PortfoliosListResultMeta(BaseModel):
+    """Metadata for portfolios.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next_token: Union[str | None, Any] = Field(default=None)
+
+class SponsoredProductCampaignsListResultMeta(BaseModel):
+    """Metadata for sponsored_product_campaigns.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next_token: Union[str | None, Any] = Field(default=None)
+
+class SponsoredProductAdGroupsListResultMeta(BaseModel):
+    """Metadata for sponsored_product_ad_groups.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next_token: Union[str | None, Any] = Field(default=None)
+
+class SponsoredProductKeywordsListResultMeta(BaseModel):
+    """Metadata for sponsored_product_keywords.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next_token: Union[str | None, Any] = Field(default=None)
+
+class SponsoredProductProductAdsListResultMeta(BaseModel):
+    """Metadata for sponsored_product_product_ads.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next_token: Union[str | None, Any] = Field(default=None)
+
+class SponsoredProductTargetsListResultMeta(BaseModel):
+    """Metadata for sponsored_product_targets.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next_token: Union[str | None, Any] = Field(default=None)
+
+class SponsoredProductNegativeKeywordsListResultMeta(BaseModel):
+    """Metadata for sponsored_product_negative_keywords.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next_token: Union[str | None, Any] = Field(default=None)
+
+class SponsoredProductNegativeTargetsListResultMeta(BaseModel):
+    """Metadata for sponsored_product_negative_targets.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next_token: Union[str | None, Any] = Field(default=None)
+
+class SponsoredBrandsCampaignsListResultMeta(BaseModel):
+    """Metadata for sponsored_brands_campaigns.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next_token: Union[str | None, Any] = Field(default=None)
+
+class SponsoredBrandsAdGroupsListResultMeta(BaseModel):
+    """Metadata for sponsored_brands_ad_groups.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next_token: Union[str | None, Any] = Field(default=None)
+
 # ===== CHECK RESULT MODEL =====
 
 class AmazonAdsCheckResult(BaseModel):
@@ -393,33 +453,33 @@ ProfilesSearchResult = AirbyteSearchResult[ProfilesSearchData]
 ProfilesListResult = AmazonAdsExecuteResult[list[Profile]]
 """Result type for profiles.list operation."""
 
-PortfoliosListResult = AmazonAdsExecuteResult[dict[str, Any]]
-"""Result type for portfolios.list operation."""
+PortfoliosListResult = AmazonAdsExecuteResultWithMeta[dict[str, Any], PortfoliosListResultMeta]
+"""Result type for portfolios.list operation with data and metadata."""
 
-SponsoredProductCampaignsListResult = AmazonAdsExecuteResult[dict[str, Any]]
-"""Result type for sponsored_product_campaigns.list operation."""
+SponsoredProductCampaignsListResult = AmazonAdsExecuteResultWithMeta[dict[str, Any], SponsoredProductCampaignsListResultMeta]
+"""Result type for sponsored_product_campaigns.list operation with data and metadata."""
 
-SponsoredProductAdGroupsListResult = AmazonAdsExecuteResult[dict[str, Any]]
-"""Result type for sponsored_product_ad_groups.list operation."""
+SponsoredProductAdGroupsListResult = AmazonAdsExecuteResultWithMeta[dict[str, Any], SponsoredProductAdGroupsListResultMeta]
+"""Result type for sponsored_product_ad_groups.list operation with data and metadata."""
 
-SponsoredProductKeywordsListResult = AmazonAdsExecuteResult[dict[str, Any]]
-"""Result type for sponsored_product_keywords.list operation."""
+SponsoredProductKeywordsListResult = AmazonAdsExecuteResultWithMeta[dict[str, Any], SponsoredProductKeywordsListResultMeta]
+"""Result type for sponsored_product_keywords.list operation with data and metadata."""
 
-SponsoredProductProductAdsListResult = AmazonAdsExecuteResult[dict[str, Any]]
-"""Result type for sponsored_product_product_ads.list operation."""
+SponsoredProductProductAdsListResult = AmazonAdsExecuteResultWithMeta[dict[str, Any], SponsoredProductProductAdsListResultMeta]
+"""Result type for sponsored_product_product_ads.list operation with data and metadata."""
 
-SponsoredProductTargetsListResult = AmazonAdsExecuteResult[dict[str, Any]]
-"""Result type for sponsored_product_targets.list operation."""
+SponsoredProductTargetsListResult = AmazonAdsExecuteResultWithMeta[dict[str, Any], SponsoredProductTargetsListResultMeta]
+"""Result type for sponsored_product_targets.list operation with data and metadata."""
 
-SponsoredProductNegativeKeywordsListResult = AmazonAdsExecuteResult[dict[str, Any]]
-"""Result type for sponsored_product_negative_keywords.list operation."""
+SponsoredProductNegativeKeywordsListResult = AmazonAdsExecuteResultWithMeta[dict[str, Any], SponsoredProductNegativeKeywordsListResultMeta]
+"""Result type for sponsored_product_negative_keywords.list operation with data and metadata."""
 
-SponsoredProductNegativeTargetsListResult = AmazonAdsExecuteResult[dict[str, Any]]
-"""Result type for sponsored_product_negative_targets.list operation."""
+SponsoredProductNegativeTargetsListResult = AmazonAdsExecuteResultWithMeta[dict[str, Any], SponsoredProductNegativeTargetsListResultMeta]
+"""Result type for sponsored_product_negative_targets.list operation with data and metadata."""
 
-SponsoredBrandsCampaignsListResult = AmazonAdsExecuteResult[dict[str, Any]]
-"""Result type for sponsored_brands_campaigns.list operation."""
+SponsoredBrandsCampaignsListResult = AmazonAdsExecuteResultWithMeta[dict[str, Any], SponsoredBrandsCampaignsListResultMeta]
+"""Result type for sponsored_brands_campaigns.list operation with data and metadata."""
 
-SponsoredBrandsAdGroupsListResult = AmazonAdsExecuteResult[dict[str, Any]]
-"""Result type for sponsored_brands_ad_groups.list operation."""
+SponsoredBrandsAdGroupsListResult = AmazonAdsExecuteResultWithMeta[dict[str, Any], SponsoredBrandsAdGroupsListResultMeta]
+"""Result type for sponsored_brands_ad_groups.list operation with data and metadata."""
 

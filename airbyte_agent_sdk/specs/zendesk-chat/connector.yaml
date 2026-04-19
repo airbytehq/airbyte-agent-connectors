@@ -1381,6 +1381,7 @@ paths:
       operationId: ListAgents
       x-airbyte-entity: agents
       x-airbyte-action: list
+      x-airbyte-no-pagination: "The Zendesk Chat /agents endpoint returns the full set of configured agents in a single response; the API does not expose pagination parameters for this resource."
       x-airbyte-preferred-for-check: true
       x-airbyte-record-extractor: $
       tags:
@@ -1488,6 +1489,7 @@ paths:
       operationId: ListBans
       x-airbyte-entity: bans
       x-airbyte-action: list
+      x-airbyte-no-pagination: "The Zendesk Chat /bans endpoint returns the full set of visitor/IP bans in a single response; the API does not expose pagination parameters for this resource."
       x-airbyte-record-extractor: $[*][*]
       tags:
         - Bans
@@ -1628,6 +1630,7 @@ paths:
       operationId: ListDepartments
       x-airbyte-entity: departments
       x-airbyte-action: list
+      x-airbyte-no-pagination: "The Zendesk Chat /departments endpoint returns the full set of configured departments in a single response; the API does not expose pagination parameters for this resource."
       x-airbyte-record-extractor: $
       tags:
         - Departments
@@ -1671,6 +1674,7 @@ paths:
       operationId: ListGoals
       x-airbyte-entity: goals
       x-airbyte-action: list
+      x-airbyte-no-pagination: "The Zendesk Chat /goals endpoint returns the full set of configured goals in a single response; the API does not expose pagination parameters for this resource."
       x-airbyte-record-extractor: $
       tags:
         - Goals
@@ -1714,6 +1718,7 @@ paths:
       operationId: ListRoles
       x-airbyte-entity: roles
       x-airbyte-action: list
+      x-airbyte-no-pagination: "The Zendesk Chat /roles endpoint returns the full set of configured roles in a single response; the API does not expose pagination parameters for this resource."
       x-airbyte-record-extractor: $
       tags:
         - Roles
@@ -1778,6 +1783,7 @@ paths:
       operationId: ListShortcuts
       x-airbyte-entity: shortcuts
       x-airbyte-action: list
+      x-airbyte-no-pagination: "The Zendesk Chat /shortcuts endpoint returns the full set of configured shortcuts in a single response; the API does not expose pagination parameters for this resource."
       x-airbyte-record-extractor: $
       tags:
         - Shortcuts
@@ -1821,6 +1827,7 @@ paths:
       operationId: ListSkills
       x-airbyte-entity: skills
       x-airbyte-action: list
+      x-airbyte-no-pagination: "The Zendesk Chat /skills endpoint returns the full set of configured skills in a single response; the API does not expose pagination parameters for this resource."
       x-airbyte-record-extractor: $
       tags:
         - Skills
@@ -1864,6 +1871,7 @@ paths:
       operationId: ListTriggers
       x-airbyte-entity: triggers
       x-airbyte-action: list
+      x-airbyte-no-pagination: "The Zendesk Chat /triggers endpoint returns the full set of configured triggers in a single response; the API does not expose pagination parameters for this resource."
       x-airbyte-record-extractor: $
       tags:
         - Triggers

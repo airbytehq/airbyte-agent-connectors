@@ -1026,6 +1026,7 @@ paths:
       x-airbyte-entity: users
       x-airbyte-action: list
       x-airbyte-preferred-for-check: true
+      x-airbyte-no-pagination: "Jira Cloud /users endpoint paginates via startAt/maxResults query parameters but returns a raw JSON array with no wrapper object, so the response exposes no next-page cursor or total count; pagination termination is derived client-side from page-size exhaustion (fewer than maxResults users returned)."
       parameters:
         - name: startAt
           in: query
@@ -1117,6 +1118,7 @@ paths:
       operationId: listIssueFields
       x-airbyte-entity: issue_fields
       x-airbyte-action: list
+      x-airbyte-no-pagination: "Jira Cloud /field endpoint returns the full collection of system and custom fields in a single response; the API does not expose pagination on this endpoint."
       responses:
         "200":
           description: Array of field objects
@@ -1220,8 +1222,8 @@ paths:
       x-airbyte-action: list
       x-airbyte-record-extractor: $.comments
       x-airbyte-meta-extractor:
-        startAt: $.startAt
-        maxResults: $.maxResults
+        next_offset: $.startAt
+        max_results: $.maxResults
         total: $.total
       parameters:
         - name: issueIdOrKey
@@ -1430,8 +1432,8 @@ paths:
       x-airbyte-action: list
       x-airbyte-record-extractor: $.worklogs
       x-airbyte-meta-extractor:
-        startAt: $.startAt
-        maxResults: $.maxResults
+        next_offset: $.startAt
+        max_results: $.maxResults
         total: $.total
       parameters:
         - name: issueIdOrKey

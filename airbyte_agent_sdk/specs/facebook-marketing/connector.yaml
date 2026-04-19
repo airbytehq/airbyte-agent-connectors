@@ -1227,6 +1227,7 @@ paths:
       operationId: listPixelStats
       x-airbyte-entity: pixel_stats
       x-airbyte-action: list
+      x-airbyte-no-pagination: "Facebook Marketing GET /{pixel_id}/stats returns a bounded event-quality aggregation scoped to the requested pixel_id + start_time/end_time + aggregation level; no pagination cursor is exposed."
       x-airbyte-record-extractor: $.data
       tags:
       - Pixels

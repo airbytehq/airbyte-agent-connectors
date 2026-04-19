@@ -5401,6 +5401,7 @@ paths:
       x-airbyte-path-override:
         path: /graphql
       x-airbyte-record-extractor: $.data.repository.object.entries
+      x-airbyte-no-pagination: "The GitHub GraphQL Tree.entries connection returns the full set of directory entries for the requested path in a single response and does not expose pagination arguments."
       tags:
         - Files
       parameters:

@@ -95,6 +95,7 @@ AmplitudeConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.data',
+                    no_pagination='Amplitude /2/annotations returns the full annotation collection in a single response; no pagination cursor or offset is exposed.',
                     preferred_for_check=True,
                 ),
                 Action.GET: EndpointDefinition(
@@ -332,6 +333,7 @@ AmplitudeConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.cohorts',
+                    no_pagination='Amplitude /3/cohorts returns all cohorts for the project in a single response; no pagination cursor is exposed.',
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -714,6 +716,7 @@ AmplitudeConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.data',
+                    no_pagination='Amplitude /api/2/taxonomy/event returns the full event taxonomy for the project in a single response; no pagination cursor is exposed.',
                 ),
             },
             entity_schema={
@@ -868,6 +871,7 @@ AmplitudeConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.data',
+                    no_pagination='Amplitude /2/users returns a bounded daily active-users aggregation scoped to the requested start/end date range; no pagination cursor is exposed.',
                 ),
             },
             entity_schema={
@@ -985,6 +989,7 @@ AmplitudeConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.data',
+                    no_pagination='Amplitude /2/sessions/average returns a bounded daily aggregation scoped to the requested start/end date range; no pagination cursor is exposed.',
                 ),
             },
             entity_schema={

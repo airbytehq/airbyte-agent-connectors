@@ -409,6 +409,7 @@ paths:
       x-airbyte-action: list
       x-airbyte-record-extractor: $.data.users
       x-airbyte-preferred-for-check: true
+      x-airbyte-no-pagination: "Monday.com GraphQL users() field accepts page/limit variables but the response exposes no next-page cursor or total count; pagination termination is derived client-side from page-size exhaustion."
       x-airbyte-path-override:
         path: /v2
       requestBody:
@@ -542,6 +543,7 @@ paths:
       x-airbyte-entity: boards
       x-airbyte-action: list
       x-airbyte-record-extractor: $.data.boards
+      x-airbyte-no-pagination: "Monday.com GraphQL boards() field accepts page/limit variables but the response exposes no next-page cursor or total count; pagination termination is derived client-side from page-size exhaustion."
       x-airbyte-path-override:
         path: /v2
       requestBody:
@@ -734,6 +736,7 @@ paths:
       x-airbyte-entity: items
       x-airbyte-action: list
       x-airbyte-record-extractor: $.data.boards[*].items_page.items
+      x-airbyte-no-pagination: "Monday.com GraphQL items_page connection returns a cursor, but this list endpoint queries the top-level items() field via boards; response contains no next-page metadata extractable to a fixed JSONPath."
       x-airbyte-path-override:
         path: /v2
       parameters:
@@ -889,6 +892,7 @@ paths:
       x-airbyte-entity: teams
       x-airbyte-action: list
       x-airbyte-record-extractor: $.data.teams
+      x-airbyte-no-pagination: "Monday.com GraphQL teams() field returns the full collection in a single response; the API does not expose pagination on this endpoint."
       x-airbyte-path-override:
         path: /v2
       requestBody:
@@ -984,6 +988,7 @@ paths:
       x-airbyte-entity: tags
       x-airbyte-action: list
       x-airbyte-record-extractor: $.data.tags
+      x-airbyte-no-pagination: "Monday.com GraphQL tags() field returns the full collection in a single response; the API does not expose pagination on this endpoint."
       x-airbyte-path-override:
         path: /v2
       requestBody:
@@ -1023,6 +1028,7 @@ paths:
       x-airbyte-entity: updates
       x-airbyte-action: list
       x-airbyte-record-extractor: $.data.updates
+      x-airbyte-no-pagination: "Monday.com GraphQL updates() field accepts page/limit variables but the response exposes no next-page cursor or total count; pagination termination is derived client-side from page-size exhaustion."
       x-airbyte-path-override:
         path: /v2
       parameters:
@@ -1180,6 +1186,7 @@ paths:
       x-airbyte-entity: workspaces
       x-airbyte-action: list
       x-airbyte-record-extractor: $.data.workspaces
+      x-airbyte-no-pagination: "Monday.com GraphQL workspaces() field accepts page/limit variables but the response exposes no next-page cursor or total count; pagination termination is derived client-side from page-size exhaustion."
       x-airbyte-path-override:
         path: /v2
       requestBody:
@@ -1326,6 +1333,7 @@ paths:
       x-airbyte-entity: activity_logs
       x-airbyte-action: list
       x-airbyte-record-extractor: $.data.boards[*].activity_logs
+      x-airbyte-no-pagination: "Monday.com GraphQL activity_logs() field accepts page/limit variables but the response exposes no next-page cursor or total count; pagination termination is derived client-side from page-size exhaustion."
       x-airbyte-path-override:
         path: /v2
       parameters:

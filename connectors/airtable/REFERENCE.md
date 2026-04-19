@@ -56,6 +56,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `permissionLevel` | `string \| null` |  |
 
 
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `offset` | `string \| null` |  |
+
 </details>
 
 ### Bases Context Store Search
@@ -302,6 +308,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `createdTime` | `string \| null` |  |
 | `fields` | `object \| null` |  |
 
+
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `offset` | `string \| null` |  |
 
 </details>
 

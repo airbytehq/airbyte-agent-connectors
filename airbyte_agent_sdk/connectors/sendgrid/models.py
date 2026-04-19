@@ -58,12 +58,19 @@ class Contact(BaseModel):
     created_at: Union[str | None, Any] = Field(default=None)
     updated_at: Union[str | None, Any] = Field(default=None)
 
+class ContactsListMetadata(BaseModel):
+    """Nested schema for ContactsList._metadata"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next: Union[str | None, Any] = Field(default=None)
+
 class ContactsList(BaseModel):
     """Response containing a list of contacts"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     result: Union[list[Contact], Any] = Field(default=None)
     contact_count: Union[int, Any] = Field(default=None)
+    metadata: Union[ContactsListMetadata, Any] = Field(default=None, alias="_metadata")
 
 class ListMetadata(BaseModel):
     """Metadata about the list resource"""
@@ -145,6 +152,14 @@ class CampaignsList(BaseModel):
     result: Union[list[Campaign], Any] = Field(default=None)
     metadata: Union[CampaignsListMetadata, Any] = Field(default=None, alias="_metadata")
 
+class SingleSendSendTo(BaseModel):
+    """Recipients configuration"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    list_ids: Union[list[str] | None, Any] = Field(default=None)
+    segment_ids: Union[list[str] | None, Any] = Field(default=None)
+    all: Union[bool, Any] = Field(default=None)
+
 class SingleSendEmailConfig(BaseModel):
     """Email configuration details"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -159,14 +174,6 @@ class SingleSendEmailConfig(BaseModel):
     custom_unsubscribe_url: Union[str | None, Any] = Field(default=None)
     sender_id: Union[int | None, Any] = Field(default=None)
     ip_pool: Union[str | None, Any] = Field(default=None)
-
-class SingleSendSendTo(BaseModel):
-    """Recipients configuration"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    list_ids: Union[list[str] | None, Any] = Field(default=None)
-    segment_ids: Union[list[str] | None, Any] = Field(default=None)
-    all: Union[bool, Any] = Field(default=None)
 
 class SingleSend(BaseModel):
     """A SendGrid single send"""
@@ -206,11 +213,18 @@ class Template(BaseModel):
     updated_at: Union[str | None, Any] = Field(default=None)
     versions: Union[list[Any] | None, Any] = Field(default=None)
 
+class TemplatesListMetadata(BaseModel):
+    """Nested schema for TemplatesList._metadata"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next: Union[str | None, Any] = Field(default=None)
+
 class TemplatesList(BaseModel):
     """Response containing a list of templates"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     templates: Union[list[Template], Any] = Field(default=None)
+    metadata: Union[TemplatesListMetadata, Any] = Field(default=None, alias="_metadata")
 
 class SingleSendStatsStats(BaseModel):
     """Email statistics for the single send"""
@@ -319,6 +333,7 @@ class ContactsListResultMeta(BaseModel):
     """Metadata for contacts.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
+    next: Union[str | None, Any] = Field(default=None)
     contact_count: Union[int, Any] = Field(default=None)
 
 class ListsListResultMeta(BaseModel):
@@ -339,8 +354,50 @@ class SinglesendsListResultMeta(BaseModel):
 
     next: Union[str | None, Any] = Field(default=None)
 
+class TemplatesListResultMeta(BaseModel):
+    """Metadata for templates.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next: Union[str | None, Any] = Field(default=None)
+
 class SinglesendStatsListResultMeta(BaseModel):
     """Metadata for singlesend_stats.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next: Union[str | None, Any] = Field(default=None)
+
+class BouncesListResultMeta(BaseModel):
+    """Metadata for bounces.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next: Union[str | None, Any] = Field(default=None)
+
+class BlocksListResultMeta(BaseModel):
+    """Metadata for blocks.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next: Union[str | None, Any] = Field(default=None)
+
+class SpamReportsListResultMeta(BaseModel):
+    """Metadata for spam_reports.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next: Union[str | None, Any] = Field(default=None)
+
+class InvalidEmailsListResultMeta(BaseModel):
+    """Metadata for invalid_emails.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next: Union[str | None, Any] = Field(default=None)
+
+class GlobalSuppressionsListResultMeta(BaseModel):
+    """Metadata for global_suppressions.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next: Union[str | None, Any] = Field(default=None)
+
+class SuppressionGroupMembersListResultMeta(BaseModel):
+    """Metadata for suppression_group_members.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next: Union[str | None, Any] = Field(default=None)
@@ -723,30 +780,30 @@ CampaignsListResult = SendgridExecuteResultWithMeta[list[Campaign], CampaignsLis
 SinglesendsListResult = SendgridExecuteResultWithMeta[list[SingleSend], SinglesendsListResultMeta]
 """Result type for singlesends.list operation with data and metadata."""
 
-TemplatesListResult = SendgridExecuteResult[list[Template]]
-"""Result type for templates.list operation."""
+TemplatesListResult = SendgridExecuteResultWithMeta[list[Template], TemplatesListResultMeta]
+"""Result type for templates.list operation with data and metadata."""
 
 SinglesendStatsListResult = SendgridExecuteResultWithMeta[list[SingleSendStats], SinglesendStatsListResultMeta]
 """Result type for singlesend_stats.list operation with data and metadata."""
 
-BouncesListResult = SendgridExecuteResult[list[Bounce]]
-"""Result type for bounces.list operation."""
+BouncesListResult = SendgridExecuteResultWithMeta[list[Bounce], BouncesListResultMeta]
+"""Result type for bounces.list operation with data and metadata."""
 
-BlocksListResult = SendgridExecuteResult[list[Block]]
-"""Result type for blocks.list operation."""
+BlocksListResult = SendgridExecuteResultWithMeta[list[Block], BlocksListResultMeta]
+"""Result type for blocks.list operation with data and metadata."""
 
-SpamReportsListResult = SendgridExecuteResult[list[SpamReport]]
-"""Result type for spam_reports.list operation."""
+SpamReportsListResult = SendgridExecuteResultWithMeta[list[SpamReport], SpamReportsListResultMeta]
+"""Result type for spam_reports.list operation with data and metadata."""
 
-InvalidEmailsListResult = SendgridExecuteResult[list[InvalidEmail]]
-"""Result type for invalid_emails.list operation."""
+InvalidEmailsListResult = SendgridExecuteResultWithMeta[list[InvalidEmail], InvalidEmailsListResultMeta]
+"""Result type for invalid_emails.list operation with data and metadata."""
 
-GlobalSuppressionsListResult = SendgridExecuteResult[list[GlobalSuppression]]
-"""Result type for global_suppressions.list operation."""
+GlobalSuppressionsListResult = SendgridExecuteResultWithMeta[list[GlobalSuppression], GlobalSuppressionsListResultMeta]
+"""Result type for global_suppressions.list operation with data and metadata."""
 
 SuppressionGroupsListResult = SendgridExecuteResult[list[SuppressionGroup]]
 """Result type for suppression_groups.list operation."""
 
-SuppressionGroupMembersListResult = SendgridExecuteResult[list[SuppressionGroupMember]]
-"""Result type for suppression_group_members.list operation."""
+SuppressionGroupMembersListResult = SendgridExecuteResultWithMeta[list[SuppressionGroupMember], SuppressionGroupMembersListResultMeta]
+"""Result type for suppression_group_members.list operation with data and metadata."""
 

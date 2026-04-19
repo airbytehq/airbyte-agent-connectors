@@ -334,6 +334,7 @@ paths:
       x-airbyte-path-override:
         path: "/properties/{property_id}:runReport"
       x-airbyte-record-extractor: $.rows
+      x-airbyte-no-pagination: "runReport returns a bounded aggregation scoped to the request body (dateRanges + dimensions + metrics); GA4 Data API responses only surface rowCount, not a next-page cursor."
       x-airbyte-meta-extractor:
         row_count: $.rowCount
       parameters:
@@ -371,6 +372,7 @@ paths:
       x-airbyte-path-override:
         path: "/properties/{property_id}:runReport"
       x-airbyte-record-extractor: $.rows
+      x-airbyte-no-pagination: "runReport returns a bounded aggregation scoped to the request body (dateRanges + dimensions + metrics); GA4 Data API responses only surface rowCount, not a next-page cursor."
       x-airbyte-meta-extractor:
         row_count: $.rowCount
       parameters:
@@ -406,6 +408,7 @@ paths:
       x-airbyte-path-override:
         path: "/properties/{property_id}:runReport"
       x-airbyte-record-extractor: $.rows
+      x-airbyte-no-pagination: "runReport returns a bounded aggregation scoped to the request body (dateRanges + dimensions + metrics); GA4 Data API responses only surface rowCount, not a next-page cursor."
       x-airbyte-meta-extractor:
         row_count: $.rowCount
       parameters:
@@ -441,6 +444,7 @@ paths:
       x-airbyte-path-override:
         path: "/properties/{property_id}:runReport"
       x-airbyte-record-extractor: $.rows
+      x-airbyte-no-pagination: "runReport returns a bounded aggregation scoped to the request body (dateRanges + dimensions + metrics); GA4 Data API responses only surface rowCount, not a next-page cursor."
       x-airbyte-meta-extractor:
         row_count: $.rowCount
       parameters:
@@ -476,6 +480,7 @@ paths:
       x-airbyte-path-override:
         path: "/properties/{property_id}:runReport"
       x-airbyte-record-extractor: $.rows
+      x-airbyte-no-pagination: "runReport returns a bounded aggregation scoped to the request body (dateRanges + dimensions + metrics); GA4 Data API responses only surface rowCount, not a next-page cursor."
       x-airbyte-meta-extractor:
         row_count: $.rowCount
       parameters:
@@ -511,6 +516,7 @@ paths:
       x-airbyte-path-override:
         path: "/properties/{property_id}:runReport"
       x-airbyte-record-extractor: $.rows
+      x-airbyte-no-pagination: "runReport returns a bounded aggregation scoped to the request body (dateRanges + dimensions + metrics); GA4 Data API responses only surface rowCount, not a next-page cursor."
       x-airbyte-meta-extractor:
         row_count: $.rowCount
       parameters:
@@ -546,6 +552,7 @@ paths:
       x-airbyte-path-override:
         path: "/properties/{property_id}:runReport"
       x-airbyte-record-extractor: $.rows
+      x-airbyte-no-pagination: "runReport returns a bounded aggregation scoped to the request body (dateRanges + dimensions + metrics); GA4 Data API responses only surface rowCount, not a next-page cursor."
       x-airbyte-meta-extractor:
         row_count: $.rowCount
       parameters:
@@ -581,6 +588,7 @@ paths:
       x-airbyte-path-override:
         path: "/properties/{property_id}:runReport"
       x-airbyte-record-extractor: $.rows
+      x-airbyte-no-pagination: "runReport returns a bounded aggregation scoped to the request body (dateRanges + dimensions + metrics); GA4 Data API responses only surface rowCount, not a next-page cursor."
       x-airbyte-meta-extractor:
         row_count: $.rowCount
       parameters:

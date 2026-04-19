@@ -1771,6 +1771,7 @@ ZendeskTalkConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.agents_overview',
+                    no_pagination='The Zendesk Talk /stats/agents_overview endpoint returns a single daily aggregate snapshot for all agents and does not expose pagination parameters.',
                 ),
             },
             entity_schema={
@@ -1988,6 +1989,7 @@ ZendeskTalkConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.account_overview',
+                    no_pagination='The Zendesk Talk /stats/account_overview endpoint returns a single daily aggregate snapshot for the account and does not expose pagination parameters.',
                 ),
             },
             entity_schema={
@@ -2145,6 +2147,7 @@ ZendeskTalkConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.current_queue_activity',
+                    no_pagination='The Zendesk Talk /stats/current_queue_activity endpoint returns a single live snapshot of queue state and does not expose pagination parameters.',
                 ),
             },
             entity_schema={

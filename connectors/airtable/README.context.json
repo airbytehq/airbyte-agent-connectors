@@ -57,10 +57,25 @@
     "response_type": "BasesListResult",
     "description": "Returns a list of all bases the user has access to",
     "record_extractor": "$.bases",
-    "meta_extractor": null,
+    "meta_extractor": {
+      "offset": "$.offset"
+    },
     "needs_envelope": true,
     "record_type": "list[Base]",
-    "meta_fields": null,
+    "meta_fields": [
+      {
+        "name": "offset",
+        "python_name": "offset",
+        "type": "str | None",
+        "schema": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Pagination offset for next page"
+        }
+      }
+    ],
     "is_download": false
   },
   "entities_grouped": {
@@ -88,10 +103,25 @@
         "response_type": "BasesListResult",
         "description": "Returns a list of all bases the user has access to",
         "record_extractor": "$.bases",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "offset": "$.offset"
+        },
         "needs_envelope": true,
         "record_type": "list[Base]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "offset",
+            "python_name": "offset",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Pagination offset for next page"
+            }
+          }
+        ],
         "is_download": false
       }
     ],
@@ -215,10 +245,25 @@
         "response_type": "RecordsListResult",
         "description": "Returns a paginated list of records from the specified table",
         "record_extractor": "$.records",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "offset": "$.offset"
+        },
         "needs_envelope": true,
         "record_type": "list[Record]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "offset",
+            "python_name": "offset",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Pagination offset for next page"
+            }
+          }
+        ],
         "is_download": false
       },
       {

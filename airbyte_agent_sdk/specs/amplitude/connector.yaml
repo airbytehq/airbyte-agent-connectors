@@ -388,6 +388,7 @@ paths:
       x-airbyte-entity: annotations
       x-airbyte-action: list
       x-airbyte-preferred-for-check: true
+      x-airbyte-no-pagination: "Amplitude /2/annotations returns the full annotation collection in a single response; no pagination cursor or offset is exposed."
       x-airbyte-record-extractor: $.data
       responses:
         "200":
@@ -437,6 +438,7 @@ paths:
       operationId: listCohorts
       x-airbyte-entity: cohorts
       x-airbyte-action: list
+      x-airbyte-no-pagination: "Amplitude /3/cohorts returns all cohorts for the project in a single response; no pagination cursor is exposed."
       x-airbyte-record-extractor: $.cohorts
       responses:
         "200":
@@ -486,6 +488,7 @@ paths:
       operationId: listEventTypes
       x-airbyte-entity: events_list
       x-airbyte-action: list
+      x-airbyte-no-pagination: "Amplitude /api/2/taxonomy/event returns the full event taxonomy for the project in a single response; no pagination cursor is exposed."
       x-airbyte-record-extractor: $.data
       responses:
         "200":
@@ -508,6 +511,7 @@ paths:
       operationId: listActiveUsers
       x-airbyte-entity: active_users
       x-airbyte-action: list
+      x-airbyte-no-pagination: "Amplitude /2/users returns a bounded daily active-users aggregation scoped to the requested start/end date range; no pagination cursor is exposed."
       x-airbyte-record-extractor: $.data
       parameters:
         - name: start
@@ -567,6 +571,7 @@ paths:
       operationId: listAverageSessionLength
       x-airbyte-entity: average_session_length
       x-airbyte-action: list
+      x-airbyte-no-pagination: "Amplitude /2/sessions/average returns a bounded daily aggregation scoped to the requested start/end date range; no pagination cursor is exposed."
       x-airbyte-record-extractor: $.data
       parameters:
         - name: start

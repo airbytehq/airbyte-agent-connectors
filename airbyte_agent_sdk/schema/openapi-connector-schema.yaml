@@ -1171,6 +1171,19 @@ $defs:
           real-time streams). Validation will generate a warning instead of an error
           when cassettes are missing.
         title: X-Airbyte-Untested
+      x-airbyte-no-pagination:
+        anyOf:
+        - type: string
+        - type: 'null'
+        default: null
+        description: Opt a list operation out of the pagination readiness check with
+          a justification. By default, every list operation must declare x-airbyte-meta-extractor
+          with a next-page / cursor field so the executor can continue paginating.
+          Set this to a non-empty string explaining why the underlying API genuinely
+          does not paginate (e.g., 'API returns the full resource list in a single
+          response; no pagination'). Empty strings are treated as missing and will
+          fail validation.
+        title: X-Airbyte-No-Pagination
       x-airbyte-preferred-for-check:
         anyOf:
         - type: boolean
@@ -1197,9 +1210,7 @@ $defs:
         - type: 'null'
         default: null
         description: AI hints for this specific operation. Use for action-level guidance,
-          especially write actions whose request params should not be treated as
-          streams.
-        title: X-Airbyte-Ai-Hints
+          especially write actions whose request params should not be treated as streams.
     required:
     - x-airbyte-entity
     - x-airbyte-action
@@ -1279,6 +1290,13 @@ $defs:
         - type: 'null'
         default: null
         title: Examples
+      x-airbyte-param-config-inject:
+        anyOf:
+        - additionalProperties: true
+          type: object
+        - type: 'null'
+        default: null
+        title: X-Airbyte-Param-Config-Inject
     required:
     - name
     - in

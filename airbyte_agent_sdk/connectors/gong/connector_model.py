@@ -210,14 +210,21 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                                     'totalRecords': {'type': 'integer', 'description': 'Total number of records'},
                                     'currentPageSize': {'type': 'integer', 'description': 'Number of records in current page'},
                                     'currentPageNumber': {'type': 'integer', 'description': 'Current page number'},
-                                    'cursor': {'type': 'string', 'description': 'Cursor for next page'},
+                                    'cursor': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Opaque cursor to fetch the next page; absent when there are no more pages',
+                                    },
                                 },
                             },
                             'requestId': {'type': 'string', 'description': 'Request identifier'},
                         },
                     },
                     record_extractor='$.users',
-                    meta_extractor={'pagination': '$.records'},
+                    meta_extractor={
+                        'cursor': '$.records.cursor',
+                        'total_records': '$.records.totalRecords',
+                        'current_page_number': '$.records.currentPageNumber',
+                    },
                     preferred_for_check=True,
                 ),
                 Action.GET: EndpointDefinition(
@@ -461,14 +468,21 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                                     'totalRecords': {'type': 'integer', 'description': 'Total number of records'},
                                     'currentPageSize': {'type': 'integer', 'description': 'Number of records in current page'},
                                     'currentPageNumber': {'type': 'integer', 'description': 'Current page number'},
-                                    'cursor': {'type': 'string', 'description': 'Cursor for next page'},
+                                    'cursor': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Opaque cursor to fetch the next page; absent when there are no more pages',
+                                    },
                                 },
                             },
                             'requestId': {'type': 'string', 'description': 'Request identifier'},
                         },
                     },
                     record_extractor='$.calls',
-                    meta_extractor={'pagination': '$.records'},
+                    meta_extractor={
+                        'cursor': '$.records.cursor',
+                        'total_records': '$.records.totalRecords',
+                        'current_page_number': '$.records.currentPageNumber',
+                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -900,14 +914,21 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                                     'totalRecords': {'type': 'integer', 'description': 'Total number of records'},
                                     'currentPageSize': {'type': 'integer', 'description': 'Number of records in current page'},
                                     'currentPageNumber': {'type': 'integer', 'description': 'Current page number'},
-                                    'cursor': {'type': 'string', 'description': 'Cursor for next page'},
+                                    'cursor': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Opaque cursor to fetch the next page; absent when there are no more pages',
+                                    },
                                 },
                             },
                             'requestId': {'type': 'string', 'description': 'Request identifier'},
                         },
                     },
                     record_extractor='$.calls',
-                    meta_extractor={'pagination': '$.records'},
+                    meta_extractor={
+                        'cursor': '$.records.cursor',
+                        'total_records': '$.records.totalRecords',
+                        'current_page_number': '$.records.currentPageNumber',
+                    },
                 ),
             },
             entity_schema={
@@ -1381,7 +1402,10 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                                     'totalRecords': {'type': 'integer', 'description': 'Total number of records'},
                                     'currentPageSize': {'type': 'integer', 'description': 'Number of records in current page'},
                                     'currentPageNumber': {'type': 'integer', 'description': 'Current page number'},
-                                    'cursor': {'type': 'string', 'description': 'Cursor for next page'},
+                                    'cursor': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Opaque cursor to fetch the next page; absent when there are no more pages',
+                                    },
                                 },
                             },
                             'requestId': {'type': 'string', 'description': 'Request identifier'},
@@ -1649,7 +1673,10 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                                     'totalRecords': {'type': 'integer', 'description': 'Total number of records'},
                                     'currentPageSize': {'type': 'integer', 'description': 'Number of records in current page'},
                                     'currentPageNumber': {'type': 'integer', 'description': 'Current page number'},
-                                    'cursor': {'type': 'string', 'description': 'Cursor for next page'},
+                                    'cursor': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Opaque cursor to fetch the next page; absent when there are no more pages',
+                                    },
                                 },
                             },
                             'requestId': {'type': 'string', 'description': 'Request identifier'},
@@ -1690,6 +1717,7 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.workspaces',
+                    no_pagination='Gong /v2/workspaces endpoint returns the full collection of company workspaces in a single response; the API does not expose pagination on this endpoint.',
                 ),
             },
             entity_schema={
@@ -1798,14 +1826,21 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                                     'totalRecords': {'type': 'integer', 'description': 'Total number of records'},
                                     'currentPageSize': {'type': 'integer', 'description': 'Number of records in current page'},
                                     'currentPageNumber': {'type': 'integer', 'description': 'Current page number'},
-                                    'cursor': {'type': 'string', 'description': 'Cursor for next page'},
+                                    'cursor': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Opaque cursor to fetch the next page; absent when there are no more pages',
+                                    },
                                 },
                             },
                             'requestId': {'type': 'string', 'description': 'Request identifier'},
                         },
                     },
                     record_extractor='$.callTranscripts',
-                    meta_extractor={'pagination': '$.records'},
+                    meta_extractor={
+                        'cursor': '$.records.cursor',
+                        'total_records': '$.records.totalRecords',
+                        'current_page_number': '$.records.currentPageNumber',
+                    },
                 ),
             },
             entity_schema={
@@ -1911,7 +1946,10 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                                     'totalRecords': {'type': 'integer', 'description': 'Total number of records'},
                                     'currentPageSize': {'type': 'integer', 'description': 'Number of records in current page'},
                                     'currentPageNumber': {'type': 'integer', 'description': 'Current page number'},
-                                    'cursor': {'type': 'string', 'description': 'Cursor for next page'},
+                                    'cursor': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Opaque cursor to fetch the next page; absent when there are no more pages',
+                                    },
                                 },
                             },
                             'usersAggregateActivityStats': {
@@ -1964,7 +2002,11 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.usersAggregateActivityStats',
-                    meta_extractor={'pagination': '$.records'},
+                    meta_extractor={
+                        'cursor': '$.records.cursor',
+                        'total_records': '$.records.totalRecords',
+                        'current_page_number': '$.records.currentPageNumber',
+                    },
                 ),
             },
             entity_schema={
@@ -2048,7 +2090,10 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                                     'totalRecords': {'type': 'integer', 'description': 'Total number of records'},
                                     'currentPageSize': {'type': 'integer', 'description': 'Number of records in current page'},
                                     'currentPageNumber': {'type': 'integer', 'description': 'Current page number'},
-                                    'cursor': {'type': 'string', 'description': 'Cursor for next page'},
+                                    'cursor': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Opaque cursor to fetch the next page; absent when there are no more pages',
+                                    },
                                 },
                             },
                             'usersDetailedActivities': {
@@ -2148,7 +2193,11 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.usersDetailedActivities',
-                    meta_extractor={'pagination': '$.records'},
+                    meta_extractor={
+                        'cursor': '$.records.cursor',
+                        'total_records': '$.records.totalRecords',
+                        'current_page_number': '$.records.currentPageNumber',
+                    },
                 ),
             },
             entity_schema={
@@ -2235,7 +2284,10 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                                     'totalRecords': {'type': 'integer', 'description': 'Total number of records'},
                                     'currentPageSize': {'type': 'integer', 'description': 'Number of records in current page'},
                                     'currentPageNumber': {'type': 'integer', 'description': 'Current page number'},
-                                    'cursor': {'type': 'string', 'description': 'Cursor for next page'},
+                                    'cursor': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Opaque cursor to fetch the next page; absent when there are no more pages',
+                                    },
                                 },
                             },
                             'peopleInteractionStats': {
@@ -2273,7 +2325,11 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.peopleInteractionStats',
-                    meta_extractor={'pagination': '$.records'},
+                    meta_extractor={
+                        'cursor': '$.records.cursor',
+                        'total_records': '$.records.totalRecords',
+                        'current_page_number': '$.records.currentPageNumber',
+                    },
                 ),
             },
             entity_schema={
@@ -2402,6 +2458,7 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.scorecards',
+                    no_pagination='Gong /v2/settings/scorecards endpoint returns all scorecard configurations for the workspace in a single response; the API does not expose pagination on this endpoint.',
                 ),
             },
             entity_schema={
@@ -2523,6 +2580,7 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.keywordTrackers',
+                    no_pagination='Gong /v2/settings/trackers endpoint returns all keyword tracker configurations for the workspace in a single response; the API does not expose pagination on this endpoint.',
                 ),
             },
             entity_schema={
@@ -2642,6 +2700,7 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.folders',
+                    no_pagination='Gong /v2/library/folders endpoint returns the full folder tree for the workspace in a single response; the API does not expose pagination on this endpoint.',
                 ),
             },
             entity_schema={
@@ -2751,13 +2810,20 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                                     'totalRecords': {'type': 'integer', 'description': 'Total number of records'},
                                     'currentPageSize': {'type': 'integer', 'description': 'Number of records in current page'},
                                     'currentPageNumber': {'type': 'integer', 'description': 'Current page number'},
-                                    'cursor': {'type': 'string', 'description': 'Cursor for next page'},
+                                    'cursor': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Opaque cursor to fetch the next page; absent when there are no more pages',
+                                    },
                                 },
                             },
                         },
                     },
                     record_extractor='$.calls',
-                    meta_extractor={'pagination': '$.records'},
+                    meta_extractor={
+                        'cursor': '$.records.cursor',
+                        'total_records': '$.records.totalRecords',
+                        'current_page_number': '$.records.currentPageNumber',
+                    },
                 ),
             },
             entity_schema={
@@ -2866,6 +2932,7 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.coachingData',
+                    no_pagination='Gong /v2/coaching endpoint returns an aggregated coaching-metrics payload for a manager and their direct reports over a date range; response is a bounded aggregate and the API does not expose pagination on this endpoint.',
                 ),
             },
             entity_schema={
@@ -3057,13 +3124,20 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                                     'totalRecords': {'type': 'integer', 'description': 'Total number of records'},
                                     'currentPageSize': {'type': 'integer', 'description': 'Number of records in current page'},
                                     'currentPageNumber': {'type': 'integer', 'description': 'Current page number'},
-                                    'cursor': {'type': 'string', 'description': 'Cursor for next page'},
+                                    'cursor': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Opaque cursor to fetch the next page; absent when there are no more pages',
+                                    },
                                 },
                             },
                         },
                     },
                     record_extractor='$.answeredScorecards',
-                    meta_extractor={'pagination': '$.records'},
+                    meta_extractor={
+                        'cursor': '$.records.cursor',
+                        'total_records': '$.records.totalRecords',
+                        'current_page_number': '$.records.currentPageNumber',
+                    },
                 ),
             },
             entity_schema={

@@ -510,6 +510,7 @@ paths:
       x-airbyte-entity: sites
       x-airbyte-action: list
       x-airbyte-preferred-for-check: true
+      x-airbyte-no-pagination: "Google Search Console GET /sites returns all verified sites for the authenticated user in a single response; no pagination cursor, offset, or page token is exposed."
       x-airbyte-record-extractor: $.siteEntry
       responses:
         "200":
@@ -556,6 +557,7 @@ paths:
       operationId: listSitemaps
       x-airbyte-entity: sitemaps
       x-airbyte-action: list
+      x-airbyte-no-pagination: "Google Search Console GET /sites/{siteUrl}/sitemaps returns all submitted sitemaps for the site in a single response; no pagination cursor, offset, or page token is exposed."
       x-airbyte-record-extractor: $.sitemap
       parameters:
       - name: siteUrl
@@ -617,6 +619,7 @@ paths:
       operationId: listSearchAnalyticsByDate
       x-airbyte-entity: search_analytics_by_date
       x-airbyte-action: list
+      x-airbyte-no-pagination: "Google Search Console searchAnalytics/query uses request-body offset pagination (startRow + rowLimit); the response exposes no next-page cursor, offset, or has-more flag, so continuation is driven entirely by the caller."
       x-airbyte-path-override:
         path: /sites/{siteUrl}/searchAnalytics/query
       x-airbyte-record-extractor: $.rows
@@ -654,6 +657,7 @@ paths:
       operationId: listSearchAnalyticsByCountry
       x-airbyte-entity: search_analytics_by_country
       x-airbyte-action: list
+      x-airbyte-no-pagination: "Google Search Console searchAnalytics/query uses request-body offset pagination (startRow + rowLimit); the response exposes no next-page cursor, offset, or has-more flag, so continuation is driven entirely by the caller."
       x-airbyte-path-override:
         path: /sites/{siteUrl}/searchAnalytics/query
       x-airbyte-record-extractor: $.rows
@@ -691,6 +695,7 @@ paths:
       operationId: listSearchAnalyticsByDevice
       x-airbyte-entity: search_analytics_by_device
       x-airbyte-action: list
+      x-airbyte-no-pagination: "Google Search Console searchAnalytics/query uses request-body offset pagination (startRow + rowLimit); the response exposes no next-page cursor, offset, or has-more flag, so continuation is driven entirely by the caller."
       x-airbyte-path-override:
         path: /sites/{siteUrl}/searchAnalytics/query
       x-airbyte-record-extractor: $.rows
@@ -728,6 +733,7 @@ paths:
       operationId: listSearchAnalyticsByPage
       x-airbyte-entity: search_analytics_by_page
       x-airbyte-action: list
+      x-airbyte-no-pagination: "Google Search Console searchAnalytics/query uses request-body offset pagination (startRow + rowLimit); the response exposes no next-page cursor, offset, or has-more flag, so continuation is driven entirely by the caller."
       x-airbyte-path-override:
         path: /sites/{siteUrl}/searchAnalytics/query
       x-airbyte-record-extractor: $.rows
@@ -765,6 +771,7 @@ paths:
       operationId: listSearchAnalyticsByQuery
       x-airbyte-entity: search_analytics_by_query
       x-airbyte-action: list
+      x-airbyte-no-pagination: "Google Search Console searchAnalytics/query uses request-body offset pagination (startRow + rowLimit); the response exposes no next-page cursor, offset, or has-more flag, so continuation is driven entirely by the caller."
       x-airbyte-path-override:
         path: /sites/{siteUrl}/searchAnalytics/query
       x-airbyte-record-extractor: $.rows
@@ -802,6 +809,7 @@ paths:
       operationId: listSearchAnalyticsAllFields
       x-airbyte-entity: search_analytics_all_fields
       x-airbyte-action: list
+      x-airbyte-no-pagination: "Google Search Console searchAnalytics/query uses request-body offset pagination (startRow + rowLimit); the response exposes no next-page cursor, offset, or has-more flag, so continuation is driven entirely by the caller."
       x-airbyte-path-override:
         path: /sites/{siteUrl}/searchAnalytics/query
       x-airbyte-record-extractor: $.rows

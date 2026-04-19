@@ -393,10 +393,22 @@
         "response_type": "ListPaymentsListResult",
         "description": "Lists payments for the PayPal account. Supports filtering by start and end times.\n",
         "record_extractor": "$.payments",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next_id": "$.next_id"
+        },
         "needs_envelope": true,
         "record_type": "list[Payment]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next_id",
+            "python_name": "next_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Next payment ID for pagination."
+            }
+          }
+        ],
         "is_download": false
       }
     ],
@@ -460,10 +472,36 @@
         "response_type": "ListDisputesListResult",
         "description": "Lists disputes for the PayPal account. Supports filtering by update time range.\n",
         "record_extractor": "$.items",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "$.links"
+        },
         "needs_envelope": true,
         "record_type": "list[Dispute]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "list[dict[str, Any]]",
+            "schema": {
+              "type": "array",
+              "description": "HATEOAS links for pagination.",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "href": {
+                    "type": "string"
+                  },
+                  "rel": {
+                    "type": "string"
+                  },
+                  "method": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        ],
         "is_download": false
       }
     ],
@@ -507,10 +545,36 @@
         "response_type": "ListProductsListResult",
         "description": "Lists all catalog products for the PayPal account.",
         "record_extractor": "$.products",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "$.links"
+        },
         "needs_envelope": true,
         "record_type": "list[Product]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "list[dict[str, Any]]",
+            "schema": {
+              "type": "array",
+              "description": "HATEOAS links for pagination.",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "href": {
+                    "type": "string"
+                  },
+                  "rel": {
+                    "type": "string"
+                  },
+                  "method": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        ],
         "is_download": false
       }
     ],
@@ -605,10 +669,36 @@
         "response_type": "SearchInvoicesListResult",
         "description": "Searches for invoices matching the specified criteria. Uses POST with a JSON body for filtering.\n",
         "record_extractor": "$.items",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "$.links"
+        },
         "needs_envelope": true,
         "record_type": "list[Invoice]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "list[dict[str, Any]]",
+            "schema": {
+              "type": "array",
+              "description": "HATEOAS links for pagination.",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "href": {
+                    "type": "string"
+                  },
+                  "rel": {
+                    "type": "string"
+                  },
+                  "method": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        ],
         "is_download": false
       }
     ]

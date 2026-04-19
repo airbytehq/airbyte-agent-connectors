@@ -4420,6 +4420,7 @@ IntercomConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.teams',
+                    no_pagination='The Intercom /teams endpoint returns the full set of configured teams as a team.list response in a single call; no pages/starting_after pagination is exposed.',
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -4605,6 +4606,7 @@ IntercomConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.admins',
+                    no_pagination='The Intercom /admins endpoint returns the full set of workspace admins as an admin.list response in a single call; no pages/starting_after pagination is exposed.',
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -4811,6 +4813,7 @@ IntercomConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.data',
+                    no_pagination='The Intercom /tags endpoint returns the full set of workspace tags as a tag.list response in a single call; no pages/starting_after pagination is exposed.',
                 ),
                 Action.CREATE: EndpointDefinition(
                     method='POST',
@@ -5160,6 +5163,7 @@ IntercomConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.segments',
+                    no_pagination='The Intercom /segments endpoint returns the full set of workspace segments as a segment.list response in a single call; no pages/starting_after pagination is exposed.',
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',

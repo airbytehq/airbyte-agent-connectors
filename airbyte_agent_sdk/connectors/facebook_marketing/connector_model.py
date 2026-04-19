@@ -4713,6 +4713,7 @@ FacebookMarketingConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.data',
+                    no_pagination='Facebook Marketing GET /{pixel_id}/stats returns a bounded event-quality aggregation scoped to the requested pixel_id + start_time/end_time + aggregation level; no pagination cursor is exposed.',
                 ),
             },
             entity_schema={

@@ -120,7 +120,7 @@ class AmazonAdsConnector:
 
     connector_name = "amazon-ads"
     connector_version = "1.0.10"
-    sdk_version = "0.1.28"
+    sdk_version = "0.1.29"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -994,7 +994,8 @@ group campaigns together for organizational and budget management purposes.
         result = await self._connector.execute("portfolios", "list", params)
         # Cast generic envelope to concrete typed result
         return PortfoliosListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1065,7 +1066,8 @@ Sponsored Products campaigns promote individual product listings on Amazon.
         result = await self._connector.execute("sponsored_product_campaigns", "list", params)
         # Cast generic envelope to concrete typed result
         return SponsoredProductCampaignsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1136,7 +1138,8 @@ Ad groups are used to organize ads and targeting within a campaign.
         result = await self._connector.execute("sponsored_product_ad_groups", "list", params)
         # Cast generic envelope to concrete typed result
         return SponsoredProductAdGroupsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1181,7 +1184,8 @@ Keywords are used in manual targeting campaigns to match shopper search queries.
         result = await self._connector.execute("sponsored_product_keywords", "list", params)
         # Cast generic envelope to concrete typed result
         return SponsoredProductKeywordsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1226,7 +1230,8 @@ Product ads associate an advertised product with an ad group.
         result = await self._connector.execute("sponsored_product_product_ads", "list", params)
         # Cast generic envelope to concrete typed result
         return SponsoredProductProductAdsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1271,7 +1276,8 @@ Targeting clauses define product or category targeting for ad groups.
         result = await self._connector.execute("sponsored_product_targets", "list", params)
         # Cast generic envelope to concrete typed result
         return SponsoredProductTargetsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1316,7 +1322,8 @@ Negative keywords prevent ads from showing for specific search terms.
         result = await self._connector.execute("sponsored_product_negative_keywords", "list", params)
         # Cast generic envelope to concrete typed result
         return SponsoredProductNegativeKeywordsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1361,7 +1368,8 @@ Negative targeting clauses exclude specific products or categories from targetin
         result = await self._connector.execute("sponsored_product_negative_targets", "list", params)
         # Cast generic envelope to concrete typed result
         return SponsoredProductNegativeTargetsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1406,7 +1414,8 @@ Sponsored Brands campaigns help drive discovery and sales with creative ad exper
         result = await self._connector.execute("sponsored_brands_campaigns", "list", params)
         # Cast generic envelope to concrete typed result
         return SponsoredBrandsCampaignsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1451,7 +1460,8 @@ Ad groups organize ads and targeting within a Sponsored Brands campaign.
         result = await self._connector.execute("sponsored_brands_ad_groups", "list", params)
         # Cast generic envelope to concrete typed result
         return SponsoredBrandsAdGroupsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 

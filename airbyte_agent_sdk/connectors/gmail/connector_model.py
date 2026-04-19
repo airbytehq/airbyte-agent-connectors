@@ -723,6 +723,7 @@ GmailConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.labels',
+                    no_pagination='The Gmail API /users/{userId}/labels endpoint returns the full list of labels available to the authenticated user in a single response; it does not expose pageToken/pagination parameters.',
                 ),
                 Action.CREATE: EndpointDefinition(
                     method='POST',

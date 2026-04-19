@@ -429,6 +429,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `links` | `array<object>` |  |
 
 
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next_id` | `string` |  |
+
 </details>
 
 ### List Payments Context Store Search
@@ -564,6 +570,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `links` | `array<object>` |  |
 
 
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next` | `array<object>` |  |
+
 </details>
 
 ### List Disputes Context Store Search
@@ -694,6 +706,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `create_time` | `string` |  |
 | `links` | `array<object>` |  |
 
+
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next` | `array<object>` |  |
 
 </details>
 
@@ -957,6 +975,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `refunds` | `object` |  |
 | `links` | `array<object>` |  |
 
+
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next` | `array<object>` |  |
 
 </details>
 

@@ -1593,6 +1593,7 @@ paths:
       operationId: listTeams
       x-airbyte-entity: teams
       x-airbyte-action: list
+      x-airbyte-no-pagination: "The Intercom /teams endpoint returns the full set of configured teams as a team.list response in a single call; no pages/starting_after pagination is exposed."
       x-airbyte-record-extractor: $.teams
       parameters:
         - name: Intercom-Version
@@ -1655,6 +1656,7 @@ paths:
       operationId: listAdmins
       x-airbyte-entity: admins
       x-airbyte-action: list
+      x-airbyte-no-pagination: "The Intercom /admins endpoint returns the full set of workspace admins as an admin.list response in a single call; no pages/starting_after pagination is exposed."
       x-airbyte-record-extractor: $.admins
       parameters:
         - name: Intercom-Version
@@ -1717,6 +1719,7 @@ paths:
       operationId: listTags
       x-airbyte-entity: tags
       x-airbyte-action: list
+      x-airbyte-no-pagination: "The Intercom /tags endpoint returns the full set of workspace tags as a tag.list response in a single call; no pages/starting_after pagination is exposed."
       x-airbyte-record-extractor: $.data
       parameters:
         - name: Intercom-Version
@@ -1850,6 +1853,7 @@ paths:
       operationId: listSegments
       x-airbyte-entity: segments
       x-airbyte-action: list
+      x-airbyte-no-pagination: "The Intercom /segments endpoint returns the full set of workspace segments as a segment.list response in a single call; no pages/starting_after pagination is exposed."
       x-airbyte-record-extractor: $.segments
       parameters:
         - name: include_count

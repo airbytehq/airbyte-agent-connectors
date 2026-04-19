@@ -144,6 +144,7 @@ PaypalTransactionConnectorModel: ConnectorModel = ConnectorModel(
                         'x-airbyte-entity-name': 'balances',
                         'x-airbyte-stream-name': 'balances',
                     },
+                    no_pagination='The PayPal /v1/reporting/balances endpoint returns the full list of account balances across currencies in a single response; no pagination parameters are exposed.',
                     preferred_for_check=True,
                 ),
             },
@@ -671,6 +672,7 @@ PaypalTransactionConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.payments',
+                    meta_extractor={'next_id': '$.next_id'},
                 ),
             },
             entity_schema={
@@ -868,6 +870,7 @@ PaypalTransactionConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.items',
+                    meta_extractor={'next': '$.links'},
                 ),
             },
             entity_schema={
@@ -995,6 +998,7 @@ PaypalTransactionConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.products',
+                    meta_extractor={'next': '$.links'},
                 ),
             },
             entity_schema={
@@ -1469,9 +1473,22 @@ PaypalTransactionConnectorModel: ConnectorModel = ConnectorModel(
                             },
                             'total_items': {'type': 'integer', 'description': 'Total number of matching invoices.'},
                             'total_pages': {'type': 'integer', 'description': 'Total number of pages.'},
+                            'links': {
+                                'type': 'array',
+                                'description': 'HATEOAS links for pagination.',
+                                'items': {
+                                    'type': 'object',
+                                    'properties': {
+                                        'href': {'type': 'string'},
+                                        'rel': {'type': 'string'},
+                                        'method': {'type': 'string'},
+                                    },
+                                },
+                            },
                         },
                     },
                     record_extractor='$.items',
+                    meta_extractor={'next': '$.links'},
                 ),
             },
             entity_schema={

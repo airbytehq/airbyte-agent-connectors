@@ -1244,8 +1244,8 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 | Field Name | Type | Description |
 |------------|------|-------------|
-| `startAt` | `integer` |  |
-| `maxResults` | `integer` |  |
+| `next_offset` | `integer` |  |
+| `max_results` | `integer` |  |
 | `total` | `integer` |  |
 
 </details>
@@ -1672,8 +1672,8 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 | Field Name | Type | Description |
 |------------|------|-------------|
-| `startAt` | `integer` |  |
-| `maxResults` | `integer` |  |
+| `next_offset` | `integer` |  |
+| `max_results` | `integer` |  |
 | `total` | `integer` |  |
 
 </details>

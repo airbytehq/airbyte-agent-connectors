@@ -584,7 +584,9 @@ paths:
       x-airbyte-preferred-for-check: true
       x-airbyte-record-extractor: $.users
       x-airbyte-meta-extractor:
-        pagination: $.records
+        cursor: $.records.cursor
+        total_records: $.records.totalRecords
+        current_page_number: $.records.currentPageNumber
       parameters:
         - name: cursor
           in: query
@@ -638,7 +640,9 @@ paths:
       x-airbyte-action: list
       x-airbyte-record-extractor: $.calls
       x-airbyte-meta-extractor:
-        pagination: $.records
+        cursor: $.records.cursor
+        total_records: $.records.totalRecords
+        current_page_number: $.records.currentPageNumber
       parameters:
         - name: fromDateTime
           in: query
@@ -706,7 +710,9 @@ paths:
       x-airbyte-action: list
       x-airbyte-record-extractor: $.calls
       x-airbyte-meta-extractor:
-        pagination: $.records
+        cursor: $.records.cursor
+        total_records: $.records.totalRecords
+        current_page_number: $.records.currentPageNumber
       requestBody:
         required: true
         content:
@@ -933,6 +939,7 @@ paths:
       x-airbyte-entity: workspaces
       x-airbyte-action: list
       x-airbyte-record-extractor: $.workspaces
+      x-airbyte-no-pagination: "Gong /v2/workspaces endpoint returns the full collection of company workspaces in a single response; the API does not expose pagination on this endpoint."
       responses:
         "200":
           description: List of workspaces
@@ -952,7 +959,9 @@ paths:
       x-airbyte-action: list
       x-airbyte-record-extractor: $.callTranscripts
       x-airbyte-meta-extractor:
-        pagination: $.records
+        cursor: $.records.cursor
+        total_records: $.records.totalRecords
+        current_page_number: $.records.currentPageNumber
       requestBody:
         required: true
         content:
@@ -1000,7 +1009,9 @@ paths:
       x-airbyte-action: list
       x-airbyte-record-extractor: $.usersAggregateActivityStats
       x-airbyte-meta-extractor:
-        pagination: $.records
+        cursor: $.records.cursor
+        total_records: $.records.totalRecords
+        current_page_number: $.records.currentPageNumber
       requestBody:
         required: true
         content:
@@ -1045,7 +1056,9 @@ paths:
       x-airbyte-action: list
       x-airbyte-record-extractor: $.usersDetailedActivities
       x-airbyte-meta-extractor:
-        pagination: $.records
+        cursor: $.records.cursor
+        total_records: $.records.totalRecords
+        current_page_number: $.records.currentPageNumber
       requestBody:
         required: true
         content:
@@ -1090,7 +1103,9 @@ paths:
       x-airbyte-action: list
       x-airbyte-record-extractor: $.peopleInteractionStats
       x-airbyte-meta-extractor:
-        pagination: $.records
+        cursor: $.records.cursor
+        total_records: $.records.totalRecords
+        current_page_number: $.records.currentPageNumber
       requestBody:
         required: true
         content:
@@ -1134,6 +1149,7 @@ paths:
       x-airbyte-entity: settings_scorecards
       x-airbyte-action: list
       x-airbyte-record-extractor: $.scorecards
+      x-airbyte-no-pagination: "Gong /v2/settings/scorecards endpoint returns all scorecard configurations for the workspace in a single response; the API does not expose pagination on this endpoint."
       parameters:
         - name: workspaceId
           in: query
@@ -1159,6 +1175,7 @@ paths:
       x-airbyte-entity: settings_trackers
       x-airbyte-action: list
       x-airbyte-record-extractor: $.keywordTrackers
+      x-airbyte-no-pagination: "Gong /v2/settings/trackers endpoint returns all keyword tracker configurations for the workspace in a single response; the API does not expose pagination on this endpoint."
       parameters:
         - name: workspaceId
           in: query
@@ -1184,6 +1201,7 @@ paths:
       x-airbyte-entity: library_folders
       x-airbyte-action: list
       x-airbyte-record-extractor: $.folders
+      x-airbyte-no-pagination: "Gong /v2/library/folders endpoint returns the full folder tree for the workspace in a single response; the API does not expose pagination on this endpoint."
       parameters:
         - name: workspaceId
           in: query
@@ -1210,7 +1228,9 @@ paths:
       x-airbyte-action: list
       x-airbyte-record-extractor: $.calls
       x-airbyte-meta-extractor:
-        pagination: $.records
+        cursor: $.records.cursor
+        total_records: $.records.totalRecords
+        current_page_number: $.records.currentPageNumber
       parameters:
         - name: folderId
           in: query
@@ -1244,6 +1264,7 @@ paths:
       x-airbyte-entity: coaching
       x-airbyte-action: list
       x-airbyte-record-extractor: $.coachingData
+      x-airbyte-no-pagination: "Gong /v2/coaching endpoint returns an aggregated coaching-metrics payload for a manager and their direct reports over a date range; response is a bounded aggregate and the API does not expose pagination on this endpoint."
       parameters:
         - name: workspace-id
           in: query
@@ -1292,7 +1313,9 @@ paths:
       x-airbyte-action: list
       x-airbyte-record-extractor: $.answeredScorecards
       x-airbyte-meta-extractor:
-        pagination: $.records
+        cursor: $.records.cursor
+        total_records: $.records.totalRecords
+        current_page_number: $.records.currentPageNumber
       requestBody:
         required: true
         content:
@@ -1450,8 +1473,8 @@ components:
           type: integer
           description: Current page number
         cursor:
-          type: string
-          description: Cursor for next page
+          type: [string, "null"]
+          description: Opaque cursor to fetch the next page; absent when there are no more pages
 
     User:
       type: object

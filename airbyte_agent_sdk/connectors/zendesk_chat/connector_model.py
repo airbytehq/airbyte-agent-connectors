@@ -367,6 +367,7 @@ ZendeskChatConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$',
+                    no_pagination='The Zendesk Chat /agents endpoint returns the full set of configured agents in a single response; the API does not expose pagination parameters for this resource.',
                     preferred_for_check=True,
                 ),
                 Action.GET: EndpointDefinition(
@@ -714,6 +715,7 @@ ZendeskChatConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$[*][*]',
+                    no_pagination='The Zendesk Chat /bans endpoint returns the full set of visitor/IP bans in a single response; the API does not expose pagination parameters for this resource.',
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -1772,6 +1774,7 @@ ZendeskChatConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$',
+                    no_pagination='The Zendesk Chat /departments endpoint returns the full set of configured departments in a single response; the API does not expose pagination parameters for this resource.',
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -1889,6 +1892,7 @@ ZendeskChatConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$',
+                    no_pagination='The Zendesk Chat /goals endpoint returns the full set of configured goals in a single response; the API does not expose pagination parameters for this resource.',
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -1997,6 +2001,7 @@ ZendeskChatConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$',
+                    no_pagination='The Zendesk Chat /roles endpoint returns the full set of configured roles in a single response; the API does not expose pagination parameters for this resource.',
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -2168,6 +2173,7 @@ ZendeskChatConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$',
+                    no_pagination='The Zendesk Chat /shortcuts endpoint returns the full set of configured shortcuts in a single response; the API does not expose pagination parameters for this resource.',
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -2280,6 +2286,7 @@ ZendeskChatConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$',
+                    no_pagination='The Zendesk Chat /skills endpoint returns the full set of configured skills in a single response; the API does not expose pagination parameters for this resource.',
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -2385,6 +2392,7 @@ ZendeskChatConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$',
+                    no_pagination='The Zendesk Chat /triggers endpoint returns the full set of configured triggers in a single response; the API does not expose pagination parameters for this resource.',
                 ),
             },
             entity_schema={

@@ -109,6 +109,7 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
                             },
                         },
                     },
+                    no_pagination='Google Ads GET /v20/customers:listAccessibleCustomers returns the full list of customer resource names directly accessible to the authenticated user in a single response; the endpoint exposes no pagination cursor, offset, or next-page token.',
                     preferred_for_check=True,
                 ),
             },

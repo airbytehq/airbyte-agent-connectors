@@ -221,6 +221,7 @@ paths:
       operationId: listLabels
       x-airbyte-entity: labels
       x-airbyte-action: list
+      x-airbyte-no-pagination: "The Gmail API /users/{userId}/labels endpoint returns the full list of labels available to the authenticated user in a single response; it does not expose pageToken/pagination parameters."
       x-airbyte-record-extractor: $.labels
       responses:
         "200":

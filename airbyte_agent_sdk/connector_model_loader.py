@@ -502,6 +502,9 @@ def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel
             # Extract untested flag
             untested = getattr(operation, "x_airbyte_untested", None) or False
 
+            # Extract x-airbyte-no-pagination justification (list-action opt-out)
+            no_pagination = getattr(operation, "x_airbyte_no_pagination", None)
+
             # Extract preferred_for_check flag
             preferred_for_check = getattr(operation, "x_airbyte_preferred_for_check", None) or False
 
@@ -532,14 +535,11 @@ def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel
                 graphql_body=graphql_body,
                 file_field=file_field,
                 untested=untested,
+                no_pagination=no_pagination,
                 preferred_for_check=preferred_for_check,
                 upload_file_param=upload_file_param,
                 no_content_response=has_no_content_response,
-                ai_hints=(
-                    operation.x_airbyte_ai_hints.model_dump(by_alias=True)
-                    if operation.x_airbyte_ai_hints is not None
-                    else None
-                ),
+                ai_hints=(operation.x_airbyte_ai_hints.model_dump(by_alias=True) if operation.x_airbyte_ai_hints is not None else None),
             )
 
             # Add to entities map

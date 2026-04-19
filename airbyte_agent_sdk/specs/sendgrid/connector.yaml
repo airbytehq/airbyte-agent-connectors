@@ -414,6 +414,7 @@ paths:
       x-airbyte-action: list
       x-airbyte-record-extractor: $.result
       x-airbyte-meta-extractor:
+        next: $._metadata.next
         contact_count: $.contact_count
       responses:
         "200":
@@ -507,6 +508,7 @@ paths:
       operationId: listSegments
       x-airbyte-entity: segments
       x-airbyte-action: list
+      x-airbyte-no-pagination: "The SendGrid /v3/marketing/segments/2.0 endpoint returns the full list of segments in a single response; the API does not expose pagination parameters."
       x-airbyte-record-extractor: $.results
       responses:
         "200":
@@ -628,6 +630,8 @@ paths:
       operationId: listTemplates
       x-airbyte-entity: templates
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: $._metadata.next
       x-airbyte-preferred-for-check: true
       x-airbyte-record-extractor: $.templates
       parameters:
@@ -713,6 +717,8 @@ paths:
       operationId: listBounces
       x-airbyte-entity: bounces
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: "@link.next"
       parameters:
         - name: limit
           in: query
@@ -747,6 +753,8 @@ paths:
       operationId: listBlocks
       x-airbyte-entity: blocks
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: "@link.next"
       parameters:
         - name: limit
           in: query
@@ -781,6 +789,8 @@ paths:
       operationId: listSpamReports
       x-airbyte-entity: spam_reports
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: "@link.next"
       parameters:
         - name: limit
           in: query
@@ -815,6 +825,8 @@ paths:
       operationId: listInvalidEmails
       x-airbyte-entity: invalid_emails
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: "@link.next"
       parameters:
         - name: limit
           in: query
@@ -849,6 +861,8 @@ paths:
       operationId: listGlobalSuppressions
       x-airbyte-entity: global_suppressions
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: "@link.next"
       parameters:
         - name: limit
           in: query
@@ -883,6 +897,7 @@ paths:
       operationId: listSuppressionGroups
       x-airbyte-entity: suppression_groups
       x-airbyte-action: list
+      x-airbyte-no-pagination: "The SendGrid /v3/asm/groups endpoint returns the full list of suppression groups in a single response; the API does not expose pagination parameters."
       responses:
         "200":
           description: List of suppression groups
@@ -925,6 +940,8 @@ paths:
       operationId: listSuppressionGroupMembers
       x-airbyte-entity: suppression_group_members
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: "@link.next"
       parameters:
         - name: limit
           in: query
@@ -1103,6 +1120,13 @@ components:
         contact_count:
           type: integer
           description: Total number of contacts
+        _metadata:
+          type: object
+          properties:
+            next:
+              type:
+                - "null"
+                - string
 
     # ── List Schemas ────────────────────────────────────────────────────
     List:
@@ -1428,6 +1452,13 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Template"
+        _metadata:
+          type: object
+          properties:
+            next:
+              type:
+                - "null"
+                - string
 
     # ── Single Send Stats Schemas ───────────────────────────────────────
     SingleSendStats:

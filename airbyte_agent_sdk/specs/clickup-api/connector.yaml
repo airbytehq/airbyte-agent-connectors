@@ -146,6 +146,7 @@ paths:
       operationId: listTeams
       x-airbyte-entity: teams
       x-airbyte-action: list
+      x-airbyte-no-pagination: "ClickUp GET /api/v2/team returns all workspaces accessible to the authenticated user in a single response; no pagination cursor or offset is exposed."
       x-airbyte-record-extractor: $.teams
       responses:
         "200":
@@ -165,6 +166,7 @@ paths:
       operationId: listSpaces
       x-airbyte-entity: spaces
       x-airbyte-action: list
+      x-airbyte-no-pagination: "ClickUp GET /api/v2/team/{team_id}/space returns all spaces in the workspace in a single response; no pagination cursor or offset is exposed."
       x-airbyte-record-extractor: $.spaces
       parameters:
       - name: team_id
@@ -217,6 +219,7 @@ paths:
       operationId: listFolders
       x-airbyte-entity: folders
       x-airbyte-action: list
+      x-airbyte-no-pagination: "ClickUp GET /api/v2/space/{space_id}/folder returns all folders in the space in a single response; no pagination cursor or offset is exposed."
       x-airbyte-record-extractor: $.folders
       parameters:
       - name: space_id
@@ -269,6 +272,7 @@ paths:
       operationId: listLists
       x-airbyte-entity: lists
       x-airbyte-action: list
+      x-airbyte-no-pagination: "ClickUp GET /api/v2/folder/{folder_id}/list returns all lists in the folder in a single response; no pagination cursor or offset is exposed."
       x-airbyte-record-extractor: $.lists
       parameters:
       - name: folder_id
@@ -503,6 +507,7 @@ paths:
       operationId: listTaskComments
       x-airbyte-entity: comments
       x-airbyte-action: list
+      x-airbyte-no-pagination: "ClickUp GET /api/v2/task/{task_id}/comment returns all comments on the task in a single response; cursor-based pagination is only available on alternate start/start_id query params not modelled here."
       x-airbyte-record-extractor: $.comments
       parameters:
       - name: task_id
@@ -613,6 +618,7 @@ paths:
       operationId: listGoals
       x-airbyte-entity: goals
       x-airbyte-action: list
+      x-airbyte-no-pagination: "ClickUp GET /api/v2/team/{team_id}/goal returns all goals in the workspace in a single response; no pagination cursor or offset is exposed."
       x-airbyte-record-extractor: $.goals
       parameters:
       - name: team_id
@@ -667,6 +673,7 @@ paths:
       operationId: listWorkspaceViews
       x-airbyte-entity: views
       x-airbyte-action: list
+      x-airbyte-no-pagination: "ClickUp GET /api/v2/team/{team_id}/view returns all workspace-level views in a single response; no pagination cursor or offset is exposed."
       x-airbyte-record-extractor: $.views
       parameters:
       - name: team_id
@@ -754,6 +761,7 @@ paths:
       operationId: listTimeEntries
       x-airbyte-entity: time_tracking
       x-airbyte-action: list
+      x-airbyte-no-pagination: "ClickUp GET /api/v2/team/{team_id}/time_entries returns a bounded set of time entries scoped to the requested start_date/end_date window; no pagination cursor or offset is exposed."
       x-airbyte-record-extractor: $.data
       parameters:
       - name: team_id
@@ -829,6 +837,7 @@ paths:
       operationId: listTaskMembers
       x-airbyte-entity: members
       x-airbyte-action: list
+      x-airbyte-no-pagination: "ClickUp GET /api/v2/task/{task_id}/member returns all members assigned to the task in a single response; no pagination cursor or offset is exposed."
       x-airbyte-record-extractor: $.members
       parameters:
       - name: task_id

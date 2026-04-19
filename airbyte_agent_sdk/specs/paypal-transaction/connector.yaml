@@ -440,6 +440,7 @@ paths:
       operationId: listBalances
       x-airbyte-entity: balances
       x-airbyte-action: list
+      x-airbyte-no-pagination: "The PayPal /v1/reporting/balances endpoint returns the full list of account balances across currencies in a single response; no pagination parameters are exposed."
       x-airbyte-preferred-for-check: true
       parameters:
         - name: as_of_time
@@ -587,6 +588,8 @@ paths:
       operationId: listPayments
       x-airbyte-entity: list_payments
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next_id: $.next_id
       x-airbyte-record-extractor: $.payments
       parameters:
         - name: start_time
@@ -635,6 +638,8 @@ paths:
       operationId: listDisputes
       x-airbyte-entity: list_disputes
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: $.links
       x-airbyte-record-extractor: $.items
       parameters:
         - name: update_time_after
@@ -681,6 +686,8 @@ paths:
       operationId: listProducts
       x-airbyte-entity: list_products
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: $.links
       x-airbyte-record-extractor: $.products
       parameters:
         - name: page_size
@@ -745,6 +752,8 @@ paths:
       operationId: searchInvoices
       x-airbyte-entity: search_invoices
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: $.links
       x-airbyte-record-extractor: $.items
       parameters:
         - name: page_size
@@ -1736,3 +1745,15 @@ components:
         total_pages:
           type: integer
           description: Total number of pages.
+        links:
+          type: array
+          description: HATEOAS links for pagination.
+          items:
+            type: object
+            properties:
+              href:
+                type: string
+              rel:
+                type: string
+              method:
+                type: string

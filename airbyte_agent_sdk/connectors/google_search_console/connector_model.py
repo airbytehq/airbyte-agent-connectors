@@ -110,6 +110,7 @@ GoogleSearchConsoleConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.siteEntry',
+                    no_pagination='Google Search Console GET /sites returns all verified sites for the authenticated user in a single response; no pagination cursor, offset, or page token is exposed.',
                     preferred_for_check=True,
                 ),
                 Action.GET: EndpointDefinition(
@@ -238,6 +239,7 @@ GoogleSearchConsoleConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.sitemap',
+                    no_pagination='Google Search Console GET /sites/{siteUrl}/sitemaps returns all submitted sitemaps for the site in a single response; no pagination cursor, offset, or page token is exposed.',
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -486,6 +488,7 @@ GoogleSearchConsoleConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.rows',
                     meta_extractor={'response_aggregation_type': '$.responseAggregationType'},
+                    no_pagination='Google Search Console searchAnalytics/query uses request-body offset pagination (startRow + rowLimit); the response exposes no next-page cursor, offset, or has-more flag, so continuation is driven entirely by the caller.',
                 ),
             },
             relationships=[
@@ -618,6 +621,7 @@ GoogleSearchConsoleConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.rows',
                     meta_extractor={'response_aggregation_type': '$.responseAggregationType'},
+                    no_pagination='Google Search Console searchAnalytics/query uses request-body offset pagination (startRow + rowLimit); the response exposes no next-page cursor, offset, or has-more flag, so continuation is driven entirely by the caller.',
                 ),
             },
             relationships=[
@@ -750,6 +754,7 @@ GoogleSearchConsoleConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.rows',
                     meta_extractor={'response_aggregation_type': '$.responseAggregationType'},
+                    no_pagination='Google Search Console searchAnalytics/query uses request-body offset pagination (startRow + rowLimit); the response exposes no next-page cursor, offset, or has-more flag, so continuation is driven entirely by the caller.',
                 ),
             },
             relationships=[
@@ -882,6 +887,7 @@ GoogleSearchConsoleConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.rows',
                     meta_extractor={'response_aggregation_type': '$.responseAggregationType'},
+                    no_pagination='Google Search Console searchAnalytics/query uses request-body offset pagination (startRow + rowLimit); the response exposes no next-page cursor, offset, or has-more flag, so continuation is driven entirely by the caller.',
                 ),
             },
             relationships=[
@@ -1014,6 +1020,7 @@ GoogleSearchConsoleConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.rows',
                     meta_extractor={'response_aggregation_type': '$.responseAggregationType'},
+                    no_pagination='Google Search Console searchAnalytics/query uses request-body offset pagination (startRow + rowLimit); the response exposes no next-page cursor, offset, or has-more flag, so continuation is driven entirely by the caller.',
                 ),
             },
             relationships=[
@@ -1158,6 +1165,7 @@ GoogleSearchConsoleConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.rows',
                     meta_extractor={'response_aggregation_type': '$.responseAggregationType'},
+                    no_pagination='Google Search Console searchAnalytics/query uses request-body offset pagination (startRow + rowLimit); the response exposes no next-page cursor, offset, or has-more flag, so continuation is driven entirely by the caller.',
                 ),
             },
             relationships=[

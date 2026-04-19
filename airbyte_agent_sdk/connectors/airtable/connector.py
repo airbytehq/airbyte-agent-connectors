@@ -97,7 +97,7 @@ class AirtableConnector:
 
     connector_name = "airtable"
     connector_version = "1.0.8"
-    sdk_version = "0.1.28"
+    sdk_version = "0.1.29"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -618,7 +618,8 @@ class BasesQuery:
         result = await self._connector.execute("bases", "list", params)
         # Cast generic envelope to concrete typed result
         return BasesListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -826,7 +827,8 @@ class RecordsQuery:
         result = await self._connector.execute("records", "list", params)
         # Cast generic envelope to concrete typed result
         return RecordsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 

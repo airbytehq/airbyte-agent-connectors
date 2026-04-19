@@ -181,7 +181,7 @@ class SendgridConnector:
 
     connector_name = "sendgrid"
     connector_version = "1.0.3"
-    sdk_version = "0.1.28"
+    sdk_version = "0.1.29"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -1481,7 +1481,8 @@ class TemplatesQuery:
         result = await self._connector.execute("templates", "list", params)
         # Cast generic envelope to concrete typed result
         return TemplatesListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1702,7 +1703,8 @@ class BouncesQuery:
         result = await self._connector.execute("bounces", "list", params)
         # Cast generic envelope to concrete typed result
         return BouncesListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1800,7 +1802,8 @@ class BlocksQuery:
         result = await self._connector.execute("blocks", "list", params)
         # Cast generic envelope to concrete typed result
         return BlocksListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1898,7 +1901,8 @@ class SpamReportsQuery:
         result = await self._connector.execute("spam_reports", "list", params)
         # Cast generic envelope to concrete typed result
         return SpamReportsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1938,7 +1942,8 @@ class InvalidEmailsQuery:
         result = await self._connector.execute("invalid_emails", "list", params)
         # Cast generic envelope to concrete typed result
         return InvalidEmailsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -2035,7 +2040,8 @@ class GlobalSuppressionsQuery:
         result = await self._connector.execute("global_suppressions", "list", params)
         # Cast generic envelope to concrete typed result
         return GlobalSuppressionsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -2246,7 +2252,8 @@ class SuppressionGroupMembersQuery:
         result = await self._connector.execute("suppression_group_members", "list", params)
         # Cast generic envelope to concrete typed result
         return SuppressionGroupMembersListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 

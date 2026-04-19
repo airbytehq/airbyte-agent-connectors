@@ -420,7 +420,7 @@ IncidentIoConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.incidents',
-                    meta_extractor={'pagination': '$.pagination_meta'},
+                    meta_extractor={'next_cursor': '$.pagination_meta.after'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -1237,7 +1237,7 @@ IncidentIoConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.alerts',
-                    meta_extractor={'pagination': '$.pagination_meta'},
+                    meta_extractor={'next_cursor': '$.pagination_meta.after'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -1713,7 +1713,7 @@ IncidentIoConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.escalations',
-                    meta_extractor={'pagination': '$.pagination_meta'},
+                    meta_extractor={'next_cursor': '$.pagination_meta.after'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -2263,7 +2263,7 @@ IncidentIoConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.users',
-                    meta_extractor={'pagination': '$.pagination_meta'},
+                    meta_extractor={'next_cursor': '$.pagination_meta.after'},
                     preferred_for_check=True,
                 ),
                 Action.GET: EndpointDefinition(
@@ -2521,7 +2521,7 @@ IncidentIoConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.incident_updates',
-                    meta_extractor={'pagination': '$.pagination_meta'},
+                    meta_extractor={'next_cursor': '$.pagination_meta.after'},
                 ),
             },
             entity_schema={
@@ -2685,6 +2685,7 @@ IncidentIoConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.incident_roles',
+                    no_pagination='incident.io incident roles endpoint returns the full bounded configuration set; the API does not expose pagination on this endpoint.',
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -2841,6 +2842,7 @@ IncidentIoConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.incident_statuses',
+                    no_pagination='incident.io incident statuses endpoint returns the full bounded configuration set; the API does not expose pagination on this endpoint.',
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -2965,6 +2967,7 @@ IncidentIoConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.incident_timestamps',
+                    no_pagination='incident.io incident timestamps endpoint returns the full bounded configuration set; the API does not expose pagination on this endpoint.',
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -3069,6 +3072,7 @@ IncidentIoConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.severities',
+                    no_pagination='incident.io severities endpoint returns the full bounded configuration set; the API does not expose pagination on this endpoint.',
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -3201,6 +3205,7 @@ IncidentIoConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.custom_fields',
+                    no_pagination='incident.io custom fields endpoint returns the full bounded configuration set; the API does not expose pagination on this endpoint.',
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -3411,6 +3416,7 @@ IncidentIoConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.catalog_types',
+                    no_pagination='incident.io catalog types endpoint returns the full bounded collection; the API does not expose pagination on this endpoint.',
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -3791,7 +3797,7 @@ IncidentIoConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.schedules',
-                    meta_extractor={'pagination': '$.pagination_meta'},
+                    meta_extractor={'next_cursor': '$.pagination_meta.after'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',

@@ -1000,6 +1000,7 @@ paths:
       operationId: listAgentsOverview
       x-airbyte-entity: agents_overview
       x-airbyte-action: list
+      x-airbyte-no-pagination: "The Zendesk Talk /stats/agents_overview endpoint returns a single daily aggregate snapshot for all agents and does not expose pagination parameters."
       x-airbyte-record-extractor: $.agents_overview
       responses:
         "200":
@@ -1016,6 +1017,7 @@ paths:
       operationId: listAccountOverview
       x-airbyte-entity: account_overview
       x-airbyte-action: list
+      x-airbyte-no-pagination: "The Zendesk Talk /stats/account_overview endpoint returns a single daily aggregate snapshot for the account and does not expose pagination parameters."
       x-airbyte-record-extractor: $.account_overview
       responses:
         "200":
@@ -1032,6 +1034,7 @@ paths:
       operationId: listCurrentQueueActivity
       x-airbyte-entity: current_queue_activity
       x-airbyte-action: list
+      x-airbyte-no-pagination: "The Zendesk Talk /stats/current_queue_activity endpoint returns a single live snapshot of queue state and does not expose pagination parameters."
       x-airbyte-record-extractor: $.current_queue_activity
       responses:
         "200":

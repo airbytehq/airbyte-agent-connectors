@@ -231,6 +231,19 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `includeExtendedDataFields` | `string` | No | Whether to include extended data fields in the response |
 
 
+<details>
+<summary><b>Response Schema</b></summary>
+
+
+
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next_token` | `string \| null` |  |
+
+</details>
+
 ### Portfolios Get
 
 Retrieves a single portfolio by its ID using the v2 API.
@@ -322,6 +335,19 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `maxResults` | `integer` | No | Maximum number of results to return |
 | `nextToken` | `string` | No | Token for pagination |
 
+
+<details>
+<summary><b>Response Schema</b></summary>
+
+
+
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next_token` | `string \| null` |  |
+
+</details>
 
 ### Sponsored Product Campaigns Get
 
@@ -424,6 +450,19 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `nextToken` | `string` | No | Token for pagination |
 
 
+<details>
+<summary><b>Response Schema</b></summary>
+
+
+
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next_token` | `string \| null` |  |
+
+</details>
+
 ## Sponsored Product Keywords
 
 ### Sponsored Product Keywords List
@@ -460,6 +499,19 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `maxResults` | `integer` | No | Maximum number of results to return |
 | `nextToken` | `string` | No | Token for pagination |
 
+
+<details>
+<summary><b>Response Schema</b></summary>
+
+
+
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next_token` | `string \| null` |  |
+
+</details>
 
 ## Sponsored Product Product Ads
 
@@ -498,6 +550,19 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `nextToken` | `string` | No | Token for pagination |
 
 
+<details>
+<summary><b>Response Schema</b></summary>
+
+
+
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next_token` | `string \| null` |  |
+
+</details>
+
 ## Sponsored Product Targets
 
 ### Sponsored Product Targets List
@@ -534,6 +599,19 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `maxResults` | `integer` | No | Maximum number of results to return |
 | `nextToken` | `string` | No | Token for pagination |
 
+
+<details>
+<summary><b>Response Schema</b></summary>
+
+
+
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next_token` | `string \| null` |  |
+
+</details>
 
 ## Sponsored Product Negative Keywords
 
@@ -572,6 +650,19 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `nextToken` | `string` | No | Token for pagination |
 
 
+<details>
+<summary><b>Response Schema</b></summary>
+
+
+
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next_token` | `string \| null` |  |
+
+</details>
+
 ## Sponsored Product Negative Targets
 
 ### Sponsored Product Negative Targets List
@@ -608,6 +699,19 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `maxResults` | `integer` | No | Maximum number of results to return |
 | `nextToken` | `string` | No | Token for pagination |
 
+
+<details>
+<summary><b>Response Schema</b></summary>
+
+
+
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next_token` | `string \| null` |  |
+
+</details>
 
 ## Sponsored Brands Campaigns
 
@@ -646,6 +750,19 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `nextToken` | `string` | No | Token for pagination |
 
 
+<details>
+<summary><b>Response Schema</b></summary>
+
+
+
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next_token` | `string \| null` |  |
+
+</details>
+
 ## Sponsored Brands Ad Groups
 
 ### Sponsored Brands Ad Groups List
@@ -682,4 +799,17 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `maxResults` | `integer` | No | Maximum number of results to return |
 | `nextToken` | `string` | No | Token for pagination |
 
+
+<details>
+<summary><b>Response Schema</b></summary>
+
+
+
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next_token` | `string \| null` |  |
+
+</details>
 

@@ -174,6 +174,7 @@ AmazonAdsConnectorModel: ConnectorModel = ConnectorModel(
                             },
                         },
                     },
+                    no_pagination='The Amazon Ads /v2/profiles endpoint returns the full list of advertising profiles associated with the authenticated user as a single JSON array; there is no pagination cursor.',
                     preferred_for_check=True,
                 ),
                 Action.GET: EndpointDefinition(
@@ -465,6 +466,7 @@ AmazonAdsConnectorModel: ConnectorModel = ConnectorModel(
                             },
                         },
                     },
+                    meta_extractor={'next_token': '$.nextToken'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -900,6 +902,7 @@ AmazonAdsConnectorModel: ConnectorModel = ConnectorModel(
                             },
                         },
                     },
+                    meta_extractor={'next_token': '$.nextToken'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -1354,6 +1357,7 @@ AmazonAdsConnectorModel: ConnectorModel = ConnectorModel(
                             },
                         },
                     },
+                    meta_extractor={'next_token': '$.nextToken'},
                 ),
             },
             entity_schema={
@@ -1568,6 +1572,7 @@ AmazonAdsConnectorModel: ConnectorModel = ConnectorModel(
                             },
                         },
                     },
+                    meta_extractor={'next_token': '$.nextToken'},
                 ),
             },
             entity_schema={
@@ -1789,6 +1794,7 @@ AmazonAdsConnectorModel: ConnectorModel = ConnectorModel(
                             },
                         },
                     },
+                    meta_extractor={'next_token': '$.nextToken'},
                 ),
             },
             entity_schema={
@@ -2032,6 +2038,7 @@ AmazonAdsConnectorModel: ConnectorModel = ConnectorModel(
                             },
                         },
                     },
+                    meta_extractor={'next_token': '$.nextToken'},
                 ),
             },
             entity_schema={
@@ -2280,6 +2287,7 @@ AmazonAdsConnectorModel: ConnectorModel = ConnectorModel(
                             },
                         },
                     },
+                    meta_extractor={'next_token': '$.nextToken'},
                 ),
             },
             entity_schema={
@@ -2523,6 +2531,7 @@ AmazonAdsConnectorModel: ConnectorModel = ConnectorModel(
                             },
                         },
                     },
+                    meta_extractor={'next_token': '$.nextToken'},
                 ),
             },
             entity_schema={
@@ -2793,6 +2802,7 @@ AmazonAdsConnectorModel: ConnectorModel = ConnectorModel(
                             },
                         },
                     },
+                    meta_extractor={'next_token': '$.nextToken'},
                 ),
             },
             entity_schema={
@@ -3019,6 +3029,7 @@ AmazonAdsConnectorModel: ConnectorModel = ConnectorModel(
                             },
                         },
                     },
+                    meta_extractor={'next_token': '$.nextToken'},
                 ),
             },
             entity_schema={

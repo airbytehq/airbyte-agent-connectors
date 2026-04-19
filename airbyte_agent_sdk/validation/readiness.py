@@ -734,15 +734,9 @@ def _validate_entity_relationships(config: ConnectorModel, raw_spec: Dict[str, A
         src = raw_rel.get("source_entity", "")
         tgt = raw_rel.get("target_entity", "")
         if src and src not in entity_names:
-            warnings.append(
-                f"Relationship with source_entity '{src}' does not match any "
-                f"defined entity. It will be silently ignored at runtime."
-            )
+            warnings.append(f"Relationship with source_entity '{src}' does not match any " f"defined entity. It will be silently ignored at runtime.")
         if tgt and tgt not in entity_names:
-            warnings.append(
-                f"Relationship with target_entity '{tgt}' (from source_entity "
-                f"'{src}') does not match any defined entity."
-            )
+            warnings.append(f"Relationship with target_entity '{tgt}' (from source_entity " f"'{src}') does not match any defined entity.")
 
     # Check 2: Conflicting duplicate foreign_key declarations
     fk_map: Dict[str, List[Tuple[str, str, str]]] = {}
@@ -805,6 +799,110 @@ def _entity_has_ai_hints(entity: Any) -> bool:
 
     endpoints = getattr(entity, "endpoints", {}) or {}
     return any(getattr(endpoint, "ai_hints", None) for endpoint in endpoints.values())
+
+
+# Substrings that, when found in an x-airbyte-meta-extractor key or JSONPath value,
+# indicate the extractor is capturing pagination state (next cursor, next link, has-more flag, etc.)
+_PAGINATION_META_HINTS: tuple[str, ...] = (
+    "next",
+    "cursor",
+    "after",
+    "page",
+    "paging",
+    "offset",
+    "marker",
+    "has_more",
+    "hasmore",
+    "more",
+    "link",
+    "continuation",
+    "scroll",
+)
+
+
+def _meta_extractor_has_pagination_field(meta: Dict[str, str] | None) -> bool:
+    """Return True if a `x-airbyte-meta-extractor` mapping contains at least one next-page / cursor style field.
+
+    Heuristic: a field is considered pagination-related if either its key or the JSONPath
+    value it maps to contains a known pagination substring (case-insensitive), or if the
+    value extracts from the RFC 5988 `Link` header (`@link.next`) or a pagination-style
+    response header (`@header.x-next-*`).
+    """
+    if not meta:
+        return False
+
+    for key, value in meta.items():
+        key_l = (key or "").lower()
+        value_l = (value or "").lower()
+
+        if value_l.startswith("@link."):
+            return True
+        if value_l.startswith("@header.") and any(hint in value_l for hint in ("next", "cursor", "page", "after")):
+            return True
+        if any(hint in key_l for hint in _PAGINATION_META_HINTS):
+            return True
+        if any(hint in value_l for hint in _PAGINATION_META_HINTS):
+            return True
+
+    return False
+
+
+def _check_list_pagination_coverage(config: ConnectorModel) -> Tuple[List[str], List[str]]:
+    """Validate that every list operation declares pagination metadata.
+
+    Every `Action.LIST` endpoint must either:
+    1. declare `x-airbyte-meta-extractor` containing at least one pagination-style field
+       (e.g., `next_cursor`, `next_page`, `@link.next`), so the executor can continue
+       paginating; or
+    2. explicitly opt out via `x-airbyte-no-pagination: "<justification>"` with a
+       non-empty string explaining why the underlying API genuinely does not paginate.
+
+    Returns a tuple of (errors, warnings). Errors block readiness; warnings surface
+    opt-out justifications so they remain visible in the readiness report.
+    """
+    errors: List[str] = []
+    warnings: List[str] = []
+
+    for entity in config.entities:
+        for action in entity.actions:
+            if action != Action.LIST:
+                continue
+
+            endpoint = entity.endpoints.get(action)
+            if endpoint is None:
+                continue
+
+            no_pagination = getattr(endpoint, "no_pagination", None)
+            if no_pagination is not None:
+                justification = no_pagination.strip() if isinstance(no_pagination, str) else ""
+                if not justification:
+                    errors.append(
+                        f"{entity.name}.list: x-airbyte-no-pagination is set but empty. "
+                        "Provide a non-empty justification string explaining why the API does not paginate, "
+                        "or remove the extension and declare x-airbyte-meta-extractor with a next-page / cursor field."
+                    )
+                    continue
+                warnings.append(f"{entity.name}.list: pagination opt-out via x-airbyte-no-pagination: {justification}")
+                continue
+
+            meta = getattr(endpoint, "meta_extractor", None)
+            if not meta:
+                errors.append(
+                    f"{entity.name}.list: list operation is missing x-airbyte-meta-extractor. "
+                    "Declare a meta extractor with a next-page / cursor field "
+                    "(e.g., next_cursor, next_page, @link.next), or add x-airbyte-no-pagination "
+                    "with a non-empty justification if the API genuinely does not paginate."
+                )
+                continue
+
+            if not _meta_extractor_has_pagination_field(meta):
+                errors.append(
+                    f"{entity.name}.list: x-airbyte-meta-extractor does not contain a pagination field. "
+                    "Add a next-page / cursor field (e.g., next_cursor, next_page, has_more, @link.next), "
+                    "or add x-airbyte-no-pagination with a non-empty justification if the API does not paginate."
+                )
+
+    return errors, warnings
 
 
 def validate_connector_readiness(connector_dir: str | Path) -> Dict[str, Any]:
@@ -1169,6 +1267,12 @@ def validate_connector_readiness(connector_dir: str | Path) -> Dict[str, Any]:
     total_errors += len(relationship_coverage_errors)
     total_warnings += len(relationship_coverage_warnings)
 
+    # Check list operations declare pagination metadata (meta-extractor with next-page/cursor field)
+    # or explicitly opt out via x-airbyte-no-pagination with a justification.
+    list_pagination_errors, list_pagination_warnings = _check_list_pagination_coverage(config)
+    total_errors += len(list_pagination_errors)
+    total_warnings += len(list_pagination_warnings)
+
     # Update success criteria to include replication, cache, auth scheme, and coverage validation
     success = (
         operations_missing_cassettes == 0
@@ -1179,6 +1283,7 @@ def validate_connector_readiness(connector_dir: str | Path) -> Dict[str, Any]:
         and len(cache_errors) == 0
         and auth_valid
         and len(relationship_coverage_errors) == 0
+        and len(list_pagination_errors) == 0
     )
 
     # Check for preferred_for_check on at least one list operation
@@ -1203,9 +1308,11 @@ def validate_connector_readiness(connector_dir: str | Path) -> Dict[str, Any]:
     # Add cache presence errors to readiness_errors
     readiness_errors = list(relationship_coverage_errors)  # copy to avoid mutating original
     readiness_errors.extend(cache_presence_errors)
+    readiness_errors.extend(list_pagination_errors)
 
     # Add coverage warnings to readiness_warnings (errors already counted above)
     readiness_warnings.extend(relationship_coverage_warnings)
+    readiness_warnings.extend(list_pagination_warnings)
 
     # Check entity relationship target_entity references
     relationship_warnings = _check_entity_relationships(config)

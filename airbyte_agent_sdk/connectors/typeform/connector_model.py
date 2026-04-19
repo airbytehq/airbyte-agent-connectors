@@ -2481,6 +2481,7 @@ TypeformConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.items',
+                    no_pagination='Typeform GET /forms/{form_id}/webhooks returns all webhooks configured on the form in a single response; the endpoint exposes no pagination cursor, offset, or page parameter.',
                 ),
             },
             entity_schema={
@@ -2738,6 +2739,7 @@ TypeformConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-stream-name': 'images',
                         },
                     },
+                    no_pagination='Typeform GET /images returns the full list of images uploaded to the account as a flat array in a single response; the endpoint exposes no pagination cursor, offset, or page parameter.',
                 ),
             },
             entity_schema={

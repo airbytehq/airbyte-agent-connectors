@@ -83,6 +83,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 | Field Name | Type | Description |
 |------------|------|-------------|
+| `next` | `null \| string` |  |
 | `contact_count` | `integer` |  |
 
 </details>
@@ -956,6 +957,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `versions` | `null \| array` |  |
 
 
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next` | `null \| string` |  |
+
 </details>
 
 ### Templates Get
@@ -1241,6 +1248,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `status` | `string` |  |
 
 
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next` | `string` |  |
+
 </details>
 
 ### Bounces Context Store Search
@@ -1353,6 +1366,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `status` | `string` |  |
 
 
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next` | `string` |  |
+
 </details>
 
 ### Blocks Context Store Search
@@ -1464,6 +1483,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `ip` | `string` |  |
 
 
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next` | `string` |  |
+
 </details>
 
 ## Invalid Emails
@@ -1510,6 +1535,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `email` | `string` |  |
 | `reason` | `string` |  |
 
+
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next` | `string` |  |
 
 </details>
 
@@ -1618,6 +1649,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `created` | `integer` |  |
 | `email` | `string` |  |
 
+
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next` | `string` |  |
 
 </details>
 
@@ -1885,6 +1922,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `group_name` | `string` |  |
 | `created_at` | `integer` |  |
 
+
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next` | `string` |  |
 
 </details>
 

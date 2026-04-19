@@ -5577,6 +5577,7 @@ paths:
       operationId: listProfiles
       x-airbyte-entity: profiles
       x-airbyte-action: list
+      x-airbyte-no-pagination: "The Amazon Ads /v2/profiles endpoint returns the full list of advertising profiles associated with the authenticated user as a single JSON array; there is no pagination cursor."
       x-airbyte-preferred-for-check: true
       tags:
         - Profiles
@@ -5662,6 +5663,8 @@ paths:
       operationId: listPortfolios
       x-airbyte-entity: portfolios
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next_token: $.nextToken
       tags:
         - Portfolios
       parameters:
@@ -5762,6 +5765,8 @@ paths:
       operationId: listSponsoredProductCampaigns
       x-airbyte-entity: sponsored_product_campaigns
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next_token: $.nextToken
       tags:
         - Sponsored Product Campaigns
       parameters:
@@ -5883,6 +5888,8 @@ paths:
       operationId: listSponsoredProductAdGroups
       x-airbyte-entity: sponsored_product_ad_groups
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next_token: $.nextToken
       tags:
         - Sponsored Product Ad Groups
       parameters:
@@ -5962,6 +5969,8 @@ paths:
       operationId: listSponsoredProductKeywords
       x-airbyte-entity: sponsored_product_keywords
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next_token: $.nextToken
       tags:
         - Sponsored Product Keywords
       parameters:
@@ -6041,6 +6050,8 @@ paths:
       operationId: listSponsoredProductProductAds
       x-airbyte-entity: sponsored_product_product_ads
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next_token: $.nextToken
       tags:
         - Sponsored Product Ads
       parameters:
@@ -6120,6 +6131,8 @@ paths:
       operationId: listSponsoredProductTargets
       x-airbyte-entity: sponsored_product_targets
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next_token: $.nextToken
       tags:
         - Sponsored Product Targets
       parameters:
@@ -6199,6 +6212,8 @@ paths:
       operationId: listSponsoredProductNegativeKeywords
       x-airbyte-entity: sponsored_product_negative_keywords
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next_token: $.nextToken
       tags:
         - Sponsored Product Negative Keywords
       parameters:
@@ -6278,6 +6293,8 @@ paths:
       operationId: listSponsoredProductNegativeTargets
       x-airbyte-entity: sponsored_product_negative_targets
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next_token: $.nextToken
       tags:
         - Sponsored Product Negative Targets
       parameters:
@@ -6357,6 +6374,8 @@ paths:
       operationId: listSponsoredBrandsCampaigns
       x-airbyte-entity: sponsored_brands_campaigns
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next_token: $.nextToken
       tags:
         - Sponsored Brands Campaigns
       parameters:
@@ -6436,6 +6455,8 @@ paths:
       operationId: listSponsoredBrandsAdGroups
       x-airbyte-entity: sponsored_brands_ad_groups
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next_token: $.nextToken
       tags:
         - Sponsored Brands Ad Groups
       parameters:

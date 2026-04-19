@@ -1522,16 +1522,16 @@
         "description": "Retrieve all comments for a specific issue",
         "record_extractor": "$.comments",
         "meta_extractor": {
-          "startAt": "$.startAt",
-          "maxResults": "$.maxResults",
+          "next_offset": "$.startAt",
+          "max_results": "$.maxResults",
           "total": "$.total"
         },
         "needs_envelope": true,
         "record_type": "list[IssueComment]",
         "meta_fields": [
           {
-            "name": "startAt",
-            "python_name": "start_at",
+            "name": "next_offset",
+            "python_name": "next_offset",
             "type": "int",
             "schema": {
               "type": "integer",
@@ -1539,7 +1539,7 @@
             }
           },
           {
-            "name": "maxResults",
+            "name": "max_results",
             "python_name": "max_results",
             "type": "int",
             "schema": {
@@ -1997,16 +1997,16 @@
         "description": "Retrieve all worklogs for a specific issue",
         "record_extractor": "$.worklogs",
         "meta_extractor": {
-          "startAt": "$.startAt",
-          "maxResults": "$.maxResults",
+          "next_offset": "$.startAt",
+          "max_results": "$.maxResults",
           "total": "$.total"
         },
         "needs_envelope": true,
         "record_type": "list[Worklog]",
         "meta_fields": [
           {
-            "name": "startAt",
-            "python_name": "start_at",
+            "name": "next_offset",
+            "python_name": "next_offset",
             "type": "int",
             "schema": {
               "type": "integer",
@@ -2014,7 +2014,7 @@
             }
           },
           {
-            "name": "maxResults",
+            "name": "max_results",
             "python_name": "max_results",
             "type": "int",
             "schema": {
