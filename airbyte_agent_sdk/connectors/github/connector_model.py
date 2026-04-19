@@ -184,6 +184,7 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                         'default_fields': 'id name nameWithOwner description url createdAt updatedAt pushedAt forkCount stargazerCount isPrivate isFork isArchived isTemplate hasIssuesEnabled hasWikiEnabled primaryLanguage { name } licenseInfo { name spdxId } owner { login avatarUrl } defaultBranchRef { name } repositoryTopics(first: 10) { nodes { topic { name } } }',
                     },
                     record_extractor='$.data.user.repositories.nodes',
+                    meta_extractor={'has_next_page': '$.data.user.repositories.pageInfo.hasNextPage', 'end_cursor': '$.data.user.repositories.pageInfo.endCursor'},
                     preferred_for_check=True,
                 ),
                 Action.API_SEARCH: EndpointDefinition(
@@ -251,6 +252,11 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                         'default_fields': 'id name nameWithOwner description url createdAt updatedAt pushedAt forkCount stargazerCount isPrivate isFork isArchived isTemplate hasIssuesEnabled hasWikiEnabled primaryLanguage { name } licenseInfo { name spdxId } owner { login avatarUrl } defaultBranchRef { name } repositoryTopics(first: 10) { nodes { topic { name } } }',
                     },
                     record_extractor='$.data.search.nodes',
+                    meta_extractor={
+                        'has_next_page': '$.data.search.pageInfo.hasNextPage',
+                        'end_cursor': '$.data.search.pageInfo.endCursor',
+                        'total_count': '$.data.search.repositoryCount',
+                    },
                 ),
             },
         ),
@@ -326,6 +332,7 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                         'default_fields': 'id name nameWithOwner description url createdAt updatedAt pushedAt forkCount stargazerCount isPrivate isFork isArchived isTemplate hasIssuesEnabled hasWikiEnabled primaryLanguage { name } licenseInfo { name spdxId } owner { login avatarUrl } defaultBranchRef { name } repositoryTopics(first: 10) { nodes { topic { name } } }',
                     },
                     record_extractor='$.data.organization.repositories.nodes',
+                    meta_extractor={'has_next_page': '$.data.organization.repositories.pageInfo.hasNextPage', 'end_cursor': '$.data.organization.repositories.pageInfo.endCursor'},
                 ),
             },
         ),
@@ -404,6 +411,7 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                         'default_fields': 'name prefix target { ... on Commit { oid commitUrl message author { name email date } } } associatedPullRequests(first: 1) { totalCount }',
                     },
                     record_extractor='$.data.repository.refs.nodes',
+                    meta_extractor={'has_next_page': '$.data.repository.refs.pageInfo.hasNextPage', 'end_cursor': '$.data.repository.refs.pageInfo.endCursor'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='POST',
@@ -543,6 +551,7 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                         'default_fields': 'oid message messageHeadline committedDate author { name email } additions deletions changedFiles parents(first: 5) { nodes { oid } }',
                     },
                     record_extractor='$.data.repository.defaultBranchRef.target.history.nodes',
+                    meta_extractor={'has_next_page': '$.data.repository.defaultBranchRef.target.history.pageInfo.hasNextPage', 'end_cursor': '$.data.repository.defaultBranchRef.target.history.pageInfo.endCursor'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='POST',
@@ -669,6 +678,7 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                         'default_fields': 'id databaseId name tagName description publishedAt createdAt isPrerelease isDraft author { login avatarUrl } releaseAssets(first: 10) { nodes { name downloadUrl size } }',
                     },
                     record_extractor='$.data.repository.releases.nodes',
+                    meta_extractor={'has_next_page': '$.data.repository.releases.pageInfo.hasNextPage', 'end_cursor': '$.data.repository.releases.pageInfo.endCursor'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='POST',
@@ -804,6 +814,7 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                         'default_fields': 'id databaseId number title body state stateReason createdAt updatedAt closedAt author { login avatarUrl } assignees(first: 10) { nodes { login } } labels(first: 10) { nodes { name color } } milestone { title number } url locked comments { totalCount }',
                     },
                     record_extractor='$.data.repository.issues.nodes',
+                    meta_extractor={'has_next_page': '$.data.repository.issues.pageInfo.hasNextPage', 'end_cursor': '$.data.repository.issues.pageInfo.endCursor'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='POST',
@@ -917,6 +928,11 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                         'default_fields': 'id databaseId number title body state stateReason createdAt updatedAt closedAt author { login avatarUrl } assignees(first: 10) { nodes { login } } labels(first: 10) { nodes { name color } } milestone { title number } url locked comments { totalCount }',
                     },
                     record_extractor='$.data.search.nodes',
+                    meta_extractor={
+                        'has_next_page': '$.data.search.pageInfo.hasNextPage',
+                        'end_cursor': '$.data.search.pageInfo.endCursor',
+                        'total_count': '$.data.search.issueCount',
+                    },
                 ),
                 Action.CREATE: EndpointDefinition(
                     method='POST',
@@ -1490,6 +1506,7 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                         'default_fields': 'id databaseId body bodyHTML createdAt updatedAt author { login avatarUrl } url isMinimized minimizedReason',
                     },
                     record_extractor='$.data.repository.issue.comments.nodes',
+                    meta_extractor={'has_next_page': '$.data.repository.issue.comments.pageInfo.hasNextPage', 'end_cursor': '$.data.repository.issue.comments.pageInfo.endCursor'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='POST',
@@ -1756,6 +1773,7 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                         'default_fields': 'id databaseId number title body state isDraft createdAt updatedAt closedAt mergedAt author { login avatarUrl } baseRefName headRefName mergeable merged mergedBy { login } additions deletions changedFiles commits { totalCount } comments { totalCount } reviews { totalCount } reviewRequests { totalCount } assignees(first: 10) { nodes { login } } labels(first: 10) { nodes { name color } } url',
                     },
                     record_extractor='$.data.repository.pullRequests.nodes',
+                    meta_extractor={'has_next_page': '$.data.repository.pullRequests.pageInfo.hasNextPage', 'end_cursor': '$.data.repository.pullRequests.pageInfo.endCursor'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='POST',
@@ -1869,6 +1887,11 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                         'default_fields': 'id databaseId number title body state isDraft createdAt updatedAt closedAt mergedAt author { login avatarUrl } baseRefName headRefName mergeable merged mergedBy { login } additions deletions changedFiles commits { totalCount } comments { totalCount } reviews { totalCount } reviewRequests { totalCount } assignees(first: 10) { nodes { login } } labels(first: 10) { nodes { name color } } url',
                     },
                     record_extractor='$.data.search.nodes',
+                    meta_extractor={
+                        'has_next_page': '$.data.search.pageInfo.hasNextPage',
+                        'end_cursor': '$.data.search.pageInfo.endCursor',
+                        'total_count': '$.data.search.issueCount',
+                    },
                 ),
             },
         ),
@@ -1955,6 +1978,7 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                         'default_fields': 'id databaseId state body submittedAt author { login avatarUrl } comments { totalCount }',
                     },
                     record_extractor='$.data.repository.pullRequest.reviews.nodes',
+                    meta_extractor={'has_next_page': '$.data.repository.pullRequest.reviews.pageInfo.hasNextPage', 'end_cursor': '$.data.repository.pullRequest.reviews.pageInfo.endCursor'},
                 ),
             },
         ),
@@ -2041,6 +2065,7 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                         'default_fields': 'id databaseId body bodyHTML createdAt updatedAt author { login avatarUrl } url isMinimized minimizedReason',
                     },
                     record_extractor='$.data.repository.pullRequest.comments.nodes',
+                    meta_extractor={'has_next_page': '$.data.repository.pullRequest.comments.pageInfo.hasNextPage', 'end_cursor': '$.data.repository.pullRequest.comments.pageInfo.endCursor'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='POST',
@@ -2151,6 +2176,7 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                         'default_fields': 'id name color description createdAt url issues { totalCount } pullRequests { totalCount }',
                     },
                     record_extractor='$.data.repository.labels.nodes',
+                    meta_extractor={'has_next_page': '$.data.repository.labels.pageInfo.hasNextPage', 'end_cursor': '$.data.repository.labels.pageInfo.endCursor'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='POST',
@@ -2280,6 +2306,7 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                         'default_fields': 'id number title description state dueOn closedAt createdAt updatedAt progressPercentage issues { totalCount } pullRequests { totalCount }',
                     },
                     record_extractor='$.data.repository.milestones.nodes',
+                    meta_extractor={'has_next_page': '$.data.repository.milestones.pageInfo.hasNextPage', 'end_cursor': '$.data.repository.milestones.pageInfo.endCursor'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='POST',
@@ -2435,6 +2462,7 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                         'default_fields': 'id databaseId login name description email websiteUrl url avatarUrl createdAt updatedAt location isVerified repositories { totalCount } membersWithRole { totalCount } teams { totalCount }',
                     },
                     record_extractor='$.data.user.organizations.nodes',
+                    meta_extractor={'has_next_page': '$.data.user.organizations.pageInfo.hasNextPage', 'end_cursor': '$.data.user.organizations.pageInfo.endCursor'},
                 ),
             },
         ),
@@ -2542,6 +2570,7 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                         'default_fields': 'id databaseId login name email bio company location websiteUrl twitterUsername url avatarUrl createdAt updatedAt isHireable followers { totalCount } following { totalCount } repositories { totalCount } starredRepositories { totalCount } organizations { totalCount }',
                     },
                     record_extractor='$.data.organization.membersWithRole.nodes',
+                    meta_extractor={'has_next_page': '$.data.organization.membersWithRole.pageInfo.hasNextPage', 'end_cursor': '$.data.organization.membersWithRole.pageInfo.endCursor'},
                 ),
                 Action.API_SEARCH: EndpointDefinition(
                     method='POST',
@@ -2607,6 +2636,11 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                         'default_fields': 'id databaseId login name email bio company location websiteUrl twitterUsername url avatarUrl createdAt updatedAt isHireable followers { totalCount } following { totalCount } repositories { totalCount } starredRepositories { totalCount } organizations { totalCount }',
                     },
                     record_extractor='$.data.search.nodes',
+                    meta_extractor={
+                        'has_next_page': '$.data.search.pageInfo.hasNextPage',
+                        'end_cursor': '$.data.search.pageInfo.endCursor',
+                        'total_count': '$.data.search.userCount',
+                    },
                 ),
             },
         ),
@@ -2682,6 +2716,7 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                         'default_fields': 'id databaseId slug name description privacy url avatarUrl createdAt updatedAt parentTeam { slug name } members { totalCount } repositories { totalCount }',
                     },
                     record_extractor='$.data.organization.teams.nodes',
+                    meta_extractor={'has_next_page': '$.data.organization.teams.pageInfo.hasNextPage', 'end_cursor': '$.data.organization.teams.pageInfo.endCursor'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='POST',
@@ -2798,6 +2833,7 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                         'default_fields': 'name prefix target { oid ... on Commit { commitUrl message } ... on Tag { tagger { name email date } message } }',
                     },
                     record_extractor='$.data.repository.refs.nodes',
+                    meta_extractor={'has_next_page': '$.data.repository.refs.pageInfo.hasNextPage', 'end_cursor': '$.data.repository.refs.pageInfo.endCursor'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='POST',
@@ -2922,6 +2958,7 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                         'default_fields': 'starredAt node { id login name avatarUrl url }',
                     },
                     record_extractor='$.data.repository.stargazers.edges',
+                    meta_extractor={'has_next_page': '$.data.repository.stargazers.pageInfo.hasNextPage', 'end_cursor': '$.data.repository.stargazers.pageInfo.endCursor'},
                 ),
             },
         ),
@@ -3023,6 +3060,7 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                         'default_fields': 'id name nameWithOwner description url createdAt updatedAt pushedAt forkCount stargazerCount isPrivate isFork isArchived isTemplate hasIssuesEnabled hasWikiEnabled primaryLanguage { name } licenseInfo { name spdxId } owner { login avatarUrl } defaultBranchRef { name } repositoryTopics(first: 10) { nodes { topic { name } } }',
                     },
                     record_extractor='$.data.viewer.repositories.nodes',
+                    meta_extractor={'has_next_page': '$.data.viewer.repositories.pageInfo.hasNextPage', 'end_cursor': '$.data.viewer.repositories.pageInfo.endCursor'},
                 ),
             },
         ),
@@ -3098,6 +3136,7 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                         'default_fields': 'id number title shortDescription url closed public createdAt updatedAt creator { login }',
                     },
                     record_extractor='$.data.organization.projectsV2.nodes',
+                    meta_extractor={'has_next_page': '$.data.organization.projectsV2.pageInfo.hasNextPage', 'end_cursor': '$.data.organization.projectsV2.pageInfo.endCursor'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='POST',
@@ -3219,6 +3258,7 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                         'default_fields': 'id\ntype\ncreatedAt\nupdatedAt\nisArchived\ncontent {\n  ... on Issue {\n    id\n    title\n    number\n    state\n    url\n    createdAt\n    updatedAt\n    author { login }\n    assignees(first: 5) { nodes { login } }\n    labels(first: 10) { nodes { name color } }\n    repository { nameWithOwner }\n  }\n  ... on PullRequest {\n    id\n    title\n    number\n    state\n    url\n    createdAt\n    updatedAt\n    author { login }\n    assignees(first: 5) { nodes { login } }\n    labels(first: 10) { nodes { name color } }\n    repository { nameWithOwner }\n  }\n  ... on DraftIssue {\n    id\n    title\n    body\n    createdAt\n    updatedAt\n    creator { login }\n  }\n}\nfieldValues(first: 20) {\n  nodes {\n    ... on ProjectV2ItemFieldSingleSelectValue {\n      name\n      field { ... on ProjectV2SingleSelectField { name } }\n    }\n    ... on ProjectV2ItemFieldTextValue {\n      text\n      field { ... on ProjectV2Field { name } }\n    }\n    ... on ProjectV2ItemFieldDateValue {\n      date\n      field { ... on ProjectV2Field { name } }\n    }\n    ... on ProjectV2ItemFieldNumberValue {\n      number\n      field { ... on ProjectV2Field { name } }\n    }\n    ... on ProjectV2ItemFieldIterationValue {\n      title\n      startDate\n      duration\n      field { ... on ProjectV2IterationField { name } }\n    }\n    ... on ProjectV2ItemFieldLabelValue {\n      labels(first: 10) { nodes { name color } }\n      field { ... on ProjectV2Field { name } }\n    }\n    ... on ProjectV2ItemFieldUserValue {\n      users(first: 5) { nodes { login } }\n      field { ... on ProjectV2Field { name } }\n    }\n    ... on ProjectV2ItemFieldRepositoryValue {\n      repository { nameWithOwner }\n      field { ... on ProjectV2Field { name } }\n    }\n    ... on ProjectV2ItemFieldMilestoneValue {\n      milestone { title number }\n      field { ... on ProjectV2Field { name } }\n    }\n  }\n}\n',
                     },
                     record_extractor='$.data.organization.projectV2.items.nodes',
+                    meta_extractor={'has_next_page': '$.data.organization.projectV2.items.pageInfo.hasNextPage', 'end_cursor': '$.data.organization.projectV2.items.pageInfo.endCursor'},
                 ),
             },
         ),
@@ -3303,6 +3343,7 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                         'default_fields': 'id databaseId number title body bodyHTML createdAt updatedAt closedAt closed locked activeLockReason stateReason upvoteCount url isAnswered answerChosenAt author { login avatarUrl } category { id name slug emoji isAnswerable } answerChosenBy { login } answer { id body author { login } createdAt } labels(first: 10) { nodes { name color } } comments { totalCount }',
                     },
                     record_extractor='$.data.repository.discussions.nodes',
+                    meta_extractor={'has_next_page': '$.data.repository.discussions.pageInfo.hasNextPage', 'end_cursor': '$.data.repository.discussions.pageInfo.endCursor'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='POST',
@@ -3416,6 +3457,11 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                         'default_fields': 'id databaseId number title body createdAt updatedAt closedAt closed locked stateReason upvoteCount url isAnswered answerChosenAt author { login avatarUrl } category { id name slug emoji isAnswerable } answerChosenBy { login } answer { id body author { login } createdAt } labels(first: 10) { nodes { name color } } comments { totalCount }',
                     },
                     record_extractor='$.data.search.nodes',
+                    meta_extractor={
+                        'has_next_page': '$.data.search.pageInfo.hasNextPage',
+                        'end_cursor': '$.data.search.pageInfo.endCursor',
+                        'total_count': '$.data.search.discussionCount',
+                    },
                 ),
             },
         ),

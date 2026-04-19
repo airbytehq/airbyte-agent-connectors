@@ -201,7 +201,7 @@ class GithubConnector:
 
     connector_name = "github"
     connector_version = "0.1.18"
-    sdk_version = "0.1.16"
+    sdk_version = "0.1.17"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -1362,7 +1362,8 @@ If not provided, uses default fields.
         result = await self._connector.execute("repositories", "list", params)
         # Cast generic envelope to concrete typed result
         return RepositoriesListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1403,7 +1404,8 @@ If not provided, uses default fields.
         result = await self._connector.execute("repositories", "api_search", params)
         # Cast generic envelope to concrete typed result
         return RepositoriesApiSearchResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1503,7 +1505,8 @@ class OrgRepositoriesQuery:
         result = await self._connector.execute("org_repositories", "list", params)
         # Cast generic envelope to concrete typed result
         return OrgRepositoriesListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1552,7 +1555,8 @@ class BranchesQuery:
         result = await self._connector.execute("branches", "list", params)
         # Cast generic envelope to concrete typed result
         return BranchesListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1692,7 +1696,8 @@ class CommitsQuery:
         result = await self._connector.execute("commits", "list", params)
         # Cast generic envelope to concrete typed result
         return CommitsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1775,7 +1780,8 @@ class ReleasesQuery:
         result = await self._connector.execute("releases", "list", params)
         # Cast generic envelope to concrete typed result
         return ReleasesListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1861,7 +1867,8 @@ class IssuesQuery:
         result = await self._connector.execute("issues", "list", params)
         # Cast generic envelope to concrete typed result
         return IssuesListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1932,7 +1939,8 @@ class IssuesQuery:
         result = await self._connector.execute("issues", "api_search", params)
         # Cast generic envelope to concrete typed result
         return IssuesApiSearchResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -2176,7 +2184,8 @@ Any user with read access can create a comment.
         result = await self._connector.execute("comments", "list", params)
         # Cast generic envelope to concrete typed result
         return CommentsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -2363,7 +2372,8 @@ To open or update a pull request in a public repository, you must have write acc
         result = await self._connector.execute("pull_requests", "list", params)
         # Cast generic envelope to concrete typed result
         return PullRequestsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -2434,7 +2444,8 @@ To open or update a pull request in a public repository, you must have write acc
         result = await self._connector.execute("pull_requests", "api_search", params)
         # Cast generic envelope to concrete typed result
         return PullRequestsApiSearchResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -2540,7 +2551,8 @@ class ReviewsQuery:
         result = await self._connector.execute("reviews", "list", params)
         # Cast generic envelope to concrete typed result
         return ReviewsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -2592,7 +2604,8 @@ class PrCommentsQuery:
         result = await self._connector.execute("pr_comments", "list", params)
         # Cast generic envelope to concrete typed result
         return PrCommentsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -2674,7 +2687,8 @@ class LabelsQuery:
         result = await self._connector.execute("labels", "list", params)
         # Cast generic envelope to concrete typed result
         return LabelsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -2760,7 +2774,8 @@ class MilestonesQuery:
         result = await self._connector.execute("milestones", "list", params)
         # Cast generic envelope to concrete typed result
         return MilestonesListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -2868,7 +2883,8 @@ class OrganizationsQuery:
         result = await self._connector.execute("organizations", "list", params)
         # Cast generic envelope to concrete typed result
         return OrganizationsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -2996,7 +3012,8 @@ class UsersQuery:
         result = await self._connector.execute("users", "list", params)
         # Cast generic envelope to concrete typed result
         return UsersListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -3033,7 +3050,8 @@ class UsersQuery:
         result = await self._connector.execute("users", "api_search", params)
         # Cast generic envelope to concrete typed result
         return UsersApiSearchResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -3133,7 +3151,8 @@ class TeamsQuery:
         result = await self._connector.execute("teams", "list", params)
         # Cast generic envelope to concrete typed result
         return TeamsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -3267,7 +3286,8 @@ class TagsQuery:
         result = await self._connector.execute("tags", "list", params)
         # Cast generic envelope to concrete typed result
         return TagsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -3404,7 +3424,8 @@ class StargazersQuery:
         result = await self._connector.execute("stargazers", "list", params)
         # Cast generic envelope to concrete typed result
         return StargazersListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -3541,7 +3562,8 @@ automatically lists repositories for the current authenticated user.
         result = await self._connector.execute("viewer_repositories", "list", params)
         # Cast generic envelope to concrete typed result
         return ViewerRepositoriesListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -3589,7 +3611,8 @@ Projects V2 are the new project boards that replaced classic projects.
         result = await self._connector.execute("projects", "list", params)
         # Cast generic envelope to concrete typed result
         return ProjectsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -3671,7 +3694,8 @@ Each item includes its field values like Status, Priority, etc.
         result = await self._connector.execute("project_items", "list", params)
         # Cast generic envelope to concrete typed result
         return ProjectItemsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -3726,7 +3750,8 @@ class DiscussionsQuery:
         result = await self._connector.execute("discussions", "list", params)
         # Cast generic envelope to concrete typed result
         return DiscussionsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -3797,7 +3822,8 @@ class DiscussionsQuery:
         result = await self._connector.execute("discussions", "api_search", params)
         # Cast generic envelope to concrete typed result
         return DiscussionsApiSearchResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 

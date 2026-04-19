@@ -847,6 +847,9 @@ paths:
       x-airbyte-path-override:
         path: /graphql
       x-airbyte-record-extractor: $.data.user.repositories.nodes
+      x-airbyte-meta-extractor:
+        has_next_page: $.data.user.repositories.pageInfo.hasNextPage
+        end_cursor: $.data.user.repositories.pageInfo.endCursor
       tags:
         - Repositories
       parameters:
@@ -962,6 +965,10 @@ paths:
       x-airbyte-path-override:
         path: /graphql
       x-airbyte-record-extractor: $.data.search.nodes
+      x-airbyte-meta-extractor:
+        has_next_page: $.data.search.pageInfo.hasNextPage
+        end_cursor: $.data.search.pageInfo.endCursor
+        total_count: $.data.search.repositoryCount
       tags:
         - Search
       parameters:
@@ -1097,6 +1104,9 @@ paths:
       x-airbyte-path-override:
         path: /graphql
       x-airbyte-record-extractor: $.data.organization.repositories.nodes
+      x-airbyte-meta-extractor:
+        has_next_page: $.data.organization.repositories.pageInfo.hasNextPage
+        end_cursor: $.data.organization.repositories.pageInfo.endCursor
       tags:
         - Repositories
       parameters:
@@ -1198,6 +1208,9 @@ paths:
       x-airbyte-path-override:
         path: /graphql
       x-airbyte-record-extractor: $.data.repository.refs.nodes
+      x-airbyte-meta-extractor:
+        has_next_page: $.data.repository.refs.pageInfo.hasNextPage
+        end_cursor: $.data.repository.refs.pageInfo.endCursor
       tags:
         - Branches
       parameters:
@@ -1383,6 +1396,9 @@ paths:
       x-airbyte-path-override:
         path: /graphql
       x-airbyte-record-extractor: $.data.repository.defaultBranchRef.target.history.nodes
+      x-airbyte-meta-extractor:
+        has_next_page: $.data.repository.defaultBranchRef.target.history.pageInfo.hasNextPage
+        end_cursor: $.data.repository.defaultBranchRef.target.history.pageInfo.endCursor
       tags:
         - Commits
       parameters:
@@ -1589,6 +1605,9 @@ paths:
       x-airbyte-path-override:
         path: /graphql
       x-airbyte-record-extractor: $.data.repository.releases.nodes
+      x-airbyte-meta-extractor:
+        has_next_page: $.data.repository.releases.pageInfo.hasNextPage
+        end_cursor: $.data.repository.releases.pageInfo.endCursor
       tags:
         - Releases
       parameters:
@@ -1774,6 +1793,9 @@ paths:
       x-airbyte-path-override:
         path: /graphql
       x-airbyte-record-extractor: $.data.repository.issues.nodes
+      x-airbyte-meta-extractor:
+        has_next_page: $.data.repository.issues.pageInfo.hasNextPage
+        end_cursor: $.data.repository.issues.pageInfo.endCursor
       tags:
         - Issues
       parameters:
@@ -1968,6 +1990,10 @@ paths:
       x-airbyte-path-override:
         path: /graphql
       x-airbyte-record-extractor: $.data.search.nodes
+      x-airbyte-meta-extractor:
+        has_next_page: $.data.search.pageInfo.hasNextPage
+        end_cursor: $.data.search.pageInfo.endCursor
+        total_count: $.data.search.issueCount
       tags:
         - Issues
       parameters:
@@ -2295,6 +2321,9 @@ paths:
       x-airbyte-path-override:
         path: /graphql
       x-airbyte-record-extractor: $.data.repository.pullRequests.nodes
+      x-airbyte-meta-extractor:
+        has_next_page: $.data.repository.pullRequests.pageInfo.hasNextPage
+        end_cursor: $.data.repository.pullRequests.pageInfo.endCursor
       tags:
         - PullRequests
       parameters:
@@ -2489,6 +2518,10 @@ paths:
       x-airbyte-path-override:
         path: /graphql
       x-airbyte-record-extractor: $.data.search.nodes
+      x-airbyte-meta-extractor:
+        has_next_page: $.data.search.pageInfo.hasNextPage
+        end_cursor: $.data.search.pageInfo.endCursor
+        total_count: $.data.search.issueCount
       tags:
         - PullRequests
       parameters:
@@ -2613,6 +2646,9 @@ paths:
       x-airbyte-path-override:
         path: /graphql
       x-airbyte-record-extractor: $.data.repository.pullRequest.reviews.nodes
+      x-airbyte-meta-extractor:
+        has_next_page: $.data.repository.pullRequest.reviews.pageInfo.hasNextPage
+        end_cursor: $.data.repository.pullRequest.reviews.pageInfo.endCursor
       tags:
         - Reviews
       parameters:
@@ -2733,6 +2769,9 @@ paths:
       x-airbyte-path-override:
         path: /graphql
       x-airbyte-record-extractor: $.data.repository.issue.comments.nodes
+      x-airbyte-meta-extractor:
+        has_next_page: $.data.repository.issue.comments.pageInfo.hasNextPage
+        end_cursor: $.data.repository.issue.comments.pageInfo.endCursor
       tags:
         - Comments
       parameters:
@@ -2918,6 +2957,9 @@ paths:
       x-airbyte-path-override:
         path: /graphql
       x-airbyte-record-extractor: $.data.repository.pullRequest.comments.nodes
+      x-airbyte-meta-extractor:
+        has_next_page: $.data.repository.pullRequest.comments.pageInfo.hasNextPage
+        end_cursor: $.data.repository.pullRequest.comments.pageInfo.endCursor
       tags:
         - Comments
       parameters:
@@ -3103,6 +3145,9 @@ paths:
       x-airbyte-path-override:
         path: /graphql
       x-airbyte-record-extractor: $.data.repository.labels.nodes
+      x-airbyte-meta-extractor:
+        has_next_page: $.data.repository.labels.pageInfo.hasNextPage
+        end_cursor: $.data.repository.labels.pageInfo.endCursor
       tags:
         - Labels
       parameters:
@@ -3288,6 +3333,9 @@ paths:
       x-airbyte-path-override:
         path: /graphql
       x-airbyte-record-extractor: $.data.repository.milestones.nodes
+      x-airbyte-meta-extractor:
+        has_next_page: $.data.repository.milestones.pageInfo.hasNextPage
+        end_cursor: $.data.repository.milestones.pageInfo.endCursor
       tags:
         - Milestones
       parameters:
@@ -3541,6 +3589,9 @@ paths:
       x-airbyte-path-override:
         path: /graphql
       x-airbyte-record-extractor: $.data.user.organizations.nodes
+      x-airbyte-meta-extractor:
+        has_next_page: $.data.user.organizations.pageInfo.hasNextPage
+        end_cursor: $.data.user.organizations.pageInfo.endCursor
       tags:
         - Organizations
       parameters:
@@ -3700,6 +3751,9 @@ paths:
       x-airbyte-path-override:
         path: /graphql
       x-airbyte-record-extractor: $.data.organization.membersWithRole.nodes
+      x-airbyte-meta-extractor:
+        has_next_page: $.data.organization.membersWithRole.pageInfo.hasNextPage
+        end_cursor: $.data.organization.membersWithRole.pageInfo.endCursor
       tags:
         - Users
       parameters:
@@ -3800,6 +3854,10 @@ paths:
       x-airbyte-path-override:
         path: /graphql
       x-airbyte-record-extractor: $.data.search.nodes
+      x-airbyte-meta-extractor:
+        has_next_page: $.data.search.pageInfo.hasNextPage
+        end_cursor: $.data.search.pageInfo.endCursor
+        total_count: $.data.search.userCount
       tags:
         - Users
       parameters:
@@ -3921,6 +3979,9 @@ paths:
       x-airbyte-path-override:
         path: /graphql
       x-airbyte-record-extractor: $.data.organization.teams.nodes
+      x-airbyte-meta-extractor:
+        has_next_page: $.data.organization.teams.pageInfo.hasNextPage
+        end_cursor: $.data.organization.teams.pageInfo.endCursor
       tags:
         - Teams
       parameters:
@@ -4092,6 +4153,9 @@ paths:
       x-airbyte-path-override:
         path: /graphql
       x-airbyte-record-extractor: $.data.repository.refs.nodes
+      x-airbyte-meta-extractor:
+        has_next_page: $.data.repository.refs.pageInfo.hasNextPage
+        end_cursor: $.data.repository.refs.pageInfo.endCursor
       tags:
         - Tags
       parameters:
@@ -4277,6 +4341,9 @@ paths:
       x-airbyte-path-override:
         path: /graphql
       x-airbyte-record-extractor: $.data.repository.stargazers.edges
+      x-airbyte-meta-extractor:
+        has_next_page: $.data.repository.stargazers.pageInfo.hasNextPage
+        end_cursor: $.data.repository.stargazers.pageInfo.endCursor
       tags:
         - Stargazers
       parameters:
@@ -4438,6 +4505,9 @@ paths:
       x-airbyte-path-override:
         path: /graphql
       x-airbyte-record-extractor: $.data.viewer.repositories.nodes
+      x-airbyte-meta-extractor:
+        has_next_page: $.data.viewer.repositories.pageInfo.hasNextPage
+        end_cursor: $.data.viewer.repositories.pageInfo.endCursor
       tags:
         - Viewer
       parameters:
@@ -4535,6 +4605,9 @@ paths:
       x-airbyte-path-override:
         path: /graphql
       x-airbyte-record-extractor: $.data.organization.projectsV2.nodes
+      x-airbyte-meta-extractor:
+        has_next_page: $.data.organization.projectsV2.pageInfo.hasNextPage
+        end_cursor: $.data.organization.projectsV2.pageInfo.endCursor
       tags:
         - Projects
       parameters:
@@ -4708,6 +4781,9 @@ paths:
       x-airbyte-path-override:
         path: /graphql
       x-airbyte-record-extractor: $.data.organization.projectV2.items.nodes
+      x-airbyte-meta-extractor:
+        has_next_page: $.data.organization.projectV2.items.pageInfo.hasNextPage
+        end_cursor: $.data.organization.projectV2.items.pageInfo.endCursor
       tags:
         - Projects
       parameters:
@@ -4904,6 +4980,9 @@ paths:
       x-airbyte-path-override:
         path: /graphql
       x-airbyte-record-extractor: $.data.repository.discussions.nodes
+      x-airbyte-meta-extractor:
+        has_next_page: $.data.repository.discussions.pageInfo.hasNextPage
+        end_cursor: $.data.repository.discussions.pageInfo.endCursor
       tags:
         - Discussions
       parameters:
@@ -5105,6 +5184,10 @@ paths:
       x-airbyte-path-override:
         path: /graphql
       x-airbyte-record-extractor: $.data.search.nodes
+      x-airbyte-meta-extractor:
+        has_next_page: $.data.search.pageInfo.hasNextPage
+        end_cursor: $.data.search.pageInfo.endCursor
+        total_count: $.data.search.discussionCount
       tags:
         - Discussions
       parameters:
