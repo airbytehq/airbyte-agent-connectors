@@ -2070,6 +2070,8 @@ paths:
       x-airbyte-entity: candidates
       x-airbyte-action: list
       x-airbyte-preferred-for-check: true
+      x-airbyte-meta-extractor:
+        next: "@link.next"
       parameters:
         - name: per_page
           in: query
@@ -2133,6 +2135,8 @@ paths:
       operationId: listApplications
       x-airbyte-entity: applications
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: "@link.next"
       parameters:
         - name: per_page
           in: query
@@ -2225,6 +2229,8 @@ paths:
       operationId: listJobs
       x-airbyte-entity: jobs
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: "@link.next"
       parameters:
         - name: per_page
           in: query
@@ -2289,6 +2295,8 @@ paths:
       operationId: listOffers
       x-airbyte-entity: offers
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: "@link.next"
       parameters:
         - name: per_page
           in: query
@@ -2370,6 +2378,8 @@ paths:
       operationId: listUsers
       x-airbyte-entity: users
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: "@link.next"
       parameters:
         - name: per_page
           in: query
@@ -2456,6 +2466,8 @@ paths:
       operationId: listDepartments
       x-airbyte-entity: departments
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: "@link.next"
       parameters:
         - name: per_page
           in: query
@@ -2518,6 +2530,8 @@ paths:
       operationId: listOffices
       x-airbyte-entity: offices
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: "@link.next"
       parameters:
         - name: per_page
           in: query
@@ -2580,6 +2594,8 @@ paths:
       operationId: listJobPosts
       x-airbyte-entity: job_posts
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: "@link.next"
       parameters:
         - name: per_page
           in: query
@@ -2653,6 +2669,8 @@ paths:
       operationId: listSources
       x-airbyte-entity: sources
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: "@link.next"
       parameters:
         - name: per_page
           in: query
@@ -2689,6 +2707,8 @@ paths:
       operationId: listScheduledInterviews
       x-airbyte-entity: scheduled_interviews
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: "@link.next"
       parameters:
         - name: per_page
           in: query

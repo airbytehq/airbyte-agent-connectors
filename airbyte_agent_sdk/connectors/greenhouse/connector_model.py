@@ -194,6 +194,7 @@ GreenhouseConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-entity-name': 'candidates',
                         },
                     },
+                    meta_extractor={'next': '@link.next'},
                     preferred_for_check=True,
                 ),
                 Action.GET: EndpointDefinition(
@@ -555,6 +556,7 @@ GreenhouseConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-entity-name': 'applications',
                         },
                     },
+                    meta_extractor={'next': '@link.next'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -827,6 +829,7 @@ GreenhouseConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-entity-name': 'jobs',
                         },
                     },
+                    meta_extractor={'next': '@link.next'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -1032,6 +1035,7 @@ GreenhouseConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-entity-name': 'offers',
                         },
                     },
+                    meta_extractor={'next': '@link.next'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -1218,6 +1222,7 @@ GreenhouseConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-entity-name': 'users',
                         },
                     },
+                    meta_extractor={'next': '@link.next'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -1391,6 +1396,7 @@ GreenhouseConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-entity-name': 'departments',
                         },
                     },
+                    meta_extractor={'next': '@link.next'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -1530,6 +1536,7 @@ GreenhouseConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-entity-name': 'offices',
                         },
                     },
+                    meta_extractor={'next': '@link.next'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -1703,6 +1710,7 @@ GreenhouseConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-entity-name': 'job_posts',
                         },
                     },
+                    meta_extractor={'next': '@link.next'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -1855,6 +1863,7 @@ GreenhouseConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-entity-name': 'sources',
                         },
                     },
+                    meta_extractor={'next': '@link.next'},
                 ),
             },
             entity_schema={
@@ -1964,6 +1973,7 @@ GreenhouseConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-entity-name': 'scheduled_interviews',
                         },
                     },
+                    meta_extractor={'next': '@link.next'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',

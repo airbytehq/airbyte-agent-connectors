@@ -156,7 +156,7 @@ class GreenhouseConnector:
 
     connector_name = "greenhouse"
     connector_version = "0.1.8"
-    sdk_version = "0.1.24"
+    sdk_version = "0.1.25"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -859,7 +859,8 @@ class CandidatesQuery:
         result = await self._connector.execute("candidates", "list", params)
         # Cast generic envelope to concrete typed result
         return CandidatesListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1019,7 +1020,8 @@ class ApplicationsQuery:
         result = await self._connector.execute("applications", "list", params)
         # Cast generic envelope to concrete typed result
         return ApplicationsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1158,7 +1160,8 @@ class JobsQuery:
         result = await self._connector.execute("jobs", "list", params)
         # Cast generic envelope to concrete typed result
         return JobsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1304,7 +1307,8 @@ class OffersQuery:
         result = await self._connector.execute("offers", "list", params)
         # Cast generic envelope to concrete typed result
         return OffersListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1449,7 +1453,8 @@ class UsersQuery:
         result = await self._connector.execute("users", "list", params)
         # Cast generic envelope to concrete typed result
         return UsersListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1582,7 +1587,8 @@ class DepartmentsQuery:
         result = await self._connector.execute("departments", "list", params)
         # Cast generic envelope to concrete typed result
         return DepartmentsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1708,7 +1714,8 @@ class OfficesQuery:
         result = await self._connector.execute("offices", "list", params)
         # Cast generic envelope to concrete typed result
         return OfficesListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1842,7 +1849,8 @@ class JobPostsQuery:
         result = await self._connector.execute("job_posts", "list", params)
         # Cast generic envelope to concrete typed result
         return JobPostsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1976,7 +1984,8 @@ class SourcesQuery:
         result = await self._connector.execute("sources", "list", params)
         # Cast generic envelope to concrete typed result
         return SourcesListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -2091,7 +2100,8 @@ class ScheduledInterviewsQuery:
         result = await self._connector.execute("scheduled_interviews", "list", params)
         # Cast generic envelope to concrete typed result
         return ScheduledInterviewsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 

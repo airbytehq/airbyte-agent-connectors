@@ -73,10 +73,22 @@
     "response_type": "CandidatesListResult",
     "description": "Returns a paginated list of all candidates in the organization",
     "record_extractor": "$",
-    "meta_extractor": null,
+    "meta_extractor": {
+      "next": "@link.next"
+    },
     "needs_envelope": true,
     "record_type": "list[Candidate]",
-    "meta_fields": null,
+    "meta_fields": [
+      {
+        "name": "next",
+        "python_name": "next",
+        "type": "str | None",
+        "schema": {
+          "type": "string",
+          "nullable": true
+        }
+      }
+    ],
     "is_download": false
   },
   "entities_grouped": {
@@ -120,10 +132,22 @@
         "response_type": "CandidatesListResult",
         "description": "Returns a paginated list of all candidates in the organization",
         "record_extractor": "$",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "@link.next"
+        },
         "needs_envelope": true,
         "record_type": "list[Candidate]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
         "is_download": false
       },
       {
@@ -258,10 +282,22 @@
         "response_type": "ApplicationsListResult",
         "description": "Returns a paginated list of all applications",
         "record_extractor": "$",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "@link.next"
+        },
         "needs_envelope": true,
         "record_type": "list[Application]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
         "is_download": false
       },
       {
@@ -333,10 +369,22 @@
         "response_type": "JobsListResult",
         "description": "Returns a paginated list of all jobs in the organization",
         "record_extractor": "$",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "@link.next"
+        },
         "needs_envelope": true,
         "record_type": "list[Job]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
         "is_download": false
       },
       {
@@ -444,10 +492,22 @@
         "response_type": "OffersListResult",
         "description": "Returns a paginated list of all offers",
         "record_extractor": "$",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "@link.next"
+        },
         "needs_envelope": true,
         "record_type": "list[Offer]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
         "is_download": false
       },
       {
@@ -567,10 +627,22 @@
         "response_type": "UsersListResult",
         "description": "Returns a paginated list of all users",
         "record_extractor": "$",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "@link.next"
+        },
         "needs_envelope": true,
         "record_type": "list[User]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
         "is_download": false
       },
       {
@@ -642,10 +714,22 @@
         "response_type": "DepartmentsListResult",
         "description": "Returns a paginated list of all departments",
         "record_extractor": "$",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "@link.next"
+        },
         "needs_envelope": true,
         "record_type": "list[Department]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
         "is_download": false
       },
       {
@@ -717,10 +801,22 @@
         "response_type": "OfficesListResult",
         "description": "Returns a paginated list of all offices",
         "record_extractor": "$",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "@link.next"
+        },
         "needs_envelope": true,
         "record_type": "list[Office]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
         "is_download": false
       },
       {
@@ -814,10 +910,22 @@
         "response_type": "JobPostsListResult",
         "description": "Returns a paginated list of all job posts",
         "record_extractor": "$",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "@link.next"
+        },
         "needs_envelope": true,
         "record_type": "list[JobPost]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
         "is_download": false
       },
       {
@@ -889,10 +997,22 @@
         "response_type": "SourcesListResult",
         "description": "Returns a paginated list of all sources",
         "record_extractor": "$",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "@link.next"
+        },
         "needs_envelope": true,
         "record_type": "list[Source]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
         "is_download": false
       }
     ],
@@ -1008,10 +1128,22 @@
         "response_type": "ScheduledInterviewsListResult",
         "description": "Returns a paginated list of all scheduled interviews",
         "record_extractor": "$",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "@link.next"
+        },
         "needs_envelope": true,
         "record_type": "list[ScheduledInterview]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
         "is_download": false
       },
       {

@@ -216,6 +216,66 @@ class ScheduledInterview(BaseModel):
 # ===== METADATA TYPE DEFINITIONS (PYDANTIC) =====
 # Meta types for operations that extract metadata (e.g., pagination info)
 
+class CandidatesListResultMeta(BaseModel):
+    """Metadata for candidates.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next: Union[str | None, Any] = Field(default=None)
+
+class ApplicationsListResultMeta(BaseModel):
+    """Metadata for applications.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next: Union[str | None, Any] = Field(default=None)
+
+class JobsListResultMeta(BaseModel):
+    """Metadata for jobs.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next: Union[str | None, Any] = Field(default=None)
+
+class OffersListResultMeta(BaseModel):
+    """Metadata for offers.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next: Union[str | None, Any] = Field(default=None)
+
+class UsersListResultMeta(BaseModel):
+    """Metadata for users.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next: Union[str | None, Any] = Field(default=None)
+
+class DepartmentsListResultMeta(BaseModel):
+    """Metadata for departments.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next: Union[str | None, Any] = Field(default=None)
+
+class OfficesListResultMeta(BaseModel):
+    """Metadata for offices.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next: Union[str | None, Any] = Field(default=None)
+
+class JobPostsListResultMeta(BaseModel):
+    """Metadata for job_posts.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next: Union[str | None, Any] = Field(default=None)
+
+class SourcesListResultMeta(BaseModel):
+    """Metadata for sources.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next: Union[str | None, Any] = Field(default=None)
+
+class ScheduledInterviewsListResultMeta(BaseModel):
+    """Metadata for scheduled_interviews.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next: Union[str | None, Any] = Field(default=None)
+
 # ===== CHECK RESULT MODEL =====
 
 class GreenhouseCheckResult(BaseModel):
@@ -633,33 +693,33 @@ UsersSearchResult = AirbyteSearchResult[UsersSearchData]
 # Concrete type aliases for each operation result.
 # These provide simpler, more readable type annotations than using the generic forms.
 
-CandidatesListResult = GreenhouseExecuteResult[list[Candidate]]
-"""Result type for candidates.list operation."""
+CandidatesListResult = GreenhouseExecuteResultWithMeta[list[Candidate], CandidatesListResultMeta]
+"""Result type for candidates.list operation with data and metadata."""
 
-ApplicationsListResult = GreenhouseExecuteResult[list[Application]]
-"""Result type for applications.list operation."""
+ApplicationsListResult = GreenhouseExecuteResultWithMeta[list[Application], ApplicationsListResultMeta]
+"""Result type for applications.list operation with data and metadata."""
 
-JobsListResult = GreenhouseExecuteResult[list[Job]]
-"""Result type for jobs.list operation."""
+JobsListResult = GreenhouseExecuteResultWithMeta[list[Job], JobsListResultMeta]
+"""Result type for jobs.list operation with data and metadata."""
 
-OffersListResult = GreenhouseExecuteResult[list[Offer]]
-"""Result type for offers.list operation."""
+OffersListResult = GreenhouseExecuteResultWithMeta[list[Offer], OffersListResultMeta]
+"""Result type for offers.list operation with data and metadata."""
 
-UsersListResult = GreenhouseExecuteResult[list[User]]
-"""Result type for users.list operation."""
+UsersListResult = GreenhouseExecuteResultWithMeta[list[User], UsersListResultMeta]
+"""Result type for users.list operation with data and metadata."""
 
-DepartmentsListResult = GreenhouseExecuteResult[list[Department]]
-"""Result type for departments.list operation."""
+DepartmentsListResult = GreenhouseExecuteResultWithMeta[list[Department], DepartmentsListResultMeta]
+"""Result type for departments.list operation with data and metadata."""
 
-OfficesListResult = GreenhouseExecuteResult[list[Office]]
-"""Result type for offices.list operation."""
+OfficesListResult = GreenhouseExecuteResultWithMeta[list[Office], OfficesListResultMeta]
+"""Result type for offices.list operation with data and metadata."""
 
-JobPostsListResult = GreenhouseExecuteResult[list[JobPost]]
-"""Result type for job_posts.list operation."""
+JobPostsListResult = GreenhouseExecuteResultWithMeta[list[JobPost], JobPostsListResultMeta]
+"""Result type for job_posts.list operation with data and metadata."""
 
-SourcesListResult = GreenhouseExecuteResult[list[Source]]
-"""Result type for sources.list operation."""
+SourcesListResult = GreenhouseExecuteResultWithMeta[list[Source], SourcesListResultMeta]
+"""Result type for sources.list operation with data and metadata."""
 
-ScheduledInterviewsListResult = GreenhouseExecuteResult[list[ScheduledInterview]]
-"""Result type for scheduled_interviews.list operation."""
+ScheduledInterviewsListResult = GreenhouseExecuteResultWithMeta[list[ScheduledInterview], ScheduledInterviewsListResultMeta]
+"""Result type for scheduled_interviews.list operation with data and metadata."""
 

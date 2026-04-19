@@ -99,13 +99,8 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 | Field Name | Type | Description |
 |------------|------|-------------|
-| `pagination` | `object` |  |
-| `pagination.per_page` | `integer` |  |
-| `pagination.count` | `integer` |  |
-| `pagination.page` | `integer` |  |
-| `pagination.more_records` | `boolean` |  |
-| `pagination.sort_by` | `string` |  |
-| `pagination.sort_order` | `string` |  |
+| `more_records` | `boolean` |  |
+| `page` | `integer` |  |
 
 </details>
 
@@ -323,13 +318,8 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 | Field Name | Type | Description |
 |------------|------|-------------|
-| `pagination` | `object` |  |
-| `pagination.per_page` | `integer` |  |
-| `pagination.count` | `integer` |  |
-| `pagination.page` | `integer` |  |
-| `pagination.more_records` | `boolean` |  |
-| `pagination.sort_by` | `string` |  |
-| `pagination.sort_order` | `string` |  |
+| `more_records` | `boolean` |  |
+| `page` | `integer` |  |
 
 </details>
 
@@ -539,13 +529,8 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 | Field Name | Type | Description |
 |------------|------|-------------|
-| `pagination` | `object` |  |
-| `pagination.per_page` | `integer` |  |
-| `pagination.count` | `integer` |  |
-| `pagination.page` | `integer` |  |
-| `pagination.more_records` | `boolean` |  |
-| `pagination.sort_by` | `string` |  |
-| `pagination.sort_order` | `string` |  |
+| `more_records` | `boolean` |  |
+| `page` | `integer` |  |
 
 </details>
 
@@ -743,13 +728,8 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 | Field Name | Type | Description |
 |------------|------|-------------|
-| `pagination` | `object` |  |
-| `pagination.per_page` | `integer` |  |
-| `pagination.count` | `integer` |  |
-| `pagination.page` | `integer` |  |
-| `pagination.more_records` | `boolean` |  |
-| `pagination.sort_by` | `string` |  |
-| `pagination.sort_order` | `string` |  |
+| `more_records` | `boolean` |  |
+| `page` | `integer` |  |
 
 </details>
 
@@ -935,13 +915,8 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 | Field Name | Type | Description |
 |------------|------|-------------|
-| `pagination` | `object` |  |
-| `pagination.per_page` | `integer` |  |
-| `pagination.count` | `integer` |  |
-| `pagination.page` | `integer` |  |
-| `pagination.more_records` | `boolean` |  |
-| `pagination.sort_by` | `string` |  |
-| `pagination.sort_order` | `string` |  |
+| `more_records` | `boolean` |  |
+| `page` | `integer` |  |
 
 </details>
 
@@ -1131,13 +1106,8 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 | Field Name | Type | Description |
 |------------|------|-------------|
-| `pagination` | `object` |  |
-| `pagination.per_page` | `integer` |  |
-| `pagination.count` | `integer` |  |
-| `pagination.page` | `integer` |  |
-| `pagination.more_records` | `boolean` |  |
-| `pagination.sort_by` | `string` |  |
-| `pagination.sort_order` | `string` |  |
+| `more_records` | `boolean` |  |
+| `page` | `integer` |  |
 
 </details>
 
@@ -1319,13 +1289,8 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 | Field Name | Type | Description |
 |------------|------|-------------|
-| `pagination` | `object` |  |
-| `pagination.per_page` | `integer` |  |
-| `pagination.count` | `integer` |  |
-| `pagination.page` | `integer` |  |
-| `pagination.more_records` | `boolean` |  |
-| `pagination.sort_by` | `string` |  |
-| `pagination.sort_order` | `string` |  |
+| `more_records` | `boolean` |  |
+| `page` | `integer` |  |
 
 </details>
 
@@ -1506,13 +1471,8 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 | Field Name | Type | Description |
 |------------|------|-------------|
-| `pagination` | `object` |  |
-| `pagination.per_page` | `integer` |  |
-| `pagination.count` | `integer` |  |
-| `pagination.page` | `integer` |  |
-| `pagination.more_records` | `boolean` |  |
-| `pagination.sort_by` | `string` |  |
-| `pagination.sort_order` | `string` |  |
+| `more_records` | `boolean` |  |
+| `page` | `integer` |  |
 
 </details>
 
@@ -1708,13 +1668,8 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 | Field Name | Type | Description |
 |------------|------|-------------|
-| `pagination` | `object` |  |
-| `pagination.per_page` | `integer` |  |
-| `pagination.count` | `integer` |  |
-| `pagination.page` | `integer` |  |
-| `pagination.more_records` | `boolean` |  |
-| `pagination.sort_by` | `string` |  |
-| `pagination.sort_order` | `string` |  |
+| `more_records` | `boolean` |  |
+| `page` | `integer` |  |
 
 </details>
 
@@ -1921,13 +1876,8 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 | Field Name | Type | Description |
 |------------|------|-------------|
-| `pagination` | `object` |  |
-| `pagination.per_page` | `integer` |  |
-| `pagination.count` | `integer` |  |
-| `pagination.page` | `integer` |  |
-| `pagination.more_records` | `boolean` |  |
-| `pagination.sort_by` | `string` |  |
-| `pagination.sort_order` | `string` |  |
+| `more_records` | `boolean` |  |
+| `page` | `integer` |  |
 
 </details>
 
@@ -2134,13 +2084,8 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 | Field Name | Type | Description |
 |------------|------|-------------|
-| `pagination` | `object` |  |
-| `pagination.per_page` | `integer` |  |
-| `pagination.count` | `integer` |  |
-| `pagination.page` | `integer` |  |
-| `pagination.more_records` | `boolean` |  |
-| `pagination.sort_by` | `string` |  |
-| `pagination.sort_order` | `string` |  |
+| `more_records` | `boolean` |  |
+| `page` | `integer` |  |
 
 </details>
 

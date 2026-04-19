@@ -284,7 +284,7 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.data',
-                    meta_extractor={'pagination': '$.info'},
+                    meta_extractor={'more_records': '$.info.more_records', 'page': '$.info.page'},
                     preferred_for_check=True,
                 ),
                 Action.GET: EndpointDefinition(
@@ -831,7 +831,7 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.data',
-                    meta_extractor={'pagination': '$.info'},
+                    meta_extractor={'more_records': '$.info.more_records', 'page': '$.info.page'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -1397,7 +1397,7 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.data',
-                    meta_extractor={'pagination': '$.info'},
+                    meta_extractor={'more_records': '$.info.more_records', 'page': '$.info.page'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -1952,7 +1952,7 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.data',
-                    meta_extractor={'pagination': '$.info'},
+                    meta_extractor={'more_records': '$.info.more_records', 'page': '$.info.page'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -2405,7 +2405,7 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.data',
-                    meta_extractor={'pagination': '$.info'},
+                    meta_extractor={'more_records': '$.info.more_records', 'page': '$.info.page'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -2821,7 +2821,7 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.data',
-                    meta_extractor={'pagination': '$.info'},
+                    meta_extractor={'more_records': '$.info.more_records', 'page': '$.info.page'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -3270,7 +3270,7 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.data',
-                    meta_extractor={'pagination': '$.info'},
+                    meta_extractor={'more_records': '$.info.more_records', 'page': '$.info.page'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -3733,7 +3733,7 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.data',
-                    meta_extractor={'pagination': '$.info'},
+                    meta_extractor={'more_records': '$.info.more_records', 'page': '$.info.page'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -4212,7 +4212,7 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.data',
-                    meta_extractor={'pagination': '$.info'},
+                    meta_extractor={'more_records': '$.info.more_records', 'page': '$.info.page'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -4780,7 +4780,7 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.data',
-                    meta_extractor={'pagination': '$.info'},
+                    meta_extractor={'more_records': '$.info.more_records', 'page': '$.info.page'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -5417,7 +5417,7 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.data',
-                    meta_extractor={'pagination': '$.info'},
+                    meta_extractor={'more_records': '$.info.more_records', 'page': '$.info.page'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',

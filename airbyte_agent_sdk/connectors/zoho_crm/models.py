@@ -502,67 +502,78 @@ class LeadsListResultMeta(BaseModel):
     """Metadata for leads.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    pagination: Union[PaginationInfo, Any] = Field(default=None)
+    more_records: Union[bool, Any] = Field(default=None)
+    page: Union[int, Any] = Field(default=None)
 
 class ContactsListResultMeta(BaseModel):
     """Metadata for contacts.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    pagination: Union[PaginationInfo, Any] = Field(default=None)
+    more_records: Union[bool, Any] = Field(default=None)
+    page: Union[int, Any] = Field(default=None)
 
 class AccountsListResultMeta(BaseModel):
     """Metadata for accounts.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    pagination: Union[PaginationInfo, Any] = Field(default=None)
+    more_records: Union[bool, Any] = Field(default=None)
+    page: Union[int, Any] = Field(default=None)
 
 class DealsListResultMeta(BaseModel):
     """Metadata for deals.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    pagination: Union[PaginationInfo, Any] = Field(default=None)
+    more_records: Union[bool, Any] = Field(default=None)
+    page: Union[int, Any] = Field(default=None)
 
 class CampaignsListResultMeta(BaseModel):
     """Metadata for campaigns.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    pagination: Union[PaginationInfo, Any] = Field(default=None)
+    more_records: Union[bool, Any] = Field(default=None)
+    page: Union[int, Any] = Field(default=None)
 
 class TasksListResultMeta(BaseModel):
     """Metadata for tasks.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    pagination: Union[PaginationInfo, Any] = Field(default=None)
+    more_records: Union[bool, Any] = Field(default=None)
+    page: Union[int, Any] = Field(default=None)
 
 class EventsListResultMeta(BaseModel):
     """Metadata for events.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    pagination: Union[PaginationInfo, Any] = Field(default=None)
+    more_records: Union[bool, Any] = Field(default=None)
+    page: Union[int, Any] = Field(default=None)
 
 class CallsListResultMeta(BaseModel):
     """Metadata for calls.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    pagination: Union[PaginationInfo, Any] = Field(default=None)
+    more_records: Union[bool, Any] = Field(default=None)
+    page: Union[int, Any] = Field(default=None)
 
 class ProductsListResultMeta(BaseModel):
     """Metadata for products.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    pagination: Union[PaginationInfo, Any] = Field(default=None)
+    more_records: Union[bool, Any] = Field(default=None)
+    page: Union[int, Any] = Field(default=None)
 
 class QuotesListResultMeta(BaseModel):
     """Metadata for quotes.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    pagination: Union[PaginationInfo, Any] = Field(default=None)
+    more_records: Union[bool, Any] = Field(default=None)
+    page: Union[int, Any] = Field(default=None)
 
 class InvoicesListResultMeta(BaseModel):
     """Metadata for invoices.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    pagination: Union[PaginationInfo, Any] = Field(default=None)
+    more_records: Union[bool, Any] = Field(default=None)
+    page: Union[int, Any] = Field(default=None)
 
 # ===== CHECK RESULT MODEL =====
 

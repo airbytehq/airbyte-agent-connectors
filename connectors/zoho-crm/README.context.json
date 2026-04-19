@@ -125,17 +125,28 @@
     "description": "Returns a paginated list of leads",
     "record_extractor": "$.data",
     "meta_extractor": {
-      "pagination": "$.info"
+      "more_records": "$.info.more_records",
+      "page": "$.info.page"
     },
     "needs_envelope": true,
     "record_type": "list[Lead]",
     "meta_fields": [
       {
-        "name": "pagination",
-        "python_name": "pagination",
-        "type": "PaginationInfo",
+        "name": "more_records",
+        "python_name": "more_records",
+        "type": "bool",
         "schema": {
-          "$ref": "#/components/schemas/PaginationInfo"
+          "type": "boolean",
+          "description": "Whether more records exist"
+        }
+      },
+      {
+        "name": "page",
+        "python_name": "page",
+        "type": "int",
+        "schema": {
+          "type": "integer",
+          "description": "Current page number"
         }
       }
     ],
@@ -220,17 +231,28 @@
         "description": "Returns a paginated list of leads",
         "record_extractor": "$.data",
         "meta_extractor": {
-          "pagination": "$.info"
+          "more_records": "$.info.more_records",
+          "page": "$.info.page"
         },
         "needs_envelope": true,
         "record_type": "list[Lead]",
         "meta_fields": [
           {
-            "name": "pagination",
-            "python_name": "pagination",
-            "type": "PaginationInfo",
+            "name": "more_records",
+            "python_name": "more_records",
+            "type": "bool",
             "schema": {
-              "$ref": "#/components/schemas/PaginationInfo"
+              "type": "boolean",
+              "description": "Whether more records exist"
+            }
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Current page number"
             }
           }
         ],
@@ -343,17 +365,28 @@
         "description": "Returns a paginated list of contacts",
         "record_extractor": "$.data",
         "meta_extractor": {
-          "pagination": "$.info"
+          "more_records": "$.info.more_records",
+          "page": "$.info.page"
         },
         "needs_envelope": true,
         "record_type": "list[Contact]",
         "meta_fields": [
           {
-            "name": "pagination",
-            "python_name": "pagination",
-            "type": "PaginationInfo",
+            "name": "more_records",
+            "python_name": "more_records",
+            "type": "bool",
             "schema": {
-              "$ref": "#/components/schemas/PaginationInfo"
+              "type": "boolean",
+              "description": "Whether more records exist"
+            }
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Current page number"
             }
           }
         ],
@@ -466,17 +499,28 @@
         "description": "Returns a paginated list of accounts",
         "record_extractor": "$.data",
         "meta_extractor": {
-          "pagination": "$.info"
+          "more_records": "$.info.more_records",
+          "page": "$.info.page"
         },
         "needs_envelope": true,
         "record_type": "list[Account]",
         "meta_fields": [
           {
-            "name": "pagination",
-            "python_name": "pagination",
-            "type": "PaginationInfo",
+            "name": "more_records",
+            "python_name": "more_records",
+            "type": "bool",
             "schema": {
-              "$ref": "#/components/schemas/PaginationInfo"
+              "type": "boolean",
+              "description": "Whether more records exist"
+            }
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Current page number"
             }
           }
         ],
@@ -589,17 +633,28 @@
         "description": "Returns a paginated list of deals",
         "record_extractor": "$.data",
         "meta_extractor": {
-          "pagination": "$.info"
+          "more_records": "$.info.more_records",
+          "page": "$.info.page"
         },
         "needs_envelope": true,
         "record_type": "list[Deal]",
         "meta_fields": [
           {
-            "name": "pagination",
-            "python_name": "pagination",
-            "type": "PaginationInfo",
+            "name": "more_records",
+            "python_name": "more_records",
+            "type": "bool",
             "schema": {
-              "$ref": "#/components/schemas/PaginationInfo"
+              "type": "boolean",
+              "description": "Whether more records exist"
+            }
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Current page number"
             }
           }
         ],
@@ -712,17 +767,28 @@
         "description": "Returns a paginated list of campaigns",
         "record_extractor": "$.data",
         "meta_extractor": {
-          "pagination": "$.info"
+          "more_records": "$.info.more_records",
+          "page": "$.info.page"
         },
         "needs_envelope": true,
         "record_type": "list[Campaign]",
         "meta_fields": [
           {
-            "name": "pagination",
-            "python_name": "pagination",
-            "type": "PaginationInfo",
+            "name": "more_records",
+            "python_name": "more_records",
+            "type": "bool",
             "schema": {
-              "$ref": "#/components/schemas/PaginationInfo"
+              "type": "boolean",
+              "description": "Whether more records exist"
+            }
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Current page number"
             }
           }
         ],
@@ -835,17 +901,28 @@
         "description": "Returns a paginated list of tasks",
         "record_extractor": "$.data",
         "meta_extractor": {
-          "pagination": "$.info"
+          "more_records": "$.info.more_records",
+          "page": "$.info.page"
         },
         "needs_envelope": true,
         "record_type": "list[Task]",
         "meta_fields": [
           {
-            "name": "pagination",
-            "python_name": "pagination",
-            "type": "PaginationInfo",
+            "name": "more_records",
+            "python_name": "more_records",
+            "type": "bool",
             "schema": {
-              "$ref": "#/components/schemas/PaginationInfo"
+              "type": "boolean",
+              "description": "Whether more records exist"
+            }
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Current page number"
             }
           }
         ],
@@ -958,17 +1035,28 @@
         "description": "Returns a paginated list of events (meetings/calendar events)",
         "record_extractor": "$.data",
         "meta_extractor": {
-          "pagination": "$.info"
+          "more_records": "$.info.more_records",
+          "page": "$.info.page"
         },
         "needs_envelope": true,
         "record_type": "list[Event]",
         "meta_fields": [
           {
-            "name": "pagination",
-            "python_name": "pagination",
-            "type": "PaginationInfo",
+            "name": "more_records",
+            "python_name": "more_records",
+            "type": "bool",
             "schema": {
-              "$ref": "#/components/schemas/PaginationInfo"
+              "type": "boolean",
+              "description": "Whether more records exist"
+            }
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Current page number"
             }
           }
         ],
@@ -1081,17 +1169,28 @@
         "description": "Returns a paginated list of calls",
         "record_extractor": "$.data",
         "meta_extractor": {
-          "pagination": "$.info"
+          "more_records": "$.info.more_records",
+          "page": "$.info.page"
         },
         "needs_envelope": true,
         "record_type": "list[Call]",
         "meta_fields": [
           {
-            "name": "pagination",
-            "python_name": "pagination",
-            "type": "PaginationInfo",
+            "name": "more_records",
+            "python_name": "more_records",
+            "type": "bool",
             "schema": {
-              "$ref": "#/components/schemas/PaginationInfo"
+              "type": "boolean",
+              "description": "Whether more records exist"
+            }
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Current page number"
             }
           }
         ],
@@ -1204,17 +1303,28 @@
         "description": "Returns a paginated list of products",
         "record_extractor": "$.data",
         "meta_extractor": {
-          "pagination": "$.info"
+          "more_records": "$.info.more_records",
+          "page": "$.info.page"
         },
         "needs_envelope": true,
         "record_type": "list[Product]",
         "meta_fields": [
           {
-            "name": "pagination",
-            "python_name": "pagination",
-            "type": "PaginationInfo",
+            "name": "more_records",
+            "python_name": "more_records",
+            "type": "bool",
             "schema": {
-              "$ref": "#/components/schemas/PaginationInfo"
+              "type": "boolean",
+              "description": "Whether more records exist"
+            }
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Current page number"
             }
           }
         ],
@@ -1327,17 +1437,28 @@
         "description": "Returns a paginated list of quotes",
         "record_extractor": "$.data",
         "meta_extractor": {
-          "pagination": "$.info"
+          "more_records": "$.info.more_records",
+          "page": "$.info.page"
         },
         "needs_envelope": true,
         "record_type": "list[Quote]",
         "meta_fields": [
           {
-            "name": "pagination",
-            "python_name": "pagination",
-            "type": "PaginationInfo",
+            "name": "more_records",
+            "python_name": "more_records",
+            "type": "bool",
             "schema": {
-              "$ref": "#/components/schemas/PaginationInfo"
+              "type": "boolean",
+              "description": "Whether more records exist"
+            }
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Current page number"
             }
           }
         ],
@@ -1450,17 +1571,28 @@
         "description": "Returns a paginated list of invoices",
         "record_extractor": "$.data",
         "meta_extractor": {
-          "pagination": "$.info"
+          "more_records": "$.info.more_records",
+          "page": "$.info.page"
         },
         "needs_envelope": true,
         "record_type": "list[Invoice]",
         "meta_fields": [
           {
-            "name": "pagination",
-            "python_name": "pagination",
-            "type": "PaginationInfo",
+            "name": "more_records",
+            "python_name": "more_records",
+            "type": "bool",
             "schema": {
-              "$ref": "#/components/schemas/PaginationInfo"
+              "type": "boolean",
+              "description": "Whether more records exist"
+            }
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Current page number"
             }
           }
         ],
