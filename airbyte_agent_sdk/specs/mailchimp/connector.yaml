@@ -1140,7 +1140,7 @@ paths:
       x-airbyte-preferred-for-check: true
       x-airbyte-record-extractor: $.campaigns
       x-airbyte-meta-extractor:
-        total_items: $.total_items
+        links: $._links
       tags:
       - Campaigns
       parameters:
@@ -1259,7 +1259,7 @@ paths:
       x-airbyte-action: list
       x-airbyte-record-extractor: $.lists
       x-airbyte-meta-extractor:
-        total_items: $.total_items
+        links: $._links
       tags:
       - Lists
       parameters:
@@ -1361,7 +1361,7 @@ paths:
       x-airbyte-action: list
       x-airbyte-record-extractor: $.members
       x-airbyte-meta-extractor:
-        total_items: $.total_items
+        links: $._links
       tags:
       - List Members
       parameters:
@@ -1507,7 +1507,7 @@ paths:
       x-airbyte-action: list
       x-airbyte-record-extractor: $.reports
       x-airbyte-meta-extractor:
-        total_items: $.total_items
+        links: $._links
       tags:
       - Reports
       parameters:
@@ -1586,7 +1586,7 @@ paths:
       x-airbyte-action: list
       x-airbyte-record-extractor: $.emails
       x-airbyte-meta-extractor:
-        total_items: $.total_items
+        links: $._links
       tags:
       - Email Activity
       parameters:
@@ -1635,7 +1635,7 @@ paths:
       x-airbyte-action: list
       x-airbyte-record-extractor: $.automations
       x-airbyte-meta-extractor:
-        total_items: $.total_items
+        links: $._links
       tags:
       - Automations
       parameters:
@@ -1702,7 +1702,7 @@ paths:
       x-airbyte-action: list
       x-airbyte-record-extractor: $.tags
       x-airbyte-meta-extractor:
-        total_items: $.total_items
+        links: $._links
       tags:
       - Tags
       parameters:
@@ -1735,7 +1735,7 @@ paths:
       x-airbyte-action: list
       x-airbyte-record-extractor: $.categories
       x-airbyte-meta-extractor:
-        total_items: $.total_items
+        links: $._links
       tags:
       - Interest Categories
       parameters:
@@ -1808,7 +1808,7 @@ paths:
       x-airbyte-action: list
       x-airbyte-record-extractor: $.interests
       x-airbyte-meta-extractor:
-        total_items: $.total_items
+        links: $._links
       tags:
       - Interests
       parameters:
@@ -1893,7 +1893,7 @@ paths:
       x-airbyte-action: list
       x-airbyte-record-extractor: $.segments
       x-airbyte-meta-extractor:
-        total_items: $.total_items
+        links: $._links
       tags:
       - Segments
       parameters:
@@ -1995,7 +1995,7 @@ paths:
       x-airbyte-action: list
       x-airbyte-record-extractor: $.members
       x-airbyte-meta-extractor:
-        total_items: $.total_items
+        links: $._links
       tags:
       - Segment Members
       parameters:
@@ -2044,7 +2044,7 @@ paths:
       x-airbyte-action: list
       x-airbyte-record-extractor: $.unsubscribes
       x-airbyte-meta-extractor:
-        total_items: $.total_items
+        links: $._links
       tags:
       - Unsubscribes
       parameters:
@@ -2104,6 +2104,27 @@ components:
           credentials.auth_type: "apikey"
 
   schemas:
+    # Shared HAL-style link object (used across list responses for pagination via rel=="next")
+    Link:
+      type: object
+      description: A HAL-style link relating the current resource to another.
+      properties:
+        rel:
+          type: [string, "null"]
+          description: The link relation. Mailchimp uses "self", "parent", "next", "prev" etc.
+        href:
+          type: [string, "null"]
+          description: The fully qualified URL for the link.
+        method:
+          type: [string, "null"]
+          description: The HTTP method for the link.
+        targetSchema:
+          type: [string, "null"]
+          description: The URI of the JSON Schema for the target.
+        schema:
+          type: [string, "null"]
+          description: The URI of the JSON Schema for this link.
+
     # Campaign schemas
     Campaign:
       type: object
@@ -2309,6 +2330,11 @@ components:
       type: object
       description: A collection of campaigns
       properties:
+        _links:
+          type: array
+          description: A list of HAL-style link objects. Agents locate the next page by finding the entry with rel=="next".
+          items:
+            $ref: "#/components/schemas/Link"
         campaigns:
           type: array
           items:
@@ -2484,6 +2510,11 @@ components:
       type: object
       description: A collection of subscriber lists for this account
       properties:
+        _links:
+          type: array
+          description: A list of HAL-style link objects. Agents locate the next page by finding the entry with rel=="next".
+          items:
+            $ref: "#/components/schemas/Link"
         lists:
           type: array
           items:
@@ -2643,6 +2674,11 @@ components:
       type: object
       description: Manage members of a specific Mailchimp list
       properties:
+        _links:
+          type: array
+          description: A list of HAL-style link objects. Agents locate the next page by finding the entry with rel=="next".
+          items:
+            $ref: "#/components/schemas/Link"
         members:
           type: array
           items:
@@ -2841,6 +2877,11 @@ components:
       type: object
       description: A list of reports containing campaigns marked as Sent
       properties:
+        _links:
+          type: array
+          description: A list of HAL-style link objects. Agents locate the next page by finding the entry with rel=="next".
+          items:
+            $ref: "#/components/schemas/Link"
         reports:
           type: array
           items:
@@ -2898,6 +2939,11 @@ components:
       type: object
       description: A list of member's subscriber activity in a specific campaign
       properties:
+        _links:
+          type: array
+          description: A list of HAL-style link objects. Agents locate the next page by finding the entry with rel=="next".
+          items:
+            $ref: "#/components/schemas/Link"
         emails:
           type: array
           items:
@@ -3046,6 +3092,11 @@ components:
       type: object
       description: A summary of the Automations for an account
       properties:
+        _links:
+          type: array
+          description: A list of HAL-style link objects. Agents locate the next page by finding the entry with rel=="next".
+          items:
+            $ref: "#/components/schemas/Link"
         automations:
           type: array
           items:
@@ -3072,6 +3123,11 @@ components:
       type: object
       description: A list of tags assigned to a list
       properties:
+        _links:
+          type: array
+          description: A list of HAL-style link objects. Agents locate the next page by finding the entry with rel=="next".
+          items:
+            $ref: "#/components/schemas/Link"
         tags:
           type: array
           items:
@@ -3108,6 +3164,11 @@ components:
       type: object
       description: Information about this list's interest categories
       properties:
+        _links:
+          type: array
+          description: A list of HAL-style link objects. Agents locate the next page by finding the entry with rel=="next".
+          items:
+            $ref: "#/components/schemas/Link"
         list_id:
           type: [string, "null"]
           description: The ID for the list that this category belongs to
@@ -3149,6 +3210,11 @@ components:
       type: object
       description: A list of interests for a specific list
       properties:
+        _links:
+          type: array
+          description: A list of HAL-style link objects. Agents locate the next page by finding the entry with rel=="next".
+          items:
+            $ref: "#/components/schemas/Link"
         interests:
           type: array
           items:
@@ -3212,6 +3278,11 @@ components:
       type: object
       description: A list of available segments
       properties:
+        _links:
+          type: array
+          description: A list of HAL-style link objects. Agents locate the next page by finding the entry with rel=="next".
+          items:
+            $ref: "#/components/schemas/Link"
         segments:
           type: array
           items:
@@ -3328,6 +3399,11 @@ components:
       type: object
       description: View members in a specific list segment
       properties:
+        _links:
+          type: array
+          description: A list of HAL-style link objects. Agents locate the next page by finding the entry with rel=="next".
+          items:
+            $ref: "#/components/schemas/Link"
         members:
           type: array
           items:
@@ -3377,6 +3453,11 @@ components:
       type: object
       description: A list of members who have unsubscribed from a specific campaign
       properties:
+        _links:
+          type: array
+          description: A list of HAL-style link objects. Agents locate the next page by finding the entry with rel=="next".
+          items:
+            $ref: "#/components/schemas/Link"
         unsubscribes:
           type: array
           items:

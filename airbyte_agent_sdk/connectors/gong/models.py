@@ -50,6 +50,13 @@ class PaginationRecords(BaseModel):
     current_page_number: Union[int, Any] = Field(default=None, alias="currentPageNumber")
     cursor: Union[str, Any] = Field(default=None)
 
+class UserSpokenlanguagesItem(BaseModel):
+    """Nested schema for User.spokenLanguages_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    language: Union[str, Any] = Field(default=None)
+    primary: Union[bool, Any] = Field(default=None)
+
 class UserSettings(BaseModel):
     """User settings"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -61,13 +68,6 @@ class UserSettings(BaseModel):
     prevent_email_import: Union[bool, Any] = Field(default=None, alias="preventEmailImport")
     non_recorded_meetings_imported: Union[bool, Any] = Field(default=None, alias="nonRecordedMeetingsImported")
     gong_connect_enabled: Union[bool, Any] = Field(default=None, alias="gongConnectEnabled")
-
-class UserSpokenlanguagesItem(BaseModel):
-    """Nested schema for User.spokenLanguages_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    language: Union[str, Any] = Field(default=None)
-    primary: Union[bool, Any] = Field(default=None)
 
 class User(BaseModel):
     """User object"""
@@ -251,12 +251,6 @@ class ExtensiveCallPartiesItem(BaseModel):
     context: Union[list[ExtensiveCallPartiesItemContextItem], Any] = Field(default=None, description="CRM context data linked to this participant")
     """CRM context data linked to this participant"""
 
-class ExtensiveCallCollaboration(BaseModel):
-    """Collaboration data"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    public_comments: Union[list[dict[str, Any]], Any] = Field(default=None, alias="publicComments")
-
 class ExtensiveCallMetadata(BaseModel):
     """Call metadata"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -356,6 +350,12 @@ class ExtensiveCallContent(BaseModel):
     topics: Union[list[ExtensiveCallContentTopicsItem], Any] = Field(default=None)
     trackers: Union[list[ExtensiveCallContentTrackersItem], Any] = Field(default=None)
     points_of_interest: Union[dict[str, Any], Any] = Field(default=None, alias="pointsOfInterest")
+
+class ExtensiveCallCollaboration(BaseModel):
+    """Collaboration data"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    public_comments: Union[list[dict[str, Any]], Any] = Field(default=None, alias="publicComments")
 
 class ExtensiveCall(BaseModel):
     """Detailed call object with extended information"""

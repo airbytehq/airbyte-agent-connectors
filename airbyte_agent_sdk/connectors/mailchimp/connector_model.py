@@ -102,6 +102,36 @@ MailchimpConnectorModel: ConnectorModel = ConnectorModel(
                         'type': 'object',
                         'description': 'A collection of campaigns',
                         'properties': {
+                            '_links': {
+                                'type': 'array',
+                                'description': 'A list of HAL-style link objects. Agents locate the next page by finding the entry with rel=="next".',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'A HAL-style link relating the current resource to another.',
+                                    'properties': {
+                                        'rel': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The link relation. Mailchimp uses "self", "parent", "next", "prev" etc.',
+                                        },
+                                        'href': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The fully qualified URL for the link.',
+                                        },
+                                        'method': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The HTTP method for the link.',
+                                        },
+                                        'targetSchema': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The URI of the JSON Schema for the target.',
+                                        },
+                                        'schema': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The URI of the JSON Schema for this link.',
+                                        },
+                                    },
+                                },
+                            },
                             'campaigns': {
                                 'type': 'array',
                                 'items': {
@@ -389,7 +419,7 @@ MailchimpConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.campaigns',
-                    meta_extractor={'total_items': '$.total_items'},
+                    meta_extractor={'links': '$._links'},
                     preferred_for_check=True,
                 ),
                 Action.GET: EndpointDefinition(
@@ -1008,6 +1038,36 @@ MailchimpConnectorModel: ConnectorModel = ConnectorModel(
                         'type': 'object',
                         'description': 'A collection of subscriber lists for this account',
                         'properties': {
+                            '_links': {
+                                'type': 'array',
+                                'description': 'A list of HAL-style link objects. Agents locate the next page by finding the entry with rel=="next".',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'A HAL-style link relating the current resource to another.',
+                                    'properties': {
+                                        'rel': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The link relation. Mailchimp uses "self", "parent", "next", "prev" etc.',
+                                        },
+                                        'href': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The fully qualified URL for the link.',
+                                        },
+                                        'method': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The HTTP method for the link.',
+                                        },
+                                        'targetSchema': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The URI of the JSON Schema for the target.',
+                                        },
+                                        'schema': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The URI of the JSON Schema for this link.',
+                                        },
+                                    },
+                                },
+                            },
                             'lists': {
                                 'type': 'array',
                                 'items': {
@@ -1227,7 +1287,7 @@ MailchimpConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.lists',
-                    meta_extractor={'total_items': '$.total_items'},
+                    meta_extractor={'links': '$._links'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -1725,6 +1785,36 @@ MailchimpConnectorModel: ConnectorModel = ConnectorModel(
                         'type': 'object',
                         'description': 'Manage members of a specific Mailchimp list',
                         'properties': {
+                            '_links': {
+                                'type': 'array',
+                                'description': 'A list of HAL-style link objects. Agents locate the next page by finding the entry with rel=="next".',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'A HAL-style link relating the current resource to another.',
+                                    'properties': {
+                                        'rel': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The link relation. Mailchimp uses "self", "parent", "next", "prev" etc.',
+                                        },
+                                        'href': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The fully qualified URL for the link.',
+                                        },
+                                        'method': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The HTTP method for the link.',
+                                        },
+                                        'targetSchema': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The URI of the JSON Schema for the target.',
+                                        },
+                                        'schema': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The URI of the JSON Schema for this link.',
+                                        },
+                                    },
+                                },
+                            },
                             'members': {
                                 'type': 'array',
                                 'items': {
@@ -1934,7 +2024,7 @@ MailchimpConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.members',
-                    meta_extractor={'total_items': '$.total_items'},
+                    meta_extractor={'links': '$._links'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -2389,6 +2479,36 @@ MailchimpConnectorModel: ConnectorModel = ConnectorModel(
                         'type': 'object',
                         'description': 'A list of reports containing campaigns marked as Sent',
                         'properties': {
+                            '_links': {
+                                'type': 'array',
+                                'description': 'A list of HAL-style link objects. Agents locate the next page by finding the entry with rel=="next".',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'A HAL-style link relating the current resource to another.',
+                                    'properties': {
+                                        'rel': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The link relation. Mailchimp uses "self", "parent", "next", "prev" etc.',
+                                        },
+                                        'href': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The fully qualified URL for the link.',
+                                        },
+                                        'method': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The HTTP method for the link.',
+                                        },
+                                        'targetSchema': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The URI of the JSON Schema for the target.',
+                                        },
+                                        'schema': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The URI of the JSON Schema for this link.',
+                                        },
+                                    },
+                                },
+                            },
                             'reports': {
                                 'type': 'array',
                                 'items': {
@@ -2639,7 +2759,7 @@ MailchimpConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.reports',
-                    meta_extractor={'total_items': '$.total_items'},
+                    meta_extractor={'links': '$._links'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -3171,6 +3291,36 @@ MailchimpConnectorModel: ConnectorModel = ConnectorModel(
                         'type': 'object',
                         'description': "A list of member's subscriber activity in a specific campaign",
                         'properties': {
+                            '_links': {
+                                'type': 'array',
+                                'description': 'A list of HAL-style link objects. Agents locate the next page by finding the entry with rel=="next".',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'A HAL-style link relating the current resource to another.',
+                                    'properties': {
+                                        'rel': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The link relation. Mailchimp uses "self", "parent", "next", "prev" etc.',
+                                        },
+                                        'href': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The fully qualified URL for the link.',
+                                        },
+                                        'method': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The HTTP method for the link.',
+                                        },
+                                        'targetSchema': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The URI of the JSON Schema for the target.',
+                                        },
+                                        'schema': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The URI of the JSON Schema for this link.',
+                                        },
+                                    },
+                                },
+                            },
                             'emails': {
                                 'type': 'array',
                                 'items': {
@@ -3240,7 +3390,7 @@ MailchimpConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.emails',
-                    meta_extractor={'total_items': '$.total_items'},
+                    meta_extractor={'links': '$._links'},
                 ),
             },
             entity_schema={
@@ -3350,6 +3500,36 @@ MailchimpConnectorModel: ConnectorModel = ConnectorModel(
                         'type': 'object',
                         'description': 'A summary of the Automations for an account',
                         'properties': {
+                            '_links': {
+                                'type': 'array',
+                                'description': 'A list of HAL-style link objects. Agents locate the next page by finding the entry with rel=="next".',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'A HAL-style link relating the current resource to another.',
+                                    'properties': {
+                                        'rel': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The link relation. Mailchimp uses "self", "parent", "next", "prev" etc.',
+                                        },
+                                        'href': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The fully qualified URL for the link.',
+                                        },
+                                        'method': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The HTTP method for the link.',
+                                        },
+                                        'targetSchema': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The URI of the JSON Schema for the target.',
+                                        },
+                                        'schema': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The URI of the JSON Schema for this link.',
+                                        },
+                                    },
+                                },
+                            },
                             'automations': {
                                 'type': 'array',
                                 'items': {
@@ -3533,7 +3713,7 @@ MailchimpConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.automations',
-                    meta_extractor={'total_items': '$.total_items'},
+                    meta_extractor={'links': '$._links'},
                 ),
             },
             entity_schema={
@@ -3735,6 +3915,36 @@ MailchimpConnectorModel: ConnectorModel = ConnectorModel(
                         'type': 'object',
                         'description': 'A list of tags assigned to a list',
                         'properties': {
+                            '_links': {
+                                'type': 'array',
+                                'description': 'A list of HAL-style link objects. Agents locate the next page by finding the entry with rel=="next".',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'A HAL-style link relating the current resource to another.',
+                                    'properties': {
+                                        'rel': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The link relation. Mailchimp uses "self", "parent", "next", "prev" etc.',
+                                        },
+                                        'href': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The fully qualified URL for the link.',
+                                        },
+                                        'method': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The HTTP method for the link.',
+                                        },
+                                        'targetSchema': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The URI of the JSON Schema for the target.',
+                                        },
+                                        'schema': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The URI of the JSON Schema for this link.',
+                                        },
+                                    },
+                                },
+                            },
                             'tags': {
                                 'type': 'array',
                                 'items': {
@@ -3755,7 +3965,7 @@ MailchimpConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.tags',
-                    meta_extractor={'total_items': '$.total_items'},
+                    meta_extractor={'links': '$._links'},
                 ),
             },
             entity_schema={
@@ -3811,6 +4021,36 @@ MailchimpConnectorModel: ConnectorModel = ConnectorModel(
                         'type': 'object',
                         'description': "Information about this list's interest categories",
                         'properties': {
+                            '_links': {
+                                'type': 'array',
+                                'description': 'A list of HAL-style link objects. Agents locate the next page by finding the entry with rel=="next".',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'A HAL-style link relating the current resource to another.',
+                                    'properties': {
+                                        'rel': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The link relation. Mailchimp uses "self", "parent", "next", "prev" etc.',
+                                        },
+                                        'href': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The fully qualified URL for the link.',
+                                        },
+                                        'method': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The HTTP method for the link.',
+                                        },
+                                        'targetSchema': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The URI of the JSON Schema for the target.',
+                                        },
+                                        'schema': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The URI of the JSON Schema for this link.',
+                                        },
+                                    },
+                                },
+                            },
                             'list_id': {
                                 'type': ['string', 'null'],
                                 'description': 'The ID for the list that this category belongs to',
@@ -3854,7 +4094,7 @@ MailchimpConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.categories',
-                    meta_extractor={'total_items': '$.total_items'},
+                    meta_extractor={'links': '$._links'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -3973,6 +4213,36 @@ MailchimpConnectorModel: ConnectorModel = ConnectorModel(
                         'type': 'object',
                         'description': 'A list of interests for a specific list',
                         'properties': {
+                            '_links': {
+                                'type': 'array',
+                                'description': 'A list of HAL-style link objects. Agents locate the next page by finding the entry with rel=="next".',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'A HAL-style link relating the current resource to another.',
+                                    'properties': {
+                                        'rel': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The link relation. Mailchimp uses "self", "parent", "next", "prev" etc.',
+                                        },
+                                        'href': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The fully qualified URL for the link.',
+                                        },
+                                        'method': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The HTTP method for the link.',
+                                        },
+                                        'targetSchema': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The URI of the JSON Schema for the target.',
+                                        },
+                                        'schema': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The URI of the JSON Schema for this link.',
+                                        },
+                                    },
+                                },
+                            },
                             'interests': {
                                 'type': 'array',
                                 'items': {
@@ -4017,7 +4287,7 @@ MailchimpConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.interests',
-                    meta_extractor={'total_items': '$.total_items'},
+                    meta_extractor={'links': '$._links'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -4149,6 +4419,36 @@ MailchimpConnectorModel: ConnectorModel = ConnectorModel(
                         'type': 'object',
                         'description': 'A list of available segments',
                         'properties': {
+                            '_links': {
+                                'type': 'array',
+                                'description': 'A list of HAL-style link objects. Agents locate the next page by finding the entry with rel=="next".',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'A HAL-style link relating the current resource to another.',
+                                    'properties': {
+                                        'rel': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The link relation. Mailchimp uses "self", "parent", "next", "prev" etc.',
+                                        },
+                                        'href': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The fully qualified URL for the link.',
+                                        },
+                                        'method': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The HTTP method for the link.',
+                                        },
+                                        'targetSchema': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The URI of the JSON Schema for the target.',
+                                        },
+                                        'schema': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The URI of the JSON Schema for this link.',
+                                        },
+                                    },
+                                },
+                            },
                             'segments': {
                                 'type': 'array',
                                 'items': {
@@ -4216,7 +4516,7 @@ MailchimpConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.segments',
-                    meta_extractor={'total_items': '$.total_items'},
+                    meta_extractor={'links': '$._links'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -4383,6 +4683,36 @@ MailchimpConnectorModel: ConnectorModel = ConnectorModel(
                         'type': 'object',
                         'description': 'View members in a specific list segment',
                         'properties': {
+                            '_links': {
+                                'type': 'array',
+                                'description': 'A list of HAL-style link objects. Agents locate the next page by finding the entry with rel=="next".',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'A HAL-style link relating the current resource to another.',
+                                    'properties': {
+                                        'rel': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The link relation. Mailchimp uses "self", "parent", "next", "prev" etc.',
+                                        },
+                                        'href': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The fully qualified URL for the link.',
+                                        },
+                                        'method': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The HTTP method for the link.',
+                                        },
+                                        'targetSchema': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The URI of the JSON Schema for the target.',
+                                        },
+                                        'schema': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The URI of the JSON Schema for this link.',
+                                        },
+                                    },
+                                },
+                            },
                             'members': {
                                 'type': 'array',
                                 'items': {
@@ -4525,7 +4855,7 @@ MailchimpConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.members',
-                    meta_extractor={'total_items': '$.total_items'},
+                    meta_extractor={'links': '$._links'},
                 ),
             },
             entity_schema={
@@ -4709,6 +5039,36 @@ MailchimpConnectorModel: ConnectorModel = ConnectorModel(
                         'type': 'object',
                         'description': 'A list of members who have unsubscribed from a specific campaign',
                         'properties': {
+                            '_links': {
+                                'type': 'array',
+                                'description': 'A list of HAL-style link objects. Agents locate the next page by finding the entry with rel=="next".',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'A HAL-style link relating the current resource to another.',
+                                    'properties': {
+                                        'rel': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The link relation. Mailchimp uses "self", "parent", "next", "prev" etc.',
+                                        },
+                                        'href': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The fully qualified URL for the link.',
+                                        },
+                                        'method': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The HTTP method for the link.',
+                                        },
+                                        'targetSchema': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The URI of the JSON Schema for the target.',
+                                        },
+                                        'schema': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The URI of the JSON Schema for this link.',
+                                        },
+                                    },
+                                },
+                            },
                             'unsubscribes': {
                                 'type': 'array',
                                 'items': {
@@ -4766,7 +5126,7 @@ MailchimpConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.unsubscribes',
-                    meta_extractor={'total_items': '$.total_items'},
+                    meta_extractor={'links': '$._links'},
                 ),
             },
             entity_schema={

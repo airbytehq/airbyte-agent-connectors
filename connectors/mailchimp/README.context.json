@@ -210,18 +210,21 @@
     "description": "Get all campaigns in an account",
     "record_extractor": "$.campaigns",
     "meta_extractor": {
-      "total_items": "$.total_items"
+      "links": "$._links"
     },
     "needs_envelope": true,
     "record_type": "list[Campaign]",
     "meta_fields": [
       {
-        "name": "total_items",
-        "python_name": "total_items",
-        "type": "int",
+        "name": "links",
+        "python_name": "links",
+        "type": "list[Link]",
         "schema": {
-          "type": "integer",
-          "description": "The total number of items matching the query regardless of pagination"
+          "type": "array",
+          "description": "A list of HAL-style link objects. Agents locate the next page by finding the entry with rel==\"next\".",
+          "items": {
+            "$ref": "#/components/schemas/Link"
+          }
         }
       }
     ],
@@ -405,18 +408,21 @@
         "description": "Get all campaigns in an account",
         "record_extractor": "$.campaigns",
         "meta_extractor": {
-          "total_items": "$.total_items"
+          "links": "$._links"
         },
         "needs_envelope": true,
         "record_type": "list[Campaign]",
         "meta_fields": [
           {
-            "name": "total_items",
-            "python_name": "total_items",
-            "type": "int",
+            "name": "links",
+            "python_name": "links",
+            "type": "list[Link]",
             "schema": {
-              "type": "integer",
-              "description": "The total number of items matching the query regardless of pagination"
+              "type": "array",
+              "description": "A list of HAL-style link objects. Agents locate the next page by finding the entry with rel==\"next\".",
+              "items": {
+                "$ref": "#/components/schemas/Link"
+              }
             }
           }
         ],
@@ -580,18 +586,21 @@
         "description": "Get information about all lists in the account",
         "record_extractor": "$.lists",
         "meta_extractor": {
-          "total_items": "$.total_items"
+          "links": "$._links"
         },
         "needs_envelope": true,
         "record_type": "list[List]",
         "meta_fields": [
           {
-            "name": "total_items",
-            "python_name": "total_items",
-            "type": "int",
+            "name": "links",
+            "python_name": "links",
+            "type": "list[Link]",
             "schema": {
-              "type": "integer",
-              "description": "The total number of items matching the query regardless of pagination"
+              "type": "array",
+              "description": "A list of HAL-style link objects. Agents locate the next page by finding the entry with rel==\"next\".",
+              "items": {
+                "$ref": "#/components/schemas/Link"
+              }
             }
           }
         ],
@@ -846,18 +855,21 @@
         "description": "Get information about members in a specific Mailchimp list",
         "record_extractor": "$.members",
         "meta_extractor": {
-          "total_items": "$.total_items"
+          "links": "$._links"
         },
         "needs_envelope": true,
         "record_type": "list[ListMember]",
         "meta_fields": [
           {
-            "name": "total_items",
-            "python_name": "total_items",
-            "type": "int",
+            "name": "links",
+            "python_name": "links",
+            "type": "list[Link]",
             "schema": {
-              "type": "integer",
-              "description": "The total number of items matching the query regardless of pagination"
+              "type": "array",
+              "description": "A list of HAL-style link objects. Agents locate the next page by finding the entry with rel==\"next\".",
+              "items": {
+                "$ref": "#/components/schemas/Link"
+              }
             }
           }
         ],
@@ -985,18 +997,21 @@
         "description": "Get campaign reports",
         "record_extractor": "$.reports",
         "meta_extractor": {
-          "total_items": "$.total_items"
+          "links": "$._links"
         },
         "needs_envelope": true,
         "record_type": "list[Report]",
         "meta_fields": [
           {
-            "name": "total_items",
-            "python_name": "total_items",
-            "type": "int",
+            "name": "links",
+            "python_name": "links",
+            "type": "list[Link]",
             "schema": {
-              "type": "integer",
-              "description": "The total number of items matching the query regardless of pagination"
+              "type": "array",
+              "description": "A list of HAL-style link objects. Agents locate the next page by finding the entry with rel==\"next\".",
+              "items": {
+                "$ref": "#/components/schemas/Link"
+              }
             }
           }
         ],
@@ -1094,18 +1109,21 @@
         "description": "Get a list of member's subscriber activity in a specific campaign",
         "record_extractor": "$.emails",
         "meta_extractor": {
-          "total_items": "$.total_items"
+          "links": "$._links"
         },
         "needs_envelope": true,
         "record_type": "list[EmailActivity]",
         "meta_fields": [
           {
-            "name": "total_items",
-            "python_name": "total_items",
-            "type": "int",
+            "name": "links",
+            "python_name": "links",
+            "type": "list[Link]",
             "schema": {
-              "type": "integer",
-              "description": "The total number of items matching the query regardless of pagination"
+              "type": "array",
+              "description": "A list of HAL-style link objects. Agents locate the next page by finding the entry with rel==\"next\".",
+              "items": {
+                "$ref": "#/components/schemas/Link"
+              }
             }
           }
         ],
@@ -1217,18 +1235,21 @@
         "description": "Get a summary of an account's classic automations",
         "record_extractor": "$.automations",
         "meta_extractor": {
-          "total_items": "$.total_items"
+          "links": "$._links"
         },
         "needs_envelope": true,
         "record_type": "list[Automation]",
         "meta_fields": [
           {
-            "name": "total_items",
-            "python_name": "total_items",
-            "type": "int",
+            "name": "links",
+            "python_name": "links",
+            "type": "list[Link]",
             "schema": {
-              "type": "integer",
-              "description": "The total number of items matching the query regardless of pagination"
+              "type": "array",
+              "description": "A list of HAL-style link objects. Agents locate the next page by finding the entry with rel==\"next\".",
+              "items": {
+                "$ref": "#/components/schemas/Link"
+              }
             }
           }
         ],
@@ -1270,18 +1291,21 @@
         "description": "Search for tags on a list by name",
         "record_extractor": "$.tags",
         "meta_extractor": {
-          "total_items": "$.total_items"
+          "links": "$._links"
         },
         "needs_envelope": true,
         "record_type": "list[Tag]",
         "meta_fields": [
           {
-            "name": "total_items",
-            "python_name": "total_items",
-            "type": "int",
+            "name": "links",
+            "python_name": "links",
+            "type": "list[Link]",
             "schema": {
-              "type": "integer",
-              "description": "The total number of items matching the query regardless of pagination"
+              "type": "array",
+              "description": "A list of HAL-style link objects. Agents locate the next page by finding the entry with rel==\"next\".",
+              "items": {
+                "$ref": "#/components/schemas/Link"
+              }
             }
           }
         ],
@@ -1339,18 +1363,21 @@
         "description": "Get information about a list's interest categories",
         "record_extractor": "$.categories",
         "meta_extractor": {
-          "total_items": "$.total_items"
+          "links": "$._links"
         },
         "needs_envelope": true,
         "record_type": "list[InterestCategory]",
         "meta_fields": [
           {
-            "name": "total_items",
-            "python_name": "total_items",
-            "type": "int",
+            "name": "links",
+            "python_name": "links",
+            "type": "list[Link]",
             "schema": {
-              "type": "integer",
-              "description": "The total number of items matching the query regardless of pagination"
+              "type": "array",
+              "description": "A list of HAL-style link objects. Agents locate the next page by finding the entry with rel==\"next\".",
+              "items": {
+                "$ref": "#/components/schemas/Link"
+              }
             }
           }
         ],
@@ -1456,18 +1483,21 @@
         "description": "Get a list of this category's interests",
         "record_extractor": "$.interests",
         "meta_extractor": {
-          "total_items": "$.total_items"
+          "links": "$._links"
         },
         "needs_envelope": true,
         "record_type": "list[Interest]",
         "meta_fields": [
           {
-            "name": "total_items",
-            "python_name": "total_items",
-            "type": "int",
+            "name": "links",
+            "python_name": "links",
+            "type": "list[Link]",
             "schema": {
-              "type": "integer",
-              "description": "The total number of items matching the query regardless of pagination"
+              "type": "array",
+              "description": "A list of HAL-style link objects. Agents locate the next page by finding the entry with rel==\"next\".",
+              "items": {
+                "$ref": "#/components/schemas/Link"
+              }
             }
           }
         ],
@@ -1632,18 +1662,21 @@
         "description": "Get information about all available segments for a specific list",
         "record_extractor": "$.segments",
         "meta_extractor": {
-          "total_items": "$.total_items"
+          "links": "$._links"
         },
         "needs_envelope": true,
         "record_type": "list[Segment]",
         "meta_fields": [
           {
-            "name": "total_items",
-            "python_name": "total_items",
-            "type": "int",
+            "name": "links",
+            "python_name": "links",
+            "type": "list[Link]",
             "schema": {
-              "type": "integer",
-              "description": "The total number of items matching the query regardless of pagination"
+              "type": "array",
+              "description": "A list of HAL-style link objects. Agents locate the next page by finding the entry with rel==\"next\".",
+              "items": {
+                "$ref": "#/components/schemas/Link"
+              }
             }
           }
         ],
@@ -1749,18 +1782,21 @@
         "description": "Get information about members in a saved segment",
         "record_extractor": "$.members",
         "meta_extractor": {
-          "total_items": "$.total_items"
+          "links": "$._links"
         },
         "needs_envelope": true,
         "record_type": "list[SegmentMember]",
         "meta_fields": [
           {
-            "name": "total_items",
-            "python_name": "total_items",
-            "type": "int",
+            "name": "links",
+            "python_name": "links",
+            "type": "list[Link]",
             "schema": {
-              "type": "integer",
-              "description": "The total number of items matching the query regardless of pagination"
+              "type": "array",
+              "description": "A list of HAL-style link objects. Agents locate the next page by finding the entry with rel==\"next\".",
+              "items": {
+                "$ref": "#/components/schemas/Link"
+              }
             }
           }
         ],
@@ -1818,18 +1854,21 @@
         "description": "Get information about members who have unsubscribed from a specific campaign",
         "record_extractor": "$.unsubscribes",
         "meta_extractor": {
-          "total_items": "$.total_items"
+          "links": "$._links"
         },
         "needs_envelope": true,
         "record_type": "list[Unsubscribe]",
         "meta_fields": [
           {
-            "name": "total_items",
-            "python_name": "total_items",
-            "type": "int",
+            "name": "links",
+            "python_name": "links",
+            "type": "list[Link]",
             "schema": {
-              "type": "integer",
-              "description": "The total number of items matching the query regardless of pagination"
+              "type": "array",
+              "description": "A list of HAL-style link objects. Agents locate the next page by finding the entry with rel==\"next\".",
+              "items": {
+                "$ref": "#/components/schemas/Link"
+              }
             }
           }
         ],

@@ -122,8 +122,13 @@ async def test_{{ test.test_name }}():
     if meta_matches_{{ meta_field_name }}:
         expected_meta_{{ meta_field_name }} = meta_matches_{{ meta_field_name }}[0].value
         actual_meta_{{ meta_field_name }} = result.meta.{{ meta_field_name | snake_case }}
-        # Convert Pydantic model to dict
-        if hasattr(actual_meta_{{ meta_field_name }}, 'model_dump'):
+        # Convert Pydantic model(s) to dict for comparison with the raw JSONPath match.
+        if isinstance(actual_meta_{{ meta_field_name }}, list):
+            actual_meta_{{ meta_field_name }} = [
+                item.model_dump(exclude_none=True, by_alias=True) if hasattr(item, 'model_dump') else item
+                for item in actual_meta_{{ meta_field_name }}
+            ]
+        elif hasattr(actual_meta_{{ meta_field_name }}, 'model_dump'):
             actual_meta_{{ meta_field_name }} = actual_meta_{{ meta_field_name }}.model_dump(exclude_none=True, by_alias=True)
         assert actual_meta_{{ meta_field_name }} == expected_meta_{{ meta_field_name }}
 {%- endif %}
