@@ -32,14 +32,6 @@ class AshbyReplicationConfig(BaseModel):
 
 # ===== RESPONSE TYPE DEFINITIONS (PYDANTIC) =====
 
-class CandidatePhonenumbersItem(BaseModel):
-    """Nested schema for Candidate.phoneNumbers_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    value: Union[str | None, Any] = Field(default=None)
-    type_: Union[str | None, Any] = Field(default=None, alias="type")
-    is_primary: Union[bool | None, Any] = Field(default=None, alias="isPrimary")
-
 class CandidateTagsItem(BaseModel):
     """Nested schema for Candidate.tags_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -48,8 +40,8 @@ class CandidateTagsItem(BaseModel):
     title: Union[str | None, Any] = Field(default=None)
     is_archived: Union[bool | None, Any] = Field(default=None, alias="isArchived")
 
-class CandidateEmailaddressesItem(BaseModel):
-    """Nested schema for Candidate.emailAddresses_item"""
+class CandidatePhonenumbersItem(BaseModel):
+    """Nested schema for Candidate.phoneNumbers_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     value: Union[str | None, Any] = Field(default=None)
@@ -62,6 +54,14 @@ class CandidateSociallinksItem(BaseModel):
 
     type_: Union[str | None, Any] = Field(default=None, alias="type")
     url: Union[str | None, Any] = Field(default=None)
+
+class CandidateEmailaddressesItem(BaseModel):
+    """Nested schema for Candidate.emailAddresses_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    value: Union[str | None, Any] = Field(default=None)
+    type_: Union[str | None, Any] = Field(default=None, alias="type")
+    is_primary: Union[bool | None, Any] = Field(default=None, alias="isPrimary")
 
 class Candidate(BaseModel):
     """Candidate object"""
@@ -114,16 +114,6 @@ class Application(BaseModel):
     submitter_client_ip: Union[str | None, Any] = Field(default=None, alias="submitterClientIp")
     submitter_user_agent: Union[str | None, Any] = Field(default=None, alias="submitterUserAgent")
 
-class JobCustomfieldsItem(BaseModel):
-    """Nested schema for Job.customFields_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str | None, Any] = Field(default=None)
-    is_private: Union[bool | None, Any] = Field(default=None, alias="isPrivate")
-    title: Union[str | None, Any] = Field(default=None)
-    value: Union[str | None, Any] = Field(default=None)
-    value_label: Union[str | None, Any] = Field(default=None, alias="valueLabel")
-
 class JobHiringteamItem(BaseModel):
     """Nested schema for Job.hiringTeam_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -133,6 +123,16 @@ class JobHiringteamItem(BaseModel):
     last_name: Union[str | None, Any] = Field(default=None, alias="lastName")
     email: Union[str | None, Any] = Field(default=None)
     role: Union[str | None, Any] = Field(default=None)
+
+class JobCustomfieldsItem(BaseModel):
+    """Nested schema for Job.customFields_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[str | None, Any] = Field(default=None)
+    is_private: Union[bool | None, Any] = Field(default=None, alias="isPrivate")
+    title: Union[str | None, Any] = Field(default=None)
+    value: Union[str | None, Any] = Field(default=None)
+    value_label: Union[str | None, Any] = Field(default=None, alias="valueLabel")
 
 class Job(BaseModel):
     """Job object"""

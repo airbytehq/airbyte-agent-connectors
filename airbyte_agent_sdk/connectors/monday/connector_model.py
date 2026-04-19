@@ -233,6 +233,7 @@ MondayConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     graphql_body={'type': 'graphql', 'query': 'query {\n  users {\n    id\n    name\n    email\n    enabled\n    birthday\n    country_code\n    created_at\n    join_date\n    is_admin\n    is_guest\n    is_pending\n    is_view_only\n    is_verified\n    location\n    mobile_phone\n    phone\n    photo_original\n    photo_small\n    photo_thumb\n    photo_thumb_small\n    photo_tiny\n    time_zone_identifier\n    title\n    url\n    utc_hours_diff\n  }\n}\n'},
+                    record_extractor='$.data.users',
                     preferred_for_check=True,
                 ),
                 Action.GET: EndpointDefinition(
@@ -373,6 +374,7 @@ MondayConnectorModel: ConnectorModel = ConnectorModel(
                         'query': 'query($ids: [ID!]) {\n  users(ids: $ids) {\n    id\n    name\n    email\n    enabled\n    birthday\n    country_code\n    created_at\n    join_date\n    is_admin\n    is_guest\n    is_pending\n    is_view_only\n    is_verified\n    location\n    mobile_phone\n    phone\n    photo_original\n    photo_small\n    photo_thumb\n    photo_thumb_small\n    photo_tiny\n    time_zone_identifier\n    title\n    url\n    utc_hours_diff\n  }\n}\n',
                         'variables': {'ids': '{{ id }}'},
                     },
+                    record_extractor='$.data.users[0]',
                 ),
             },
             entity_schema={
@@ -708,6 +710,7 @@ MondayConnectorModel: ConnectorModel = ConnectorModel(
                         'query': 'query($page: Int, $limit: Int) {\n  boards(page: $page, limit: $limit) {\n    id\n    name\n    board_kind\n    type\n    description\n    permissions\n    state\n    updated_at\n    columns {\n      archived\n      description\n      id\n      settings_str\n      title\n      type\n      width\n    }\n    groups {\n      archived\n      color\n      deleted\n      id\n      position\n      title\n    }\n    owners {\n      id\n    }\n    creator {\n      id\n    }\n    subscribers {\n      id\n    }\n    tags {\n      id\n    }\n    top_group {\n      id\n    }\n    views {\n      id\n      name\n      settings_str\n      type\n      view_specific_data_str\n    }\n    workspace {\n      id\n      name\n      kind\n      description\n    }\n  }\n}\n',
                         'variables': {'page': '{{ page }}', 'limit': '{{ limit }}'},
                     },
+                    record_extractor='$.data.boards',
                 ),
                 Action.GET: EndpointDefinition(
                     method='POST',
@@ -932,6 +935,7 @@ MondayConnectorModel: ConnectorModel = ConnectorModel(
                         'query': 'query($ids: [ID!]) {\n  boards(ids: $ids) {\n    id\n    name\n    board_kind\n    type\n    description\n    permissions\n    state\n    updated_at\n    columns {\n      archived\n      description\n      id\n      settings_str\n      title\n      type\n      width\n    }\n    groups {\n      archived\n      color\n      deleted\n      id\n      position\n      title\n    }\n    owners {\n      id\n    }\n    creator {\n      id\n    }\n    subscribers {\n      id\n    }\n    tags {\n      id\n    }\n    top_group {\n      id\n    }\n    views {\n      id\n      name\n      settings_str\n      type\n      view_specific_data_str\n    }\n    workspace {\n      id\n      name\n      kind\n      description\n    }\n  }\n}\n',
                         'variables': {'ids': '{{ id }}'},
                     },
+                    record_extractor='$.data.boards[0]',
                 ),
             },
             entity_schema={
@@ -1271,6 +1275,7 @@ MondayConnectorModel: ConnectorModel = ConnectorModel(
                         'query': 'query($boardId: [ID!], $limit: Int) {\n  boards(ids: $boardId) {\n    items_page(limit: $limit) {\n      items {\n        id\n        name\n        created_at\n        creator_id\n        state\n        updated_at\n        board {\n          id\n          name\n        }\n        group {\n          id\n        }\n        parent_item {\n          id\n        }\n        column_values {\n          id\n          text\n          type\n          value\n        }\n        subscribers {\n          id\n        }\n      }\n    }\n  }\n}\n',
                         'variables': {'boardId': '{{ board_id }}', 'limit': '{{ limit }}'},
                     },
+                    record_extractor='$.data.boards[*].items_page.items',
                 ),
                 Action.GET: EndpointDefinition(
                     method='POST',
@@ -1397,6 +1402,7 @@ MondayConnectorModel: ConnectorModel = ConnectorModel(
                         'query': 'query($ids: [ID!]) {\n  items(ids: $ids) {\n    id\n    name\n    created_at\n    creator_id\n    state\n    updated_at\n    board {\n      id\n      name\n    }\n    group {\n      id\n    }\n    parent_item {\n      id\n    }\n    column_values {\n      id\n      text\n      type\n      value\n    }\n    subscribers {\n      id\n    }\n  }\n}\n',
                         'variables': {'ids': '{{ id }}'},
                     },
+                    record_extractor='$.data.items[0]',
                 ),
             },
             entity_schema={
@@ -1554,6 +1560,7 @@ MondayConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     graphql_body={'type': 'graphql', 'query': 'query {\n  teams {\n    id\n    name\n    picture_url\n    users {\n      id\n    }\n  }\n}\n'},
+                    record_extractor='$.data.teams',
                 ),
                 Action.GET: EndpointDefinition(
                     method='POST',
@@ -1617,6 +1624,7 @@ MondayConnectorModel: ConnectorModel = ConnectorModel(
                         'query': 'query($ids: [ID!]) {\n  teams(ids: $ids) {\n    id\n    name\n    picture_url\n    users {\n      id\n    }\n  }\n}\n',
                         'variables': {'ids': '{{ id }}'},
                     },
+                    record_extractor='$.data.teams[0]',
                 ),
             },
             entity_schema={
@@ -1699,6 +1707,7 @@ MondayConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     graphql_body={'type': 'graphql', 'query': 'query {\n  tags {\n    id\n    name\n    color\n  }\n}\n'},
+                    record_extractor='$.data.tags',
                 ),
             },
             entity_schema={
@@ -1873,6 +1882,7 @@ MondayConnectorModel: ConnectorModel = ConnectorModel(
                         'query': 'query($page: Int, $limit: Int) {\n  updates(page: $page, limit: $limit) {\n    id\n    body\n    text_body\n    created_at\n    creator_id\n    item_id\n    updated_at\n    replies {\n      id\n      creator_id\n      created_at\n      text_body\n      updated_at\n      body\n    }\n    assets {\n      id\n      name\n      url\n      url_thumbnail\n      public_url\n      file_extension\n      file_size\n      created_at\n      original_geometry\n      uploaded_by {\n        id\n      }\n    }\n  }\n}\n',
                         'variables': {'page': '{{ page }}', 'limit': '{{ limit }}'},
                     },
+                    record_extractor='$.data.updates',
                 ),
                 Action.GET: EndpointDefinition(
                     method='POST',
@@ -2011,6 +2021,7 @@ MondayConnectorModel: ConnectorModel = ConnectorModel(
                         'query': 'query($ids: [ID!]) {\n  updates(ids: $ids) {\n    id\n    body\n    text_body\n    created_at\n    creator_id\n    item_id\n    updated_at\n    replies {\n      id\n      creator_id\n      created_at\n      text_body\n      updated_at\n      body\n    }\n    assets {\n      id\n      name\n      url\n      url_thumbnail\n      public_url\n      file_extension\n      file_size\n      created_at\n      original_geometry\n      uploaded_by {\n        id\n      }\n    }\n  }\n}\n',
                         'variables': {'ids': '{{ id }}'},
                     },
+                    record_extractor='$.data.updates[0]',
                 ),
             },
             entity_schema={
@@ -2267,6 +2278,7 @@ MondayConnectorModel: ConnectorModel = ConnectorModel(
                         'query': 'query($page: Int, $limit: Int) {\n  workspaces(page: $page, limit: $limit) {\n    id\n    name\n    kind\n    description\n    state\n    created_at\n    account_product {\n      id\n      kind\n    }\n    owners_subscribers {\n      id\n    }\n    settings {\n      icon {\n        color\n        image\n      }\n    }\n    team_owners_subscribers {\n      id\n      name\n    }\n    teams_subscribers {\n      id\n      name\n    }\n    users_subscribers {\n      id\n    }\n  }\n}\n',
                         'variables': {'page': '{{ page }}', 'limit': '{{ limit }}'},
                     },
+                    record_extractor='$.data.workspaces',
                 ),
                 Action.GET: EndpointDefinition(
                     method='POST',
@@ -2413,6 +2425,7 @@ MondayConnectorModel: ConnectorModel = ConnectorModel(
                         'query': 'query($ids: [ID!]) {\n  workspaces(ids: $ids) {\n    id\n    name\n    kind\n    description\n    state\n    created_at\n    account_product {\n      id\n      kind\n    }\n    owners_subscribers {\n      id\n    }\n    settings {\n      icon {\n        color\n        image\n      }\n    }\n    team_owners_subscribers {\n      id\n      name\n    }\n    teams_subscribers {\n      id\n      name\n    }\n    users_subscribers {\n      id\n    }\n  }\n}\n',
                         'variables': {'ids': '{{ id }}'},
                     },
+                    record_extractor='$.data.workspaces[0]',
                 ),
             },
             entity_schema={
@@ -2606,6 +2619,7 @@ MondayConnectorModel: ConnectorModel = ConnectorModel(
                         'query': 'query($boardIds: [ID!]) {\n  boards(ids: $boardIds) {\n    activity_logs {\n      id\n      event\n      data\n      entity\n      created_at\n      user_id\n    }\n  }\n}\n',
                         'variables': {'boardIds': '{{ board_id }}'},
                     },
+                    record_extractor='$.data.boards[*].activity_logs',
                 ),
             },
             entity_schema={

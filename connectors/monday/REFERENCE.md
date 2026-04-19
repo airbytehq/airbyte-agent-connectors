@@ -43,6 +43,42 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 
 
+<details>
+<summary><b>Response Schema</b></summary>
+
+#### Records
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `id` | `null \| string` |  |
+| `name` | `null \| string` |  |
+| `email` | `null \| string` |  |
+| `enabled` | `null \| boolean` |  |
+| `birthday` | `null \| string` |  |
+| `country_code` | `null \| string` |  |
+| `created_at` | `null \| string` |  |
+| `join_date` | `null \| string` |  |
+| `is_admin` | `null \| boolean` |  |
+| `is_guest` | `null \| boolean` |  |
+| `is_pending` | `null \| boolean` |  |
+| `is_view_only` | `null \| boolean` |  |
+| `is_verified` | `null \| boolean` |  |
+| `location` | `null \| string` |  |
+| `mobile_phone` | `null \| string` |  |
+| `phone` | `null \| string` |  |
+| `photo_original` | `null \| string` |  |
+| `photo_small` | `null \| string` |  |
+| `photo_thumb` | `null \| string` |  |
+| `photo_thumb_small` | `null \| string` |  |
+| `photo_tiny` | `null \| string` |  |
+| `time_zone_identifier` | `null \| string` |  |
+| `title` | `null \| string` |  |
+| `url` | `null \| string` |  |
+| `utc_hours_diff` | `null \| integer` |  |
+
+
+</details>
+
 ### Users Get
 
 Returns a single user by ID
@@ -209,6 +245,34 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 ```
 
 
+
+<details>
+<summary><b>Response Schema</b></summary>
+
+#### Records
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `id` | `null \| string` |  |
+| `name` | `null \| string` |  |
+| `board_kind` | `null \| string` |  |
+| `type` | `null \| string` |  |
+| `description` | `null \| string` |  |
+| `permissions` | `null \| string` |  |
+| `state` | `null \| string` |  |
+| `updated_at` | `null \| string` |  |
+| `columns` | `null \| array` |  |
+| `groups` | `null \| array` |  |
+| `owners` | `null \| array` |  |
+| `creator` | `null \| object` |  |
+| `subscribers` | `null \| array` |  |
+| `tags` | `null \| array` |  |
+| `top_group` | `null \| object` |  |
+| `views` | `null \| array` |  |
+| `workspace` | `null \| object` |  |
+
+
+</details>
 
 ### Boards Get
 
@@ -378,6 +442,28 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `board_id` | `string` | Yes | Board ID to fetch items from |
 
 
+<details>
+<summary><b>Response Schema</b></summary>
+
+#### Records
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `id` | `null \| string` |  |
+| `name` | `null \| string` |  |
+| `created_at` | `null \| string` |  |
+| `creator_id` | `null \| string` |  |
+| `state` | `null \| string` |  |
+| `updated_at` | `null \| string` |  |
+| `board` | `null \| object` |  |
+| `group` | `null \| object` |  |
+| `parent_item` | `null \| object` |  |
+| `column_values` | `null \| array` |  |
+| `subscribers` | `null \| array` |  |
+
+
+</details>
+
 ### Items Get
 
 Returns a single item by ID
@@ -523,6 +609,21 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 
 
+<details>
+<summary><b>Response Schema</b></summary>
+
+#### Records
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `id` | `null \| string` |  |
+| `name` | `null \| string` |  |
+| `picture_url` | `null \| string` |  |
+| `users` | `null \| array` |  |
+
+
+</details>
+
 ### Teams Get
 
 Returns a single team by ID
@@ -648,6 +749,20 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 
 
+<details>
+<summary><b>Response Schema</b></summary>
+
+#### Records
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `id` | `null \| string` |  |
+| `name` | `null \| string` |  |
+| `color` | `null \| string` |  |
+
+
+</details>
+
 ### Tags Context Store Search
 
 Search and filter tags records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
@@ -742,6 +857,26 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `page` | `integer` | No | Page number for pagination |
 | `limit` | `integer` | No | Number of updates to return per page |
 
+
+<details>
+<summary><b>Response Schema</b></summary>
+
+#### Records
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `id` | `null \| string` |  |
+| `body` | `null \| string` |  |
+| `text_body` | `null \| string` |  |
+| `created_at` | `null \| string` |  |
+| `creator_id` | `null \| string` |  |
+| `item_id` | `null \| string` |  |
+| `updated_at` | `null \| string` |  |
+| `replies` | `null \| array` |  |
+| `assets` | `null \| array` |  |
+
+
+</details>
 
 ### Updates Get
 
@@ -877,6 +1012,29 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 ```
 
 
+
+<details>
+<summary><b>Response Schema</b></summary>
+
+#### Records
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `id` | `null \| string` |  |
+| `name` | `null \| string` |  |
+| `kind` | `null \| string` |  |
+| `description` | `null \| string` |  |
+| `state` | `null \| string` |  |
+| `created_at` | `null \| string` |  |
+| `account_product` | `null \| object` |  |
+| `owners_subscribers` | `null \| array` |  |
+| `settings` | `null \| object` |  |
+| `team_owners_subscribers` | `null \| array` |  |
+| `teams_subscribers` | `null \| array` |  |
+| `users_subscribers` | `null \| array` |  |
+
+
+</details>
 
 ### Workspaces Get
 
@@ -1029,6 +1187,23 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 |----------------|------|----------|-------------|
 | `board_id` | `string` | Yes | Board ID to fetch activity logs from |
 
+
+<details>
+<summary><b>Response Schema</b></summary>
+
+#### Records
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `id` | `null \| string` |  |
+| `event` | `null \| string` |  |
+| `data` | `null \| string` |  |
+| `entity` | `null \| string` |  |
+| `created_at` | `null \| string` |  |
+| `user_id` | `null \| string` |  |
+
+
+</details>
 
 ### Activity Logs Context Store Search
 
