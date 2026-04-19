@@ -2027,7 +2027,7 @@ SlackConnectorModel: ConnectorModel = ConnectorModel(
                                         ],
                                         'freshness': 'live',
                                         'example_questions': ["What's the latest in #ext-marathon?", 'What did Alex say in the channel?'],
-                                        'search_strategy': 'Use channel_messages for reading and searching existing Slack messages only. First find the channel using the channels entity search, then find messages using the channel_messages entity search filtered on channel_id for that channel. Example filter: {"eq": {"channel_id": "C123"}}. Do not use channel_messages.create to send a message. To post a new Slack message, use messages.create with channel and text.',
+                                        'search_strategy': 'Use `channel_messages` for reading and searching existing Slack messages only. First find the channel using the `channels` entity search, then find messages using the `channel_messages` entity search filtered on channel_id for that channel. Example filter: {"eq": {"channel_id": "C123"}}. Do not use `channel_messages.create` to send a message. To post a new Slack message, use `messages.create` with channel and text.',
                                     },
                                 },
                             },
@@ -2165,7 +2165,7 @@ SlackConnectorModel: ConnectorModel = ConnectorModel(
                     ],
                     'freshness': 'live',
                     'example_questions': ["What's the latest in #ext-marathon?", 'What did Alex say in the channel?'],
-                    'search_strategy': 'Use channel_messages for reading and searching existing Slack messages only. First find the channel using the channels entity search, then find messages using the channel_messages entity search filtered on channel_id for that channel. Example filter: {"eq": {"channel_id": "C123"}}. Do not use channel_messages.create to send a message. To post a new Slack message, use messages.create with channel and text.',
+                    'search_strategy': 'Use `channel_messages` for reading and searching existing Slack messages only. First find the channel using the `channels` entity search, then find messages using the `channel_messages` entity search filtered on channel_id for that channel. Example filter: {"eq": {"channel_id": "C123"}}. Do not use `channel_messages.create` to send a message. To post a new Slack message, use `messages.create` with channel and text.',
                 },
             },
             ai_hints={
@@ -2179,7 +2179,7 @@ SlackConnectorModel: ConnectorModel = ConnectorModel(
                 ],
                 'freshness': 'live',
                 'example_questions': ["What's the latest in #ext-marathon?", 'What did Alex say in the channel?'],
-                'search_strategy': 'Use channel_messages for reading and searching existing Slack messages only. First find the channel using the channels entity search, then find messages using the channel_messages entity search filtered on channel_id for that channel. Example filter: {"eq": {"channel_id": "C123"}}. Do not use channel_messages.create to send a message. To post a new Slack message, use messages.create with channel and text.',
+                'search_strategy': 'Use `channel_messages` for reading and searching existing Slack messages only. First find the channel using the `channels` entity search, then find messages using the `channel_messages` entity search filtered on channel_id for that channel. Example filter: {"eq": {"channel_id": "C123"}}. Do not use `channel_messages.create` to send a message. To post a new Slack message, use `messages.create` with channel and text.',
             },
         ),
         EntityDefinition(
