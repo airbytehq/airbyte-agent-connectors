@@ -682,6 +682,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 | Field Name | Type | Description |
 |------------|------|-------------|
+| `next` | `string` |  |
 | `start` | `integer` |  |
 | `limit` | `integer` |  |
 | `size` | `integer` |  |
@@ -812,6 +813,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 | Field Name | Type | Description |
 |------------|------|-------------|
+| `next` | `string` |  |
 | `start` | `integer` |  |
 | `limit` | `integer` |  |
 | `size` | `integer` |  |

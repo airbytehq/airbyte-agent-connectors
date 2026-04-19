@@ -751,6 +751,7 @@
         "description": "Returns all user groups.",
         "record_extractor": "$.results",
         "meta_extractor": {
+          "next": "$._links.next",
           "start": "$.start",
           "limit": "$.limit",
           "size": "$.size"
@@ -758,6 +759,14 @@
         "needs_envelope": true,
         "record_type": "list[Group]",
         "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "start",
             "python_name": "start",
@@ -863,6 +872,7 @@
         "description": "Returns audit log records.",
         "record_extractor": "$.results",
         "meta_extractor": {
+          "next": "$._links.next",
           "start": "$.start",
           "limit": "$.limit",
           "size": "$.size"
@@ -870,6 +880,14 @@
         "needs_envelope": true,
         "record_type": "list[AuditRecord]",
         "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "start",
             "python_name": "start",

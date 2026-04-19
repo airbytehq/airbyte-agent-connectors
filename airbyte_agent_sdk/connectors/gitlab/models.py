@@ -491,6 +491,90 @@ class Milestone(BaseModel):
 # ===== METADATA TYPE DEFINITIONS (PYDANTIC) =====
 # Meta types for operations that extract metadata (e.g., pagination info)
 
+class ProjectsListResultMeta(BaseModel):
+    """Metadata for projects.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next: Union[str | None, Any] = Field(default=None)
+
+class IssuesListResultMeta(BaseModel):
+    """Metadata for issues.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next: Union[str | None, Any] = Field(default=None)
+
+class MergeRequestsListResultMeta(BaseModel):
+    """Metadata for merge_requests.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next: Union[str | None, Any] = Field(default=None)
+
+class UsersListResultMeta(BaseModel):
+    """Metadata for users.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next: Union[str | None, Any] = Field(default=None)
+
+class CommitsListResultMeta(BaseModel):
+    """Metadata for commits.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next: Union[str | None, Any] = Field(default=None)
+
+class GroupsListResultMeta(BaseModel):
+    """Metadata for groups.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next: Union[str | None, Any] = Field(default=None)
+
+class BranchesListResultMeta(BaseModel):
+    """Metadata for branches.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next: Union[str | None, Any] = Field(default=None)
+
+class PipelinesListResultMeta(BaseModel):
+    """Metadata for pipelines.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next: Union[str | None, Any] = Field(default=None)
+
+class GroupMembersListResultMeta(BaseModel):
+    """Metadata for group_members.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next: Union[str | None, Any] = Field(default=None)
+
+class ProjectMembersListResultMeta(BaseModel):
+    """Metadata for project_members.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next: Union[str | None, Any] = Field(default=None)
+
+class ReleasesListResultMeta(BaseModel):
+    """Metadata for releases.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next: Union[str | None, Any] = Field(default=None)
+
+class TagsListResultMeta(BaseModel):
+    """Metadata for tags.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next: Union[str | None, Any] = Field(default=None)
+
+class GroupMilestonesListResultMeta(BaseModel):
+    """Metadata for group_milestones.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next: Union[str | None, Any] = Field(default=None)
+
+class ProjectMilestonesListResultMeta(BaseModel):
+    """Metadata for project_milestones.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next: Union[str | None, Any] = Field(default=None)
+
 # ===== CHECK RESULT MODEL =====
 
 class GitlabCheckResult(BaseModel):
@@ -1323,45 +1407,45 @@ ProjectMilestonesSearchResult = AirbyteSearchResult[ProjectMilestonesSearchData]
 # Concrete type aliases for each operation result.
 # These provide simpler, more readable type annotations than using the generic forms.
 
-ProjectsListResult = GitlabExecuteResult[list[Project]]
-"""Result type for projects.list operation."""
+ProjectsListResult = GitlabExecuteResultWithMeta[list[Project], ProjectsListResultMeta]
+"""Result type for projects.list operation with data and metadata."""
 
-IssuesListResult = GitlabExecuteResult[list[Issue]]
-"""Result type for issues.list operation."""
+IssuesListResult = GitlabExecuteResultWithMeta[list[Issue], IssuesListResultMeta]
+"""Result type for issues.list operation with data and metadata."""
 
-MergeRequestsListResult = GitlabExecuteResult[list[MergeRequest]]
-"""Result type for merge_requests.list operation."""
+MergeRequestsListResult = GitlabExecuteResultWithMeta[list[MergeRequest], MergeRequestsListResultMeta]
+"""Result type for merge_requests.list operation with data and metadata."""
 
-UsersListResult = GitlabExecuteResult[list[User]]
-"""Result type for users.list operation."""
+UsersListResult = GitlabExecuteResultWithMeta[list[User], UsersListResultMeta]
+"""Result type for users.list operation with data and metadata."""
 
-CommitsListResult = GitlabExecuteResult[list[Commit]]
-"""Result type for commits.list operation."""
+CommitsListResult = GitlabExecuteResultWithMeta[list[Commit], CommitsListResultMeta]
+"""Result type for commits.list operation with data and metadata."""
 
-GroupsListResult = GitlabExecuteResult[list[Group]]
-"""Result type for groups.list operation."""
+GroupsListResult = GitlabExecuteResultWithMeta[list[Group], GroupsListResultMeta]
+"""Result type for groups.list operation with data and metadata."""
 
-BranchesListResult = GitlabExecuteResult[list[Branch]]
-"""Result type for branches.list operation."""
+BranchesListResult = GitlabExecuteResultWithMeta[list[Branch], BranchesListResultMeta]
+"""Result type for branches.list operation with data and metadata."""
 
-PipelinesListResult = GitlabExecuteResult[list[Pipeline]]
-"""Result type for pipelines.list operation."""
+PipelinesListResult = GitlabExecuteResultWithMeta[list[Pipeline], PipelinesListResultMeta]
+"""Result type for pipelines.list operation with data and metadata."""
 
-GroupMembersListResult = GitlabExecuteResult[list[Member]]
-"""Result type for group_members.list operation."""
+GroupMembersListResult = GitlabExecuteResultWithMeta[list[Member], GroupMembersListResultMeta]
+"""Result type for group_members.list operation with data and metadata."""
 
-ProjectMembersListResult = GitlabExecuteResult[list[Member]]
-"""Result type for project_members.list operation."""
+ProjectMembersListResult = GitlabExecuteResultWithMeta[list[Member], ProjectMembersListResultMeta]
+"""Result type for project_members.list operation with data and metadata."""
 
-ReleasesListResult = GitlabExecuteResult[list[Release]]
-"""Result type for releases.list operation."""
+ReleasesListResult = GitlabExecuteResultWithMeta[list[Release], ReleasesListResultMeta]
+"""Result type for releases.list operation with data and metadata."""
 
-TagsListResult = GitlabExecuteResult[list[Tag]]
-"""Result type for tags.list operation."""
+TagsListResult = GitlabExecuteResultWithMeta[list[Tag], TagsListResultMeta]
+"""Result type for tags.list operation with data and metadata."""
 
-GroupMilestonesListResult = GitlabExecuteResult[list[Milestone]]
-"""Result type for group_milestones.list operation."""
+GroupMilestonesListResult = GitlabExecuteResultWithMeta[list[Milestone], GroupMilestonesListResultMeta]
+"""Result type for group_milestones.list operation with data and metadata."""
 
-ProjectMilestonesListResult = GitlabExecuteResult[list[Milestone]]
-"""Result type for project_milestones.list operation."""
+ProjectMilestonesListResult = GitlabExecuteResultWithMeta[list[Milestone], ProjectMilestonesListResultMeta]
+"""Result type for project_milestones.list operation with data and metadata."""
 

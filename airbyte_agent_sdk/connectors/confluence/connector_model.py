@@ -900,6 +900,7 @@ ConfluenceConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.results',
                     meta_extractor={
+                        'next': '$._links.next',
                         'start': '$.start',
                         'limit': '$.limit',
                         'size': '$.size',
@@ -1034,6 +1035,7 @@ ConfluenceConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.results',
                     meta_extractor={
+                        'next': '$._links.next',
                         'start': '$.start',
                         'limit': '$.limit',
                         'size': '$.size',

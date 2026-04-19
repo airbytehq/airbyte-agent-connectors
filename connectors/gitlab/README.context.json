@@ -194,10 +194,22 @@
     "response_type": "ProjectsListResult",
     "description": "Get a list of all visible projects across GitLab for the authenticated user.",
     "record_extractor": "$",
-    "meta_extractor": null,
+    "meta_extractor": {
+      "next": "@link.next"
+    },
     "needs_envelope": true,
     "record_type": "list[Project]",
-    "meta_fields": null,
+    "meta_fields": [
+      {
+        "name": "next",
+        "python_name": "next",
+        "type": "str | None",
+        "schema": {
+          "type": "string",
+          "nullable": true
+        }
+      }
+    ],
     "is_download": false
   },
   "entities_grouped": {
@@ -310,10 +322,22 @@
         "response_type": "ProjectsListResult",
         "description": "Get a list of all visible projects across GitLab for the authenticated user.",
         "record_extractor": "$",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "@link.next"
+        },
         "needs_envelope": true,
         "record_type": "list[Project]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
         "is_download": false
       },
       {
@@ -523,10 +547,22 @@
         "response_type": "IssuesListResult",
         "description": "Get a list of a project's issues.",
         "record_extractor": "$",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "@link.next"
+        },
         "needs_envelope": true,
         "record_type": "list[Issue]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
         "is_download": false
       },
       {
@@ -731,10 +767,22 @@
         "response_type": "MergeRequestsListResult",
         "description": "Get all merge requests for a project.",
         "record_extractor": "$",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "@link.next"
+        },
         "needs_envelope": true,
         "record_type": "list[MergeRequest]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
         "is_download": false
       },
       {
@@ -838,10 +886,22 @@
         "response_type": "UsersListResult",
         "description": "Get a list of users.",
         "record_extractor": "$",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "@link.next"
+        },
         "needs_envelope": true,
         "record_type": "list[User]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
         "is_download": false
       },
       {
@@ -969,10 +1029,22 @@
         "response_type": "CommitsListResult",
         "description": "Get a list of repository commits in a project.",
         "record_extractor": "$",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "@link.next"
+        },
         "needs_envelope": true,
         "record_type": "list[Commit]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
         "is_download": false
       },
       {
@@ -1118,10 +1190,22 @@
         "response_type": "GroupsListResult",
         "description": "Get a list of visible groups for the authenticated user.",
         "record_extractor": "$",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "@link.next"
+        },
         "needs_envelope": true,
         "record_type": "list[Group]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
         "is_download": false
       },
       {
@@ -1214,10 +1298,22 @@
         "response_type": "BranchesListResult",
         "description": "Get a list of repository branches from a project.",
         "record_extractor": "$",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "@link.next"
+        },
         "needs_envelope": true,
         "record_type": "list[Branch]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
         "is_download": false
       },
       {
@@ -1377,10 +1473,22 @@
         "response_type": "PipelinesListResult",
         "description": "List pipelines in a project.",
         "record_extractor": "$",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "@link.next"
+        },
         "needs_envelope": true,
         "record_type": "list[Pipeline]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
         "is_download": false
       },
       {
@@ -1483,10 +1591,22 @@
         "response_type": "GroupMembersListResult",
         "description": "Gets a list of group members viewable by the authenticated user.",
         "record_extractor": "$",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "@link.next"
+        },
         "needs_envelope": true,
         "record_type": "list[Member]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
         "is_download": false
       },
       {
@@ -1589,10 +1709,22 @@
         "response_type": "ProjectMembersListResult",
         "description": "Gets a list of project members viewable by the authenticated user.",
         "record_extractor": "$",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "@link.next"
+        },
         "needs_envelope": true,
         "record_type": "list[Member]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
         "is_download": false
       },
       {
@@ -1714,10 +1846,22 @@
         "response_type": "ReleasesListResult",
         "description": "Paginated list of releases for a given project, sorted by released_at.",
         "record_extractor": "$",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "@link.next"
+        },
         "needs_envelope": true,
         "record_type": "list[Release]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
         "is_download": false
       },
       {
@@ -1851,10 +1995,22 @@
         "response_type": "TagsListResult",
         "description": "Get a list of repository tags from a project, sorted by update date and time in descending order.",
         "record_extractor": "$",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "@link.next"
+        },
         "needs_envelope": true,
         "record_type": "list[Tag]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
         "is_download": false
       },
       {
@@ -1972,10 +2128,22 @@
         "response_type": "GroupMilestonesListResult",
         "description": "Returns a list of group milestones.",
         "record_extractor": "$",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "@link.next"
+        },
         "needs_envelope": true,
         "record_type": "list[Milestone]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
         "is_download": false
       },
       {
@@ -2093,10 +2261,22 @@
         "response_type": "ProjectMilestonesListResult",
         "description": "Returns a list of project milestones.",
         "record_extractor": "$",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "@link.next"
+        },
         "needs_envelope": true,
         "record_type": "list[Milestone]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
         "is_download": false
       },
       {

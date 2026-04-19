@@ -1708,6 +1708,8 @@ paths:
       x-airbyte-entity: projects
       x-airbyte-action: list
       x-airbyte-preferred-for-check: true
+      x-airbyte-meta-extractor:
+        next: "@link.next"
       parameters:
       - name: page
         in: query
@@ -1809,6 +1811,8 @@ paths:
       operationId: listIssues
       x-airbyte-entity: issues
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: "@link.next"
       parameters:
       - name: project_id
         in: path
@@ -1945,6 +1949,8 @@ paths:
       operationId: listMergeRequests
       x-airbyte-entity: merge_requests
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: "@link.next"
       parameters:
       - name: project_id
         in: path
@@ -2077,6 +2083,8 @@ paths:
       operationId: listUsers
       x-airbyte-entity: users
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: "@link.next"
       parameters:
       - name: page
         in: query
@@ -2146,6 +2154,8 @@ paths:
       operationId: listCommits
       x-airbyte-entity: commits
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: "@link.next"
       parameters:
       - name: project_id
         in: path
@@ -2244,6 +2254,8 @@ paths:
       operationId: listGroups
       x-airbyte-entity: groups
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: "@link.next"
       parameters:
       - name: page
         in: query
@@ -2330,6 +2342,8 @@ paths:
       operationId: listBranches
       x-airbyte-entity: branches
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: "@link.next"
       parameters:
       - name: project_id
         in: path
@@ -2406,6 +2420,8 @@ paths:
       operationId: listPipelines
       x-airbyte-entity: pipelines
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: "@link.next"
       parameters:
       - name: project_id
         in: path
@@ -2518,6 +2534,8 @@ paths:
       operationId: listGroupMembers
       x-airbyte-entity: group_members
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: "@link.next"
       parameters:
       - name: group_id
         in: path
@@ -2594,6 +2612,8 @@ paths:
       operationId: listProjectMembers
       x-airbyte-entity: project_members
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: "@link.next"
       parameters:
       - name: project_id
         in: path
@@ -2670,6 +2690,8 @@ paths:
       operationId: listReleases
       x-airbyte-entity: releases
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: "@link.next"
       parameters:
       - name: project_id
         in: path
@@ -2757,6 +2779,8 @@ paths:
       operationId: listTags
       x-airbyte-entity: tags
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: "@link.next"
       parameters:
       - name: project_id
         in: path
@@ -2850,6 +2874,8 @@ paths:
       operationId: listGroupMilestones
       x-airbyte-entity: group_milestones
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: "@link.next"
       parameters:
       - name: group_id
         in: path
@@ -2934,6 +2960,8 @@ paths:
       operationId: listProjectMilestones
       x-airbyte-entity: project_milestones
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: "@link.next"
       parameters:
       - name: project_id
         in: path

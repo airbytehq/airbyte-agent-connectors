@@ -605,6 +605,7 @@ GitlabConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-stream-name': 'projects',
                         },
                     },
+                    meta_extractor={'next': '@link.next'},
                     preferred_for_check=True,
                 ),
                 Action.GET: EndpointDefinition(
@@ -1744,6 +1745,7 @@ GitlabConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-stream-name': 'issues',
                         },
                     },
+                    meta_extractor={'next': '@link.next'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -2365,6 +2367,7 @@ GitlabConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-stream-name': 'merge_requests',
                         },
                     },
+                    meta_extractor={'next': '@link.next'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -2907,6 +2910,7 @@ GitlabConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-stream-name': 'users',
                         },
                     },
+                    meta_extractor={'next': '@link.next'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -3071,6 +3075,7 @@ GitlabConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-stream-name': 'commits',
                         },
                     },
+                    meta_extractor={'next': '@link.next'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -3436,6 +3441,7 @@ GitlabConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-stream-name': 'groups',
                         },
                     },
+                    meta_extractor={'next': '@link.next'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -3881,6 +3887,7 @@ GitlabConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-stream-name': 'branches',
                         },
                     },
+                    meta_extractor={'next': '@link.next'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -4018,6 +4025,7 @@ GitlabConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-stream-name': 'pipelines',
                         },
                     },
+                    meta_extractor={'next': '@link.next'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -4178,6 +4186,7 @@ GitlabConnectorModel: ConnectorModel = ConnectorModel(
                             'additionalProperties': True,
                         },
                     },
+                    meta_extractor={'next': '@link.next'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -4318,6 +4327,7 @@ GitlabConnectorModel: ConnectorModel = ConnectorModel(
                             'additionalProperties': True,
                         },
                     },
+                    meta_extractor={'next': '@link.next'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -4470,6 +4480,7 @@ GitlabConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-stream-name': 'releases',
                         },
                     },
+                    meta_extractor={'next': '@link.next'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -4655,6 +4666,7 @@ GitlabConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-stream-name': 'tags',
                         },
                     },
+                    meta_extractor={'next': '@link.next'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -4814,6 +4826,7 @@ GitlabConnectorModel: ConnectorModel = ConnectorModel(
                             'additionalProperties': True,
                         },
                     },
+                    meta_extractor={'next': '@link.next'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -4970,6 +4983,7 @@ GitlabConnectorModel: ConnectorModel = ConnectorModel(
                             'additionalProperties': True,
                         },
                     },
+                    meta_extractor={'next': '@link.next'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',

@@ -192,7 +192,7 @@ class GitlabConnector:
 
     connector_name = "gitlab"
     connector_version = "1.0.4"
-    sdk_version = "0.1.20"
+    sdk_version = "0.1.21"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -1114,7 +1114,8 @@ class ProjectsQuery:
         result = await self._connector.execute("projects", "list", params)
         # Cast generic envelope to concrete typed result
         return ProjectsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1342,7 +1343,8 @@ class IssuesQuery:
         result = await self._connector.execute("issues", "list", params)
         # Cast generic envelope to concrete typed result
         return IssuesListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1528,7 +1530,8 @@ class MergeRequestsQuery:
         result = await self._connector.execute("merge_requests", "list", params)
         # Cast generic envelope to concrete typed result
         return MergeRequestsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1706,7 +1709,8 @@ class UsersQuery:
         result = await self._connector.execute("users", "list", params)
         # Cast generic envelope to concrete typed result
         return UsersListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1847,7 +1851,8 @@ class CommitsQuery:
         result = await self._connector.execute("commits", "list", params)
         # Cast generic envelope to concrete typed result
         return CommitsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -2000,7 +2005,8 @@ class GroupsQuery:
         result = await self._connector.execute("groups", "list", params)
         # Cast generic envelope to concrete typed result
         return GroupsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -2150,7 +2156,8 @@ class BranchesQuery:
         result = await self._connector.execute("branches", "list", params)
         # Cast generic envelope to concrete typed result
         return BranchesListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -2298,7 +2305,8 @@ class PipelinesQuery:
         result = await self._connector.execute("pipelines", "list", params)
         # Cast generic envelope to concrete typed result
         return PipelinesListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -2437,7 +2445,8 @@ class GroupMembersQuery:
         result = await self._connector.execute("group_members", "list", params)
         # Cast generic envelope to concrete typed result
         return GroupMembersListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -2578,7 +2587,8 @@ class ProjectMembersQuery:
         result = await self._connector.execute("project_members", "list", params)
         # Cast generic envelope to concrete typed result
         return ProjectMembersListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -2722,7 +2732,8 @@ class ReleasesQuery:
         result = await self._connector.execute("releases", "list", params)
         # Cast generic envelope to concrete typed result
         return ReleasesListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -2873,7 +2884,8 @@ class TagsQuery:
         result = await self._connector.execute("tags", "list", params)
         # Cast generic envelope to concrete typed result
         return TagsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -3012,7 +3024,8 @@ class GroupMilestonesQuery:
         result = await self._connector.execute("group_milestones", "list", params)
         # Cast generic envelope to concrete typed result
         return GroupMilestonesListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -3155,7 +3168,8 @@ class ProjectMilestonesQuery:
         result = await self._connector.execute("project_milestones", "list", params)
         # Cast generic envelope to concrete typed result
         return ProjectMilestonesListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 

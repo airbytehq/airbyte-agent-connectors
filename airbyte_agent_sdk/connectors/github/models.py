@@ -64,23 +64,6 @@ class IssueResponseLabelsItem(BaseModel):
     default: Union[bool, Any] = Field(default=None)
     description: Union[str | None, Any] = Field(default=None)
 
-class IssueResponseIssueDependenciesSummary(BaseModel):
-    """Summary of issue dependencies"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    blocked_by: Union[int, Any] = Field(default=None)
-    blocking: Union[int, Any] = Field(default=None)
-    total_blocked_by: Union[int, Any] = Field(default=None)
-    total_blocking: Union[int, Any] = Field(default=None)
-
-class IssueResponseSubIssuesSummary(BaseModel):
-    """Summary of sub-issues"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    total: Union[int, Any] = Field(default=None)
-    completed: Union[int, Any] = Field(default=None)
-    percent_completed: Union[int, Any] = Field(default=None)
-
 class IssueResponseAssigneesItem(BaseModel):
     """Nested schema for IssueResponse.assignees_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -107,6 +90,36 @@ class IssueResponseAssignee(BaseModel):
     type_: Union[str, Any] = Field(default=None, alias="type")
     site_admin: Union[bool, Any] = Field(default=None)
 
+class IssueResponseIssueDependenciesSummary(BaseModel):
+    """Summary of issue dependencies"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    blocked_by: Union[int, Any] = Field(default=None)
+    blocking: Union[int, Any] = Field(default=None)
+    total_blocked_by: Union[int, Any] = Field(default=None)
+    total_blocking: Union[int, Any] = Field(default=None)
+
+class IssueResponseUser(BaseModel):
+    """The user who created the issue"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    login: Union[str, Any] = Field(default=None)
+    id: Union[int, Any] = Field(default=None)
+    node_id: Union[str, Any] = Field(default=None)
+    avatar_url: Union[str, Any] = Field(default=None)
+    url: Union[str, Any] = Field(default=None)
+    html_url: Union[str, Any] = Field(default=None)
+    type_: Union[str, Any] = Field(default=None, alias="type")
+    site_admin: Union[bool, Any] = Field(default=None)
+
+class IssueResponseSubIssuesSummary(BaseModel):
+    """Summary of sub-issues"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    total: Union[int, Any] = Field(default=None)
+    completed: Union[int, Any] = Field(default=None)
+    percent_completed: Union[int, Any] = Field(default=None)
+
 class IssueResponseReactions(BaseModel):
     """Reaction counts"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -121,19 +134,6 @@ class IssueResponseReactions(BaseModel):
     heart: Union[int, Any] = Field(default=None)
     rocket: Union[int, Any] = Field(default=None)
     eyes: Union[int, Any] = Field(default=None)
-
-class IssueResponseUser(BaseModel):
-    """The user who created the issue"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    login: Union[str, Any] = Field(default=None)
-    id: Union[int, Any] = Field(default=None)
-    node_id: Union[str, Any] = Field(default=None)
-    avatar_url: Union[str, Any] = Field(default=None)
-    url: Union[str, Any] = Field(default=None)
-    html_url: Union[str, Any] = Field(default=None)
-    type_: Union[str, Any] = Field(default=None, alias="type")
-    site_admin: Union[bool, Any] = Field(default=None)
 
 class IssueResponse(BaseModel):
     """IssueResponse type definition"""
@@ -192,6 +192,19 @@ class CommentCreateParams(BaseModel):
 
     body: Union[str, Any] = Field(default=None)
 
+class CommentResponseUser(BaseModel):
+    """The user who created the comment"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    login: Union[str, Any] = Field(default=None)
+    id: Union[int, Any] = Field(default=None)
+    node_id: Union[str, Any] = Field(default=None)
+    avatar_url: Union[str, Any] = Field(default=None)
+    url: Union[str, Any] = Field(default=None)
+    html_url: Union[str, Any] = Field(default=None)
+    type_: Union[str, Any] = Field(default=None, alias="type")
+    site_admin: Union[bool, Any] = Field(default=None)
+
 class CommentResponseReactions(BaseModel):
     """Reaction counts"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -206,19 +219,6 @@ class CommentResponseReactions(BaseModel):
     heart: Union[int, Any] = Field(default=None)
     rocket: Union[int, Any] = Field(default=None)
     eyes: Union[int, Any] = Field(default=None)
-
-class CommentResponseUser(BaseModel):
-    """The user who created the comment"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    login: Union[str, Any] = Field(default=None)
-    id: Union[int, Any] = Field(default=None)
-    node_id: Union[str, Any] = Field(default=None)
-    avatar_url: Union[str, Any] = Field(default=None)
-    url: Union[str, Any] = Field(default=None)
-    html_url: Union[str, Any] = Field(default=None)
-    type_: Union[str, Any] = Field(default=None, alias="type")
-    site_admin: Union[bool, Any] = Field(default=None)
 
 class CommentResponse(BaseModel):
     """CommentResponse type definition"""
@@ -256,6 +256,14 @@ class PullRequestResponseBase(BaseModel):
     ref: Union[str, Any] = Field(default=None)
     sha: Union[str, Any] = Field(default=None)
 
+class PullRequestResponseHead(BaseModel):
+    """The head branch"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    label: Union[str, Any] = Field(default=None)
+    ref: Union[str, Any] = Field(default=None)
+    sha: Union[str, Any] = Field(default=None)
+
 class PullRequestResponseAssigneesItem(BaseModel):
     """Nested schema for PullRequestResponse.assignees_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -268,14 +276,6 @@ class PullRequestResponseAssigneesItem(BaseModel):
     html_url: Union[str, Any] = Field(default=None)
     type_: Union[str, Any] = Field(default=None, alias="type")
     site_admin: Union[bool, Any] = Field(default=None)
-
-class PullRequestResponseHead(BaseModel):
-    """The head branch"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    label: Union[str, Any] = Field(default=None)
-    ref: Union[str, Any] = Field(default=None)
-    sha: Union[str, Any] = Field(default=None)
 
 class PullRequestResponseUser(BaseModel):
     """The user who created the pull request"""
