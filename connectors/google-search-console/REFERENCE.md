@@ -429,6 +429,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `position` | `null \| number` |  |
 
 
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `response_aggregation_type` | `null \| string` |  |
+
 </details>
 
 ### Search Analytics By Date Context Store Search
@@ -567,6 +573,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `ctr` | `null \| number` |  |
 | `position` | `null \| number` |  |
 
+
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `response_aggregation_type` | `null \| string` |  |
 
 </details>
 
@@ -709,6 +721,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `position` | `null \| number` |  |
 
 
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `response_aggregation_type` | `null \| string` |  |
+
 </details>
 
 ### Search Analytics By Device Context Store Search
@@ -849,6 +867,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `ctr` | `null \| number` |  |
 | `position` | `null \| number` |  |
 
+
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `response_aggregation_type` | `null \| string` |  |
 
 </details>
 
@@ -991,6 +1015,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `position` | `null \| number` |  |
 
 
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `response_aggregation_type` | `null \| string` |  |
+
 </details>
 
 ### Search Analytics By Query Context Store Search
@@ -1131,6 +1161,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `ctr` | `null \| number` |  |
 | `position` | `null \| number` |  |
 
+
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `response_aggregation_type` | `null \| string` |  |
 
 </details>
 

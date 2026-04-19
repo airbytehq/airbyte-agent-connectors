@@ -208,7 +208,7 @@ class WoocommerceConnector:
 
     connector_name = "woocommerce"
     connector_version = "1.0.4"
-    sdk_version = "0.1.25"
+    sdk_version = "0.1.26"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -1045,7 +1045,8 @@ class CustomersQuery:
         result = await self._connector.execute("customers", "list", params)
         # Cast generic envelope to concrete typed result
         return CustomersListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1209,7 +1210,8 @@ class OrdersQuery:
         result = await self._connector.execute("orders", "list", params)
         # Cast generic envelope to concrete typed result
         return OrdersListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1420,7 +1422,8 @@ class ProductsQuery:
         result = await self._connector.execute("products", "list", params)
         # Cast generic envelope to concrete typed result
         return ProductsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1627,7 +1630,8 @@ class CouponsQuery:
         result = await self._connector.execute("coupons", "list", params)
         # Cast generic envelope to concrete typed result
         return CouponsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1794,7 +1798,8 @@ class ProductCategoriesQuery:
         result = await self._connector.execute("product_categories", "list", params)
         # Cast generic envelope to concrete typed result
         return ProductCategoriesListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1940,7 +1945,8 @@ class ProductTagsQuery:
         result = await self._connector.execute("product_tags", "list", params)
         # Cast generic envelope to concrete typed result
         return ProductTagsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -2079,7 +2085,8 @@ class ProductReviewsQuery:
         result = await self._connector.execute("product_reviews", "list", params)
         # Cast generic envelope to concrete typed result
         return ProductReviewsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -2208,7 +2215,8 @@ class ProductAttributesQuery:
         result = await self._connector.execute("product_attributes", "list", params)
         # Cast generic envelope to concrete typed result
         return ProductAttributesListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -2363,7 +2371,8 @@ class ProductVariationsQuery:
         result = await self._connector.execute("product_variations", "list", params)
         # Cast generic envelope to concrete typed result
         return ProductVariationsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -2524,7 +2533,8 @@ class OrderNotesQuery:
         result = await self._connector.execute("order_notes", "list", params)
         # Cast generic envelope to concrete typed result
         return OrderNotesListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -2654,7 +2664,8 @@ class RefundsQuery:
         result = await self._connector.execute("refunds", "list", params)
         # Cast generic envelope to concrete typed result
         return RefundsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -2776,7 +2787,8 @@ class PaymentGatewaysQuery:
         result = await self._connector.execute("payment_gateways", "list", params)
         # Cast generic envelope to concrete typed result
         return PaymentGatewaysListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -2895,7 +2907,8 @@ class ShippingMethodsQuery:
         result = await self._connector.execute("shipping_methods", "list", params)
         # Cast generic envelope to concrete typed result
         return ShippingMethodsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -3008,7 +3021,8 @@ class ShippingZonesQuery:
         result = await self._connector.execute("shipping_zones", "list", params)
         # Cast generic envelope to concrete typed result
         return ShippingZonesListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -3139,7 +3153,8 @@ class TaxRatesQuery:
         result = await self._connector.execute("tax_rates", "list", params)
         # Cast generic envelope to concrete typed result
         return TaxRatesListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -3263,7 +3278,8 @@ class TaxClassesQuery:
         result = await self._connector.execute("tax_classes", "list", params)
         # Cast generic envelope to concrete typed result
         return TaxClassesListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 

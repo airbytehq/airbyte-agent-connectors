@@ -180,6 +180,42 @@ class SearchAnalyticsResponse(BaseModel):
 # ===== METADATA TYPE DEFINITIONS (PYDANTIC) =====
 # Meta types for operations that extract metadata (e.g., pagination info)
 
+class SearchAnalyticsByDateListResultMeta(BaseModel):
+    """Metadata for search_analytics_by_date.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    response_aggregation_type: Union[str | None, Any] = Field(default=None)
+
+class SearchAnalyticsByCountryListResultMeta(BaseModel):
+    """Metadata for search_analytics_by_country.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    response_aggregation_type: Union[str | None, Any] = Field(default=None)
+
+class SearchAnalyticsByDeviceListResultMeta(BaseModel):
+    """Metadata for search_analytics_by_device.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    response_aggregation_type: Union[str | None, Any] = Field(default=None)
+
+class SearchAnalyticsByPageListResultMeta(BaseModel):
+    """Metadata for search_analytics_by_page.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    response_aggregation_type: Union[str | None, Any] = Field(default=None)
+
+class SearchAnalyticsByQueryListResultMeta(BaseModel):
+    """Metadata for search_analytics_by_query.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    response_aggregation_type: Union[str | None, Any] = Field(default=None)
+
+class SearchAnalyticsAllFieldsListResultMeta(BaseModel):
+    """Metadata for search_analytics_all_fields.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    response_aggregation_type: Union[str | None, Any] = Field(default=None)
+
 # ===== CHECK RESULT MODEL =====
 
 class GoogleSearchConsoleCheckResult(BaseModel):
@@ -464,21 +500,21 @@ SitesListResult = GoogleSearchConsoleExecuteResult[list[Site]]
 SitemapsListResult = GoogleSearchConsoleExecuteResult[list[Sitemap]]
 """Result type for sitemaps.list operation."""
 
-SearchAnalyticsByDateListResult = GoogleSearchConsoleExecuteResult[list[SearchAnalyticsRow]]
-"""Result type for search_analytics_by_date.list operation."""
+SearchAnalyticsByDateListResult = GoogleSearchConsoleExecuteResultWithMeta[list[SearchAnalyticsRow], SearchAnalyticsByDateListResultMeta]
+"""Result type for search_analytics_by_date.list operation with data and metadata."""
 
-SearchAnalyticsByCountryListResult = GoogleSearchConsoleExecuteResult[list[SearchAnalyticsRow]]
-"""Result type for search_analytics_by_country.list operation."""
+SearchAnalyticsByCountryListResult = GoogleSearchConsoleExecuteResultWithMeta[list[SearchAnalyticsRow], SearchAnalyticsByCountryListResultMeta]
+"""Result type for search_analytics_by_country.list operation with data and metadata."""
 
-SearchAnalyticsByDeviceListResult = GoogleSearchConsoleExecuteResult[list[SearchAnalyticsRow]]
-"""Result type for search_analytics_by_device.list operation."""
+SearchAnalyticsByDeviceListResult = GoogleSearchConsoleExecuteResultWithMeta[list[SearchAnalyticsRow], SearchAnalyticsByDeviceListResultMeta]
+"""Result type for search_analytics_by_device.list operation with data and metadata."""
 
-SearchAnalyticsByPageListResult = GoogleSearchConsoleExecuteResult[list[SearchAnalyticsRow]]
-"""Result type for search_analytics_by_page.list operation."""
+SearchAnalyticsByPageListResult = GoogleSearchConsoleExecuteResultWithMeta[list[SearchAnalyticsRow], SearchAnalyticsByPageListResultMeta]
+"""Result type for search_analytics_by_page.list operation with data and metadata."""
 
-SearchAnalyticsByQueryListResult = GoogleSearchConsoleExecuteResult[list[SearchAnalyticsRow]]
-"""Result type for search_analytics_by_query.list operation."""
+SearchAnalyticsByQueryListResult = GoogleSearchConsoleExecuteResultWithMeta[list[SearchAnalyticsRow], SearchAnalyticsByQueryListResultMeta]
+"""Result type for search_analytics_by_query.list operation with data and metadata."""
 
-SearchAnalyticsAllFieldsListResult = GoogleSearchConsoleExecuteResult[list[SearchAnalyticsRow]]
-"""Result type for search_analytics_all_fields.list operation."""
+SearchAnalyticsAllFieldsListResult = GoogleSearchConsoleExecuteResultWithMeta[list[SearchAnalyticsRow], SearchAnalyticsAllFieldsListResultMeta]
+"""Result type for search_analytics_all_fields.list operation with data and metadata."""
 

@@ -119,10 +119,22 @@
     "response_type": "TicketsListResult",
     "description": "Returns a paginated list of tickets. By default returns tickets created in the past 30 days. Use updated_since to get older tickets.",
     "record_extractor": "$",
-    "meta_extractor": null,
+    "meta_extractor": {
+      "next": "@link.next"
+    },
     "needs_envelope": true,
     "record_type": "list[Ticket]",
-    "meta_fields": null,
+    "meta_fields": [
+      {
+        "name": "next",
+        "python_name": "next",
+        "type": "str | None",
+        "schema": {
+          "type": "string",
+          "nullable": true
+        }
+      }
+    ],
     "is_download": false
   },
   "entities_grouped": {
@@ -212,10 +224,22 @@
         "response_type": "TicketsListResult",
         "description": "Returns a paginated list of tickets. By default returns tickets created in the past 30 days. Use updated_since to get older tickets.",
         "record_extractor": "$",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "@link.next"
+        },
         "needs_envelope": true,
         "record_type": "list[Ticket]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
         "is_download": false
       },
       {
@@ -299,10 +323,22 @@
         "response_type": "ContactsListResult",
         "description": "Returns a paginated list of contacts",
         "record_extractor": "$",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "@link.next"
+        },
         "needs_envelope": true,
         "record_type": "list[Contact]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
         "is_download": false
       },
       {
@@ -374,10 +410,22 @@
         "response_type": "AgentsListResult",
         "description": "Returns a paginated list of agents",
         "record_extractor": "$",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "@link.next"
+        },
         "needs_envelope": true,
         "record_type": "list[Agent]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
         "is_download": false
       },
       {
@@ -449,10 +497,22 @@
         "response_type": "GroupsListResult",
         "description": "Returns a paginated list of groups",
         "record_extractor": "$",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "@link.next"
+        },
         "needs_envelope": true,
         "record_type": "list[Group]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
         "is_download": false
       },
       {
@@ -524,10 +584,22 @@
         "response_type": "CompaniesListResult",
         "description": "Returns a paginated list of companies",
         "record_extractor": "$",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "@link.next"
+        },
         "needs_envelope": true,
         "record_type": "list[Company]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
         "is_download": false
       },
       {
@@ -599,10 +671,22 @@
         "response_type": "RolesListResult",
         "description": "Returns a paginated list of roles",
         "record_extractor": "$",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "@link.next"
+        },
         "needs_envelope": true,
         "record_type": "list[Role]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
         "is_download": false
       },
       {
@@ -686,10 +770,22 @@
         "response_type": "SatisfactionRatingsListResult",
         "description": "Returns a paginated list of satisfaction ratings",
         "record_extractor": "$",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "@link.next"
+        },
         "needs_envelope": true,
         "record_type": "list[SatisfactionRating]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
         "is_download": false
       }
     ],
@@ -733,10 +829,22 @@
         "response_type": "SurveysListResult",
         "description": "Returns a paginated list of surveys",
         "record_extractor": "$",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "@link.next"
+        },
         "needs_envelope": true,
         "record_type": "list[Survey]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
         "is_download": false
       }
     ],
@@ -780,10 +888,22 @@
         "response_type": "TimeEntriesListResult",
         "description": "Returns a paginated list of time entries",
         "record_extractor": "$",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "@link.next"
+        },
         "needs_envelope": true,
         "record_type": "list[TimeEntry]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
         "is_download": false
       }
     ],
@@ -827,10 +947,22 @@
         "response_type": "TicketFieldsListResult",
         "description": "Returns a list of all ticket fields",
         "record_extractor": "$",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "@link.next"
+        },
         "needs_envelope": true,
         "record_type": "list[TicketField]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
         "is_download": false
       }
     ]

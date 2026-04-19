@@ -34,14 +34,6 @@ class SentryReplicationConfig(BaseModel):
 
 # ===== RESPONSE TYPE DEFINITIONS (PYDANTIC) =====
 
-class ProjectAvatar(BaseModel):
-    """Project avatar information."""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    avatar_type: Union[str | None, Any] = Field(default=None, alias="avatarType")
-    avatar_uuid: Union[str | None, Any] = Field(default=None, alias="avatarUuid")
-    avatar_url: Union[str | None, Any] = Field(default=None, alias="avatarUrl")
-
 class ProjectOrganization(BaseModel):
     """Organization this project belongs to."""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -49,6 +41,14 @@ class ProjectOrganization(BaseModel):
     id: Union[str | None, Any] = Field(default=None)
     name: Union[str | None, Any] = Field(default=None)
     slug: Union[str | None, Any] = Field(default=None)
+
+class ProjectAvatar(BaseModel):
+    """Project avatar information."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    avatar_type: Union[str | None, Any] = Field(default=None, alias="avatarType")
+    avatar_uuid: Union[str | None, Any] = Field(default=None, alias="avatarUuid")
+    avatar_url: Union[str | None, Any] = Field(default=None, alias="avatarUrl")
 
 class Project(BaseModel):
     """A Sentry project (summary view from list endpoint)."""
@@ -93,16 +93,24 @@ class Project(BaseModel):
     avatar: Union[ProjectAvatar | None, Any] = Field(default=None)
     organization: Union[ProjectOrganization | None, Any] = Field(default=None)
 
-class ProjectDetailTeam(BaseModel):
-    """Primary team for this project."""
+class ProjectDetailAvatar(BaseModel):
+    """Project avatar information."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    avatar_type: Union[str | None, Any] = Field(default=None, alias="avatarType")
+    avatar_uuid: Union[str | None, Any] = Field(default=None, alias="avatarUuid")
+    avatar_url: Union[str | None, Any] = Field(default=None, alias="avatarUrl")
+
+class ProjectDetailOrganization(BaseModel):
+    """Organization this project belongs to."""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     id: Union[str | None, Any] = Field(default=None)
     name: Union[str | None, Any] = Field(default=None)
     slug: Union[str | None, Any] = Field(default=None)
 
-class ProjectDetailOrganization(BaseModel):
-    """Organization this project belongs to."""
+class ProjectDetailTeam(BaseModel):
+    """Primary team for this project."""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     id: Union[str | None, Any] = Field(default=None)
@@ -116,14 +124,6 @@ class ProjectDetailTeamsItem(BaseModel):
     id: Union[str | None, Any] = Field(default=None)
     name: Union[str | None, Any] = Field(default=None)
     slug: Union[str | None, Any] = Field(default=None)
-
-class ProjectDetailAvatar(BaseModel):
-    """Project avatar information."""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    avatar_type: Union[str | None, Any] = Field(default=None, alias="avatarType")
-    avatar_uuid: Union[str | None, Any] = Field(default=None, alias="avatarUuid")
-    avatar_url: Union[str | None, Any] = Field(default=None, alias="avatarUrl")
 
 class ProjectDetail(BaseModel):
     """Detailed project information."""
@@ -336,13 +336,6 @@ class ReleaseProjectsItem(BaseModel):
     new_groups: Union[int | None, Any] = Field(default=None, alias="newGroups")
     has_health_data: Union[bool | None, Any] = Field(default=None, alias="hasHealthData")
 
-class ReleaseAuthorsItem(BaseModel):
-    """Nested schema for Release.authors_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: Union[str | None, Any] = Field(default=None)
-    email: Union[str | None, Any] = Field(default=None)
-
 class ReleaseVersioninfoVersion(BaseModel):
     """Nested schema for ReleaseVersioninfo.version"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -363,6 +356,13 @@ class ReleaseVersioninfo(BaseModel):
     description: Union[str | None, Any] = Field(default=None)
     package: Union[str | None, Any] = Field(default=None)
     build_hash: Union[str | None, Any] = Field(default=None, alias="buildHash")
+
+class ReleaseAuthorsItem(BaseModel):
+    """Nested schema for Release.authors_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: Union[str | None, Any] = Field(default=None)
+    email: Union[str | None, Any] = Field(default=None)
 
 class Release(BaseModel):
     """A Sentry release."""

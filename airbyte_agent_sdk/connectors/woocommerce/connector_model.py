@@ -251,6 +251,7 @@ WoocommerceConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-stream-name': 'customers',
                         },
                     },
+                    meta_extractor={'next': '@link.next'},
                     preferred_for_check=True,
                 ),
                 Action.GET: EndpointDefinition(
@@ -1164,6 +1165,7 @@ WoocommerceConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-stream-name': 'orders',
                         },
                     },
+                    meta_extractor={'next': '@link.next'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -2784,6 +2786,7 @@ WoocommerceConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-stream-name': 'products',
                         },
                     },
+                    meta_extractor={'next': '@link.next'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -3870,6 +3873,7 @@ WoocommerceConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-stream-name': 'coupons',
                         },
                     },
+                    meta_extractor={'next': '@link.next'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -4303,6 +4307,7 @@ WoocommerceConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-stream-name': 'product_categories',
                         },
                     },
+                    meta_extractor={'next': '@link.next'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -4534,6 +4539,7 @@ WoocommerceConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-stream-name': 'product_tags',
                         },
                     },
+                    meta_extractor={'next': '@link.next'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -4706,6 +4712,7 @@ WoocommerceConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-stream-name': 'product_reviews',
                         },
                     },
+                    meta_extractor={'next': '@link.next'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -4900,6 +4907,7 @@ WoocommerceConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-stream-name': 'product_attributes',
                         },
                     },
+                    meta_extractor={'next': '@link.next'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -5297,6 +5305,7 @@ WoocommerceConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-stream-name': 'product_variations',
                         },
                     },
+                    meta_extractor={'next': '@link.next'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -5893,6 +5902,7 @@ WoocommerceConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-stream-name': 'order_notes',
                         },
                     },
+                    meta_extractor={'next': '@link.next'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -6214,6 +6224,7 @@ WoocommerceConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-stream-name': 'refunds',
                         },
                     },
+                    meta_extractor={'next': '@link.next'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -6740,6 +6751,7 @@ WoocommerceConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-stream-name': 'payment_gateways',
                         },
                     },
+                    meta_extractor={'next': '@link.next'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -6939,6 +6951,7 @@ WoocommerceConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-stream-name': 'shipping_methods',
                         },
                     },
+                    meta_extractor={'next': '@link.next'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -7022,6 +7035,7 @@ WoocommerceConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-stream-name': 'shipping_zones',
                         },
                     },
+                    meta_extractor={'next': '@link.next'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -7185,6 +7199,7 @@ WoocommerceConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-stream-name': 'tax_rates',
                         },
                     },
+                    meta_extractor={'next': '@link.next'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -7364,6 +7379,7 @@ WoocommerceConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-stream-name': 'tax_classes',
                         },
                     },
+                    meta_extractor={'next': '@link.next'},
                 ),
             },
             entity_schema={

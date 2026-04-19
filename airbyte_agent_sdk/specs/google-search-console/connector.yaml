@@ -620,6 +620,8 @@ paths:
       x-airbyte-path-override:
         path: /sites/{siteUrl}/searchAnalytics/query
       x-airbyte-record-extractor: $.rows
+      x-airbyte-meta-extractor:
+        response_aggregation_type: $.responseAggregationType
       parameters:
       - name: siteUrl
         in: path
@@ -655,6 +657,8 @@ paths:
       x-airbyte-path-override:
         path: /sites/{siteUrl}/searchAnalytics/query
       x-airbyte-record-extractor: $.rows
+      x-airbyte-meta-extractor:
+        response_aggregation_type: $.responseAggregationType
       parameters:
       - name: siteUrl
         in: path
@@ -690,6 +694,8 @@ paths:
       x-airbyte-path-override:
         path: /sites/{siteUrl}/searchAnalytics/query
       x-airbyte-record-extractor: $.rows
+      x-airbyte-meta-extractor:
+        response_aggregation_type: $.responseAggregationType
       parameters:
       - name: siteUrl
         in: path
@@ -725,6 +731,8 @@ paths:
       x-airbyte-path-override:
         path: /sites/{siteUrl}/searchAnalytics/query
       x-airbyte-record-extractor: $.rows
+      x-airbyte-meta-extractor:
+        response_aggregation_type: $.responseAggregationType
       parameters:
       - name: siteUrl
         in: path
@@ -760,6 +768,8 @@ paths:
       x-airbyte-path-override:
         path: /sites/{siteUrl}/searchAnalytics/query
       x-airbyte-record-extractor: $.rows
+      x-airbyte-meta-extractor:
+        response_aggregation_type: $.responseAggregationType
       parameters:
       - name: siteUrl
         in: path
@@ -795,6 +805,8 @@ paths:
       x-airbyte-path-override:
         path: /sites/{siteUrl}/searchAnalytics/query
       x-airbyte-record-extractor: $.rows
+      x-airbyte-meta-extractor:
+        response_aggregation_type: $.responseAggregationType
       parameters:
       - name: siteUrl
         in: path

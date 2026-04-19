@@ -237,6 +237,8 @@ paths:
       operationId: listTickets
       x-airbyte-entity: tickets
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: "@link.next"
       parameters:
         - name: per_page
           in: query
@@ -318,6 +320,8 @@ paths:
       operationId: listContacts
       x-airbyte-entity: contacts
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: "@link.next"
       parameters:
         - name: per_page
           in: query
@@ -386,6 +390,8 @@ paths:
       x-airbyte-entity: agents
       x-airbyte-action: list
       x-airbyte-preferred-for-check: true
+      x-airbyte-meta-extractor:
+        next: "@link.next"
       parameters:
         - name: per_page
           in: query
@@ -447,6 +453,8 @@ paths:
       operationId: listGroups
       x-airbyte-entity: groups
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: "@link.next"
       parameters:
         - name: per_page
           in: query
@@ -508,6 +516,8 @@ paths:
       operationId: listCompanies
       x-airbyte-entity: companies
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: "@link.next"
       parameters:
         - name: per_page
           in: query
@@ -569,6 +579,8 @@ paths:
       operationId: listRoles
       x-airbyte-entity: roles
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: "@link.next"
       parameters:
         - name: per_page
           in: query
@@ -630,6 +642,8 @@ paths:
       operationId: listSatisfactionRatings
       x-airbyte-entity: satisfaction_ratings
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: "@link.next"
       parameters:
         - name: per_page
           in: query
@@ -671,6 +685,8 @@ paths:
       operationId: listSurveys
       x-airbyte-entity: surveys
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: "@link.next"
       parameters:
         - name: per_page
           in: query
@@ -706,6 +722,8 @@ paths:
       operationId: listTimeEntries
       x-airbyte-entity: time_entries
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: "@link.next"
       parameters:
         - name: per_page
           in: query
@@ -741,6 +759,8 @@ paths:
       operationId: listTicketFields
       x-airbyte-entity: ticket_fields
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: "@link.next"
       parameters:
         - name: per_page
           in: query

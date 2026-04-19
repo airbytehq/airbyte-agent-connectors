@@ -485,6 +485,7 @@ GoogleSearchConsoleConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.rows',
+                    meta_extractor={'response_aggregation_type': '$.responseAggregationType'},
                 ),
             },
             relationships=[
@@ -616,6 +617,7 @@ GoogleSearchConsoleConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.rows',
+                    meta_extractor={'response_aggregation_type': '$.responseAggregationType'},
                 ),
             },
             relationships=[
@@ -747,6 +749,7 @@ GoogleSearchConsoleConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.rows',
+                    meta_extractor={'response_aggregation_type': '$.responseAggregationType'},
                 ),
             },
             relationships=[
@@ -878,6 +881,7 @@ GoogleSearchConsoleConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.rows',
+                    meta_extractor={'response_aggregation_type': '$.responseAggregationType'},
                 ),
             },
             relationships=[
@@ -1009,6 +1013,7 @@ GoogleSearchConsoleConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.rows',
+                    meta_extractor={'response_aggregation_type': '$.responseAggregationType'},
                 ),
             },
             relationships=[
@@ -1152,6 +1157,7 @@ GoogleSearchConsoleConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.rows',
+                    meta_extractor={'response_aggregation_type': '$.responseAggregationType'},
                 ),
             },
             relationships=[

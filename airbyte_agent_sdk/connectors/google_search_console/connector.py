@@ -134,7 +134,7 @@ class GoogleSearchConsoleConnector:
 
     connector_name = "google-search-console"
     connector_version = "1.0.3"
-    sdk_version = "0.1.25"
+    sdk_version = "0.1.26"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -1106,7 +1106,8 @@ class SearchAnalyticsByDateQuery:
         result = await self._connector.execute("search_analytics_by_date", "list", params)
         # Cast generic envelope to concrete typed result
         return SearchAnalyticsByDateListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1232,7 +1233,8 @@ class SearchAnalyticsByCountryQuery:
         result = await self._connector.execute("search_analytics_by_country", "list", params)
         # Cast generic envelope to concrete typed result
         return SearchAnalyticsByCountryListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1359,7 +1361,8 @@ class SearchAnalyticsByDeviceQuery:
         result = await self._connector.execute("search_analytics_by_device", "list", params)
         # Cast generic envelope to concrete typed result
         return SearchAnalyticsByDeviceListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1486,7 +1489,8 @@ class SearchAnalyticsByPageQuery:
         result = await self._connector.execute("search_analytics_by_page", "list", params)
         # Cast generic envelope to concrete typed result
         return SearchAnalyticsByPageListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1613,7 +1617,8 @@ class SearchAnalyticsByQueryQuery:
         result = await self._connector.execute("search_analytics_by_query", "list", params)
         # Cast generic envelope to concrete typed result
         return SearchAnalyticsByQueryListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1740,7 +1745,8 @@ class SearchAnalyticsAllFieldsQuery:
         result = await self._connector.execute("search_analytics_all_fields", "list", params)
         # Cast generic envelope to concrete typed result
         return SearchAnalyticsAllFieldsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 

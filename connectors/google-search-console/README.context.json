@@ -330,10 +330,25 @@
         "response_type": "SearchAnalyticsByDateListResult",
         "description": "Query search analytics data grouped by date. Returns clicks, impressions, CTR, and average position for each date in the specified range.\n",
         "record_extractor": "$.rows",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "response_aggregation_type": "$.responseAggregationType"
+        },
         "needs_envelope": true,
         "record_type": "list[SearchAnalyticsRow]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "response_aggregation_type",
+            "python_name": "response_aggregation_type",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ],
+              "description": "How the results were aggregated (auto, byPage, byProperty)."
+            }
+          }
+        ],
         "is_download": false
       }
     ],
@@ -463,10 +478,25 @@
         "response_type": "SearchAnalyticsByCountryListResult",
         "description": "Query search analytics data grouped by date and country. Returns clicks, impressions, CTR, and average position for each country.\n",
         "record_extractor": "$.rows",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "response_aggregation_type": "$.responseAggregationType"
+        },
         "needs_envelope": true,
         "record_type": "list[SearchAnalyticsRow]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "response_aggregation_type",
+            "python_name": "response_aggregation_type",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ],
+              "description": "How the results were aggregated (auto, byPage, byProperty)."
+            }
+          }
+        ],
         "is_download": false
       }
     ],
@@ -596,10 +626,25 @@
         "response_type": "SearchAnalyticsByDeviceListResult",
         "description": "Query search analytics data grouped by date and device. Returns clicks, impressions, CTR, and average position for each device type.\n",
         "record_extractor": "$.rows",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "response_aggregation_type": "$.responseAggregationType"
+        },
         "needs_envelope": true,
         "record_type": "list[SearchAnalyticsRow]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "response_aggregation_type",
+            "python_name": "response_aggregation_type",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ],
+              "description": "How the results were aggregated (auto, byPage, byProperty)."
+            }
+          }
+        ],
         "is_download": false
       }
     ],
@@ -729,10 +774,25 @@
         "response_type": "SearchAnalyticsByPageListResult",
         "description": "Query search analytics data grouped by date and page. Returns clicks, impressions, CTR, and average position for each page URL.\n",
         "record_extractor": "$.rows",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "response_aggregation_type": "$.responseAggregationType"
+        },
         "needs_envelope": true,
         "record_type": "list[SearchAnalyticsRow]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "response_aggregation_type",
+            "python_name": "response_aggregation_type",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ],
+              "description": "How the results were aggregated (auto, byPage, byProperty)."
+            }
+          }
+        ],
         "is_download": false
       }
     ],
@@ -862,10 +922,25 @@
         "response_type": "SearchAnalyticsByQueryListResult",
         "description": "Query search analytics data grouped by date and query. Returns clicks, impressions, CTR, and average position for each search query.\n",
         "record_extractor": "$.rows",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "response_aggregation_type": "$.responseAggregationType"
+        },
         "needs_envelope": true,
         "record_type": "list[SearchAnalyticsRow]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "response_aggregation_type",
+            "python_name": "response_aggregation_type",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ],
+              "description": "How the results were aggregated (auto, byPage, byProperty)."
+            }
+          }
+        ],
         "is_download": false
       }
     ],
@@ -998,10 +1073,25 @@
         "response_type": "SearchAnalyticsAllFieldsListResult",
         "description": "Query search analytics data grouped by all dimensions (date, country, device, page, query). Returns the most granular breakdown of search data.\n",
         "record_extractor": "$.rows",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "response_aggregation_type": "$.responseAggregationType"
+        },
         "needs_envelope": true,
         "record_type": "list[SearchAnalyticsRow]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "response_aggregation_type",
+            "python_name": "response_aggregation_type",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ],
+              "description": "How the results were aggregated (auto, byPage, byProperty)."
+            }
+          }
+        ],
         "is_download": false
       }
     ]

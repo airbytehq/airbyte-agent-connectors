@@ -264,6 +264,7 @@ FreshdeskConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-entity-name': 'tickets',
                         },
                     },
+                    meta_extractor={'next': '@link.next'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -790,6 +791,7 @@ FreshdeskConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-entity-name': 'contacts',
                         },
                     },
+                    meta_extractor={'next': '@link.next'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -1263,6 +1265,7 @@ FreshdeskConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-entity-name': 'agents',
                         },
                     },
+                    meta_extractor={'next': '@link.next'},
                     preferred_for_check=True,
                 ),
                 Action.GET: EndpointDefinition(
@@ -1676,6 +1679,7 @@ FreshdeskConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-entity-name': 'groups',
                         },
                     },
+                    meta_extractor={'next': '@link.next'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -1899,6 +1903,7 @@ FreshdeskConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-entity-name': 'companies',
                         },
                     },
+                    meta_extractor={'next': '@link.next'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -2102,6 +2107,7 @@ FreshdeskConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-entity-name': 'roles',
                         },
                     },
+                    meta_extractor={'next': '@link.next'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -2258,6 +2264,7 @@ FreshdeskConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-entity-name': 'satisfaction_ratings',
                         },
                     },
+                    meta_extractor={'next': '@link.next'},
                 ),
             },
             entity_schema={
@@ -2382,6 +2389,7 @@ FreshdeskConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-entity-name': 'surveys',
                         },
                     },
+                    meta_extractor={'next': '@link.next'},
                 ),
             },
             entity_schema={
@@ -2520,6 +2528,7 @@ FreshdeskConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-entity-name': 'time_entries',
                         },
                     },
+                    meta_extractor={'next': '@link.next'},
                 ),
             },
             entity_schema={
@@ -2701,6 +2710,7 @@ FreshdeskConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-entity-name': 'ticket_fields',
                         },
                     },
+                    meta_extractor={'next': '@link.next'},
                 ),
             },
             entity_schema={

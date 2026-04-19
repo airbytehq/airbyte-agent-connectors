@@ -954,6 +954,8 @@ paths:
       x-airbyte-entity: customers
       x-airbyte-action: list
       x-airbyte-preferred-for-check: true
+      x-airbyte-meta-extractor:
+        next: "@link.next"
       parameters:
       - name: page
         in: query
@@ -1043,6 +1045,8 @@ paths:
       operationId: listOrders
       x-airbyte-entity: orders
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: "@link.next"
       parameters:
       - name: page
         in: query
@@ -1157,6 +1161,8 @@ paths:
       operationId: listProducts
       x-airbyte-entity: products
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: "@link.next"
       parameters:
       - name: page
         in: query
@@ -1308,6 +1314,8 @@ paths:
       operationId: listCoupons
       x-airbyte-entity: coupons
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: "@link.next"
       parameters:
       - name: page
         in: query
@@ -1410,6 +1418,8 @@ paths:
       operationId: listProductCategories
       x-airbyte-entity: product_categories
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: "@link.next"
       parameters:
       - name: page
         in: query
@@ -1508,6 +1518,8 @@ paths:
       operationId: listProductTags
       x-airbyte-entity: product_tags
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: "@link.next"
       parameters:
       - name: page
         in: query
@@ -1601,6 +1613,8 @@ paths:
       operationId: listProductReviews
       x-airbyte-entity: product_reviews
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: "@link.next"
       parameters:
       - name: page
         in: query
@@ -1688,6 +1702,8 @@ paths:
       operationId: listProductAttributes
       x-airbyte-entity: product_attributes
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: "@link.next"
       parameters:
       - name: page
         in: query
@@ -1746,6 +1762,8 @@ paths:
       operationId: listProductVariations
       x-airbyte-entity: product_variations
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: "@link.next"
       parameters:
       - name: product_id
         in: path
@@ -1868,6 +1886,8 @@ paths:
       operationId: listOrderNotes
       x-airbyte-entity: order_notes
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: "@link.next"
       parameters:
       - name: order_id
         in: path
@@ -1930,6 +1950,8 @@ paths:
       operationId: listRefunds
       x-airbyte-entity: refunds
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: "@link.next"
       parameters:
       - name: order_id
         in: path
@@ -2000,6 +2022,8 @@ paths:
       operationId: listPaymentGateways
       x-airbyte-entity: payment_gateways
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: "@link.next"
       responses:
         "200":
           description: List of payment gateways
@@ -2042,6 +2066,8 @@ paths:
       operationId: listShippingMethods
       x-airbyte-entity: shipping_methods
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: "@link.next"
       responses:
         "200":
           description: List of shipping methods
@@ -2084,6 +2110,8 @@ paths:
       operationId: listShippingZones
       x-airbyte-entity: shipping_zones
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: "@link.next"
       responses:
         "200":
           description: List of shipping zones
@@ -2126,6 +2154,8 @@ paths:
       operationId: listTaxRates
       x-airbyte-entity: tax_rates
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: "@link.next"
       parameters:
       - name: page
         in: query
@@ -2203,6 +2233,8 @@ paths:
       operationId: listTaxClasses
       x-airbyte-entity: tax_classes
       x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next: "@link.next"
       responses:
         "200":
           description: List of tax classes

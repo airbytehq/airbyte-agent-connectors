@@ -173,10 +173,22 @@
     "response_type": "CustomersListResult",
     "description": "List customers",
     "record_extractor": "$",
-    "meta_extractor": null,
+    "meta_extractor": {
+      "next": "@link.next"
+    },
     "needs_envelope": true,
     "record_type": "list[Customer]",
-    "meta_fields": null,
+    "meta_fields": [
+      {
+        "name": "next",
+        "python_name": "next",
+        "type": "str | None",
+        "schema": {
+          "type": "string",
+          "nullable": true
+        }
+      }
+    ],
     "is_download": false
   },
   "entities_grouped": {
@@ -298,10 +310,22 @@
         "response_type": "CustomersListResult",
         "description": "List customers",
         "record_extractor": "$",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "@link.next"
+        },
         "needs_envelope": true,
         "record_type": "list[Customer]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
         "is_download": false
       },
       {
@@ -509,10 +533,22 @@
         "response_type": "OrdersListResult",
         "description": "List orders",
         "record_extractor": "$",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "@link.next"
+        },
         "needs_envelope": true,
         "record_type": "list[Order]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
         "is_download": false
       },
       {
@@ -808,10 +844,22 @@
         "response_type": "ProductsListResult",
         "description": "List products",
         "record_extractor": "$",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "@link.next"
+        },
         "needs_envelope": true,
         "record_type": "list[Product]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
         "is_download": false
       },
       {
@@ -985,10 +1033,22 @@
         "response_type": "CouponsListResult",
         "description": "List coupons",
         "record_extractor": "$",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "@link.next"
+        },
         "needs_envelope": true,
         "record_type": "list[Coupon]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
         "is_download": false
       },
       {
@@ -1153,10 +1213,22 @@
         "response_type": "ProductCategoriesListResult",
         "description": "List product categories",
         "record_extractor": "$",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "@link.next"
+        },
         "needs_envelope": true,
         "record_type": "list[ProductCategory]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
         "is_download": false
       },
       {
@@ -1310,10 +1382,22 @@
         "response_type": "ProductTagsListResult",
         "description": "List product tags",
         "record_extractor": "$",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "@link.next"
+        },
         "needs_envelope": true,
         "record_type": "list[ProductTag]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
         "is_download": false
       },
       {
@@ -1451,10 +1535,22 @@
         "response_type": "ProductReviewsListResult",
         "description": "List product reviews",
         "record_extractor": "$",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "@link.next"
+        },
         "needs_envelope": true,
         "record_type": "list[ProductReview]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
         "is_download": false
       },
       {
@@ -1526,10 +1622,22 @@
         "response_type": "ProductAttributesListResult",
         "description": "List product attributes",
         "record_extractor": "$",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "@link.next"
+        },
         "needs_envelope": true,
         "record_type": "list[ProductAttribute]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
         "is_download": false
       },
       {
@@ -1738,10 +1846,22 @@
         "response_type": "ProductVariationsListResult",
         "description": "List product variations",
         "record_extractor": "$",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "@link.next"
+        },
         "needs_envelope": true,
         "record_type": "list[ProductVariation]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
         "is_download": false
       },
       {
@@ -1823,10 +1943,22 @@
         "response_type": "OrderNotesListResult",
         "description": "List order notes",
         "record_extractor": "$",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "@link.next"
+        },
         "needs_envelope": true,
         "record_type": "list[OrderNote]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
         "is_download": false
       },
       {
@@ -1918,10 +2050,22 @@
         "response_type": "RefundsListResult",
         "description": "List order refunds",
         "record_extractor": "$",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "@link.next"
+        },
         "needs_envelope": true,
         "record_type": "list[Refund]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
         "is_download": false
       },
       {
@@ -1975,10 +2119,22 @@
         "response_type": "PaymentGatewaysListResult",
         "description": "List payment gateways",
         "record_extractor": "$",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "@link.next"
+        },
         "needs_envelope": true,
         "record_type": "list[PaymentGateway]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
         "is_download": false
       },
       {
@@ -2022,10 +2178,22 @@
         "response_type": "ShippingMethodsListResult",
         "description": "List shipping methods",
         "record_extractor": "$",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "@link.next"
+        },
         "needs_envelope": true,
         "record_type": "list[ShippingMethod]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
         "is_download": false
       },
       {
@@ -2069,10 +2237,22 @@
         "response_type": "ShippingZonesListResult",
         "description": "List shipping zones",
         "record_extractor": "$",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "@link.next"
+        },
         "needs_envelope": true,
         "record_type": "list[ShippingZone]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
         "is_download": false
       },
       {
@@ -2188,10 +2368,22 @@
         "response_type": "TaxRatesListResult",
         "description": "List tax rates",
         "record_extractor": "$",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "@link.next"
+        },
         "needs_envelope": true,
         "record_type": "list[TaxRate]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
         "is_download": false
       },
       {
@@ -2235,10 +2427,22 @@
         "response_type": "TaxClassesListResult",
         "description": "List tax classes",
         "record_extractor": "$",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "@link.next"
+        },
         "needs_envelope": true,
         "record_type": "list[TaxClass]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
         "is_download": false
       }
     ]

@@ -87,6 +87,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `meta_data` | `null \| array` |  |
 
 
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next` | `string` |  |
+
 </details>
 
 ### Customers Get
@@ -333,6 +339,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `needs_payment` | `null \| boolean` |  |
 | `needs_processing` | `null \| boolean` |  |
 
+
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next` | `string` |  |
 
 </details>
 
@@ -694,6 +706,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `post_password` | `null \| string` |  |
 | `global_unique_id` | `null \| string` |  |
 
+
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next` | `string` |  |
 
 </details>
 
@@ -1075,6 +1093,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `status` | `null \| string` |  |
 
 
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next` | `string` |  |
+
 </details>
 
 ### Coupons Get
@@ -1319,6 +1343,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `count` | `null \| integer` |  |
 
 
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next` | `string` |  |
+
 </details>
 
 ### Product Categories Get
@@ -1503,6 +1533,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `count` | `null \| integer` |  |
 
 
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next` | `string` |  |
+
 </details>
 
 ### Product Tags Get
@@ -1681,6 +1717,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `verified` | `null \| boolean` |  |
 | `reviewer_avatar_urls` | `null \| object` |  |
 
+
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next` | `string` |  |
 
 </details>
 
@@ -1866,6 +1908,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `order_by` | `null \| string` |  |
 | `has_archives` | `null \| boolean` |  |
 
+
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next` | `string` |  |
 
 </details>
 
@@ -2089,6 +2137,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `name` | `null \| string` |  |
 | `parent_id` | `null \| integer` |  |
 
+
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next` | `string` |  |
 
 </details>
 
@@ -2372,6 +2426,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `customer_note` | `null \| boolean` |  |
 
 
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next` | `string` |  |
+
 </details>
 
 ### Order Notes Get
@@ -2554,6 +2614,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `tax_lines` | `null \| array` |  |
 | `fee_lines` | `null \| array` |  |
 
+
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next` | `string` |  |
 
 </details>
 
@@ -2742,6 +2808,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `required_settings_keys` | `null \| array` |  |
 
 
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next` | `string` |  |
+
 </details>
 
 ### Payment Gateways Get
@@ -2917,6 +2989,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `description` | `null \| string` |  |
 
 
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next` | `string` |  |
+
 </details>
 
 ### Shipping Methods Get
@@ -3067,6 +3145,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `name` | `null \| string` |  |
 | `order` | `null \| integer` |  |
 
+
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next` | `string` |  |
 
 </details>
 
@@ -3239,6 +3323,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `order` | `null \| integer` |  |
 | `class` | `null \| string` |  |
 
+
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next` | `string` |  |
 
 </details>
 
@@ -3422,6 +3512,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `slug` | `null \| string` |  |
 | `name` | `null \| string` |  |
 
+
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next` | `string` |  |
 
 </details>
 

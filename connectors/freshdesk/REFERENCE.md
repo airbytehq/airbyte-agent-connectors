@@ -103,6 +103,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `nr_escalated` | `null \| boolean` |  |
 
 
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next` | `string` |  |
+
 </details>
 
 ### Tickets Get
@@ -389,6 +395,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `updated_at` | `null \| string` |  |
 
 
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next` | `string` |  |
+
 </details>
 
 ### Contacts Get
@@ -533,6 +545,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `created_at` | `null \| string` |  |
 | `updated_at` | `null \| string` |  |
 
+
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next` | `string` |  |
 
 </details>
 
@@ -738,6 +756,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `updated_at` | `null \| string` |  |
 
 
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next` | `string` |  |
+
 </details>
 
 ### Groups Get
@@ -931,6 +955,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `updated_at` | `null \| string` |  |
 
 
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next` | `string` |  |
+
 </details>
 
 ### Companies Get
@@ -1042,6 +1072,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `updated_at` | `null \| string` |  |
 
 
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next` | `string` |  |
+
 </details>
 
 ### Roles Get
@@ -1150,6 +1186,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `updated_at` | `null \| string` |  |
 
 
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next` | `string` |  |
+
 </details>
 
 ## Surveys
@@ -1199,6 +1241,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `created_at` | `null \| string` |  |
 | `updated_at` | `null \| string` |  |
 
+
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next` | `string` |  |
 
 </details>
 
@@ -1256,6 +1304,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `created_at` | `null \| string` |  |
 | `updated_at` | `null \| string` |  |
 
+
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next` | `string` |  |
 
 </details>
 
@@ -1319,6 +1373,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `created_at` | `null \| string` |  |
 | `updated_at` | `null \| string` |  |
 
+
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next` | `string` |  |
 
 </details>
 

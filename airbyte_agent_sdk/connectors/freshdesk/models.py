@@ -289,6 +289,66 @@ class TicketField(BaseModel):
 # ===== METADATA TYPE DEFINITIONS (PYDANTIC) =====
 # Meta types for operations that extract metadata (e.g., pagination info)
 
+class TicketsListResultMeta(BaseModel):
+    """Metadata for tickets.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next: Union[str | None, Any] = Field(default=None)
+
+class ContactsListResultMeta(BaseModel):
+    """Metadata for contacts.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next: Union[str | None, Any] = Field(default=None)
+
+class AgentsListResultMeta(BaseModel):
+    """Metadata for agents.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next: Union[str | None, Any] = Field(default=None)
+
+class GroupsListResultMeta(BaseModel):
+    """Metadata for groups.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next: Union[str | None, Any] = Field(default=None)
+
+class CompaniesListResultMeta(BaseModel):
+    """Metadata for companies.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next: Union[str | None, Any] = Field(default=None)
+
+class RolesListResultMeta(BaseModel):
+    """Metadata for roles.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next: Union[str | None, Any] = Field(default=None)
+
+class SatisfactionRatingsListResultMeta(BaseModel):
+    """Metadata for satisfaction_ratings.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next: Union[str | None, Any] = Field(default=None)
+
+class SurveysListResultMeta(BaseModel):
+    """Metadata for surveys.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next: Union[str | None, Any] = Field(default=None)
+
+class TimeEntriesListResultMeta(BaseModel):
+    """Metadata for time_entries.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next: Union[str | None, Any] = Field(default=None)
+
+class TicketFieldsListResultMeta(BaseModel):
+    """Metadata for ticket_fields.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next: Union[str | None, Any] = Field(default=None)
+
 # ===== CHECK RESULT MODEL =====
 
 class FreshdeskCheckResult(BaseModel):
@@ -510,33 +570,33 @@ GroupsSearchResult = AirbyteSearchResult[GroupsSearchData]
 # Concrete type aliases for each operation result.
 # These provide simpler, more readable type annotations than using the generic forms.
 
-TicketsListResult = FreshdeskExecuteResult[list[Ticket]]
-"""Result type for tickets.list operation."""
+TicketsListResult = FreshdeskExecuteResultWithMeta[list[Ticket], TicketsListResultMeta]
+"""Result type for tickets.list operation with data and metadata."""
 
-ContactsListResult = FreshdeskExecuteResult[list[Contact]]
-"""Result type for contacts.list operation."""
+ContactsListResult = FreshdeskExecuteResultWithMeta[list[Contact], ContactsListResultMeta]
+"""Result type for contacts.list operation with data and metadata."""
 
-AgentsListResult = FreshdeskExecuteResult[list[Agent]]
-"""Result type for agents.list operation."""
+AgentsListResult = FreshdeskExecuteResultWithMeta[list[Agent], AgentsListResultMeta]
+"""Result type for agents.list operation with data and metadata."""
 
-GroupsListResult = FreshdeskExecuteResult[list[Group]]
-"""Result type for groups.list operation."""
+GroupsListResult = FreshdeskExecuteResultWithMeta[list[Group], GroupsListResultMeta]
+"""Result type for groups.list operation with data and metadata."""
 
-CompaniesListResult = FreshdeskExecuteResult[list[Company]]
-"""Result type for companies.list operation."""
+CompaniesListResult = FreshdeskExecuteResultWithMeta[list[Company], CompaniesListResultMeta]
+"""Result type for companies.list operation with data and metadata."""
 
-RolesListResult = FreshdeskExecuteResult[list[Role]]
-"""Result type for roles.list operation."""
+RolesListResult = FreshdeskExecuteResultWithMeta[list[Role], RolesListResultMeta]
+"""Result type for roles.list operation with data and metadata."""
 
-SatisfactionRatingsListResult = FreshdeskExecuteResult[list[SatisfactionRating]]
-"""Result type for satisfaction_ratings.list operation."""
+SatisfactionRatingsListResult = FreshdeskExecuteResultWithMeta[list[SatisfactionRating], SatisfactionRatingsListResultMeta]
+"""Result type for satisfaction_ratings.list operation with data and metadata."""
 
-SurveysListResult = FreshdeskExecuteResult[list[Survey]]
-"""Result type for surveys.list operation."""
+SurveysListResult = FreshdeskExecuteResultWithMeta[list[Survey], SurveysListResultMeta]
+"""Result type for surveys.list operation with data and metadata."""
 
-TimeEntriesListResult = FreshdeskExecuteResult[list[TimeEntry]]
-"""Result type for time_entries.list operation."""
+TimeEntriesListResult = FreshdeskExecuteResultWithMeta[list[TimeEntry], TimeEntriesListResultMeta]
+"""Result type for time_entries.list operation with data and metadata."""
 
-TicketFieldsListResult = FreshdeskExecuteResult[list[TicketField]]
-"""Result type for ticket_fields.list operation."""
+TicketFieldsListResult = FreshdeskExecuteResultWithMeta[list[TicketField], TicketFieldsListResultMeta]
+"""Result type for ticket_fields.list operation with data and metadata."""
 
