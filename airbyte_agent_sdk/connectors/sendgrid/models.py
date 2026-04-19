@@ -145,6 +145,14 @@ class CampaignsList(BaseModel):
     result: Union[list[Campaign], Any] = Field(default=None)
     metadata: Union[CampaignsListMetadata, Any] = Field(default=None, alias="_metadata")
 
+class SingleSendSendTo(BaseModel):
+    """Recipients configuration"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    list_ids: Union[list[str] | None, Any] = Field(default=None)
+    segment_ids: Union[list[str] | None, Any] = Field(default=None)
+    all: Union[bool, Any] = Field(default=None)
+
 class SingleSendEmailConfig(BaseModel):
     """Email configuration details"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -159,14 +167,6 @@ class SingleSendEmailConfig(BaseModel):
     custom_unsubscribe_url: Union[str | None, Any] = Field(default=None)
     sender_id: Union[int | None, Any] = Field(default=None)
     ip_pool: Union[str | None, Any] = Field(default=None)
-
-class SingleSendSendTo(BaseModel):
-    """Recipients configuration"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    list_ids: Union[list[str] | None, Any] = Field(default=None)
-    segment_ids: Union[list[str] | None, Any] = Field(default=None)
-    all: Union[bool, Any] = Field(default=None)
 
 class SingleSend(BaseModel):
     """A SendGrid single send"""

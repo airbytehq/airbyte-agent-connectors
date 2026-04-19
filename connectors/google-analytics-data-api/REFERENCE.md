@@ -77,6 +77,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `metricValues[].value` | `string` |  |
 
 
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `row_count` | `integer` |  |
+
 </details>
 
 ### Website Overview Context Store Search
@@ -219,6 +225,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `metricValues[].value` | `string` |  |
 
 
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `row_count` | `integer` |  |
+
 </details>
 
 ### Daily Active Users Context Store Search
@@ -346,6 +358,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `metricValues` | `array<object>` |  |
 | `metricValues[].value` | `string` |  |
 
+
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `row_count` | `integer` |  |
 
 </details>
 
@@ -475,6 +493,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `metricValues[].value` | `string` |  |
 
 
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `row_count` | `integer` |  |
+
 </details>
 
 ### Four Weekly Active Users Context Store Search
@@ -602,6 +626,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `metricValues` | `array<object>` |  |
 | `metricValues[].value` | `string` |  |
 
+
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `row_count` | `integer` |  |
 
 </details>
 
@@ -749,6 +779,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `metricValues[].value` | `string` |  |
 
 
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `row_count` | `integer` |  |
+
 </details>
 
 ### Pages Context Store Search
@@ -882,6 +918,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `metricValues` | `array<object>` |  |
 | `metricValues[].value` | `string` |  |
 
+
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `row_count` | `integer` |  |
 
 </details>
 
@@ -1030,6 +1072,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `metricValues` | `array<object>` |  |
 | `metricValues[].value` | `string` |  |
 
+
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `row_count` | `integer` |  |
 
 </details>
 

@@ -214,10 +214,22 @@
     "response_type": "WebsiteOverviewListResult",
     "description": "Returns website overview metrics including total users, new users, sessions, bounce rate, page views, and average session duration by date.",
     "record_extractor": "$.rows",
-    "meta_extractor": null,
+    "meta_extractor": {
+      "row_count": "$.rowCount"
+    },
     "needs_envelope": true,
     "record_type": "list[Row]",
-    "meta_fields": null,
+    "meta_fields": [
+      {
+        "name": "row_count",
+        "python_name": "row_count",
+        "type": "int",
+        "schema": {
+          "type": "integer",
+          "description": "Total number of rows in the query result"
+        }
+      }
+    ],
     "is_download": false
   },
   "entities_grouped": {
@@ -373,10 +385,22 @@
         "response_type": "WebsiteOverviewListResult",
         "description": "Returns website overview metrics including total users, new users, sessions, bounce rate, page views, and average session duration by date.",
         "record_extractor": "$.rows",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "row_count": "$.rowCount"
+        },
         "needs_envelope": true,
         "record_type": "list[Row]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "row_count",
+            "python_name": "row_count",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Total number of rows in the query result"
+            }
+          }
+        ],
         "is_download": false
       }
     ],
@@ -511,10 +535,22 @@
         "response_type": "DailyActiveUsersListResult",
         "description": "Returns daily active user counts (1-day active users) by date.",
         "record_extractor": "$.rows",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "row_count": "$.rowCount"
+        },
         "needs_envelope": true,
         "record_type": "list[Row]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "row_count",
+            "python_name": "row_count",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Total number of rows in the query result"
+            }
+          }
+        ],
         "is_download": false
       }
     ],
@@ -649,10 +685,22 @@
         "response_type": "WeeklyActiveUsersListResult",
         "description": "Returns weekly active user counts (7-day active users) by date.",
         "record_extractor": "$.rows",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "row_count": "$.rowCount"
+        },
         "needs_envelope": true,
         "record_type": "list[Row]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "row_count",
+            "python_name": "row_count",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Total number of rows in the query result"
+            }
+          }
+        ],
         "is_download": false
       }
     ],
@@ -787,10 +835,22 @@
         "response_type": "FourWeeklyActiveUsersListResult",
         "description": "Returns 28-day active user counts by date.",
         "record_extractor": "$.rows",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "row_count": "$.rowCount"
+        },
         "needs_envelope": true,
         "record_type": "list[Row]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "row_count",
+            "python_name": "row_count",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Total number of rows in the query result"
+            }
+          }
+        ],
         "is_download": false
       }
     ],
@@ -952,10 +1012,22 @@
         "response_type": "TrafficSourcesListResult",
         "description": "Returns traffic source metrics broken down by session source, session medium, and date, including users, sessions, bounce rate, and page views.",
         "record_extractor": "$.rows",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "row_count": "$.rowCount"
+        },
         "needs_envelope": true,
         "record_type": "list[Row]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "row_count",
+            "python_name": "row_count",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Total number of rows in the query result"
+            }
+          }
+        ],
         "is_download": false
       }
     ],
@@ -1099,10 +1171,22 @@
         "response_type": "PagesListResult",
         "description": "Returns page-level metrics including page views and bounce rate, broken down by host name, page path, and date.",
         "record_extractor": "$.rows",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "row_count": "$.rowCount"
+        },
         "needs_envelope": true,
         "record_type": "list[Row]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "row_count",
+            "python_name": "row_count",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Total number of rows in the query result"
+            }
+          }
+        ],
         "is_download": false
       }
     ],
@@ -1267,10 +1351,22 @@
         "response_type": "DevicesListResult",
         "description": "Returns device-related metrics broken down by device category, operating system, browser, and date, including users, sessions, and page views.",
         "record_extractor": "$.rows",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "row_count": "$.rowCount"
+        },
         "needs_envelope": true,
         "record_type": "list[Row]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "row_count",
+            "python_name": "row_count",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Total number of rows in the query result"
+            }
+          }
+        ],
         "is_download": false
       }
     ],
@@ -1435,10 +1531,22 @@
         "response_type": "LocationsListResult",
         "description": "Returns geographic metrics broken down by region, country, city, and date, including users, sessions, bounce rate, and page views.",
         "record_extractor": "$.rows",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "row_count": "$.rowCount"
+        },
         "needs_envelope": true,
         "record_type": "list[Row]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "row_count",
+            "python_name": "row_count",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Total number of rows in the query result"
+            }
+          }
+        ],
         "is_download": false
       }
     ]

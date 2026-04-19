@@ -71,10 +71,24 @@
     "response_type": "ProfilesListResult",
     "description": "Returns a paginated list of profiles (contacts) in your Klaviyo account",
     "record_extractor": "$.data",
-    "meta_extractor": null,
+    "meta_extractor": {
+      "next": "$.links.next"
+    },
     "needs_envelope": true,
     "record_type": "list[Profile]",
-    "meta_fields": null,
+    "meta_fields": [
+      {
+        "name": "next",
+        "python_name": "next",
+        "type": "str | None",
+        "schema": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    ],
     "is_download": false
   },
   "entities_grouped": {
@@ -116,10 +130,24 @@
         "response_type": "ProfilesListResult",
         "description": "Returns a paginated list of profiles (contacts) in your Klaviyo account",
         "record_extractor": "$.data",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "$.links.next"
+        },
         "needs_envelope": true,
         "record_type": "list[Profile]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        ],
         "is_download": false
       },
       {
@@ -189,10 +217,24 @@
         "response_type": "ListsListResult",
         "description": "Returns a paginated list of all lists in your Klaviyo account",
         "record_extractor": "$.data",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "$.links.next"
+        },
         "needs_envelope": true,
         "record_type": "list[List]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        ],
         "is_download": false
       },
       {
@@ -274,10 +316,24 @@
         "response_type": "CampaignsListResult",
         "description": "Returns a paginated list of campaigns. A channel filter is required.",
         "record_extractor": "$.data",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "$.links.next"
+        },
         "needs_envelope": true,
         "record_type": "list[Campaign]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        ],
         "is_download": false
       },
       {
@@ -359,10 +415,24 @@
         "response_type": "EventsListResult",
         "description": "Returns a paginated list of events (actions taken by profiles)",
         "record_extractor": "$.data",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "$.links.next"
+        },
         "needs_envelope": true,
         "record_type": "list[Event]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        ],
         "is_download": false
       }
     ],
@@ -404,10 +474,24 @@
         "response_type": "MetricsListResult",
         "description": "Returns a paginated list of metrics (event types)",
         "record_extractor": "$.data",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "$.links.next"
+        },
         "needs_envelope": true,
         "record_type": "list[Metric]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        ],
         "is_download": false
       },
       {
@@ -477,10 +561,24 @@
         "response_type": "FlowsListResult",
         "description": "Returns a paginated list of flows (automated sequences)",
         "record_extractor": "$.data",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "$.links.next"
+        },
         "needs_envelope": true,
         "record_type": "list[Flow]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        ],
         "is_download": false
       },
       {
@@ -550,10 +648,24 @@
         "response_type": "EmailTemplatesListResult",
         "description": "Returns a paginated list of email templates",
         "record_extractor": "$.data",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next": "$.links.next"
+        },
         "needs_envelope": true,
         "record_type": "list[Template]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        ],
         "is_download": false
       },
       {

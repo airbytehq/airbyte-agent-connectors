@@ -62,6 +62,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `links` | `object \| null` |  |
 
 
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next` | `string \| null` |  |
+
 </details>
 
 ### Profiles Get
@@ -229,6 +235,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `attributes` | `object \| null` |  |
 | `links` | `object \| null` |  |
 
+
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next` | `string \| null` |  |
 
 </details>
 
@@ -402,6 +414,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `links` | `object \| null` |  |
 
 
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next` | `string \| null` |  |
+
 </details>
 
 ### Campaigns Get
@@ -570,6 +588,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `links` | `object \| null` |  |
 
 
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next` | `string \| null` |  |
+
 </details>
 
 ### Events Context Store Search
@@ -685,6 +709,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `attributes` | `object \| null` |  |
 | `links` | `object \| null` |  |
 
+
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next` | `string \| null` |  |
 
 </details>
 
@@ -852,6 +882,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `links` | `object \| null` |  |
 
 
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next` | `string \| null` |  |
+
 </details>
 
 ### Flows Get
@@ -1017,6 +1053,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `attributes` | `object \| null` |  |
 | `links` | `object \| null` |  |
 
+
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next` | `string \| null` |  |
 
 </details>
 

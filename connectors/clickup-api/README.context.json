@@ -299,10 +299,25 @@
         "response_type": "TasksListResult",
         "description": "Get the tasks in a list",
         "record_extractor": "$.tasks",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "last_page": "$.last_page"
+        },
         "needs_envelope": true,
         "record_type": "list[Task]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "last_page",
+            "python_name": "last_page",
+            "type": "bool | None",
+            "schema": {
+              "type": [
+                "boolean",
+                "null"
+              ],
+              "description": "Whether this is the last page of results"
+            }
+          }
+        ],
         "is_download": false
       },
       {
@@ -544,10 +559,25 @@
         "response_type": "TasksApiSearchResult",
         "description": "View the tasks that meet specific criteria from a workspace. Supports free-text search\nand structured filters including status, assignee, tags, priority, and date ranges.\nResponses are limited to 100 tasks per page.\n",
         "record_extractor": "$.tasks",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "last_page": "$.last_page"
+        },
         "needs_envelope": true,
         "record_type": "list[Task]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "last_page",
+            "python_name": "last_page",
+            "type": "bool | None",
+            "schema": {
+              "type": [
+                "boolean",
+                "null"
+              ],
+              "description": "Whether this is the last page of results"
+            }
+          }
+        ],
         "is_download": false
       }
     ],
@@ -882,10 +912,25 @@
         "response_type": "ViewTasksListResult",
         "description": "Get tasks matching a view's pre-configured filters \u2014 useful as a secondary search mechanism",
         "record_extractor": "$.tasks",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "last_page": "$.last_page"
+        },
         "needs_envelope": true,
         "record_type": "list[Task]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "last_page",
+            "python_name": "last_page",
+            "type": "bool | None",
+            "schema": {
+              "type": [
+                "boolean",
+                "null"
+              ],
+              "description": "Whether this is the last page of results"
+            }
+          }
+        ],
         "is_download": false
       }
     ],
@@ -1037,16 +1082,42 @@
             },
             "required": true,
             "description": "The ID of the workspace"
+          },
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor for pagination to the next page of results",
+            "is_deep_object": false
           }
         ],
         "params_type_name": "DocsListParams",
         "response_type": "DocsListResult",
         "description": "Search for docs in a workspace",
         "record_extractor": "$.docs",
-        "meta_extractor": null,
+        "meta_extractor": {
+          "next_cursor": "$.next_cursor"
+        },
         "needs_envelope": true,
         "record_type": "list[Doc]",
-        "meta_fields": null,
+        "meta_fields": [
+          {
+            "name": "next_cursor",
+            "python_name": "next_cursor",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Cursor for pagination to the next page of results"
+            }
+          }
+        ],
         "is_download": false
       },
       {

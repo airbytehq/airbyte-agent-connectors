@@ -154,7 +154,7 @@ class GoogleAnalyticsDataApiConnector:
 
     connector_name = "google-analytics-data-api"
     connector_version = "1.0.5"
-    sdk_version = "0.1.18"
+    sdk_version = "0.1.19"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -854,7 +854,8 @@ class WebsiteOverviewQuery:
         result = await self._connector.execute("website_overview", "list", params)
         # Cast generic envelope to concrete typed result
         return WebsiteOverviewListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -975,7 +976,8 @@ class DailyActiveUsersQuery:
         result = await self._connector.execute("daily_active_users", "list", params)
         # Cast generic envelope to concrete typed result
         return DailyActiveUsersListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1089,7 +1091,8 @@ class WeeklyActiveUsersQuery:
         result = await self._connector.execute("weekly_active_users", "list", params)
         # Cast generic envelope to concrete typed result
         return WeeklyActiveUsersListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1203,7 +1206,8 @@ class FourWeeklyActiveUsersQuery:
         result = await self._connector.execute("four_weekly_active_users", "list", params)
         # Cast generic envelope to concrete typed result
         return FourWeeklyActiveUsersListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1317,7 +1321,8 @@ class TrafficSourcesQuery:
         result = await self._connector.execute("traffic_sources", "list", params)
         # Cast generic envelope to concrete typed result
         return TrafficSourcesListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1440,7 +1445,8 @@ class PagesQuery:
         result = await self._connector.execute("pages", "list", params)
         # Cast generic envelope to concrete typed result
         return PagesListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1557,7 +1563,8 @@ class DevicesQuery:
         result = await self._connector.execute("devices", "list", params)
         # Cast generic envelope to concrete typed result
         return DevicesListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1681,7 +1688,8 @@ class LocationsQuery:
         result = await self._connector.execute("locations", "list", params)
         # Cast generic envelope to concrete typed result
         return LocationsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 

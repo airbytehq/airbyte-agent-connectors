@@ -142,6 +142,7 @@ class MembersListParams(TypedDict):
 class DocsListParams(TypedDict):
     """Parameters for docs.list operation"""
     workspace_id: str
+    cursor: NotRequired[str]
 
 class DocsGetParams(TypedDict):
     """Parameters for docs.get operation"""

@@ -1175,6 +1175,8 @@ paths:
       x-airbyte-entity: profiles
       x-airbyte-action: list
       x-airbyte-record-extractor: $.data
+      x-airbyte-meta-extractor:
+        next: $.links.next
       parameters:
         - name: revision
           in: header
@@ -1251,6 +1253,8 @@ paths:
       x-airbyte-entity: lists
       x-airbyte-action: list
       x-airbyte-record-extractor: $.data
+      x-airbyte-meta-extractor:
+        next: $.links.next
       parameters:
         - name: revision
           in: header
@@ -1327,6 +1331,8 @@ paths:
       x-airbyte-entity: campaigns
       x-airbyte-action: list
       x-airbyte-record-extractor: $.data
+      x-airbyte-meta-extractor:
+        next: $.links.next
       parameters:
         - name: revision
           in: header
@@ -1410,6 +1416,8 @@ paths:
       x-airbyte-entity: events
       x-airbyte-action: list
       x-airbyte-record-extractor: $.data
+      x-airbyte-meta-extractor:
+        next: $.links.next
       parameters:
         - name: revision
           in: header
@@ -1455,6 +1463,8 @@ paths:
       x-airbyte-entity: metrics
       x-airbyte-action: list
       x-airbyte-record-extractor: $.data
+      x-airbyte-meta-extractor:
+        next: $.links.next
       parameters:
         - name: revision
           in: header
@@ -1531,6 +1541,8 @@ paths:
       x-airbyte-entity: flows
       x-airbyte-action: list
       x-airbyte-record-extractor: $.data
+      x-airbyte-meta-extractor:
+        next: $.links.next
       parameters:
         - name: revision
           in: header
@@ -1607,6 +1619,8 @@ paths:
       x-airbyte-entity: email_templates
       x-airbyte-action: list
       x-airbyte-record-extractor: $.data
+      x-airbyte-meta-extractor:
+        next: $.links.next
       parameters:
         - name: revision
           in: header

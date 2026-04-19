@@ -207,6 +207,7 @@ KlaviyoConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.data',
+                    meta_extractor={'next': '$.links.next'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -548,6 +549,7 @@ KlaviyoConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.data',
+                    meta_extractor={'next': '$.links.next'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -802,6 +804,7 @@ KlaviyoConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.data',
+                    meta_extractor={'next': '$.links.next'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -1127,6 +1130,7 @@ KlaviyoConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.data',
+                    meta_extractor={'next': '$.links.next'},
                 ),
             },
             entity_schema={
@@ -1327,6 +1331,7 @@ KlaviyoConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.data',
+                    meta_extractor={'next': '$.links.next'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -1576,6 +1581,7 @@ KlaviyoConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.data',
+                    meta_extractor={'next': '$.links.next'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -1819,6 +1825,7 @@ KlaviyoConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.data',
+                    meta_extractor={'next': '$.links.next'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',

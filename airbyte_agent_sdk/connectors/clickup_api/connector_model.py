@@ -2007,6 +2007,7 @@ ClickupApiConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.tasks',
+                    meta_extractor={'last_page': '$.last_page'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -2493,6 +2494,7 @@ ClickupApiConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.tasks',
+                    meta_extractor={'last_page': '$.last_page'},
                 ),
             },
             entity_schema={
@@ -3630,6 +3632,7 @@ ClickupApiConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.tasks',
+                    meta_extractor={'last_page': '$.last_page'},
                     untested=True,
                 ),
             },
@@ -3891,6 +3894,10 @@ ClickupApiConnectorModel: ConnectorModel = ConnectorModel(
                     path='/api/v3/workspaces/{workspace_id}/docs',
                     action=Action.LIST,
                     description='Search for docs in a workspace',
+                    query_params=['cursor'],
+                    query_params_schema={
+                        'cursor': {'type': 'string', 'required': False},
+                    },
                     path_params=['workspace_id'],
                     path_params_schema={
                         'workspace_id': {'type': 'string', 'required': True},
@@ -3952,6 +3959,7 @@ ClickupApiConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.docs',
+                    meta_extractor={'next_cursor': '$.next_cursor'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',

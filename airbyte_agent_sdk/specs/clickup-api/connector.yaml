@@ -322,6 +322,8 @@ paths:
       x-airbyte-entity: tasks
       x-airbyte-action: list
       x-airbyte-record-extractor: $.tasks
+      x-airbyte-meta-extractor:
+        last_page: $.last_page
       parameters:
       - name: list_id
         in: path
@@ -393,6 +395,8 @@ paths:
       x-airbyte-entity: tasks
       x-airbyte-action: api_search
       x-airbyte-record-extractor: $.tasks
+      x-airbyte-meta-extractor:
+        last_page: $.last_page
       parameters:
       - name: team_id
         in: path
@@ -717,6 +721,8 @@ paths:
       x-airbyte-action: list
       x-airbyte-untested: true
       x-airbyte-record-extractor: $.tasks
+      x-airbyte-meta-extractor:
+        last_page: $.last_page
       parameters:
       - name: view_id
         in: path
@@ -850,11 +856,19 @@ paths:
       x-airbyte-entity: docs
       x-airbyte-action: list
       x-airbyte-record-extractor: $.docs
+      x-airbyte-meta-extractor:
+        next_cursor: $.next_cursor
       parameters:
       - name: workspace_id
         in: path
         required: true
         description: The ID of the workspace
+        schema:
+          type: string
+      - name: cursor
+        in: query
+        description: Cursor for pagination to the next page of results
+        required: false
         schema:
           type: string
       responses:

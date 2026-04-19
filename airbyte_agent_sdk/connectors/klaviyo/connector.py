@@ -134,7 +134,7 @@ class KlaviyoConnector:
 
     connector_name = "klaviyo"
     connector_version = "1.0.4"
-    sdk_version = "0.1.18"
+    sdk_version = "0.1.19"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -752,7 +752,8 @@ class ProfilesQuery:
         result = await self._connector.execute("profiles", "list", params)
         # Cast generic envelope to concrete typed result
         return ProfilesListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -878,7 +879,8 @@ class ListsQuery:
         result = await self._connector.execute("lists", "list", params)
         # Cast generic envelope to concrete typed result
         return ListsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1006,7 +1008,8 @@ class CampaignsQuery:
         result = await self._connector.execute("campaigns", "list", params)
         # Cast generic envelope to concrete typed result
         return CampaignsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1134,7 +1137,8 @@ class EventsQuery:
         result = await self._connector.execute("events", "list", params)
         # Cast generic envelope to concrete typed result
         return EventsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1234,7 +1238,8 @@ class MetricsQuery:
         result = await self._connector.execute("metrics", "list", params)
         # Cast generic envelope to concrete typed result
         return MetricsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1359,7 +1364,8 @@ class FlowsQuery:
         result = await self._connector.execute("flows", "list", params)
         # Cast generic envelope to concrete typed result
         return FlowsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1484,7 +1490,8 @@ class EmailTemplatesQuery:
         result = await self._connector.execute("email_templates", "list", params)
         # Cast generic envelope to concrete typed result
         return EmailTemplatesListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 

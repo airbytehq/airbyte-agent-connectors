@@ -559,6 +559,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `attachments` | `array<object>` |  |
 
 
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `last_page` | `boolean \| null` |  |
+
 </details>
 
 ### Tasks Get
@@ -751,6 +757,12 @@ Operators: = (contains), == (exact), \<, \<=, \>, \>=, !=, !==, IS NULL, IS NOT 
 | `permission_level` | `string \| null` |  |
 | `attachments` | `array<object>` |  |
 
+
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `last_page` | `boolean \| null` |  |
 
 </details>
 
@@ -1322,6 +1334,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `attachments` | `array<object>` |  |
 
 
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `last_page` | `boolean \| null` |  |
+
 </details>
 
 ## Time Tracking
@@ -1535,6 +1553,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
 | `workspace_id` | `string` | Yes | The ID of the workspace |
+| `cursor` | `string` | No | Cursor for pagination to the next page of results |
 
 
 <details>
@@ -1556,6 +1575,12 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `workspace_id` | `integer \| null` |  |
 | `content` | `string \| null` |  |
 
+
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next_cursor` | `string \| null` |  |
 
 </details>
 

@@ -138,6 +138,12 @@ class ListsList(BaseModel):
     data: Union[list[List], Any] = Field(default=None)
     links: Union[ListsListLinks | None, Any] = Field(default=None)
 
+class CampaignLinks(BaseModel):
+    """Related links"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    self: Union[str | None, Any] = Field(default=None)
+
 class CampaignAttributes(BaseModel):
     """Campaign attributes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -165,12 +171,6 @@ class CampaignAttributes(BaseModel):
     send_time: Union[str | None, Any] = Field(default=None, description="Actual send time")
     """Actual send time"""
 
-class CampaignLinks(BaseModel):
-    """Related links"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    self: Union[str | None, Any] = Field(default=None)
-
 class Campaign(BaseModel):
     """A Klaviyo campaign"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -195,11 +195,18 @@ class CampaignsList(BaseModel):
     data: Union[list[Campaign], Any] = Field(default=None)
     links: Union[CampaignsListLinks | None, Any] = Field(default=None)
 
-class EventLinks(BaseModel):
-    """Related links"""
+class EventRelationshipsProfileData(BaseModel):
+    """Nested schema for EventRelationshipsProfile.data"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    self: Union[str | None, Any] = Field(default=None)
+    type_: Union[str | None, Any] = Field(default=None, alias="type")
+    id: Union[str | None, Any] = Field(default=None)
+
+class EventRelationshipsProfile(BaseModel):
+    """Nested schema for EventRelationships.profile"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: Union[EventRelationshipsProfileData | None, Any] = Field(default=None)
 
 class EventRelationshipsMetricData(BaseModel):
     """Nested schema for EventRelationshipsMetric.data"""
@@ -213,19 +220,6 @@ class EventRelationshipsMetric(BaseModel):
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     data: Union[EventRelationshipsMetricData | None, Any] = Field(default=None)
-
-class EventRelationshipsProfileData(BaseModel):
-    """Nested schema for EventRelationshipsProfile.data"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    type_: Union[str | None, Any] = Field(default=None, alias="type")
-    id: Union[str | None, Any] = Field(default=None)
-
-class EventRelationshipsProfile(BaseModel):
-    """Nested schema for EventRelationships.profile"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    data: Union[EventRelationshipsProfileData | None, Any] = Field(default=None)
 
 class EventRelationships(BaseModel):
     """Related resources"""
@@ -246,6 +240,12 @@ class EventAttributes(BaseModel):
     """Event UUID"""
     event_properties: Union[dict[str, Any] | None, Any] = Field(default=None, description="Custom event properties")
     """Custom event properties"""
+
+class EventLinks(BaseModel):
+    """Related links"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    self: Union[str | None, Any] = Field(default=None)
 
 class Event(BaseModel):
     """A Klaviyo event representing an action taken by a profile"""
@@ -323,6 +323,12 @@ class MetricsList(BaseModel):
     data: Union[list[Metric], Any] = Field(default=None)
     links: Union[MetricsListLinks | None, Any] = Field(default=None)
 
+class FlowLinks(BaseModel):
+    """Related links"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    self: Union[str | None, Any] = Field(default=None)
+
 class FlowAttributes(BaseModel):
     """Flow attributes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -339,12 +345,6 @@ class FlowAttributes(BaseModel):
     """Last update timestamp"""
     trigger_type: Union[str | None, Any] = Field(default=None, description="Type of trigger for the flow")
     """Type of trigger for the flow"""
-
-class FlowLinks(BaseModel):
-    """Related links"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    self: Union[str | None, Any] = Field(default=None)
 
 class Flow(BaseModel):
     """A Klaviyo flow (automated sequence)"""
@@ -419,6 +419,48 @@ class TemplatesList(BaseModel):
 
 # ===== METADATA TYPE DEFINITIONS (PYDANTIC) =====
 # Meta types for operations that extract metadata (e.g., pagination info)
+
+class ProfilesListResultMeta(BaseModel):
+    """Metadata for profiles.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next: Union[str | None, Any] = Field(default=None)
+
+class ListsListResultMeta(BaseModel):
+    """Metadata for lists.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next: Union[str | None, Any] = Field(default=None)
+
+class CampaignsListResultMeta(BaseModel):
+    """Metadata for campaigns.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next: Union[str | None, Any] = Field(default=None)
+
+class EventsListResultMeta(BaseModel):
+    """Metadata for events.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next: Union[str | None, Any] = Field(default=None)
+
+class MetricsListResultMeta(BaseModel):
+    """Metadata for metrics.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next: Union[str | None, Any] = Field(default=None)
+
+class FlowsListResultMeta(BaseModel):
+    """Metadata for flows.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next: Union[str | None, Any] = Field(default=None)
+
+class EmailTemplatesListResultMeta(BaseModel):
+    """Metadata for email_templates.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next: Union[str | None, Any] = Field(default=None)
 
 # ===== CHECK RESULT MODEL =====
 
@@ -651,24 +693,24 @@ ListsSearchResult = AirbyteSearchResult[ListsSearchData]
 # Concrete type aliases for each operation result.
 # These provide simpler, more readable type annotations than using the generic forms.
 
-ProfilesListResult = KlaviyoExecuteResult[list[Profile]]
-"""Result type for profiles.list operation."""
+ProfilesListResult = KlaviyoExecuteResultWithMeta[list[Profile], ProfilesListResultMeta]
+"""Result type for profiles.list operation with data and metadata."""
 
-ListsListResult = KlaviyoExecuteResult[list[List]]
-"""Result type for lists.list operation."""
+ListsListResult = KlaviyoExecuteResultWithMeta[list[List], ListsListResultMeta]
+"""Result type for lists.list operation with data and metadata."""
 
-CampaignsListResult = KlaviyoExecuteResult[list[Campaign]]
-"""Result type for campaigns.list operation."""
+CampaignsListResult = KlaviyoExecuteResultWithMeta[list[Campaign], CampaignsListResultMeta]
+"""Result type for campaigns.list operation with data and metadata."""
 
-EventsListResult = KlaviyoExecuteResult[list[Event]]
-"""Result type for events.list operation."""
+EventsListResult = KlaviyoExecuteResultWithMeta[list[Event], EventsListResultMeta]
+"""Result type for events.list operation with data and metadata."""
 
-MetricsListResult = KlaviyoExecuteResult[list[Metric]]
-"""Result type for metrics.list operation."""
+MetricsListResult = KlaviyoExecuteResultWithMeta[list[Metric], MetricsListResultMeta]
+"""Result type for metrics.list operation with data and metadata."""
 
-FlowsListResult = KlaviyoExecuteResult[list[Flow]]
-"""Result type for flows.list operation."""
+FlowsListResult = KlaviyoExecuteResultWithMeta[list[Flow], FlowsListResultMeta]
+"""Result type for flows.list operation with data and metadata."""
 
-EmailTemplatesListResult = KlaviyoExecuteResult[list[Template]]
-"""Result type for email_templates.list operation."""
+EmailTemplatesListResult = KlaviyoExecuteResultWithMeta[list[Template], EmailTemplatesListResultMeta]
+"""Result type for email_templates.list operation with data and metadata."""
 
