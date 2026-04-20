@@ -11,25 +11,45 @@ from airbyte_agent_sdk.connector_model_loader import load_connector_model
 from airbyte_agent_sdk.executor.hosted_executor import HostedExecutor
 from airbyte_agent_sdk.executor.models import AskResult, AutomationInfo, ConnectorInfo, WorkflowInfo
 
-_UNSET = object()
-
 
 class Workspace:
     """Top-level entry point for Airbyte hosted-mode workspace operations.
 
-    Provides workspace-level methods: ask, list/create/delete connectors,
-    and get a connector executor.
-
-    Args:
-        client_id: Airbyte OAuth client ID (or set AIRBYTE_CLIENT_ID).
-        client_secret: Airbyte OAuth client secret (or set AIRBYTE_CLIENT_SECRET).
-        workspace_name: Workspace name for scoping operations. Defaults to "default".
-        organization_id: Optional org ID for multi-org routing.
+    Provides workspace-level methods: `ask`, list/create/delete connectors,
+    get a connector executor, and workflow/automation CRUD. Use `Workspace`
+    when you want to operate against a whole workspace (many connectors,
+    workflows, automations); use [`connect()`](#connect) when you already
+    know which connector you want to execute.
 
     Example:
-        async with Workspace(workspace_name="my-workspace") as ws:
-            result = await ws.ask("list my recent customers")
-            connectors = await ws.list_connectors()
+        ```python
+        import asyncio
+        from airbyte_agent_sdk import Workspace
+
+        async def main():
+            async with Workspace(
+                client_id="your_client_id",
+                client_secret="your_client_secret",
+                workspace_name="my-workspace",
+            ) as ws:
+                result = await ws.ask("list my recent customers")
+                connectors = await ws.list_connectors()
+                print(result.outcome, len(connectors))
+
+        asyncio.run(main())
+        ```
+
+    Args:
+        client_id: Airbyte OAuth client ID (or set `AIRBYTE_CLIENT_ID`).
+        client_secret: Airbyte OAuth client secret (or set
+            `AIRBYTE_CLIENT_SECRET`).
+        workspace_name: Workspace name for scoping operations. Defaults to
+            `"default"`.
+        organization_id: Optional org ID for multi-org routing.
+
+    Raises:
+        ValueError: If `client_id`/`client_secret` are not supplied and no
+            `AIRBYTE_CLIENT_ID`/`AIRBYTE_CLIENT_SECRET` env vars are set.
     """
 
     def __init__(
@@ -37,14 +57,14 @@ class Workspace:
         *,
         client_id: str | None = None,
         client_secret: str | None = None,
-        workspace_name: str | object = _UNSET,
+        workspace_name: str | None = None,
         organization_id: str | None = None,
     ):
         resolved_id, resolved_secret, resolved_org, resolved_ws = resolve_credentials(
             client_id=client_id,
             client_secret=client_secret,
             organization_id=organization_id,
-            workspace_name=workspace_name if workspace_name is not _UNSET else None,
+            workspace_name=workspace_name,
         )
         self._workspace_name = resolved_ws
         self._organization_id = resolved_org

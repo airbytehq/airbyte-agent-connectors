@@ -2,11 +2,13 @@
 
 from typing import TYPE_CHECKING
 
+from airbyte_agent_sdk.errors import AirbyteError
+
 if TYPE_CHECKING:
     from airbyte_agent_sdk.http.response import HTTPResponse
 
 
-class HTTPClientError(Exception):
+class HTTPClientError(AirbyteError):
     """Base exception for HTTP client errors."""
 
     pass
@@ -99,6 +101,11 @@ class TimeoutError(HTTPClientError):
 
     This can occur during connection establishment, reading the response,
     or writing the request.
+
+    Note:
+        This class intentionally shadows `builtins.TimeoutError` inside the
+        `airbyte_agent_sdk.http.exceptions` namespace. If you need both, import
+        the builtin under an alias (e.g. `import builtins as _b`).
     """
 
     def __init__(

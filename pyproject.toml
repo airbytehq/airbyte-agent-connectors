@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "airbyte-agent-sdk"
-version = "0.1.30"
+version = "0.1.31"
 description = "Core SDK for Airbyte connectors with declarative YAML execution"
 authors = [{ name = "Airbyte", email = "contact@airbyte.io" }]
 readme = "README.md"
@@ -35,6 +35,8 @@ dev = [
     "pytest-mock>=3.10.0",
     "pytest-httpx>=0.30.0",
     "ruff==0.7.3",
+    "pdoc>=15.0.0",
+    "poethepoet>=0.24.0",
 ]
 
 [tool.setuptools.packages.find]
@@ -46,6 +48,10 @@ airbyte_agent_sdk = ["py.typed", "codegen/templates/*.jinja2", "specs/*/connecto
 
 [dependency-groups]
 dev = ["pytest-cov>=7.0.0"]
+
+[tool.poe.tasks]
+docs-generate = { env = { PDOC_ALLOW_EXEC = "1" }, cmd = "python docs/generate.py", help = "Generate API documentation with pdoc." }
+docs-preview = { shell = "poe docs-generate && python -m webbrowser docs/generated/index.html", help = "Generate API documentation and open it in the default web browser." }
 
 [tool.ruff]
 extend = "../shared/ruff.toml"

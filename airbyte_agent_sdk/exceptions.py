@@ -4,6 +4,7 @@ DEPRECATED: HTTP exceptions have been moved to airbyte_agent_sdk.http.exceptions
 This module re-exports them for backward compatibility.
 """
 
+from airbyte_agent_sdk.errors import AirbyteError
 from airbyte_agent_sdk.http.exceptions import (
     AuthenticationError,
     HTTPClientError,
@@ -14,6 +15,7 @@ from airbyte_agent_sdk.http.exceptions import (
 )
 
 __all__ = [
+    "AirbyteError",
     "HTTPClientError",
     "HTTPStatusError",
     "AuthenticationError",

@@ -14,8 +14,6 @@ from . import registry
 if TYPE_CHECKING:
     from airbyte_agent_sdk.connectors.stripe import StripeConnector
 
-_UNSET = object()
-
 
 @overload
 def connect(
@@ -23,7 +21,7 @@ def connect(
     *,
     client_id: str | None = ...,
     client_secret: str | None = ...,
-    workspace_name: str | object = ...,
+    workspace_name: str | None = ...,
     connector_id: str | None = ...,
     organization_id: str | None = ...,
     auth_config: AirbyteAuthConfig | None = ...,
@@ -36,7 +34,7 @@ def connect(
     *,
     client_id: str | None = ...,
     client_secret: str | None = ...,
-    workspace_name: str | object = ...,
+    workspace_name: str | None = ...,
     connector_id: str | None = ...,
     organization_id: str | None = ...,
     auth_config: AirbyteAuthConfig | None = ...,
@@ -48,39 +46,71 @@ def connect(
     *,
     client_id: str | None = None,
     client_secret: str | None = None,
-    workspace_name: str | object = _UNSET,
+    workspace_name: str | None = None,
     connector_id: str | None = None,
     organization_id: str | None = None,
     auth_config: AirbyteAuthConfig | None = None,
 ) -> StripeConnector | HostedExecutor:
-    """Create a typed connector or HostedExecutor for a connector by name.
+    """Create a typed connector or `HostedExecutor` for a connector by name.
 
-    When a generated typed connector package exists (e.g., StripeConnector),
+    When a generated typed connector package exists (e.g. `StripeConnector`),
     returns the typed connector with full IDE autocompletion and type safety.
-    Otherwise, falls back to a generic HostedExecutor.
+    Otherwise, falls back to a generic [`HostedExecutor`](#HostedExecutor).
 
     Example:
-        stripe = connect("stripe",
-            client_id="your_client_id",
-            client_secret="your_client_secret",
-        )
+        ```python
+        import asyncio
+        from airbyte_agent_sdk import connect
+
+        async def main():
+            stripe = connect(
+                "stripe",
+                client_id="your_client_id",
+                client_secret="your_client_secret",
+                connector_id="src_123",
+            )
+            result = await stripe.execute("customers", "list", params={"limit": 10})
+            print(result.data)
+
+        asyncio.run(main())
+        ```
+
+    The returned object's `execute()` is `async` — always `await` it from inside a
+    coroutine (see `asyncio.run(main())` above).
 
     Args:
-        connector_name: Connector slug, e.g. "stripe" or "zendesk-support".
-        client_id: Airbyte OAuth client ID.
-        client_secret: Airbyte OAuth client secret.
-        workspace_name: Workspace name for connector lookup. Defaults to "default".
+        connector_name: Connector slug, e.g. `"stripe"` or `"zendesk-support"`.
+        client_id: Airbyte OAuth client ID (falls back to `AIRBYTE_CLIENT_ID`).
+        client_secret: Airbyte OAuth client secret (falls back to `AIRBYTE_CLIENT_SECRET`).
+        workspace_name: Workspace name for connector lookup. Defaults to `"default"`.
         connector_id: Direct connector/source ID — skips lookup.
         organization_id: Airbyte organization ID for multi-org routing.
-        auth_config: AirbyteAuthConfig with hosted credentials.
+        auth_config: [`AirbyteAuthConfig`](#AirbyteAuthConfig) with hosted credentials.
 
     Returns:
-        A typed connector (e.g., StripeConnector) if a generated package exists,
-        or a HostedExecutor for connectors with only a YAML spec.
+        A typed connector (e.g. `StripeConnector`) if a generated package exists,
+        or a [`HostedExecutor`](#HostedExecutor) for connectors with only a YAML spec.
 
     Raises:
-        ValueError: If connector_name is not in the bundled registry.
-        ValueError: If no Airbyte Cloud credentials are provided.
+        ValueError: If `connector_name` is not in the bundled registry, or if no
+            Airbyte Cloud credentials are provided (neither arguments, env vars,
+            nor `auth_config`).
+
+    Note:
+        The returned object's `execute()` method may raise exceptions from three
+        disjoint families depending on the execution path:
+
+        1. [`AirbyteError`](#AirbyteError) (root of `HTTPClientError` and
+           `ExecutorError` families) — raised by SDK-owned paths such as the
+           local executor, HTTP client, and auth strategies.
+        2. `httpx.HTTPStatusError` / `httpx.RequestError` — propagated **unwrapped**
+           from `HostedExecutor.execute()`; not covered by `AirbyteError`.
+        3. `RuntimeError` — raised by generated typed connectors when the
+           underlying `ExecutionResult.success` is `False`; not covered by
+           `AirbyteError`.
+
+        See the module-level `## Errors` section for a compound `try`/`except`
+        pattern that catches both SDK-defined and hosted-path errors.
     """
     registry.get_spec_path(connector_name)
 
@@ -91,7 +121,7 @@ def connect(
             client_id=client_id,
             client_secret=client_secret,
             organization_id=organization_id,
-            workspace_name=workspace_name if workspace_name is not _UNSET else None,
+            workspace_name=workspace_name,
         )
     except ValueError:
         if not is_hosted_auth_config:
@@ -104,7 +134,7 @@ def connect(
         resolved_client_id = None
         resolved_client_secret = None
         resolved_org_id = organization_id
-        resolved_ws = workspace_name if workspace_name is not _UNSET else "default"
+        resolved_ws = workspace_name or "default"
 
     connector_cls = registry._get_connector_class(connector_name)
     if connector_cls is not None:

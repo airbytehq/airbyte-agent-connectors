@@ -6,6 +6,7 @@ from collections.abc import AsyncIterator
 from dataclasses import dataclass, field
 from typing import Any, Protocol, runtime_checkable
 
+from airbyte_agent_sdk.errors import AirbyteError
 from airbyte_agent_sdk.types import Action
 
 
@@ -328,7 +329,7 @@ def find_check_operation(model: Any) -> tuple[str, Any, dict[str, Any]] | None:
     return (check_entity, check_action, params)
 
 
-class ExecutorError(Exception):
+class ExecutorError(AirbyteError):
     """Base exception for executor errors."""
 
     pass

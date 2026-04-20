@@ -175,19 +175,19 @@ class ActiveUsersResponse(BaseModel):
 
     data: Union[ActiveUsersData, Any] = Field(default=None)
 
-class AverageSessionLengthDataSeriesmetaItem(BaseModel):
-    """Nested schema for AverageSessionLengthData.seriesMeta_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    segment_index: Union[int, Any] = Field(default=None, alias="segmentIndex")
-    session_index: Union[int, Any] = Field(default=None, alias="sessionIndex")
-
 class AverageSessionLengthDataSeriescollapsedItemItem(BaseModel):
     """Nested schema for AverageSessionLengthData.seriesCollapsed_item_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     set_id: Union[str, Any] = Field(default=None, alias="setId")
     value: Union[float, Any] = Field(default=None)
+
+class AverageSessionLengthDataSeriesmetaItem(BaseModel):
+    """Nested schema for AverageSessionLengthData.seriesMeta_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    segment_index: Union[int, Any] = Field(default=None, alias="segmentIndex")
+    session_index: Union[int, Any] = Field(default=None, alias="sessionIndex")
 
 class AverageSessionLengthData(BaseModel):
     """Average session length data"""
