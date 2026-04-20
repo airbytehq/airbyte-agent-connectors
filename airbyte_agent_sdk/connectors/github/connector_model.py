@@ -94,7 +94,11 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                     query_params_schema={
                         'owner': {'type': 'string', 'required': True},
                         'repo': {'type': 'string', 'required': True},
-                        'fields': {'type': 'array', 'required': False},
+                        'fields': {
+                            'type': 'array',
+                            'required': False,
+                            'items': {'type': 'string'},
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -135,9 +139,15 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 30,
+                            'minimum': 1,
+                            'maximum': 100,
                         },
                         'after': {'type': 'string', 'required': False},
-                        'fields': {'type': 'array', 'required': False},
+                        'fields': {
+                            'type': 'array',
+                            'required': False,
+                            'items': {'type': 'string'},
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -207,9 +217,15 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 10,
+                            'minimum': 1,
+                            'maximum': 100,
                         },
                         'after': {'type': 'string', 'required': False},
-                        'fields': {'type': 'array', 'required': False},
+                        'fields': {
+                            'type': 'array',
+                            'required': False,
+                            'items': {'type': 'string'},
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -284,9 +300,15 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 30,
+                            'minimum': 1,
+                            'maximum': 100,
                         },
                         'after': {'type': 'string', 'required': False},
-                        'fields': {'type': 'array', 'required': False},
+                        'fields': {
+                            'type': 'array',
+                            'required': False,
+                            'items': {'type': 'string'},
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -362,9 +384,15 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 30,
+                            'minimum': 1,
+                            'maximum': 100,
                         },
                         'after': {'type': 'string', 'required': False},
-                        'fields': {'type': 'array', 'required': False},
+                        'fields': {
+                            'type': 'array',
+                            'required': False,
+                            'items': {'type': 'string'},
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -431,7 +459,11 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                         'owner': {'type': 'string', 'required': True},
                         'repo': {'type': 'string', 'required': True},
                         'branch': {'type': 'string', 'required': True},
-                        'fields': {'type': 'array', 'required': False},
+                        'fields': {
+                            'type': 'array',
+                            'required': False,
+                            'items': {'type': 'string'},
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -490,10 +522,16 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 30,
+                            'minimum': 1,
+                            'maximum': 100,
                         },
                         'after': {'type': 'string', 'required': False},
                         'path': {'type': 'string', 'required': False},
-                        'fields': {'type': 'array', 'required': False},
+                        'fields': {
+                            'type': 'array',
+                            'required': False,
+                            'items': {'type': 'string'},
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -571,7 +609,11 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                         'owner': {'type': 'string', 'required': True},
                         'repo': {'type': 'string', 'required': True},
                         'sha': {'type': 'string', 'required': True},
-                        'fields': {'type': 'array', 'required': False},
+                        'fields': {
+                            'type': 'array',
+                            'required': False,
+                            'items': {'type': 'string'},
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -629,9 +671,15 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 30,
+                            'minimum': 1,
+                            'maximum': 100,
                         },
                         'after': {'type': 'string', 'required': False},
-                        'fields': {'type': 'array', 'required': False},
+                        'fields': {
+                            'type': 'array',
+                            'required': False,
+                            'items': {'type': 'string'},
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -698,7 +746,11 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                         'owner': {'type': 'string', 'required': True},
                         'repo': {'type': 'string', 'required': True},
                         'tag': {'type': 'string', 'required': True},
-                        'fields': {'type': 'array', 'required': False},
+                        'fields': {
+                            'type': 'array',
+                            'required': False,
+                            'items': {'type': 'string'},
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -759,14 +811,27 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                     query_params_schema={
                         'owner': {'type': 'string', 'required': True},
                         'repo': {'type': 'string', 'required': True},
-                        'states': {'type': 'array', 'required': False},
+                        'states': {
+                            'type': 'array',
+                            'required': False,
+                            'items': {
+                                'type': 'string',
+                                'enum': ['OPEN', 'CLOSED'],
+                            },
+                        },
                         'per_page': {
                             'type': 'integer',
                             'required': False,
                             'default': 30,
+                            'minimum': 1,
+                            'maximum': 100,
                         },
                         'after': {'type': 'string', 'required': False},
-                        'fields': {'type': 'array', 'required': False},
+                        'fields': {
+                            'type': 'array',
+                            'required': False,
+                            'items': {'type': 'string'},
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -834,7 +899,11 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                         'owner': {'type': 'string', 'required': True},
                         'repo': {'type': 'string', 'required': True},
                         'number': {'type': 'integer', 'required': True},
-                        'fields': {'type': 'array', 'required': False},
+                        'fields': {
+                            'type': 'array',
+                            'required': False,
+                            'items': {'type': 'string'},
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -884,9 +953,15 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 30,
+                            'minimum': 1,
+                            'maximum': 100,
                         },
                         'after': {'type': 'string', 'required': False},
-                        'fields': {'type': 'array', 'required': False},
+                        'fields': {
+                            'type': 'array',
+                            'required': False,
+                            'items': {'type': 'string'},
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -1451,9 +1526,15 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 30,
+                            'minimum': 1,
+                            'maximum': 100,
                         },
                         'after': {'type': 'string', 'required': False},
-                        'fields': {'type': 'array', 'required': False},
+                        'fields': {
+                            'type': 'array',
+                            'required': False,
+                            'items': {'type': 'string'},
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -1519,7 +1600,11 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                     query_params=['id', 'fields'],
                     query_params_schema={
                         'id': {'type': 'string', 'required': True},
-                        'fields': {'type': 'array', 'required': False},
+                        'fields': {
+                            'type': 'array',
+                            'required': False,
+                            'items': {'type': 'string'},
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -1718,14 +1803,27 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                     query_params_schema={
                         'owner': {'type': 'string', 'required': True},
                         'repo': {'type': 'string', 'required': True},
-                        'states': {'type': 'array', 'required': False},
+                        'states': {
+                            'type': 'array',
+                            'required': False,
+                            'items': {
+                                'type': 'string',
+                                'enum': ['OPEN', 'CLOSED', 'MERGED'],
+                            },
+                        },
                         'per_page': {
                             'type': 'integer',
                             'required': False,
                             'default': 30,
+                            'minimum': 1,
+                            'maximum': 100,
                         },
                         'after': {'type': 'string', 'required': False},
-                        'fields': {'type': 'array', 'required': False},
+                        'fields': {
+                            'type': 'array',
+                            'required': False,
+                            'items': {'type': 'string'},
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -1793,7 +1891,11 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                         'owner': {'type': 'string', 'required': True},
                         'repo': {'type': 'string', 'required': True},
                         'number': {'type': 'integer', 'required': True},
-                        'fields': {'type': 'array', 'required': False},
+                        'fields': {
+                            'type': 'array',
+                            'required': False,
+                            'items': {'type': 'string'},
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -1843,9 +1945,15 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 30,
+                            'minimum': 1,
+                            'maximum': 100,
                         },
                         'after': {'type': 'string', 'required': False},
-                        'fields': {'type': 'array', 'required': False},
+                        'fields': {
+                            'type': 'array',
+                            'required': False,
+                            'items': {'type': 'string'},
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -1923,9 +2031,15 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 30,
+                            'minimum': 1,
+                            'maximum': 100,
                         },
                         'after': {'type': 'string', 'required': False},
-                        'fields': {'type': 'array', 'required': False},
+                        'fields': {
+                            'type': 'array',
+                            'required': False,
+                            'items': {'type': 'string'},
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -2010,9 +2124,15 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 30,
+                            'minimum': 1,
+                            'maximum': 100,
                         },
                         'after': {'type': 'string', 'required': False},
-                        'fields': {'type': 'array', 'required': False},
+                        'fields': {
+                            'type': 'array',
+                            'required': False,
+                            'items': {'type': 'string'},
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -2078,7 +2198,11 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                     query_params=['id', 'fields'],
                     query_params_schema={
                         'id': {'type': 'string', 'required': True},
-                        'fields': {'type': 'array', 'required': False},
+                        'fields': {
+                            'type': 'array',
+                            'required': False,
+                            'items': {'type': 'string'},
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -2127,9 +2251,15 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 30,
+                            'minimum': 1,
+                            'maximum': 100,
                         },
                         'after': {'type': 'string', 'required': False},
-                        'fields': {'type': 'array', 'required': False},
+                        'fields': {
+                            'type': 'array',
+                            'required': False,
+                            'items': {'type': 'string'},
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -2196,7 +2326,11 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                         'owner': {'type': 'string', 'required': True},
                         'repo': {'type': 'string', 'required': True},
                         'name': {'type': 'string', 'required': True},
-                        'fields': {'type': 'array', 'required': False},
+                        'fields': {
+                            'type': 'array',
+                            'required': False,
+                            'items': {'type': 'string'},
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -2251,14 +2385,27 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                     query_params_schema={
                         'owner': {'type': 'string', 'required': True},
                         'repo': {'type': 'string', 'required': True},
-                        'states': {'type': 'array', 'required': False},
+                        'states': {
+                            'type': 'array',
+                            'required': False,
+                            'items': {
+                                'type': 'string',
+                                'enum': ['OPEN', 'CLOSED'],
+                            },
+                        },
                         'per_page': {
                             'type': 'integer',
                             'required': False,
                             'default': 30,
+                            'minimum': 1,
+                            'maximum': 100,
                         },
                         'after': {'type': 'string', 'required': False},
-                        'fields': {'type': 'array', 'required': False},
+                        'fields': {
+                            'type': 'array',
+                            'required': False,
+                            'items': {'type': 'string'},
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -2326,7 +2473,11 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                         'owner': {'type': 'string', 'required': True},
                         'repo': {'type': 'string', 'required': True},
                         'number': {'type': 'integer', 'required': True},
-                        'fields': {'type': 'array', 'required': False},
+                        'fields': {
+                            'type': 'array',
+                            'required': False,
+                            'items': {'type': 'string'},
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -2373,7 +2524,11 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                     query_params=['org', 'fields'],
                     query_params_schema={
                         'org': {'type': 'string', 'required': True},
-                        'fields': {'type': 'array', 'required': False},
+                        'fields': {
+                            'type': 'array',
+                            'required': False,
+                            'items': {'type': 'string'},
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -2414,9 +2569,15 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 30,
+                            'minimum': 1,
+                            'maximum': 100,
                         },
                         'after': {'type': 'string', 'required': False},
-                        'fields': {'type': 'array', 'required': False},
+                        'fields': {
+                            'type': 'array',
+                            'required': False,
+                            'items': {'type': 'string'},
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -2481,7 +2642,11 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                     query_params=['username', 'fields'],
                     query_params_schema={
                         'username': {'type': 'string', 'required': True},
-                        'fields': {'type': 'array', 'required': False},
+                        'fields': {
+                            'type': 'array',
+                            'required': False,
+                            'items': {'type': 'string'},
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -2522,9 +2687,15 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 30,
+                            'minimum': 1,
+                            'maximum': 100,
                         },
                         'after': {'type': 'string', 'required': False},
-                        'fields': {'type': 'array', 'required': False},
+                        'fields': {
+                            'type': 'array',
+                            'required': False,
+                            'items': {'type': 'string'},
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -2592,9 +2763,15 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 10,
+                            'minimum': 1,
+                            'maximum': 100,
                         },
                         'after': {'type': 'string', 'required': False},
-                        'fields': {'type': 'array', 'required': False},
+                        'fields': {
+                            'type': 'array',
+                            'required': False,
+                            'items': {'type': 'string'},
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -2668,9 +2845,15 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 30,
+                            'minimum': 1,
+                            'maximum': 100,
                         },
                         'after': {'type': 'string', 'required': False},
-                        'fields': {'type': 'array', 'required': False},
+                        'fields': {
+                            'type': 'array',
+                            'required': False,
+                            'items': {'type': 'string'},
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -2730,7 +2913,11 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                     query_params_schema={
                         'org': {'type': 'string', 'required': True},
                         'team_slug': {'type': 'string', 'required': True},
-                        'fields': {'type': 'array', 'required': False},
+                        'fields': {
+                            'type': 'array',
+                            'required': False,
+                            'items': {'type': 'string'},
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -2784,9 +2971,15 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 30,
+                            'minimum': 1,
+                            'maximum': 100,
                         },
                         'after': {'type': 'string', 'required': False},
-                        'fields': {'type': 'array', 'required': False},
+                        'fields': {
+                            'type': 'array',
+                            'required': False,
+                            'items': {'type': 'string'},
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -2853,7 +3046,11 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                         'owner': {'type': 'string', 'required': True},
                         'repo': {'type': 'string', 'required': True},
                         'tag': {'type': 'string', 'required': True},
-                        'fields': {'type': 'array', 'required': False},
+                        'fields': {
+                            'type': 'array',
+                            'required': False,
+                            'items': {'type': 'string'},
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -2911,9 +3108,15 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 30,
+                            'minimum': 1,
+                            'maximum': 100,
                         },
                         'after': {'type': 'string', 'required': False},
-                        'fields': {'type': 'array', 'required': False},
+                        'fields': {
+                            'type': 'array',
+                            'required': False,
+                            'items': {'type': 'string'},
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -2976,7 +3179,11 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                     description="Gets information about the currently authenticated user.\nThis is useful when you don't know the username but need to access\nthe current user's profile, permissions, or associated resources.\n",
                     query_params=['fields'],
                     query_params_schema={
-                        'fields': {'type': 'array', 'required': False},
+                        'fields': {
+                            'type': 'array',
+                            'required': False,
+                            'items': {'type': 'string'},
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -3016,9 +3223,15 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 30,
+                            'minimum': 1,
+                            'maximum': 100,
                         },
                         'after': {'type': 'string', 'required': False},
-                        'fields': {'type': 'array', 'required': False},
+                        'fields': {
+                            'type': 'array',
+                            'required': False,
+                            'items': {'type': 'string'},
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -3088,9 +3301,15 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 20,
+                            'minimum': 1,
+                            'maximum': 100,
                         },
                         'after': {'type': 'string', 'required': False},
-                        'fields': {'type': 'array', 'required': False},
+                        'fields': {
+                            'type': 'array',
+                            'required': False,
+                            'items': {'type': 'string'},
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -3150,7 +3369,11 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                     query_params_schema={
                         'org': {'type': 'string', 'required': True},
                         'project_number': {'type': 'integer', 'required': True},
-                        'fields': {'type': 'array', 'required': False},
+                        'fields': {
+                            'type': 'array',
+                            'required': False,
+                            'items': {'type': 'string'},
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -3204,9 +3427,15 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 50,
+                            'minimum': 1,
+                            'maximum': 100,
                         },
                         'after': {'type': 'string', 'required': False},
-                        'fields': {'type': 'array', 'required': False},
+                        'fields': {
+                            'type': 'array',
+                            'required': False,
+                            'items': {'type': 'string'},
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -3286,15 +3515,28 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                     query_params_schema={
                         'owner': {'type': 'string', 'required': True},
                         'repo': {'type': 'string', 'required': True},
-                        'states': {'type': 'array', 'required': False},
+                        'states': {
+                            'type': 'array',
+                            'required': False,
+                            'items': {
+                                'type': 'string',
+                                'enum': ['OPEN', 'CLOSED'],
+                            },
+                        },
                         'answered': {'type': 'boolean', 'required': False},
                         'per_page': {
                             'type': 'integer',
                             'required': False,
                             'default': 30,
+                            'minimum': 1,
+                            'maximum': 100,
                         },
                         'after': {'type': 'string', 'required': False},
-                        'fields': {'type': 'array', 'required': False},
+                        'fields': {
+                            'type': 'array',
+                            'required': False,
+                            'items': {'type': 'string'},
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -3363,7 +3605,11 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                         'owner': {'type': 'string', 'required': True},
                         'repo': {'type': 'string', 'required': True},
                         'number': {'type': 'integer', 'required': True},
-                        'fields': {'type': 'array', 'required': False},
+                        'fields': {
+                            'type': 'array',
+                            'required': False,
+                            'items': {'type': 'string'},
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -3413,9 +3659,15 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 30,
+                            'minimum': 1,
+                            'maximum': 100,
                         },
                         'after': {'type': 'string', 'required': False},
-                        'fields': {'type': 'array', 'required': False},
+                        'fields': {
+                            'type': 'array',
+                            'required': False,
+                            'items': {'type': 'string'},
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -3493,7 +3745,11 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                             'required': False,
                             'default': 'HEAD',
                         },
-                        'fields': {'type': 'array', 'required': False},
+                        'fields': {
+                            'type': 'array',
+                            'required': False,
+                            'items': {'type': 'string'},
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -3553,7 +3809,11 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                             'required': False,
                             'default': 'HEAD',
                         },
-                        'fields': {'type': 'array', 'required': False},
+                        'fields': {
+                            'type': 'array',
+                            'required': False,
+                            'items': {'type': 'string'},
+                        },
                     },
                     response_schema={
                         'type': 'object',

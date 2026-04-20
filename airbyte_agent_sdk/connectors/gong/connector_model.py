@@ -400,8 +400,16 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                     description='Retrieve calls data by date range',
                     query_params=['fromDateTime', 'toDateTime', 'cursor'],
                     query_params_schema={
-                        'fromDateTime': {'type': 'string', 'required': False},
-                        'toDateTime': {'type': 'string', 'required': False},
+                        'fromDateTime': {
+                            'type': 'string',
+                            'required': False,
+                            'format': 'date-time',
+                        },
+                        'toDateTime': {
+                            'type': 'string',
+                            'required': False,
+                            'format': 'date-time',
+                        },
                         'cursor': {'type': 'string', 'required': False},
                     },
                     response_schema={
@@ -2883,8 +2891,16 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                     query_params_schema={
                         'workspace-id': {'type': 'string', 'required': True},
                         'manager-id': {'type': 'string', 'required': True},
-                        'from': {'type': 'string', 'required': True},
-                        'to': {'type': 'string', 'required': True},
+                        'from': {
+                            'type': 'string',
+                            'required': True,
+                            'format': 'date-time',
+                        },
+                        'to': {
+                            'type': 'string',
+                            'required': True,
+                            'format': 'date-time',
+                        },
                     },
                     response_schema={
                         'type': 'object',

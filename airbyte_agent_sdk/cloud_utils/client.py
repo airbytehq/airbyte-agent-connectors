@@ -8,24 +8,79 @@ from typing import Any
 
 import httpx
 
+from airbyte_agent_sdk.http.exceptions import (
+    AuthenticationError,
+    ConnectorValidationError,
+    HTTPStatusError,
+    RateLimitError,
+)
+
 
 def _raise_with_body(response: httpx.Response) -> None:
-    """Raise HTTPStatusError with response body included in the message.
+    """Raise the appropriate SDK exception for an httpx error response.
 
     Unlike httpx's raise_for_status(), this includes the response body in the
-    error message so that API validation errors are visible to the caller.
+    error message so that API validation errors are visible to the caller, and
+    maps status codes to the SDK exception hierarchy so framework adapters can
+    translate them into retryable tool errors.
+
+    Status code mapping:
+    - 401/403 -> AuthenticationError
+    - 429     -> RateLimitError (parses Retry-After header when present)
+    - 400/422 -> ConnectorValidationError
+    - other ≥400 -> HTTPStatusError
     """
     if response.is_success:
         return
 
-    # Try to get the response body for a more informative error
+    # Try to get the response body for a more informative error. Prefer
+    # structured JSON error details when available (mirrors the httpx adapter).
+    body_text: str
     try:
-        body = response.text
+        body_text = response.text
     except Exception:
-        body = "<unable to read response body>"
+        body_text = "<unable to read response body>"
 
-    message = f"HTTP {response.status_code} error for {response.request.method} {response.url}: {body}"
-    raise httpx.HTTPStatusError(message=message, request=response.request, response=response)
+    detail_message: str | None = None
+    try:
+        error_data = response.json()
+        if isinstance(error_data, dict):
+            errors_list = error_data.get("errors")
+            if isinstance(errors_list, list) and errors_list:
+
+                def _extract_error(e: object) -> str:
+                    if isinstance(e, dict):
+                        return str(e.get("userPresentableMessage") or e.get("message") or e.get("error") or e)
+                    return str(e)
+
+                detail_message = ", ".join(_extract_error(e) for e in errors_list)
+            else:
+                detail_message = error_data.get("message") or error_data.get("error")
+    except Exception:
+        detail_message = None
+
+    detail = detail_message if detail_message else body_text
+    message = f"HTTP {response.status_code} error for {response.request.method} {response.url}: {detail}"
+
+    status_code = response.status_code
+
+    if status_code in (401, 403):
+        raise AuthenticationError(message=message, status_code=status_code)
+
+    if status_code == 429:
+        retry_after: int | None = None
+        retry_after_header = response.headers.get("retry-after")
+        if retry_after_header is not None:
+            try:
+                retry_after = int(retry_after_header)
+            except ValueError:
+                retry_after = None
+        raise RateLimitError(message=message, retry_after=retry_after)
+
+    if status_code in (400, 422):
+        raise ConnectorValidationError(message=message, status_code=status_code)
+
+    raise HTTPStatusError(status_code=status_code, message=message)
 
 
 class AirbyteCloudClient:
@@ -379,7 +434,10 @@ class AirbyteCloudClient:
             credentials: Flat OAuth app credentials dict, or None to remove the override
 
         Raises:
-            httpx.HTTPStatusError: If the request fails
+            AuthenticationError: If API returns 401/403
+            RateLimitError: If API returns 429
+            ConnectorValidationError: If API returns 400/422
+            HTTPStatusError: If API returns any other 4xx/5xx status code
 
         Example:
             await client.configure_oauth_app_parameters(
@@ -427,7 +485,10 @@ class AirbyteCloudClient:
             Raw JSON response dict from the API
 
         Raises:
-            httpx.HTTPStatusError: If API returns 4xx/5xx status code
+            AuthenticationError: If API returns 401/403
+            RateLimitError: If API returns 429
+            ConnectorValidationError: If API returns 400/422 (retryable by LLM)
+            HTTPStatusError: If API returns any other 4xx/5xx status code
             httpx.RequestError: If network request fails
 
         Example:
@@ -453,7 +514,15 @@ class AirbyteCloudClient:
         return response.json()
 
     async def ask_workspace(self, workspace_name: str, prompt: str) -> dict[str, Any]:
-        """Ask a natural-language question across all connectors in a workspace."""
+        """Ask a natural-language question across all connectors in a workspace.
+
+        Raises:
+            AuthenticationError: If API returns 401/403
+            RateLimitError: If API returns 429
+            ConnectorValidationError: If API returns 400/422
+            HTTPStatusError: If API returns any other 4xx/5xx status code
+            httpx.RequestError: If network request fails
+        """
         token = await self.get_bearer_token()
         url = f"{self.API_BASE_URL}/api/v1/workspaces/query/structured"
         headers = self._build_headers(token=token)
@@ -467,7 +536,15 @@ class AirbyteCloudClient:
         return response.json()
 
     async def list_workspace_connectors(self, customer_name: str) -> list[dict[str, Any]]:
-        """List connector instances for a workspace."""
+        """List connector instances for a workspace.
+
+        Raises:
+            AuthenticationError: If API returns 401/403
+            RateLimitError: If API returns 429
+            ConnectorValidationError: If API returns 400/422
+            HTTPStatusError: If API returns any other 4xx/5xx status code
+            httpx.RequestError: If network request fails
+        """
         token = await self.get_bearer_token()
         url = f"{self.API_BASE_URL}/api/v1/integrations/connectors"
         headers = self._build_headers(token=token)

@@ -2257,9 +2257,21 @@ ClickupApiConnectorModel: ConnectorModel = ConnectorModel(
                     ],
                     query_params_schema={
                         'search': {'type': 'string', 'required': False},
-                        'statuses[]': {'type': 'array', 'required': False},
-                        'assignees[]': {'type': 'array', 'required': False},
-                        'tags[]': {'type': 'array', 'required': False},
+                        'statuses[]': {
+                            'type': 'array',
+                            'required': False,
+                            'items': {'type': 'string'},
+                        },
+                        'assignees[]': {
+                            'type': 'array',
+                            'required': False,
+                            'items': {'type': 'string'},
+                        },
+                        'tags[]': {
+                            'type': 'array',
+                            'required': False,
+                            'items': {'type': 'string'},
+                        },
                         'priority': {'type': 'integer', 'required': False},
                         'due_date_gt': {'type': 'integer', 'required': False},
                         'due_date_lt': {'type': 'integer', 'required': False},
@@ -2267,7 +2279,11 @@ ClickupApiConnectorModel: ConnectorModel = ConnectorModel(
                         'date_created_lt': {'type': 'integer', 'required': False},
                         'date_updated_gt': {'type': 'integer', 'required': False},
                         'date_updated_lt': {'type': 'integer', 'required': False},
-                        'custom_fields': {'type': 'array', 'required': False},
+                        'custom_fields': {
+                            'type': 'array',
+                            'required': False,
+                            'items': {'type': 'object'},
+                        },
                         'include_closed': {'type': 'boolean', 'required': False},
                         'page': {
                             'type': 'integer',

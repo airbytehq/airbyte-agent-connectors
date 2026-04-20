@@ -390,6 +390,8 @@ SendgridConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 100,
+                            'minimum': 1,
+                            'maximum': 1000,
                         },
                     },
                     response_schema={
@@ -666,6 +668,8 @@ SendgridConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 50,
+                            'minimum': 1,
+                            'maximum': 100,
                         },
                     },
                     response_schema={
@@ -760,6 +764,8 @@ SendgridConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 50,
+                            'minimum': 1,
+                            'maximum': 100,
                         },
                     },
                     response_schema={
@@ -1070,6 +1076,8 @@ SendgridConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 50,
+                            'minimum': 1,
+                            'maximum': 200,
                         },
                     },
                     response_schema={
@@ -1181,6 +1189,8 @@ SendgridConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 50,
+                            'minimum': 1,
+                            'maximum': 50,
                         },
                     },
                     response_schema={
@@ -1307,11 +1317,14 @@ SendgridConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 500,
+                            'minimum': 1,
+                            'maximum': 500,
                         },
                         'offset': {
                             'type': 'integer',
                             'required': False,
                             'default': 0,
+                            'minimum': 0,
                         },
                     },
                     response_schema={
@@ -1361,11 +1374,14 @@ SendgridConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 500,
+                            'minimum': 1,
+                            'maximum': 500,
                         },
                         'offset': {
                             'type': 'integer',
                             'required': False,
                             'default': 0,
+                            'minimum': 0,
                         },
                     },
                     response_schema={
@@ -1415,11 +1431,14 @@ SendgridConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 500,
+                            'minimum': 1,
+                            'maximum': 500,
                         },
                         'offset': {
                             'type': 'integer',
                             'required': False,
                             'default': 0,
+                            'minimum': 0,
                         },
                     },
                     response_schema={
@@ -1467,11 +1486,14 @@ SendgridConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 500,
+                            'minimum': 1,
+                            'maximum': 500,
                         },
                         'offset': {
                             'type': 'integer',
                             'required': False,
                             'default': 0,
+                            'minimum': 0,
                         },
                     },
                     response_schema={
@@ -1519,11 +1541,14 @@ SendgridConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 500,
+                            'minimum': 1,
+                            'maximum': 500,
                         },
                         'offset': {
                             'type': 'integer',
                             'required': False,
                             'default': 0,
+                            'minimum': 0,
                         },
                     },
                     response_schema={
@@ -1635,11 +1660,14 @@ SendgridConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 500,
+                            'minimum': 1,
+                            'maximum': 500,
                         },
                         'offset': {
                             'type': 'integer',
                             'required': False,
                             'default': 0,
+                            'minimum': 0,
                         },
                     },
                     response_schema={

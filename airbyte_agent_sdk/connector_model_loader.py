@@ -303,6 +303,28 @@ def parse_openapi_spec(raw_config: dict) -> OpenAPIConnector:
     return spec
 
 
+def _extract_schema_metadata(param_schema: dict[str, Any]) -> dict[str, Any]:
+    """Extract validation/description metadata from an OpenAPI parameter schema.
+
+    Returns a fresh dict with keys that downstream renderers (e.g. introspection)
+    need to produce accurate tool descriptions and to validate arguments. Never
+    mutates the input schema.
+
+    Keys included when present in ``param_schema``:
+        - ``enum``: scalar enum values (e.g. ``["asc", "desc"]``)
+        - ``items``: full items dict for array-typed params; callers should
+          read ``items.enum`` for array-of-enum params.
+        - ``minimum`` / ``maximum``: numeric bounds
+        - ``format``: string format hint (e.g. ``"date-time"``, ``"uuid"``)
+        - ``description``: human-readable description
+    """
+    extracted: dict[str, Any] = {}
+    for key in ("enum", "items", "minimum", "maximum", "format", "description"):
+        if key in param_schema:
+            extracted[key] = param_schema[key]
+    return extracted
+
+
 def _extract_request_body_config(
     request_body: RequestBody | None, spec_dict: dict[str, Any]
 ) -> tuple[list[str], dict[str, Any] | None, dict[str, Any] | None, dict[str, Any]]:
@@ -342,7 +364,11 @@ def _extract_request_body_config(
         # media_type is now a MediaType object with schema_ field
         schema = media_type.schema_ or {}
 
-        # Resolve all $refs in the schema using jsonref
+        # Resolve all $refs in the schema using jsonref.
+        # Invariant: the full resolved schema is preserved, so per-property
+        # metadata such as `enum`, `items`, `minimum`, `maximum`, `format`, and
+        # `description` round-trips to EndpointDefinition.request_schema for
+        # downstream tool-description rendering and validation.
         request_schema = resolve_schema_refs(schema, spec_dict)
 
         # Extract body field names and defaults from resolved schema
@@ -459,6 +485,7 @@ def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel
                         "type": param_schema.get("type", "string"),
                         "required": param.required or False,
                         "default": param_schema.get("default"),
+                        **_extract_schema_metadata(param_schema),
                     }
 
                     if param.in_ == "path":

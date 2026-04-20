@@ -810,11 +810,13 @@ AmplitudeConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'string',
                             'required': False,
                             'default': 'active',
+                            'enum': ['active', 'new'],
                         },
                         'i': {
                             'type': 'integer',
                             'required': False,
                             'default': 1,
+                            'enum': [1, 7, 30],
                         },
                         'g': {'type': 'string', 'required': False},
                     },

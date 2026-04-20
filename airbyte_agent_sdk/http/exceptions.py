@@ -58,6 +58,32 @@ class AuthenticationError(HTTPStatusError):
         super().__init__(status_code=status_code, message=message, response=response)
 
 
+class ConnectorValidationError(HTTPStatusError):
+    """Raised when a connector request fails client-side or server-side validation.
+
+    Used for (1) pre-flight enum/type checks inside LocalExecutor, and (2) 400/422
+    responses from the connector API whose body describes how to correct the call.
+    Framework adapters translate this into a retryable ModelRetry so the LLM can
+    fix its arguments and try again.
+    """
+
+    def __init__(
+        self,
+        message: str,
+        status_code: int = 400,
+        response: "HTTPResponse | None" = None,
+    ) -> None:
+        """Initialize connector validation error.
+
+        Args:
+            message: Error message describing the validation issue
+            status_code: HTTP status code (400 or 422 for server-side; 400 default
+                for client-side pre-flight checks)
+            response: Optional HTTPResponse object for accessing details
+        """
+        super().__init__(status_code=status_code, message=message, response=response)
+
+
 class RateLimitError(HTTPStatusError):
     """Raised when API rate limit is exceeded (429 response)."""
 

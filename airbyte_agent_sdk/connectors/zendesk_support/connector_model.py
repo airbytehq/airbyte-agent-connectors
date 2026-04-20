@@ -113,15 +113,40 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                         'per_page',
                     ],
                     query_params_schema={
-                        'page': {'type': 'integer', 'required': False},
+                        'page': {
+                            'type': 'integer',
+                            'required': False,
+                            'minimum': 1,
+                        },
                         'external_id': {'type': 'string', 'required': False},
-                        'sort_by': {'type': 'string', 'required': False},
+                        'sort_by': {
+                            'type': 'string',
+                            'required': False,
+                            'enum': [
+                                'assignee',
+                                'assignee.name',
+                                'created_at',
+                                'group',
+                                'id',
+                                'requester',
+                                'requester.name',
+                                'status',
+                                'subject',
+                                'updated_at',
+                            ],
+                        },
                         'sort_order': {
                             'type': 'string',
                             'required': False,
                             'default': 'asc',
+                            'enum': ['asc', 'desc'],
                         },
-                        'per_page': {'type': 'integer', 'required': False},
+                        'per_page': {
+                            'type': 'integer',
+                            'required': False,
+                            'minimum': 1,
+                            'maximum': 100,
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -599,14 +624,28 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                         'per_page',
                     ],
                     query_params_schema={
-                        'page': {'type': 'integer', 'required': False},
-                        'sort_by': {'type': 'string', 'required': False},
+                        'page': {
+                            'type': 'integer',
+                            'required': False,
+                            'minimum': 1,
+                        },
+                        'sort_by': {
+                            'type': 'string',
+                            'required': False,
+                            'enum': ['id', 'subject', 'deleted_at'],
+                        },
                         'sort_order': {
                             'type': 'string',
                             'required': False,
                             'default': 'asc',
+                            'enum': ['asc', 'desc'],
                         },
-                        'per_page': {'type': 'integer', 'required': False},
+                        'per_page': {
+                            'type': 'integer',
+                            'required': False,
+                            'minimum': 1,
+                            'maximum': 100,
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -730,10 +769,23 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                         'per_page',
                     ],
                     query_params_schema={
-                        'page': {'type': 'integer', 'required': False},
-                        'role': {'type': 'string', 'required': False},
+                        'page': {
+                            'type': 'integer',
+                            'required': False,
+                            'minimum': 1,
+                        },
+                        'role': {
+                            'type': 'string',
+                            'required': False,
+                            'enum': ['end-user', 'agent', 'admin'],
+                        },
                         'external_id': {'type': 'string', 'required': False},
-                        'per_page': {'type': 'integer', 'required': False},
+                        'per_page': {
+                            'type': 'integer',
+                            'required': False,
+                            'minimum': 1,
+                            'maximum': 100,
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -1121,8 +1173,17 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                     description='Returns a list of all organizations in your account',
                     query_params=['page', 'per_page'],
                     query_params_schema={
-                        'page': {'type': 'integer', 'required': False},
-                        'per_page': {'type': 'integer', 'required': False},
+                        'page': {
+                            'type': 'integer',
+                            'required': False,
+                            'minimum': 1,
+                        },
+                        'per_page': {
+                            'type': 'integer',
+                            'required': False,
+                            'minimum': 1,
+                            'maximum': 100,
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -1327,13 +1388,22 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                     description='Returns a list of all groups in your account',
                     query_params=['page', 'exclude_deleted', 'per_page'],
                     query_params_schema={
-                        'page': {'type': 'integer', 'required': False},
+                        'page': {
+                            'type': 'integer',
+                            'required': False,
+                            'minimum': 1,
+                        },
                         'exclude_deleted': {
                             'type': 'boolean',
                             'required': False,
                             'default': False,
                         },
-                        'per_page': {'type': 'integer', 'required': False},
+                        'per_page': {
+                            'type': 'integer',
+                            'required': False,
+                            'minimum': 1,
+                            'maximum': 100,
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -1468,7 +1538,11 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                         'per_page',
                     ],
                     query_params_schema={
-                        'page': {'type': 'integer', 'required': False},
+                        'page': {
+                            'type': 'integer',
+                            'required': False,
+                            'minimum': 1,
+                        },
                         'include_inline_images': {
                             'type': 'boolean',
                             'required': False,
@@ -1478,8 +1552,14 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'string',
                             'required': False,
                             'default': 'asc',
+                            'enum': ['asc', 'desc'],
                         },
-                        'per_page': {'type': 'integer', 'required': False},
+                        'per_page': {
+                            'type': 'integer',
+                            'required': False,
+                            'minimum': 1,
+                            'maximum': 100,
+                        },
                     },
                     path_params=['ticket_id'],
                     path_params_schema={
@@ -1686,8 +1766,17 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                     description='Returns a list of audits for a specific ticket',
                     query_params=['page', 'per_page'],
                     query_params_schema={
-                        'page': {'type': 'integer', 'required': False},
-                        'per_page': {'type': 'integer', 'required': False},
+                        'page': {
+                            'type': 'integer',
+                            'required': False,
+                            'minimum': 1,
+                        },
+                        'per_page': {
+                            'type': 'integer',
+                            'required': False,
+                            'minimum': 1,
+                            'maximum': 100,
+                        },
                     },
                     path_params=['ticket_id'],
                     path_params_schema={
@@ -1784,8 +1873,17 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                     description='Returns a list of all ticket metrics',
                     query_params=['page', 'per_page'],
                     query_params_schema={
-                        'page': {'type': 'integer', 'required': False},
-                        'per_page': {'type': 'integer', 'required': False},
+                        'page': {
+                            'type': 'integer',
+                            'required': False,
+                            'minimum': 1,
+                        },
+                        'per_page': {
+                            'type': 'integer',
+                            'required': False,
+                            'minimum': 1,
+                            'maximum': 100,
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -1956,9 +2054,18 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                     description='Returns a list of all ticket fields',
                     query_params=['page', 'locale', 'per_page'],
                     query_params_schema={
-                        'page': {'type': 'integer', 'required': False},
+                        'page': {
+                            'type': 'integer',
+                            'required': False,
+                            'minimum': 1,
+                        },
                         'locale': {'type': 'string', 'required': False},
-                        'per_page': {'type': 'integer', 'required': False},
+                        'per_page': {
+                            'type': 'integer',
+                            'required': False,
+                            'minimum': 1,
+                            'maximum': 100,
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -2187,8 +2294,17 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                     description='Returns a list of all brands for the account',
                     query_params=['page', 'per_page'],
                     query_params_schema={
-                        'page': {'type': 'integer', 'required': False},
-                        'per_page': {'type': 'integer', 'required': False},
+                        'page': {
+                            'type': 'integer',
+                            'required': False,
+                            'minimum': 1,
+                        },
+                        'per_page': {
+                            'type': 'integer',
+                            'required': False,
+                            'minimum': 1,
+                            'maximum': 100,
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -2377,13 +2493,39 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                         'per_page',
                     ],
                     query_params_schema={
-                        'page': {'type': 'integer', 'required': False},
-                        'access': {'type': 'string', 'required': False},
+                        'page': {
+                            'type': 'integer',
+                            'required': False,
+                            'minimum': 1,
+                        },
+                        'access': {
+                            'type': 'string',
+                            'required': False,
+                            'enum': ['personal', 'shared', 'account'],
+                        },
                         'active': {'type': 'boolean', 'required': False},
                         'group_id': {'type': 'integer', 'required': False},
-                        'sort_by': {'type': 'string', 'required': False},
-                        'sort_order': {'type': 'string', 'required': False},
-                        'per_page': {'type': 'integer', 'required': False},
+                        'sort_by': {
+                            'type': 'string',
+                            'required': False,
+                            'enum': [
+                                'alphabetical',
+                                'created_at',
+                                'updated_at',
+                                'position',
+                            ],
+                        },
+                        'sort_order': {
+                            'type': 'string',
+                            'required': False,
+                            'enum': ['asc', 'desc'],
+                        },
+                        'per_page': {
+                            'type': 'integer',
+                            'required': False,
+                            'minimum': 1,
+                            'maximum': 100,
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -2550,15 +2692,41 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                         'per_page',
                     ],
                     query_params_schema={
-                        'page': {'type': 'integer', 'required': False},
-                        'access': {'type': 'string', 'required': False},
+                        'page': {
+                            'type': 'integer',
+                            'required': False,
+                            'minimum': 1,
+                        },
+                        'access': {
+                            'type': 'string',
+                            'required': False,
+                            'enum': ['personal', 'shared', 'account'],
+                        },
                         'active': {'type': 'boolean', 'required': False},
                         'category': {'type': 'integer', 'required': False},
                         'group_id': {'type': 'integer', 'required': False},
                         'only_viewable': {'type': 'boolean', 'required': False},
-                        'sort_by': {'type': 'string', 'required': False},
-                        'sort_order': {'type': 'string', 'required': False},
-                        'per_page': {'type': 'integer', 'required': False},
+                        'sort_by': {
+                            'type': 'string',
+                            'required': False,
+                            'enum': [
+                                'alphabetical',
+                                'created_at',
+                                'updated_at',
+                                'position',
+                            ],
+                        },
+                        'sort_order': {
+                            'type': 'string',
+                            'required': False,
+                            'enum': ['asc', 'desc'],
+                        },
+                        'per_page': {
+                            'type': 'integer',
+                            'required': False,
+                            'minimum': 1,
+                            'maximum': 100,
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -2722,16 +2890,37 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                         'per_page',
                     ],
                     query_params_schema={
-                        'page': {'type': 'integer', 'required': False},
+                        'page': {
+                            'type': 'integer',
+                            'required': False,
+                            'minimum': 1,
+                        },
                         'active': {'type': 'boolean', 'required': False},
                         'category_id': {'type': 'string', 'required': False},
                         'sort_by': {
                             'type': 'string',
                             'required': False,
                             'default': 'position',
+                            'enum': [
+                                'alphabetical',
+                                'created_at',
+                                'updated_at',
+                                'usage_1h',
+                                'usage_24h',
+                                'usage_7d',
+                            ],
                         },
-                        'sort_order': {'type': 'string', 'required': False},
-                        'per_page': {'type': 'integer', 'required': False},
+                        'sort_order': {
+                            'type': 'string',
+                            'required': False,
+                            'enum': ['asc', 'desc'],
+                        },
+                        'per_page': {
+                            'type': 'integer',
+                            'required': False,
+                            'minimum': 1,
+                            'maximum': 100,
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -2897,15 +3086,36 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                         'per_page',
                     ],
                     query_params_schema={
-                        'page': {'type': 'integer', 'required': False},
+                        'page': {
+                            'type': 'integer',
+                            'required': False,
+                            'minimum': 1,
+                        },
                         'active': {'type': 'boolean', 'required': False},
                         'sort_by': {
                             'type': 'string',
                             'required': False,
                             'default': 'position',
+                            'enum': [
+                                'alphabetical',
+                                'created_at',
+                                'updated_at',
+                                'usage_1h',
+                                'usage_24h',
+                                'usage_7d',
+                            ],
                         },
-                        'sort_order': {'type': 'string', 'required': False},
-                        'per_page': {'type': 'integer', 'required': False},
+                        'sort_order': {
+                            'type': 'string',
+                            'required': False,
+                            'enum': ['asc', 'desc'],
+                        },
+                        'per_page': {
+                            'type': 'integer',
+                            'required': False,
+                            'minimum': 1,
+                            'maximum': 100,
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -3050,8 +3260,17 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                     description='Returns a list of all tags used in the account',
                     query_params=['page', 'per_page'],
                     query_params_schema={
-                        'page': {'type': 'integer', 'required': False},
-                        'per_page': {'type': 'integer', 'required': False},
+                        'page': {
+                            'type': 'integer',
+                            'required': False,
+                            'minimum': 1,
+                        },
+                        'per_page': {
+                            'type': 'integer',
+                            'required': False,
+                            'minimum': 1,
+                            'maximum': 100,
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -3116,11 +3335,30 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                         'per_page',
                     ],
                     query_params_schema={
-                        'page': {'type': 'integer', 'required': False},
-                        'score': {'type': 'string', 'required': False},
+                        'page': {
+                            'type': 'integer',
+                            'required': False,
+                            'minimum': 1,
+                        },
+                        'score': {
+                            'type': 'string',
+                            'required': False,
+                            'enum': [
+                                'offered',
+                                'unoffered',
+                                'received',
+                                'good',
+                                'bad',
+                            ],
+                        },
                         'start_time': {'type': 'integer', 'required': False},
                         'end_time': {'type': 'integer', 'required': False},
-                        'per_page': {'type': 'integer', 'required': False},
+                        'per_page': {
+                            'type': 'integer',
+                            'required': False,
+                            'minimum': 1,
+                            'maximum': 100,
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -3316,8 +3554,17 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                     description='Returns a list of all group memberships',
                     query_params=['page', 'per_page'],
                     query_params_schema={
-                        'page': {'type': 'integer', 'required': False},
-                        'per_page': {'type': 'integer', 'required': False},
+                        'page': {
+                            'type': 'integer',
+                            'required': False,
+                            'minimum': 1,
+                        },
+                        'per_page': {
+                            'type': 'integer',
+                            'required': False,
+                            'minimum': 1,
+                            'maximum': 100,
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -3402,8 +3649,17 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                     description='Returns a list of all organization memberships',
                     query_params=['page', 'per_page'],
                     query_params_schema={
-                        'page': {'type': 'integer', 'required': False},
-                        'per_page': {'type': 'integer', 'required': False},
+                        'page': {
+                            'type': 'integer',
+                            'required': False,
+                            'minimum': 1,
+                        },
+                        'per_page': {
+                            'type': 'integer',
+                            'required': False,
+                            'minimum': 1,
+                            'maximum': 100,
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -3492,8 +3748,17 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                     description='Returns a list of all SLA policies',
                     query_params=['page', 'per_page'],
                     query_params_schema={
-                        'page': {'type': 'integer', 'required': False},
-                        'per_page': {'type': 'integer', 'required': False},
+                        'page': {
+                            'type': 'integer',
+                            'required': False,
+                            'minimum': 1,
+                        },
+                        'per_page': {
+                            'type': 'integer',
+                            'required': False,
+                            'minimum': 1,
+                            'maximum': 100,
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -3640,10 +3905,19 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                         'per_page',
                     ],
                     query_params_schema={
-                        'page': {'type': 'integer', 'required': False},
+                        'page': {
+                            'type': 'integer',
+                            'required': False,
+                            'minimum': 1,
+                        },
                         'active': {'type': 'boolean', 'required': False},
                         'end_user_visible': {'type': 'boolean', 'required': False},
-                        'per_page': {'type': 'integer', 'required': False},
+                        'per_page': {
+                            'type': 'integer',
+                            'required': False,
+                            'minimum': 1,
+                            'maximum': 100,
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -3850,14 +4124,33 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                         'per_page',
                     ],
                     query_params_schema={
-                        'page': {'type': 'integer', 'required': False},
-                        'sort_by': {'type': 'string', 'required': False},
+                        'page': {
+                            'type': 'integer',
+                            'required': False,
+                            'minimum': 1,
+                        },
+                        'sort_by': {
+                            'type': 'string',
+                            'required': False,
+                            'enum': [
+                                'created_at',
+                                'updated_at',
+                                'title',
+                                'position',
+                            ],
+                        },
                         'sort_order': {
                             'type': 'string',
                             'required': False,
                             'default': 'asc',
+                            'enum': ['asc', 'desc'],
                         },
-                        'per_page': {'type': 'integer', 'required': False},
+                        'per_page': {
+                            'type': 'integer',
+                            'required': False,
+                            'minimum': 1,
+                            'maximum': 100,
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -4020,8 +4313,17 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                     description='Returns a list of all attachments for a specific article',
                     query_params=['page', 'per_page'],
                     query_params_schema={
-                        'page': {'type': 'integer', 'required': False},
-                        'per_page': {'type': 'integer', 'required': False},
+                        'page': {
+                            'type': 'integer',
+                            'required': False,
+                            'minimum': 1,
+                        },
+                        'per_page': {
+                            'type': 'integer',
+                            'required': False,
+                            'minimum': 1,
+                            'maximum': 100,
+                        },
                     },
                     path_params=['article_id'],
                     path_params_schema={

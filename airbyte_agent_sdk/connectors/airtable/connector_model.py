@@ -270,7 +270,12 @@ AirtableConnectorModel: ConnectorModel = ConnectorModel(
                     ],
                     query_params_schema={
                         'offset': {'type': 'string', 'required': False},
-                        'pageSize': {'type': 'integer', 'required': False},
+                        'pageSize': {
+                            'type': 'integer',
+                            'required': False,
+                            'minimum': 1,
+                            'maximum': 100,
+                        },
                         'view': {'type': 'string', 'required': False},
                         'filterByFormula': {'type': 'string', 'required': False},
                         'sort': {'type': 'string', 'required': False},

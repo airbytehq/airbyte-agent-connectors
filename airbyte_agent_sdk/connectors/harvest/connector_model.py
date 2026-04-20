@@ -131,6 +131,8 @@ HarvestConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 50,
+                            'minimum': 1,
+                            'maximum': 2000,
                         },
                     },
                     response_schema={
@@ -505,6 +507,8 @@ HarvestConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 50,
+                            'minimum': 1,
+                            'maximum': 2000,
                         },
                     },
                     response_schema={
@@ -701,6 +705,8 @@ HarvestConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 50,
+                            'minimum': 1,
+                            'maximum': 2000,
                         },
                     },
                     response_schema={
@@ -1184,6 +1190,8 @@ HarvestConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 50,
+                            'minimum': 1,
+                            'maximum': 2000,
                         },
                     },
                     response_schema={
@@ -1614,6 +1622,8 @@ HarvestConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 50,
+                            'minimum': 1,
+                            'maximum': 2000,
                         },
                     },
                     response_schema={
@@ -1810,6 +1820,8 @@ HarvestConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 50,
+                            'minimum': 1,
+                            'maximum': 2000,
                         },
                     },
                     response_schema={
@@ -2420,6 +2432,8 @@ HarvestConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 50,
+                            'minimum': 1,
+                            'maximum': 2000,
                         },
                     },
                     response_schema={
@@ -2943,6 +2957,8 @@ HarvestConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 50,
+                            'minimum': 1,
+                            'maximum': 2000,
                         },
                     },
                     response_schema={
@@ -3115,6 +3131,8 @@ HarvestConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 50,
+                            'minimum': 1,
+                            'maximum': 2000,
                         },
                     },
                     response_schema={
@@ -3515,6 +3533,8 @@ HarvestConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 50,
+                            'minimum': 1,
+                            'maximum': 2000,
                         },
                     },
                     response_schema={
@@ -3663,6 +3683,8 @@ HarvestConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 50,
+                            'minimum': 1,
+                            'maximum': 2000,
                         },
                     },
                     response_schema={
@@ -4015,6 +4037,8 @@ HarvestConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 50,
+                            'minimum': 1,
+                            'maximum': 2000,
                         },
                     },
                     response_schema={
@@ -4199,6 +4223,8 @@ HarvestConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 50,
+                            'minimum': 1,
+                            'maximum': 2000,
                         },
                     },
                     response_schema={
@@ -4362,6 +4388,8 @@ HarvestConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 50,
+                            'minimum': 1,
+                            'maximum': 2000,
                         },
                     },
                     response_schema={
@@ -4572,6 +4600,8 @@ HarvestConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 50,
+                            'minimum': 1,
+                            'maximum': 2000,
                         },
                     },
                     response_schema={
@@ -4784,6 +4814,8 @@ HarvestConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 50,
+                            'minimum': 1,
+                            'maximum': 2000,
                         },
                     },
                     response_schema={
@@ -4940,6 +4972,8 @@ HarvestConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 50,
+                            'minimum': 1,
+                            'maximum': 2000,
                         },
                     },
                     response_schema={

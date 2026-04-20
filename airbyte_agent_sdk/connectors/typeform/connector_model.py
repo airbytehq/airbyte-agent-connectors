@@ -69,11 +69,14 @@ TypeformConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 1,
+                            'minimum': 1,
                         },
                         'page_size': {
                             'type': 'integer',
                             'required': False,
                             'default': 10,
+                            'minimum': 1,
+                            'maximum': 200,
                         },
                     },
                     response_schema={
@@ -2006,6 +2009,8 @@ TypeformConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 25,
+                            'minimum': 1,
+                            'maximum': 1000,
                         },
                         'since': {'type': 'string', 'required': False},
                         'until': {'type': 'string', 'required': False},
@@ -2549,11 +2554,14 @@ TypeformConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 1,
+                            'minimum': 1,
                         },
                         'page_size': {
                             'type': 'integer',
                             'required': False,
                             'default': 10,
+                            'minimum': 1,
+                            'maximum': 200,
                         },
                     },
                     response_schema={
@@ -2803,11 +2811,14 @@ TypeformConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 1,
+                            'minimum': 1,
                         },
                         'page_size': {
                             'type': 'integer',
                             'required': False,
                             'default': 10,
+                            'minimum': 1,
+                            'maximum': 200,
                         },
                     },
                     response_schema={

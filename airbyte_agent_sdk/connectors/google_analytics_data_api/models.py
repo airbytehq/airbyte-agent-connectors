@@ -68,15 +68,31 @@ class MetricHeader(BaseModel):
     name: Union[str, Any] = Field(default=None)
     type_: Union[str, Any] = Field(default=None, alias="type")
 
-class RunReportResponsePropertyquotaConcurrentrequests(BaseModel):
-    """Nested schema for RunReportResponsePropertyquota.concurrentRequests"""
+class RunReportResponseMetadata(BaseModel):
+    """Nested schema for RunReportResponse.metadata"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    currency_code: Union[str, Any] = Field(default=None, alias="currencyCode", description="The currency code used in this report")
+    """The currency code used in this report"""
+    time_zone: Union[str, Any] = Field(default=None, alias="timeZone", description="The property's current timezone")
+    """The property's current timezone"""
+
+class RunReportResponsePropertyquotaTokensperday(BaseModel):
+    """Nested schema for RunReportResponsePropertyquota.tokensPerDay"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     consumed: Union[int, Any] = Field(default=None)
     remaining: Union[int, Any] = Field(default=None)
 
-class RunReportResponsePropertyquotaTokensperday(BaseModel):
-    """Nested schema for RunReportResponsePropertyquota.tokensPerDay"""
+class RunReportResponsePropertyquotaPotentiallythresholdedrequestsperhour(BaseModel):
+    """Nested schema for RunReportResponsePropertyquota.potentiallyThresholdedRequestsPerHour"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    consumed: Union[int, Any] = Field(default=None)
+    remaining: Union[int, Any] = Field(default=None)
+
+class RunReportResponsePropertyquotaConcurrentrequests(BaseModel):
+    """Nested schema for RunReportResponsePropertyquota.concurrentRequests"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     consumed: Union[int, Any] = Field(default=None)
@@ -103,13 +119,6 @@ class RunReportResponsePropertyquotaTokensperprojectperhour(BaseModel):
     consumed: Union[int, Any] = Field(default=None)
     remaining: Union[int, Any] = Field(default=None)
 
-class RunReportResponsePropertyquotaPotentiallythresholdedrequestsperhour(BaseModel):
-    """Nested schema for RunReportResponsePropertyquota.potentiallyThresholdedRequestsPerHour"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    consumed: Union[int, Any] = Field(default=None)
-    remaining: Union[int, Any] = Field(default=None)
-
 class RunReportResponsePropertyquota(BaseModel):
     """Quota status for this Analytics property"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -120,15 +129,6 @@ class RunReportResponsePropertyquota(BaseModel):
     server_errors_per_project_per_hour: Union[RunReportResponsePropertyquotaServererrorsperprojectperhour, Any] = Field(default=None, alias="serverErrorsPerProjectPerHour")
     potentially_thresholded_requests_per_hour: Union[RunReportResponsePropertyquotaPotentiallythresholdedrequestsperhour, Any] = Field(default=None, alias="potentiallyThresholdedRequestsPerHour")
     tokens_per_project_per_hour: Union[RunReportResponsePropertyquotaTokensperprojectperhour, Any] = Field(default=None, alias="tokensPerProjectPerHour")
-
-class RunReportResponseMetadata(BaseModel):
-    """Nested schema for RunReportResponse.metadata"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    currency_code: Union[str, Any] = Field(default=None, alias="currencyCode", description="The currency code used in this report")
-    """The currency code used in this report"""
-    time_zone: Union[str, Any] = Field(default=None, alias="timeZone", description="The property's current timezone")
-    """The property's current timezone"""
 
 class RunReportResponse(BaseModel):
     """Response from the runReport endpoint"""
@@ -142,8 +142,8 @@ class RunReportResponse(BaseModel):
     property_quota: Union[RunReportResponsePropertyquota, Any] = Field(default=None, alias="propertyQuota")
     kind: Union[str, Any] = Field(default=None)
 
-class WebsiteOverviewRequestDimensionsItem(BaseModel):
-    """Nested schema for WebsiteOverviewRequest.dimensions_item"""
+class WebsiteOverviewRequestMetricsItem(BaseModel):
+    """Nested schema for WebsiteOverviewRequest.metrics_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     name: Union[str, Any] = Field(default=None)
@@ -157,8 +157,8 @@ class WebsiteOverviewRequestDaterangesItem(BaseModel):
     end_date: Union[str, Any] = Field(default=None, alias="endDate", description="End date in YYYY-MM-DD format or relative (e.g., today)")
     """End date in YYYY-MM-DD format or relative (e.g., today)"""
 
-class WebsiteOverviewRequestMetricsItem(BaseModel):
-    """Nested schema for WebsiteOverviewRequest.metrics_item"""
+class WebsiteOverviewRequestDimensionsItem(BaseModel):
+    """Nested schema for WebsiteOverviewRequest.dimensions_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     name: Union[str, Any] = Field(default=None)
@@ -174,6 +174,18 @@ class WebsiteOverviewRequest(BaseModel):
     return_property_quota: Union[bool, Any] = Field(default=None, alias="returnPropertyQuota")
     limit: Union[int, Any] = Field(default=None)
 
+class DailyActiveUsersRequestDimensionsItem(BaseModel):
+    """Nested schema for DailyActiveUsersRequest.dimensions_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: Union[str, Any] = Field(default=None)
+
+class DailyActiveUsersRequestMetricsItem(BaseModel):
+    """Nested schema for DailyActiveUsersRequest.metrics_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: Union[str, Any] = Field(default=None)
+
 class DailyActiveUsersRequestDaterangesItem(BaseModel):
     """Nested schema for DailyActiveUsersRequest.dateRanges_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -182,18 +194,6 @@ class DailyActiveUsersRequestDaterangesItem(BaseModel):
     """Start date in YYYY-MM-DD format or relative (e.g., 30daysAgo)"""
     end_date: Union[str, Any] = Field(default=None, alias="endDate", description="End date in YYYY-MM-DD format or relative (e.g., today)")
     """End date in YYYY-MM-DD format or relative (e.g., today)"""
-
-class DailyActiveUsersRequestMetricsItem(BaseModel):
-    """Nested schema for DailyActiveUsersRequest.metrics_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: Union[str, Any] = Field(default=None)
-
-class DailyActiveUsersRequestDimensionsItem(BaseModel):
-    """Nested schema for DailyActiveUsersRequest.dimensions_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: Union[str, Any] = Field(default=None)
 
 class DailyActiveUsersRequest(BaseModel):
     """Request body for daily active users report"""
@@ -206,6 +206,12 @@ class DailyActiveUsersRequest(BaseModel):
     return_property_quota: Union[bool, Any] = Field(default=None, alias="returnPropertyQuota")
     limit: Union[int, Any] = Field(default=None)
 
+class WeeklyActiveUsersRequestDimensionsItem(BaseModel):
+    """Nested schema for WeeklyActiveUsersRequest.dimensions_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: Union[str, Any] = Field(default=None)
+
 class WeeklyActiveUsersRequestDaterangesItem(BaseModel):
     """Nested schema for WeeklyActiveUsersRequest.dateRanges_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -214,12 +220,6 @@ class WeeklyActiveUsersRequestDaterangesItem(BaseModel):
     """Start date in YYYY-MM-DD format or relative (e.g., 30daysAgo)"""
     end_date: Union[str, Any] = Field(default=None, alias="endDate", description="End date in YYYY-MM-DD format or relative (e.g., today)")
     """End date in YYYY-MM-DD format or relative (e.g., today)"""
-
-class WeeklyActiveUsersRequestDimensionsItem(BaseModel):
-    """Nested schema for WeeklyActiveUsersRequest.dimensions_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: Union[str, Any] = Field(default=None)
 
 class WeeklyActiveUsersRequestMetricsItem(BaseModel):
     """Nested schema for WeeklyActiveUsersRequest.metrics_item"""
@@ -244,6 +244,12 @@ class FourWeeklyActiveUsersRequestDimensionsItem(BaseModel):
 
     name: Union[str, Any] = Field(default=None)
 
+class FourWeeklyActiveUsersRequestMetricsItem(BaseModel):
+    """Nested schema for FourWeeklyActiveUsersRequest.metrics_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: Union[str, Any] = Field(default=None)
+
 class FourWeeklyActiveUsersRequestDaterangesItem(BaseModel):
     """Nested schema for FourWeeklyActiveUsersRequest.dateRanges_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -252,12 +258,6 @@ class FourWeeklyActiveUsersRequestDaterangesItem(BaseModel):
     """Start date in YYYY-MM-DD format or relative (e.g., 30daysAgo)"""
     end_date: Union[str, Any] = Field(default=None, alias="endDate", description="End date in YYYY-MM-DD format or relative (e.g., today)")
     """End date in YYYY-MM-DD format or relative (e.g., today)"""
-
-class FourWeeklyActiveUsersRequestMetricsItem(BaseModel):
-    """Nested schema for FourWeeklyActiveUsersRequest.metrics_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: Union[str, Any] = Field(default=None)
 
 class FourWeeklyActiveUsersRequest(BaseModel):
     """Request body for four-weekly active users report"""
@@ -302,12 +302,6 @@ class TrafficSourcesRequest(BaseModel):
     return_property_quota: Union[bool, Any] = Field(default=None, alias="returnPropertyQuota")
     limit: Union[int, Any] = Field(default=None)
 
-class PagesRequestDimensionsItem(BaseModel):
-    """Nested schema for PagesRequest.dimensions_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: Union[str, Any] = Field(default=None)
-
 class PagesRequestMetricsItem(BaseModel):
     """Nested schema for PagesRequest.metrics_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -323,6 +317,12 @@ class PagesRequestDaterangesItem(BaseModel):
     end_date: Union[str, Any] = Field(default=None, alias="endDate", description="End date in YYYY-MM-DD format or relative (e.g., today)")
     """End date in YYYY-MM-DD format or relative (e.g., today)"""
 
+class PagesRequestDimensionsItem(BaseModel):
+    """Nested schema for PagesRequest.dimensions_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: Union[str, Any] = Field(default=None)
+
 class PagesRequest(BaseModel):
     """Request body for pages report"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -333,12 +333,6 @@ class PagesRequest(BaseModel):
     keep_empty_rows: Union[bool, Any] = Field(default=None, alias="keepEmptyRows")
     return_property_quota: Union[bool, Any] = Field(default=None, alias="returnPropertyQuota")
     limit: Union[int, Any] = Field(default=None)
-
-class DevicesRequestMetricsItem(BaseModel):
-    """Nested schema for DevicesRequest.metrics_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: Union[str, Any] = Field(default=None)
 
 class DevicesRequestDaterangesItem(BaseModel):
     """Nested schema for DevicesRequest.dateRanges_item"""
@@ -355,6 +349,12 @@ class DevicesRequestDimensionsItem(BaseModel):
 
     name: Union[str, Any] = Field(default=None)
 
+class DevicesRequestMetricsItem(BaseModel):
+    """Nested schema for DevicesRequest.metrics_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: Union[str, Any] = Field(default=None)
+
 class DevicesRequest(BaseModel):
     """Request body for devices report"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -365,6 +365,12 @@ class DevicesRequest(BaseModel):
     keep_empty_rows: Union[bool, Any] = Field(default=None, alias="keepEmptyRows")
     return_property_quota: Union[bool, Any] = Field(default=None, alias="returnPropertyQuota")
     limit: Union[int, Any] = Field(default=None)
+
+class LocationsRequestDimensionsItem(BaseModel):
+    """Nested schema for LocationsRequest.dimensions_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: Union[str, Any] = Field(default=None)
 
 class LocationsRequestMetricsItem(BaseModel):
     """Nested schema for LocationsRequest.metrics_item"""
@@ -380,12 +386,6 @@ class LocationsRequestDaterangesItem(BaseModel):
     """Start date in YYYY-MM-DD format or relative (e.g., 30daysAgo)"""
     end_date: Union[str, Any] = Field(default=None, alias="endDate", description="End date in YYYY-MM-DD format or relative (e.g., today)")
     """End date in YYYY-MM-DD format or relative (e.g., today)"""
-
-class LocationsRequestDimensionsItem(BaseModel):
-    """Nested schema for LocationsRequest.dimensions_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: Union[str, Any] = Field(default=None)
 
 class LocationsRequest(BaseModel):
     """Request body for locations report"""

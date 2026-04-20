@@ -161,7 +161,10 @@ class HostedExecutor:
             TypeError: If action/params are passed together with an ExecutionConfig,
                 or if action is omitted when using the string form
             ValueError: If no connector or multiple connectors found for user (when doing lookup)
-            httpx.HTTPStatusError: If API returns 4xx/5xx status code
+            AuthenticationError: If API returns 401/403
+            RateLimitError: If API returns 429
+            ConnectorValidationError: If API returns 400/422 (retryable by LLM)
+            HTTPStatusError: If API returns any other 4xx/5xx status code
             httpx.RequestError: If network request fails
 
         Example:

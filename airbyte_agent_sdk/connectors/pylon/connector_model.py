@@ -68,8 +68,16 @@ PylonConnectorModel: ConnectorModel = ConnectorModel(
                     description='Get a list of issues within a time range',
                     query_params=['start_time', 'end_time', 'cursor'],
                     query_params_schema={
-                        'start_time': {'type': 'string', 'required': True},
-                        'end_time': {'type': 'string', 'required': True},
+                        'start_time': {
+                            'type': 'string',
+                            'required': True,
+                            'format': 'date-time',
+                        },
+                        'end_time': {
+                            'type': 'string',
+                            'required': True,
+                            'format': 'date-time',
+                        },
                         'cursor': {'type': 'string', 'required': False},
                     },
                     response_schema={
@@ -3471,7 +3479,11 @@ PylonConnectorModel: ConnectorModel = ConnectorModel(
                     description='Get all custom fields for a given object type',
                     query_params=['object_type', 'cursor'],
                     query_params_schema={
-                        'object_type': {'type': 'string', 'required': True},
+                        'object_type': {
+                            'type': 'string',
+                            'required': True,
+                            'enum': ['account', 'issue', 'contact'],
+                        },
                         'cursor': {'type': 'string', 'required': False},
                     },
                     response_schema={

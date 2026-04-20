@@ -7,6 +7,7 @@ import httpx
 from airbyte_agent_sdk.http.config import ClientConfig, ConnectionLimits, TimeoutConfig
 from airbyte_agent_sdk.http.exceptions import (
     AuthenticationError,
+    ConnectorValidationError,
     HTTPStatusError,
     NetworkError,
     RateLimitError,
@@ -177,6 +178,7 @@ class HTTPXClient:
         Raises:
             AuthenticationError: For 401 or 403 status codes
             RateLimitError: For 429 status codes
+            ConnectorValidationError: For 400 or 422 status codes (retryable by LLM)
             HTTPStatusError: For other 4xx or 5xx status codes
         """
         status_code = httpx_response.status_code
@@ -221,6 +223,13 @@ class HTTPXClient:
             raise RateLimitError(
                 message=error_msg,
                 retry_after=retry_after,
+                response=sdk_response,
+            )
+
+        if status_code in (400, 422):
+            raise ConnectorValidationError(
+                message=f"Validation error: {error_message} (HTTP {status_code})",
+                status_code=status_code,
                 response=sdk_response,
             )
 

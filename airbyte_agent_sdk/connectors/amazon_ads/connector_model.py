@@ -184,7 +184,11 @@ AmazonAdsConnectorModel: ConnectorModel = ConnectorModel(
                     description="Retrieves a single advertising profile by its ID. The profile contains\ninformation about the advertiser's account in a specific marketplace.\n",
                     path_params=['profileId'],
                     path_params_schema={
-                        'profileId': {'type': 'integer', 'required': True},
+                        'profileId': {
+                            'type': 'integer',
+                            'required': True,
+                            'format': 'int64',
+                        },
                     },
                     header_params=['Amazon-Advertising-API-ClientId'],
                     header_params_schema={
@@ -475,7 +479,11 @@ AmazonAdsConnectorModel: ConnectorModel = ConnectorModel(
                     description='Retrieves a single portfolio by its ID using the v2 API.\n',
                     path_params=['portfolioId'],
                     path_params_schema={
-                        'portfolioId': {'type': 'integer', 'required': True},
+                        'portfolioId': {
+                            'type': 'integer',
+                            'required': True,
+                            'format': 'int64',
+                        },
                     },
                     header_params=['Amazon-Advertising-API-ClientId', 'Amazon-Advertising-API-Scope'],
                     header_params_schema={
@@ -911,7 +919,11 @@ AmazonAdsConnectorModel: ConnectorModel = ConnectorModel(
                     description='Retrieves a single sponsored product campaign by its ID using the v2 API.\n',
                     path_params=['campaignId'],
                     path_params_schema={
-                        'campaignId': {'type': 'integer', 'required': True},
+                        'campaignId': {
+                            'type': 'integer',
+                            'required': True,
+                            'format': 'int64',
+                        },
                     },
                     header_params=['Amazon-Advertising-API-ClientId', 'Amazon-Advertising-API-Scope'],
                     header_params_schema={

@@ -25,7 +25,7 @@ from airbyte_agent_sdk.constants import (
     DEFAULT_MAX_CONNECTIONS,
     DEFAULT_MAX_KEEPALIVE_CONNECTIONS,
 )
-from airbyte_agent_sdk.http.exceptions import HTTPClientError
+from airbyte_agent_sdk.http.exceptions import ConnectorValidationError, HTTPClientError
 from airbyte_agent_sdk.http_client import HTTPClient, TokenRefreshCallback
 from airbyte_agent_sdk.logging import NullLogger, RequestLogger
 from airbyte_agent_sdk.observability import ObservabilitySession
@@ -117,6 +117,7 @@ class _OperationContext:
         self.build_request_body = executor._build_request_body
         self.determine_request_format = executor._determine_request_format
         self.validate_required_body_fields = executor._validate_required_body_fields
+        self.validate_enum_params = executor._validate_enum_params
         self.extract_records = executor._extract_records
 
     @property
@@ -1858,6 +1859,72 @@ class LocalExecutor:
                 f"Missing required body fields for {entity}.{action.value}: {missing_fields}. Provided parameters: {list(params.keys())}"
             )
 
+    def _validate_enum_params(self, endpoint: EndpointDefinition, params: dict[str, Any]) -> None:
+        """Validate enum-constrained query/body params BEFORE the HTTP call.
+
+        Walks ``endpoint.query_params_schema`` and the top level of
+        ``endpoint.request_schema.properties`` (scope limited to top level
+        for this phase). Any value not in the schema's ``enum`` list (or, for
+        arrays with ``items.enum``, any element not in that list) triggers a
+        :class:`ConnectorValidationError` with the offending field name and
+        the allowed values. No network call is made on invalid input.
+
+        Also raises when a schema declares ``type: array`` but the provided
+        value is a scalar — the schema contract is violated even if the scalar
+        happens to be a member of ``items.enum``.
+
+        Args:
+            endpoint: Endpoint definition with query/body schemas.
+            params: Caller-provided parameters.
+
+        Raises:
+            ConnectorValidationError: If any value violates an enum or the
+                array/scalar contract.
+        """
+
+        def check(name: str, schema: dict[str, Any], value: Any) -> None:
+            if not isinstance(schema, dict):
+                return
+            enum_values = schema.get("enum")
+            raw_items = schema.get("items")
+            items = raw_items if isinstance(raw_items, dict) else None
+            items_enum = items.get("enum") if items else None
+
+            if enum_values and value not in enum_values:
+                raise ConnectorValidationError(
+                    f"Invalid value {value!r} for parameter {name!r}; expected one of: {enum_values}"
+                )
+
+            if items_enum:
+                if isinstance(value, list):
+                    bad = [v for v in value if v not in items_enum]
+                    if bad:
+                        raise ConnectorValidationError(
+                            f"Invalid value(s) {bad!r} for parameter {name!r}; expected each element in: {items_enum}"
+                        )
+                elif schema.get("type") == "array":
+                    raise ConnectorValidationError(
+                        f"Parameter {name!r} expects an array of values from {items_enum}; got scalar {value!r}"
+                    )
+            elif schema.get("type") == "array" and value is not None and not isinstance(value, list):
+                # Array contract violated regardless of whether items carry an enum.
+                raise ConnectorValidationError(
+                    f"Parameter {name!r} expects an array; got scalar {value!r}"
+                )
+
+        for name, schema in (endpoint.query_params_schema or {}).items():
+            if name in params:
+                check(name, schema, params[name])
+
+        # Top-level request body properties only — nested object validation
+        # is intentionally out of scope for this phase.
+        request_schema = endpoint.request_schema or {}
+        properties = request_schema.get("properties") if isinstance(request_schema, dict) else None
+        if isinstance(properties, dict):
+            for name, schema in properties.items():
+                if name in params:
+                    check(name, schema, params[name])
+
     async def close(self):
         """Close async HTTP client and logger."""
         self.tracker.track_session_end()
@@ -1934,6 +2001,11 @@ class _StandardOperationHandler:
                 endpoint = self.ctx.operation_index.get((entity, action))
                 if not endpoint:
                     raise ExecutorError(f"No endpoint defined for {entity}.{action.value}. This is a configuration error.")
+
+                # Validate enum-constrained params before any HTTP traffic.
+                # ConnectorValidationError must propagate — do NOT add it to
+                # the logic-error catch list at _execute_operation.
+                self.ctx.validate_enum_params(endpoint, params)
 
                 # Validate required body fields for CREATE/UPDATE operations
                 self.ctx.validate_required_body_fields(endpoint, params, action, entity)

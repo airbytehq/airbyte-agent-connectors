@@ -70,10 +70,20 @@ GranolaConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 10,
+                            'minimum': 1,
+                            'maximum': 30,
                         },
                         'cursor': {'type': 'string', 'required': False},
-                        'created_before': {'type': 'string', 'required': False},
-                        'created_after': {'type': 'string', 'required': False},
+                        'created_before': {
+                            'type': 'string',
+                            'required': False,
+                            'format': 'date',
+                        },
+                        'created_after': {
+                            'type': 'string',
+                            'required': False,
+                            'format': 'date',
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -292,7 +302,11 @@ GranolaConnectorModel: ConnectorModel = ConnectorModel(
                     description='Get a single note by ID, including full details and optionally the transcript',
                     query_params=['include'],
                     query_params_schema={
-                        'include': {'type': 'string', 'required': False},
+                        'include': {
+                            'type': 'string',
+                            'required': False,
+                            'enum': ['transcript'],
+                        },
                     },
                     path_params=['note_id'],
                     path_params_schema={

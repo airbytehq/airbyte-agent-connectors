@@ -276,6 +276,7 @@ ZendeskChatConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 100,
+                            'maximum': 100,
                         },
                         'since_id': {'type': 'integer', 'required': False},
                     },
@@ -556,6 +557,7 @@ ZendeskChatConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 1000,
+                            'maximum': 1000,
                         },
                         'fields': {
                             'type': 'string',
@@ -642,6 +644,7 @@ ZendeskChatConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 100,
+                            'maximum': 100,
                         },
                         'since_id': {'type': 'integer', 'required': False},
                     },
@@ -804,6 +807,7 @@ ZendeskChatConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 1000,
+                            'maximum': 1000,
                         },
                         'fields': {
                             'type': 'string',

@@ -8,6 +8,7 @@ a consistent API.
 from airbyte_agent_sdk.http.config import ClientConfig, ConnectionLimits, TimeoutConfig
 from airbyte_agent_sdk.http.exceptions import (
     AuthenticationError,
+    ConnectorValidationError,
     HTTPClientError,
     HTTPStatusError,
     NetworkError,
@@ -31,6 +32,7 @@ __all__ = [
     "HTTPClientError",
     "HTTPStatusError",
     "AuthenticationError",
+    "ConnectorValidationError",
     "RateLimitError",
     "NetworkError",
     "TimeoutError",

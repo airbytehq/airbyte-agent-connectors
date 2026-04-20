@@ -74,11 +74,14 @@ TiktokMarketingConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 1,
+                            'minimum': 1,
                         },
                         'page_size': {
                             'type': 'integer',
                             'required': False,
                             'default': 100,
+                            'minimum': 1,
+                            'maximum': 100,
                         },
                     },
                     response_schema={
@@ -352,11 +355,14 @@ TiktokMarketingConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 1,
+                            'minimum': 1,
                         },
                         'page_size': {
                             'type': 'integer',
                             'required': False,
                             'default': 1000,
+                            'minimum': 1,
+                            'maximum': 1000,
                         },
                     },
                     response_schema={
@@ -593,11 +599,14 @@ TiktokMarketingConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 1,
+                            'minimum': 1,
                         },
                         'page_size': {
                             'type': 'integer',
                             'required': False,
                             'default': 1000,
+                            'minimum': 1,
+                            'maximum': 1000,
                         },
                     },
                     response_schema={
@@ -1314,11 +1323,14 @@ TiktokMarketingConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 1,
+                            'minimum': 1,
                         },
                         'page_size': {
                             'type': 'integer',
                             'required': False,
                             'default': 1000,
+                            'minimum': 1,
+                            'maximum': 1000,
                         },
                     },
                     response_schema={
@@ -1717,11 +1729,14 @@ TiktokMarketingConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 1,
+                            'minimum': 1,
                         },
                         'page_size': {
                             'type': 'integer',
                             'required': False,
                             'default': 100,
+                            'minimum': 1,
+                            'maximum': 100,
                         },
                     },
                     response_schema={
@@ -1878,11 +1893,14 @@ TiktokMarketingConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 1,
+                            'minimum': 1,
                         },
                         'page_size': {
                             'type': 'integer',
                             'required': False,
                             'default': 100,
+                            'minimum': 1,
+                            'maximum': 100,
                         },
                     },
                     response_schema={
@@ -2055,11 +2073,14 @@ TiktokMarketingConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'integer',
                             'required': False,
                             'default': 1,
+                            'minimum': 1,
                         },
                         'page_size': {
                             'type': 'integer',
                             'required': False,
                             'default': 100,
+                            'minimum': 1,
+                            'maximum': 100,
                         },
                     },
                     response_schema={
@@ -2331,17 +2352,28 @@ TiktokMarketingConnectorModel: ConnectorModel = ConnectorModel(
                             'required': True,
                             'default': '["cash_spend", "voucher_spend", "spend", "cpc", "cpm", "impressions", "clicks", "ctr", "reach", "cost_per_1000_reached", "frequency", "video_play_actions", "video_watched_2s", "video_watched_6s", "average_video_play", "average_video_play_per_user", "video_views_p25", "video_views_p50", "video_views_p75", "video_views_p100", "profile_visits", "likes", "comments", "shares", "follows", "clicks_on_music_disc", "real_time_app_install", "real_time_app_install_cost", "app_install"]',
                         },
-                        'start_date': {'type': 'string', 'required': True},
-                        'end_date': {'type': 'string', 'required': True},
+                        'start_date': {
+                            'type': 'string',
+                            'required': True,
+                            'format': 'date',
+                        },
+                        'end_date': {
+                            'type': 'string',
+                            'required': True,
+                            'format': 'date',
+                        },
                         'page': {
                             'type': 'integer',
                             'required': False,
                             'default': 1,
+                            'minimum': 1,
                         },
                         'page_size': {
                             'type': 'integer',
                             'required': False,
                             'default': 1000,
+                            'minimum': 1,
+                            'maximum': 1000,
                         },
                     },
                     response_schema={
@@ -2689,17 +2721,28 @@ TiktokMarketingConnectorModel: ConnectorModel = ConnectorModel(
                             'required': True,
                             'default': '["campaign_name", "spend", "cpc", "cpm", "impressions", "clicks", "ctr", "reach", "cost_per_1000_reached", "frequency", "video_play_actions", "video_watched_2s", "video_watched_6s", "average_video_play", "average_video_play_per_user", "video_views_p25", "video_views_p50", "video_views_p75", "video_views_p100", "profile_visits", "likes", "comments", "shares", "follows", "clicks_on_music_disc", "real_time_app_install", "real_time_app_install_cost", "app_install"]',
                         },
-                        'start_date': {'type': 'string', 'required': True},
-                        'end_date': {'type': 'string', 'required': True},
+                        'start_date': {
+                            'type': 'string',
+                            'required': True,
+                            'format': 'date',
+                        },
+                        'end_date': {
+                            'type': 'string',
+                            'required': True,
+                            'format': 'date',
+                        },
                         'page': {
                             'type': 'integer',
                             'required': False,
                             'default': 1,
+                            'minimum': 1,
                         },
                         'page_size': {
                             'type': 'integer',
                             'required': False,
                             'default': 1000,
+                            'minimum': 1,
+                            'maximum': 1000,
                         },
                     },
                     response_schema={
@@ -3039,17 +3082,28 @@ TiktokMarketingConnectorModel: ConnectorModel = ConnectorModel(
                             'required': True,
                             'default': '["campaign_name", "campaign_id", "adgroup_name", "placement_type", "spend", "cpc", "cpm", "impressions", "clicks", "ctr", "reach", "cost_per_1000_reached", "conversion", "cost_per_conversion", "conversion_rate", "real_time_conversion", "real_time_cost_per_conversion", "real_time_conversion_rate", "result", "cost_per_result", "result_rate", "real_time_result", "real_time_cost_per_result", "real_time_result_rate", "secondary_goal_result", "cost_per_secondary_goal_result", "secondary_goal_result_rate", "frequency", "video_play_actions", "video_watched_2s", "video_watched_6s", "average_video_play", "average_video_play_per_user", "video_views_p25", "video_views_p50", "video_views_p75", "video_views_p100", "profile_visits", "likes", "comments", "shares", "follows", "clicks_on_music_disc", "real_time_app_install", "real_time_app_install_cost", "app_install"]',
                         },
-                        'start_date': {'type': 'string', 'required': True},
-                        'end_date': {'type': 'string', 'required': True},
+                        'start_date': {
+                            'type': 'string',
+                            'required': True,
+                            'format': 'date',
+                        },
+                        'end_date': {
+                            'type': 'string',
+                            'required': True,
+                            'format': 'date',
+                        },
                         'page': {
                             'type': 'integer',
                             'required': False,
                             'default': 1,
+                            'minimum': 1,
                         },
                         'page_size': {
                             'type': 'integer',
                             'required': False,
                             'default': 1000,
+                            'minimum': 1,
+                            'maximum': 1000,
                         },
                     },
                     response_schema={
@@ -3533,17 +3587,28 @@ TiktokMarketingConnectorModel: ConnectorModel = ConnectorModel(
                             'required': True,
                             'default': '["campaign_name", "campaign_id", "adgroup_name", "adgroup_id", "ad_name", "ad_text", "placement_type", "spend", "cpc", "cpm", "impressions", "clicks", "ctr", "reach", "cost_per_1000_reached", "conversion", "cost_per_conversion", "conversion_rate", "real_time_conversion", "real_time_cost_per_conversion", "real_time_conversion_rate", "result", "cost_per_result", "result_rate", "real_time_result", "real_time_cost_per_result", "real_time_result_rate", "secondary_goal_result", "cost_per_secondary_goal_result", "secondary_goal_result_rate", "frequency", "video_play_actions", "video_watched_2s", "video_watched_6s", "average_video_play", "average_video_play_per_user", "video_views_p25", "video_views_p50", "video_views_p75", "video_views_p100", "profile_visits", "likes", "comments", "shares", "follows", "clicks_on_music_disc", "real_time_app_install", "real_time_app_install_cost", "app_install"]',
                         },
-                        'start_date': {'type': 'string', 'required': True},
-                        'end_date': {'type': 'string', 'required': True},
+                        'start_date': {
+                            'type': 'string',
+                            'required': True,
+                            'format': 'date',
+                        },
+                        'end_date': {
+                            'type': 'string',
+                            'required': True,
+                            'format': 'date',
+                        },
                         'page': {
                             'type': 'integer',
                             'required': False,
                             'default': 1,
+                            'minimum': 1,
                         },
                         'page_size': {
                             'type': 'integer',
                             'required': False,
                             'default': 1000,
+                            'minimum': 1,
+                            'maximum': 1000,
                         },
                     },
                     response_schema={

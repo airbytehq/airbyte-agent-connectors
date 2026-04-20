@@ -104,6 +104,28 @@ def _simplify_type(type_value: str | list[str]) -> str:
     return types[0] if types else "any"
 
 
+def _format_type_with_enum(schema: dict[str, Any]) -> str:
+    """Format a JSON Schema into a display type string, appending enum values when present.
+
+    Handles three shapes:
+    - scalar with top-level ``enum``    → ``string<"asc" | "desc">``
+    - array whose ``items`` has ``enum`` → ``array<"OPEN" | "CLOSED">``
+    - no enum present                    → ``string`` (unchanged)
+
+    String enum values are quoted; numeric/boolean values render bare.
+    """
+    base = _simplify_type(schema.get("type", "string"))
+    enum_values = schema.get("enum")
+    if enum_values is None:
+        items = schema.get("items")
+        if isinstance(items, dict):
+            enum_values = items.get("enum")
+    if not enum_values:
+        return base
+    formatted = " | ".join(f'"{v}"' if isinstance(v, str) else str(v) for v in enum_values)
+    return f"{base}<{formatted}>"
+
+
 def _format_ai_hint_lines(hints: dict[str, Any], indent: str = "    ") -> list[str]:
     """Format ai_hints dict into indented lines."""
     lines: list[str] = []
@@ -184,8 +206,8 @@ def _flatten_schema_params(
             for prop_name, prop_schema in properties.items():
                 path = f"{prefix}{prop_name}" if prefix else prop_name
                 is_required = parent_required and prop_name in required_fields
-                param_type = _simplify_type(prop_schema.get("type", "string")) if isinstance(prop_schema, dict) else "string"
-                entries.append((path, is_required, param_type))
+                type_str = _format_type_with_enum(prop_schema) if isinstance(prop_schema, dict) else "string"
+                entries.append((path, is_required, type_str))
 
                 if isinstance(prop_schema, dict):
                     if _is_array_schema(prop_schema):
@@ -431,13 +453,13 @@ def format_param_signature(endpoint: EndpointProtocol) -> str:
         if schema.get("config_inject"):
             continue
         required = schema.get("required", False)
-        param_type = _simplify_type(schema.get("type", "string"))
+        param_type = _format_type_with_enum(schema)
         params.append(f"{name}{'?' if not required else ''}: {param_type}")
 
     # Body fields (include nested params from schema when available)
     if isinstance(request_schema, dict):
-        for name, required, param_type in _flatten_schema_params(request_schema):
-            params.append(f"{name}{'?' if not required else ''}: {param_type}")
+        for name, required, type_str in _flatten_schema_params(request_schema):
+            params.append(f"{name}{'?' if not required else ''}: {type_str}")
     elif request_schema:
         required_fields = set(request_schema.get("required", [])) if isinstance(request_schema, dict) else set()
         for name in body_fields:
@@ -504,15 +526,18 @@ def describe_entities(model: ConnectorModelProtocol) -> list[dict[str, Any]]:
                     schema = query_params_schema.get(param_name, {})
                     if schema.get("config_inject"):
                         continue
-                    action_params.append(
-                        {
-                            "name": param_name,
-                            "in": "query",
-                            "required": schema.get("required", False),
-                            "type": schema.get("type", "string"),
-                            "description": schema.get("description", ""),
-                        }
-                    )
+                    query_entry: dict[str, Any] = {
+                        "name": param_name,
+                        "in": "query",
+                        "required": schema.get("required", False),
+                        "type": schema.get("type", "string"),
+                        "description": schema.get("description", ""),
+                    }
+                    if "enum" in schema:
+                        query_entry["enum"] = schema["enum"]
+                    if "items" in schema:
+                        query_entry["items"] = schema["items"]
+                    action_params.append(query_entry)
 
                 # Body fields
                 if request_schema:
@@ -520,15 +545,19 @@ def describe_entities(model: ConnectorModelProtocol) -> list[dict[str, Any]]:
                     properties = request_schema.get("properties", {})
                     for param_name in body_fields:
                         prop = properties.get(param_name, {})
-                        action_params.append(
-                            {
-                                "name": param_name,
-                                "in": "body",
-                                "required": param_name in required_fields,
-                                "type": prop.get("type", "string"),
-                                "description": prop.get("description", ""),
-                            }
-                        )
+                        body_entry: dict[str, Any] = {
+                            "name": param_name,
+                            "in": "body",
+                            "required": param_name in required_fields,
+                            "type": prop.get("type", "string"),
+                            "description": prop.get("description", ""),
+                        }
+                        if isinstance(prop, dict):
+                            if "enum" in prop:
+                                body_entry["enum"] = prop["enum"]
+                            if "items" in prop:
+                                body_entry["items"] = prop["items"]
+                        action_params.append(body_entry)
 
                 if action_params:
                     # Action is an enum, use .value to get string
