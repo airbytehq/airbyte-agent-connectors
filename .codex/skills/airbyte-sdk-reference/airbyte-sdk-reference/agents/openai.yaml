@@ -1,0 +1,4 @@
+interface:
+  display_name: "Airbyte SDK Reference"
+  short_description: "Reference documentation for the Airbyte per-connector typed SDK packages"
+  default_prompt: "Use $airbyte-sdk-reference for SDK API details, PydanticAI patterns, and Claude SDK patterns."

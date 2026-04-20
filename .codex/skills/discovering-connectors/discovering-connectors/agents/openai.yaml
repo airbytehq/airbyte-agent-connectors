@@ -1,0 +1,4 @@
+interface:
+  display_name: "Discovering Connectors"
+  short_description: "Discovers available Airbyte connectors and explores their entities, actions, and schemas"
+  default_prompt: "Use $discovering-connectors to explore available Airbyte connectors."

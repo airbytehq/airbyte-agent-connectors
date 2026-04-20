@@ -1,0 +1,4 @@
+interface:
+  display_name: "Building Multi-Connector Agent"
+  short_description: "Builds a complete agent with multiple Airbyte connectors using PydanticAI or Claude SDK"
+  default_prompt: "Use $building-multi-connector-agent to build an agent with multiple Airbyte connectors."
