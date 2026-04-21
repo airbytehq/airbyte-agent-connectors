@@ -47,8 +47,8 @@
     ]
   },
   "custom_description": "Stripe is a payment processing platform that enables businesses to accept payments,\nmanage subscriptions, and handle financial transactions. This connector provides\naccess to customers for payment analytics and customer management.\n",
-  "supported_questions": "- List customers created in the last 7 days\n- Show me details for a recent customer\n- List recent charges\n- Show me details for a recent charge\n- List recent invoices\n- List active subscriptions\n- Show me my top 10 customers by total revenue this month\n- List all customers who have spent over $5,000 in the last quarter\n- Analyze payment trends for my Stripe customers\n- Identify which customers have the most consistent subscription payments\n- Give me insights into my customer retention rates\n- Summarize the payment history for {customer}\n- Compare customer spending patterns from last month to this month\n- Show me details about my highest-value Stripe customers\n- What are the key financial insights from my customer base?\n- Break down my customers by their average transaction value",
-  "unsupported_questions": "- Create a new customer profile in Stripe\n- Update the billing information for {customer}\n- Delete a customer record\n- Send a payment reminder to {customer}\n- Schedule an automatic invoice for {company}",
+  "supported_questions": "- List customers created in the last 7 days\n- Show me details for a recent customer\n- List recent charges\n- Show me details for a recent charge\n- List recent invoices\n- List active subscriptions\n- Create a payment intent for $50.00 USD\n- Create a new invoice for customer cus_123\n- Create a subscription for customer cus_123 with price price_456\n- Create a price of $29.99/month for product prod_789\n- Create a checkout session for price price_456\n- Cancel payment intent pi_123\n- Finalize invoice inv_123\n- Show me my top 10 customers by total revenue this month\n- List all customers who have spent over $5,000 in the last quarter\n- Analyze payment trends for my Stripe customers\n- Identify which customers have the most consistent subscription payments\n- Give me insights into my customer retention rates\n- Summarize the payment history for {customer}\n- Compare customer spending patterns from last month to this month\n- Show me details about my highest-value Stripe customers\n- What are the key financial insights from my customer base?\n- Break down my customers by their average transaction value",
+  "unsupported_questions": "- Send a payment reminder to {customer}",
   "first_operation": {
     "method_name": "customers__list",
     "http_method": "get",
@@ -587,6 +587,23 @@
         "is_download": false
       },
       {
+        "method_name": "invoices__create",
+        "http_method": "post",
+        "path": "/v1/invoices",
+        "entity": "invoices",
+        "action": "create",
+        "parameters": [],
+        "params_type_name": "InvoicesCreateParams",
+        "response_type": "Invoice",
+        "description": "Creates a draft invoice for a given customer. The invoice remains a draft until you finalize it, which allows you to pay or send the invoice to your customers.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Invoice",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
         "method_name": "invoices__get",
         "http_method": "get",
         "path": "/v1/invoices/{id}",
@@ -664,6 +681,66 @@
         "meta_extractor": null,
         "needs_envelope": true,
         "record_type": "InvoiceSearchResult",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "invoice_finalizations": [
+      {
+        "method_name": "invoice_finalizations__create",
+        "http_method": "post",
+        "path": "/v1/invoices/{id}/finalize",
+        "entity": "invoice_finalizations",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the invoice to finalize"
+          }
+        ],
+        "params_type_name": "InvoiceFinalizationsCreateParams",
+        "response_type": "Invoice",
+        "description": "Stripe automatically finalizes drafts before sending and attempting payment on invoices. However, if you'd like to finalize a draft invoice manually, you can do so using this method.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Invoice",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "invoice_sends": [
+      {
+        "method_name": "invoice_sends__create",
+        "http_method": "post",
+        "path": "/v1/invoices/{id}/send",
+        "entity": "invoice_sends",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the invoice to send"
+          }
+        ],
+        "params_type_name": "InvoiceSendsCreateParams",
+        "response_type": "Invoice",
+        "description": "Stripe will automatically send invoices to customers according to your subscriptions settings. However, if you'd like to manually send an invoice to your customer out of the normal schedule, you can do so.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Invoice",
         "meta_fields": null,
         "is_download": false
       }
@@ -1101,6 +1178,23 @@
         "is_download": false
       },
       {
+        "method_name": "subscriptions__create",
+        "http_method": "post",
+        "path": "/v1/subscriptions",
+        "entity": "subscriptions",
+        "action": "create",
+        "parameters": [],
+        "params_type_name": "SubscriptionsCreateParams",
+        "response_type": "Subscription",
+        "description": "Creates a new subscription on an existing customer. Each customer can have up to 500 active or scheduled subscriptions.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Subscription",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
         "method_name": "subscriptions__get",
         "http_method": "get",
         "path": "/v1/subscriptions/{id}",
@@ -1121,6 +1215,62 @@
         "params_type_name": "SubscriptionsGetParams",
         "response_type": "Subscription",
         "description": "Retrieves the subscription with the given ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Subscription",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "subscriptions__update",
+        "http_method": "post",
+        "path": "/v1/subscriptions/{id}",
+        "entity": "subscriptions",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The subscription ID"
+          }
+        ],
+        "params_type_name": "SubscriptionsUpdateParams",
+        "response_type": "Subscription",
+        "description": "Updates an existing subscription on a customer to match the specified parameters. When changing prices or quantities, we optionally prorate the price we charge next month to make up for any price changes.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Subscription",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "subscriptions__delete",
+        "http_method": "delete",
+        "path": "/v1/subscriptions/{id}",
+        "entity": "subscriptions",
+        "action": "delete",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The subscription ID"
+          }
+        ],
+        "params_type_name": "SubscriptionsDeleteParams",
+        "response_type": "Subscription",
+        "description": "Cancels a customer's subscription immediately. The customer will not be charged again for the subscription. Any pending invoice items that you've created will still be charged for at the end of the period, unless manually deleted.",
         "record_extractor": "$",
         "meta_extractor": null,
         "needs_envelope": null,
@@ -1954,6 +2104,23 @@
         "is_download": false
       },
       {
+        "method_name": "payment_intents__create",
+        "http_method": "post",
+        "path": "/v1/payment_intents",
+        "entity": "payment_intents",
+        "action": "create",
+        "parameters": [],
+        "params_type_name": "PaymentIntentsCreateParams",
+        "response_type": "PaymentIntent",
+        "description": "Creates a PaymentIntent object. After the PaymentIntent is created, attach a payment method and confirm to continue the payment.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "PaymentIntent",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
         "method_name": "payment_intents__get",
         "http_method": "get",
         "path": "/v1/payment_intents/{id}",
@@ -1974,6 +2141,34 @@
         "params_type_name": "PaymentIntentsGetParams",
         "response_type": "PaymentIntent",
         "description": "Retrieves the details of a PaymentIntent that has previously been created.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "PaymentIntent",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "payment_intents__update",
+        "http_method": "post",
+        "path": "/v1/payment_intents/{id}",
+        "entity": "payment_intents",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the payment intent to update"
+          }
+        ],
+        "params_type_name": "PaymentIntentsUpdateParams",
+        "response_type": "PaymentIntent",
+        "description": "Updates properties on a PaymentIntent object without confirming.",
         "record_extractor": "$",
         "meta_extractor": null,
         "needs_envelope": null,
@@ -2043,6 +2238,134 @@
             }
           }
         ],
+        "is_download": false
+      }
+    ],
+    "payment_intent_confirmations": [
+      {
+        "method_name": "payment_intent_confirmations__create",
+        "http_method": "post",
+        "path": "/v1/payment_intents/{id}/confirm",
+        "entity": "payment_intent_confirmations",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the payment intent to confirm"
+          }
+        ],
+        "params_type_name": "PaymentIntentConfirmationsCreateParams",
+        "response_type": "PaymentIntent",
+        "description": "Confirm that your customer intends to pay with current or provided payment method. Upon confirmation, the PaymentIntent will attempt to initiate a payment.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "PaymentIntent",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "payment_intent_cancellations": [
+      {
+        "method_name": "payment_intent_cancellations__create",
+        "http_method": "post",
+        "path": "/v1/payment_intents/{id}/cancel",
+        "entity": "payment_intent_cancellations",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the payment intent to cancel"
+          }
+        ],
+        "params_type_name": "PaymentIntentCancellationsCreateParams",
+        "response_type": "PaymentIntent",
+        "description": "You can cancel a PaymentIntent object when it's in one of these statuses - requires_payment_method, requires_capture, requires_confirmation, requires_action, or processing.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "PaymentIntent",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "prices": [
+      {
+        "method_name": "prices__create",
+        "http_method": "post",
+        "path": "/v1/prices",
+        "entity": "prices",
+        "action": "create",
+        "parameters": [],
+        "params_type_name": "PricesCreateParams",
+        "response_type": "Price",
+        "description": "Creates a new price for an existing product. The price can be recurring for use in subscriptions or one-time for use in one-off charges.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Price",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "checkout_sessions": [
+      {
+        "method_name": "checkout_sessions__create",
+        "http_method": "post",
+        "path": "/v1/checkout/sessions",
+        "entity": "checkout_sessions",
+        "action": "create",
+        "parameters": [],
+        "params_type_name": "CheckoutSessionsCreateParams",
+        "response_type": "CheckoutSession",
+        "description": "Creates a Checkout Session object. You can use it to create a payment page hosted on Stripe that customers can use to complete their purchase.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "CheckoutSession",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "payment_method_attachments": [
+      {
+        "method_name": "payment_method_attachments__create",
+        "http_method": "post",
+        "path": "/v1/payment_methods/{id}/attach",
+        "entity": "payment_method_attachments",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the payment method to attach"
+          }
+        ],
+        "params_type_name": "PaymentMethodAttachmentsCreateParams",
+        "response_type": "PaymentMethod",
+        "description": "Attaches a PaymentMethod object to a Customer. To use this PaymentMethod as the default for invoice or subscription payments, set invoice_settings.default_payment_method on the Customer.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "PaymentMethod",
+        "meta_fields": null,
         "is_download": false
       }
     ],

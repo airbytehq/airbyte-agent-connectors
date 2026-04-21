@@ -34,6 +34,13 @@ info:
       - "Show me details for a recent charge"
       - "List recent invoices"
       - "List active subscriptions"
+      - "Create a payment intent for $50.00 USD"
+      - "Create a new invoice for customer cus_123"
+      - "Create a subscription for customer cus_123 with price price_456"
+      - "Create a price of $29.99/month for product prod_789"
+      - "Create a checkout session for price price_456"
+      - "Cancel payment intent pi_123"
+      - "Finalize invoice inv_123"
     search:
       - "Show me my top 10 customers by total revenue this month"
       - "List all customers who have spent over $5,000 in the last quarter"
@@ -46,11 +53,7 @@ info:
       - "What are the key financial insights from my customer base?"
       - "Break down my customers by their average transaction value"
     unsupported:
-      - "Create a new customer profile in Stripe"
-      - "Update the billing information for {customer}"
-      - "Delete a customer record"
       - "Send a payment reminder to {customer}"
-      - "Schedule an automatic invoice for {company}"
   x-airbyte-context-store:
     disable_compaction: false
     entities:
@@ -1594,6 +1597,27 @@ paths:
 
   # Invoice entities
   /v1/invoices:
+    post:
+      summary: Create an invoice
+      description: Creates a draft invoice for a given customer. The invoice remains a draft until you finalize it, which allows you to pay or send the invoice to your customers.
+      operationId: Invoices_Create
+      x-airbyte-entity: invoices
+      x-airbyte-action: create
+      tags:
+        - Invoices
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/InvoiceCreateParams"
+      responses:
+        "200":
+          description: Invoice created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Invoice"
     get:
       summary: List all invoices
       description: Returns a list of invoices
@@ -1697,6 +1721,67 @@ paths:
       responses:
         "200":
           description: Invoice retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Invoice"
+
+  /v1/invoices/{id}/finalize:
+    post:
+      summary: Finalize an invoice
+      description: Stripe automatically finalizes drafts before sending and attempting payment on invoices. However, if you'd like to finalize a draft invoice manually, you can do so using this method.
+      operationId: InvoiceFinalizations_Create
+      x-airbyte-entity: invoice_finalizations
+      x-airbyte-action: create
+      tags:
+        - Invoices
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the invoice to finalize
+          schema:
+            type: string
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/InvoiceFinalizeParams"
+      responses:
+        "200":
+          description: Invoice finalized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Invoice"
+
+  /v1/invoices/{id}/send:
+    post:
+      summary: Send an invoice
+      description: Stripe will automatically send invoices to customers according to your subscriptions settings. However, if you'd like to manually send an invoice to your customer out of the normal schedule, you can do so.
+      operationId: InvoiceSends_Create
+      x-airbyte-entity: invoice_sends
+      x-airbyte-action: create
+      tags:
+        - Invoices
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the invoice to send
+          schema:
+            type: string
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties: {}
+      responses:
+        "200":
+          description: Invoice sent
           content:
             application/json:
               schema:
@@ -1869,6 +1954,27 @@ paths:
 
   # Subscription entities
   /v1/subscriptions:
+    post:
+      summary: Create a subscription
+      description: Creates a new subscription on an existing customer. Each customer can have up to 500 active or scheduled subscriptions.
+      operationId: Subscriptions_Create
+      x-airbyte-entity: subscriptions
+      x-airbyte-action: create
+      tags:
+        - Subscriptions
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/SubscriptionCreateParams"
+      responses:
+        "200":
+          description: Subscription created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Subscription"
     get:
       summary: List all subscriptions
       description: By default, returns a list of subscriptions that have not been canceled
@@ -2006,6 +2112,56 @@ paths:
                 $ref: "#/components/schemas/SubscriptionList"
 
   /v1/subscriptions/{id}:
+    post:
+      summary: Update a subscription
+      description: Updates an existing subscription on a customer to match the specified parameters. When changing prices or quantities, we optionally prorate the price we charge next month to make up for any price changes.
+      operationId: Subscriptions_Update
+      x-airbyte-entity: subscriptions
+      x-airbyte-action: update
+      tags:
+        - Subscriptions
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The subscription ID
+          schema:
+            type: string
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/SubscriptionUpdateParams"
+      responses:
+        "200":
+          description: Subscription updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Subscription"
+    delete:
+      summary: Cancel a subscription
+      description: Cancels a customer's subscription immediately. The customer will not be charged again for the subscription. Any pending invoice items that you've created will still be charged for at the end of the period, unless manually deleted.
+      operationId: Subscriptions_Delete
+      x-airbyte-entity: subscriptions
+      x-airbyte-action: delete
+      tags:
+        - Subscriptions
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The subscription ID
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Subscription canceled
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Subscription"
     get:
       summary: Get a subscription
       description: Retrieves the subscription with the given ID
@@ -2520,6 +2676,27 @@ paths:
 
   # PaymentIntent entities
   /v1/payment_intents:
+    post:
+      summary: Create a payment intent
+      description: Creates a PaymentIntent object. After the PaymentIntent is created, attach a payment method and confirm to continue the payment.
+      operationId: PaymentIntents_Create
+      x-airbyte-entity: payment_intents
+      x-airbyte-action: create
+      tags:
+        - Payment Intents
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/PaymentIntentCreateParams"
+      responses:
+        "200":
+          description: Payment intent created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentIntent"
     get:
       summary: List all payment intents
       description: Returns a list of PaymentIntents. The payment intents are returned sorted by creation date, with the most recent payment intents appearing first.
@@ -2588,6 +2765,34 @@ paths:
                 $ref: "#/components/schemas/PaymentIntentList"
 
   /v1/payment_intents/{id}:
+    post:
+      summary: Update a payment intent
+      description: Updates properties on a PaymentIntent object without confirming.
+      operationId: PaymentIntents_Update
+      x-airbyte-entity: payment_intents
+      x-airbyte-action: update
+      tags:
+        - Payment Intents
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the payment intent to update
+          schema:
+            type: string
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/PaymentIntentUpdateParams"
+      responses:
+        "200":
+          description: Payment intent updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentIntent"
     get:
       summary: Retrieve a payment intent
       description: Retrieves the details of a PaymentIntent that has previously been created.
@@ -2606,6 +2811,66 @@ paths:
       responses:
         "200":
           description: Payment intent retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentIntent"
+
+  /v1/payment_intents/{id}/confirm:
+    post:
+      summary: Confirm a payment intent
+      description: Confirm that your customer intends to pay with current or provided payment method. Upon confirmation, the PaymentIntent will attempt to initiate a payment.
+      operationId: PaymentIntentConfirmations_Create
+      x-airbyte-entity: payment_intent_confirmations
+      x-airbyte-action: create
+      tags:
+        - Payment Intents
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the payment intent to confirm
+          schema:
+            type: string
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/PaymentIntentConfirmParams"
+      responses:
+        "200":
+          description: Payment intent confirmed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentIntent"
+
+  /v1/payment_intents/{id}/cancel:
+    post:
+      summary: Cancel a payment intent
+      description: You can cancel a PaymentIntent object when it's in one of these statuses - requires_payment_method, requires_capture, requires_confirmation, requires_action, or processing.
+      operationId: PaymentIntentCancellations_Create
+      x-airbyte-entity: payment_intent_cancellations
+      x-airbyte-action: create
+      tags:
+        - Payment Intents
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the payment intent to cancel
+          schema:
+            type: string
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/PaymentIntentCancelParams"
+      responses:
+        "200":
+          description: Payment intent canceled
           content:
             application/json:
               schema:
@@ -2649,6 +2914,85 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/PaymentIntentSearchResult"
+
+  # Price entities
+  /v1/prices:
+    post:
+      summary: Create a price
+      description: Creates a new price for an existing product. The price can be recurring for use in subscriptions or one-time for use in one-off charges.
+      operationId: Prices_Create
+      x-airbyte-entity: prices
+      x-airbyte-action: create
+      tags:
+        - Prices
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/PriceCreateParams"
+      responses:
+        "200":
+          description: Price created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Price"
+
+  # Checkout Session entities
+  /v1/checkout/sessions:
+    post:
+      summary: Create a checkout session
+      description: Creates a Checkout Session object. You can use it to create a payment page hosted on Stripe that customers can use to complete their purchase.
+      operationId: CheckoutSessions_Create
+      x-airbyte-entity: checkout_sessions
+      x-airbyte-action: create
+      tags:
+        - Checkout Sessions
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/CheckoutSessionCreateParams"
+      responses:
+        "200":
+          description: Checkout session created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CheckoutSession"
+
+  # Payment Method entities
+  /v1/payment_methods/{id}/attach:
+    post:
+      summary: Attach a payment method to a customer
+      description: Attaches a PaymentMethod object to a Customer. To use this PaymentMethod as the default for invoice or subscription payments, set invoice_settings.default_payment_method on the Customer.
+      operationId: PaymentMethodAttachments_Create
+      x-airbyte-entity: payment_method_attachments
+      x-airbyte-action: create
+      tags:
+        - Payment Methods
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the payment method to attach
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/PaymentMethodAttachParams"
+      responses:
+        "200":
+          description: Payment method attached successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentMethod"
 
   # Dispute entities
   /v1/disputes:
@@ -6508,3 +6852,581 @@ components:
         url:
           type: string
           description: The URL for accessing this list
+
+    # Payment Intent write operation schemas
+    PaymentIntentCreateParams:
+      type: object
+      required:
+        - amount
+        - currency
+      properties:
+        amount:
+          type: integer
+          description: Amount intended to be collected by this PaymentIntent, in the smallest currency unit (e.g., 100 cents to charge $1.00)
+        currency:
+          type: string
+          description: Three-letter ISO currency code, in lowercase (e.g., usd, eur)
+        customer:
+          type: string
+          description: ID of the Customer this PaymentIntent belongs to
+        description:
+          type: string
+          description: An arbitrary string attached to the object
+        payment_method:
+          type: string
+          description: ID of the payment method to attach to this PaymentIntent
+        confirm:
+          type: boolean
+          description: Set to true to attempt to confirm this PaymentIntent immediately
+        automatic_payment_methods:
+          type: object
+          description: When you enable this parameter, this PaymentIntent accepts payment methods that you enable in the Dashboard and that are compatible with this PaymentIntent's other parameters
+          properties:
+            enabled:
+              type: boolean
+              description: Whether this feature is enabled
+            allow_redirects:
+              type: string
+              enum: [always, never]
+              description: Controls whether this PaymentIntent can accept redirect-based payment methods
+        receipt_email:
+          type: string
+          description: Email address to send the receipt to
+        statement_descriptor:
+          type: string
+          description: Extra information about a payment for the customer's credit card statement (max 22 characters)
+        statement_descriptor_suffix:
+          type: string
+          description: Provides information about a card payment for the customer's statement suffix (max 22 characters)
+        metadata:
+          type: object
+          description: Set of key-value pairs that you can attach to an object
+          additionalProperties:
+            type: string
+
+    PaymentIntentUpdateParams:
+      type: object
+      properties:
+        amount:
+          type: integer
+          description: Amount intended to be collected by this PaymentIntent, in the smallest currency unit
+        currency:
+          type: string
+          description: Three-letter ISO currency code, in lowercase
+        customer:
+          type: string
+          description: ID of the Customer this PaymentIntent belongs to
+        description:
+          type: string
+          description: An arbitrary string attached to the object
+        payment_method:
+          type: string
+          description: ID of the payment method to attach to this PaymentIntent
+        receipt_email:
+          type: string
+          description: Email address to send the receipt to
+        statement_descriptor:
+          type: string
+          description: Extra information about a payment for the customer's credit card statement
+        statement_descriptor_suffix:
+          type: string
+          description: Provides information about a card payment for the customer's statement suffix
+        metadata:
+          type: object
+          description: Set of key-value pairs that you can attach to an object
+          additionalProperties:
+            type: string
+
+    PaymentIntentConfirmParams:
+      type: object
+      properties:
+        payment_method:
+          type: string
+          description: ID of the payment method to use for confirming this PaymentIntent
+        receipt_email:
+          type: string
+          description: Email address to send the receipt to
+        return_url:
+          type: string
+          description: The URL to redirect to after the customer completes authentication
+
+    PaymentIntentCancelParams:
+      type: object
+      properties:
+        cancellation_reason:
+          type: string
+          enum: [duplicate, fraudulent, requested_by_customer, abandoned]
+          description: Reason for canceling this PaymentIntent
+
+    # Invoice write operation schemas
+    InvoiceCreateParams:
+      type: object
+      required:
+        - customer
+      properties:
+        customer:
+          type: string
+          description: The ID of the customer who will be billed
+        auto_advance:
+          type: boolean
+          description: Controls whether Stripe performs automatic collection of the invoice. If false, the invoice's state doesn't automatically advance without an explicit action
+        collection_method:
+          type: string
+          enum: [charge_automatically, send_invoice]
+          description: How to collect payment for this invoice
+        description:
+          type: string
+          description: An arbitrary string attached to the object, often displayed to customers
+        days_until_due:
+          type: integer
+          description: The number of days from when the invoice is created until it is due. Only valid for invoices where collection_method is send_invoice
+        due_date:
+          type: integer
+          description: The date on which payment for this invoice is due (Unix timestamp). Only valid for invoices where collection_method is send_invoice
+        footer:
+          type: string
+          description: Footer to be displayed on the invoice
+        metadata:
+          type: object
+          description: Set of key-value pairs that you can attach to an object
+          additionalProperties:
+            type: string
+        pending_invoice_items_behavior:
+          type: string
+          enum: [exclude, include]
+          description: How to handle pending invoice items on invoice creation
+
+    InvoiceFinalizeParams:
+      type: object
+      properties:
+        auto_advance:
+          type: boolean
+          description: Controls whether Stripe performs automatic collection of the invoice after finalization
+
+    # Subscription write operation schemas
+    SubscriptionCreateParams:
+      type: object
+      required:
+        - customer
+      properties:
+        customer:
+          type: string
+          description: The identifier of the customer to subscribe
+        items:
+          type: array
+          description: A list of up to 20 subscription items, each with an attached price
+          items:
+            type: object
+            properties:
+              price:
+                type: string
+                description: The ID of the price object
+              quantity:
+                type: integer
+                description: The quantity you'd like to apply to the subscription item
+        cancel_at_period_end:
+          type: boolean
+          description: Whether the subscription should cancel at the end of the current period
+        collection_method:
+          type: string
+          enum: [charge_automatically, send_invoice]
+          description: How to collect payment for this subscription
+        currency:
+          type: string
+          description: Three-letter ISO currency code, in lowercase
+        days_until_due:
+          type: integer
+          description: Number of days a customer has to pay invoices generated by this subscription
+        default_payment_method:
+          type: string
+          description: ID of the default payment method for the subscription
+        description:
+          type: string
+          description: The subscription's description, displayed to customers
+        trial_period_days:
+          type: integer
+          description: Number of days for the trial period
+        metadata:
+          type: object
+          description: Set of key-value pairs that you can attach to an object
+          additionalProperties:
+            type: string
+
+    SubscriptionUpdateParams:
+      type: object
+      properties:
+        cancel_at_period_end:
+          type: boolean
+          description: Whether the subscription should cancel at the end of the current period
+        collection_method:
+          type: string
+          enum: [charge_automatically, send_invoice]
+          description: How to collect payment for this subscription
+        days_until_due:
+          type: integer
+          description: Number of days a customer has to pay invoices generated by this subscription
+        default_payment_method:
+          type: string
+          description: ID of the default payment method for the subscription
+        description:
+          type: string
+          description: The subscription's description, displayed to customers
+        items:
+          type: array
+          description: A list of up to 20 subscription items, each with an attached price
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: Subscription item to update
+              price:
+                type: string
+                description: The ID of the price object
+              quantity:
+                type: integer
+                description: The quantity you'd like to apply to the subscription item
+              deleted:
+                type: boolean
+                description: A flag that, if set to true, will delete the specified item
+        metadata:
+          type: object
+          description: Set of key-value pairs that you can attach to an object
+          additionalProperties:
+            type: string
+        proration_behavior:
+          type: string
+          enum: [create_prorations, none, always_invoice]
+          description: Determines how to handle prorations when the billing cycle changes
+
+    # Price schemas
+    Price:
+      type: object
+      x-airbyte-entity-name: prices
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the price
+        object:
+          type: string
+          description: String representing the object's type
+          enum: [price]
+        active:
+          type: boolean
+          description: Whether the price can be used for new purchases
+        billing_scheme:
+          type: [string, "null"]
+          description: Describes how to compute the price per period
+          enum: [per_unit, tiered]
+        created:
+          type: integer
+          description: Time at which the object was created (Unix timestamp)
+        currency:
+          type: string
+          description: Three-letter ISO currency code, in lowercase
+        livemode:
+          type: boolean
+          description: Has the value true if the object exists in live mode
+        lookup_key:
+          type: [string, "null"]
+          description: A lookup key used to retrieve prices dynamically from a static string
+        metadata:
+          type: object
+          description: Set of key-value pairs
+          additionalProperties:
+            type: string
+        nickname:
+          type: [string, "null"]
+          description: A brief description of the price
+        product:
+          type: string
+          description: The ID of the product this price is associated with
+        recurring:
+          type: [object, "null"]
+          description: The recurring components of a price such as interval and usage_type
+          properties:
+            interval:
+              type: string
+              enum: [day, week, month, year]
+              description: The frequency at which a subscription is billed
+            interval_count:
+              type: integer
+              description: The number of intervals between subscription billings
+            usage_type:
+              type: [string, "null"]
+              enum: [metered, licensed]
+              description: Configures how the quantity per period should be determined
+        tax_behavior:
+          type: [string, "null"]
+          description: Only required if a default tax behavior was not provided in the Stripe Tax settings
+          enum: [exclusive, inclusive, unspecified]
+        tiers_mode:
+          type: [string, "null"]
+          description: Defines if the tiering price should be graduated or volume based
+        transform_quantity:
+          type: [object, "null"]
+          description: Apply a transformation to the reported usage or set quantity before computing the amount billed
+          properties:
+            divide_by:
+              type: integer
+              description: Divide usage by this number
+            round:
+              type: string
+              enum: [up, down]
+              description: After division, either round the result up or down
+        type:
+          type: string
+          description: Type of the price
+          enum: [one_time, recurring]
+        unit_amount:
+          type: [integer, "null"]
+          description: The unit amount in the smallest currency unit
+        unit_amount_decimal:
+          type: [string, "null"]
+          description: The unit amount in decimal string representation
+
+    PriceCreateParams:
+      type: object
+      required:
+        - currency
+        - product
+        - unit_amount
+      properties:
+        currency:
+          type: string
+          description: Three-letter ISO currency code, in lowercase
+        product:
+          type: string
+          description: The ID of the product that this price will belong to
+        unit_amount:
+          type: integer
+          description: A positive integer in the smallest currency unit representing the price
+        active:
+          type: boolean
+          description: Whether the price can be used for new purchases. Defaults to true
+        nickname:
+          type: string
+          description: A brief description of the price, hidden from customers
+        recurring:
+          type: object
+          description: The recurring components of a price
+          properties:
+            interval:
+              type: string
+              enum: [day, week, month, year]
+              description: Specifies billing frequency
+            interval_count:
+              type: integer
+              description: The number of intervals between subscription billings (e.g., interval=month and interval_count=3 bills every 3 months)
+            usage_type:
+              type: string
+              enum: [metered, licensed]
+              description: Configures how the quantity per period should be determined
+        billing_scheme:
+          type: string
+          enum: [per_unit, tiered]
+          description: Describes how to compute the price per period
+        lookup_key:
+          type: string
+          description: A lookup key used to retrieve prices dynamically from a static string
+        tax_behavior:
+          type: string
+          enum: [exclusive, inclusive, unspecified]
+          description: Only required if a default tax behavior was not provided in the Stripe Tax settings
+        metadata:
+          type: object
+          description: Set of key-value pairs that you can attach to an object
+          additionalProperties:
+            type: string
+
+    # Checkout Session schemas
+    CheckoutSession:
+      type: object
+      x-airbyte-entity-name: checkout_sessions
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the checkout session
+        object:
+          type: string
+          description: String representing the object's type
+          enum: [checkout.session]
+        cancel_url:
+          type: [string, "null"]
+          description: URL the customer will be directed to if they decide to cancel payment
+        client_reference_id:
+          type: [string, "null"]
+          description: A unique string to reference the Checkout Session
+        created:
+          type: integer
+          description: Time at which the object was created (Unix timestamp)
+        currency:
+          type: [string, "null"]
+          description: Three-letter ISO currency code, in lowercase
+        customer:
+          type: [string, "null"]
+          description: The ID of the customer for this Session
+        customer_email:
+          type: [string, "null"]
+          description: Customer email address
+        livemode:
+          type: boolean
+          description: Has the value true if the object exists in live mode
+        metadata:
+          type: object
+          description: Set of key-value pairs
+          additionalProperties:
+            type: string
+        mode:
+          type: string
+          description: The mode of the Checkout Session
+          enum: [payment, setup, subscription]
+        payment_intent:
+          type: [string, "null"]
+          description: The ID of the PaymentIntent for Checkout Sessions in payment mode
+        payment_status:
+          type: string
+          description: The payment status of the Checkout Session
+          enum: [no_payment_required, paid, unpaid]
+        status:
+          type: [string, "null"]
+          description: The status of the Checkout Session
+          enum: [complete, expired, open]
+        success_url:
+          type: [string, "null"]
+          description: URL the customer will be directed to after a successful payment
+        url:
+          type: [string, "null"]
+          description: The URL to the Checkout Session
+
+    CheckoutSessionCreateParams:
+      type: object
+      required:
+        - mode
+      properties:
+        mode:
+          type: string
+          enum: [payment, setup, subscription]
+          description: The mode of the Checkout Session
+        success_url:
+          type: string
+          description: The URL to which Stripe should send customers when payment or setup is complete
+        cancel_url:
+          type: string
+          description: The URL the customer will be directed to if they decide to cancel payment
+        customer:
+          type: string
+          description: ID of an existing Customer, if one exists
+        customer_email:
+          type: string
+          description: If provided, this value will be used when the Customer object is created
+        line_items:
+          type: array
+          description: A list of items the customer is purchasing
+          items:
+            type: object
+            properties:
+              price:
+                type: string
+                description: The ID of the Price or Plan object
+              quantity:
+                type: integer
+                description: The quantity of the line item
+        client_reference_id:
+          type: string
+          description: A unique string to reference the Checkout Session
+        metadata:
+          type: object
+          description: Set of key-value pairs that you can attach to an object
+          additionalProperties:
+            type: string
+
+    # Payment Method schemas
+    PaymentMethod:
+      type: object
+      x-airbyte-entity-name: payment_method_attachments
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the payment method
+        object:
+          type: string
+          description: String representing the object's type
+          enum: [payment_method]
+        billing_details:
+          type: [object, "null"]
+          description: Billing information associated with the PaymentMethod
+          properties:
+            address:
+              type: [object, "null"]
+              description: Billing address
+              properties:
+                city:
+                  type: [string, "null"]
+                country:
+                  type: [string, "null"]
+                line1:
+                  type: [string, "null"]
+                line2:
+                  type: [string, "null"]
+                postal_code:
+                  type: [string, "null"]
+                state:
+                  type: [string, "null"]
+            email:
+              type: [string, "null"]
+            name:
+              type: [string, "null"]
+            phone:
+              type: [string, "null"]
+        created:
+          type: integer
+          description: Time at which the object was created (Unix timestamp)
+        customer:
+          type: [string, "null"]
+          description: The ID of the Customer to which this PaymentMethod is saved
+        livemode:
+          type: boolean
+          description: Has the value true if the object exists in live mode
+        metadata:
+          type: object
+          description: Set of key-value pairs
+          additionalProperties:
+            type: string
+        type:
+          type: string
+          description: The type of the PaymentMethod (card, etc.)
+        card:
+          type: [object, "null"]
+          description: If this is a card PaymentMethod, this hash contains the card details
+          properties:
+            brand:
+              type: [string, "null"]
+              description: Card brand
+            country:
+              type: [string, "null"]
+              description: Two-letter ISO code representing the country of the card
+            exp_month:
+              type: [integer, "null"]
+              description: Two-digit number representing the card's expiration month
+            exp_year:
+              type: [integer, "null"]
+              description: Four-digit number representing the card's expiration year
+            fingerprint:
+              type: [string, "null"]
+              description: Uniquely identifies this particular card number
+            funding:
+              type: [string, "null"]
+              description: Card funding type
+            last4:
+              type: [string, "null"]
+              description: The last four digits of the card
+
+    PaymentMethodAttachParams:
+      type: object
+      required:
+        - customer
+      properties:
+        customer:
+          type: string
+          description: The ID of the customer to which to attach the PaymentMethod

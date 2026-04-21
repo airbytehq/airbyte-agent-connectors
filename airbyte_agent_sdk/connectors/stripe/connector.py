@@ -28,6 +28,7 @@ from .types import (
     ChargesGetParams,
     ChargesListParams,
     ChargesListParamsCreated,
+    CheckoutSessionsCreateParams,
     CustomersApiSearchParams,
     CustomersCreateParams,
     CustomersDeleteParams,
@@ -38,18 +39,27 @@ from .types import (
     DisputesGetParams,
     DisputesListParams,
     DisputesListParamsCreated,
+    InvoiceFinalizationsCreateParams,
+    InvoiceSendsCreateParams,
     InvoicesApiSearchParams,
+    InvoicesCreateParams,
     InvoicesGetParams,
     InvoicesListParams,
     InvoicesListParamsCreated,
+    PaymentIntentCancellationsCreateParams,
+    PaymentIntentConfirmationsCreateParams,
     PaymentIntentsApiSearchParams,
+    PaymentIntentsCreateParams,
     PaymentIntentsGetParams,
     PaymentIntentsListParams,
     PaymentIntentsListParamsCreated,
+    PaymentIntentsUpdateParams,
+    PaymentMethodAttachmentsCreateParams,
     PayoutsGetParams,
     PayoutsListParams,
     PayoutsListParamsArrivalDate,
     PayoutsListParamsCreated,
+    PricesCreateParams,
     ProductsApiSearchParams,
     ProductsCreateParams,
     ProductsDeleteParams,
@@ -62,12 +72,15 @@ from .types import (
     RefundsListParams,
     RefundsListParamsCreated,
     SubscriptionsApiSearchParams,
+    SubscriptionsCreateParams,
+    SubscriptionsDeleteParams,
     SubscriptionsGetParams,
     SubscriptionsListParams,
     SubscriptionsListParamsAutomaticTax,
     SubscriptionsListParamsCreated,
     SubscriptionsListParamsCurrentPeriodEnd,
     SubscriptionsListParamsCurrentPeriodStart,
+    SubscriptionsUpdateParams,
     AirbyteSearchParams,
     ChargesSearchFilter,
     ChargesSearchQuery,
@@ -109,13 +122,16 @@ from .models import (
     BalanceTransaction,
     Charge,
     ChargeSearchResult,
+    CheckoutSession,
     Customer,
     CustomerDeletedResponse,
     Dispute,
     Invoice,
     InvoiceSearchResult,
     PaymentIntent,
+    PaymentMethod,
     Payout,
+    Price,
     Product,
     ProductDeletedResponse,
     Refund,
@@ -181,7 +197,7 @@ class StripeConnector:
 
     connector_name = "stripe"
     connector_version = "0.1.13"
-    sdk_version = "0.1.41"
+    sdk_version = "0.1.42"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -192,13 +208,19 @@ class StripeConnector:
         ("customers", "delete"): None,
         ("customers", "api_search"): True,
         ("invoices", "list"): True,
+        ("invoices", "create"): None,
         ("invoices", "get"): None,
+        ("invoice_finalizations", "create"): None,
+        ("invoice_sends", "create"): None,
         ("invoices", "api_search"): True,
         ("charges", "list"): True,
         ("charges", "get"): None,
         ("charges", "api_search"): True,
         ("subscriptions", "list"): True,
+        ("subscriptions", "create"): None,
         ("subscriptions", "get"): None,
+        ("subscriptions", "update"): None,
+        ("subscriptions", "delete"): None,
         ("subscriptions", "api_search"): True,
         ("refunds", "list"): True,
         ("refunds", "create"): None,
@@ -213,8 +235,15 @@ class StripeConnector:
         ("balance_transactions", "list"): True,
         ("balance_transactions", "get"): None,
         ("payment_intents", "list"): True,
+        ("payment_intents", "create"): None,
         ("payment_intents", "get"): None,
+        ("payment_intents", "update"): None,
+        ("payment_intent_confirmations", "create"): None,
+        ("payment_intent_cancellations", "create"): None,
         ("payment_intents", "api_search"): True,
+        ("prices", "create"): None,
+        ("checkout_sessions", "create"): None,
+        ("payment_method_attachments", "create"): None,
         ("disputes", "list"): True,
         ("disputes", "get"): None,
         ("payouts", "list"): True,
@@ -231,12 +260,16 @@ class StripeConnector:
         ('customers', 'api_search'): {'query': 'query', 'limit': 'limit', 'page': 'page'},
         ('invoices', 'list'): {'collection_method': 'collection_method', 'created': 'created', 'customer': 'customer', 'customer_account': 'customer_account', 'ending_before': 'ending_before', 'limit': 'limit', 'starting_after': 'starting_after', 'status': 'status', 'subscription': 'subscription'},
         ('invoices', 'get'): {'id': 'id'},
+        ('invoice_finalizations', 'create'): {'id': 'id'},
+        ('invoice_sends', 'create'): {'id': 'id'},
         ('invoices', 'api_search'): {'query': 'query', 'limit': 'limit', 'page': 'page'},
         ('charges', 'list'): {'created': 'created', 'customer': 'customer', 'ending_before': 'ending_before', 'limit': 'limit', 'payment_intent': 'payment_intent', 'starting_after': 'starting_after'},
         ('charges', 'get'): {'id': 'id'},
         ('charges', 'api_search'): {'query': 'query', 'limit': 'limit', 'page': 'page'},
         ('subscriptions', 'list'): {'automatic_tax': 'automatic_tax', 'collection_method': 'collection_method', 'created': 'created', 'current_period_end': 'current_period_end', 'current_period_start': 'current_period_start', 'customer': 'customer', 'customer_account': 'customer_account', 'ending_before': 'ending_before', 'limit': 'limit', 'price': 'price', 'starting_after': 'starting_after', 'status': 'status'},
         ('subscriptions', 'get'): {'id': 'id'},
+        ('subscriptions', 'update'): {'id': 'id'},
+        ('subscriptions', 'delete'): {'id': 'id'},
         ('subscriptions', 'api_search'): {'query': 'query', 'limit': 'limit', 'page': 'page'},
         ('refunds', 'list'): {'charge': 'charge', 'created': 'created', 'ending_before': 'ending_before', 'limit': 'limit', 'payment_intent': 'payment_intent', 'starting_after': 'starting_after'},
         ('refunds', 'get'): {'id': 'id'},
@@ -249,7 +282,11 @@ class StripeConnector:
         ('balance_transactions', 'get'): {'id': 'id'},
         ('payment_intents', 'list'): {'created': 'created', 'customer': 'customer', 'customer_account': 'customer_account', 'ending_before': 'ending_before', 'limit': 'limit', 'starting_after': 'starting_after'},
         ('payment_intents', 'get'): {'id': 'id'},
+        ('payment_intents', 'update'): {'id': 'id'},
+        ('payment_intent_confirmations', 'create'): {'id': 'id'},
+        ('payment_intent_cancellations', 'create'): {'id': 'id'},
         ('payment_intents', 'api_search'): {'query': 'query', 'limit': 'limit', 'page': 'page'},
+        ('payment_method_attachments', 'create'): {'id': 'id'},
         ('disputes', 'list'): {'charge': 'charge', 'created': 'created', 'ending_before': 'ending_before', 'limit': 'limit', 'payment_intent': 'payment_intent', 'starting_after': 'starting_after'},
         ('disputes', 'get'): {'id': 'id'},
         ('payouts', 'list'): {'arrival_date': 'arrival_date', 'created': 'created', 'destination': 'destination', 'ending_before': 'ending_before', 'limit': 'limit', 'starting_after': 'starting_after', 'status': 'status'},
@@ -351,6 +388,8 @@ class StripeConnector:
         # Initialize entity query objects
         self.customers = CustomersQuery(self)
         self.invoices = InvoicesQuery(self)
+        self.invoice_finalizations = InvoiceFinalizationsQuery(self)
+        self.invoice_sends = InvoiceSendsQuery(self)
         self.charges = ChargesQuery(self)
         self.subscriptions = SubscriptionsQuery(self)
         self.refunds = RefundsQuery(self)
@@ -358,6 +397,11 @@ class StripeConnector:
         self.balance = BalanceQuery(self)
         self.balance_transactions = BalanceTransactionsQuery(self)
         self.payment_intents = PaymentIntentsQuery(self)
+        self.payment_intent_confirmations = PaymentIntentConfirmationsQuery(self)
+        self.payment_intent_cancellations = PaymentIntentCancellationsQuery(self)
+        self.prices = PricesQuery(self)
+        self.checkout_sessions = CheckoutSessionsQuery(self)
+        self.payment_method_attachments = PaymentMethodAttachmentsQuery(self)
         self.disputes = DisputesQuery(self)
         self.payouts = PayoutsQuery(self)
 
@@ -423,8 +467,32 @@ class StripeConnector:
     async def execute(
         self,
         entity: Literal["invoices"],
+        action: Literal["create"],
+        params: "InvoicesCreateParams"
+    ) -> "Invoice": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["invoices"],
         action: Literal["get"],
         params: "InvoicesGetParams"
+    ) -> "Invoice": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["invoice_finalizations"],
+        action: Literal["create"],
+        params: "InvoiceFinalizationsCreateParams"
+    ) -> "Invoice": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["invoice_sends"],
+        action: Literal["create"],
+        params: "InvoiceSendsCreateParams"
     ) -> "Invoice": ...
 
     @overload
@@ -471,8 +539,32 @@ class StripeConnector:
     async def execute(
         self,
         entity: Literal["subscriptions"],
+        action: Literal["create"],
+        params: "SubscriptionsCreateParams"
+    ) -> "Subscription": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["subscriptions"],
         action: Literal["get"],
         params: "SubscriptionsGetParams"
+    ) -> "Subscription": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["subscriptions"],
+        action: Literal["update"],
+        params: "SubscriptionsUpdateParams"
+    ) -> "Subscription": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["subscriptions"],
+        action: Literal["delete"],
+        params: "SubscriptionsDeleteParams"
     ) -> "Subscription": ...
 
     @overload
@@ -591,8 +683,40 @@ class StripeConnector:
     async def execute(
         self,
         entity: Literal["payment_intents"],
+        action: Literal["create"],
+        params: "PaymentIntentsCreateParams"
+    ) -> "PaymentIntent": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["payment_intents"],
         action: Literal["get"],
         params: "PaymentIntentsGetParams"
+    ) -> "PaymentIntent": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["payment_intents"],
+        action: Literal["update"],
+        params: "PaymentIntentsUpdateParams"
+    ) -> "PaymentIntent": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["payment_intent_confirmations"],
+        action: Literal["create"],
+        params: "PaymentIntentConfirmationsCreateParams"
+    ) -> "PaymentIntent": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["payment_intent_cancellations"],
+        action: Literal["create"],
+        params: "PaymentIntentCancellationsCreateParams"
     ) -> "PaymentIntent": ...
 
     @overload
@@ -602,6 +726,30 @@ class StripeConnector:
         action: Literal["api_search"],
         params: "PaymentIntentsApiSearchParams"
     ) -> "PaymentIntentsApiSearchResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["prices"],
+        action: Literal["create"],
+        params: "PricesCreateParams"
+    ) -> "Price": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["checkout_sessions"],
+        action: Literal["create"],
+        params: "CheckoutSessionsCreateParams"
+    ) -> "CheckoutSession": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["payment_method_attachments"],
+        action: Literal["create"],
+        params: "PaymentMethodAttachmentsCreateParams"
+    ) -> "PaymentMethod": ...
 
     @overload
     async def execute(
@@ -1312,6 +1460,25 @@ class InvoicesQuery:
 
 
 
+    async def create(
+        self,
+        **kwargs
+    ) -> Invoice:
+        """
+        Creates a draft invoice for a given customer. The invoice remains a draft until you finalize it, which allows you to pay or send the invoice to your customers.
+
+        Returns:
+            Invoice
+        """
+        params = {k: v for k, v in {
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("invoices", "create", params)
+        return result
+
+
+
     async def get(
         self,
         id: str | None = None,
@@ -1514,6 +1681,74 @@ class InvoicesQuery:
                 took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
             ),
         )
+
+class InvoiceFinalizationsQuery:
+    """
+    Query class for InvoiceFinalizations entity operations.
+    """
+
+    def __init__(self, connector: StripeConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def create(
+        self,
+        id: str | None = None,
+        **kwargs
+    ) -> Invoice:
+        """
+        Stripe automatically finalizes drafts before sending and attempting payment on invoices. However, if you'd like to finalize a draft invoice manually, you can do so using this method.
+
+        Args:
+            id: The ID of the invoice to finalize
+            **kwargs: Additional parameters
+
+        Returns:
+            Invoice
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("invoice_finalizations", "create", params)
+        return result
+
+
+
+class InvoiceSendsQuery:
+    """
+    Query class for InvoiceSends entity operations.
+    """
+
+    def __init__(self, connector: StripeConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def create(
+        self,
+        id: str | None = None,
+        **kwargs
+    ) -> Invoice:
+        """
+        Stripe will automatically send invoices to customers according to your subscriptions settings. However, if you'd like to manually send an invoice to your customer out of the normal schedule, you can do so.
+
+        Args:
+            id: The ID of the invoice to send
+            **kwargs: Additional parameters
+
+        Returns:
+            Invoice
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("invoice_sends", "create", params)
+        return result
+
+
 
 class ChargesQuery:
     """
@@ -1803,6 +2038,25 @@ class SubscriptionsQuery:
 
 
 
+    async def create(
+        self,
+        **kwargs
+    ) -> Subscription:
+        """
+        Creates a new subscription on an existing customer. Each customer can have up to 500 active or scheduled subscriptions.
+
+        Returns:
+            Subscription
+        """
+        params = {k: v for k, v in {
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("subscriptions", "create", params)
+        return result
+
+
+
     async def get(
         self,
         id: str | None = None,
@@ -1824,6 +2078,56 @@ class SubscriptionsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("subscriptions", "get", params)
+        return result
+
+
+
+    async def update(
+        self,
+        id: str | None = None,
+        **kwargs
+    ) -> Subscription:
+        """
+        Updates an existing subscription on a customer to match the specified parameters. When changing prices or quantities, we optionally prorate the price we charge next month to make up for any price changes.
+
+        Args:
+            id: The subscription ID
+            **kwargs: Additional parameters
+
+        Returns:
+            Subscription
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("subscriptions", "update", params)
+        return result
+
+
+
+    async def delete(
+        self,
+        id: str | None = None,
+        **kwargs
+    ) -> Subscription:
+        """
+        Cancels a customer's subscription immediately. The customer will not be charged again for the subscription. Any pending invoice items that you've created will still be charged for at the end of the period, unless manually deleted.
+
+        Args:
+            id: The subscription ID
+            **kwargs: Additional parameters
+
+        Returns:
+            Subscription
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("subscriptions", "delete", params)
         return result
 
 
@@ -2487,6 +2791,25 @@ class PaymentIntentsQuery:
 
 
 
+    async def create(
+        self,
+        **kwargs
+    ) -> PaymentIntent:
+        """
+        Creates a PaymentIntent object. After the PaymentIntent is created, attach a payment method and confirm to continue the payment.
+
+        Returns:
+            PaymentIntent
+        """
+        params = {k: v for k, v in {
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("payment_intents", "create", params)
+        return result
+
+
+
     async def get(
         self,
         id: str | None = None,
@@ -2508,6 +2831,31 @@ class PaymentIntentsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("payment_intents", "get", params)
+        return result
+
+
+
+    async def update(
+        self,
+        id: str | None = None,
+        **kwargs
+    ) -> PaymentIntent:
+        """
+        Updates properties on a PaymentIntent object without confirming.
+
+        Args:
+            id: The ID of the payment intent to update
+            **kwargs: Additional parameters
+
+        Returns:
+            PaymentIntent
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("payment_intents", "update", params)
         return result
 
 
@@ -2544,6 +2892,164 @@ class PaymentIntentsQuery:
             data=result.data,
             meta=result.meta
         )
+
+
+
+class PaymentIntentConfirmationsQuery:
+    """
+    Query class for PaymentIntentConfirmations entity operations.
+    """
+
+    def __init__(self, connector: StripeConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def create(
+        self,
+        id: str | None = None,
+        **kwargs
+    ) -> PaymentIntent:
+        """
+        Confirm that your customer intends to pay with current or provided payment method. Upon confirmation, the PaymentIntent will attempt to initiate a payment.
+
+        Args:
+            id: The ID of the payment intent to confirm
+            **kwargs: Additional parameters
+
+        Returns:
+            PaymentIntent
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("payment_intent_confirmations", "create", params)
+        return result
+
+
+
+class PaymentIntentCancellationsQuery:
+    """
+    Query class for PaymentIntentCancellations entity operations.
+    """
+
+    def __init__(self, connector: StripeConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def create(
+        self,
+        id: str | None = None,
+        **kwargs
+    ) -> PaymentIntent:
+        """
+        You can cancel a PaymentIntent object when it's in one of these statuses - requires_payment_method, requires_capture, requires_confirmation, requires_action, or processing.
+
+        Args:
+            id: The ID of the payment intent to cancel
+            **kwargs: Additional parameters
+
+        Returns:
+            PaymentIntent
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("payment_intent_cancellations", "create", params)
+        return result
+
+
+
+class PricesQuery:
+    """
+    Query class for Prices entity operations.
+    """
+
+    def __init__(self, connector: StripeConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def create(
+        self,
+        **kwargs
+    ) -> Price:
+        """
+        Creates a new price for an existing product. The price can be recurring for use in subscriptions or one-time for use in one-off charges.
+
+        Returns:
+            Price
+        """
+        params = {k: v for k, v in {
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("prices", "create", params)
+        return result
+
+
+
+class CheckoutSessionsQuery:
+    """
+    Query class for CheckoutSessions entity operations.
+    """
+
+    def __init__(self, connector: StripeConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def create(
+        self,
+        **kwargs
+    ) -> CheckoutSession:
+        """
+        Creates a Checkout Session object. You can use it to create a payment page hosted on Stripe that customers can use to complete their purchase.
+
+        Returns:
+            CheckoutSession
+        """
+        params = {k: v for k, v in {
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("checkout_sessions", "create", params)
+        return result
+
+
+
+class PaymentMethodAttachmentsQuery:
+    """
+    Query class for PaymentMethodAttachments entity operations.
+    """
+
+    def __init__(self, connector: StripeConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def create(
+        self,
+        id: str | None = None,
+        **kwargs
+    ) -> PaymentMethod:
+        """
+        Attaches a PaymentMethod object to a Customer. To use this PaymentMethod as the default for invoice or subscription payments, set invoice_settings.default_payment_method on the Customer.
+
+        Args:
+            id: The ID of the payment method to attach
+            **kwargs: Additional parameters
+
+        Returns:
+            PaymentMethod
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("payment_method_attachments", "create", params)
+        return result
 
 
 

@@ -67,14 +67,20 @@ class SpacesList(BaseModel):
     results: Union[list[Space], Any] = Field(default=None)
     links: Union[SpacesListLinks, Any] = Field(default=None, alias="_links")
 
-class PageBody(BaseModel):
-    """Page body content"""
+class PageLinks(BaseModel):
+    """Links related to the page"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    storage: Union[dict[str, Any], Any] = Field(default=None, description="Storage format body")
-    """Storage format body"""
-    atlas_doc_format: Union[dict[str, Any], Any] = Field(default=None, description="Atlas doc format body")
-    """Atlas doc format body"""
+    webui: Union[str, Any] = Field(default=None, description="Web UI link")
+    """Web UI link"""
+    editui: Union[str, Any] = Field(default=None, description="Edit UI link")
+    """Edit UI link"""
+    edituiv2: Union[str, Any] = Field(default=None, description="Edit UI v2 link")
+    """Edit UI v2 link"""
+    tinyui: Union[str, Any] = Field(default=None, description="Tiny UI link")
+    """Tiny UI link"""
+    base: Union[str, Any] = Field(default=None, description="Base URL")
+    """Base URL"""
 
 class PageVersion(BaseModel):
     """Version information"""
@@ -93,20 +99,14 @@ class PageVersion(BaseModel):
     ncs_step_version: Union[Any, Any] = Field(default=None, alias="ncsStepVersion", description="NCS step version")
     """NCS step version"""
 
-class PageLinks(BaseModel):
-    """Links related to the page"""
+class PageBody(BaseModel):
+    """Page body content"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    webui: Union[str, Any] = Field(default=None, description="Web UI link")
-    """Web UI link"""
-    editui: Union[str, Any] = Field(default=None, description="Edit UI link")
-    """Edit UI link"""
-    edituiv2: Union[str, Any] = Field(default=None, description="Edit UI v2 link")
-    """Edit UI v2 link"""
-    tinyui: Union[str, Any] = Field(default=None, description="Tiny UI link")
-    """Tiny UI link"""
-    base: Union[str, Any] = Field(default=None, description="Base URL")
-    """Base URL"""
+    storage: Union[dict[str, Any], Any] = Field(default=None, description="Storage format body")
+    """Storage format body"""
+    atlas_doc_format: Union[dict[str, Any], Any] = Field(default=None, description="Atlas doc format body")
+    """Atlas doc format body"""
 
 class Page(BaseModel):
     """Confluence page object"""
@@ -158,6 +158,15 @@ class BlogPostLinks(BaseModel):
     base: Union[str, Any] = Field(default=None, description="Base URL")
     """Base URL"""
 
+class BlogPostBody(BaseModel):
+    """Blog post body content"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    storage: Union[dict[str, Any], Any] = Field(default=None, description="Storage format body")
+    """Storage format body"""
+    atlas_doc_format: Union[dict[str, Any], Any] = Field(default=None, description="Atlas doc format body")
+    """Atlas doc format body"""
+
 class BlogPostVersion(BaseModel):
     """Version information"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -174,15 +183,6 @@ class BlogPostVersion(BaseModel):
     """ID of the version author"""
     ncs_step_version: Union[Any, Any] = Field(default=None, alias="ncsStepVersion", description="NCS step version")
     """NCS step version"""
-
-class BlogPostBody(BaseModel):
-    """Blog post body content"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    storage: Union[dict[str, Any], Any] = Field(default=None, description="Storage format body")
-    """Storage format body"""
-    atlas_doc_format: Union[dict[str, Any], Any] = Field(default=None, description="Atlas doc format body")
-    """Atlas doc format body"""
 
 class BlogPost(BaseModel):
     """Confluence blog post object"""
@@ -252,6 +252,15 @@ class GroupsList(BaseModel):
     size: Union[int, Any] = Field(default=None)
     links: Union[GroupsListLinks, Any] = Field(default=None, alias="_links")
 
+class AuditRecordAssociatedobjectsItem(BaseModel):
+    """Nested schema for AuditRecord.associatedObjects_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: Union[str, Any] = Field(default=None, description="Name of the associated object")
+    """Name of the associated object"""
+    object_type: Union[str, Any] = Field(default=None, alias="objectType", description="Type of the associated object")
+    """Type of the associated object"""
+
 class AuditRecordAuthor(BaseModel):
     """User who triggered the audit event"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -279,15 +288,6 @@ class AuditRecordAffectedobject(BaseModel):
     """Name of the affected object"""
     object_type: Union[str, Any] = Field(default=None, alias="objectType", description="Type of the affected object")
     """Type of the affected object"""
-
-class AuditRecordAssociatedobjectsItem(BaseModel):
-    """Nested schema for AuditRecord.associatedObjects_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: Union[str, Any] = Field(default=None, description="Name of the associated object")
-    """Name of the associated object"""
-    object_type: Union[str, Any] = Field(default=None, alias="objectType", description="Type of the associated object")
-    """Type of the associated object"""
 
 class AuditRecord(BaseModel):
     """Confluence audit record"""

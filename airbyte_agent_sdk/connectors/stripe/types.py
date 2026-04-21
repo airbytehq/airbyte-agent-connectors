@@ -156,8 +156,20 @@ class InvoicesListParams(TypedDict):
     status: NotRequired[str]
     subscription: NotRequired[str]
 
+class InvoicesCreateParams(TypedDict):
+    """Parameters for invoices.create operation"""
+    pass
+
 class InvoicesGetParams(TypedDict):
     """Parameters for invoices.get operation"""
+    id: str
+
+class InvoiceFinalizationsCreateParams(TypedDict):
+    """Parameters for invoice_finalizations.create operation"""
+    id: str
+
+class InvoiceSendsCreateParams(TypedDict):
+    """Parameters for invoice_sends.create operation"""
     id: str
 
 class InvoicesApiSearchParams(TypedDict):
@@ -200,8 +212,20 @@ class SubscriptionsListParams(TypedDict):
     starting_after: NotRequired[str]
     status: NotRequired[str]
 
+class SubscriptionsCreateParams(TypedDict):
+    """Parameters for subscriptions.create operation"""
+    pass
+
 class SubscriptionsGetParams(TypedDict):
     """Parameters for subscriptions.get operation"""
+    id: str
+
+class SubscriptionsUpdateParams(TypedDict):
+    """Parameters for subscriptions.update operation"""
+    id: str
+
+class SubscriptionsDeleteParams(TypedDict):
+    """Parameters for subscriptions.delete operation"""
     id: str
 
 class SubscriptionsApiSearchParams(TypedDict):
@@ -288,8 +312,24 @@ class PaymentIntentsListParams(TypedDict):
     limit: NotRequired[int]
     starting_after: NotRequired[str]
 
+class PaymentIntentsCreateParams(TypedDict):
+    """Parameters for payment_intents.create operation"""
+    pass
+
 class PaymentIntentsGetParams(TypedDict):
     """Parameters for payment_intents.get operation"""
+    id: str
+
+class PaymentIntentsUpdateParams(TypedDict):
+    """Parameters for payment_intents.update operation"""
+    id: str
+
+class PaymentIntentConfirmationsCreateParams(TypedDict):
+    """Parameters for payment_intent_confirmations.create operation"""
+    id: str
+
+class PaymentIntentCancellationsCreateParams(TypedDict):
+    """Parameters for payment_intent_cancellations.create operation"""
     id: str
 
 class PaymentIntentsApiSearchParams(TypedDict):
@@ -297,6 +337,18 @@ class PaymentIntentsApiSearchParams(TypedDict):
     query: str
     limit: NotRequired[int]
     page: NotRequired[str]
+
+class PricesCreateParams(TypedDict):
+    """Parameters for prices.create operation"""
+    pass
+
+class CheckoutSessionsCreateParams(TypedDict):
+    """Parameters for checkout_sessions.create operation"""
+    pass
+
+class PaymentMethodAttachmentsCreateParams(TypedDict):
+    """Parameters for payment_method_attachments.create operation"""
+    id: str
 
 class DisputesListParams(TypedDict):
     """Parameters for disputes.list operation"""

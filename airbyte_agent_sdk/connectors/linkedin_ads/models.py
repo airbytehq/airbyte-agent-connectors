@@ -36,6 +36,12 @@ class LinkedinAdsReplicationConfig(BaseModel):
 
 # ===== RESPONSE TYPE DEFINITIONS (PYDANTIC) =====
 
+class AccountVersion(BaseModel):
+    """Version information"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    version_tag: Union[str | None, Any] = Field(default=None, alias="versionTag")
+
 class AccountChangeauditstampsLastmodified(BaseModel):
     """Nested schema for AccountChangeauditstamps.lastModified"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -56,12 +62,6 @@ class AccountChangeauditstamps(BaseModel):
 
     created: Union[AccountChangeauditstampsCreated | None, Any] = Field(default=None)
     last_modified: Union[AccountChangeauditstampsLastmodified | None, Any] = Field(default=None, alias="lastModified")
-
-class AccountVersion(BaseModel):
-    """Version information"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    version_tag: Union[str | None, Any] = Field(default=None, alias="versionTag")
 
 class Account(BaseModel):
     """LinkedIn ad account object"""
@@ -139,6 +139,19 @@ class AccountUsersList(BaseModel):
     elements: Union[list[AccountUser], Any] = Field(default=None)
     metadata: Union[AccountUsersListMetadata, Any] = Field(default=None)
 
+class CampaignUnitcost(BaseModel):
+    """Cost per unit (bid amount)"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    amount: Union[str | None, Any] = Field(default=None)
+    currency_code: Union[str | None, Any] = Field(default=None, alias="currencyCode")
+
+class CampaignVersion(BaseModel):
+    """Version information"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    version_tag: Union[str | None, Any] = Field(default=None, alias="versionTag")
+
 class CampaignChangeauditstampsLastmodified(BaseModel):
     """Nested schema for CampaignChangeauditstamps.lastModified"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -160,20 +173,6 @@ class CampaignChangeauditstamps(BaseModel):
     created: Union[CampaignChangeauditstampsCreated | None, Any] = Field(default=None)
     last_modified: Union[CampaignChangeauditstampsLastmodified | None, Any] = Field(default=None, alias="lastModified")
 
-class CampaignRunschedule(BaseModel):
-    """Campaign run schedule"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    start: Union[int | None, Any] = Field(default=None)
-    end: Union[int | None, Any] = Field(default=None)
-
-class CampaignUnitcost(BaseModel):
-    """Cost per unit (bid amount)"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    amount: Union[str | None, Any] = Field(default=None)
-    currency_code: Union[str | None, Any] = Field(default=None, alias="currencyCode")
-
 class CampaignLocale(BaseModel):
     """Campaign locale settings"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -181,11 +180,12 @@ class CampaignLocale(BaseModel):
     country: Union[str | None, Any] = Field(default=None)
     language: Union[str | None, Any] = Field(default=None)
 
-class CampaignVersion(BaseModel):
-    """Version information"""
+class CampaignDailybudget(BaseModel):
+    """Daily budget configuration"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    version_tag: Union[str | None, Any] = Field(default=None, alias="versionTag")
+    amount: Union[str | None, Any] = Field(default=None)
+    currency_code: Union[str | None, Any] = Field(default=None, alias="currencyCode")
 
 class CampaignTotalbudget(BaseModel):
     """Total budget configuration"""
@@ -194,12 +194,12 @@ class CampaignTotalbudget(BaseModel):
     amount: Union[str | None, Any] = Field(default=None)
     currency_code: Union[str | None, Any] = Field(default=None, alias="currencyCode")
 
-class CampaignDailybudget(BaseModel):
-    """Daily budget configuration"""
+class CampaignRunschedule(BaseModel):
+    """Campaign run schedule"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    amount: Union[str | None, Any] = Field(default=None)
-    currency_code: Union[str | None, Any] = Field(default=None, alias="currencyCode")
+    start: Union[int | None, Any] = Field(default=None)
+    end: Union[int | None, Any] = Field(default=None)
 
 class Campaign(BaseModel):
     """LinkedIn ad campaign object"""
