@@ -271,6 +271,15 @@ class TasksList(BaseModel):
     previous_page: Union[int | None, Any] = Field(default=None)
     links: Union[PaginationLinks, Any] = Field(default=None)
 
+class TimeEntryProject(BaseModel):
+    """The project associated with the time entry"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[int | None, Any] = Field(default=None, description="Project ID")
+    """Project ID"""
+    name: Union[str | None, Any] = Field(default=None, description="Project name")
+    """Project name"""
+
 class TimeEntryTask(BaseModel):
     """The task associated with the time entry"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -279,15 +288,6 @@ class TimeEntryTask(BaseModel):
     """Task ID"""
     name: Union[str | None, Any] = Field(default=None, description="Task name")
     """Task name"""
-
-class TimeEntryInvoice(BaseModel):
-    """The invoice associated with the time entry"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[int | None, Any] = Field(default=None, description="Invoice ID")
-    """Invoice ID"""
-    number: Union[str | None, Any] = Field(default=None, description="Invoice number")
-    """Invoice number"""
 
 class TimeEntryUser(BaseModel):
     """The user associated with the time entry"""
@@ -298,15 +298,6 @@ class TimeEntryUser(BaseModel):
     name: Union[str | None, Any] = Field(default=None, description="User name")
     """User name"""
 
-class TimeEntryProject(BaseModel):
-    """The project associated with the time entry"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[int | None, Any] = Field(default=None, description="Project ID")
-    """Project ID"""
-    name: Union[str | None, Any] = Field(default=None, description="Project name")
-    """Project name"""
-
 class TimeEntryClient(BaseModel):
     """The client associated with the time entry"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -315,6 +306,15 @@ class TimeEntryClient(BaseModel):
     """Client ID"""
     name: Union[str | None, Any] = Field(default=None, description="Client name")
     """Client name"""
+
+class TimeEntryInvoice(BaseModel):
+    """The invoice associated with the time entry"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[int | None, Any] = Field(default=None, description="Invoice ID")
+    """Invoice ID"""
+    number: Union[str | None, Any] = Field(default=None, description="Invoice number")
+    """Invoice number"""
 
 class TimeEntry(BaseModel):
     """A Harvest time entry"""
@@ -591,15 +591,6 @@ class RolesList(BaseModel):
     previous_page: Union[int | None, Any] = Field(default=None)
     links: Union[PaginationLinks, Any] = Field(default=None)
 
-class UserAssignmentUser(BaseModel):
-    """The user associated with the assignment"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[int | None, Any] = Field(default=None, description="User ID")
-    """User ID"""
-    name: Union[str | None, Any] = Field(default=None, description="User name")
-    """User name"""
-
 class UserAssignmentProject(BaseModel):
     """The project associated with the assignment"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -610,6 +601,15 @@ class UserAssignmentProject(BaseModel):
     """Project name"""
     code: Union[str | None, Any] = Field(default=None, description="Project code")
     """Project code"""
+
+class UserAssignmentUser(BaseModel):
+    """The user associated with the assignment"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[int | None, Any] = Field(default=None, description="User ID")
+    """User ID"""
+    name: Union[str | None, Any] = Field(default=None, description="User name")
+    """User name"""
 
 class UserAssignment(BaseModel):
     """A Harvest user assignment linking a user to a project"""

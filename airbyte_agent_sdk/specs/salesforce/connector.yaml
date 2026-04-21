@@ -2413,6 +2413,24 @@ components:
           scopes:
             api: Access and manage your data
             refresh_token: Perform requests on your behalf at any time
+      # Salesforce OAuth grants full access without scope parameters; entries below are for UI entity display only.
+      x-airbyte-oauth-scopes:
+        - mode: read
+          entities:
+            - sobjects
+            - accounts
+            - attachments
+            - campaigns
+            - cases
+            - contacts
+            - content_versions
+            - events
+            - leads
+            - notes
+            - opportunities
+            - query
+            - reports
+            - tasks
       x-airbyte-token-refresh:
         auth_style: body
         body_format: form
