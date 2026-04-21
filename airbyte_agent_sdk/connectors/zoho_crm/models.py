@@ -495,6 +495,425 @@ class InvoicesList(BaseModel):
     data: Union[list[Invoice], Any] = Field(default=None)
     info: Union[PaginationInfo, Any] = Field(default=None)
 
+class WriteResponseDetail(BaseModel):
+    """Details of a successfully written record"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    modified_time: Union[str | None, Any] = Field(default=None, alias="Modified_Time")
+    modified_by: Union[Any, Any] = Field(default=None, alias="Modified_By")
+    created_time: Union[str | None, Any] = Field(default=None, alias="Created_Time")
+    id: Union[str, Any] = Field(default=None)
+    created_by: Union[Any, Any] = Field(default=None, alias="Created_By")
+
+class WriteResponseItem(BaseModel):
+    """Individual record write result"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    code: Union[str, Any] = Field(default=None)
+    details: Union[WriteResponseDetail, Any] = Field(default=None)
+    message: Union[str, Any] = Field(default=None)
+    status: Union[str, Any] = Field(default=None)
+
+class WriteResponse(BaseModel):
+    """Response from a create or update operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: Union[list[WriteResponseItem], Any] = Field(default=None)
+
+class LeadCreateParamsDataItem(BaseModel):
+    """Nested schema for LeadCreateParams.data_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    first_name: Union[str, Any] = Field(default=None, alias="First_Name", description="Lead's first name")
+    """Lead's first name"""
+    last_name: Union[str, Any] = Field(default=None, alias="Last_Name", description="Lead's last name (required)")
+    """Lead's last name (required)"""
+    email: Union[str, Any] = Field(default=None, alias="Email", description="Lead's email address")
+    """Lead's email address"""
+    phone: Union[str, Any] = Field(default=None, alias="Phone", description="Lead's phone number")
+    """Lead's phone number"""
+    mobile: Union[str, Any] = Field(default=None, alias="Mobile", description="Lead's mobile number")
+    """Lead's mobile number"""
+    company: Union[str, Any] = Field(default=None, alias="Company", description="Company the lead is associated with")
+    """Company the lead is associated with"""
+    title: Union[str, Any] = Field(default=None, alias="Title", description="Lead's job title")
+    """Lead's job title"""
+    lead_source: Union[str, Any] = Field(default=None, alias="Lead_Source", description="Source from which the lead was generated")
+    """Source from which the lead was generated"""
+    industry: Union[str, Any] = Field(default=None, alias="Industry", description="Industry the lead belongs to")
+    """Industry the lead belongs to"""
+    annual_revenue: Union[float, Any] = Field(default=None, alias="Annual_Revenue", description="Annual revenue of the lead's company")
+    """Annual revenue of the lead's company"""
+    no_of_employees: Union[int, Any] = Field(default=None, alias="No_of_Employees", description="Number of employees in the lead's company")
+    """Number of employees in the lead's company"""
+    rating: Union[str, Any] = Field(default=None, alias="Rating", description="Lead rating")
+    """Lead rating"""
+    lead_status: Union[str, Any] = Field(default=None, alias="Lead_Status", description="Current status of the lead")
+    """Current status of the lead"""
+    website: Union[str, Any] = Field(default=None, alias="Website", description="Lead's website URL")
+    """Lead's website URL"""
+    street: Union[str, Any] = Field(default=None, alias="Street", description="Street address")
+    """Street address"""
+    city: Union[str, Any] = Field(default=None, alias="City", description="City")
+    """City"""
+    state: Union[str, Any] = Field(default=None, alias="State", description="State or province")
+    """State or province"""
+    zip_code: Union[str, Any] = Field(default=None, alias="Zip_Code", description="ZIP/postal code")
+    """ZIP/postal code"""
+    country: Union[str, Any] = Field(default=None, alias="Country", description="Country")
+    """Country"""
+    description: Union[str, Any] = Field(default=None, alias="Description", description="Description or notes about the lead")
+    """Description or notes about the lead"""
+
+class LeadCreateParams(BaseModel):
+    """Parameters for creating a lead. The record fields must be nested inside a data array."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: Union[list[LeadCreateParamsDataItem], Any] = Field(default=None)
+
+class LeadUpdateParamsDataItem(BaseModel):
+    """Nested schema for LeadUpdateParams.data_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    first_name: Union[str, Any] = Field(default=None, alias="First_Name", description="Lead's first name")
+    """Lead's first name"""
+    last_name: Union[str, Any] = Field(default=None, alias="Last_Name", description="Lead's last name")
+    """Lead's last name"""
+    email: Union[str, Any] = Field(default=None, alias="Email", description="Lead's email address")
+    """Lead's email address"""
+    phone: Union[str, Any] = Field(default=None, alias="Phone", description="Lead's phone number")
+    """Lead's phone number"""
+    mobile: Union[str, Any] = Field(default=None, alias="Mobile", description="Lead's mobile number")
+    """Lead's mobile number"""
+    company: Union[str, Any] = Field(default=None, alias="Company", description="Company the lead is associated with")
+    """Company the lead is associated with"""
+    title: Union[str, Any] = Field(default=None, alias="Title", description="Lead's job title")
+    """Lead's job title"""
+    lead_source: Union[str, Any] = Field(default=None, alias="Lead_Source", description="Source from which the lead was generated")
+    """Source from which the lead was generated"""
+    industry: Union[str, Any] = Field(default=None, alias="Industry", description="Industry the lead belongs to")
+    """Industry the lead belongs to"""
+    annual_revenue: Union[float, Any] = Field(default=None, alias="Annual_Revenue", description="Annual revenue of the lead's company")
+    """Annual revenue of the lead's company"""
+    no_of_employees: Union[int, Any] = Field(default=None, alias="No_of_Employees", description="Number of employees in the lead's company")
+    """Number of employees in the lead's company"""
+    rating: Union[str, Any] = Field(default=None, alias="Rating", description="Lead rating")
+    """Lead rating"""
+    lead_status: Union[str, Any] = Field(default=None, alias="Lead_Status", description="Current status of the lead")
+    """Current status of the lead"""
+    website: Union[str, Any] = Field(default=None, alias="Website", description="Lead's website URL")
+    """Lead's website URL"""
+    street: Union[str, Any] = Field(default=None, alias="Street", description="Street address")
+    """Street address"""
+    city: Union[str, Any] = Field(default=None, alias="City", description="City")
+    """City"""
+    state: Union[str, Any] = Field(default=None, alias="State", description="State or province")
+    """State or province"""
+    zip_code: Union[str, Any] = Field(default=None, alias="Zip_Code", description="ZIP/postal code")
+    """ZIP/postal code"""
+    country: Union[str, Any] = Field(default=None, alias="Country", description="Country")
+    """Country"""
+    description: Union[str, Any] = Field(default=None, alias="Description", description="Description or notes about the lead")
+    """Description or notes about the lead"""
+
+class LeadUpdateParams(BaseModel):
+    """Parameters for updating a lead. The record fields must be nested inside a data array."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: Union[list[LeadUpdateParamsDataItem], Any] = Field(default=None)
+
+class ContactCreateParamsDataItem(BaseModel):
+    """Nested schema for ContactCreateParams.data_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    first_name: Union[str, Any] = Field(default=None, alias="First_Name", description="Contact's first name")
+    """Contact's first name"""
+    last_name: Union[str, Any] = Field(default=None, alias="Last_Name", description="Contact's last name (required)")
+    """Contact's last name (required)"""
+    email: Union[str, Any] = Field(default=None, alias="Email", description="Contact's email address")
+    """Contact's email address"""
+    phone: Union[str, Any] = Field(default=None, alias="Phone", description="Contact's phone number")
+    """Contact's phone number"""
+    mobile: Union[str, Any] = Field(default=None, alias="Mobile", description="Contact's mobile number")
+    """Contact's mobile number"""
+    title: Union[str, Any] = Field(default=None, alias="Title", description="Contact's job title")
+    """Contact's job title"""
+    department: Union[str, Any] = Field(default=None, alias="Department", description="Department the contact belongs to")
+    """Department the contact belongs to"""
+    lead_source: Union[str, Any] = Field(default=None, alias="Lead_Source", description="Source from which the contact was generated")
+    """Source from which the contact was generated"""
+    date_of_birth: Union[str, Any] = Field(default=None, alias="Date_of_Birth", description="Contact's date of birth (YYYY-MM-DD)")
+    """Contact's date of birth (YYYY-MM-DD)"""
+    mailing_street: Union[str, Any] = Field(default=None, alias="Mailing_Street", description="Mailing street address")
+    """Mailing street address"""
+    mailing_city: Union[str, Any] = Field(default=None, alias="Mailing_City", description="Mailing city")
+    """Mailing city"""
+    mailing_state: Union[str, Any] = Field(default=None, alias="Mailing_State", description="Mailing state or province")
+    """Mailing state or province"""
+    mailing_zip: Union[str, Any] = Field(default=None, alias="Mailing_Zip", description="Mailing ZIP/postal code")
+    """Mailing ZIP/postal code"""
+    mailing_country: Union[str, Any] = Field(default=None, alias="Mailing_Country", description="Mailing country")
+    """Mailing country"""
+    description: Union[str, Any] = Field(default=None, alias="Description", description="Description or notes about the contact")
+    """Description or notes about the contact"""
+
+class ContactCreateParams(BaseModel):
+    """Parameters for creating a contact. The record fields must be nested inside a data array."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: Union[list[ContactCreateParamsDataItem], Any] = Field(default=None)
+
+class ContactUpdateParamsDataItem(BaseModel):
+    """Nested schema for ContactUpdateParams.data_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    first_name: Union[str, Any] = Field(default=None, alias="First_Name", description="Contact's first name")
+    """Contact's first name"""
+    last_name: Union[str, Any] = Field(default=None, alias="Last_Name", description="Contact's last name")
+    """Contact's last name"""
+    email: Union[str, Any] = Field(default=None, alias="Email", description="Contact's email address")
+    """Contact's email address"""
+    phone: Union[str, Any] = Field(default=None, alias="Phone", description="Contact's phone number")
+    """Contact's phone number"""
+    mobile: Union[str, Any] = Field(default=None, alias="Mobile", description="Contact's mobile number")
+    """Contact's mobile number"""
+    title: Union[str, Any] = Field(default=None, alias="Title", description="Contact's job title")
+    """Contact's job title"""
+    department: Union[str, Any] = Field(default=None, alias="Department", description="Department the contact belongs to")
+    """Department the contact belongs to"""
+    lead_source: Union[str, Any] = Field(default=None, alias="Lead_Source", description="Source from which the contact was generated")
+    """Source from which the contact was generated"""
+    date_of_birth: Union[str, Any] = Field(default=None, alias="Date_of_Birth", description="Contact's date of birth (YYYY-MM-DD)")
+    """Contact's date of birth (YYYY-MM-DD)"""
+    mailing_street: Union[str, Any] = Field(default=None, alias="Mailing_Street", description="Mailing street address")
+    """Mailing street address"""
+    mailing_city: Union[str, Any] = Field(default=None, alias="Mailing_City", description="Mailing city")
+    """Mailing city"""
+    mailing_state: Union[str, Any] = Field(default=None, alias="Mailing_State", description="Mailing state or province")
+    """Mailing state or province"""
+    mailing_zip: Union[str, Any] = Field(default=None, alias="Mailing_Zip", description="Mailing ZIP/postal code")
+    """Mailing ZIP/postal code"""
+    mailing_country: Union[str, Any] = Field(default=None, alias="Mailing_Country", description="Mailing country")
+    """Mailing country"""
+    description: Union[str, Any] = Field(default=None, alias="Description", description="Description or notes about the contact")
+    """Description or notes about the contact"""
+
+class ContactUpdateParams(BaseModel):
+    """Parameters for updating a contact. The record fields must be nested inside a data array."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: Union[list[ContactUpdateParamsDataItem], Any] = Field(default=None)
+
+class AccountCreateParamsDataItem(BaseModel):
+    """Nested schema for AccountCreateParams.data_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    account_name: Union[str, Any] = Field(default=None, alias="Account_Name", description="Account/company name (required)")
+    """Account/company name (required)"""
+    account_number: Union[str, Any] = Field(default=None, alias="Account_Number", description="Account number")
+    """Account number"""
+    account_type: Union[str, Any] = Field(default=None, alias="Account_Type", description="Type of account (e.g., Analyst, Competitor, Customer)")
+    """Type of account (e.g., Analyst, Competitor, Customer)"""
+    industry: Union[str, Any] = Field(default=None, alias="Industry", description="Industry the account belongs to")
+    """Industry the account belongs to"""
+    annual_revenue: Union[float, Any] = Field(default=None, alias="Annual_Revenue", description="Annual revenue of the account")
+    """Annual revenue of the account"""
+    employees: Union[int, Any] = Field(default=None, alias="Employees", description="Number of employees")
+    """Number of employees"""
+    phone: Union[str, Any] = Field(default=None, alias="Phone", description="Account phone number")
+    """Account phone number"""
+    website: Union[str, Any] = Field(default=None, alias="Website", description="Account website URL")
+    """Account website URL"""
+    ownership: Union[str, Any] = Field(default=None, alias="Ownership", description="Ownership type (e.g., Public, Private)")
+    """Ownership type (e.g., Public, Private)"""
+    rating: Union[str, Any] = Field(default=None, alias="Rating", description="Account rating")
+    """Account rating"""
+    billing_street: Union[str, Any] = Field(default=None, alias="Billing_Street", description="Billing street address")
+    """Billing street address"""
+    billing_city: Union[str, Any] = Field(default=None, alias="Billing_City", description="Billing city")
+    """Billing city"""
+    billing_state: Union[str, Any] = Field(default=None, alias="Billing_State", description="Billing state or province")
+    """Billing state or province"""
+    billing_code: Union[str, Any] = Field(default=None, alias="Billing_Code", description="Billing ZIP/postal code")
+    """Billing ZIP/postal code"""
+    billing_country: Union[str, Any] = Field(default=None, alias="Billing_Country", description="Billing country")
+    """Billing country"""
+    shipping_street: Union[str, Any] = Field(default=None, alias="Shipping_Street", description="Shipping street address")
+    """Shipping street address"""
+    shipping_city: Union[str, Any] = Field(default=None, alias="Shipping_City", description="Shipping city")
+    """Shipping city"""
+    shipping_state: Union[str, Any] = Field(default=None, alias="Shipping_State", description="Shipping state or province")
+    """Shipping state or province"""
+    shipping_code: Union[str, Any] = Field(default=None, alias="Shipping_Code", description="Shipping ZIP/postal code")
+    """Shipping ZIP/postal code"""
+    shipping_country: Union[str, Any] = Field(default=None, alias="Shipping_Country", description="Shipping country")
+    """Shipping country"""
+    description: Union[str, Any] = Field(default=None, alias="Description", description="Description or notes about the account")
+    """Description or notes about the account"""
+
+class AccountCreateParams(BaseModel):
+    """Parameters for creating an account. The record fields must be nested inside a data array."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: Union[list[AccountCreateParamsDataItem], Any] = Field(default=None)
+
+class AccountUpdateParamsDataItem(BaseModel):
+    """Nested schema for AccountUpdateParams.data_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    account_name: Union[str, Any] = Field(default=None, alias="Account_Name", description="Account/company name")
+    """Account/company name"""
+    account_number: Union[str, Any] = Field(default=None, alias="Account_Number", description="Account number")
+    """Account number"""
+    account_type: Union[str, Any] = Field(default=None, alias="Account_Type", description="Type of account (e.g., Analyst, Competitor, Customer)")
+    """Type of account (e.g., Analyst, Competitor, Customer)"""
+    industry: Union[str, Any] = Field(default=None, alias="Industry", description="Industry the account belongs to")
+    """Industry the account belongs to"""
+    annual_revenue: Union[float, Any] = Field(default=None, alias="Annual_Revenue", description="Annual revenue of the account")
+    """Annual revenue of the account"""
+    employees: Union[int, Any] = Field(default=None, alias="Employees", description="Number of employees")
+    """Number of employees"""
+    phone: Union[str, Any] = Field(default=None, alias="Phone", description="Account phone number")
+    """Account phone number"""
+    website: Union[str, Any] = Field(default=None, alias="Website", description="Account website URL")
+    """Account website URL"""
+    ownership: Union[str, Any] = Field(default=None, alias="Ownership", description="Ownership type (e.g., Public, Private)")
+    """Ownership type (e.g., Public, Private)"""
+    rating: Union[str, Any] = Field(default=None, alias="Rating", description="Account rating")
+    """Account rating"""
+    billing_street: Union[str, Any] = Field(default=None, alias="Billing_Street", description="Billing street address")
+    """Billing street address"""
+    billing_city: Union[str, Any] = Field(default=None, alias="Billing_City", description="Billing city")
+    """Billing city"""
+    billing_state: Union[str, Any] = Field(default=None, alias="Billing_State", description="Billing state or province")
+    """Billing state or province"""
+    billing_code: Union[str, Any] = Field(default=None, alias="Billing_Code", description="Billing ZIP/postal code")
+    """Billing ZIP/postal code"""
+    billing_country: Union[str, Any] = Field(default=None, alias="Billing_Country", description="Billing country")
+    """Billing country"""
+    shipping_street: Union[str, Any] = Field(default=None, alias="Shipping_Street", description="Shipping street address")
+    """Shipping street address"""
+    shipping_city: Union[str, Any] = Field(default=None, alias="Shipping_City", description="Shipping city")
+    """Shipping city"""
+    shipping_state: Union[str, Any] = Field(default=None, alias="Shipping_State", description="Shipping state or province")
+    """Shipping state or province"""
+    shipping_code: Union[str, Any] = Field(default=None, alias="Shipping_Code", description="Shipping ZIP/postal code")
+    """Shipping ZIP/postal code"""
+    shipping_country: Union[str, Any] = Field(default=None, alias="Shipping_Country", description="Shipping country")
+    """Shipping country"""
+    description: Union[str, Any] = Field(default=None, alias="Description", description="Description or notes about the account")
+    """Description or notes about the account"""
+
+class AccountUpdateParams(BaseModel):
+    """Parameters for updating an account. The record fields must be nested inside a data array."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: Union[list[AccountUpdateParamsDataItem], Any] = Field(default=None)
+
+class DealCreateParamsDataItem(BaseModel):
+    """Nested schema for DealCreateParams.data_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    deal_name: Union[str, Any] = Field(default=None, alias="Deal_Name", description="Deal name (required)")
+    """Deal name (required)"""
+    amount: Union[float, Any] = Field(default=None, alias="Amount", description="Monetary value of the deal")
+    """Monetary value of the deal"""
+    stage: Union[str, Any] = Field(default=None, alias="Stage", description="Current stage of the deal in the pipeline (required)")
+    """Current stage of the deal in the pipeline (required)"""
+    probability: Union[int, Any] = Field(default=None, alias="Probability", description="Probability of closing the deal (percentage)")
+    """Probability of closing the deal (percentage)"""
+    closing_date: Union[str, Any] = Field(default=None, alias="Closing_Date", description="Expected closing date (YYYY-MM-DD)")
+    """Expected closing date (YYYY-MM-DD)"""
+    type_: Union[str, Any] = Field(default=None, alias="Type", description="Type of deal (e.g., New Business, Existing Business)")
+    """Type of deal (e.g., New Business, Existing Business)"""
+    next_step: Union[str, Any] = Field(default=None, alias="Next_Step", description="Next step in the deal process")
+    """Next step in the deal process"""
+    lead_source: Union[str, Any] = Field(default=None, alias="Lead_Source", description="Source from which the deal originated")
+    """Source from which the deal originated"""
+    description: Union[str, Any] = Field(default=None, alias="Description", description="Description or notes about the deal")
+    """Description or notes about the deal"""
+
+class DealCreateParams(BaseModel):
+    """Parameters for creating a deal. The record fields must be nested inside a data array."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: Union[list[DealCreateParamsDataItem], Any] = Field(default=None)
+
+class DealUpdateParamsDataItem(BaseModel):
+    """Nested schema for DealUpdateParams.data_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    deal_name: Union[str, Any] = Field(default=None, alias="Deal_Name", description="Deal name")
+    """Deal name"""
+    amount: Union[float, Any] = Field(default=None, alias="Amount", description="Monetary value of the deal")
+    """Monetary value of the deal"""
+    stage: Union[str, Any] = Field(default=None, alias="Stage", description="Current stage of the deal in the pipeline")
+    """Current stage of the deal in the pipeline"""
+    probability: Union[int, Any] = Field(default=None, alias="Probability", description="Probability of closing the deal (percentage)")
+    """Probability of closing the deal (percentage)"""
+    closing_date: Union[str, Any] = Field(default=None, alias="Closing_Date", description="Expected closing date (YYYY-MM-DD)")
+    """Expected closing date (YYYY-MM-DD)"""
+    type_: Union[str, Any] = Field(default=None, alias="Type", description="Type of deal (e.g., New Business, Existing Business)")
+    """Type of deal (e.g., New Business, Existing Business)"""
+    next_step: Union[str, Any] = Field(default=None, alias="Next_Step", description="Next step in the deal process")
+    """Next step in the deal process"""
+    lead_source: Union[str, Any] = Field(default=None, alias="Lead_Source", description="Source from which the deal originated")
+    """Source from which the deal originated"""
+    description: Union[str, Any] = Field(default=None, alias="Description", description="Description or notes about the deal")
+    """Description or notes about the deal"""
+
+class DealUpdateParams(BaseModel):
+    """Parameters for updating a deal. The record fields must be nested inside a data array."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: Union[list[DealUpdateParamsDataItem], Any] = Field(default=None)
+
+class TaskCreateParamsDataItem(BaseModel):
+    """Nested schema for TaskCreateParams.data_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    subject: Union[str, Any] = Field(default=None, alias="Subject", description="Subject or title of the task (required)")
+    """Subject or title of the task (required)"""
+    due_date: Union[str, Any] = Field(default=None, alias="Due_Date", description="Due date for the task (YYYY-MM-DD)")
+    """Due date for the task (YYYY-MM-DD)"""
+    status: Union[str, Any] = Field(default=None, alias="Status", description="Task status (e.g., Not Started, In Progress, Completed)")
+    """Task status (e.g., Not Started, In Progress, Completed)"""
+    priority: Union[str, Any] = Field(default=None, alias="Priority", description="Priority level (e.g., High, Highest, Low, Lowest, Normal)")
+    """Priority level (e.g., High, Highest, Low, Lowest, Normal)"""
+    send_notification_email: Union[bool, Any] = Field(default=None, alias="Send_Notification_Email", description="Whether to send a notification email")
+    """Whether to send a notification email"""
+    description: Union[str, Any] = Field(default=None, alias="Description", description="Description or notes about the task")
+    """Description or notes about the task"""
+
+class TaskCreateParams(BaseModel):
+    """Parameters for creating a task. The record fields must be nested inside a data array."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: Union[list[TaskCreateParamsDataItem], Any] = Field(default=None)
+
+class TaskUpdateParamsDataItem(BaseModel):
+    """Nested schema for TaskUpdateParams.data_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    subject: Union[str, Any] = Field(default=None, alias="Subject", description="Subject or title of the task")
+    """Subject or title of the task"""
+    due_date: Union[str, Any] = Field(default=None, alias="Due_Date", description="Due date for the task (YYYY-MM-DD)")
+    """Due date for the task (YYYY-MM-DD)"""
+    status: Union[str, Any] = Field(default=None, alias="Status", description="Task status (e.g., Not Started, In Progress, Completed)")
+    """Task status (e.g., Not Started, In Progress, Completed)"""
+    priority: Union[str, Any] = Field(default=None, alias="Priority", description="Priority level (e.g., High, Highest, Low, Lowest, Normal)")
+    """Priority level (e.g., High, Highest, Low, Lowest, Normal)"""
+    send_notification_email: Union[bool, Any] = Field(default=None, alias="Send_Notification_Email", description="Whether to send a notification email")
+    """Whether to send a notification email"""
+    description: Union[str, Any] = Field(default=None, alias="Description", description="Description or notes about the task")
+    """Description or notes about the task"""
+
+class TaskUpdateParams(BaseModel):
+    """Parameters for updating a task. The record fields must be nested inside a data array."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: Union[list[TaskUpdateParamsDataItem], Any] = Field(default=None)
+
 # ===== METADATA TYPE DEFINITIONS (PYDANTIC) =====
 # Meta types for operations that extract metadata (e.g., pagination info)
 

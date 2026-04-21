@@ -20,28 +20,48 @@ from .connector_model import ZohoCrmConnectorModel
 from airbyte_agent_sdk.introspection import describe_entities, generate_tool_description
 from airbyte_agent_sdk.types import AirbyteAuthConfig
 from .types import (
+    AccountsCreateParams,
+    AccountsCreateParamsDataItem,
     AccountsGetParams,
     AccountsListParams,
+    AccountsUpdateParams,
+    AccountsUpdateParamsDataItem,
     CallsGetParams,
     CallsListParams,
     CampaignsGetParams,
     CampaignsListParams,
+    ContactsCreateParams,
+    ContactsCreateParamsDataItem,
     ContactsGetParams,
     ContactsListParams,
+    ContactsUpdateParams,
+    ContactsUpdateParamsDataItem,
+    DealsCreateParams,
+    DealsCreateParamsDataItem,
     DealsGetParams,
     DealsListParams,
+    DealsUpdateParams,
+    DealsUpdateParamsDataItem,
     EventsGetParams,
     EventsListParams,
     InvoicesGetParams,
     InvoicesListParams,
+    LeadsCreateParams,
+    LeadsCreateParamsDataItem,
     LeadsGetParams,
     LeadsListParams,
+    LeadsUpdateParams,
+    LeadsUpdateParamsDataItem,
     ProductsGetParams,
     ProductsListParams,
     QuotesGetParams,
     QuotesListParams,
+    TasksCreateParams,
+    TasksCreateParamsDataItem,
     TasksGetParams,
     TasksListParams,
+    TasksUpdateParams,
+    TasksUpdateParamsDataItem,
     AirbyteSearchParams,
     LeadsSearchFilter,
     LeadsSearchQuery,
@@ -95,6 +115,7 @@ from .models import (
     Product,
     Quote,
     Task,
+    WriteResponse,
     AirbyteSearchMeta,
     AirbyteSearchResult,
     LeadsSearchData,
@@ -167,22 +188,32 @@ class ZohoCrmConnector:
 
     connector_name = "zoho-crm"
     connector_version = "1.0.3"
-    sdk_version = "0.1.43"
+    sdk_version = "0.1.44"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
         ("leads", "list"): True,
+        ("leads", "create"): None,
         ("leads", "get"): None,
+        ("leads", "update"): None,
         ("contacts", "list"): True,
+        ("contacts", "create"): None,
         ("contacts", "get"): None,
+        ("contacts", "update"): None,
         ("accounts", "list"): True,
+        ("accounts", "create"): None,
         ("accounts", "get"): None,
+        ("accounts", "update"): None,
         ("deals", "list"): True,
+        ("deals", "create"): None,
         ("deals", "get"): None,
+        ("deals", "update"): None,
         ("campaigns", "list"): True,
         ("campaigns", "get"): None,
         ("tasks", "list"): True,
+        ("tasks", "create"): None,
         ("tasks", "get"): None,
+        ("tasks", "update"): None,
         ("events", "list"): True,
         ("events", "get"): None,
         ("calls", "list"): True,
@@ -199,17 +230,27 @@ class ZohoCrmConnector:
     # Used to convert snake_case TypedDict keys to API parameter names in execute()
     _PARAM_MAP = {
         ('leads', 'list'): {'page': 'page', 'per_page': 'per_page', 'page_token': 'page_token', 'sort_by': 'sort_by', 'sort_order': 'sort_order'},
+        ('leads', 'create'): {'data': 'data'},
         ('leads', 'get'): {'id': 'id'},
+        ('leads', 'update'): {'data': 'data', 'id': 'id'},
         ('contacts', 'list'): {'page': 'page', 'per_page': 'per_page', 'page_token': 'page_token', 'sort_by': 'sort_by', 'sort_order': 'sort_order'},
+        ('contacts', 'create'): {'data': 'data'},
         ('contacts', 'get'): {'id': 'id'},
+        ('contacts', 'update'): {'data': 'data', 'id': 'id'},
         ('accounts', 'list'): {'page': 'page', 'per_page': 'per_page', 'page_token': 'page_token', 'sort_by': 'sort_by', 'sort_order': 'sort_order'},
+        ('accounts', 'create'): {'data': 'data'},
         ('accounts', 'get'): {'id': 'id'},
+        ('accounts', 'update'): {'data': 'data', 'id': 'id'},
         ('deals', 'list'): {'page': 'page', 'per_page': 'per_page', 'page_token': 'page_token', 'sort_by': 'sort_by', 'sort_order': 'sort_order'},
+        ('deals', 'create'): {'data': 'data'},
         ('deals', 'get'): {'id': 'id'},
+        ('deals', 'update'): {'data': 'data', 'id': 'id'},
         ('campaigns', 'list'): {'page': 'page', 'per_page': 'per_page', 'page_token': 'page_token', 'sort_by': 'sort_by', 'sort_order': 'sort_order'},
         ('campaigns', 'get'): {'id': 'id'},
         ('tasks', 'list'): {'page': 'page', 'per_page': 'per_page', 'page_token': 'page_token', 'sort_by': 'sort_by', 'sort_order': 'sort_order'},
+        ('tasks', 'create'): {'data': 'data'},
         ('tasks', 'get'): {'id': 'id'},
+        ('tasks', 'update'): {'data': 'data', 'id': 'id'},
         ('events', 'list'): {'page': 'page', 'per_page': 'per_page', 'page_token': 'page_token', 'sort_by': 'sort_by', 'sort_order': 'sort_order'},
         ('events', 'get'): {'id': 'id'},
         ('calls', 'list'): {'page': 'page', 'per_page': 'per_page', 'page_token': 'page_token', 'sort_by': 'sort_by', 'sort_order': 'sort_order'},
@@ -349,9 +390,25 @@ class ZohoCrmConnector:
     async def execute(
         self,
         entity: Literal["leads"],
+        action: Literal["create"],
+        params: "LeadsCreateParams"
+    ) -> "WriteResponse": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["leads"],
         action: Literal["get"],
         params: "LeadsGetParams"
     ) -> "dict[str, Any]": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["leads"],
+        action: Literal["update"],
+        params: "LeadsUpdateParams"
+    ) -> "WriteResponse": ...
 
     @overload
     async def execute(
@@ -365,9 +422,25 @@ class ZohoCrmConnector:
     async def execute(
         self,
         entity: Literal["contacts"],
+        action: Literal["create"],
+        params: "ContactsCreateParams"
+    ) -> "WriteResponse": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["contacts"],
         action: Literal["get"],
         params: "ContactsGetParams"
     ) -> "dict[str, Any]": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["contacts"],
+        action: Literal["update"],
+        params: "ContactsUpdateParams"
+    ) -> "WriteResponse": ...
 
     @overload
     async def execute(
@@ -381,9 +454,25 @@ class ZohoCrmConnector:
     async def execute(
         self,
         entity: Literal["accounts"],
+        action: Literal["create"],
+        params: "AccountsCreateParams"
+    ) -> "WriteResponse": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["accounts"],
         action: Literal["get"],
         params: "AccountsGetParams"
     ) -> "dict[str, Any]": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["accounts"],
+        action: Literal["update"],
+        params: "AccountsUpdateParams"
+    ) -> "WriteResponse": ...
 
     @overload
     async def execute(
@@ -397,9 +486,25 @@ class ZohoCrmConnector:
     async def execute(
         self,
         entity: Literal["deals"],
+        action: Literal["create"],
+        params: "DealsCreateParams"
+    ) -> "WriteResponse": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["deals"],
         action: Literal["get"],
         params: "DealsGetParams"
     ) -> "dict[str, Any]": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["deals"],
+        action: Literal["update"],
+        params: "DealsUpdateParams"
+    ) -> "WriteResponse": ...
 
     @overload
     async def execute(
@@ -429,9 +534,25 @@ class ZohoCrmConnector:
     async def execute(
         self,
         entity: Literal["tasks"],
+        action: Literal["create"],
+        params: "TasksCreateParams"
+    ) -> "WriteResponse": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["tasks"],
         action: Literal["get"],
         params: "TasksGetParams"
     ) -> "dict[str, Any]": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["tasks"],
+        action: Literal["update"],
+        params: "TasksUpdateParams"
+    ) -> "WriteResponse": ...
 
     @overload
     async def execute(
@@ -518,14 +639,14 @@ class ZohoCrmConnector:
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get", "context_store_search"],
+        action: Literal["list", "create", "get", "update", "context_store_search"],
         params: Mapping[str, Any]
     ) -> ZohoCrmExecuteResult[Any] | ZohoCrmExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get", "context_store_search"],
+        action: Literal["list", "create", "get", "update", "context_store_search"],
         params: Mapping[str, Any] | None = None
     ) -> Any:
         """
@@ -1004,6 +1125,31 @@ class LeadsQuery:
 
 
 
+    async def create(
+        self,
+        data: list[LeadsCreateParamsDataItem],
+        **kwargs
+    ) -> WriteResponse:
+        """
+        Creates a new lead record in Zoho CRM
+
+        Args:
+            data: Array containing the lead record to create
+            **kwargs: Additional parameters
+
+        Returns:
+            WriteResponse
+        """
+        params = {k: v for k, v in {
+            "data": data,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("leads", "create", params)
+        return result
+
+
+
     async def get(
         self,
         id: str | None = None,
@@ -1025,6 +1171,34 @@ class LeadsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("leads", "get", params)
+        return result
+
+
+
+    async def update(
+        self,
+        data: list[LeadsUpdateParamsDataItem],
+        id: str | None = None,
+        **kwargs
+    ) -> WriteResponse:
+        """
+        Updates an existing lead record in Zoho CRM
+
+        Args:
+            data: Array containing the lead fields to update
+            id: Lead ID
+            **kwargs: Additional parameters
+
+        Returns:
+            WriteResponse
+        """
+        params = {k: v for k, v in {
+            "data": data,
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("leads", "update", params)
         return result
 
 
@@ -1155,6 +1329,31 @@ class ContactsQuery:
 
 
 
+    async def create(
+        self,
+        data: list[ContactsCreateParamsDataItem],
+        **kwargs
+    ) -> WriteResponse:
+        """
+        Creates a new contact record in Zoho CRM
+
+        Args:
+            data: Array containing the contact record to create
+            **kwargs: Additional parameters
+
+        Returns:
+            WriteResponse
+        """
+        params = {k: v for k, v in {
+            "data": data,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("contacts", "create", params)
+        return result
+
+
+
     async def get(
         self,
         id: str | None = None,
@@ -1176,6 +1375,34 @@ class ContactsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("contacts", "get", params)
+        return result
+
+
+
+    async def update(
+        self,
+        data: list[ContactsUpdateParamsDataItem],
+        id: str | None = None,
+        **kwargs
+    ) -> WriteResponse:
+        """
+        Updates an existing contact record in Zoho CRM
+
+        Args:
+            data: Array containing the contact fields to update
+            id: Contact ID
+            **kwargs: Additional parameters
+
+        Returns:
+            WriteResponse
+        """
+        params = {k: v for k, v in {
+            "data": data,
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("contacts", "update", params)
         return result
 
 
@@ -1301,6 +1528,31 @@ class AccountsQuery:
 
 
 
+    async def create(
+        self,
+        data: list[AccountsCreateParamsDataItem],
+        **kwargs
+    ) -> WriteResponse:
+        """
+        Creates a new account record in Zoho CRM
+
+        Args:
+            data: Array containing the account record to create
+            **kwargs: Additional parameters
+
+        Returns:
+            WriteResponse
+        """
+        params = {k: v for k, v in {
+            "data": data,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("accounts", "create", params)
+        return result
+
+
+
     async def get(
         self,
         id: str | None = None,
@@ -1322,6 +1574,34 @@ class AccountsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("accounts", "get", params)
+        return result
+
+
+
+    async def update(
+        self,
+        data: list[AccountsUpdateParamsDataItem],
+        id: str | None = None,
+        **kwargs
+    ) -> WriteResponse:
+        """
+        Updates an existing account record in Zoho CRM
+
+        Args:
+            data: Array containing the account fields to update
+            id: Account ID
+            **kwargs: Additional parameters
+
+        Returns:
+            WriteResponse
+        """
+        params = {k: v for k, v in {
+            "data": data,
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("accounts", "update", params)
         return result
 
 
@@ -1447,6 +1727,31 @@ class DealsQuery:
 
 
 
+    async def create(
+        self,
+        data: list[DealsCreateParamsDataItem],
+        **kwargs
+    ) -> WriteResponse:
+        """
+        Creates a new deal record in Zoho CRM
+
+        Args:
+            data: Array containing the deal record to create
+            **kwargs: Additional parameters
+
+        Returns:
+            WriteResponse
+        """
+        params = {k: v for k, v in {
+            "data": data,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("deals", "create", params)
+        return result
+
+
+
     async def get(
         self,
         id: str | None = None,
@@ -1468,6 +1773,34 @@ class DealsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("deals", "get", params)
+        return result
+
+
+
+    async def update(
+        self,
+        data: list[DealsUpdateParamsDataItem],
+        id: str | None = None,
+        **kwargs
+    ) -> WriteResponse:
+        """
+        Updates an existing deal record in Zoho CRM
+
+        Args:
+            data: Array containing the deal fields to update
+            id: Deal ID
+            **kwargs: Additional parameters
+
+        Returns:
+            WriteResponse
+        """
+        params = {k: v for k, v in {
+            "data": data,
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("deals", "update", params)
         return result
 
 
@@ -1731,6 +2064,31 @@ class TasksQuery:
 
 
 
+    async def create(
+        self,
+        data: list[TasksCreateParamsDataItem],
+        **kwargs
+    ) -> WriteResponse:
+        """
+        Creates a new task record in Zoho CRM
+
+        Args:
+            data: Array containing the task record to create
+            **kwargs: Additional parameters
+
+        Returns:
+            WriteResponse
+        """
+        params = {k: v for k, v in {
+            "data": data,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("tasks", "create", params)
+        return result
+
+
+
     async def get(
         self,
         id: str | None = None,
@@ -1752,6 +2110,34 @@ class TasksQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("tasks", "get", params)
+        return result
+
+
+
+    async def update(
+        self,
+        data: list[TasksUpdateParamsDataItem],
+        id: str | None = None,
+        **kwargs
+    ) -> WriteResponse:
+        """
+        Updates an existing task record in Zoho CRM
+
+        Args:
+            data: Array containing the task fields to update
+            id: Task ID
+            **kwargs: Additional parameters
+
+        Returns:
+            WriteResponse
+        """
+        params = {k: v for k, v in {
+            "data": data,
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("tasks", "update", params)
         return result
 
 

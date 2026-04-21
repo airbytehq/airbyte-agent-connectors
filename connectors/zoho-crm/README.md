@@ -2,7 +2,7 @@
 
 The Zoho-Crm agent connector is a Python package that equips AI agents to interact with Zoho-Crm through strongly typed, well-documented tools. It's ready to use directly in your Python app, in an agent framework, or exposed through an MCP.
 
-Connector for the Zoho CRM API, providing access to CRM modules including leads, contacts, accounts, deals, campaigns, tasks, events, calls, products, quotes, and invoices. Supports OAuth 2.0 authentication with regional data center support (US, EU, AU, IN, CN, JP). Read-only operations (list and get) are supported for all entities.
+Connector for the Zoho CRM API, providing access to CRM modules including leads, contacts, accounts, deals, campaigns, tasks, events, calls, products, quotes, and invoices. Supports OAuth 2.0 authentication with regional data center support (US, EU, AU, IN, CN, JP). Supports read operations (list and get) for all entities, and write operations (create and update) for leads, contacts, accounts, deals, and tasks.
 
 
 ## Example questions
@@ -22,6 +22,14 @@ The Zoho-Crm connector is optimized to handle prompts like these.
 - List all products
 - List all quotes
 - List all invoices
+- Create a new lead named John Smith at Acme Corp
+- Update the status of lead to Contacted
+- Create a new contact with email jane@example.com
+- Create a new account called Global Industries
+- Create a deal called Enterprise License worth $50,000
+- Update the deal stage to Closed Won
+- Create a task to follow up with the client
+- Update the task priority to High
 - Show me leads created in the last 30 days
 - Which deals have the highest amount?
 - List all contacts at a specific company
@@ -39,12 +47,12 @@ The Zoho-Crm connector is optimized to handle prompts like these.
 
 The Zoho-Crm connector isn't currently able to handle prompts like these.
 
-- Create a new lead in Zoho CRM
-- Update a contact's email address
 - Delete a deal record
 - Send an email to a lead
 - Convert a lead to a contact
 - Merge duplicate contacts
+- Bulk import leads from CSV
+- Create a workflow rule
 
 ## Installation
 
@@ -111,12 +119,12 @@ This connector supports the following entities and actions. For more details, se
 
 | Entity | Actions |
 |--------|---------|
-| Leads | [List](./REFERENCE.md#leads-list), [Get](./REFERENCE.md#leads-get), [Context Store Search](./REFERENCE.md#leads-context-store-search) |
-| Contacts | [List](./REFERENCE.md#contacts-list), [Get](./REFERENCE.md#contacts-get), [Context Store Search](./REFERENCE.md#contacts-context-store-search) |
-| Accounts | [List](./REFERENCE.md#accounts-list), [Get](./REFERENCE.md#accounts-get), [Context Store Search](./REFERENCE.md#accounts-context-store-search) |
-| Deals | [List](./REFERENCE.md#deals-list), [Get](./REFERENCE.md#deals-get), [Context Store Search](./REFERENCE.md#deals-context-store-search) |
+| Leads | [List](./REFERENCE.md#leads-list), [Create](./REFERENCE.md#leads-create), [Get](./REFERENCE.md#leads-get), [Update](./REFERENCE.md#leads-update), [Context Store Search](./REFERENCE.md#leads-context-store-search) |
+| Contacts | [List](./REFERENCE.md#contacts-list), [Create](./REFERENCE.md#contacts-create), [Get](./REFERENCE.md#contacts-get), [Update](./REFERENCE.md#contacts-update), [Context Store Search](./REFERENCE.md#contacts-context-store-search) |
+| Accounts | [List](./REFERENCE.md#accounts-list), [Create](./REFERENCE.md#accounts-create), [Get](./REFERENCE.md#accounts-get), [Update](./REFERENCE.md#accounts-update), [Context Store Search](./REFERENCE.md#accounts-context-store-search) |
+| Deals | [List](./REFERENCE.md#deals-list), [Create](./REFERENCE.md#deals-create), [Get](./REFERENCE.md#deals-get), [Update](./REFERENCE.md#deals-update), [Context Store Search](./REFERENCE.md#deals-context-store-search) |
 | Campaigns | [List](./REFERENCE.md#campaigns-list), [Get](./REFERENCE.md#campaigns-get), [Context Store Search](./REFERENCE.md#campaigns-context-store-search) |
-| Tasks | [List](./REFERENCE.md#tasks-list), [Get](./REFERENCE.md#tasks-get), [Context Store Search](./REFERENCE.md#tasks-context-store-search) |
+| Tasks | [List](./REFERENCE.md#tasks-list), [Create](./REFERENCE.md#tasks-create), [Get](./REFERENCE.md#tasks-get), [Update](./REFERENCE.md#tasks-update), [Context Store Search](./REFERENCE.md#tasks-context-store-search) |
 | Events | [List](./REFERENCE.md#events-list), [Get](./REFERENCE.md#events-get), [Context Store Search](./REFERENCE.md#events-context-store-search) |
 | Calls | [List](./REFERENCE.md#calls-list), [Get](./REFERENCE.md#calls-get), [Context Store Search](./REFERENCE.md#calls-context-store-search) |
 | Products | [List](./REFERENCE.md#products-list), [Get](./REFERENCE.md#products-get), [Context Store Search](./REFERENCE.md#products-context-store-search) |

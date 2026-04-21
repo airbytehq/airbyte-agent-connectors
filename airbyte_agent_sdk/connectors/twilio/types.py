@@ -32,6 +32,10 @@ class CallsListParams(TypedDict):
     account_sid: str
     page_size: NotRequired[int]
 
+class CallsCreateParams(TypedDict):
+    """Parameters for calls.create operation"""
+    account_sid: str
+
 class CallsGetParams(TypedDict):
     """Parameters for calls.get operation"""
     account_sid: str
@@ -42,6 +46,10 @@ class MessagesListParams(TypedDict):
     account_sid: str
     page_size: NotRequired[int]
 
+class MessagesCreateParams(TypedDict):
+    """Parameters for messages.create operation"""
+    account_sid: str
+
 class MessagesGetParams(TypedDict):
     """Parameters for messages.get operation"""
     account_sid: str
@@ -51,6 +59,10 @@ class IncomingPhoneNumbersListParams(TypedDict):
     """Parameters for incoming_phone_numbers.list operation"""
     account_sid: str
     page_size: NotRequired[int]
+
+class IncomingPhoneNumbersCreateParams(TypedDict):
+    """Parameters for incoming_phone_numbers.create operation"""
+    account_sid: str
 
 class IncomingPhoneNumbersGetParams(TypedDict):
     """Parameters for incoming_phone_numbers.get operation"""

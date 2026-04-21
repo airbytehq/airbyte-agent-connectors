@@ -416,6 +416,50 @@ class OutgoingCallerIdsList(BaseModel):
     page_size: Union[int | None, Any] = Field(default=None)
     uri: Union[str | None, Any] = Field(default=None)
 
+class MessageCreateParams(BaseModel):
+    """Parameters for sending a new SMS/MMS/WhatsApp message"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    to: Union[str, Any] = Field(default=None, alias="To")
+    from_: Union[str, Any] = Field(default=None, alias="From")
+    messaging_service_sid: Union[str, Any] = Field(default=None, alias="MessagingServiceSid")
+    body: Union[str, Any] = Field(default=None, alias="Body")
+    media_url: Union[list[str], Any] = Field(default=None, alias="MediaUrl")
+    status_callback: Union[str, Any] = Field(default=None, alias="StatusCallback")
+    validity_period: Union[int, Any] = Field(default=None, alias="ValidityPeriod")
+
+class CallCreateParams(BaseModel):
+    """Parameters for placing an outbound call"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    to: Union[str, Any] = Field(default=None, alias="To")
+    from_: Union[str, Any] = Field(default=None, alias="From")
+    url: Union[str, Any] = Field(default=None, alias="Url")
+    twiml: Union[str, Any] = Field(default=None, alias="Twiml")
+    application_sid: Union[str, Any] = Field(default=None, alias="ApplicationSid")
+    method: Union[str, Any] = Field(default=None, alias="Method")
+    status_callback: Union[str, Any] = Field(default=None, alias="StatusCallback")
+    status_callback_method: Union[str, Any] = Field(default=None, alias="StatusCallbackMethod")
+    timeout: Union[int, Any] = Field(default=None, alias="Timeout")
+    record: Union[bool, Any] = Field(default=None, alias="Record")
+    machine_detection: Union[str, Any] = Field(default=None, alias="MachineDetection")
+    send_digits: Union[str, Any] = Field(default=None, alias="SendDigits")
+
+class IncomingPhoneNumberCreateParams(BaseModel):
+    """Parameters for provisioning a new phone number"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    phone_number: Union[str, Any] = Field(default=None, alias="PhoneNumber")
+    area_code: Union[str, Any] = Field(default=None, alias="AreaCode")
+    friendly_name: Union[str, Any] = Field(default=None, alias="FriendlyName")
+    voice_url: Union[str, Any] = Field(default=None, alias="VoiceUrl")
+    voice_method: Union[str, Any] = Field(default=None, alias="VoiceMethod")
+    sms_url: Union[str, Any] = Field(default=None, alias="SmsUrl")
+    sms_method: Union[str, Any] = Field(default=None, alias="SmsMethod")
+    status_callback: Union[str, Any] = Field(default=None, alias="StatusCallback")
+    voice_application_sid: Union[str, Any] = Field(default=None, alias="VoiceApplicationSid")
+    sms_application_sid: Union[str, Any] = Field(default=None, alias="SmsApplicationSid")
+
 # ===== METADATA TYPE DEFINITIONS (PYDANTIC) =====
 # Meta types for operations that extract metadata (e.g., pagination info)
 

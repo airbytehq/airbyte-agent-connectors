@@ -76,7 +76,12 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
     entities=[
         EntityDefinition(
             name='leads',
-            actions=[Action.LIST, Action.GET],
+            actions=[
+                Action.LIST,
+                Action.CREATE,
+                Action.GET,
+                Action.UPDATE,
+            ],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
@@ -294,6 +299,113 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
                     meta_extractor={'more_records': '$.info.more_records', 'page': '$.info.page'},
                     preferred_for_check=True,
                 ),
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/crm/v2/Leads',
+                    action=Action.CREATE,
+                    description='Creates a new lead record in Zoho CRM',
+                    body_fields=['data'],
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for creating a lead. The record fields must be nested inside a data array.',
+                        'properties': {
+                            'data': {
+                                'type': 'array',
+                                'description': 'Array containing the lead record to create',
+                                'items': {
+                                    'type': 'object',
+                                    'required': ['Last_Name'],
+                                    'properties': {
+                                        'First_Name': {'type': 'string', 'description': "Lead's first name"},
+                                        'Last_Name': {'type': 'string', 'description': "Lead's last name (required)"},
+                                        'Email': {'type': 'string', 'description': "Lead's email address"},
+                                        'Phone': {'type': 'string', 'description': "Lead's phone number"},
+                                        'Mobile': {'type': 'string', 'description': "Lead's mobile number"},
+                                        'Company': {'type': 'string', 'description': 'Company the lead is associated with'},
+                                        'Title': {'type': 'string', 'description': "Lead's job title"},
+                                        'Lead_Source': {'type': 'string', 'description': 'Source from which the lead was generated'},
+                                        'Industry': {'type': 'string', 'description': 'Industry the lead belongs to'},
+                                        'Annual_Revenue': {'type': 'number', 'description': "Annual revenue of the lead's company"},
+                                        'No_of_Employees': {'type': 'integer', 'description': "Number of employees in the lead's company"},
+                                        'Rating': {'type': 'string', 'description': 'Lead rating'},
+                                        'Lead_Status': {'type': 'string', 'description': 'Current status of the lead'},
+                                        'Website': {'type': 'string', 'description': "Lead's website URL"},
+                                        'Street': {'type': 'string', 'description': 'Street address'},
+                                        'City': {'type': 'string', 'description': 'City'},
+                                        'State': {'type': 'string', 'description': 'State or province'},
+                                        'Zip_Code': {'type': 'string', 'description': 'ZIP/postal code'},
+                                        'Country': {'type': 'string', 'description': 'Country'},
+                                        'Description': {'type': 'string', 'description': 'Description or notes about the lead'},
+                                    },
+                                },
+                            },
+                        },
+                        'required': ['data'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Response from a create or update operation',
+                        'properties': {
+                            'data': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'Individual record write result',
+                                    'properties': {
+                                        'code': {'type': 'string', 'description': 'Response code (e.g., SUCCESS)'},
+                                        'details': {
+                                            'type': 'object',
+                                            'description': 'Details of a successfully written record',
+                                            'properties': {
+                                                'Modified_Time': {
+                                                    'type': ['null', 'string'],
+                                                    'format': 'date-time',
+                                                    'description': 'Last modification timestamp',
+                                                },
+                                                'Modified_By': {
+                                                    'oneOf': [
+                                                        {
+                                                            'type': 'object',
+                                                            'description': 'User who last modified the record',
+                                                            'properties': {
+                                                                'name': {'type': 'string', 'description': 'User name'},
+                                                                'id': {'type': 'string', 'description': 'User ID'},
+                                                                'email': {'type': 'string', 'description': 'User email'},
+                                                            },
+                                                        },
+                                                        {'type': 'null'},
+                                                    ],
+                                                },
+                                                'Created_Time': {
+                                                    'type': ['null', 'string'],
+                                                    'format': 'date-time',
+                                                    'description': 'Record creation timestamp',
+                                                },
+                                                'id': {'type': 'string', 'description': 'Unique record identifier'},
+                                                'Created_By': {
+                                                    'oneOf': [
+                                                        {
+                                                            'type': 'object',
+                                                            'description': 'User who created the record',
+                                                            'properties': {
+                                                                'name': {'type': 'string', 'description': 'User name'},
+                                                                'id': {'type': 'string', 'description': 'User ID'},
+                                                                'email': {'type': 'string', 'description': 'User email'},
+                                                            },
+                                                        },
+                                                        {'type': 'null'},
+                                                    ],
+                                                },
+                                            },
+                                        },
+                                        'message': {'type': 'string', 'description': 'Response message'},
+                                        'status': {'type': 'string', 'description': 'Response status (e.g., success)'},
+                                    },
+                                },
+                            },
+                        },
+                    },
+                ),
                 Action.GET: EndpointDefinition(
                     method='GET',
                     path='/crm/v2/Leads/{id}',
@@ -483,6 +595,116 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data[0]',
                 ),
+                Action.UPDATE: EndpointDefinition(
+                    method='PUT',
+                    path='/crm/v2/Leads/{id}',
+                    action=Action.UPDATE,
+                    description='Updates an existing lead record in Zoho CRM',
+                    body_fields=['data'],
+                    path_params=['id'],
+                    path_params_schema={
+                        'id': {'type': 'string', 'required': True},
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for updating a lead. The record fields must be nested inside a data array.',
+                        'properties': {
+                            'data': {
+                                'type': 'array',
+                                'description': 'Array containing the lead fields to update',
+                                'items': {
+                                    'type': 'object',
+                                    'properties': {
+                                        'First_Name': {'type': 'string', 'description': "Lead's first name"},
+                                        'Last_Name': {'type': 'string', 'description': "Lead's last name"},
+                                        'Email': {'type': 'string', 'description': "Lead's email address"},
+                                        'Phone': {'type': 'string', 'description': "Lead's phone number"},
+                                        'Mobile': {'type': 'string', 'description': "Lead's mobile number"},
+                                        'Company': {'type': 'string', 'description': 'Company the lead is associated with'},
+                                        'Title': {'type': 'string', 'description': "Lead's job title"},
+                                        'Lead_Source': {'type': 'string', 'description': 'Source from which the lead was generated'},
+                                        'Industry': {'type': 'string', 'description': 'Industry the lead belongs to'},
+                                        'Annual_Revenue': {'type': 'number', 'description': "Annual revenue of the lead's company"},
+                                        'No_of_Employees': {'type': 'integer', 'description': "Number of employees in the lead's company"},
+                                        'Rating': {'type': 'string', 'description': 'Lead rating'},
+                                        'Lead_Status': {'type': 'string', 'description': 'Current status of the lead'},
+                                        'Website': {'type': 'string', 'description': "Lead's website URL"},
+                                        'Street': {'type': 'string', 'description': 'Street address'},
+                                        'City': {'type': 'string', 'description': 'City'},
+                                        'State': {'type': 'string', 'description': 'State or province'},
+                                        'Zip_Code': {'type': 'string', 'description': 'ZIP/postal code'},
+                                        'Country': {'type': 'string', 'description': 'Country'},
+                                        'Description': {'type': 'string', 'description': 'Description or notes about the lead'},
+                                    },
+                                },
+                            },
+                        },
+                        'required': ['data'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Response from a create or update operation',
+                        'properties': {
+                            'data': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'Individual record write result',
+                                    'properties': {
+                                        'code': {'type': 'string', 'description': 'Response code (e.g., SUCCESS)'},
+                                        'details': {
+                                            'type': 'object',
+                                            'description': 'Details of a successfully written record',
+                                            'properties': {
+                                                'Modified_Time': {
+                                                    'type': ['null', 'string'],
+                                                    'format': 'date-time',
+                                                    'description': 'Last modification timestamp',
+                                                },
+                                                'Modified_By': {
+                                                    'oneOf': [
+                                                        {
+                                                            'type': 'object',
+                                                            'description': 'User who last modified the record',
+                                                            'properties': {
+                                                                'name': {'type': 'string', 'description': 'User name'},
+                                                                'id': {'type': 'string', 'description': 'User ID'},
+                                                                'email': {'type': 'string', 'description': 'User email'},
+                                                            },
+                                                        },
+                                                        {'type': 'null'},
+                                                    ],
+                                                },
+                                                'Created_Time': {
+                                                    'type': ['null', 'string'],
+                                                    'format': 'date-time',
+                                                    'description': 'Record creation timestamp',
+                                                },
+                                                'id': {'type': 'string', 'description': 'Unique record identifier'},
+                                                'Created_By': {
+                                                    'oneOf': [
+                                                        {
+                                                            'type': 'object',
+                                                            'description': 'User who created the record',
+                                                            'properties': {
+                                                                'name': {'type': 'string', 'description': 'User name'},
+                                                                'id': {'type': 'string', 'description': 'User ID'},
+                                                                'email': {'type': 'string', 'description': 'User email'},
+                                                            },
+                                                        },
+                                                        {'type': 'null'},
+                                                    ],
+                                                },
+                                            },
+                                        },
+                                        'message': {'type': 'string', 'description': 'Response message'},
+                                        'status': {'type': 'string', 'description': 'Response status (e.g., success)'},
+                                    },
+                                },
+                            },
+                        },
+                    },
+                ),
             },
             entity_schema={
                 'type': 'object',
@@ -620,7 +842,12 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
         ),
         EntityDefinition(
             name='contacts',
-            actions=[Action.LIST, Action.GET],
+            actions=[
+                Action.LIST,
+                Action.CREATE,
+                Action.GET,
+                Action.UPDATE,
+            ],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
@@ -847,6 +1074,112 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
                     record_extractor='$.data',
                     meta_extractor={'more_records': '$.info.more_records', 'page': '$.info.page'},
                 ),
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/crm/v2/Contacts',
+                    action=Action.CREATE,
+                    description='Creates a new contact record in Zoho CRM',
+                    body_fields=['data'],
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for creating a contact. The record fields must be nested inside a data array.',
+                        'properties': {
+                            'data': {
+                                'type': 'array',
+                                'description': 'Array containing the contact record to create',
+                                'items': {
+                                    'type': 'object',
+                                    'required': ['Last_Name'],
+                                    'properties': {
+                                        'First_Name': {'type': 'string', 'description': "Contact's first name"},
+                                        'Last_Name': {'type': 'string', 'description': "Contact's last name (required)"},
+                                        'Email': {'type': 'string', 'description': "Contact's email address"},
+                                        'Phone': {'type': 'string', 'description': "Contact's phone number"},
+                                        'Mobile': {'type': 'string', 'description': "Contact's mobile number"},
+                                        'Title': {'type': 'string', 'description': "Contact's job title"},
+                                        'Department': {'type': 'string', 'description': 'Department the contact belongs to'},
+                                        'Lead_Source': {'type': 'string', 'description': 'Source from which the contact was generated'},
+                                        'Date_of_Birth': {
+                                            'type': 'string',
+                                            'format': 'date',
+                                            'description': "Contact's date of birth (YYYY-MM-DD)",
+                                        },
+                                        'Mailing_Street': {'type': 'string', 'description': 'Mailing street address'},
+                                        'Mailing_City': {'type': 'string', 'description': 'Mailing city'},
+                                        'Mailing_State': {'type': 'string', 'description': 'Mailing state or province'},
+                                        'Mailing_Zip': {'type': 'string', 'description': 'Mailing ZIP/postal code'},
+                                        'Mailing_Country': {'type': 'string', 'description': 'Mailing country'},
+                                        'Description': {'type': 'string', 'description': 'Description or notes about the contact'},
+                                    },
+                                },
+                            },
+                        },
+                        'required': ['data'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Response from a create or update operation',
+                        'properties': {
+                            'data': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'Individual record write result',
+                                    'properties': {
+                                        'code': {'type': 'string', 'description': 'Response code (e.g., SUCCESS)'},
+                                        'details': {
+                                            'type': 'object',
+                                            'description': 'Details of a successfully written record',
+                                            'properties': {
+                                                'Modified_Time': {
+                                                    'type': ['null', 'string'],
+                                                    'format': 'date-time',
+                                                    'description': 'Last modification timestamp',
+                                                },
+                                                'Modified_By': {
+                                                    'oneOf': [
+                                                        {
+                                                            'type': 'object',
+                                                            'description': 'User who last modified the record',
+                                                            'properties': {
+                                                                'name': {'type': 'string', 'description': 'User name'},
+                                                                'id': {'type': 'string', 'description': 'User ID'},
+                                                                'email': {'type': 'string', 'description': 'User email'},
+                                                            },
+                                                        },
+                                                        {'type': 'null'},
+                                                    ],
+                                                },
+                                                'Created_Time': {
+                                                    'type': ['null', 'string'],
+                                                    'format': 'date-time',
+                                                    'description': 'Record creation timestamp',
+                                                },
+                                                'id': {'type': 'string', 'description': 'Unique record identifier'},
+                                                'Created_By': {
+                                                    'oneOf': [
+                                                        {
+                                                            'type': 'object',
+                                                            'description': 'User who created the record',
+                                                            'properties': {
+                                                                'name': {'type': 'string', 'description': 'User name'},
+                                                                'id': {'type': 'string', 'description': 'User ID'},
+                                                                'email': {'type': 'string', 'description': 'User email'},
+                                                            },
+                                                        },
+                                                        {'type': 'null'},
+                                                    ],
+                                                },
+                                            },
+                                        },
+                                        'message': {'type': 'string', 'description': 'Response message'},
+                                        'status': {'type': 'string', 'description': 'Response status (e.g., success)'},
+                                    },
+                                },
+                            },
+                        },
+                    },
+                ),
                 Action.GET: EndpointDefinition(
                     method='GET',
                     path='/crm/v2/Contacts/{id}',
@@ -1046,6 +1379,115 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data[0]',
                 ),
+                Action.UPDATE: EndpointDefinition(
+                    method='PUT',
+                    path='/crm/v2/Contacts/{id}',
+                    action=Action.UPDATE,
+                    description='Updates an existing contact record in Zoho CRM',
+                    body_fields=['data'],
+                    path_params=['id'],
+                    path_params_schema={
+                        'id': {'type': 'string', 'required': True},
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for updating a contact. The record fields must be nested inside a data array.',
+                        'properties': {
+                            'data': {
+                                'type': 'array',
+                                'description': 'Array containing the contact fields to update',
+                                'items': {
+                                    'type': 'object',
+                                    'properties': {
+                                        'First_Name': {'type': 'string', 'description': "Contact's first name"},
+                                        'Last_Name': {'type': 'string', 'description': "Contact's last name"},
+                                        'Email': {'type': 'string', 'description': "Contact's email address"},
+                                        'Phone': {'type': 'string', 'description': "Contact's phone number"},
+                                        'Mobile': {'type': 'string', 'description': "Contact's mobile number"},
+                                        'Title': {'type': 'string', 'description': "Contact's job title"},
+                                        'Department': {'type': 'string', 'description': 'Department the contact belongs to'},
+                                        'Lead_Source': {'type': 'string', 'description': 'Source from which the contact was generated'},
+                                        'Date_of_Birth': {
+                                            'type': 'string',
+                                            'format': 'date',
+                                            'description': "Contact's date of birth (YYYY-MM-DD)",
+                                        },
+                                        'Mailing_Street': {'type': 'string', 'description': 'Mailing street address'},
+                                        'Mailing_City': {'type': 'string', 'description': 'Mailing city'},
+                                        'Mailing_State': {'type': 'string', 'description': 'Mailing state or province'},
+                                        'Mailing_Zip': {'type': 'string', 'description': 'Mailing ZIP/postal code'},
+                                        'Mailing_Country': {'type': 'string', 'description': 'Mailing country'},
+                                        'Description': {'type': 'string', 'description': 'Description or notes about the contact'},
+                                    },
+                                },
+                            },
+                        },
+                        'required': ['data'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Response from a create or update operation',
+                        'properties': {
+                            'data': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'Individual record write result',
+                                    'properties': {
+                                        'code': {'type': 'string', 'description': 'Response code (e.g., SUCCESS)'},
+                                        'details': {
+                                            'type': 'object',
+                                            'description': 'Details of a successfully written record',
+                                            'properties': {
+                                                'Modified_Time': {
+                                                    'type': ['null', 'string'],
+                                                    'format': 'date-time',
+                                                    'description': 'Last modification timestamp',
+                                                },
+                                                'Modified_By': {
+                                                    'oneOf': [
+                                                        {
+                                                            'type': 'object',
+                                                            'description': 'User who last modified the record',
+                                                            'properties': {
+                                                                'name': {'type': 'string', 'description': 'User name'},
+                                                                'id': {'type': 'string', 'description': 'User ID'},
+                                                                'email': {'type': 'string', 'description': 'User email'},
+                                                            },
+                                                        },
+                                                        {'type': 'null'},
+                                                    ],
+                                                },
+                                                'Created_Time': {
+                                                    'type': ['null', 'string'],
+                                                    'format': 'date-time',
+                                                    'description': 'Record creation timestamp',
+                                                },
+                                                'id': {'type': 'string', 'description': 'Unique record identifier'},
+                                                'Created_By': {
+                                                    'oneOf': [
+                                                        {
+                                                            'type': 'object',
+                                                            'description': 'User who created the record',
+                                                            'properties': {
+                                                                'name': {'type': 'string', 'description': 'User name'},
+                                                                'id': {'type': 'string', 'description': 'User ID'},
+                                                                'email': {'type': 'string', 'description': 'User email'},
+                                                            },
+                                                        },
+                                                        {'type': 'null'},
+                                                    ],
+                                                },
+                                            },
+                                        },
+                                        'message': {'type': 'string', 'description': 'Response message'},
+                                        'status': {'type': 'string', 'description': 'Response status (e.g., success)'},
+                                    },
+                                },
+                            },
+                        },
+                    },
+                ),
             },
             entity_schema={
                 'type': 'object',
@@ -1186,7 +1628,12 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
         ),
         EntityDefinition(
             name='accounts',
-            actions=[Action.LIST, Action.GET],
+            actions=[
+                Action.LIST,
+                Action.CREATE,
+                Action.GET,
+                Action.UPDATE,
+            ],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
@@ -1420,6 +1867,114 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
                     record_extractor='$.data',
                     meta_extractor={'more_records': '$.info.more_records', 'page': '$.info.page'},
                 ),
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/crm/v2/Accounts',
+                    action=Action.CREATE,
+                    description='Creates a new account record in Zoho CRM',
+                    body_fields=['data'],
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for creating an account. The record fields must be nested inside a data array.',
+                        'properties': {
+                            'data': {
+                                'type': 'array',
+                                'description': 'Array containing the account record to create',
+                                'items': {
+                                    'type': 'object',
+                                    'required': ['Account_Name'],
+                                    'properties': {
+                                        'Account_Name': {'type': 'string', 'description': 'Account/company name (required)'},
+                                        'Account_Number': {'type': 'string', 'description': 'Account number'},
+                                        'Account_Type': {'type': 'string', 'description': 'Type of account (e.g., Analyst, Competitor, Customer)'},
+                                        'Industry': {'type': 'string', 'description': 'Industry the account belongs to'},
+                                        'Annual_Revenue': {'type': 'number', 'description': 'Annual revenue of the account'},
+                                        'Employees': {'type': 'integer', 'description': 'Number of employees'},
+                                        'Phone': {'type': 'string', 'description': 'Account phone number'},
+                                        'Website': {'type': 'string', 'description': 'Account website URL'},
+                                        'Ownership': {'type': 'string', 'description': 'Ownership type (e.g., Public, Private)'},
+                                        'Rating': {'type': 'string', 'description': 'Account rating'},
+                                        'Billing_Street': {'type': 'string', 'description': 'Billing street address'},
+                                        'Billing_City': {'type': 'string', 'description': 'Billing city'},
+                                        'Billing_State': {'type': 'string', 'description': 'Billing state or province'},
+                                        'Billing_Code': {'type': 'string', 'description': 'Billing ZIP/postal code'},
+                                        'Billing_Country': {'type': 'string', 'description': 'Billing country'},
+                                        'Shipping_Street': {'type': 'string', 'description': 'Shipping street address'},
+                                        'Shipping_City': {'type': 'string', 'description': 'Shipping city'},
+                                        'Shipping_State': {'type': 'string', 'description': 'Shipping state or province'},
+                                        'Shipping_Code': {'type': 'string', 'description': 'Shipping ZIP/postal code'},
+                                        'Shipping_Country': {'type': 'string', 'description': 'Shipping country'},
+                                        'Description': {'type': 'string', 'description': 'Description or notes about the account'},
+                                    },
+                                },
+                            },
+                        },
+                        'required': ['data'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Response from a create or update operation',
+                        'properties': {
+                            'data': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'Individual record write result',
+                                    'properties': {
+                                        'code': {'type': 'string', 'description': 'Response code (e.g., SUCCESS)'},
+                                        'details': {
+                                            'type': 'object',
+                                            'description': 'Details of a successfully written record',
+                                            'properties': {
+                                                'Modified_Time': {
+                                                    'type': ['null', 'string'],
+                                                    'format': 'date-time',
+                                                    'description': 'Last modification timestamp',
+                                                },
+                                                'Modified_By': {
+                                                    'oneOf': [
+                                                        {
+                                                            'type': 'object',
+                                                            'description': 'User who last modified the record',
+                                                            'properties': {
+                                                                'name': {'type': 'string', 'description': 'User name'},
+                                                                'id': {'type': 'string', 'description': 'User ID'},
+                                                                'email': {'type': 'string', 'description': 'User email'},
+                                                            },
+                                                        },
+                                                        {'type': 'null'},
+                                                    ],
+                                                },
+                                                'Created_Time': {
+                                                    'type': ['null', 'string'],
+                                                    'format': 'date-time',
+                                                    'description': 'Record creation timestamp',
+                                                },
+                                                'id': {'type': 'string', 'description': 'Unique record identifier'},
+                                                'Created_By': {
+                                                    'oneOf': [
+                                                        {
+                                                            'type': 'object',
+                                                            'description': 'User who created the record',
+                                                            'properties': {
+                                                                'name': {'type': 'string', 'description': 'User name'},
+                                                                'id': {'type': 'string', 'description': 'User ID'},
+                                                                'email': {'type': 'string', 'description': 'User email'},
+                                                            },
+                                                        },
+                                                        {'type': 'null'},
+                                                    ],
+                                                },
+                                            },
+                                        },
+                                        'message': {'type': 'string', 'description': 'Response message'},
+                                        'status': {'type': 'string', 'description': 'Response status (e.g., success)'},
+                                    },
+                                },
+                            },
+                        },
+                    },
+                ),
                 Action.GET: EndpointDefinition(
                     method='GET',
                     path='/crm/v2/Accounts/{id}',
@@ -1626,6 +2181,117 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data[0]',
                 ),
+                Action.UPDATE: EndpointDefinition(
+                    method='PUT',
+                    path='/crm/v2/Accounts/{id}',
+                    action=Action.UPDATE,
+                    description='Updates an existing account record in Zoho CRM',
+                    body_fields=['data'],
+                    path_params=['id'],
+                    path_params_schema={
+                        'id': {'type': 'string', 'required': True},
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for updating an account. The record fields must be nested inside a data array.',
+                        'properties': {
+                            'data': {
+                                'type': 'array',
+                                'description': 'Array containing the account fields to update',
+                                'items': {
+                                    'type': 'object',
+                                    'properties': {
+                                        'Account_Name': {'type': 'string', 'description': 'Account/company name'},
+                                        'Account_Number': {'type': 'string', 'description': 'Account number'},
+                                        'Account_Type': {'type': 'string', 'description': 'Type of account (e.g., Analyst, Competitor, Customer)'},
+                                        'Industry': {'type': 'string', 'description': 'Industry the account belongs to'},
+                                        'Annual_Revenue': {'type': 'number', 'description': 'Annual revenue of the account'},
+                                        'Employees': {'type': 'integer', 'description': 'Number of employees'},
+                                        'Phone': {'type': 'string', 'description': 'Account phone number'},
+                                        'Website': {'type': 'string', 'description': 'Account website URL'},
+                                        'Ownership': {'type': 'string', 'description': 'Ownership type (e.g., Public, Private)'},
+                                        'Rating': {'type': 'string', 'description': 'Account rating'},
+                                        'Billing_Street': {'type': 'string', 'description': 'Billing street address'},
+                                        'Billing_City': {'type': 'string', 'description': 'Billing city'},
+                                        'Billing_State': {'type': 'string', 'description': 'Billing state or province'},
+                                        'Billing_Code': {'type': 'string', 'description': 'Billing ZIP/postal code'},
+                                        'Billing_Country': {'type': 'string', 'description': 'Billing country'},
+                                        'Shipping_Street': {'type': 'string', 'description': 'Shipping street address'},
+                                        'Shipping_City': {'type': 'string', 'description': 'Shipping city'},
+                                        'Shipping_State': {'type': 'string', 'description': 'Shipping state or province'},
+                                        'Shipping_Code': {'type': 'string', 'description': 'Shipping ZIP/postal code'},
+                                        'Shipping_Country': {'type': 'string', 'description': 'Shipping country'},
+                                        'Description': {'type': 'string', 'description': 'Description or notes about the account'},
+                                    },
+                                },
+                            },
+                        },
+                        'required': ['data'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Response from a create or update operation',
+                        'properties': {
+                            'data': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'Individual record write result',
+                                    'properties': {
+                                        'code': {'type': 'string', 'description': 'Response code (e.g., SUCCESS)'},
+                                        'details': {
+                                            'type': 'object',
+                                            'description': 'Details of a successfully written record',
+                                            'properties': {
+                                                'Modified_Time': {
+                                                    'type': ['null', 'string'],
+                                                    'format': 'date-time',
+                                                    'description': 'Last modification timestamp',
+                                                },
+                                                'Modified_By': {
+                                                    'oneOf': [
+                                                        {
+                                                            'type': 'object',
+                                                            'description': 'User who last modified the record',
+                                                            'properties': {
+                                                                'name': {'type': 'string', 'description': 'User name'},
+                                                                'id': {'type': 'string', 'description': 'User ID'},
+                                                                'email': {'type': 'string', 'description': 'User email'},
+                                                            },
+                                                        },
+                                                        {'type': 'null'},
+                                                    ],
+                                                },
+                                                'Created_Time': {
+                                                    'type': ['null', 'string'],
+                                                    'format': 'date-time',
+                                                    'description': 'Record creation timestamp',
+                                                },
+                                                'id': {'type': 'string', 'description': 'Unique record identifier'},
+                                                'Created_By': {
+                                                    'oneOf': [
+                                                        {
+                                                            'type': 'object',
+                                                            'description': 'User who created the record',
+                                                            'properties': {
+                                                                'name': {'type': 'string', 'description': 'User name'},
+                                                                'id': {'type': 'string', 'description': 'User ID'},
+                                                                'email': {'type': 'string', 'description': 'User email'},
+                                                            },
+                                                        },
+                                                        {'type': 'null'},
+                                                    ],
+                                                },
+                                            },
+                                        },
+                                        'message': {'type': 'string', 'description': 'Response message'},
+                                        'status': {'type': 'string', 'description': 'Response status (e.g., success)'},
+                                    },
+                                },
+                            },
+                        },
+                    },
+                ),
             },
             entity_schema={
                 'type': 'object',
@@ -1773,7 +2439,12 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
         ),
         EntityDefinition(
             name='deals',
-            actions=[Action.LIST, Action.GET],
+            actions=[
+                Action.LIST,
+                Action.CREATE,
+                Action.GET,
+                Action.UPDATE,
+            ],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
@@ -1982,6 +2653,106 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
                     record_extractor='$.data',
                     meta_extractor={'more_records': '$.info.more_records', 'page': '$.info.page'},
                 ),
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/crm/v2/Deals',
+                    action=Action.CREATE,
+                    description='Creates a new deal record in Zoho CRM',
+                    body_fields=['data'],
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for creating a deal. The record fields must be nested inside a data array.',
+                        'properties': {
+                            'data': {
+                                'type': 'array',
+                                'description': 'Array containing the deal record to create',
+                                'items': {
+                                    'type': 'object',
+                                    'required': ['Deal_Name', 'Stage', 'Closing_Date'],
+                                    'properties': {
+                                        'Deal_Name': {'type': 'string', 'description': 'Deal name (required)'},
+                                        'Amount': {'type': 'number', 'description': 'Monetary value of the deal'},
+                                        'Stage': {'type': 'string', 'description': 'Current stage of the deal in the pipeline (required)'},
+                                        'Probability': {'type': 'integer', 'description': 'Probability of closing the deal (percentage)'},
+                                        'Closing_Date': {
+                                            'type': 'string',
+                                            'format': 'date',
+                                            'description': 'Expected closing date (YYYY-MM-DD)',
+                                        },
+                                        'Type': {'type': 'string', 'description': 'Type of deal (e.g., New Business, Existing Business)'},
+                                        'Next_Step': {'type': 'string', 'description': 'Next step in the deal process'},
+                                        'Lead_Source': {'type': 'string', 'description': 'Source from which the deal originated'},
+                                        'Description': {'type': 'string', 'description': 'Description or notes about the deal'},
+                                    },
+                                },
+                            },
+                        },
+                        'required': ['data'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Response from a create or update operation',
+                        'properties': {
+                            'data': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'Individual record write result',
+                                    'properties': {
+                                        'code': {'type': 'string', 'description': 'Response code (e.g., SUCCESS)'},
+                                        'details': {
+                                            'type': 'object',
+                                            'description': 'Details of a successfully written record',
+                                            'properties': {
+                                                'Modified_Time': {
+                                                    'type': ['null', 'string'],
+                                                    'format': 'date-time',
+                                                    'description': 'Last modification timestamp',
+                                                },
+                                                'Modified_By': {
+                                                    'oneOf': [
+                                                        {
+                                                            'type': 'object',
+                                                            'description': 'User who last modified the record',
+                                                            'properties': {
+                                                                'name': {'type': 'string', 'description': 'User name'},
+                                                                'id': {'type': 'string', 'description': 'User ID'},
+                                                                'email': {'type': 'string', 'description': 'User email'},
+                                                            },
+                                                        },
+                                                        {'type': 'null'},
+                                                    ],
+                                                },
+                                                'Created_Time': {
+                                                    'type': ['null', 'string'],
+                                                    'format': 'date-time',
+                                                    'description': 'Record creation timestamp',
+                                                },
+                                                'id': {'type': 'string', 'description': 'Unique record identifier'},
+                                                'Created_By': {
+                                                    'oneOf': [
+                                                        {
+                                                            'type': 'object',
+                                                            'description': 'User who created the record',
+                                                            'properties': {
+                                                                'name': {'type': 'string', 'description': 'User name'},
+                                                                'id': {'type': 'string', 'description': 'User ID'},
+                                                                'email': {'type': 'string', 'description': 'User email'},
+                                                            },
+                                                        },
+                                                        {'type': 'null'},
+                                                    ],
+                                                },
+                                            },
+                                        },
+                                        'message': {'type': 'string', 'description': 'Response message'},
+                                        'status': {'type': 'string', 'description': 'Response status (e.g., success)'},
+                                    },
+                                },
+                            },
+                        },
+                    },
+                ),
                 Action.GET: EndpointDefinition(
                     method='GET',
                     path='/crm/v2/Deals/{id}',
@@ -2162,6 +2933,109 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.data[0]',
+                ),
+                Action.UPDATE: EndpointDefinition(
+                    method='PUT',
+                    path='/crm/v2/Deals/{id}',
+                    action=Action.UPDATE,
+                    description='Updates an existing deal record in Zoho CRM',
+                    body_fields=['data'],
+                    path_params=['id'],
+                    path_params_schema={
+                        'id': {'type': 'string', 'required': True},
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for updating a deal. The record fields must be nested inside a data array.',
+                        'properties': {
+                            'data': {
+                                'type': 'array',
+                                'description': 'Array containing the deal fields to update',
+                                'items': {
+                                    'type': 'object',
+                                    'properties': {
+                                        'Deal_Name': {'type': 'string', 'description': 'Deal name'},
+                                        'Amount': {'type': 'number', 'description': 'Monetary value of the deal'},
+                                        'Stage': {'type': 'string', 'description': 'Current stage of the deal in the pipeline'},
+                                        'Probability': {'type': 'integer', 'description': 'Probability of closing the deal (percentage)'},
+                                        'Closing_Date': {
+                                            'type': 'string',
+                                            'format': 'date',
+                                            'description': 'Expected closing date (YYYY-MM-DD)',
+                                        },
+                                        'Type': {'type': 'string', 'description': 'Type of deal (e.g., New Business, Existing Business)'},
+                                        'Next_Step': {'type': 'string', 'description': 'Next step in the deal process'},
+                                        'Lead_Source': {'type': 'string', 'description': 'Source from which the deal originated'},
+                                        'Description': {'type': 'string', 'description': 'Description or notes about the deal'},
+                                    },
+                                },
+                            },
+                        },
+                        'required': ['data'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Response from a create or update operation',
+                        'properties': {
+                            'data': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'Individual record write result',
+                                    'properties': {
+                                        'code': {'type': 'string', 'description': 'Response code (e.g., SUCCESS)'},
+                                        'details': {
+                                            'type': 'object',
+                                            'description': 'Details of a successfully written record',
+                                            'properties': {
+                                                'Modified_Time': {
+                                                    'type': ['null', 'string'],
+                                                    'format': 'date-time',
+                                                    'description': 'Last modification timestamp',
+                                                },
+                                                'Modified_By': {
+                                                    'oneOf': [
+                                                        {
+                                                            'type': 'object',
+                                                            'description': 'User who last modified the record',
+                                                            'properties': {
+                                                                'name': {'type': 'string', 'description': 'User name'},
+                                                                'id': {'type': 'string', 'description': 'User ID'},
+                                                                'email': {'type': 'string', 'description': 'User email'},
+                                                            },
+                                                        },
+                                                        {'type': 'null'},
+                                                    ],
+                                                },
+                                                'Created_Time': {
+                                                    'type': ['null', 'string'],
+                                                    'format': 'date-time',
+                                                    'description': 'Record creation timestamp',
+                                                },
+                                                'id': {'type': 'string', 'description': 'Unique record identifier'},
+                                                'Created_By': {
+                                                    'oneOf': [
+                                                        {
+                                                            'type': 'object',
+                                                            'description': 'User who created the record',
+                                                            'properties': {
+                                                                'name': {'type': 'string', 'description': 'User name'},
+                                                                'id': {'type': 'string', 'description': 'User ID'},
+                                                                'email': {'type': 'string', 'description': 'User email'},
+                                                            },
+                                                        },
+                                                        {'type': 'null'},
+                                                    ],
+                                                },
+                                            },
+                                        },
+                                        'message': {'type': 'string', 'description': 'Response message'},
+                                        'status': {'type': 'string', 'description': 'Response status (e.g., success)'},
+                                    },
+                                },
+                            },
+                        },
+                    },
                 ),
             },
             entity_schema={
@@ -2676,7 +3550,12 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
         ),
         EntityDefinition(
             name='tasks',
-            actions=[Action.LIST, Action.GET],
+            actions=[
+                Action.LIST,
+                Action.CREATE,
+                Action.GET,
+                Action.UPDATE,
+            ],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
@@ -2865,6 +3744,103 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
                     record_extractor='$.data',
                     meta_extractor={'more_records': '$.info.more_records', 'page': '$.info.page'},
                 ),
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/crm/v2/Tasks',
+                    action=Action.CREATE,
+                    description='Creates a new task record in Zoho CRM',
+                    body_fields=['data'],
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for creating a task. The record fields must be nested inside a data array.',
+                        'properties': {
+                            'data': {
+                                'type': 'array',
+                                'description': 'Array containing the task record to create',
+                                'items': {
+                                    'type': 'object',
+                                    'required': ['Subject'],
+                                    'properties': {
+                                        'Subject': {'type': 'string', 'description': 'Subject or title of the task (required)'},
+                                        'Due_Date': {
+                                            'type': 'string',
+                                            'format': 'date',
+                                            'description': 'Due date for the task (YYYY-MM-DD)',
+                                        },
+                                        'Status': {'type': 'string', 'description': 'Task status (e.g., Not Started, In Progress, Completed)'},
+                                        'Priority': {'type': 'string', 'description': 'Priority level (e.g., High, Highest, Low, Lowest, Normal)'},
+                                        'Send_Notification_Email': {'type': 'boolean', 'description': 'Whether to send a notification email'},
+                                        'Description': {'type': 'string', 'description': 'Description or notes about the task'},
+                                    },
+                                },
+                            },
+                        },
+                        'required': ['data'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Response from a create or update operation',
+                        'properties': {
+                            'data': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'Individual record write result',
+                                    'properties': {
+                                        'code': {'type': 'string', 'description': 'Response code (e.g., SUCCESS)'},
+                                        'details': {
+                                            'type': 'object',
+                                            'description': 'Details of a successfully written record',
+                                            'properties': {
+                                                'Modified_Time': {
+                                                    'type': ['null', 'string'],
+                                                    'format': 'date-time',
+                                                    'description': 'Last modification timestamp',
+                                                },
+                                                'Modified_By': {
+                                                    'oneOf': [
+                                                        {
+                                                            'type': 'object',
+                                                            'description': 'User who last modified the record',
+                                                            'properties': {
+                                                                'name': {'type': 'string', 'description': 'User name'},
+                                                                'id': {'type': 'string', 'description': 'User ID'},
+                                                                'email': {'type': 'string', 'description': 'User email'},
+                                                            },
+                                                        },
+                                                        {'type': 'null'},
+                                                    ],
+                                                },
+                                                'Created_Time': {
+                                                    'type': ['null', 'string'],
+                                                    'format': 'date-time',
+                                                    'description': 'Record creation timestamp',
+                                                },
+                                                'id': {'type': 'string', 'description': 'Unique record identifier'},
+                                                'Created_By': {
+                                                    'oneOf': [
+                                                        {
+                                                            'type': 'object',
+                                                            'description': 'User who created the record',
+                                                            'properties': {
+                                                                'name': {'type': 'string', 'description': 'User name'},
+                                                                'id': {'type': 'string', 'description': 'User ID'},
+                                                                'email': {'type': 'string', 'description': 'User email'},
+                                                            },
+                                                        },
+                                                        {'type': 'null'},
+                                                    ],
+                                                },
+                                            },
+                                        },
+                                        'message': {'type': 'string', 'description': 'Response message'},
+                                        'status': {'type': 'string', 'description': 'Response status (e.g., success)'},
+                                    },
+                                },
+                            },
+                        },
+                    },
+                ),
                 Action.GET: EndpointDefinition(
                     method='GET',
                     path='/crm/v2/Tasks/{id}',
@@ -3025,6 +4001,106 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.data[0]',
+                ),
+                Action.UPDATE: EndpointDefinition(
+                    method='PUT',
+                    path='/crm/v2/Tasks/{id}',
+                    action=Action.UPDATE,
+                    description='Updates an existing task record in Zoho CRM',
+                    body_fields=['data'],
+                    path_params=['id'],
+                    path_params_schema={
+                        'id': {'type': 'string', 'required': True},
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for updating a task. The record fields must be nested inside a data array.',
+                        'properties': {
+                            'data': {
+                                'type': 'array',
+                                'description': 'Array containing the task fields to update',
+                                'items': {
+                                    'type': 'object',
+                                    'properties': {
+                                        'Subject': {'type': 'string', 'description': 'Subject or title of the task'},
+                                        'Due_Date': {
+                                            'type': 'string',
+                                            'format': 'date',
+                                            'description': 'Due date for the task (YYYY-MM-DD)',
+                                        },
+                                        'Status': {'type': 'string', 'description': 'Task status (e.g., Not Started, In Progress, Completed)'},
+                                        'Priority': {'type': 'string', 'description': 'Priority level (e.g., High, Highest, Low, Lowest, Normal)'},
+                                        'Send_Notification_Email': {'type': 'boolean', 'description': 'Whether to send a notification email'},
+                                        'Description': {'type': 'string', 'description': 'Description or notes about the task'},
+                                    },
+                                },
+                            },
+                        },
+                        'required': ['data'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Response from a create or update operation',
+                        'properties': {
+                            'data': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'Individual record write result',
+                                    'properties': {
+                                        'code': {'type': 'string', 'description': 'Response code (e.g., SUCCESS)'},
+                                        'details': {
+                                            'type': 'object',
+                                            'description': 'Details of a successfully written record',
+                                            'properties': {
+                                                'Modified_Time': {
+                                                    'type': ['null', 'string'],
+                                                    'format': 'date-time',
+                                                    'description': 'Last modification timestamp',
+                                                },
+                                                'Modified_By': {
+                                                    'oneOf': [
+                                                        {
+                                                            'type': 'object',
+                                                            'description': 'User who last modified the record',
+                                                            'properties': {
+                                                                'name': {'type': 'string', 'description': 'User name'},
+                                                                'id': {'type': 'string', 'description': 'User ID'},
+                                                                'email': {'type': 'string', 'description': 'User email'},
+                                                            },
+                                                        },
+                                                        {'type': 'null'},
+                                                    ],
+                                                },
+                                                'Created_Time': {
+                                                    'type': ['null', 'string'],
+                                                    'format': 'date-time',
+                                                    'description': 'Record creation timestamp',
+                                                },
+                                                'id': {'type': 'string', 'description': 'Unique record identifier'},
+                                                'Created_By': {
+                                                    'oneOf': [
+                                                        {
+                                                            'type': 'object',
+                                                            'description': 'User who created the record',
+                                                            'properties': {
+                                                                'name': {'type': 'string', 'description': 'User name'},
+                                                                'id': {'type': 'string', 'description': 'User ID'},
+                                                                'email': {'type': 'string', 'description': 'User email'},
+                                                            },
+                                                        },
+                                                        {'type': 'null'},
+                                                    ],
+                                                },
+                                            },
+                                        },
+                                        'message': {'type': 'string', 'description': 'Response message'},
+                                        'status': {'type': 'string', 'description': 'Response status (e.g., success)'},
+                                    },
+                                },
+                            },
+                        },
+                    },
                 ),
             },
             entity_schema={
@@ -6109,6 +7185,14 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
             'List all products',
             'List all quotes',
             'List all invoices',
+            'Create a new lead named John Smith at Acme Corp',
+            'Update the status of lead to Contacted',
+            'Create a new contact with email jane@example.com',
+            'Create a new account called Global Industries',
+            'Create a deal called Enterprise License worth $50,000',
+            'Update the deal stage to Closed Won',
+            'Create a task to follow up with the client',
+            'Update the task priority to High',
         ],
         context_store_search=[
             'Show me leads created in the last 30 days',
@@ -6139,12 +7223,12 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
             'Break down leads by source and industry',
         ],
         unsupported=[
-            'Create a new lead in Zoho CRM',
-            "Update a contact's email address",
             'Delete a deal record',
             'Send an email to a lead',
             'Convert a lead to a contact',
             'Merge duplicate contacts',
+            'Bulk import leads from CSV',
+            'Create a workflow rule',
         ],
     ),
     server_variable_defaults={'dc_region': 'com'},

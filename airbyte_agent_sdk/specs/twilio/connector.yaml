@@ -4,9 +4,11 @@ info:
   title: Twilio API Connector
   version: 1.0.4
   description: >
-    Connector for the Twilio REST API. Provides read access to core Twilio resources
+    Connector for the Twilio REST API. Provides read and write access to core Twilio resources
     including accounts, calls, messages, recordings, conferences, incoming phone numbers,
     usage records, addresses, queues, transcriptions, and outgoing caller IDs.
+    Write operations include sending SMS/MMS messages, placing outbound calls,
+    and provisioning phone numbers.
     Uses HTTP Basic authentication with Account SID and Auth Token.
   x-airbyte-connector-name: twilio
   x-airbyte-connector-definition-id: b9dc6155-672e-42ea-b10d-9f1f1fb95ab1
@@ -44,6 +46,11 @@ info:
     - "List outgoing caller IDs"
     - "Show me addresses on my account"
     - "List transcriptions"
+    - "Send an SMS message to +15558675310 saying 'Hello from Twilio!'"
+    - "Place an outbound call to +15558675310 with the message 'Your appointment is confirmed'"
+    - "Provision a new phone number with area code 415"
+    - "Send a WhatsApp message to +15558675310"
+    - "Send an MMS with an image to +15558675310"
     search:
     - "What are my top 10 most expensive calls this month?"
     - "How many SMS messages did I send vs receive in the last 30 days?"
@@ -52,10 +59,9 @@ info:
     - "Show me all failed messages and their error codes"
     - "What is the average call duration for outbound calls?"
     unsupported:
-    - "Send a new SMS message"
-    - "Make a phone call"
-    - "Purchase a new phone number"
     - "Delete a recording"
+    - "Delete a phone number"
+    - "Delete a message"
     - "Create a new queue"
   x-airbyte-entity-relationships:
   - source_entity: calls
@@ -734,6 +740,39 @@ paths:
 
   # ==================== CALLS ====================
   "/Accounts/{AccountSid}/Calls.json":
+    post:
+      summary: Place an outbound call
+      description: >
+        Initiate an outbound phone call. Requires a recipient (To), a caller ID (From),
+        and call instructions via a TwiML URL, TwiML content, or ApplicationSid.
+        The call will be queued and placed at the account's CPS rate.
+      operationId: createCall
+      x-airbyte-entity: calls
+      x-airbyte-action: create
+      parameters:
+      - name: AccountSid
+        in: path
+        required: true
+        description: The Account SID that will create the call
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/CallCreateParams"
+      responses:
+        "201":
+          description: Call created and queued
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Call"
+        "400":
+          description: Invalid request parameters
+        "401":
+          description: Unauthorized
     get:
       summary: List calls
       description: Returns a list of calls made to and from an account
@@ -805,6 +844,39 @@ paths:
 
   # ==================== MESSAGES ====================
   "/Accounts/{AccountSid}/Messages.json":
+    post:
+      summary: Send a message (SMS/MMS/WhatsApp)
+      description: >
+        Send an outbound SMS, MMS, or WhatsApp message. Requires a recipient (To),
+        a sender (From or MessagingServiceSid), and content (Body, MediaUrl, or ContentSid).
+        Twilio uses application/x-www-form-urlencoded encoding for request bodies.
+      operationId: createMessage
+      x-airbyte-entity: messages
+      x-airbyte-action: create
+      parameters:
+      - name: AccountSid
+        in: path
+        required: true
+        description: The Account SID that will create the message
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/MessageCreateParams"
+      responses:
+        "201":
+          description: Message created and queued for delivery
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Message"
+        "400":
+          description: Invalid request parameters
+        "401":
+          description: Unauthorized
     get:
       summary: List messages
       description: Returns a list of messages associated with an account
@@ -876,6 +948,39 @@ paths:
 
   # ==================== INCOMING PHONE NUMBERS ====================
   "/Accounts/{AccountSid}/IncomingPhoneNumbers.json":
+    post:
+      summary: Provision a new phone number
+      description: >
+        Purchase and provision a new Twilio phone number. You must provide either a
+        specific PhoneNumber in E.164 format or an AreaCode (US/Canada only).
+        The number will be added to your account and can be configured for voice and SMS.
+      operationId: createIncomingPhoneNumber
+      x-airbyte-entity: incoming_phone_numbers
+      x-airbyte-action: create
+      parameters:
+      - name: AccountSid
+        in: path
+        required: true
+        description: The Account SID that will own the phone number
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/IncomingPhoneNumberCreateParams"
+      responses:
+        "201":
+          description: Phone number provisioned successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IncomingPhoneNumber"
+        "400":
+          description: Invalid request parameters
+        "401":
+          description: Unauthorized
     get:
       summary: List incoming phone numbers
       description: Returns a list of incoming phone numbers for an account
@@ -2376,3 +2481,145 @@ components:
           type: ["null", "integer"]
         uri:
           type: ["null", "string"]
+
+    # ==================== WRITE OPERATION REQUEST SCHEMAS ====================
+    MessageCreateParams:
+      type: object
+      description: Parameters for sending a new SMS/MMS/WhatsApp message
+      properties:
+        To:
+          type: string
+          description: >
+            The recipient's phone number in E.164 format (for SMS/MMS)
+            or channel address (e.g. whatsapp:+15552229999)
+        From:
+          type: string
+          description: >
+            The sender's Twilio phone number in E.164 format, alphanumeric sender ID,
+            short code, or channel address. Required if MessagingServiceSid is not provided.
+        MessagingServiceSid:
+          type: string
+          description: >
+            The SID of the Messaging Service to use. Required if From is not provided.
+            Twilio will select an optimal sender from the Service's Sender Pool.
+        Body:
+          type: string
+          description: >
+            The text content of the message. Can be up to 1,600 characters.
+            Required if MediaUrl and ContentSid are not provided.
+        MediaUrl:
+          type: array
+          items:
+            type: string
+          description: >
+            URL(s) of media to include in the message. Supports jpeg, jpg, gif, png.
+            Up to 10 media URLs per message. Required if Body and ContentSid are not provided.
+        StatusCallback:
+          type: string
+          description: URL to receive message status callback notifications
+        ValidityPeriod:
+          type: integer
+          description: >
+            Maximum seconds the message can remain in Twilio's outgoing queue.
+            Range 1-36000, default 36000.
+
+    CallCreateParams:
+      type: object
+      description: Parameters for placing an outbound call
+      properties:
+        To:
+          type: string
+          description: >
+            The phone number, SIP address, or client identifier to call.
+            Phone numbers must be in E.164 format.
+        From:
+          type: string
+          description: >
+            The phone number or client identifier to use as the caller ID.
+            Must be a Twilio number or verified outgoing caller ID.
+        Url:
+          type: string
+          description: >
+            The absolute URL that returns TwiML instructions for the call.
+            Required if Twiml and ApplicationSid are not provided.
+        Twiml:
+          type: string
+          description: >
+            TwiML instructions for the call, up to 4000 characters.
+            Example: <Response><Say>Hello!</Say></Response>.
+            Required if Url and ApplicationSid are not provided.
+        ApplicationSid:
+          type: string
+          description: >
+            The SID of the Application to handle the call.
+            Required if Url and Twiml are not provided.
+        Method:
+          type: string
+          enum: ["GET", "POST"]
+          description: HTTP method for the Url parameter. Default is POST.
+        StatusCallback:
+          type: string
+          description: URL to receive call status callback notifications
+        StatusCallbackMethod:
+          type: string
+          enum: ["GET", "POST"]
+          description: HTTP method for StatusCallback. Default is POST.
+        Timeout:
+          type: integer
+          description: >
+            Seconds to wait for an answer before giving up. Default 60, max 600.
+        Record:
+          type: boolean
+          description: Whether to record the call. Default false.
+        MachineDetection:
+          type: string
+          description: >
+            Answering machine detection mode. Can be Enable or DetectMessageEnd.
+        SendDigits:
+          type: string
+          description: >
+            DTMF tones to send after connecting. Use w for half-second pause,
+            W for one-second pause. Max 32 digits.
+
+    IncomingPhoneNumberCreateParams:
+      type: object
+      description: Parameters for provisioning a new phone number
+      properties:
+        PhoneNumber:
+          type: string
+          description: >
+            The phone number to purchase in E.164 format (e.g. +14155552344).
+            Required if AreaCode is not provided.
+        AreaCode:
+          type: string
+          description: >
+            A three-digit US or Canada area code. Twilio will provision an available
+            number in this area code. Required if PhoneNumber is not provided.
+        FriendlyName:
+          type: string
+          description: A descriptive name for the phone number, up to 64 characters
+        VoiceUrl:
+          type: string
+          description: URL to call when the phone number receives an incoming call
+        VoiceMethod:
+          type: string
+          enum: ["GET", "POST"]
+          description: HTTP method for VoiceUrl. Default POST.
+        SmsUrl:
+          type: string
+          description: URL to call when the phone number receives an incoming SMS
+        SmsMethod:
+          type: string
+          enum: ["GET", "POST"]
+          description: HTTP method for SmsUrl. Default POST.
+        StatusCallback:
+          type: string
+          description: URL to receive status callback notifications
+        VoiceApplicationSid:
+          type: string
+          description: SID of the application to handle voice calls
+        SmsApplicationSid:
+          type: string
+          description: SID of the application to handle SMS messages
+
+

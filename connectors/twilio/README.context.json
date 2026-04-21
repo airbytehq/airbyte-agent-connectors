@@ -53,9 +53,9 @@
       }
     ]
   },
-  "custom_description": "Connector for the Twilio REST API. Provides read access to core Twilio resources including accounts, calls, messages, recordings, conferences, incoming phone numbers, usage records, addresses, queues, transcriptions, and outgoing caller IDs. Uses HTTP Basic authentication with Account SID and Auth Token.\n",
-  "supported_questions": "- List all calls from the last 7 days\n- Show me recent inbound SMS messages\n- List all active phone numbers on my account\n- Show me details for a specific call\n- List all recordings\n- Show me conference calls\n- List usage records for my account\n- Show me all queues\n- List outgoing caller IDs\n- Show me addresses on my account\n- List transcriptions\n- What are my top 10 most expensive calls this month?\n- How many SMS messages did I send vs receive in the last 30 days?\n- Summarize my usage costs by category\n- Which phone numbers have the most incoming calls?\n- Show me all failed messages and their error codes\n- What is the average call duration for outbound calls?",
-  "unsupported_questions": "- Send a new SMS message\n- Make a phone call\n- Purchase a new phone number\n- Delete a recording\n- Create a new queue",
+  "custom_description": "Connector for the Twilio REST API. Provides read and write access to core Twilio resources including accounts, calls, messages, recordings, conferences, incoming phone numbers, usage records, addresses, queues, transcriptions, and outgoing caller IDs. Write operations include sending SMS/MMS messages, placing outbound calls, and provisioning phone numbers. Uses HTTP Basic authentication with Account SID and Auth Token.\n",
+  "supported_questions": "- List all calls from the last 7 days\n- Show me recent inbound SMS messages\n- List all active phone numbers on my account\n- Show me details for a specific call\n- List all recordings\n- Show me conference calls\n- List usage records for my account\n- Show me all queues\n- List outgoing caller IDs\n- Show me addresses on my account\n- List transcriptions\n- Send an SMS message to +15558675310 saying 'Hello from Twilio!'\n- Place an outbound call to +15558675310 with the message 'Your appointment is confirmed'\n- Provision a new phone number with area code 415\n- Send a WhatsApp message to +15558675310\n- Send an MMS with an image to +15558675310\n- What are my top 10 most expensive calls this month?\n- How many SMS messages did I send vs receive in the last 30 days?\n- Summarize my usage costs by category\n- Which phone numbers have the most incoming calls?\n- Show me all failed messages and their error codes\n- What is the average call duration for outbound calls?",
+  "unsupported_questions": "- Delete a recording\n- Delete a phone number\n- Delete a message\n- Create a new queue",
   "first_operation": {
     "method_name": "list_accounts",
     "http_method": "get",
@@ -345,6 +345,34 @@
         "is_download": false
       },
       {
+        "method_name": "create_call",
+        "http_method": "post",
+        "path": "/Accounts/{AccountSid}/Calls.json",
+        "entity": "calls",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "AccountSid",
+            "python_name": "account_sid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The Account SID that will create the call"
+          }
+        ],
+        "params_type_name": "CallsCreateParams",
+        "response_type": "Call",
+        "description": "Initiate an outbound phone call. Requires a recipient (To), a caller ID (From), and call instructions via a TwiML URL, TwiML content, or ApplicationSid. The call will be queued and placed at the account's CPS rate.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Call",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
         "method_name": "get_call",
         "http_method": "get",
         "path": "/Accounts/{AccountSid}/Calls/{sid}.json",
@@ -477,6 +505,34 @@
         "is_download": false
       },
       {
+        "method_name": "create_message",
+        "http_method": "post",
+        "path": "/Accounts/{AccountSid}/Messages.json",
+        "entity": "messages",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "AccountSid",
+            "python_name": "account_sid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The Account SID that will create the message"
+          }
+        ],
+        "params_type_name": "MessagesCreateParams",
+        "response_type": "Message",
+        "description": "Send an outbound SMS, MMS, or WhatsApp message. Requires a recipient (To), a sender (From or MessagingServiceSid), and content (Body, MediaUrl, or ContentSid). Twilio uses application/x-www-form-urlencoded encoding for request bodies.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Message",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
         "method_name": "get_message",
         "http_method": "get",
         "path": "/Accounts/{AccountSid}/Messages/{sid}.json",
@@ -606,6 +662,34 @@
             }
           }
         ],
+        "is_download": false
+      },
+      {
+        "method_name": "create_incoming_phone_number",
+        "http_method": "post",
+        "path": "/Accounts/{AccountSid}/IncomingPhoneNumbers.json",
+        "entity": "incoming_phone_numbers",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "AccountSid",
+            "python_name": "account_sid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The Account SID that will own the phone number"
+          }
+        ],
+        "params_type_name": "IncomingPhoneNumbersCreateParams",
+        "response_type": "IncomingPhoneNumber",
+        "description": "Purchase and provision a new Twilio phone number. You must provide either a specific PhoneNumber in E.164 format or an AreaCode (US/Canada only). The number will be added to your account and can be configured for voice and SMS.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "IncomingPhoneNumber",
+        "meta_fields": null,
         "is_download": false
       },
       {

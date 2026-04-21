@@ -689,6 +689,26 @@ class AdUpdateParams(BaseModel):
     tracking_specs: Union[str | None, Any] = Field(default=None)
     bid_amount: Union[str | None, Any] = Field(default=None)
 
+class AdLibraryAdImpressions(BaseModel):
+    """Number of impressions as a range"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    lower_bound: Union[int | None, Any] = Field(default=None, description="Lower bound of impressions")
+    """Lower bound of impressions"""
+    upper_bound: Union[int | None, Any] = Field(default=None, description="Upper bound of impressions")
+    """Upper bound of impressions"""
+
+class AdLibraryAdDemographicDistributionItem(BaseModel):
+    """Nested schema for AdLibraryAd.demographic_distribution_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    age: Union[str | None, Any] = Field(default=None, description="Age range")
+    """Age range"""
+    gender: Union[str | None, Any] = Field(default=None, description="Gender category")
+    """Gender category"""
+    percentage: Union[str | None, Any] = Field(default=None, description="Percentage of audience in this demographic")
+    """Percentage of audience in this demographic"""
+
 class AdLibraryAdEstimatedAudienceSize(BaseModel):
     """Estimated audience size range"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -715,26 +735,6 @@ class AdLibraryAdDeliveryByRegionItem(BaseModel):
     """Region name"""
     percentage: Union[str | None, Any] = Field(default=None, description="Percentage of audience in this region")
     """Percentage of audience in this region"""
-
-class AdLibraryAdImpressions(BaseModel):
-    """Number of impressions as a range"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    lower_bound: Union[int | None, Any] = Field(default=None, description="Lower bound of impressions")
-    """Lower bound of impressions"""
-    upper_bound: Union[int | None, Any] = Field(default=None, description="Upper bound of impressions")
-    """Upper bound of impressions"""
-
-class AdLibraryAdDemographicDistributionItem(BaseModel):
-    """Nested schema for AdLibraryAd.demographic_distribution_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    age: Union[str | None, Any] = Field(default=None, description="Age range")
-    """Age range"""
-    gender: Union[str | None, Any] = Field(default=None, description="Gender category")
-    """Gender category"""
-    percentage: Union[str | None, Any] = Field(default=None, description="Percentage of audience in this demographic")
-    """Percentage of audience in this demographic"""
 
 class AdLibraryAd(BaseModel):
     """An archived ad from the Facebook Ad Library, containing ad creative content, delivery information, spend data, and demographic reach breakdowns."""

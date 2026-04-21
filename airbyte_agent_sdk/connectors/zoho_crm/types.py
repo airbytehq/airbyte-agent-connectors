@@ -17,6 +17,178 @@ from typing import Any, Literal
 # ===== NESTED PARAM TYPE DEFINITIONS =====
 # Nested parameter schemas discovered during parameter extraction
 
+class LeadsCreateParamsDataItem(TypedDict):
+    """Nested schema for LeadsCreateParams.data_item"""
+    First_Name: NotRequired[str]
+    Last_Name: str
+    Email: NotRequired[str]
+    Phone: NotRequired[str]
+    Mobile: NotRequired[str]
+    Company: NotRequired[str]
+    Title: NotRequired[str]
+    Lead_Source: NotRequired[str]
+    Industry: NotRequired[str]
+    Annual_Revenue: NotRequired[float]
+    No_of_Employees: NotRequired[int]
+    Rating: NotRequired[str]
+    Lead_Status: NotRequired[str]
+    Website: NotRequired[str]
+    Street: NotRequired[str]
+    City: NotRequired[str]
+    State: NotRequired[str]
+    Zip_Code: NotRequired[str]
+    Country: NotRequired[str]
+    Description: NotRequired[str]
+
+class LeadsUpdateParamsDataItem(TypedDict):
+    """Nested schema for LeadsUpdateParams.data_item"""
+    First_Name: NotRequired[str]
+    Last_Name: NotRequired[str]
+    Email: NotRequired[str]
+    Phone: NotRequired[str]
+    Mobile: NotRequired[str]
+    Company: NotRequired[str]
+    Title: NotRequired[str]
+    Lead_Source: NotRequired[str]
+    Industry: NotRequired[str]
+    Annual_Revenue: NotRequired[float]
+    No_of_Employees: NotRequired[int]
+    Rating: NotRequired[str]
+    Lead_Status: NotRequired[str]
+    Website: NotRequired[str]
+    Street: NotRequired[str]
+    City: NotRequired[str]
+    State: NotRequired[str]
+    Zip_Code: NotRequired[str]
+    Country: NotRequired[str]
+    Description: NotRequired[str]
+
+class ContactsCreateParamsDataItem(TypedDict):
+    """Nested schema for ContactsCreateParams.data_item"""
+    First_Name: NotRequired[str]
+    Last_Name: str
+    Email: NotRequired[str]
+    Phone: NotRequired[str]
+    Mobile: NotRequired[str]
+    Title: NotRequired[str]
+    Department: NotRequired[str]
+    Lead_Source: NotRequired[str]
+    Date_of_Birth: NotRequired[str]
+    Mailing_Street: NotRequired[str]
+    Mailing_City: NotRequired[str]
+    Mailing_State: NotRequired[str]
+    Mailing_Zip: NotRequired[str]
+    Mailing_Country: NotRequired[str]
+    Description: NotRequired[str]
+
+class ContactsUpdateParamsDataItem(TypedDict):
+    """Nested schema for ContactsUpdateParams.data_item"""
+    First_Name: NotRequired[str]
+    Last_Name: NotRequired[str]
+    Email: NotRequired[str]
+    Phone: NotRequired[str]
+    Mobile: NotRequired[str]
+    Title: NotRequired[str]
+    Department: NotRequired[str]
+    Lead_Source: NotRequired[str]
+    Date_of_Birth: NotRequired[str]
+    Mailing_Street: NotRequired[str]
+    Mailing_City: NotRequired[str]
+    Mailing_State: NotRequired[str]
+    Mailing_Zip: NotRequired[str]
+    Mailing_Country: NotRequired[str]
+    Description: NotRequired[str]
+
+class AccountsCreateParamsDataItem(TypedDict):
+    """Nested schema for AccountsCreateParams.data_item"""
+    Account_Name: str
+    Account_Number: NotRequired[str]
+    Account_Type: NotRequired[str]
+    Industry: NotRequired[str]
+    Annual_Revenue: NotRequired[float]
+    Employees: NotRequired[int]
+    Phone: NotRequired[str]
+    Website: NotRequired[str]
+    Ownership: NotRequired[str]
+    Rating: NotRequired[str]
+    Billing_Street: NotRequired[str]
+    Billing_City: NotRequired[str]
+    Billing_State: NotRequired[str]
+    Billing_Code: NotRequired[str]
+    Billing_Country: NotRequired[str]
+    Shipping_Street: NotRequired[str]
+    Shipping_City: NotRequired[str]
+    Shipping_State: NotRequired[str]
+    Shipping_Code: NotRequired[str]
+    Shipping_Country: NotRequired[str]
+    Description: NotRequired[str]
+
+class AccountsUpdateParamsDataItem(TypedDict):
+    """Nested schema for AccountsUpdateParams.data_item"""
+    Account_Name: NotRequired[str]
+    Account_Number: NotRequired[str]
+    Account_Type: NotRequired[str]
+    Industry: NotRequired[str]
+    Annual_Revenue: NotRequired[float]
+    Employees: NotRequired[int]
+    Phone: NotRequired[str]
+    Website: NotRequired[str]
+    Ownership: NotRequired[str]
+    Rating: NotRequired[str]
+    Billing_Street: NotRequired[str]
+    Billing_City: NotRequired[str]
+    Billing_State: NotRequired[str]
+    Billing_Code: NotRequired[str]
+    Billing_Country: NotRequired[str]
+    Shipping_Street: NotRequired[str]
+    Shipping_City: NotRequired[str]
+    Shipping_State: NotRequired[str]
+    Shipping_Code: NotRequired[str]
+    Shipping_Country: NotRequired[str]
+    Description: NotRequired[str]
+
+class DealsCreateParamsDataItem(TypedDict):
+    """Nested schema for DealsCreateParams.data_item"""
+    Deal_Name: str
+    Amount: NotRequired[float]
+    Stage: str
+    Probability: NotRequired[int]
+    Closing_Date: str
+    Type: NotRequired[str]
+    Next_Step: NotRequired[str]
+    Lead_Source: NotRequired[str]
+    Description: NotRequired[str]
+
+class DealsUpdateParamsDataItem(TypedDict):
+    """Nested schema for DealsUpdateParams.data_item"""
+    Deal_Name: NotRequired[str]
+    Amount: NotRequired[float]
+    Stage: NotRequired[str]
+    Probability: NotRequired[int]
+    Closing_Date: NotRequired[str]
+    Type: NotRequired[str]
+    Next_Step: NotRequired[str]
+    Lead_Source: NotRequired[str]
+    Description: NotRequired[str]
+
+class TasksCreateParamsDataItem(TypedDict):
+    """Nested schema for TasksCreateParams.data_item"""
+    Subject: str
+    Due_Date: NotRequired[str]
+    Status: NotRequired[str]
+    Priority: NotRequired[str]
+    Send_Notification_Email: NotRequired[bool]
+    Description: NotRequired[str]
+
+class TasksUpdateParamsDataItem(TypedDict):
+    """Nested schema for TasksUpdateParams.data_item"""
+    Subject: NotRequired[str]
+    Due_Date: NotRequired[str]
+    Status: NotRequired[str]
+    Priority: NotRequired[str]
+    Send_Notification_Email: NotRequired[bool]
+    Description: NotRequired[str]
+
 # ===== OPERATION PARAMS TYPE DEFINITIONS =====
 
 class LeadsListParams(TypedDict):
@@ -27,8 +199,17 @@ class LeadsListParams(TypedDict):
     sort_by: NotRequired[str]
     sort_order: NotRequired[str]
 
+class LeadsCreateParams(TypedDict):
+    """Parameters for leads.create operation"""
+    data: list[LeadsCreateParamsDataItem]
+
 class LeadsGetParams(TypedDict):
     """Parameters for leads.get operation"""
+    id: str
+
+class LeadsUpdateParams(TypedDict):
+    """Parameters for leads.update operation"""
+    data: list[LeadsUpdateParamsDataItem]
     id: str
 
 class ContactsListParams(TypedDict):
@@ -39,8 +220,17 @@ class ContactsListParams(TypedDict):
     sort_by: NotRequired[str]
     sort_order: NotRequired[str]
 
+class ContactsCreateParams(TypedDict):
+    """Parameters for contacts.create operation"""
+    data: list[ContactsCreateParamsDataItem]
+
 class ContactsGetParams(TypedDict):
     """Parameters for contacts.get operation"""
+    id: str
+
+class ContactsUpdateParams(TypedDict):
+    """Parameters for contacts.update operation"""
+    data: list[ContactsUpdateParamsDataItem]
     id: str
 
 class AccountsListParams(TypedDict):
@@ -51,8 +241,17 @@ class AccountsListParams(TypedDict):
     sort_by: NotRequired[str]
     sort_order: NotRequired[str]
 
+class AccountsCreateParams(TypedDict):
+    """Parameters for accounts.create operation"""
+    data: list[AccountsCreateParamsDataItem]
+
 class AccountsGetParams(TypedDict):
     """Parameters for accounts.get operation"""
+    id: str
+
+class AccountsUpdateParams(TypedDict):
+    """Parameters for accounts.update operation"""
+    data: list[AccountsUpdateParamsDataItem]
     id: str
 
 class DealsListParams(TypedDict):
@@ -63,8 +262,17 @@ class DealsListParams(TypedDict):
     sort_by: NotRequired[str]
     sort_order: NotRequired[str]
 
+class DealsCreateParams(TypedDict):
+    """Parameters for deals.create operation"""
+    data: list[DealsCreateParamsDataItem]
+
 class DealsGetParams(TypedDict):
     """Parameters for deals.get operation"""
+    id: str
+
+class DealsUpdateParams(TypedDict):
+    """Parameters for deals.update operation"""
+    data: list[DealsUpdateParamsDataItem]
     id: str
 
 class CampaignsListParams(TypedDict):
@@ -87,8 +295,17 @@ class TasksListParams(TypedDict):
     sort_by: NotRequired[str]
     sort_order: NotRequired[str]
 
+class TasksCreateParams(TypedDict):
+    """Parameters for tasks.create operation"""
+    data: list[TasksCreateParamsDataItem]
+
 class TasksGetParams(TypedDict):
     """Parameters for tasks.get operation"""
+    id: str
+
+class TasksUpdateParams(TypedDict):
+    """Parameters for tasks.update operation"""
+    data: list[TasksUpdateParamsDataItem]
     id: str
 
 class EventsListParams(TypedDict):

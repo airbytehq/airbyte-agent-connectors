@@ -24,12 +24,15 @@ from .types import (
     AccountsListParams,
     AddressesGetParams,
     AddressesListParams,
+    CallsCreateParams,
     CallsGetParams,
     CallsListParams,
     ConferencesGetParams,
     ConferencesListParams,
+    IncomingPhoneNumbersCreateParams,
     IncomingPhoneNumbersGetParams,
     IncomingPhoneNumbersListParams,
+    MessagesCreateParams,
     MessagesGetParams,
     MessagesListParams,
     OutgoingCallerIdsGetParams,
@@ -168,17 +171,20 @@ class TwilioConnector:
 
     connector_name = "twilio"
     connector_version = "1.0.4"
-    sdk_version = "0.1.43"
+    sdk_version = "0.1.44"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
         ("accounts", "list"): True,
         ("accounts", "get"): None,
         ("calls", "list"): True,
+        ("calls", "create"): None,
         ("calls", "get"): None,
         ("messages", "list"): True,
+        ("messages", "create"): None,
         ("messages", "get"): None,
         ("incoming_phone_numbers", "list"): True,
+        ("incoming_phone_numbers", "create"): None,
         ("incoming_phone_numbers", "get"): None,
         ("recordings", "list"): True,
         ("recordings", "get"): None,
@@ -201,10 +207,13 @@ class TwilioConnector:
         ('accounts', 'list'): {'page_size': 'PageSize'},
         ('accounts', 'get'): {'sid': 'sid'},
         ('calls', 'list'): {'account_sid': 'AccountSid', 'page_size': 'PageSize'},
+        ('calls', 'create'): {'account_sid': 'AccountSid'},
         ('calls', 'get'): {'account_sid': 'AccountSid', 'sid': 'sid'},
         ('messages', 'list'): {'account_sid': 'AccountSid', 'page_size': 'PageSize'},
+        ('messages', 'create'): {'account_sid': 'AccountSid'},
         ('messages', 'get'): {'account_sid': 'AccountSid', 'sid': 'sid'},
         ('incoming_phone_numbers', 'list'): {'account_sid': 'AccountSid', 'page_size': 'PageSize'},
+        ('incoming_phone_numbers', 'create'): {'account_sid': 'AccountSid'},
         ('incoming_phone_numbers', 'get'): {'account_sid': 'AccountSid', 'sid': 'sid'},
         ('recordings', 'list'): {'account_sid': 'AccountSid', 'page_size': 'PageSize'},
         ('recordings', 'get'): {'account_sid': 'AccountSid', 'sid': 'sid'},
@@ -356,6 +365,14 @@ class TwilioConnector:
     async def execute(
         self,
         entity: Literal["calls"],
+        action: Literal["create"],
+        params: "CallsCreateParams"
+    ) -> "Call": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["calls"],
         action: Literal["get"],
         params: "CallsGetParams"
     ) -> "Call": ...
@@ -372,6 +389,14 @@ class TwilioConnector:
     async def execute(
         self,
         entity: Literal["messages"],
+        action: Literal["create"],
+        params: "MessagesCreateParams"
+    ) -> "Message": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["messages"],
         action: Literal["get"],
         params: "MessagesGetParams"
     ) -> "Message": ...
@@ -383,6 +408,14 @@ class TwilioConnector:
         action: Literal["list"],
         params: "IncomingPhoneNumbersListParams"
     ) -> "IncomingPhoneNumbersListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["incoming_phone_numbers"],
+        action: Literal["create"],
+        params: "IncomingPhoneNumbersCreateParams"
+    ) -> "IncomingPhoneNumber": ...
 
     @overload
     async def execute(
@@ -501,14 +534,14 @@ class TwilioConnector:
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get", "context_store_search"],
+        action: Literal["list", "get", "create", "context_store_search"],
         params: Mapping[str, Any]
     ) -> TwilioExecuteResult[Any] | TwilioExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get", "context_store_search"],
+        action: Literal["list", "get", "create", "context_store_search"],
         params: Mapping[str, Any] | None = None
     ) -> Any:
         """
@@ -1013,6 +1046,32 @@ class CallsQuery:
 
 
 
+    async def create(
+        self,
+        account_sid: str,
+        **kwargs
+    ) -> Call:
+        """
+        Initiate an outbound phone call. Requires a recipient (To), a caller ID (From), and call instructions via a TwiML URL, TwiML content, or ApplicationSid. The call will be queued and placed at the account's CPS rate.
+
+
+        Args:
+            account_sid: The Account SID that will create the call
+            **kwargs: Additional parameters
+
+        Returns:
+            Call
+        """
+        params = {k: v for k, v in {
+            "AccountSid": account_sid,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("calls", "create", params)
+        return result
+
+
+
     async def get(
         self,
         account_sid: str,
@@ -1146,6 +1205,32 @@ class MessagesQuery:
             data=result.data,
             meta=result.meta
         )
+
+
+
+    async def create(
+        self,
+        account_sid: str,
+        **kwargs
+    ) -> Message:
+        """
+        Send an outbound SMS, MMS, or WhatsApp message. Requires a recipient (To), a sender (From or MessagingServiceSid), and content (Body, MediaUrl, or ContentSid). Twilio uses application/x-www-form-urlencoded encoding for request bodies.
+
+
+        Args:
+            account_sid: The Account SID that will create the message
+            **kwargs: Additional parameters
+
+        Returns:
+            Message
+        """
+        params = {k: v for k, v in {
+            "AccountSid": account_sid,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("messages", "create", params)
+        return result
 
 
 
@@ -1284,6 +1369,32 @@ class IncomingPhoneNumbersQuery:
             data=result.data,
             meta=result.meta
         )
+
+
+
+    async def create(
+        self,
+        account_sid: str,
+        **kwargs
+    ) -> IncomingPhoneNumber:
+        """
+        Purchase and provision a new Twilio phone number. You must provide either a specific PhoneNumber in E.164 format or an AreaCode (US/Canada only). The number will be added to your account and can be configured for voice and SMS.
+
+
+        Args:
+            account_sid: The Account SID that will own the phone number
+            **kwargs: Additional parameters
+
+        Returns:
+            IncomingPhoneNumber
+        """
+        params = {k: v for k, v in {
+            "AccountSid": account_sid,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("incoming_phone_numbers", "create", params)
+        return result
 
 
 

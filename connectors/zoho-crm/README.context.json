@@ -45,9 +45,9 @@
     "is_multi_auth": false
   },
   "replication_config": null,
-  "custom_description": "Connector for the Zoho CRM API, providing access to CRM modules including leads, contacts, accounts, deals, campaigns, tasks, events, calls, products, quotes, and invoices. Supports OAuth 2.0 authentication with regional data center support (US, EU, AU, IN, CN, JP). Read-only operations (list and get) are supported for all entities.\n",
-  "supported_questions": "- List all leads\n- Show me details for a specific lead\n- List all contacts\n- List all accounts\n- List all open deals\n- Show me details for a specific deal\n- List all campaigns\n- List all tasks\n- List all events\n- List recent calls\n- List all products\n- List all quotes\n- List all invoices\n- Show me leads created in the last 30 days\n- Which deals have the highest amount?\n- List all contacts at a specific company\n- What is the total revenue across all deals by stage?\n- Show me overdue tasks\n- Which campaigns generated the most leads?\n- Summarize the deal pipeline by stage\n- Show me accounts with the highest annual revenue\n- List all events scheduled for this week\n- What are the top-performing products by unit price?\n- Show me all invoices that are past due\n- Break down leads by source and industry",
-  "unsupported_questions": "- Create a new lead in Zoho CRM\n- Update a contact's email address\n- Delete a deal record\n- Send an email to a lead\n- Convert a lead to a contact\n- Merge duplicate contacts",
+  "custom_description": "Connector for the Zoho CRM API, providing access to CRM modules including leads, contacts, accounts, deals, campaigns, tasks, events, calls, products, quotes, and invoices. Supports OAuth 2.0 authentication with regional data center support (US, EU, AU, IN, CN, JP). Supports read operations (list and get) for all entities, and write operations (create and update) for leads, contacts, accounts, deals, and tasks.\n",
+  "supported_questions": "- List all leads\n- Show me details for a specific lead\n- List all contacts\n- List all accounts\n- List all open deals\n- Show me details for a specific deal\n- List all campaigns\n- List all tasks\n- List all events\n- List recent calls\n- List all products\n- List all quotes\n- List all invoices\n- Create a new lead named John Smith at Acme Corp\n- Update the status of lead to Contacted\n- Create a new contact with email jane@example.com\n- Create a new account called Global Industries\n- Create a deal called Enterprise License worth $50,000\n- Update the deal stage to Closed Won\n- Create a task to follow up with the client\n- Update the task priority to High\n- Show me leads created in the last 30 days\n- Which deals have the highest amount?\n- List all contacts at a specific company\n- What is the total revenue across all deals by stage?\n- Show me overdue tasks\n- Which campaigns generated the most leads?\n- Summarize the deal pipeline by stage\n- Show me accounts with the highest annual revenue\n- List all events scheduled for this week\n- What are the top-performing products by unit price?\n- Show me all invoices that are past due\n- Break down leads by source and industry",
+  "unsupported_questions": "- Delete a deal record\n- Send an email to a lead\n- Convert a lead to a contact\n- Merge duplicate contacts\n- Bulk import leads from CSV\n- Create a workflow rule",
   "first_operation": {
     "method_name": "list_leads",
     "http_method": "get",
@@ -259,6 +259,123 @@
         "is_download": false
       },
       {
+        "method_name": "create_lead",
+        "http_method": "post",
+        "path": "/crm/v2/Leads",
+        "entity": "leads",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "data",
+            "python_name": "data",
+            "type": "list[LeadsCreateParamsDataItem]",
+            "schema": {
+              "type": "array",
+              "description": "Array containing the lead record to create",
+              "items": {
+                "type": "object",
+                "required": [
+                  "Last_Name"
+                ],
+                "properties": {
+                  "First_Name": {
+                    "type": "string",
+                    "description": "Lead's first name"
+                  },
+                  "Last_Name": {
+                    "type": "string",
+                    "description": "Lead's last name (required)"
+                  },
+                  "Email": {
+                    "type": "string",
+                    "description": "Lead's email address"
+                  },
+                  "Phone": {
+                    "type": "string",
+                    "description": "Lead's phone number"
+                  },
+                  "Mobile": {
+                    "type": "string",
+                    "description": "Lead's mobile number"
+                  },
+                  "Company": {
+                    "type": "string",
+                    "description": "Company the lead is associated with"
+                  },
+                  "Title": {
+                    "type": "string",
+                    "description": "Lead's job title"
+                  },
+                  "Lead_Source": {
+                    "type": "string",
+                    "description": "Source from which the lead was generated"
+                  },
+                  "Industry": {
+                    "type": "string",
+                    "description": "Industry the lead belongs to"
+                  },
+                  "Annual_Revenue": {
+                    "type": "number",
+                    "description": "Annual revenue of the lead's company"
+                  },
+                  "No_of_Employees": {
+                    "type": "integer",
+                    "description": "Number of employees in the lead's company"
+                  },
+                  "Rating": {
+                    "type": "string",
+                    "description": "Lead rating"
+                  },
+                  "Lead_Status": {
+                    "type": "string",
+                    "description": "Current status of the lead"
+                  },
+                  "Website": {
+                    "type": "string",
+                    "description": "Lead's website URL"
+                  },
+                  "Street": {
+                    "type": "string",
+                    "description": "Street address"
+                  },
+                  "City": {
+                    "type": "string",
+                    "description": "City"
+                  },
+                  "State": {
+                    "type": "string",
+                    "description": "State or province"
+                  },
+                  "Zip_Code": {
+                    "type": "string",
+                    "description": "ZIP/postal code"
+                  },
+                  "Country": {
+                    "type": "string",
+                    "description": "Country"
+                  },
+                  "Description": {
+                    "type": "string",
+                    "description": "Description or notes about the lead"
+                  }
+                }
+              }
+            },
+            "required": true,
+            "description": "Array containing the lead record to create"
+          }
+        ],
+        "params_type_name": "LeadsCreateParams",
+        "response_type": "WriteResponse",
+        "description": "Creates a new lead record in Zoho CRM",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "WriteResponse",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
         "method_name": "get_lead",
         "http_method": "get",
         "path": "/crm/v2/Leads/{id}",
@@ -283,6 +400,130 @@
         "meta_extractor": null,
         "needs_envelope": null,
         "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "update_lead",
+        "http_method": "put",
+        "path": "/crm/v2/Leads/{id}",
+        "entity": "leads",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "data",
+            "python_name": "data",
+            "type": "list[LeadsUpdateParamsDataItem]",
+            "schema": {
+              "type": "array",
+              "description": "Array containing the lead fields to update",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "First_Name": {
+                    "type": "string",
+                    "description": "Lead's first name"
+                  },
+                  "Last_Name": {
+                    "type": "string",
+                    "description": "Lead's last name"
+                  },
+                  "Email": {
+                    "type": "string",
+                    "description": "Lead's email address"
+                  },
+                  "Phone": {
+                    "type": "string",
+                    "description": "Lead's phone number"
+                  },
+                  "Mobile": {
+                    "type": "string",
+                    "description": "Lead's mobile number"
+                  },
+                  "Company": {
+                    "type": "string",
+                    "description": "Company the lead is associated with"
+                  },
+                  "Title": {
+                    "type": "string",
+                    "description": "Lead's job title"
+                  },
+                  "Lead_Source": {
+                    "type": "string",
+                    "description": "Source from which the lead was generated"
+                  },
+                  "Industry": {
+                    "type": "string",
+                    "description": "Industry the lead belongs to"
+                  },
+                  "Annual_Revenue": {
+                    "type": "number",
+                    "description": "Annual revenue of the lead's company"
+                  },
+                  "No_of_Employees": {
+                    "type": "integer",
+                    "description": "Number of employees in the lead's company"
+                  },
+                  "Rating": {
+                    "type": "string",
+                    "description": "Lead rating"
+                  },
+                  "Lead_Status": {
+                    "type": "string",
+                    "description": "Current status of the lead"
+                  },
+                  "Website": {
+                    "type": "string",
+                    "description": "Lead's website URL"
+                  },
+                  "Street": {
+                    "type": "string",
+                    "description": "Street address"
+                  },
+                  "City": {
+                    "type": "string",
+                    "description": "City"
+                  },
+                  "State": {
+                    "type": "string",
+                    "description": "State or province"
+                  },
+                  "Zip_Code": {
+                    "type": "string",
+                    "description": "ZIP/postal code"
+                  },
+                  "Country": {
+                    "type": "string",
+                    "description": "Country"
+                  },
+                  "Description": {
+                    "type": "string",
+                    "description": "Description or notes about the lead"
+                  }
+                }
+              }
+            },
+            "required": true,
+            "description": "Array containing the lead fields to update"
+          },
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Lead ID"
+          }
+        ],
+        "params_type_name": "LeadsUpdateParams",
+        "response_type": "WriteResponse",
+        "description": "Updates an existing lead record in Zoho CRM",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "WriteResponse",
         "meta_fields": null,
         "is_download": false
       }
@@ -393,6 +634,104 @@
         "is_download": false
       },
       {
+        "method_name": "create_contact",
+        "http_method": "post",
+        "path": "/crm/v2/Contacts",
+        "entity": "contacts",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "data",
+            "python_name": "data",
+            "type": "list[ContactsCreateParamsDataItem]",
+            "schema": {
+              "type": "array",
+              "description": "Array containing the contact record to create",
+              "items": {
+                "type": "object",
+                "required": [
+                  "Last_Name"
+                ],
+                "properties": {
+                  "First_Name": {
+                    "type": "string",
+                    "description": "Contact's first name"
+                  },
+                  "Last_Name": {
+                    "type": "string",
+                    "description": "Contact's last name (required)"
+                  },
+                  "Email": {
+                    "type": "string",
+                    "description": "Contact's email address"
+                  },
+                  "Phone": {
+                    "type": "string",
+                    "description": "Contact's phone number"
+                  },
+                  "Mobile": {
+                    "type": "string",
+                    "description": "Contact's mobile number"
+                  },
+                  "Title": {
+                    "type": "string",
+                    "description": "Contact's job title"
+                  },
+                  "Department": {
+                    "type": "string",
+                    "description": "Department the contact belongs to"
+                  },
+                  "Lead_Source": {
+                    "type": "string",
+                    "description": "Source from which the contact was generated"
+                  },
+                  "Date_of_Birth": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "Contact's date of birth (YYYY-MM-DD)"
+                  },
+                  "Mailing_Street": {
+                    "type": "string",
+                    "description": "Mailing street address"
+                  },
+                  "Mailing_City": {
+                    "type": "string",
+                    "description": "Mailing city"
+                  },
+                  "Mailing_State": {
+                    "type": "string",
+                    "description": "Mailing state or province"
+                  },
+                  "Mailing_Zip": {
+                    "type": "string",
+                    "description": "Mailing ZIP/postal code"
+                  },
+                  "Mailing_Country": {
+                    "type": "string",
+                    "description": "Mailing country"
+                  },
+                  "Description": {
+                    "type": "string",
+                    "description": "Description or notes about the contact"
+                  }
+                }
+              }
+            },
+            "required": true,
+            "description": "Array containing the contact record to create"
+          }
+        ],
+        "params_type_name": "ContactsCreateParams",
+        "response_type": "WriteResponse",
+        "description": "Creates a new contact record in Zoho CRM",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "WriteResponse",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
         "method_name": "get_contact",
         "http_method": "get",
         "path": "/crm/v2/Contacts/{id}",
@@ -417,6 +756,111 @@
         "meta_extractor": null,
         "needs_envelope": null,
         "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "update_contact",
+        "http_method": "put",
+        "path": "/crm/v2/Contacts/{id}",
+        "entity": "contacts",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "data",
+            "python_name": "data",
+            "type": "list[ContactsUpdateParamsDataItem]",
+            "schema": {
+              "type": "array",
+              "description": "Array containing the contact fields to update",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "First_Name": {
+                    "type": "string",
+                    "description": "Contact's first name"
+                  },
+                  "Last_Name": {
+                    "type": "string",
+                    "description": "Contact's last name"
+                  },
+                  "Email": {
+                    "type": "string",
+                    "description": "Contact's email address"
+                  },
+                  "Phone": {
+                    "type": "string",
+                    "description": "Contact's phone number"
+                  },
+                  "Mobile": {
+                    "type": "string",
+                    "description": "Contact's mobile number"
+                  },
+                  "Title": {
+                    "type": "string",
+                    "description": "Contact's job title"
+                  },
+                  "Department": {
+                    "type": "string",
+                    "description": "Department the contact belongs to"
+                  },
+                  "Lead_Source": {
+                    "type": "string",
+                    "description": "Source from which the contact was generated"
+                  },
+                  "Date_of_Birth": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "Contact's date of birth (YYYY-MM-DD)"
+                  },
+                  "Mailing_Street": {
+                    "type": "string",
+                    "description": "Mailing street address"
+                  },
+                  "Mailing_City": {
+                    "type": "string",
+                    "description": "Mailing city"
+                  },
+                  "Mailing_State": {
+                    "type": "string",
+                    "description": "Mailing state or province"
+                  },
+                  "Mailing_Zip": {
+                    "type": "string",
+                    "description": "Mailing ZIP/postal code"
+                  },
+                  "Mailing_Country": {
+                    "type": "string",
+                    "description": "Mailing country"
+                  },
+                  "Description": {
+                    "type": "string",
+                    "description": "Description or notes about the contact"
+                  }
+                }
+              }
+            },
+            "required": true,
+            "description": "Array containing the contact fields to update"
+          },
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Contact ID"
+          }
+        ],
+        "params_type_name": "ContactsUpdateParams",
+        "response_type": "WriteResponse",
+        "description": "Updates an existing contact record in Zoho CRM",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "WriteResponse",
         "meta_fields": null,
         "is_download": false
       }
@@ -527,6 +971,127 @@
         "is_download": false
       },
       {
+        "method_name": "create_account",
+        "http_method": "post",
+        "path": "/crm/v2/Accounts",
+        "entity": "accounts",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "data",
+            "python_name": "data",
+            "type": "list[AccountsCreateParamsDataItem]",
+            "schema": {
+              "type": "array",
+              "description": "Array containing the account record to create",
+              "items": {
+                "type": "object",
+                "required": [
+                  "Account_Name"
+                ],
+                "properties": {
+                  "Account_Name": {
+                    "type": "string",
+                    "description": "Account/company name (required)"
+                  },
+                  "Account_Number": {
+                    "type": "string",
+                    "description": "Account number"
+                  },
+                  "Account_Type": {
+                    "type": "string",
+                    "description": "Type of account (e.g., Analyst, Competitor, Customer)"
+                  },
+                  "Industry": {
+                    "type": "string",
+                    "description": "Industry the account belongs to"
+                  },
+                  "Annual_Revenue": {
+                    "type": "number",
+                    "description": "Annual revenue of the account"
+                  },
+                  "Employees": {
+                    "type": "integer",
+                    "description": "Number of employees"
+                  },
+                  "Phone": {
+                    "type": "string",
+                    "description": "Account phone number"
+                  },
+                  "Website": {
+                    "type": "string",
+                    "description": "Account website URL"
+                  },
+                  "Ownership": {
+                    "type": "string",
+                    "description": "Ownership type (e.g., Public, Private)"
+                  },
+                  "Rating": {
+                    "type": "string",
+                    "description": "Account rating"
+                  },
+                  "Billing_Street": {
+                    "type": "string",
+                    "description": "Billing street address"
+                  },
+                  "Billing_City": {
+                    "type": "string",
+                    "description": "Billing city"
+                  },
+                  "Billing_State": {
+                    "type": "string",
+                    "description": "Billing state or province"
+                  },
+                  "Billing_Code": {
+                    "type": "string",
+                    "description": "Billing ZIP/postal code"
+                  },
+                  "Billing_Country": {
+                    "type": "string",
+                    "description": "Billing country"
+                  },
+                  "Shipping_Street": {
+                    "type": "string",
+                    "description": "Shipping street address"
+                  },
+                  "Shipping_City": {
+                    "type": "string",
+                    "description": "Shipping city"
+                  },
+                  "Shipping_State": {
+                    "type": "string",
+                    "description": "Shipping state or province"
+                  },
+                  "Shipping_Code": {
+                    "type": "string",
+                    "description": "Shipping ZIP/postal code"
+                  },
+                  "Shipping_Country": {
+                    "type": "string",
+                    "description": "Shipping country"
+                  },
+                  "Description": {
+                    "type": "string",
+                    "description": "Description or notes about the account"
+                  }
+                }
+              }
+            },
+            "required": true,
+            "description": "Array containing the account record to create"
+          }
+        ],
+        "params_type_name": "AccountsCreateParams",
+        "response_type": "WriteResponse",
+        "description": "Creates a new account record in Zoho CRM",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "WriteResponse",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
         "method_name": "get_account",
         "http_method": "get",
         "path": "/crm/v2/Accounts/{id}",
@@ -551,6 +1116,134 @@
         "meta_extractor": null,
         "needs_envelope": null,
         "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "update_account",
+        "http_method": "put",
+        "path": "/crm/v2/Accounts/{id}",
+        "entity": "accounts",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "data",
+            "python_name": "data",
+            "type": "list[AccountsUpdateParamsDataItem]",
+            "schema": {
+              "type": "array",
+              "description": "Array containing the account fields to update",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "Account_Name": {
+                    "type": "string",
+                    "description": "Account/company name"
+                  },
+                  "Account_Number": {
+                    "type": "string",
+                    "description": "Account number"
+                  },
+                  "Account_Type": {
+                    "type": "string",
+                    "description": "Type of account (e.g., Analyst, Competitor, Customer)"
+                  },
+                  "Industry": {
+                    "type": "string",
+                    "description": "Industry the account belongs to"
+                  },
+                  "Annual_Revenue": {
+                    "type": "number",
+                    "description": "Annual revenue of the account"
+                  },
+                  "Employees": {
+                    "type": "integer",
+                    "description": "Number of employees"
+                  },
+                  "Phone": {
+                    "type": "string",
+                    "description": "Account phone number"
+                  },
+                  "Website": {
+                    "type": "string",
+                    "description": "Account website URL"
+                  },
+                  "Ownership": {
+                    "type": "string",
+                    "description": "Ownership type (e.g., Public, Private)"
+                  },
+                  "Rating": {
+                    "type": "string",
+                    "description": "Account rating"
+                  },
+                  "Billing_Street": {
+                    "type": "string",
+                    "description": "Billing street address"
+                  },
+                  "Billing_City": {
+                    "type": "string",
+                    "description": "Billing city"
+                  },
+                  "Billing_State": {
+                    "type": "string",
+                    "description": "Billing state or province"
+                  },
+                  "Billing_Code": {
+                    "type": "string",
+                    "description": "Billing ZIP/postal code"
+                  },
+                  "Billing_Country": {
+                    "type": "string",
+                    "description": "Billing country"
+                  },
+                  "Shipping_Street": {
+                    "type": "string",
+                    "description": "Shipping street address"
+                  },
+                  "Shipping_City": {
+                    "type": "string",
+                    "description": "Shipping city"
+                  },
+                  "Shipping_State": {
+                    "type": "string",
+                    "description": "Shipping state or province"
+                  },
+                  "Shipping_Code": {
+                    "type": "string",
+                    "description": "Shipping ZIP/postal code"
+                  },
+                  "Shipping_Country": {
+                    "type": "string",
+                    "description": "Shipping country"
+                  },
+                  "Description": {
+                    "type": "string",
+                    "description": "Description or notes about the account"
+                  }
+                }
+              }
+            },
+            "required": true,
+            "description": "Array containing the account fields to update"
+          },
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Account ID"
+          }
+        ],
+        "params_type_name": "AccountsUpdateParams",
+        "response_type": "WriteResponse",
+        "description": "Updates an existing account record in Zoho CRM",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "WriteResponse",
         "meta_fields": null,
         "is_download": false
       }
@@ -661,6 +1354,82 @@
         "is_download": false
       },
       {
+        "method_name": "create_deal",
+        "http_method": "post",
+        "path": "/crm/v2/Deals",
+        "entity": "deals",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "data",
+            "python_name": "data",
+            "type": "list[DealsCreateParamsDataItem]",
+            "schema": {
+              "type": "array",
+              "description": "Array containing the deal record to create",
+              "items": {
+                "type": "object",
+                "required": [
+                  "Deal_Name",
+                  "Stage",
+                  "Closing_Date"
+                ],
+                "properties": {
+                  "Deal_Name": {
+                    "type": "string",
+                    "description": "Deal name (required)"
+                  },
+                  "Amount": {
+                    "type": "number",
+                    "description": "Monetary value of the deal"
+                  },
+                  "Stage": {
+                    "type": "string",
+                    "description": "Current stage of the deal in the pipeline (required)"
+                  },
+                  "Probability": {
+                    "type": "integer",
+                    "description": "Probability of closing the deal (percentage)"
+                  },
+                  "Closing_Date": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "Expected closing date (YYYY-MM-DD)"
+                  },
+                  "Type": {
+                    "type": "string",
+                    "description": "Type of deal (e.g., New Business, Existing Business)"
+                  },
+                  "Next_Step": {
+                    "type": "string",
+                    "description": "Next step in the deal process"
+                  },
+                  "Lead_Source": {
+                    "type": "string",
+                    "description": "Source from which the deal originated"
+                  },
+                  "Description": {
+                    "type": "string",
+                    "description": "Description or notes about the deal"
+                  }
+                }
+              }
+            },
+            "required": true,
+            "description": "Array containing the deal record to create"
+          }
+        ],
+        "params_type_name": "DealsCreateParams",
+        "response_type": "WriteResponse",
+        "description": "Creates a new deal record in Zoho CRM",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "WriteResponse",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
         "method_name": "get_deal",
         "http_method": "get",
         "path": "/crm/v2/Deals/{id}",
@@ -685,6 +1454,87 @@
         "meta_extractor": null,
         "needs_envelope": null,
         "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "update_deal",
+        "http_method": "put",
+        "path": "/crm/v2/Deals/{id}",
+        "entity": "deals",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "data",
+            "python_name": "data",
+            "type": "list[DealsUpdateParamsDataItem]",
+            "schema": {
+              "type": "array",
+              "description": "Array containing the deal fields to update",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "Deal_Name": {
+                    "type": "string",
+                    "description": "Deal name"
+                  },
+                  "Amount": {
+                    "type": "number",
+                    "description": "Monetary value of the deal"
+                  },
+                  "Stage": {
+                    "type": "string",
+                    "description": "Current stage of the deal in the pipeline"
+                  },
+                  "Probability": {
+                    "type": "integer",
+                    "description": "Probability of closing the deal (percentage)"
+                  },
+                  "Closing_Date": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "Expected closing date (YYYY-MM-DD)"
+                  },
+                  "Type": {
+                    "type": "string",
+                    "description": "Type of deal (e.g., New Business, Existing Business)"
+                  },
+                  "Next_Step": {
+                    "type": "string",
+                    "description": "Next step in the deal process"
+                  },
+                  "Lead_Source": {
+                    "type": "string",
+                    "description": "Source from which the deal originated"
+                  },
+                  "Description": {
+                    "type": "string",
+                    "description": "Description or notes about the deal"
+                  }
+                }
+              }
+            },
+            "required": true,
+            "description": "Array containing the deal fields to update"
+          },
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Deal ID"
+          }
+        ],
+        "params_type_name": "DealsUpdateParams",
+        "response_type": "WriteResponse",
+        "description": "Updates an existing deal record in Zoho CRM",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "WriteResponse",
         "meta_fields": null,
         "is_download": false
       }
@@ -929,6 +1779,68 @@
         "is_download": false
       },
       {
+        "method_name": "create_task",
+        "http_method": "post",
+        "path": "/crm/v2/Tasks",
+        "entity": "tasks",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "data",
+            "python_name": "data",
+            "type": "list[TasksCreateParamsDataItem]",
+            "schema": {
+              "type": "array",
+              "description": "Array containing the task record to create",
+              "items": {
+                "type": "object",
+                "required": [
+                  "Subject"
+                ],
+                "properties": {
+                  "Subject": {
+                    "type": "string",
+                    "description": "Subject or title of the task (required)"
+                  },
+                  "Due_Date": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "Due date for the task (YYYY-MM-DD)"
+                  },
+                  "Status": {
+                    "type": "string",
+                    "description": "Task status (e.g., Not Started, In Progress, Completed)"
+                  },
+                  "Priority": {
+                    "type": "string",
+                    "description": "Priority level (e.g., High, Highest, Low, Lowest, Normal)"
+                  },
+                  "Send_Notification_Email": {
+                    "type": "boolean",
+                    "description": "Whether to send a notification email"
+                  },
+                  "Description": {
+                    "type": "string",
+                    "description": "Description or notes about the task"
+                  }
+                }
+              }
+            },
+            "required": true,
+            "description": "Array containing the task record to create"
+          }
+        ],
+        "params_type_name": "TasksCreateParams",
+        "response_type": "WriteResponse",
+        "description": "Creates a new task record in Zoho CRM",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "WriteResponse",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
         "method_name": "get_task",
         "http_method": "get",
         "path": "/crm/v2/Tasks/{id}",
@@ -953,6 +1865,75 @@
         "meta_extractor": null,
         "needs_envelope": null,
         "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "update_task",
+        "http_method": "put",
+        "path": "/crm/v2/Tasks/{id}",
+        "entity": "tasks",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "data",
+            "python_name": "data",
+            "type": "list[TasksUpdateParamsDataItem]",
+            "schema": {
+              "type": "array",
+              "description": "Array containing the task fields to update",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "Subject": {
+                    "type": "string",
+                    "description": "Subject or title of the task"
+                  },
+                  "Due_Date": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "Due date for the task (YYYY-MM-DD)"
+                  },
+                  "Status": {
+                    "type": "string",
+                    "description": "Task status (e.g., Not Started, In Progress, Completed)"
+                  },
+                  "Priority": {
+                    "type": "string",
+                    "description": "Priority level (e.g., High, Highest, Low, Lowest, Normal)"
+                  },
+                  "Send_Notification_Email": {
+                    "type": "boolean",
+                    "description": "Whether to send a notification email"
+                  },
+                  "Description": {
+                    "type": "string",
+                    "description": "Description or notes about the task"
+                  }
+                }
+              }
+            },
+            "required": true,
+            "description": "Array containing the task fields to update"
+          },
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Task ID"
+          }
+        ],
+        "params_type_name": "TasksUpdateParams",
+        "response_type": "WriteResponse",
+        "description": "Updates an existing task record in Zoho CRM",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "WriteResponse",
         "meta_fields": null,
         "is_download": false
       }
