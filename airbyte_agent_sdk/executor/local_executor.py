@@ -15,7 +15,7 @@ from collections.abc import AsyncIterator
 from typing import Any, Protocol, overload
 from urllib.parse import quote
 
-from jinja2 import Environment, StrictUndefined
+from jinja2 import Environment, StrictUndefined, Template
 from jsonpath_ng import parse as parse_jsonpath
 from opentelemetry import trace
 
@@ -1637,8 +1637,9 @@ class LocalExecutor:
         self,
         response_data: Any,
         endpoint: EndpointDefinition,
+        config: dict[str, Any] | None = None,
     ) -> dict[str, Any] | list[dict[str, Any]] | None:
-        """Extract records from response using record extractor.
+        """Extract records from response using record extractor and record filter.
 
         Type inference based on action:
         - list, search: Returns array ([] if not found)
@@ -1647,9 +1648,14 @@ class LocalExecutor:
         Automatically wraps primitive values (int, str, float, bool) in {"value": primitive}
         format to ensure consistent dict-based responses for downstream code.
 
+        If the endpoint defines `record_filter` (Jinja expression), it is evaluated
+        per record after JSONPath extraction; records for which the expression is
+        truthy are kept, others are dropped. Only applies to list/api_search actions.
+
         Args:
             response_data: Full API response (can be dict, list, primitive, or None)
-            endpoint: Endpoint with optional record extractor and action
+            endpoint: Endpoint with optional record extractor, record filter, and action
+            config: Connector config available to the Jinja filter as `config`
 
         Returns:
             - Extracted data if extractor configured and path found
@@ -1686,11 +1692,109 @@ class LocalExecutor:
                 # For single record actions, return first match
                 result = matches[0]
 
-            return self._wrap_primitives(result)
+            result = self._wrap_primitives(result)
 
         except Exception as e:
+            record_filter = getattr(endpoint, "record_filter", None)
+            if is_array_action and isinstance(record_filter, str) and record_filter:
+                # Extractor failed on an endpoint that declares a record_filter.
+                # Silently returning the unfiltered response would bypass a
+                # privacy-critical filter (e.g. Gong's `isPrivate`) and leak the
+                # exact records the filter is meant to drop. Fail loud instead.
+                logging.error(
+                    f"Record extractor '{extractor}' failed on an endpoint with a record_filter; "
+                    f"propagating rather than returning unfiltered data: {e}"
+                )
+                raise
             logging.warning(f"Failed to apply record extractor '{extractor}': {e}. Returning original response.")
             return self._wrap_primitives(response_data)
+
+        # Apply record_filter (Jinja expression) on list/api_search actions.
+        # Intentionally outside the try/except above: a failing record_filter is
+        # a connector configuration bug, and for privacy-critical filters silent
+        # recovery would leak records. Let the exception propagate.
+        record_filter = getattr(endpoint, "record_filter", None)
+        if is_array_action and isinstance(record_filter, str) and record_filter and result is not None:
+            result = self._apply_record_filter(result, record_filter, config or {})
+
+        return result
+
+    # Strings that a rendered Jinja expression should resolve to a boolean False.
+    # Mirrors Airbyte declarative CDK's InterpolatedBoolean.FALSY_STRINGS.
+    _FALSY_RENDERED_STRINGS = frozenset({"False", "false", "0", "None", "none", "null", ""})
+
+    # Shared Jinja environment for record_filter evaluation. `Environment` is
+    # thread-safe for rendering, so a single module-level instance avoids the
+    # per-record allocation cost of spinning up a new one each call.
+    _RECORD_FILTER_ENV = Environment(undefined=StrictUndefined, autoescape=False)
+
+    @classmethod
+    def _evaluate_compiled_record_filter(
+        cls,
+        template: Template,
+        record: dict[str, Any],
+        config: dict[str, Any],
+    ) -> bool:
+        """Render a compiled `record_filter` template and coerce the result to bool.
+
+        The template receives the current record as `record` and the connector
+        config as `config`. Booleans are returned verbatim; strings use Airbyte
+        CDK's falsy-string semantics (`False`, `false`, `0`, `None`, `none`,
+        `null`, empty string are falsy).
+        """
+        rendered = template.render(record=record, config=config)
+        if isinstance(rendered, bool):
+            return rendered
+        if isinstance(rendered, str):
+            return rendered.strip() not in cls._FALSY_RENDERED_STRINGS
+        return bool(rendered)
+
+    def _apply_record_filter(
+        self,
+        records: dict[str, Any] | list[dict[str, Any]],
+        condition: str,
+        config: dict[str, Any],
+    ) -> dict[str, Any] | list[dict[str, Any]]:
+        """Filter extracted records using a Jinja boolean expression.
+
+        Keeps records where the expression renders truthy. Preserves the
+        input container type: a list stays a list; a single-dict result
+        becomes either the same dict (kept) or an empty list (dropped).
+
+        The Jinja template is compiled **once per call** and reused across
+        every record in the batch — compiling per-record would add an O(N)
+        grammar-parse + AST-compile overhead on large list responses.
+
+        Evaluation errors (e.g. missing fields under ``StrictUndefined``,
+        invalid template syntax) are intentionally propagated — for
+        privacy-critical filters like Gong's ``isPrivate`` the safe default
+        is to *fail the sync* rather than silently let records through.
+        Connector authors can pre-guard fields in the expression itself
+        (e.g. ``{{ not record.get('isPrivate', false) }}``) when the
+        upstream API may omit the field.
+        """
+        template = self._RECORD_FILTER_ENV.from_string(condition)
+
+        if isinstance(records, list):
+            filtered: list[dict[str, Any]] = []
+            for record in records:
+                if not isinstance(record, dict):
+                    # Non-dict items can't be filtered by field — keep them.
+                    filtered.append(record)
+                    continue
+                if self._evaluate_compiled_record_filter(template, record, config):
+                    filtered.append(record)
+            return filtered
+
+        if isinstance(records, dict):
+            if self._evaluate_compiled_record_filter(template, records, config):
+                return records
+            # Dropped: return an empty list so downstream list-action consumers
+            # still see an iterable.
+            return []
+
+        # Unknown shape — return unchanged.
+        return records
 
     def _extract_metadata(
         self,
@@ -2060,7 +2164,7 @@ class _StandardOperationHandler:
                 metadata = self.ctx.executor._extract_metadata(response_data, response_headers, endpoint)
 
                 # Extract records if extractor configured
-                response = self.ctx.extract_records(response_data, endpoint)
+                response = self.ctx.extract_records(response_data, endpoint, self.ctx.executor.config_values)
 
                 # Assume success with 200 status code if no exception raised
                 status_code = 200

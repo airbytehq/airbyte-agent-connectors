@@ -486,6 +486,7 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.calls',
+                    record_filter='{{ not record.isPrivate }}',
                     meta_extractor={
                         'cursor': '$.records.cursor',
                         'total_records': '$.records.totalRecords',
@@ -932,6 +933,7 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.calls',
+                    record_filter='{{ not record.metaData.isPrivate }}',
                     meta_extractor={
                         'cursor': '$.records.cursor',
                         'total_records': '$.records.totalRecords',
@@ -2827,6 +2829,7 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.calls',
+                    record_filter='{{ not record.isPrivate }}',
                     meta_extractor={
                         'cursor': '$.records.cursor',
                         'total_records': '$.records.totalRecords',

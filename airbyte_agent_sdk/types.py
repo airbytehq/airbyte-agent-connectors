@@ -281,6 +281,16 @@ class EndpointDefinition(BaseModel):
         description="JSONPath expression to extract records from response envelopes",
     )
 
+    # Record filter support (Airbyte extension)
+    record_filter: str | None = Field(
+        None,
+        description=(
+            "Jinja expression evaluated per extracted record. Records for which the "
+            "expression renders to a truthy value are emitted; others are dropped. "
+            "Runs after `record_extractor`. Example: `{{ not record.isPrivate }}`."
+        ),
+    )
+
     # Metadata extractor support (Airbyte extension)
     meta_extractor: dict[str, str] | None = Field(
         None,

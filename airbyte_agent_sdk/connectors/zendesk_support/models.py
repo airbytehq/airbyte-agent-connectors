@@ -503,13 +503,6 @@ class JobStatus(BaseModel):
     status: Union[str, Any] = Field(default=None)
     message: Union[str | None, Any] = Field(default=None)
 
-class TicketCreateParamsTicketCustomFieldsItem(BaseModel):
-    """Nested schema for TicketCreateParamsTicket.custom_fields_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[int, Any] = Field(default=None)
-    value: Union[str, Any] = Field(default=None)
-
 class TicketCreateParamsTicketComment(BaseModel):
     """An object that defines the initial comment on the ticket"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -520,6 +513,13 @@ class TicketCreateParamsTicketComment(BaseModel):
     """The HTML body of the comment"""
     public: Union[bool, Any] = Field(default=None, description="Whether the comment is public (default true)")
     """Whether the comment is public (default true)"""
+
+class TicketCreateParamsTicketCustomFieldsItem(BaseModel):
+    """Nested schema for TicketCreateParamsTicket.custom_fields_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[int, Any] = Field(default=None)
+    value: Union[str, Any] = Field(default=None)
 
 class TicketCreateParamsTicket(BaseModel):
     """The ticket object to create"""

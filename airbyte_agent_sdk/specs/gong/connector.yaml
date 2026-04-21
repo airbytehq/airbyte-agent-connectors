@@ -639,6 +639,7 @@ paths:
       x-airbyte-entity: calls
       x-airbyte-action: list
       x-airbyte-record-extractor: $.calls
+      x-airbyte-record-filter: "{{ not record.isPrivate }}"
       x-airbyte-meta-extractor:
         cursor: $.records.cursor
         total_records: $.records.totalRecords
@@ -709,6 +710,7 @@ paths:
       x-airbyte-entity: calls_extensive
       x-airbyte-action: list
       x-airbyte-record-extractor: $.calls
+      x-airbyte-record-filter: "{{ not record.metaData.isPrivate }}"
       x-airbyte-meta-extractor:
         cursor: $.records.cursor
         total_records: $.records.totalRecords
@@ -1227,6 +1229,7 @@ paths:
       x-airbyte-entity: library_folder_content
       x-airbyte-action: list
       x-airbyte-record-extractor: $.calls
+      x-airbyte-record-filter: "{{ not record.isPrivate }}"
       x-airbyte-meta-extractor:
         cursor: $.records.cursor
         total_records: $.records.totalRecords

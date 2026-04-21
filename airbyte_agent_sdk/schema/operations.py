@@ -64,6 +64,20 @@ class Operation(BaseModel):
             "get/create/update/delete actions."
         ),
     )
+    x_airbyte_record_filter: str | None = Field(
+        None,
+        alias="x-airbyte-record-filter",
+        description=(
+            "Jinja expression evaluated per record to decide whether the record is "
+            "emitted. Runs **after** `x-airbyte-record-extractor` on each extracted "
+            "record; records for which the expression is truthy are kept, others are "
+            "dropped. The expression receives the current record as `record` and the "
+            "connector config as `config`, and must render to a boolean-like value "
+            "(`True`/`False`/`1`/`0`/non-empty strings). "
+            "Example: `{{ not record.isPrivate }}`. Only valid on `list` and `api_search` "
+            "operations."
+        ),
+    )
     x_airbyte_meta_extractor: Dict[str, str] | None = Field(
         None,
         alias="x-airbyte-meta-extractor",
