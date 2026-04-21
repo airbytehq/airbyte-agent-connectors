@@ -8,7 +8,10 @@ The Pylon connector supports the following entities and actions.
 
 | Entity | Actions |
 |--------|---------|
-| Issues | [List](#issues-list), [Create](#issues-create), [Get](#issues-get), [Update](#issues-update) |
+| Issues | [List](#issues-list), [Create](#issues-create), [Get](#issues-get), [Update](#issues-update), [Delete](#issues-delete) |
+| Issue Replies | [Create](#issue-replies-create) |
+| Issue Assignments | [Update](#issue-assignments-update) |
+| Issue Statuses | [Update](#issue-statuses-update) |
 | Messages | [List](#messages-list) |
 | Issue Notes | [Create](#issue-notes-create) |
 | Issue Threads | [Create](#issue-threads-create) |
@@ -83,6 +86,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `body_html` | `string \| null` |  |
 | `business_hours_first_response_seconds` | `integer \| null` |  |
 | `business_hours_resolution_seconds` | `integer \| null` |  |
+| `business_hours_time_in_status_seconds` | `object \| null` |  |
 | `chat_widget_info` | `object \| any` |  |
 | `created_at` | `string \| null` |  |
 | `csat_responses` | `array \| null` |  |
@@ -110,7 +114,9 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `tags` | `array \| null` |  |
 | `team` | `object \| any` |  |
 | `title` | `string \| null` |  |
-| `type` | `"Conversation" \| "Ticket" \| any` |  |
+| `time_in_status_seconds` | `object \| null` |  |
+| `type` | `"conversation" \| "ticket" \| any` |  |
+| `updated_at` | `string \| null` |  |
 
 
 #### Meta
@@ -197,6 +203,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `data.body_html` | `string \| null` |  |
 | `data.business_hours_first_response_seconds` | `integer \| null` |  |
 | `data.business_hours_resolution_seconds` | `integer \| null` |  |
+| `data.business_hours_time_in_status_seconds` | `object \| null` |  |
 | `data.chat_widget_info` | `object \| any` |  |
 | `data.created_at` | `string \| null` |  |
 | `data.csat_responses` | `array \| null` |  |
@@ -224,7 +231,9 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `data.tags` | `array \| null` |  |
 | `data.team` | `object \| any` |  |
 | `data.title` | `string \| null` |  |
-| `data.type` | `"Conversation" \| "Ticket" \| any` |  |
+| `data.time_in_status_seconds` | `object \| null` |  |
+| `data.type` | `"conversation" \| "ticket" \| any` |  |
+| `data.updated_at` | `string \| null` |  |
 | `request_id` | `string` |  |
 
 
@@ -280,6 +289,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `body_html` | `string \| null` |  |
 | `business_hours_first_response_seconds` | `integer \| null` |  |
 | `business_hours_resolution_seconds` | `integer \| null` |  |
+| `business_hours_time_in_status_seconds` | `object \| null` |  |
 | `chat_widget_info` | `object \| any` |  |
 | `created_at` | `string \| null` |  |
 | `csat_responses` | `array \| null` |  |
@@ -307,7 +317,9 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `tags` | `array \| null` |  |
 | `team` | `object \| any` |  |
 | `title` | `string \| null` |  |
-| `type` | `"Conversation" \| "Ticket" \| any` |  |
+| `time_in_status_seconds` | `object \| null` |  |
+| `type` | `"conversation" \| "ticket" \| any` |  |
+| `updated_at` | `string \| null` |  |
 
 
 </details>
@@ -378,6 +390,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `data.body_html` | `string \| null` |  |
 | `data.business_hours_first_response_seconds` | `integer \| null` |  |
 | `data.business_hours_resolution_seconds` | `integer \| null` |  |
+| `data.business_hours_time_in_status_seconds` | `object \| null` |  |
 | `data.chat_widget_info` | `object \| any` |  |
 | `data.created_at` | `string \| null` |  |
 | `data.csat_responses` | `array \| null` |  |
@@ -405,7 +418,310 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `data.tags` | `array \| null` |  |
 | `data.team` | `object \| any` |  |
 | `data.title` | `string \| null` |  |
-| `data.type` | `"Conversation" \| "Ticket" \| any` |  |
+| `data.time_in_status_seconds` | `object \| null` |  |
+| `data.type` | `"conversation" \| "ticket" \| any` |  |
+| `data.updated_at` | `string \| null` |  |
+| `request_id` | `string` |  |
+
+
+</details>
+
+### Issues Delete
+
+Permanently deletes an issue by ID. This action cannot be undone.
+
+#### Python SDK
+
+```python
+await pylon.issues.delete(
+    id="<str>"
+)
+```
+
+#### API
+
+```bash
+curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_connector_id}/execute' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer {your_auth_token}' \
+--data '{
+    "entity": "issues",
+    "action": "delete",
+    "params": {
+        "id": "<str>"
+    }
+}'
+```
+
+
+#### Parameters
+
+| Parameter Name | Type | Required | Description |
+|----------------|------|----------|-------------|
+| `id` | `string` | Yes | The ID of the issue to delete |
+
+
+<details>
+<summary><b>Response Schema</b></summary>
+
+#### Records
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `request_id` | `string` |  |
+
+
+</details>
+
+## Issue Replies
+
+### Issue Replies Create
+
+Sends a customer-facing reply on an issue, visible to the requester.
+
+#### Python SDK
+
+```python
+await pylon.issue_replies.create(
+    body_html="<str>",
+    message_id="<str>",
+    user_id="<str>",
+    contact_id="<str>",
+    attachment_urls=[],
+    id="<str>"
+)
+```
+
+#### API
+
+```bash
+curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_connector_id}/execute' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer {your_auth_token}' \
+--data '{
+    "entity": "issue_replies",
+    "action": "create",
+    "params": {
+        "body_html": "<str>",
+        "message_id": "<str>",
+        "user_id": "<str>",
+        "contact_id": "<str>",
+        "attachment_urls": [],
+        "id": "<str>"
+    }
+}'
+```
+
+
+#### Parameters
+
+| Parameter Name | Type | Required | Description |
+|----------------|------|----------|-------------|
+| `body_html` | `string` | Yes | The body of the reply message in HTML |
+| `message_id` | `string` | Yes | The ID of the message to reply to |
+| `user_id` | `string` | No | Optional user ID to post the message as. Only one of user_id or contact_id can be provided. |
+| `contact_id` | `string` | No | Optional contact ID to post the message as. Only one of user_id or contact_id can be provided. |
+| `attachment_urls` | `array<string>` | No | An array of attachment URLs to attach to this reply |
+| `id` | `string` | Yes | The ID of the issue to reply to |
+
+
+<details>
+<summary><b>Response Schema</b></summary>
+
+#### Records
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `data` | `object` |  |
+| `data.id` | `string` |  |
+| `data.issue_id` | `string` |  |
+| `request_id` | `string` |  |
+
+
+</details>
+
+## Issue Assignments
+
+### Issue Assignments Update
+
+Assign an issue to a user or team, or remove the current assignment.
+
+#### Python SDK
+
+```python
+await pylon.issue_assignments.update(
+    assignee_id="<str>",
+    team_id="<str>",
+    id="<str>"
+)
+```
+
+#### API
+
+```bash
+curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_connector_id}/execute' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer {your_auth_token}' \
+--data '{
+    "entity": "issue_assignments",
+    "action": "update",
+    "params": {
+        "assignee_id": "<str>",
+        "team_id": "<str>",
+        "id": "<str>"
+    }
+}'
+```
+
+
+#### Parameters
+
+| Parameter Name | Type | Required | Description |
+|----------------|------|----------|-------------|
+| `assignee_id` | `string` | No | The ID of the user to assign the issue to. Pass an empty string to unassign. |
+| `team_id` | `string` | No | The ID of the team to assign the issue to. Pass an empty string to remove team assignment. |
+| `id` | `string` | Yes | The ID of the issue to assign |
+
+
+<details>
+<summary><b>Response Schema</b></summary>
+
+#### Records
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `data` | `object` |  |
+| `data.id` | `string` |  |
+| `data.account` | `object \| any` |  |
+| `data.assignee` | `object \| any` |  |
+| `data.attachment_urls` | `array \| null` |  |
+| `data.author_unverified` | `boolean \| null` |  |
+| `data.body_html` | `string \| null` |  |
+| `data.business_hours_first_response_seconds` | `integer \| null` |  |
+| `data.business_hours_resolution_seconds` | `integer \| null` |  |
+| `data.business_hours_time_in_status_seconds` | `object \| null` |  |
+| `data.chat_widget_info` | `object \| any` |  |
+| `data.created_at` | `string \| null` |  |
+| `data.csat_responses` | `array \| null` |  |
+| `data.csat_responses[].comment` | `string \| null` |  |
+| `data.csat_responses[].score` | `integer \| null` |  |
+| `data.custom_fields` | `object \| null` |  |
+| `data.customer_portal_visible` | `boolean \| null` |  |
+| `data.external_issues` | `array \| null` |  |
+| `data.external_issues[].external_id` | `string \| null` |  |
+| `data.external_issues[].link` | `string \| null` |  |
+| `data.external_issues[].source` | `string \| null` |  |
+| `data.first_response_seconds` | `integer \| null` |  |
+| `data.first_response_time` | `string \| null` |  |
+| `data.latest_message_time` | `string \| null` |  |
+| `data.link` | `string \| null` |  |
+| `data.number` | `integer \| null` |  |
+| `data.number_of_touches` | `integer \| null` |  |
+| `data.requester` | `object \| any` |  |
+| `data.resolution_seconds` | `integer \| null` |  |
+| `data.resolution_time` | `string \| null` |  |
+| `data.slack` | `object \| any` |  |
+| `data.snoozed_until_time` | `string \| null` |  |
+| `data.source` | `"slack" \| "microsoft_teams" \| "microsoft_teams_chat" \| "chat_widget" \| "email" \| "manual" \| "form" \| "discord" \| "whatsapp" \| "sms" \| "telegram" \| any` |  |
+| `data.state` | `string \| null` |  |
+| `data.tags` | `array \| null` |  |
+| `data.team` | `object \| any` |  |
+| `data.title` | `string \| null` |  |
+| `data.time_in_status_seconds` | `object \| null` |  |
+| `data.type` | `"conversation" \| "ticket" \| any` |  |
+| `data.updated_at` | `string \| null` |  |
+| `request_id` | `string` |  |
+
+
+</details>
+
+## Issue Statuses
+
+### Issue Statuses Update
+
+Transition an issue to a new status (new, waiting_on_you, waiting_on_customer, on_hold, closed, or a custom status slug).
+
+#### Python SDK
+
+```python
+await pylon.issue_statuses.update(
+    state="<str>",
+    id="<str>"
+)
+```
+
+#### API
+
+```bash
+curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_connector_id}/execute' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer {your_auth_token}' \
+--data '{
+    "entity": "issue_statuses",
+    "action": "update",
+    "params": {
+        "state": "<str>",
+        "id": "<str>"
+    }
+}'
+```
+
+
+#### Parameters
+
+| Parameter Name | Type | Required | Description |
+|----------------|------|----------|-------------|
+| `state` | `string` | Yes | The target state for the issue (new, waiting_on_you, waiting_on_customer, on_hold, closed, or a custom status slug) |
+| `id` | `string` | Yes | The ID of the issue to update status for |
+
+
+<details>
+<summary><b>Response Schema</b></summary>
+
+#### Records
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `data` | `object` |  |
+| `data.id` | `string` |  |
+| `data.account` | `object \| any` |  |
+| `data.assignee` | `object \| any` |  |
+| `data.attachment_urls` | `array \| null` |  |
+| `data.author_unverified` | `boolean \| null` |  |
+| `data.body_html` | `string \| null` |  |
+| `data.business_hours_first_response_seconds` | `integer \| null` |  |
+| `data.business_hours_resolution_seconds` | `integer \| null` |  |
+| `data.business_hours_time_in_status_seconds` | `object \| null` |  |
+| `data.chat_widget_info` | `object \| any` |  |
+| `data.created_at` | `string \| null` |  |
+| `data.csat_responses` | `array \| null` |  |
+| `data.csat_responses[].comment` | `string \| null` |  |
+| `data.csat_responses[].score` | `integer \| null` |  |
+| `data.custom_fields` | `object \| null` |  |
+| `data.customer_portal_visible` | `boolean \| null` |  |
+| `data.external_issues` | `array \| null` |  |
+| `data.external_issues[].external_id` | `string \| null` |  |
+| `data.external_issues[].link` | `string \| null` |  |
+| `data.external_issues[].source` | `string \| null` |  |
+| `data.first_response_seconds` | `integer \| null` |  |
+| `data.first_response_time` | `string \| null` |  |
+| `data.latest_message_time` | `string \| null` |  |
+| `data.link` | `string \| null` |  |
+| `data.number` | `integer \| null` |  |
+| `data.number_of_touches` | `integer \| null` |  |
+| `data.requester` | `object \| any` |  |
+| `data.resolution_seconds` | `integer \| null` |  |
+| `data.resolution_time` | `string \| null` |  |
+| `data.slack` | `object \| any` |  |
+| `data.snoozed_until_time` | `string \| null` |  |
+| `data.source` | `"slack" \| "microsoft_teams" \| "microsoft_teams_chat" \| "chat_widget" \| "email" \| "manual" \| "form" \| "discord" \| "whatsapp" \| "sms" \| "telegram" \| any` |  |
+| `data.state` | `string \| null` |  |
+| `data.tags` | `array \| null` |  |
+| `data.team` | `object \| any` |  |
+| `data.title` | `string \| null` |  |
+| `data.time_in_status_seconds` | `object \| null` |  |
+| `data.type` | `"conversation" \| "ticket" \| any` |  |
+| `data.updated_at` | `string \| null` |  |
 | `request_id` | `string` |  |
 
 

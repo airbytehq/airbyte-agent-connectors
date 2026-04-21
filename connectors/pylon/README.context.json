@@ -32,8 +32,8 @@
   },
   "replication_config": null,
   "custom_description": "Pylon is a customer support platform that helps B2B companies manage customer interactions\nacross Slack, email, chat widgets, and other channels. This connector provides access to\nissues, accounts, contacts, teams, tags, users, custom fields, ticket forms, and user roles\nfor customer support analytics and account intelligence insights.\n",
-  "supported_questions": "- List all open issues in Pylon\n- Show me all accounts in Pylon\n- List all contacts in Pylon\n- What teams are configured in my Pylon workspace?\n- Show me all tags used in Pylon\n- List all users in my Pylon account\n- Show me the custom fields configured for issues\n- List all ticket forms in Pylon\n- What user roles are available in Pylon?\n- Show me details for a specific issue\n- Get details for a specific account\n- Show me details for a specific contact\n- What are the most common issue sources this month?\n- Show me issues assigned to a specific team\n- Which accounts have the most open issues?\n- Analyze issue resolution times over the last 30 days\n- List contacts associated with a specific account",
-  "unsupported_questions": "- Delete an issue\n- Delete an account\n- Send a message to a customer\n- Schedule a meeting with a contact",
+  "supported_questions": "- List all open issues in Pylon\n- Show me all accounts in Pylon\n- List all contacts in Pylon\n- What teams are configured in my Pylon workspace?\n- Show me all tags used in Pylon\n- List all users in my Pylon account\n- Show me the custom fields configured for issues\n- List all ticket forms in Pylon\n- What user roles are available in Pylon?\n- Show me details for a specific issue\n- Get details for a specific account\n- Show me details for a specific contact\n- Reply to the customer on an issue saying we are looking into it\n- Send a message to the customer on the billing issue\n- Assign an issue to a specific team member\n- Change the status of an issue to waiting_on_customer\n- Close an issue as resolved\n- Delete a test issue\n- What are the most common issue sources this month?\n- Show me issues assigned to a specific team\n- Which accounts have the most open issues?\n- Analyze issue resolution times over the last 30 days\n- List contacts associated with a specific account",
+  "unsupported_questions": "- Delete an account\n- Schedule a meeting with a contact",
   "first_operation": {
     "method_name": "list_issues",
     "http_method": "get",
@@ -419,6 +419,215 @@
         "params_type_name": "IssuesUpdateParams",
         "response_type": "IssueResponse",
         "description": "Update an existing issue by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "IssueResponse",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "delete_issue",
+        "http_method": "delete",
+        "path": "/issues/{id}/delete",
+        "entity": "issues",
+        "action": "delete",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the issue to delete"
+          }
+        ],
+        "params_type_name": "IssuesDeleteParams",
+        "response_type": "DeleteIssueResponse",
+        "description": "Permanently deletes an issue by ID. This action cannot be undone.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "DeleteIssueResponse",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "issue_replies": [
+      {
+        "method_name": "reply_to_issue",
+        "http_method": "post",
+        "path": "/issues/{id}/reply",
+        "entity": "issue_replies",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "body_html",
+            "python_name": "body_html",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The body of the reply message in HTML"
+            },
+            "required": true,
+            "description": "The body of the reply message in HTML"
+          },
+          {
+            "name": "message_id",
+            "python_name": "message_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The ID of the message to reply to"
+            },
+            "required": true,
+            "description": "The ID of the message to reply to"
+          },
+          {
+            "name": "user_id",
+            "python_name": "user_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Optional user ID to post the message as. Only one of user_id or contact_id can be provided."
+            },
+            "required": false,
+            "description": "Optional user ID to post the message as. Only one of user_id or contact_id can be provided."
+          },
+          {
+            "name": "contact_id",
+            "python_name": "contact_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Optional contact ID to post the message as. Only one of user_id or contact_id can be provided."
+            },
+            "required": false,
+            "description": "Optional contact ID to post the message as. Only one of user_id or contact_id can be provided."
+          },
+          {
+            "name": "attachment_urls",
+            "python_name": "attachment_urls",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "An array of attachment URLs to attach to this reply"
+            },
+            "required": false,
+            "description": "An array of attachment URLs to attach to this reply"
+          },
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the issue to reply to"
+          }
+        ],
+        "params_type_name": "IssueRepliesCreateParams",
+        "response_type": "IssueReplyResponse",
+        "description": "Sends a customer-facing reply on an issue, visible to the requester.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "IssueReplyResponse",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "issue_assignments": [
+      {
+        "method_name": "assign_issue",
+        "http_method": "patch",
+        "path": "/issues/{id}/assign",
+        "entity": "issue_assignments",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "assignee_id",
+            "python_name": "assignee_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The ID of the user to assign the issue to. Pass an empty string to unassign."
+            },
+            "required": false,
+            "description": "The ID of the user to assign the issue to. Pass an empty string to unassign."
+          },
+          {
+            "name": "team_id",
+            "python_name": "team_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The ID of the team to assign the issue to. Pass an empty string to remove team assignment."
+            },
+            "required": false,
+            "description": "The ID of the team to assign the issue to. Pass an empty string to remove team assignment."
+          },
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the issue to assign"
+          }
+        ],
+        "params_type_name": "IssueAssignmentsUpdateParams",
+        "response_type": "IssueResponse",
+        "description": "Assign an issue to a user or team, or remove the current assignment.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "IssueResponse",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "issue_statuses": [
+      {
+        "method_name": "update_issue_status",
+        "http_method": "patch",
+        "path": "/issues/{id}/update-status",
+        "entity": "issue_statuses",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "state",
+            "python_name": "state",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The target state for the issue (new, waiting_on_you, waiting_on_customer, on_hold, closed, or a custom status slug)"
+            },
+            "required": true,
+            "description": "The target state for the issue (new, waiting_on_you, waiting_on_customer, on_hold, closed, or a custom status slug)"
+          },
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the issue to update status for"
+          }
+        ],
+        "params_type_name": "IssueStatusesUpdateParams",
+        "response_type": "IssueResponse",
+        "description": "Transition an issue to a new status (new, waiting_on_you, waiting_on_customer, on_hold, closed, or a custom status slug).",
         "record_extractor": "$",
         "meta_extractor": null,
         "needs_envelope": null,

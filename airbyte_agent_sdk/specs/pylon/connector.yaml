@@ -34,6 +34,12 @@ info:
     - "Show me details for a specific issue"
     - "Get details for a specific account"
     - "Show me details for a specific contact"
+    - "Reply to the customer on an issue saying we are looking into it"
+    - "Send a message to the customer on the billing issue"
+    - "Assign an issue to a specific team member"
+    - "Change the status of an issue to waiting_on_customer"
+    - "Close an issue as resolved"
+    - "Delete a test issue"
     search:
     - "What are the most common issue sources this month?"
     - "Show me issues assigned to a specific team"
@@ -41,9 +47,7 @@ info:
     - "Analyze issue resolution times over the last 30 days"
     - "List contacts associated with a specific account"
     unsupported:
-    - "Delete an issue"
     - "Delete an account"
-    - "Send a message to a customer"
     - "Schedule a meeting with a contact"
 
   x-airbyte-entity-relationships:
@@ -183,6 +187,140 @@ paths:
                 $ref: "#/components/schemas/IssueResponse"
         "400":
           description: Bad request
+        "404":
+          description: Issue not found
+        "401":
+          description: Unauthorized
+
+  "/issues/{id}/reply":
+    post:
+      summary: Reply to an issue
+      description: Sends a customer-facing reply on an issue, visible to the requester.
+      operationId: replyToIssue
+      x-airbyte-entity: issue_replies
+      x-airbyte-action: create
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: The ID of the issue to reply to
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/IssueReplyCreateParams"
+      responses:
+        "200":
+          description: Reply sent successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IssueReplyResponse"
+        "400":
+          description: Bad request
+        "404":
+          description: Issue not found
+        "401":
+          description: Unauthorized
+
+  "/issues/{id}/assign":
+    patch:
+      summary: Assign an issue
+      description: Assign an issue to a user or team, or remove the current assignment.
+      operationId: assignIssue
+      x-airbyte-entity: issue_assignments
+      x-airbyte-action: update
+      x-airbyte-path-override:
+        path: "/issues/{id}"
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: The ID of the issue to assign
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/IssueAssignParams"
+      responses:
+        "200":
+          description: Issue assigned successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IssueResponse"
+        "400":
+          description: Bad request
+        "404":
+          description: Issue not found
+        "401":
+          description: Unauthorized
+
+  "/issues/{id}/update-status":
+    patch:
+      summary: Update issue status
+      description: Transition an issue to a new status (new, waiting_on_you, waiting_on_customer, on_hold, closed, or a custom status slug).
+      operationId: updateIssueStatus
+      x-airbyte-entity: issue_statuses
+      x-airbyte-action: update
+      x-airbyte-path-override:
+        path: "/issues/{id}"
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: The ID of the issue to update status for
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/IssueStatusUpdateParams"
+      responses:
+        "200":
+          description: Issue status updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IssueResponse"
+        "400":
+          description: Bad request
+        "404":
+          description: Issue not found
+        "401":
+          description: Unauthorized
+
+  "/issues/{id}/delete":
+    delete:
+      summary: Delete an issue
+      description: Permanently deletes an issue by ID. This action cannot be undone.
+      operationId: deleteIssue
+      x-airbyte-entity: issues
+      x-airbyte-action: delete
+      x-airbyte-path-override:
+        path: "/issues/{id}"
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: The ID of the issue to delete
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Issue deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeleteIssueResponse"
         "404":
           description: Issue not found
         "401":
@@ -1395,6 +1533,11 @@ components:
         business_hours_resolution_seconds:
           type: [integer, "null"]
           description: Business hours time in seconds for resolution
+        business_hours_time_in_status_seconds:
+          type: [object, "null"]
+          additionalProperties:
+            type: integer
+          description: A map of status slug to the business hours time in seconds the issue has spent in that status
         chat_widget_info:
           oneOf:
           - $ref: "#/components/schemas/IssueChatWidgetInfo"
@@ -1486,13 +1629,21 @@ components:
         title:
           type: [string, "null"]
           description: The title of the issue
+        time_in_status_seconds:
+          type: [object, "null"]
+          additionalProperties:
+            type: integer
+          description: A map of status slug to the time in seconds the issue has spent in that status
         type:
           oneOf:
           - type: string
             enum:
-            - Conversation
-            - Ticket
+            - conversation
+            - ticket
           - type: "null"
+        updated_at:
+          type: [string, "null"]
+          description: The time the issue was last updated
 
     IssuesResponse:
       type: object
@@ -2273,6 +2424,75 @@ components:
       properties:
         data:
           $ref: "#/components/schemas/IssueThread"
+        request_id:
+          type: string
+          description: The request ID for tracking
+
+    IssueReplyCreateParams:
+      type: object
+      required:
+      - body_html
+      - message_id
+      properties:
+        body_html:
+          type: string
+          description: The body of the reply message in HTML
+        message_id:
+          type: string
+          description: The ID of the message to reply to
+        user_id:
+          type: string
+          description: Optional user ID to post the message as. Only one of user_id or contact_id can be provided.
+        contact_id:
+          type: string
+          description: Optional contact ID to post the message as. Only one of user_id or contact_id can be provided.
+        attachment_urls:
+          type: array
+          items:
+            type: string
+          description: An array of attachment URLs to attach to this reply
+
+    IssueReplyData:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The ID of the reply message
+        issue_id:
+          type: string
+          description: The ID of the issue the reply belongs to
+
+    IssueReplyResponse:
+      type: object
+      properties:
+        data:
+          $ref: "#/components/schemas/IssueReplyData"
+        request_id:
+          type: string
+          description: The request ID for tracking
+
+    IssueAssignParams:
+      type: object
+      properties:
+        assignee_id:
+          type: string
+          description: "The ID of the user to assign the issue to. Pass an empty string to unassign."
+        team_id:
+          type: string
+          description: "The ID of the team to assign the issue to. Pass an empty string to remove team assignment."
+
+    IssueStatusUpdateParams:
+      type: object
+      required:
+      - state
+      properties:
+        state:
+          type: string
+          description: "The target state for the issue (new, waiting_on_you, waiting_on_customer, on_hold, closed, or a custom status slug)"
+
+    DeleteIssueResponse:
+      type: object
+      properties:
         request_id:
           type: string
           description: The request ID for tracking

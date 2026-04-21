@@ -49,6 +49,30 @@ class IssuesUpdateParams(TypedDict):
     tags: NotRequired[list[str]]
     id: str
 
+class IssueRepliesCreateParams(TypedDict):
+    """Parameters for issue_replies.create operation"""
+    body_html: str
+    message_id: str
+    user_id: NotRequired[str]
+    contact_id: NotRequired[str]
+    attachment_urls: NotRequired[list[str]]
+    id: str
+
+class IssueAssignmentsUpdateParams(TypedDict):
+    """Parameters for issue_assignments.update operation"""
+    assignee_id: NotRequired[str]
+    team_id: NotRequired[str]
+    id: str
+
+class IssueStatusesUpdateParams(TypedDict):
+    """Parameters for issue_statuses.update operation"""
+    state: str
+    id: str
+
+class IssuesDeleteParams(TypedDict):
+    """Parameters for issues.delete operation"""
+    id: str
+
 class MessagesListParams(TypedDict):
     """Parameters for messages.list operation"""
     id: str

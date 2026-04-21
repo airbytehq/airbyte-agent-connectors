@@ -33,9 +33,13 @@ from .types import (
     ContactsUpdateParams,
     CustomFieldsGetParams,
     CustomFieldsListParams,
+    IssueAssignmentsUpdateParams,
     IssueNotesCreateParams,
+    IssueRepliesCreateParams,
+    IssueStatusesUpdateParams,
     IssueThreadsCreateParams,
     IssuesCreateParams,
+    IssuesDeleteParams,
     IssuesGetParams,
     IssuesListParams,
     IssuesUpdateParams,
@@ -84,8 +88,10 @@ from .models import (
     Contact,
     ContactResponse,
     CustomField,
+    DeleteIssueResponse,
     Issue,
     IssueNoteResponse,
+    IssueReplyResponse,
     IssueResponse,
     IssueThreadResponse,
     Message,
@@ -147,7 +153,7 @@ class PylonConnector:
 
     connector_name = "pylon"
     connector_version = "0.1.9"
-    sdk_version = "0.1.32"
+    sdk_version = "0.1.33"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -155,6 +161,10 @@ class PylonConnector:
         ("issues", "create"): None,
         ("issues", "get"): None,
         ("issues", "update"): None,
+        ("issue_replies", "create"): None,
+        ("issue_assignments", "update"): None,
+        ("issue_statuses", "update"): None,
+        ("issues", "delete"): None,
         ("messages", "list"): True,
         ("issue_notes", "create"): None,
         ("issue_threads", "create"): None,
@@ -199,6 +209,10 @@ class PylonConnector:
         ('issues', 'create'): {'title': 'title', 'body_html': 'body_html', 'priority': 'priority', 'requester_email': 'requester_email', 'requester_name': 'requester_name', 'account_id': 'account_id', 'assignee_id': 'assignee_id', 'team_id': 'team_id', 'tags': 'tags'},
         ('issues', 'get'): {'id': 'id'},
         ('issues', 'update'): {'state': 'state', 'assignee_id': 'assignee_id', 'team_id': 'team_id', 'account_id': 'account_id', 'tags': 'tags', 'id': 'id'},
+        ('issue_replies', 'create'): {'body_html': 'body_html', 'message_id': 'message_id', 'user_id': 'user_id', 'contact_id': 'contact_id', 'attachment_urls': 'attachment_urls', 'id': 'id'},
+        ('issue_assignments', 'update'): {'assignee_id': 'assignee_id', 'team_id': 'team_id', 'id': 'id'},
+        ('issue_statuses', 'update'): {'state': 'state', 'id': 'id'},
+        ('issues', 'delete'): {'id': 'id'},
         ('messages', 'list'): {'id': 'id', 'cursor': 'cursor'},
         ('issue_notes', 'create'): {'body_html': 'body_html', 'thread_id': 'thread_id', 'message_id': 'message_id', 'id': 'id'},
         ('issue_threads', 'create'): {'name': 'name', 'id': 'id'},
@@ -329,6 +343,9 @@ class PylonConnector:
 
         # Initialize entity query objects
         self.issues = IssuesQuery(self)
+        self.issue_replies = IssueRepliesQuery(self)
+        self.issue_assignments = IssueAssignmentsQuery(self)
+        self.issue_statuses = IssueStatusesQuery(self)
         self.messages = MessagesQuery(self)
         self.issue_notes = IssueNotesQuery(self)
         self.issue_threads = IssueThreadsQuery(self)
@@ -380,6 +397,38 @@ class PylonConnector:
         action: Literal["update"],
         params: "IssuesUpdateParams"
     ) -> "IssueResponse": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["issue_replies"],
+        action: Literal["create"],
+        params: "IssueRepliesCreateParams"
+    ) -> "IssueReplyResponse": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["issue_assignments"],
+        action: Literal["update"],
+        params: "IssueAssignmentsUpdateParams"
+    ) -> "IssueResponse": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["issue_statuses"],
+        action: Literal["update"],
+        params: "IssueStatusesUpdateParams"
+    ) -> "IssueResponse": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["issues"],
+        action: Literal["delete"],
+        params: "IssuesDeleteParams"
+    ) -> "DeleteIssueResponse": ...
 
     @overload
     async def execute(
@@ -666,14 +715,14 @@ class PylonConnector:
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "create", "get", "update"],
+        action: Literal["list", "create", "get", "update", "delete"],
         params: Mapping[str, Any]
     ) -> PylonExecuteResult[Any] | PylonExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "create", "get", "update"],
+        action: Literal["list", "create", "get", "update", "delete"],
         params: Mapping[str, Any] | None = None
     ) -> Any:
         """
@@ -1154,6 +1203,157 @@ class IssuesQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("issues", "update", params)
+        return result
+
+
+
+    async def delete(
+        self,
+        id: str | None = None,
+        **kwargs
+    ) -> DeleteIssueResponse:
+        """
+        Permanently deletes an issue by ID. This action cannot be undone.
+
+        Args:
+            id: The ID of the issue to delete
+            **kwargs: Additional parameters
+
+        Returns:
+            DeleteIssueResponse
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("issues", "delete", params)
+        return result
+
+
+
+class IssueRepliesQuery:
+    """
+    Query class for IssueReplies entity operations.
+    """
+
+    def __init__(self, connector: PylonConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def create(
+        self,
+        body_html: str,
+        message_id: str,
+        user_id: str | None = None,
+        contact_id: str | None = None,
+        attachment_urls: list[str] | None = None,
+        id: str | None = None,
+        **kwargs
+    ) -> IssueReplyResponse:
+        """
+        Sends a customer-facing reply on an issue, visible to the requester.
+
+        Args:
+            body_html: The body of the reply message in HTML
+            message_id: The ID of the message to reply to
+            user_id: Optional user ID to post the message as. Only one of user_id or contact_id can be provided.
+            contact_id: Optional contact ID to post the message as. Only one of user_id or contact_id can be provided.
+            attachment_urls: An array of attachment URLs to attach to this reply
+            id: The ID of the issue to reply to
+            **kwargs: Additional parameters
+
+        Returns:
+            IssueReplyResponse
+        """
+        params = {k: v for k, v in {
+            "body_html": body_html,
+            "message_id": message_id,
+            "user_id": user_id,
+            "contact_id": contact_id,
+            "attachment_urls": attachment_urls,
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("issue_replies", "create", params)
+        return result
+
+
+
+class IssueAssignmentsQuery:
+    """
+    Query class for IssueAssignments entity operations.
+    """
+
+    def __init__(self, connector: PylonConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def update(
+        self,
+        assignee_id: str | None = None,
+        team_id: str | None = None,
+        id: str | None = None,
+        **kwargs
+    ) -> IssueResponse:
+        """
+        Assign an issue to a user or team, or remove the current assignment.
+
+        Args:
+            assignee_id: The ID of the user to assign the issue to. Pass an empty string to unassign.
+            team_id: The ID of the team to assign the issue to. Pass an empty string to remove team assignment.
+            id: The ID of the issue to assign
+            **kwargs: Additional parameters
+
+        Returns:
+            IssueResponse
+        """
+        params = {k: v for k, v in {
+            "assignee_id": assignee_id,
+            "team_id": team_id,
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("issue_assignments", "update", params)
+        return result
+
+
+
+class IssueStatusesQuery:
+    """
+    Query class for IssueStatuses entity operations.
+    """
+
+    def __init__(self, connector: PylonConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def update(
+        self,
+        state: str,
+        id: str | None = None,
+        **kwargs
+    ) -> IssueResponse:
+        """
+        Transition an issue to a new status (new, waiting_on_you, waiting_on_customer, on_hold, closed, or a custom status slug).
+
+        Args:
+            state: The target state for the issue (new, waiting_on_you, waiting_on_customer, on_hold, closed, or a custom status slug)
+            id: The ID of the issue to update status for
+            **kwargs: Additional parameters
+
+        Returns:
+            IssueResponse
+        """
+        params = {k: v for k, v in {
+            "state": state,
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("issue_statuses", "update", params)
         return result
 
 

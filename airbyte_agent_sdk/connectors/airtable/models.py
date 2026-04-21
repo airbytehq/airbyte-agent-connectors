@@ -37,6 +37,14 @@ class BasesList(BaseModel):
     bases: Union[list[Base], Any] = Field(default=None)
     offset: Union[str | None, Any] = Field(default=None)
 
+class View(BaseModel):
+    """A view in a table"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[str | None, Any] = Field(default=None)
+    name: Union[str | None, Any] = Field(default=None)
+    type_: Union[str | None, Any] = Field(default=None, alias="type")
+
 class TableField(BaseModel):
     """A field (column) in a table"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -45,14 +53,6 @@ class TableField(BaseModel):
     name: Union[str | None, Any] = Field(default=None)
     type_: Union[str | None, Any] = Field(default=None, alias="type")
     options: Union[dict[str, Any] | None, Any] = Field(default=None)
-
-class View(BaseModel):
-    """A view in a table"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    type_: Union[str | None, Any] = Field(default=None, alias="type")
 
 class Table(BaseModel):
     """A table within an Airtable base"""

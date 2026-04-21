@@ -25,6 +25,9 @@ from airbyte_agent_sdk.schema.extensions import (
 from airbyte_agent_sdk.schema.base import (
     ExampleQuestions,
 )
+from airbyte_agent_sdk.schema.components import (
+    PathOverrideConfig,
+)
 from uuid import (
     UUID,
 )
@@ -59,6 +62,7 @@ PylonConnectorModel: ConnectorModel = ConnectorModel(
                 Action.CREATE,
                 Action.GET,
                 Action.UPDATE,
+                Action.DELETE,
             ],
             endpoints={
                 Action.LIST: EndpointDefinition(
@@ -141,6 +145,11 @@ PylonConnectorModel: ConnectorModel = ConnectorModel(
                                         'business_hours_resolution_seconds': {
                                             'type': ['integer', 'null'],
                                             'description': 'Business hours time in seconds for resolution',
+                                        },
+                                        'business_hours_time_in_status_seconds': {
+                                            'type': ['object', 'null'],
+                                            'additionalProperties': {'type': 'integer'},
+                                            'description': 'A map of status slug to the business hours time in seconds the issue has spent in that status',
                                         },
                                         'chat_widget_info': {
                                             'oneOf': [
@@ -348,14 +357,23 @@ PylonConnectorModel: ConnectorModel = ConnectorModel(
                                             'type': ['string', 'null'],
                                             'description': 'The title of the issue',
                                         },
+                                        'time_in_status_seconds': {
+                                            'type': ['object', 'null'],
+                                            'additionalProperties': {'type': 'integer'},
+                                            'description': 'A map of status slug to the time in seconds the issue has spent in that status',
+                                        },
                                         'type': {
                                             'oneOf': [
                                                 {
                                                     'type': 'string',
-                                                    'enum': ['Conversation', 'Ticket'],
+                                                    'enum': ['conversation', 'ticket'],
                                                 },
                                                 {'type': 'null'},
                                             ],
+                                        },
+                                        'updated_at': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The time the issue was last updated',
                                         },
                                     },
                                     'x-airbyte-entity-name': 'issues',
@@ -486,6 +504,11 @@ PylonConnectorModel: ConnectorModel = ConnectorModel(
                                         'type': ['integer', 'null'],
                                         'description': 'Business hours time in seconds for resolution',
                                     },
+                                    'business_hours_time_in_status_seconds': {
+                                        'type': ['object', 'null'],
+                                        'additionalProperties': {'type': 'integer'},
+                                        'description': 'A map of status slug to the business hours time in seconds the issue has spent in that status',
+                                    },
                                     'chat_widget_info': {
                                         'oneOf': [
                                             {
@@ -692,14 +715,23 @@ PylonConnectorModel: ConnectorModel = ConnectorModel(
                                         'type': ['string', 'null'],
                                         'description': 'The title of the issue',
                                     },
+                                    'time_in_status_seconds': {
+                                        'type': ['object', 'null'],
+                                        'additionalProperties': {'type': 'integer'},
+                                        'description': 'A map of status slug to the time in seconds the issue has spent in that status',
+                                    },
                                     'type': {
                                         'oneOf': [
                                             {
                                                 'type': 'string',
-                                                'enum': ['Conversation', 'Ticket'],
+                                                'enum': ['conversation', 'ticket'],
                                             },
                                             {'type': 'null'},
                                         ],
+                                    },
+                                    'updated_at': {
+                                        'type': ['string', 'null'],
+                                        'description': 'The time the issue was last updated',
                                     },
                                 },
                                 'x-airbyte-entity-name': 'issues',
@@ -791,6 +823,11 @@ PylonConnectorModel: ConnectorModel = ConnectorModel(
                                         'type': ['integer', 'null'],
                                         'description': 'Business hours time in seconds for resolution',
                                     },
+                                    'business_hours_time_in_status_seconds': {
+                                        'type': ['object', 'null'],
+                                        'additionalProperties': {'type': 'integer'},
+                                        'description': 'A map of status slug to the business hours time in seconds the issue has spent in that status',
+                                    },
                                     'chat_widget_info': {
                                         'oneOf': [
                                             {
@@ -997,14 +1034,23 @@ PylonConnectorModel: ConnectorModel = ConnectorModel(
                                         'type': ['string', 'null'],
                                         'description': 'The title of the issue',
                                     },
+                                    'time_in_status_seconds': {
+                                        'type': ['object', 'null'],
+                                        'additionalProperties': {'type': 'integer'},
+                                        'description': 'A map of status slug to the time in seconds the issue has spent in that status',
+                                    },
                                     'type': {
                                         'oneOf': [
                                             {
                                                 'type': 'string',
-                                                'enum': ['Conversation', 'Ticket'],
+                                                'enum': ['conversation', 'ticket'],
                                             },
                                             {'type': 'null'},
                                         ],
+                                    },
+                                    'updated_at': {
+                                        'type': ['string', 'null'],
+                                        'description': 'The time the issue was last updated',
                                     },
                                 },
                                 'x-airbyte-entity-name': 'issues',
@@ -1118,6 +1164,11 @@ PylonConnectorModel: ConnectorModel = ConnectorModel(
                                         'type': ['integer', 'null'],
                                         'description': 'Business hours time in seconds for resolution',
                                     },
+                                    'business_hours_time_in_status_seconds': {
+                                        'type': ['object', 'null'],
+                                        'additionalProperties': {'type': 'integer'},
+                                        'description': 'A map of status slug to the business hours time in seconds the issue has spent in that status',
+                                    },
                                     'chat_widget_info': {
                                         'oneOf': [
                                             {
@@ -1324,14 +1375,23 @@ PylonConnectorModel: ConnectorModel = ConnectorModel(
                                         'type': ['string', 'null'],
                                         'description': 'The title of the issue',
                                     },
+                                    'time_in_status_seconds': {
+                                        'type': ['object', 'null'],
+                                        'additionalProperties': {'type': 'integer'},
+                                        'description': 'A map of status slug to the time in seconds the issue has spent in that status',
+                                    },
                                     'type': {
                                         'oneOf': [
                                             {
                                                 'type': 'string',
-                                                'enum': ['Conversation', 'Ticket'],
+                                                'enum': ['conversation', 'ticket'],
                                             },
                                             {'type': 'null'},
                                         ],
+                                    },
+                                    'updated_at': {
+                                        'type': ['string', 'null'],
+                                        'description': 'The time the issue was last updated',
                                     },
                                 },
                                 'x-airbyte-entity-name': 'issues',
@@ -1350,6 +1410,25 @@ PylonConnectorModel: ConnectorModel = ConnectorModel(
                                     'search_strategy': 'Search by title. If no results, try resolving by account name.',
                                 },
                             },
+                            'request_id': {'type': 'string', 'description': 'The request ID for tracking'},
+                        },
+                    },
+                ),
+                Action.DELETE: EndpointDefinition(
+                    method='DELETE',
+                    path='/issues/{id}/delete',
+                    path_override=PathOverrideConfig(
+                        path='/issues/{id}',
+                    ),
+                    action=Action.DELETE,
+                    description='Permanently deletes an issue by ID. This action cannot be undone.',
+                    path_params=['id'],
+                    path_params_schema={
+                        'id': {'type': 'string', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
                             'request_id': {'type': 'string', 'description': 'The request ID for tracking'},
                         },
                     },
@@ -1391,6 +1470,11 @@ PylonConnectorModel: ConnectorModel = ConnectorModel(
                     'business_hours_resolution_seconds': {
                         'type': ['integer', 'null'],
                         'description': 'Business hours time in seconds for resolution',
+                    },
+                    'business_hours_time_in_status_seconds': {
+                        'type': ['object', 'null'],
+                        'additionalProperties': {'type': 'integer'},
+                        'description': 'A map of status slug to the business hours time in seconds the issue has spent in that status',
                     },
                     'chat_widget_info': {
                         'oneOf': [
@@ -1509,14 +1593,23 @@ PylonConnectorModel: ConnectorModel = ConnectorModel(
                         'type': ['string', 'null'],
                         'description': 'The title of the issue',
                     },
+                    'time_in_status_seconds': {
+                        'type': ['object', 'null'],
+                        'additionalProperties': {'type': 'integer'},
+                        'description': 'A map of status slug to the time in seconds the issue has spent in that status',
+                    },
                     'type': {
                         'oneOf': [
                             {
                                 'type': 'string',
-                                'enum': ['Conversation', 'Ticket'],
+                                'enum': ['conversation', 'ticket'],
                             },
                             {'type': 'null'},
                         ],
+                    },
+                    'updated_at': {
+                        'type': ['string', 'null'],
+                        'description': 'The time the issue was last updated',
                     },
                 },
                 'x-airbyte-entity-name': 'issues',
@@ -1548,6 +1641,729 @@ PylonConnectorModel: ConnectorModel = ConnectorModel(
                 'freshness': 'live',
                 'example_questions': ['Did Marathon get back to us on the integration issue?', 'What are the open support tickets for Acme?', 'Who last replied to the billing thread?'],
                 'search_strategy': 'Search by title. If no results, try resolving by account name.',
+            },
+        ),
+        EntityDefinition(
+            name='issue_replies',
+            actions=[Action.CREATE],
+            endpoints={
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/issues/{id}/reply',
+                    action=Action.CREATE,
+                    description='Sends a customer-facing reply on an issue, visible to the requester.',
+                    body_fields=[
+                        'body_html',
+                        'message_id',
+                        'user_id',
+                        'contact_id',
+                        'attachment_urls',
+                    ],
+                    path_params=['id'],
+                    path_params_schema={
+                        'id': {'type': 'string', 'required': True},
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'properties': {
+                            'body_html': {'type': 'string', 'description': 'The body of the reply message in HTML'},
+                            'message_id': {'type': 'string', 'description': 'The ID of the message to reply to'},
+                            'user_id': {'type': 'string', 'description': 'Optional user ID to post the message as. Only one of user_id or contact_id can be provided.'},
+                            'contact_id': {'type': 'string', 'description': 'Optional contact ID to post the message as. Only one of user_id or contact_id can be provided.'},
+                            'attachment_urls': {
+                                'type': 'array',
+                                'items': {'type': 'string'},
+                                'description': 'An array of attachment URLs to attach to this reply',
+                            },
+                        },
+                        'required': ['body_html', 'message_id'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'id': {'type': 'string', 'description': 'The ID of the reply message'},
+                                    'issue_id': {'type': 'string', 'description': 'The ID of the issue the reply belongs to'},
+                                },
+                            },
+                            'request_id': {'type': 'string', 'description': 'The request ID for tracking'},
+                        },
+                    },
+                ),
+            },
+        ),
+        EntityDefinition(
+            name='issue_assignments',
+            actions=[Action.UPDATE],
+            endpoints={
+                Action.UPDATE: EndpointDefinition(
+                    method='PATCH',
+                    path='/issues/{id}/assign',
+                    path_override=PathOverrideConfig(
+                        path='/issues/{id}',
+                    ),
+                    action=Action.UPDATE,
+                    description='Assign an issue to a user or team, or remove the current assignment.',
+                    body_fields=['assignee_id', 'team_id'],
+                    path_params=['id'],
+                    path_params_schema={
+                        'id': {'type': 'string', 'required': True},
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'properties': {
+                            'assignee_id': {'type': 'string', 'description': 'The ID of the user to assign the issue to. Pass an empty string to unassign.'},
+                            'team_id': {'type': 'string', 'description': 'The ID of the team to assign the issue to. Pass an empty string to remove team assignment.'},
+                        },
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'id': {'type': 'string', 'description': 'The ID of the issue'},
+                                    'account': {
+                                        'oneOf': [
+                                            {
+                                                'type': 'object',
+                                                'properties': {
+                                                    'id': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'The ID of the account',
+                                                    },
+                                                },
+                                            },
+                                            {'type': 'null'},
+                                        ],
+                                    },
+                                    'assignee': {
+                                        'oneOf': [
+                                            {
+                                                'type': 'object',
+                                                'properties': {
+                                                    'email': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'The email of the user',
+                                                    },
+                                                    'id': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'The ID of the user',
+                                                    },
+                                                },
+                                            },
+                                            {'type': 'null'},
+                                        ],
+                                    },
+                                    'attachment_urls': {
+                                        'type': ['array', 'null'],
+                                        'items': {'type': 'string'},
+                                        'description': 'The attachment URLs attached to this issue',
+                                    },
+                                    'author_unverified': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether any message on the issue has an unverified author identity',
+                                    },
+                                    'body_html': {
+                                        'type': ['string', 'null'],
+                                        'description': 'The body of the issue in HTML format',
+                                    },
+                                    'business_hours_first_response_seconds': {
+                                        'type': ['integer', 'null'],
+                                        'description': 'Business hours time in seconds for first response',
+                                    },
+                                    'business_hours_resolution_seconds': {
+                                        'type': ['integer', 'null'],
+                                        'description': 'Business hours time in seconds for resolution',
+                                    },
+                                    'business_hours_time_in_status_seconds': {
+                                        'type': ['object', 'null'],
+                                        'additionalProperties': {'type': 'integer'},
+                                        'description': 'A map of status slug to the business hours time in seconds the issue has spent in that status',
+                                    },
+                                    'chat_widget_info': {
+                                        'oneOf': [
+                                            {
+                                                'type': 'object',
+                                                'properties': {
+                                                    'page_url': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'The URL of the page the user was on when starting the chat widget issue',
+                                                    },
+                                                },
+                                            },
+                                            {'type': 'null'},
+                                        ],
+                                    },
+                                    'created_at': {
+                                        'type': ['string', 'null'],
+                                        'description': 'The time the issue was created',
+                                    },
+                                    'csat_responses': {
+                                        'type': ['array', 'null'],
+                                        'items': {
+                                            'type': 'object',
+                                            'properties': {
+                                                'comment': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'The comment of the CSAT response',
+                                                },
+                                                'score': {
+                                                    'type': ['integer', 'null'],
+                                                    'description': 'The score of the CSAT response',
+                                                },
+                                            },
+                                        },
+                                        'description': 'The CSAT responses of the issue',
+                                    },
+                                    'custom_fields': {
+                                        'type': ['object', 'null'],
+                                        'additionalProperties': {
+                                            'type': 'object',
+                                            'properties': {
+                                                'slug': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'The slug of the custom field',
+                                                },
+                                                'value': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'The value of the custom field',
+                                                },
+                                                'values': {
+                                                    'type': ['array', 'null'],
+                                                    'items': {'type': 'string'},
+                                                    'description': 'The values for multi-valued custom fields',
+                                                },
+                                            },
+                                        },
+                                        'description': 'Custom field values associated with the issue',
+                                    },
+                                    'customer_portal_visible': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether the issue is visible in the customer portal',
+                                    },
+                                    'external_issues': {
+                                        'type': ['array', 'null'],
+                                        'items': {
+                                            'type': 'object',
+                                            'properties': {
+                                                'external_id': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'The external ID of the external issue',
+                                                },
+                                                'link': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'Link to the product issue',
+                                                },
+                                                'source': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'The source of the external issue',
+                                                },
+                                            },
+                                        },
+                                        'description': 'The external issues associated with the issue',
+                                    },
+                                    'first_response_seconds': {
+                                        'type': ['integer', 'null'],
+                                        'description': 'Time in seconds for first response',
+                                    },
+                                    'first_response_time': {
+                                        'type': ['string', 'null'],
+                                        'description': 'The time of the first response',
+                                    },
+                                    'latest_message_time': {
+                                        'type': ['string', 'null'],
+                                        'description': 'The time of the latest message in the issue',
+                                    },
+                                    'link': {
+                                        'type': ['string', 'null'],
+                                        'description': 'The link to the issue in Pylon',
+                                    },
+                                    'number': {
+                                        'type': ['integer', 'null'],
+                                        'description': 'The number of the issue',
+                                    },
+                                    'number_of_touches': {
+                                        'type': ['integer', 'null'],
+                                        'description': 'The number of times the issue has been touched',
+                                    },
+                                    'requester': {
+                                        'oneOf': [
+                                            {
+                                                'type': 'object',
+                                                'properties': {
+                                                    'email': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'The email of the contact',
+                                                    },
+                                                    'id': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'The ID of the contact',
+                                                    },
+                                                },
+                                            },
+                                            {'type': 'null'},
+                                        ],
+                                    },
+                                    'resolution_seconds': {
+                                        'type': ['integer', 'null'],
+                                        'description': 'Time in seconds for resolution',
+                                    },
+                                    'resolution_time': {
+                                        'type': ['string', 'null'],
+                                        'description': 'The time of the resolution',
+                                    },
+                                    'slack': {
+                                        'oneOf': [
+                                            {
+                                                'type': 'object',
+                                                'properties': {
+                                                    'channel_id': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'The Slack channel ID associated with the issue',
+                                                    },
+                                                    'message_ts': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'The root message ID of Slack message that started issue',
+                                                    },
+                                                    'workspace_id': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'The Slack workspace ID associated with the issue',
+                                                    },
+                                                },
+                                            },
+                                            {'type': 'null'},
+                                        ],
+                                    },
+                                    'snoozed_until_time': {
+                                        'type': ['string', 'null'],
+                                        'description': 'The time the issue was snoozed until',
+                                    },
+                                    'source': {
+                                        'oneOf': [
+                                            {
+                                                'type': 'string',
+                                                'enum': [
+                                                    'slack',
+                                                    'microsoft_teams',
+                                                    'microsoft_teams_chat',
+                                                    'chat_widget',
+                                                    'email',
+                                                    'manual',
+                                                    'form',
+                                                    'discord',
+                                                    'whatsapp',
+                                                    'sms',
+                                                    'telegram',
+                                                ],
+                                            },
+                                            {'type': 'null'},
+                                        ],
+                                    },
+                                    'state': {
+                                        'type': ['string', 'null'],
+                                        'description': 'The state of the issue',
+                                    },
+                                    'tags': {
+                                        'type': ['array', 'null'],
+                                        'items': {'type': 'string'},
+                                        'description': 'Tags associated with the issue',
+                                    },
+                                    'team': {
+                                        'oneOf': [
+                                            {
+                                                'type': 'object',
+                                                'properties': {
+                                                    'id': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'The ID of the team',
+                                                    },
+                                                },
+                                            },
+                                            {'type': 'null'},
+                                        ],
+                                    },
+                                    'title': {
+                                        'type': ['string', 'null'],
+                                        'description': 'The title of the issue',
+                                    },
+                                    'time_in_status_seconds': {
+                                        'type': ['object', 'null'],
+                                        'additionalProperties': {'type': 'integer'},
+                                        'description': 'A map of status slug to the time in seconds the issue has spent in that status',
+                                    },
+                                    'type': {
+                                        'oneOf': [
+                                            {
+                                                'type': 'string',
+                                                'enum': ['conversation', 'ticket'],
+                                            },
+                                            {'type': 'null'},
+                                        ],
+                                    },
+                                    'updated_at': {
+                                        'type': ['string', 'null'],
+                                        'description': 'The time the issue was last updated',
+                                    },
+                                },
+                                'x-airbyte-entity-name': 'issues',
+                                'x-airbyte-ai-hints': {
+                                    'summary': 'Customer support threads, open issues, response timelines, and who replied',
+                                    'when_to_use': 'Support issue or customer response questions',
+                                    'trigger_phrases': [
+                                        'did they get back',
+                                        'support issue',
+                                        'ticket for',
+                                        'open issues',
+                                        'did someone follow up',
+                                    ],
+                                    'freshness': 'live',
+                                    'example_questions': ['Did Marathon get back to us on the integration issue?', 'What are the open support tickets for Acme?', 'Who last replied to the billing thread?'],
+                                    'search_strategy': 'Search by title. If no results, try resolving by account name.',
+                                },
+                            },
+                            'request_id': {'type': 'string', 'description': 'The request ID for tracking'},
+                        },
+                    },
+                ),
+            },
+        ),
+        EntityDefinition(
+            name='issue_statuses',
+            actions=[Action.UPDATE],
+            endpoints={
+                Action.UPDATE: EndpointDefinition(
+                    method='PATCH',
+                    path='/issues/{id}/update-status',
+                    path_override=PathOverrideConfig(
+                        path='/issues/{id}',
+                    ),
+                    action=Action.UPDATE,
+                    description='Transition an issue to a new status (new, waiting_on_you, waiting_on_customer, on_hold, closed, or a custom status slug).',
+                    body_fields=['state'],
+                    path_params=['id'],
+                    path_params_schema={
+                        'id': {'type': 'string', 'required': True},
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'properties': {
+                            'state': {'type': 'string', 'description': 'The target state for the issue (new, waiting_on_you, waiting_on_customer, on_hold, closed, or a custom status slug)'},
+                        },
+                        'required': ['state'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'id': {'type': 'string', 'description': 'The ID of the issue'},
+                                    'account': {
+                                        'oneOf': [
+                                            {
+                                                'type': 'object',
+                                                'properties': {
+                                                    'id': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'The ID of the account',
+                                                    },
+                                                },
+                                            },
+                                            {'type': 'null'},
+                                        ],
+                                    },
+                                    'assignee': {
+                                        'oneOf': [
+                                            {
+                                                'type': 'object',
+                                                'properties': {
+                                                    'email': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'The email of the user',
+                                                    },
+                                                    'id': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'The ID of the user',
+                                                    },
+                                                },
+                                            },
+                                            {'type': 'null'},
+                                        ],
+                                    },
+                                    'attachment_urls': {
+                                        'type': ['array', 'null'],
+                                        'items': {'type': 'string'},
+                                        'description': 'The attachment URLs attached to this issue',
+                                    },
+                                    'author_unverified': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether any message on the issue has an unverified author identity',
+                                    },
+                                    'body_html': {
+                                        'type': ['string', 'null'],
+                                        'description': 'The body of the issue in HTML format',
+                                    },
+                                    'business_hours_first_response_seconds': {
+                                        'type': ['integer', 'null'],
+                                        'description': 'Business hours time in seconds for first response',
+                                    },
+                                    'business_hours_resolution_seconds': {
+                                        'type': ['integer', 'null'],
+                                        'description': 'Business hours time in seconds for resolution',
+                                    },
+                                    'business_hours_time_in_status_seconds': {
+                                        'type': ['object', 'null'],
+                                        'additionalProperties': {'type': 'integer'},
+                                        'description': 'A map of status slug to the business hours time in seconds the issue has spent in that status',
+                                    },
+                                    'chat_widget_info': {
+                                        'oneOf': [
+                                            {
+                                                'type': 'object',
+                                                'properties': {
+                                                    'page_url': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'The URL of the page the user was on when starting the chat widget issue',
+                                                    },
+                                                },
+                                            },
+                                            {'type': 'null'},
+                                        ],
+                                    },
+                                    'created_at': {
+                                        'type': ['string', 'null'],
+                                        'description': 'The time the issue was created',
+                                    },
+                                    'csat_responses': {
+                                        'type': ['array', 'null'],
+                                        'items': {
+                                            'type': 'object',
+                                            'properties': {
+                                                'comment': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'The comment of the CSAT response',
+                                                },
+                                                'score': {
+                                                    'type': ['integer', 'null'],
+                                                    'description': 'The score of the CSAT response',
+                                                },
+                                            },
+                                        },
+                                        'description': 'The CSAT responses of the issue',
+                                    },
+                                    'custom_fields': {
+                                        'type': ['object', 'null'],
+                                        'additionalProperties': {
+                                            'type': 'object',
+                                            'properties': {
+                                                'slug': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'The slug of the custom field',
+                                                },
+                                                'value': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'The value of the custom field',
+                                                },
+                                                'values': {
+                                                    'type': ['array', 'null'],
+                                                    'items': {'type': 'string'},
+                                                    'description': 'The values for multi-valued custom fields',
+                                                },
+                                            },
+                                        },
+                                        'description': 'Custom field values associated with the issue',
+                                    },
+                                    'customer_portal_visible': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether the issue is visible in the customer portal',
+                                    },
+                                    'external_issues': {
+                                        'type': ['array', 'null'],
+                                        'items': {
+                                            'type': 'object',
+                                            'properties': {
+                                                'external_id': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'The external ID of the external issue',
+                                                },
+                                                'link': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'Link to the product issue',
+                                                },
+                                                'source': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'The source of the external issue',
+                                                },
+                                            },
+                                        },
+                                        'description': 'The external issues associated with the issue',
+                                    },
+                                    'first_response_seconds': {
+                                        'type': ['integer', 'null'],
+                                        'description': 'Time in seconds for first response',
+                                    },
+                                    'first_response_time': {
+                                        'type': ['string', 'null'],
+                                        'description': 'The time of the first response',
+                                    },
+                                    'latest_message_time': {
+                                        'type': ['string', 'null'],
+                                        'description': 'The time of the latest message in the issue',
+                                    },
+                                    'link': {
+                                        'type': ['string', 'null'],
+                                        'description': 'The link to the issue in Pylon',
+                                    },
+                                    'number': {
+                                        'type': ['integer', 'null'],
+                                        'description': 'The number of the issue',
+                                    },
+                                    'number_of_touches': {
+                                        'type': ['integer', 'null'],
+                                        'description': 'The number of times the issue has been touched',
+                                    },
+                                    'requester': {
+                                        'oneOf': [
+                                            {
+                                                'type': 'object',
+                                                'properties': {
+                                                    'email': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'The email of the contact',
+                                                    },
+                                                    'id': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'The ID of the contact',
+                                                    },
+                                                },
+                                            },
+                                            {'type': 'null'},
+                                        ],
+                                    },
+                                    'resolution_seconds': {
+                                        'type': ['integer', 'null'],
+                                        'description': 'Time in seconds for resolution',
+                                    },
+                                    'resolution_time': {
+                                        'type': ['string', 'null'],
+                                        'description': 'The time of the resolution',
+                                    },
+                                    'slack': {
+                                        'oneOf': [
+                                            {
+                                                'type': 'object',
+                                                'properties': {
+                                                    'channel_id': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'The Slack channel ID associated with the issue',
+                                                    },
+                                                    'message_ts': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'The root message ID of Slack message that started issue',
+                                                    },
+                                                    'workspace_id': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'The Slack workspace ID associated with the issue',
+                                                    },
+                                                },
+                                            },
+                                            {'type': 'null'},
+                                        ],
+                                    },
+                                    'snoozed_until_time': {
+                                        'type': ['string', 'null'],
+                                        'description': 'The time the issue was snoozed until',
+                                    },
+                                    'source': {
+                                        'oneOf': [
+                                            {
+                                                'type': 'string',
+                                                'enum': [
+                                                    'slack',
+                                                    'microsoft_teams',
+                                                    'microsoft_teams_chat',
+                                                    'chat_widget',
+                                                    'email',
+                                                    'manual',
+                                                    'form',
+                                                    'discord',
+                                                    'whatsapp',
+                                                    'sms',
+                                                    'telegram',
+                                                ],
+                                            },
+                                            {'type': 'null'},
+                                        ],
+                                    },
+                                    'state': {
+                                        'type': ['string', 'null'],
+                                        'description': 'The state of the issue',
+                                    },
+                                    'tags': {
+                                        'type': ['array', 'null'],
+                                        'items': {'type': 'string'},
+                                        'description': 'Tags associated with the issue',
+                                    },
+                                    'team': {
+                                        'oneOf': [
+                                            {
+                                                'type': 'object',
+                                                'properties': {
+                                                    'id': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'The ID of the team',
+                                                    },
+                                                },
+                                            },
+                                            {'type': 'null'},
+                                        ],
+                                    },
+                                    'title': {
+                                        'type': ['string', 'null'],
+                                        'description': 'The title of the issue',
+                                    },
+                                    'time_in_status_seconds': {
+                                        'type': ['object', 'null'],
+                                        'additionalProperties': {'type': 'integer'},
+                                        'description': 'A map of status slug to the time in seconds the issue has spent in that status',
+                                    },
+                                    'type': {
+                                        'oneOf': [
+                                            {
+                                                'type': 'string',
+                                                'enum': ['conversation', 'ticket'],
+                                            },
+                                            {'type': 'null'},
+                                        ],
+                                    },
+                                    'updated_at': {
+                                        'type': ['string', 'null'],
+                                        'description': 'The time the issue was last updated',
+                                    },
+                                },
+                                'x-airbyte-entity-name': 'issues',
+                                'x-airbyte-ai-hints': {
+                                    'summary': 'Customer support threads, open issues, response timelines, and who replied',
+                                    'when_to_use': 'Support issue or customer response questions',
+                                    'trigger_phrases': [
+                                        'did they get back',
+                                        'support issue',
+                                        'ticket for',
+                                        'open issues',
+                                        'did someone follow up',
+                                    ],
+                                    'freshness': 'live',
+                                    'example_questions': ['Did Marathon get back to us on the integration issue?', 'What are the open support tickets for Acme?', 'Who last replied to the billing thread?'],
+                                    'search_strategy': 'Search by title. If no results, try resolving by account name.',
+                                },
+                            },
+                            'request_id': {'type': 'string', 'description': 'The request ID for tracking'},
+                        },
+                    },
+                ),
             },
         ),
         EntityDefinition(
@@ -4638,6 +5454,12 @@ PylonConnectorModel: ConnectorModel = ConnectorModel(
             'Show me details for a specific issue',
             'Get details for a specific account',
             'Show me details for a specific contact',
+            'Reply to the customer on an issue saying we are looking into it',
+            'Send a message to the customer on the billing issue',
+            'Assign an issue to a specific team member',
+            'Change the status of an issue to waiting_on_customer',
+            'Close an issue as resolved',
+            'Delete a test issue',
         ],
         context_store_search=[
             'What are the most common issue sources this month?',
@@ -4653,11 +5475,6 @@ PylonConnectorModel: ConnectorModel = ConnectorModel(
             'Analyze issue resolution times over the last 30 days',
             'List contacts associated with a specific account',
         ],
-        unsupported=[
-            'Delete an issue',
-            'Delete an account',
-            'Send a message to a customer',
-            'Schedule a meeting with a contact',
-        ],
+        unsupported=['Delete an account', 'Schedule a meeting with a contact'],
     ),
 )

@@ -24,6 +24,12 @@ The Pylon connector is optimized to handle prompts like these.
 - Show me details for a specific issue
 - Get details for a specific account
 - Show me details for a specific contact
+- Reply to the customer on an issue saying we are looking into it
+- Send a message to the customer on the billing issue
+- Assign an issue to a specific team member
+- Change the status of an issue to waiting_on_customer
+- Close an issue as resolved
+- Delete a test issue
 - What are the most common issue sources this month?
 - Show me issues assigned to a specific team
 - Which accounts have the most open issues?
@@ -34,9 +40,7 @@ The Pylon connector is optimized to handle prompts like these.
 
 The Pylon connector isn't currently able to handle prompts like these.
 
-- Delete an issue
 - Delete an account
-- Send a message to a customer
 - Schedule a meeting with a contact
 
 ## Installation
@@ -102,7 +106,10 @@ This connector supports the following entities and actions. For more details, se
 
 | Entity | Actions |
 |--------|---------|
-| Issues | [List](./REFERENCE.md#issues-list), [Create](./REFERENCE.md#issues-create), [Get](./REFERENCE.md#issues-get), [Update](./REFERENCE.md#issues-update) |
+| Issues | [List](./REFERENCE.md#issues-list), [Create](./REFERENCE.md#issues-create), [Get](./REFERENCE.md#issues-get), [Update](./REFERENCE.md#issues-update), [Delete](./REFERENCE.md#issues-delete) |
+| Issue Replies | [Create](./REFERENCE.md#issue-replies-create) |
+| Issue Assignments | [Update](./REFERENCE.md#issue-assignments-update) |
+| Issue Statuses | [Update](./REFERENCE.md#issue-statuses-update) |
 | Messages | [List](./REFERENCE.md#messages-list) |
 | Issue Notes | [Create](./REFERENCE.md#issue-notes-create) |
 | Issue Threads | [Create](./REFERENCE.md#issue-threads-create) |

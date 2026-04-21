@@ -104,6 +104,7 @@ class Issue(BaseModel):
     body_html: Union[str | None, Any] = Field(default=None)
     business_hours_first_response_seconds: Union[int | None, Any] = Field(default=None)
     business_hours_resolution_seconds: Union[int | None, Any] = Field(default=None)
+    business_hours_time_in_status_seconds: Union[dict[str, int] | None, Any] = Field(default=None)
     chat_widget_info: Union[Any, Any] = Field(default=None)
     created_at: Union[str | None, Any] = Field(default=None)
     csat_responses: Union[list[CSATResponse] | None, Any] = Field(default=None)
@@ -126,7 +127,9 @@ class Issue(BaseModel):
     tags: Union[list[str] | None, Any] = Field(default=None)
     team: Union[Any, Any] = Field(default=None)
     title: Union[str | None, Any] = Field(default=None)
+    time_in_status_seconds: Union[dict[str, int] | None, Any] = Field(default=None)
     type_: Union[Any, Any] = Field(default=None, alias="type")
+    updated_at: Union[str | None, Any] = Field(default=None)
 
 class IssuesResponse(BaseModel):
     """IssuesResponse type definition"""
@@ -533,6 +536,49 @@ class IssueThreadResponse(BaseModel):
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     data: Union[IssueThread, Any] = Field(default=None)
+    request_id: Union[str, Any] = Field(default=None)
+
+class IssueReplyCreateParams(BaseModel):
+    """IssueReplyCreateParams type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    body_html: Union[str, Any] = Field(default=None)
+    message_id: Union[str, Any] = Field(default=None)
+    user_id: Union[str, Any] = Field(default=None)
+    contact_id: Union[str, Any] = Field(default=None)
+    attachment_urls: Union[list[str], Any] = Field(default=None)
+
+class IssueReplyData(BaseModel):
+    """IssueReplyData type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[str, Any] = Field(default=None)
+    issue_id: Union[str, Any] = Field(default=None)
+
+class IssueReplyResponse(BaseModel):
+    """IssueReplyResponse type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: Union[IssueReplyData, Any] = Field(default=None)
+    request_id: Union[str, Any] = Field(default=None)
+
+class IssueAssignParams(BaseModel):
+    """IssueAssignParams type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    assignee_id: Union[str, Any] = Field(default=None)
+    team_id: Union[str, Any] = Field(default=None)
+
+class IssueStatusUpdateParams(BaseModel):
+    """IssueStatusUpdateParams type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    state: Union[str, Any] = Field(default=None)
+
+class DeleteIssueResponse(BaseModel):
+    """DeleteIssueResponse type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
     request_id: Union[str, Any] = Field(default=None)
 
 class ContactCreateParams(BaseModel):
