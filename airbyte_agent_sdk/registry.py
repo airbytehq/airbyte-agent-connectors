@@ -14,9 +14,7 @@ if not _SPECS_DIR.is_dir():
     _REPO_ROOT = _SDK_DIR.parent.parent  # airbyte_agent_sdk -> connector-sdk -> repo root
     _SPECS_DIR = _REPO_ROOT / "integrations"
 
-_CONNECTORS: list[str] = sorted(
-    d.name for d in _SPECS_DIR.iterdir() if d.is_dir() and (d / "connector.yaml").exists()
-) if _SPECS_DIR.is_dir() else []
+_CONNECTORS: list[str] = sorted(d.name for d in _SPECS_DIR.iterdir() if d.is_dir() and (d / "connector.yaml").exists()) if _SPECS_DIR.is_dir() else []
 
 _CONNECTOR_SET: set[str] = set(_CONNECTORS)
 
@@ -31,10 +29,7 @@ def get_spec_path(name: str) -> Path:
         ValueError: If the connector name is not found.
     """
     if name not in _CONNECTOR_SET:
-        raise ValueError(
-            f"Unknown connector: {name!r}. "
-            f"Available connectors: {', '.join(_CONNECTORS)}"
-        )
+        raise ValueError(f"Unknown connector: {name!r}. " f"Available connectors: {', '.join(_CONNECTORS)}")
     return _SPECS_DIR / name / "connector.yaml"
 
 

@@ -163,9 +163,7 @@ class Info(BaseModel):
     x_airbyte_retry_config: RetryConfig | None = Field(None, alias="x-airbyte-retry-config")
     x_airbyte_example_questions: ExampleQuestions | None = Field(None, alias="x-airbyte-example-questions")
     x_airbyte_context_store: CacheConfig | None = Field(None, alias="x-airbyte-context-store")
-    x_airbyte_entity_relationships: list[EntityRelationshipConfig] = Field(
-        default_factory=list, alias="x-airbyte-entity-relationships"
-    )
+    x_airbyte_entity_relationships: list[EntityRelationshipConfig] = Field(default_factory=list, alias="x-airbyte-entity-relationships")
     x_airbyte_scoping: list[ScopingParamConfig] = Field(default_factory=list, alias="x-airbyte-scoping")
     x_airbyte_replication_config: ReplicationConfig | None = Field(None, alias="x-airbyte-replication-config")
     x_airbyte_replication_version: str | None = Field(

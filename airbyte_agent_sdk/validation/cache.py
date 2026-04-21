@@ -144,10 +144,7 @@ def validate_cache_against_manifest(
 
         if manifest_name not in manifest_streams:
             if manifest_name != entity_name:
-                errors.append(
-                    f"Cache entity '{entity_name}' (x-airbyte-name: '{manifest_name}') "
-                    f"does not exist as a stream in the manifest"
-                )
+                errors.append(f"Cache entity '{entity_name}' (x-airbyte-name: '{manifest_name}') " f"does not exist as a stream in the manifest")
             else:
                 errors.append(f"Cache entity '{entity_name}' does not exist as a stream in the manifest")
             continue

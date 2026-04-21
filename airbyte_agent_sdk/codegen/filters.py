@@ -42,9 +42,4 @@ def mdx_escape(value: str) -> str:
     """
     if not isinstance(value, str):
         return value
-    return (
-        value.replace("{", "\\{")
-        .replace("}", "\\}")
-        .replace("<", "\\<")
-        .replace(">", "\\>")
-    )
+    return value.replace("{", "\\{").replace("}", "\\}").replace("<", "\\<").replace(">", "\\>")

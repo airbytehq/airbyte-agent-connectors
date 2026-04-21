@@ -101,9 +101,7 @@ def generate_sdk(spec_path: Path, output: Path | None):
         # Default: generate into airbyte_agent_sdk/ alongside this CLI
         output = Path(__file__).parent
         if not output.is_dir():
-            raise click.ClickException(
-                "Could not auto-detect output dir. Use --output."
-            )
+            raise click.ClickException("Could not auto-detect output dir. Use --output.")
 
     click.echo(f"Generating SDK module from {spec_path}...")
 
@@ -742,6 +740,7 @@ def overview(connector_path: Path, json_output: bool, markdown: bool, base_ref: 
         if not isinstance(e, click.Abort):
             click.echo(f"\nError: {e}", err=True)
         raise click.Abort()
+
 
 if __name__ == "__main__":
     cli()

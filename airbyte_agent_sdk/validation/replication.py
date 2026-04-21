@@ -610,7 +610,7 @@ def _find_oneof_discriminator_fields(
                     const_fields[prop_name] = []
                 const_fields[prop_name].append(prop_def["const"])
 
-    return [(k, v) for k, v in const_fields.items()]
+    return list(const_fields.items())
 
 
 def validate_oneof_discriminators_mapped(
@@ -848,6 +848,7 @@ def _extract_skip_auth_methods_from_connector_def(connector_def: dict[str, Any])
 # ============================================
 # AUTH METHOD VALIDATION
 # ============================================
+
 
 def fetch_airbyte_manifest(connector_name: str) -> dict[str, Any] | None:
     """Fetch connector manifest from Airbyte GitHub repo.
@@ -1534,10 +1535,7 @@ def annotate_replication_version(
     def insert_annotations(match: re.Match[str]) -> str:
         original = match.group(0)
         indent = "  "  # Standard 2-space indent for info section
-        annotations = (
-            f'\n{indent}x-airbyte-replication-version: "{version}"'
-            f'\n{indent}x-airbyte-replication-compatibility: "{compatibility}"'
-        )
+        annotations = f'\n{indent}x-airbyte-replication-version: "{version}"' f'\n{indent}x-airbyte-replication-compatibility: "{compatibility}"'
         return original + annotations
 
     new_content, count = re.subn(

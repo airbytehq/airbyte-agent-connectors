@@ -77,23 +77,14 @@ class BoardGroupsItem(BaseModel):
     position: Union[str | None, Any] = Field(default=None)
     title: Union[str | None, Any] = Field(default=None)
 
-class BoardWorkspace(BaseModel):
-    """Workspace the board belongs to"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    kind: Union[str | None, Any] = Field(default=None)
-    description: Union[str | None, Any] = Field(default=None)
-
-class BoardTopGroup(BaseModel):
-    """Top group on the board"""
+class BoardSubscribersItem(BaseModel):
+    """Nested schema for Board.subscribers_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     id: Union[str | None, Any] = Field(default=None)
 
-class BoardTagsItem(BaseModel):
-    """Nested schema for Board.tags_item"""
+class BoardCreator(BaseModel):
+    """Board creator"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     id: Union[str | None, Any] = Field(default=None)
@@ -110,11 +101,14 @@ class BoardColumnsItem(BaseModel):
     type_: Union[str | None, Any] = Field(default=None, alias="type")
     width: Union[int | None, Any] = Field(default=None)
 
-class BoardSubscribersItem(BaseModel):
-    """Nested schema for Board.subscribers_item"""
+class BoardWorkspace(BaseModel):
+    """Workspace the board belongs to"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     id: Union[str | None, Any] = Field(default=None)
+    name: Union[str | None, Any] = Field(default=None)
+    kind: Union[str | None, Any] = Field(default=None)
+    description: Union[str | None, Any] = Field(default=None)
 
 class BoardViewsItem(BaseModel):
     """Nested schema for Board.views_item"""
@@ -126,14 +120,20 @@ class BoardViewsItem(BaseModel):
     type_: Union[str | None, Any] = Field(default=None, alias="type")
     view_specific_data_str: Union[str | None, Any] = Field(default=None)
 
-class BoardOwnersItem(BaseModel):
-    """Nested schema for Board.owners_item"""
+class BoardTagsItem(BaseModel):
+    """Nested schema for Board.tags_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     id: Union[str | None, Any] = Field(default=None)
 
-class BoardCreator(BaseModel):
-    """Board creator"""
+class BoardTopGroup(BaseModel):
+    """Top group on the board"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[str | None, Any] = Field(default=None)
+
+class BoardOwnersItem(BaseModel):
+    """Nested schema for Board.owners_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     id: Union[str | None, Any] = Field(default=None)
@@ -160,6 +160,12 @@ class Board(BaseModel):
     views: Union[list[BoardViewsItem | None] | None, Any] = Field(default=None)
     workspace: Union[BoardWorkspace | None, Any] = Field(default=None)
 
+class ItemParentItem(BaseModel):
+    """Parent item (for subitems)"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[str | None, Any] = Field(default=None)
+
 class ItemColumnValuesItem(BaseModel):
     """Nested schema for Item.column_values_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -169,8 +175,8 @@ class ItemColumnValuesItem(BaseModel):
     type_: Union[str | None, Any] = Field(default=None, alias="type")
     value: Union[str | None, Any] = Field(default=None)
 
-class ItemParentItem(BaseModel):
-    """Parent item (for subitems)"""
+class ItemSubscribersItem(BaseModel):
+    """Nested schema for Item.subscribers_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     id: Union[str | None, Any] = Field(default=None)
@@ -181,12 +187,6 @@ class ItemBoard(BaseModel):
 
     id: Union[str | None, Any] = Field(default=None)
     name: Union[str | None, Any] = Field(default=None)
-
-class ItemSubscribersItem(BaseModel):
-    """Nested schema for Item.subscribers_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str | None, Any] = Field(default=None)
 
 class ItemGroup(BaseModel):
     """Group the item belongs to"""
@@ -279,6 +279,13 @@ class Update(BaseModel):
     replies: Union[list[UpdateRepliesItem | None] | None, Any] = Field(default=None)
     assets: Union[list[UpdateAssetsItem | None] | None, Any] = Field(default=None)
 
+class WorkspaceTeamsSubscribersItem(BaseModel):
+    """Nested schema for Workspace.teams_subscribers_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[str | None, Any] = Field(default=None)
+    name: Union[str | None, Any] = Field(default=None)
+
 class WorkspaceAccountProduct(BaseModel):
     """Account product info"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -292,8 +299,8 @@ class WorkspaceUsersSubscribersItem(BaseModel):
 
     id: Union[str | None, Any] = Field(default=None)
 
-class WorkspaceTeamsSubscribersItem(BaseModel):
-    """Nested schema for Workspace.teams_subscribers_item"""
+class WorkspaceTeamOwnersSubscribersItem(BaseModel):
+    """Nested schema for Workspace.team_owners_subscribers_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     id: Union[str | None, Any] = Field(default=None)
@@ -317,13 +324,6 @@ class WorkspaceOwnersSubscribersItem(BaseModel):
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     id: Union[str | None, Any] = Field(default=None)
-
-class WorkspaceTeamOwnersSubscribersItem(BaseModel):
-    """Nested schema for Workspace.team_owners_subscribers_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
 
 class Workspace(BaseModel):
     """Monday.com workspace object"""

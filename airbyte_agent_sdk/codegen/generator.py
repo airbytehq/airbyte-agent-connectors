@@ -45,9 +45,7 @@ PYDANTIC_RESERVED_NAMES = frozenset(
 PYTHON_KEYWORDS = frozenset(keyword.kwlist)
 
 # Python builtin type names that would shadow type annotations in Pydantic models
-PYTHON_BUILTIN_TYPE_NAMES = frozenset(
-    {"str", "int", "float", "bool", "None", "list", "dict", "set", "tuple", "type", "object"}
-)
+PYTHON_BUILTIN_TYPE_NAMES = frozenset({"str", "int", "float", "bool", "None", "list", "dict", "set", "tuple", "type", "object"})
 
 # Type names from the typing module used in generated code that are not custom types
 TYPING_TYPE_NAMES = frozenset({"Any", "Optional", "AsyncIterator", "NotRequired", "TypedDict"})

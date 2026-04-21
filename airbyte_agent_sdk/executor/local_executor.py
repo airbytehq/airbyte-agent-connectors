@@ -1995,26 +1995,18 @@ class LocalExecutor:
             items_enum = items.get("enum") if items else None
 
             if enum_values and value not in enum_values:
-                raise ConnectorValidationError(
-                    f"Invalid value {value!r} for parameter {name!r}; expected one of: {enum_values}"
-                )
+                raise ConnectorValidationError(f"Invalid value {value!r} for parameter {name!r}; expected one of: {enum_values}")
 
             if items_enum:
                 if isinstance(value, list):
                     bad = [v for v in value if v not in items_enum]
                     if bad:
-                        raise ConnectorValidationError(
-                            f"Invalid value(s) {bad!r} for parameter {name!r}; expected each element in: {items_enum}"
-                        )
+                        raise ConnectorValidationError(f"Invalid value(s) {bad!r} for parameter {name!r}; expected each element in: {items_enum}")
                 elif schema.get("type") == "array":
-                    raise ConnectorValidationError(
-                        f"Parameter {name!r} expects an array of values from {items_enum}; got scalar {value!r}"
-                    )
+                    raise ConnectorValidationError(f"Parameter {name!r} expects an array of values from {items_enum}; got scalar {value!r}")
             elif schema.get("type") == "array" and value is not None and not isinstance(value, list):
                 # Array contract violated regardless of whether items carry an enum.
-                raise ConnectorValidationError(
-                    f"Parameter {name!r} expects an array; got scalar {value!r}"
-                )
+                raise ConnectorValidationError(f"Parameter {name!r} expects an array; got scalar {value!r}")
 
         for name, schema in (endpoint.query_params_schema or {}).items():
             if name in params:

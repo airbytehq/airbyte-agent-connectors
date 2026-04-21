@@ -130,15 +130,15 @@ class Parent(BaseModel):
     block_id: Union[str | None, Any] = Field(default=None)
     workspace: Union[bool | None, Any] = Field(default=None)
 
-class PageLastEditedBy(BaseModel):
-    """User who last edited the page"""
+class PageCreatedBy(BaseModel):
+    """User who created the page"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     object_: Union[str | None, Any] = Field(default=None, alias="object")
     id: Union[str | None, Any] = Field(default=None)
 
-class PageCreatedBy(BaseModel):
-    """User who created the page"""
+class PageLastEditedBy(BaseModel):
+    """User who last edited the page"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     object_: Union[str | None, Any] = Field(default=None, alias="object")
@@ -230,20 +230,11 @@ class DataSourcesListResponse(BaseModel):
     page_or_data_source: Union[dict[str, Any] | None, Any] = Field(default=None)
     request_id: Union[str | None, Any] = Field(default=None)
 
-class BlockHeading3(BaseModel):
-    """Heading 3 block content"""
+class BlockEmbed(BaseModel):
+    """Embed block"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    rich_text: Union[list[RichText] | None, Any] = Field(default=None)
-    color: Union[str | None, Any] = Field(default=None)
-    is_toggleable: Union[bool | None, Any] = Field(default=None)
-
-class BlockBulletedListItem(BaseModel):
-    """Bulleted list item content"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    rich_text: Union[list[RichText] | None, Any] = Field(default=None)
-    color: Union[str | None, Any] = Field(default=None)
+    url: Union[str | None, Any] = Field(default=None)
 
 class BlockTable(BaseModel):
     """Table block"""
@@ -267,25 +258,13 @@ class BlockHeading2(BaseModel):
     color: Union[str | None, Any] = Field(default=None)
     is_toggleable: Union[bool | None, Any] = Field(default=None)
 
-class BlockChildPage(BaseModel):
-    """Child page block"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    title: Union[str | None, Any] = Field(default=None)
-
-class BlockQuote(BaseModel):
-    """Quote block content"""
+class BlockHeading3(BaseModel):
+    """Heading 3 block content"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     rich_text: Union[list[RichText] | None, Any] = Field(default=None)
     color: Union[str | None, Any] = Field(default=None)
-
-class BlockParagraph(BaseModel):
-    """Paragraph block content"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    rich_text: Union[list[RichText] | None, Any] = Field(default=None)
-    color: Union[str | None, Any] = Field(default=None)
+    is_toggleable: Union[bool | None, Any] = Field(default=None)
 
 class BlockCallout(BaseModel):
     """Callout block content"""
@@ -295,37 +274,24 @@ class BlockCallout(BaseModel):
     icon: Union[dict[str, Any] | None, Any] = Field(default=None)
     color: Union[str | None, Any] = Field(default=None)
 
-class BlockToggle(BaseModel):
-    """Toggle block content"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    rich_text: Union[list[RichText] | None, Any] = Field(default=None)
-    color: Union[str | None, Any] = Field(default=None)
-
-class BlockCreatedBy(BaseModel):
-    """User who created the block"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    object_: Union[str | None, Any] = Field(default=None, alias="object")
-    id: Union[str | None, Any] = Field(default=None)
-
-class BlockEquation(BaseModel):
-    """Equation block"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    expression: Union[str | None, Any] = Field(default=None)
-
 class BlockColumn(BaseModel):
     """Column block"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     width_ratio: Union[float | None, Any] = Field(default=None)
 
-class BlockTableOfContents(BaseModel):
-    """Table of contents block"""
+class BlockParagraph(BaseModel):
+    """Paragraph block content"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
+    rich_text: Union[list[RichText] | None, Any] = Field(default=None)
     color: Union[str | None, Any] = Field(default=None)
+
+class BlockChildPage(BaseModel):
+    """Child page block"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    title: Union[str | None, Any] = Field(default=None)
 
 class BlockHeading1(BaseModel):
     """Heading 1 block content"""
@@ -335,13 +301,31 @@ class BlockHeading1(BaseModel):
     color: Union[str | None, Any] = Field(default=None)
     is_toggleable: Union[bool | None, Any] = Field(default=None)
 
-class BlockToDo(BaseModel):
-    """To-do block content"""
+class BlockToggle(BaseModel):
+    """Toggle block content"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     rich_text: Union[list[RichText] | None, Any] = Field(default=None)
-    checked: Union[bool | None, Any] = Field(default=None)
     color: Union[str | None, Any] = Field(default=None)
+
+class BlockLinkPreview(BaseModel):
+    """Link preview block"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    url: Union[str | None, Any] = Field(default=None)
+
+class BlockTableOfContents(BaseModel):
+    """Table of contents block"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    color: Union[str | None, Any] = Field(default=None)
+
+class BlockBookmark(BaseModel):
+    """Bookmark block"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    caption: Union[list[RichText] | None, Any] = Field(default=None)
+    url: Union[str | None, Any] = Field(default=None)
 
 class BlockCode(BaseModel):
     """Code block content"""
@@ -351,12 +335,20 @@ class BlockCode(BaseModel):
     caption: Union[list[RichText] | None, Any] = Field(default=None)
     language: Union[str | None, Any] = Field(default=None)
 
-class BlockBookmark(BaseModel):
-    """Bookmark block"""
+class BlockToDo(BaseModel):
+    """To-do block content"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    caption: Union[list[RichText] | None, Any] = Field(default=None)
-    url: Union[str | None, Any] = Field(default=None)
+    rich_text: Union[list[RichText] | None, Any] = Field(default=None)
+    checked: Union[bool | None, Any] = Field(default=None)
+    color: Union[str | None, Any] = Field(default=None)
+
+class BlockBulletedListItem(BaseModel):
+    """Bulleted list item content"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    rich_text: Union[list[RichText] | None, Any] = Field(default=None)
+    color: Union[str | None, Any] = Field(default=None)
 
 class BlockChildDatabase(BaseModel):
     """Child database block"""
@@ -371,17 +363,25 @@ class BlockNumberedListItem(BaseModel):
     rich_text: Union[list[RichText] | None, Any] = Field(default=None)
     color: Union[str | None, Any] = Field(default=None)
 
-class BlockLinkPreview(BaseModel):
-    """Link preview block"""
+class BlockQuote(BaseModel):
+    """Quote block content"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    url: Union[str | None, Any] = Field(default=None)
+    rich_text: Union[list[RichText] | None, Any] = Field(default=None)
+    color: Union[str | None, Any] = Field(default=None)
 
-class BlockEmbed(BaseModel):
-    """Embed block"""
+class BlockEquation(BaseModel):
+    """Equation block"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    url: Union[str | None, Any] = Field(default=None)
+    expression: Union[str | None, Any] = Field(default=None)
+
+class BlockCreatedBy(BaseModel):
+    """User who created the block"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    object_: Union[str | None, Any] = Field(default=None, alias="object")
+    id: Union[str | None, Any] = Field(default=None)
 
 class BlockLastEditedBy(BaseModel):
     """User who last edited the block"""

@@ -161,7 +161,7 @@ class TestRunner:
         mock_response.raise_for_status.return_value = None
 
         # Create async mock for HTTPClient.request that captures the actual request
-        async def mock_http_client_request(method, path, params=None, json=None, data=None, headers=None, content=None):
+        async def mock_http_client_request(method, path, params=None, json=None, data=None, headers=None, content=None):  # noqa: ARG001
             nonlocal captured_actual_request
 
             # Capture the actual request details from HTTPClient.request parameters
@@ -257,14 +257,14 @@ class TestRunner:
         # Create mock that returns different values based on stream parameter
         call_count = 0
 
-        async def mock_request_with_stream(
+        async def mock_request_with_stream(  # noqa: ARG001
             method,
             path,
             params=None,
             json=None,
             data=None,
             headers=None,
-            content=None,
+            content=None,  # noqa: ARG001
             stream=False,
         ):
             nonlocal call_count, captured_metadata_request, captured_file_request
