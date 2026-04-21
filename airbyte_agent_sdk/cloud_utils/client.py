@@ -513,28 +513,6 @@ class AirbyteCloudClient:
 
         return response.json()
 
-    async def ask_workspace(self, workspace_name: str, prompt: str) -> dict[str, Any]:
-        """Ask a natural-language question across all connectors in a workspace.
-
-        Raises:
-            AuthenticationError: If API returns 401/403
-            RateLimitError: If API returns 429
-            ConnectorValidationError: If API returns 400/422
-            HTTPStatusError: If API returns any other 4xx/5xx status code
-            httpx.RequestError: If network request fails
-        """
-        token = await self.get_bearer_token()
-        url = f"{self.API_BASE_URL}/api/v1/workspaces/query/structured"
-        headers = self._build_headers(token=token)
-        response = await self._http_client.post(
-            url,
-            params={"workspace_name": workspace_name},
-            json={"prompt": prompt},
-            headers=headers,
-        )
-        _raise_with_body(response)
-        return response.json()
-
     async def list_workspace_connectors(self, customer_name: str) -> list[dict[str, Any]]:
         """List connector instances for a workspace.
 

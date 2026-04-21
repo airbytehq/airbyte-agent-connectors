@@ -5,7 +5,7 @@
 ```python
 import airbyte_agent_sdk
 
-# Set global credentials (used as defaults by connect(), Workspace, ask())
+# Set global credentials (used as defaults by connect() and Workspace)
 airbyte_agent_sdk.configure(
     *,
     client_id: str,           # Airbyte OAuth client ID

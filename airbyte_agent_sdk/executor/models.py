@@ -108,54 +108,6 @@ class ExecutionResult:
 
 
 @dataclass
-class AskToolCallResult:
-    """A single tool call result from a structured query.
-
-    Fields match backend StructuredQueryToolCallResult (customer_query/schemas.py:36-44).
-    """
-
-    source_id: str | None = None
-    entity: str | None = None
-    action: str | None = None
-    params: dict[str, Any] = field(default_factory=dict)
-    status: str | None = None
-    data: Any = None
-    connector_metadata: Any = None
-    execution_time_ms: int | None = None
-
-
-@dataclass
-class AskResult:
-    """Result of a workspace-level natural language query.
-
-    Fields match backend StructuredQueryResponse (customer_query/schemas.py:53-59).
-    Note: execution_metadata is required in backend but made optional here for
-    forward-compatibility -- the SDK should not break if the backend omits it.
-    """
-
-    outcome: str
-    outcome_reason: str | None = None
-    answer: str | None = None
-    results: list[AskToolCallResult] = field(default_factory=list)
-    query_id: str | None = None
-    execution_metadata: dict[str, Any] = field(default_factory=dict)
-
-    @classmethod
-    def from_response(cls, response: dict[str, Any]) -> AskResult:
-        """Parse a raw structured query API response into AskResult."""
-        _fields = set(AskToolCallResult.__dataclass_fields__)
-        results = [AskToolCallResult(**{k: v for k, v in r.items() if k in _fields}) for r in response.get("results", [])]
-        return cls(
-            outcome=response.get("outcome", "error"),
-            outcome_reason=response.get("outcome_reason"),
-            answer=response.get("answer"),
-            results=results,
-            query_id=response.get("query_id"),
-            execution_metadata=response.get("execution_metadata") or {},
-        )
-
-
-@dataclass
 class ConnectorInfo:
     """A connector instance in a workspace."""
 
