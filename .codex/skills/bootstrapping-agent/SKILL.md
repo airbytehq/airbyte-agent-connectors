@@ -92,6 +92,6 @@ AIRBYTE_WORKSPACE_NAME=your_workspace_name
 
 ## References
 
-- [SDK API reference](../../airbyte-sdk-reference/airbyte-sdk-reference/sdk-api.md) — full API signatures and options
-- [PydanticAI patterns](../../airbyte-sdk-reference/airbyte-sdk-reference/pydantic-ai.md) — complete runnable examples
-- [Claude SDK patterns](../../airbyte-sdk-reference/airbyte-sdk-reference/claude-sdk.md) — Anthropic Python SDK examples
+- [SDK API reference](../airbyte-sdk-reference/sdk-api.md) — full API signatures and options
+- [PydanticAI patterns](../airbyte-sdk-reference/pydantic-ai.md) — complete runnable examples
+- [Claude SDK patterns](../airbyte-sdk-reference/claude-sdk.md) — Anthropic Python SDK examples

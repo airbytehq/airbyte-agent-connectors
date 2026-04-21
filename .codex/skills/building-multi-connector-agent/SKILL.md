@@ -104,7 +104,7 @@ asyncio.run(main())
 
 ### Claude SDK (Anthropic Python)
 
-See [Claude SDK patterns](../../airbyte-sdk-reference/airbyte-sdk-reference/claude-sdk.md) for the full message loop with tool handling.
+See [Claude SDK patterns](../airbyte-sdk-reference/claude-sdk.md) for the full message loop with tool handling.
 
 ## Project Structure
 
@@ -141,7 +141,7 @@ AIRBYTE_WORKSPACE_NAME=your_workspace_name
 
 ## References
 
-- [SDK API reference](../../airbyte-sdk-reference/airbyte-sdk-reference/sdk-api.md) — `AirbyteAuthConfig`, typed connector constructors, `tool_utils`
-- [PydanticAI patterns](../../airbyte-sdk-reference/airbyte-sdk-reference/pydantic-ai.md) — multi-connector example
-- [Claude SDK patterns](../../airbyte-sdk-reference/airbyte-sdk-reference/claude-sdk.md) — multi-connector example
-- [Connector discovery](../../airbyte-sdk-reference/airbyte-sdk-reference/connector-discovery.md) — finding available connectors
+- [SDK API reference](../airbyte-sdk-reference/sdk-api.md) — `AirbyteAuthConfig`, typed connector constructors, `tool_utils`
+- [PydanticAI patterns](../airbyte-sdk-reference/pydantic-ai.md) — multi-connector example
+- [Claude SDK patterns](../airbyte-sdk-reference/claude-sdk.md) — multi-connector example
+- [Connector discovery](../airbyte-sdk-reference/connector-discovery.md) — finding available connectors

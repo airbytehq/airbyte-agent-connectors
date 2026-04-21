@@ -60,5 +60,5 @@ Read the connector's `AUTH.md` to understand what credentials are needed. For ho
 
 ## References
 
-- [SDK API reference](../../airbyte-sdk-reference/airbyte-sdk-reference/sdk-api.md)
-- [Connector discovery details](../../airbyte-sdk-reference/airbyte-sdk-reference/connector-discovery.md)
+- [SDK API reference](../airbyte-sdk-reference/sdk-api.md)
+- [Connector discovery details](../airbyte-sdk-reference/connector-discovery.md)
