@@ -105,6 +105,57 @@ class ReactionsCreateParams(TypedDict):
     timestamp: str
     name: str
 
+class ReactionsDeleteParams(TypedDict):
+    """Parameters for reactions.delete operation"""
+    channel: str
+    timestamp: str
+    name: str
+
+class EphemeralMessagesCreateParams(TypedDict):
+    """Parameters for ephemeral_messages.create operation"""
+    channel: str
+    user: str
+    text: str
+    thread_ts: NotRequired[str]
+    blocks: NotRequired[str]
+
+class ScheduledMessagesCreateParams(TypedDict):
+    """Parameters for scheduled_messages.create operation"""
+    channel: str
+    text: str
+    post_at: int
+    thread_ts: NotRequired[str]
+    reply_broadcast: NotRequired[bool]
+    unfurl_links: NotRequired[bool]
+    unfurl_media: NotRequired[bool]
+
+class MessagesDeleteParams(TypedDict):
+    """Parameters for messages.delete operation"""
+    channel: str
+    ts: str
+
+class ChannelArchivesCreateParams(TypedDict):
+    """Parameters for channel_archives.create operation"""
+    channel: str
+
+class ChannelKicksCreateParams(TypedDict):
+    """Parameters for channel_kicks.create operation"""
+    channel: str
+    user: str
+
+class PinsCreateParams(TypedDict):
+    """Parameters for pins.create operation"""
+    channel: str
+    timestamp: str
+
+class BookmarksCreateParams(TypedDict):
+    """Parameters for bookmarks.create operation"""
+    channel_id: str
+    title: str
+    type: str
+    link: NotRequired[str]
+    emoji: NotRequired[str]
+
 # ===== SEARCH TYPES =====
 
 # Sort specification

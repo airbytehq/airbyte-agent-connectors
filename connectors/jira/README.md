@@ -25,6 +25,13 @@ The Jira connector is optimized to handle prompts like these.
 - Update my most recent comment
 - Delete a test issue
 - Remove my most recent comment
+- Transition \{issue_key\} to In Progress
+- Move \{issue_key\} to Done
+- What transitions are available for \{issue_key\}?
+- Log 2 hours of work on \{issue_key\}
+- Log 30 minutes on \{issue_key\} with a comment about what I did
+- Link \{issue_key_1\} as blocking \{issue_key_2\}
+- Create a 'relates to' link between \{issue_key_1\} and \{issue_key_2\}
 - What issues are assigned to \{team_member\} this week?
 - Find all high priority bugs in our current sprint
 - Show me overdue issues across all projects
@@ -35,8 +42,8 @@ The Jira connector is optimized to handle prompts like these.
 
 The Jira connector isn't currently able to handle prompts like these.
 
-- Log time on \{issue_key\}
-- Transition \{issue_key\} to Done
+- Attach a file to \{issue_key\}
+- Add a watcher to \{issue_key\}
 
 ## Installation
 
@@ -107,8 +114,10 @@ This connector supports the following entities and actions. For more details, se
 | Users | [Get](./REFERENCE.md#users-get), [List](./REFERENCE.md#users-list), [API Search](./REFERENCE.md#users-api_search), [Context Store Search](./REFERENCE.md#users-context-store-search) |
 | Issue Fields | [List](./REFERENCE.md#issue-fields-list), [API Search](./REFERENCE.md#issue-fields-api_search), [Context Store Search](./REFERENCE.md#issue-fields-context-store-search) |
 | Issue Comments | [List](./REFERENCE.md#issue-comments-list), [Create](./REFERENCE.md#issue-comments-create), [Get](./REFERENCE.md#issue-comments-get), [Update](./REFERENCE.md#issue-comments-update), [Delete](./REFERENCE.md#issue-comments-delete), [Context Store Search](./REFERENCE.md#issue-comments-context-store-search) |
-| Issue Worklogs | [List](./REFERENCE.md#issue-worklogs-list), [Get](./REFERENCE.md#issue-worklogs-get), [Context Store Search](./REFERENCE.md#issue-worklogs-context-store-search) |
+| Issue Worklogs | [Get](./REFERENCE.md#issue-worklogs-get), [List](./REFERENCE.md#issue-worklogs-list), [Create](./REFERENCE.md#issue-worklogs-create), [Context Store Search](./REFERENCE.md#issue-worklogs-context-store-search) |
 | Issues Assignee | [Update](./REFERENCE.md#issues-assignee-update) |
+| Issue Transitions | [List](./REFERENCE.md#issue-transitions-list), [Create](./REFERENCE.md#issue-transitions-create) |
+| Issue Links | [Create](./REFERENCE.md#issue-links-create) |
 
 
 ### Authentication

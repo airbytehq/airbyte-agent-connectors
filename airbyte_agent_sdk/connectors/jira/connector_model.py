@@ -3496,8 +3496,146 @@ JiraConnectorModel: ConnectorModel = ConnectorModel(
         ),
         EntityDefinition(
             name='issue_worklogs',
-            actions=[Action.LIST, Action.GET],
+            actions=[Action.GET, Action.LIST, Action.CREATE],
             endpoints={
+                Action.GET: EndpointDefinition(
+                    method='GET',
+                    path='/rest/api/3/issue/{issueIdOrKey}/worklog/{worklogId}',
+                    action=Action.GET,
+                    description='Retrieve a single worklog by its ID',
+                    query_params=['expand'],
+                    query_params_schema={
+                        'expand': {'type': 'string', 'required': False},
+                    },
+                    path_params=['issueIdOrKey', 'worklogId'],
+                    path_params_schema={
+                        'issueIdOrKey': {'type': 'string', 'required': True},
+                        'worklogId': {'type': 'string', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Jira worklog object',
+                        'properties': {
+                            'id': {'type': 'string', 'description': 'Unique worklog identifier'},
+                            'self': {
+                                'type': 'string',
+                                'format': 'uri',
+                                'description': 'URL of the worklog',
+                            },
+                            'author': {
+                                'type': 'object',
+                                'description': 'Worklog author user information',
+                                'properties': {
+                                    'self': {'type': 'string', 'format': 'uri'},
+                                    'accountId': {'type': 'string'},
+                                    'emailAddress': {'type': 'string', 'format': 'email'},
+                                    'displayName': {'type': 'string'},
+                                    'active': {'type': 'boolean'},
+                                    'timeZone': {'type': 'string'},
+                                    'accountType': {'type': 'string'},
+                                    'avatarUrls': {
+                                        'type': 'object',
+                                        'description': 'URLs for user avatars in different sizes',
+                                        'properties': {
+                                            '16x16': {'type': 'string', 'format': 'uri'},
+                                            '24x24': {'type': 'string', 'format': 'uri'},
+                                            '32x32': {'type': 'string', 'format': 'uri'},
+                                            '48x48': {'type': 'string', 'format': 'uri'},
+                                        },
+                                    },
+                                },
+                            },
+                            'updateAuthor': {
+                                'type': 'object',
+                                'description': 'User who last updated the worklog',
+                                'properties': {
+                                    'self': {'type': 'string', 'format': 'uri'},
+                                    'accountId': {'type': 'string'},
+                                    'emailAddress': {'type': 'string', 'format': 'email'},
+                                    'displayName': {'type': 'string'},
+                                    'active': {'type': 'boolean'},
+                                    'timeZone': {'type': 'string'},
+                                    'accountType': {'type': 'string'},
+                                    'avatarUrls': {
+                                        'type': 'object',
+                                        'description': 'URLs for user avatars in different sizes',
+                                        'properties': {
+                                            '16x16': {'type': 'string', 'format': 'uri'},
+                                            '24x24': {'type': 'string', 'format': 'uri'},
+                                            '32x32': {'type': 'string', 'format': 'uri'},
+                                            '48x48': {'type': 'string', 'format': 'uri'},
+                                        },
+                                    },
+                                },
+                            },
+                            'comment': {
+                                'type': 'object',
+                                'description': 'Comment associated with the worklog (ADF format)',
+                                'properties': {
+                                    'type': {'type': 'string', 'description': "Document type (always 'doc')"},
+                                    'version': {'type': 'integer', 'description': 'ADF version'},
+                                    'content': {
+                                        'type': 'array',
+                                        'description': 'Array of content blocks',
+                                        'items': {
+                                            'type': 'object',
+                                            'properties': {
+                                                'type': {'type': 'string', 'description': "Block type (e.g., 'paragraph')"},
+                                                'content': {
+                                                    'type': 'array',
+                                                    'description': 'Nested content items',
+                                                    'items': {
+                                                        'type': 'object',
+                                                        'properties': {
+                                                            'type': {'type': 'string', 'description': "Content type (e.g., 'text')"},
+                                                            'text': {'type': 'string', 'description': 'Text content'},
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                                'additionalProperties': False,
+                            },
+                            'created': {
+                                'type': 'string',
+                                'format': 'date-time',
+                                'description': 'Worklog creation timestamp',
+                            },
+                            'updated': {
+                                'type': 'string',
+                                'format': 'date-time',
+                                'description': 'Worklog last update timestamp',
+                            },
+                            'started': {
+                                'type': 'string',
+                                'format': 'date-time',
+                                'description': 'When the work was started',
+                            },
+                            'timeSpent': {'type': 'string', 'description': 'Human-readable time spent (e.g., "3h 20m")'},
+                            'timeSpentSeconds': {'type': 'integer', 'description': 'Time spent in seconds'},
+                            'issueId': {'type': 'string', 'description': 'ID of the issue this worklog belongs to'},
+                            'visibility': {
+                                'type': ['object', 'null'],
+                                'description': 'Visibility restrictions for the worklog',
+                                'properties': {
+                                    'type': {'type': 'string'},
+                                    'value': {'type': 'string'},
+                                    'identifier': {
+                                        'type': ['string', 'null'],
+                                    },
+                                },
+                            },
+                            'properties': {
+                                'type': ['array', 'null'],
+                                'description': 'Worklog properties (available with expand=properties)',
+                                'items': {'type': 'object', 'additionalProperties': True},
+                            },
+                        },
+                        'x-airbyte-entity-name': 'worklogs',
+                    },
+                ),
                 Action.LIST: EndpointDefinition(
                     method='GET',
                     path='/rest/api/3/issue/{issueIdOrKey}/worklog',
@@ -3668,19 +3806,102 @@ JiraConnectorModel: ConnectorModel = ConnectorModel(
                         'total': '$.total',
                     },
                 ),
-                Action.GET: EndpointDefinition(
-                    method='GET',
-                    path='/rest/api/3/issue/{issueIdOrKey}/worklog/{worklogId}',
-                    action=Action.GET,
-                    description='Retrieve a single worklog by its ID',
-                    query_params=['expand'],
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/rest/api/3/issue/{issueIdOrKey}/worklog',
+                    action=Action.CREATE,
+                    description='Adds a worklog entry to an issue to track time spent.\nUse timeSpentSeconds or timeSpent (e.g., "3h 30m") to specify time.\nOptionally include a started datetime and a comment describing the work done.\n',
+                    body_fields=[
+                        'timeSpentSeconds',
+                        'timeSpent',
+                        'started',
+                        'comment',
+                        'visibility',
+                    ],
+                    query_params=['notifyUsers', 'adjustEstimate'],
                     query_params_schema={
-                        'expand': {'type': 'string', 'required': False},
+                        'notifyUsers': {
+                            'type': 'boolean',
+                            'required': False,
+                            'default': True,
+                        },
+                        'adjustEstimate': {
+                            'type': 'string',
+                            'required': False,
+                            'default': 'auto',
+                            'enum': [
+                                'new',
+                                'leave',
+                                'manual',
+                                'auto',
+                            ],
+                        },
                     },
-                    path_params=['issueIdOrKey', 'worklogId'],
+                    path_params=['issueIdOrKey'],
                     path_params_schema={
                         'issueIdOrKey': {'type': 'string', 'required': True},
-                        'worklogId': {'type': 'string', 'required': True},
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for adding a worklog entry to an issue. Either timeSpentSeconds or timeSpent must be provided.',
+                        'properties': {
+                            'timeSpentSeconds': {'type': 'integer', 'description': 'Time spent in seconds (e.g., 3600 for 1 hour). Provide this or timeSpent.'},
+                            'timeSpent': {'type': 'string', 'description': 'Human-readable time spent (e.g., 3h 30m, 1d 2h). Provide this or timeSpentSeconds.'},
+                            'started': {
+                                'type': 'string',
+                                'format': 'date-time',
+                                'description': 'The datetime when the work was started (ISO 8601 format, e.g., "2024-01-15T09:00:00.000+0000"). Defaults to current time.',
+                            },
+                            'comment': {
+                                'type': 'object',
+                                'description': 'A comment about the work done in Atlassian Document Format (ADF)',
+                                'properties': {
+                                    'type': {
+                                        'type': 'string',
+                                        'default': 'doc',
+                                        'description': "Document type (always 'doc')",
+                                    },
+                                    'version': {
+                                        'type': 'integer',
+                                        'default': 1,
+                                        'description': 'ADF version',
+                                    },
+                                    'content': {
+                                        'type': 'array',
+                                        'description': 'Array of content blocks',
+                                        'items': {
+                                            'type': 'object',
+                                            'properties': {
+                                                'type': {'type': 'string', 'description': "Block type (e.g., 'paragraph')"},
+                                                'content': {
+                                                    'type': 'array',
+                                                    'items': {
+                                                        'type': 'object',
+                                                        'properties': {
+                                                            'type': {'type': 'string', 'description': "Content type (e.g., 'text')"},
+                                                            'text': {'type': 'string', 'description': 'Text content'},
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                            'visibility': {
+                                'type': 'object',
+                                'description': 'Restrict worklog visibility to a group or role',
+                                'properties': {
+                                    'type': {
+                                        'type': 'string',
+                                        'enum': ['group', 'role'],
+                                        'description': 'The type of visibility restriction',
+                                    },
+                                    'value': {'type': 'string', 'description': 'The name of the group or role'},
+                                    'identifier': {'type': 'string', 'description': 'The ID of the group or role'},
+                                },
+                            },
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -3845,6 +4066,242 @@ JiraConnectorModel: ConnectorModel = ConnectorModel(
                 ),
             },
         ),
+        EntityDefinition(
+            name='issue_transitions',
+            actions=[Action.LIST, Action.CREATE],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/rest/api/3/issue/{issueIdOrKey}/transitions',
+                    action=Action.LIST,
+                    description='Returns the available transitions for an issue. Transitions define the workflow steps an issue can move through (e.g., To Do -> In Progress -> Done). Use this to discover valid transition IDs before performing a transition.',
+                    query_params=[
+                        'expand',
+                        'transitionId',
+                        'skipRemoteOnlyCondition',
+                        'includeUnavailableTransitions',
+                        'sortByOpsBarAndStatus',
+                    ],
+                    query_params_schema={
+                        'expand': {'type': 'string', 'required': False},
+                        'transitionId': {'type': 'string', 'required': False},
+                        'skipRemoteOnlyCondition': {
+                            'type': 'boolean',
+                            'required': False,
+                            'default': False,
+                        },
+                        'includeUnavailableTransitions': {
+                            'type': 'boolean',
+                            'required': False,
+                            'default': False,
+                        },
+                        'sortByOpsBarAndStatus': {
+                            'type': 'boolean',
+                            'required': False,
+                            'default': False,
+                        },
+                    },
+                    path_params=['issueIdOrKey'],
+                    path_params_schema={
+                        'issueIdOrKey': {'type': 'string', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'List of available transitions for an issue',
+                        'properties': {
+                            'expand': {
+                                'type': ['string', 'null'],
+                                'description': 'Expand options applied to the response',
+                            },
+                            'transitions': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'A workflow transition that can be performed on an issue',
+                                    'properties': {
+                                        'id': {'type': 'string', 'description': 'The ID of the transition (use this when performing a transition)'},
+                                        'name': {'type': 'string', 'description': 'The name of the transition (e.g., "In Progress", "Done")'},
+                                        'to': {
+                                            'type': 'object',
+                                            'description': 'The target status after performing this transition',
+                                            'properties': {
+                                                'self': {'type': 'string', 'format': 'uri'},
+                                                'description': {'type': 'string'},
+                                                'iconUrl': {'type': 'string', 'format': 'uri'},
+                                                'name': {'type': 'string', 'description': 'The name of the target status'},
+                                                'id': {'type': 'string'},
+                                                'statusCategory': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'self': {'type': 'string', 'format': 'uri'},
+                                                        'id': {'type': 'integer'},
+                                                        'key': {'type': 'string'},
+                                                        'colorName': {'type': 'string'},
+                                                        'name': {'type': 'string'},
+                                                    },
+                                                },
+                                            },
+                                        },
+                                        'hasScreen': {'type': 'boolean', 'description': 'Whether the transition has a screen associated with it'},
+                                        'isGlobal': {'type': 'boolean', 'description': 'Whether this is a global transition'},
+                                        'isInitial': {'type': 'boolean', 'description': 'Whether this is the initial transition'},
+                                        'isConditional': {'type': 'boolean', 'description': 'Whether the transition has conditions'},
+                                        'isLooped': {'type': 'boolean', 'description': 'Whether the transition loops back to the current status'},
+                                    },
+                                },
+                                'description': 'Array of available transitions',
+                            },
+                        },
+                    },
+                    record_extractor='$.transitions',
+                ),
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/rest/api/3/issue/{issueIdOrKey}/transitions',
+                    action=Action.CREATE,
+                    description="Performs a status transition on an issue (e.g., To Do -> In Progress -> Done).\nThis is the primary way to change an issue's workflow status in Jira.\n\nTo use this endpoint:\n1. First, GET the available transitions for the issue to find valid transition IDs\n2. Then POST with the desired transition ID\n\nYou can optionally include field updates and comments as part of the transition.\n",
+                    body_fields=[
+                        'transition',
+                        'fields',
+                        'update',
+                        'historyMetadata',
+                    ],
+                    path_params=['issueIdOrKey'],
+                    path_params_schema={
+                        'issueIdOrKey': {'type': 'string', 'required': True},
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for transitioning an issue to a new status',
+                        'properties': {
+                            'transition': {
+                                'type': 'object',
+                                'description': 'The transition to perform',
+                                'required': ['id'],
+                                'properties': {
+                                    'id': {'type': 'string', 'description': 'The ID of the transition to perform. Get available transition IDs from the GET transitions endpoint.'},
+                                },
+                            },
+                            'fields': {
+                                'type': 'object',
+                                'description': 'Fields to set during the transition (if required by the transition screen)',
+                                'additionalProperties': True,
+                            },
+                            'update': {
+                                'type': 'object',
+                                'description': 'Additional update operations to perform during the transition',
+                                'additionalProperties': True,
+                            },
+                            'historyMetadata': {
+                                'type': 'object',
+                                'description': 'Metadata about the transition for the issue history',
+                                'additionalProperties': True,
+                            },
+                        },
+                        'required': ['transition'],
+                    },
+                    no_content_response=True,
+                ),
+            },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='issue_transitions',
+                    target_entity='issues',
+                    foreign_key='issueIdOrKey',
+                    cardinality='many_to_one',
+                ),
+            ],
+        ),
+        EntityDefinition(
+            name='issue_links',
+            actions=[Action.CREATE],
+            endpoints={
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/rest/api/3/issueLink',
+                    action=Action.CREATE,
+                    description='Creates a link between two issues. Issue links define relationships such as\n"blocks", "is blocked by", "relates to", "duplicates", "is duplicated by", "clones", "is cloned by".\n\nCommon link type names: Blocks, Cloners, Duplicate, Relates.\nEach type has an inward and outward description (e.g., "blocks" / "is blocked by").\n',
+                    body_fields=[
+                        'type',
+                        'inwardIssue',
+                        'outwardIssue',
+                        'comment',
+                    ],
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for creating a link between two issues',
+                        'properties': {
+                            'type': {
+                                'type': 'object',
+                                'description': 'The type of link (e.g., Blocks, Duplicate, Relates)',
+                                'properties': {
+                                    'name': {'type': 'string', 'description': 'The name of the link type (e.g., Blocks, Duplicate, Relates, Cloners)'},
+                                    'id': {'type': 'string', 'description': 'The ID of the link type'},
+                                    'inward': {'type': 'string', 'description': 'The inward description (e.g., is blocked by)'},
+                                    'outward': {'type': 'string', 'description': 'The outward description (e.g., blocks)'},
+                                },
+                            },
+                            'inwardIssue': {
+                                'type': 'object',
+                                'description': 'The inward issue (the issue that is affected by the link)',
+                                'required': ['key'],
+                                'properties': {
+                                    'key': {'type': 'string', 'description': 'The issue key (e.g., PROJ-123)'},
+                                    'id': {'type': 'string', 'description': 'The issue ID'},
+                                },
+                            },
+                            'outwardIssue': {
+                                'type': 'object',
+                                'description': 'The outward issue (the issue that causes the link)',
+                                'required': ['key'],
+                                'properties': {
+                                    'key': {'type': 'string', 'description': 'The issue key (e.g., PROJ-456)'},
+                                    'id': {'type': 'string', 'description': 'The issue ID'},
+                                },
+                            },
+                            'comment': {
+                                'type': 'object',
+                                'description': 'A comment about the link in Atlassian Document Format (ADF)',
+                                'properties': {
+                                    'body': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'type': {'type': 'string', 'default': 'doc'},
+                                            'version': {'type': 'integer', 'default': 1},
+                                            'content': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'type': {'type': 'string'},
+                                                        'content': {
+                                                            'type': 'array',
+                                                            'items': {
+                                                                'type': 'object',
+                                                                'properties': {
+                                                                    'type': {'type': 'string'},
+                                                                    'text': {'type': 'string'},
+                                                                },
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                        'required': ['type', 'inwardIssue', 'outwardIssue'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Empty response object (returned for 204 No Content responses)',
+                        'additionalProperties': True,
+                    },
+                ),
+            },
+        ),
     ],
     search_field_paths={
         'issues': [
@@ -3989,6 +4446,13 @@ JiraConnectorModel: ConnectorModel = ConnectorModel(
             'Update my most recent comment',
             'Delete a test issue',
             'Remove my most recent comment',
+            'Transition {issue_key} to In Progress',
+            'Move {issue_key} to Done',
+            'What transitions are available for {issue_key}?',
+            'Log 2 hours of work on {issue_key}',
+            'Log 30 minutes on {issue_key} with a comment about what I did',
+            'Link {issue_key_1} as blocking {issue_key_2}',
+            "Create a 'relates to' link between {issue_key_1} and {issue_key_2}",
         ],
         context_store_search=[
             'What issues are assigned to {team_member} this week?',
@@ -4004,7 +4468,7 @@ JiraConnectorModel: ConnectorModel = ConnectorModel(
             'What projects have the most issues?',
             'Search for users named {user_name}',
         ],
-        unsupported=['Log time on {issue_key}', 'Transition {issue_key} to Done'],
+        unsupported=['Attach a file to {issue_key}', 'Add a watcher to {issue_key}'],
     ),
     server_variable_defaults={'subdomain': '{subdomain}'},
 )

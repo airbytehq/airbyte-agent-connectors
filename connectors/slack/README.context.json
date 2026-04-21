@@ -94,9 +94,9 @@
       }
     ]
   },
-  "custom_description": "Slack is a business communication platform that offers messaging, file sharing, and integrations\nwith other tools. This connector provides read access to users, channels, channel members, channel\nmessages, and threads for workspace analytics. It also supports write operations including sending\nand updating messages, creating and renaming channels, setting channel topics and purposes,\nadding reactions to messages, and inviting users to channels.\n",
-  "supported_questions": "- List all users in my Slack workspace\n- Show me all public channels\n- List members of a public channel\n- Show me recent messages in a public channel\n- Show me thread replies for a recent message\n- List all channels I have access to\n- Show me user details for a workspace member\n- List channel members for a public channel\n- Send a message to a channel saying 'Hello team!'\n- Post a message in the general channel\n- Update the most recent message in a channel\n- Create a new public channel called 'project-updates'\n- Create a private channel named 'team-internal'\n- Rename a channel to 'new-channel-name'\n- Set the topic for a channel to 'Daily standup notes'\n- Update the purpose of a channel\n- Add a thumbsup reaction to the latest message in a channel\n- React with :rocket: to the latest message in a channel\n- Reply to a recent thread with 'Thanks for the update!'\n- Invite a user to a channel\n- Add a team member to the #project-updates channel\n- What messages were posted in channel {channel_id} last week?\n- Show me the conversation history for channel {channel_id}\n- Search for messages mentioning {keyword} in channel {channel_id}",
-  "unsupported_questions": "- Delete a message from channel {channel_id}\n- Remove a reaction from a message\n- Archive channel {channel_id}\n- Remove user {user_id} from channel {channel_id}\n- Delete channel {channel_id}\n- Create a new user in the workspace\n- Update user profile information",
+  "custom_description": "Slack is a business communication platform that offers messaging, file sharing, and integrations\nwith other tools. This connector provides read access to users, channels, channel members, channel\nmessages, and threads for workspace analytics. It also supports write operations including sending,\nupdating, deleting, and scheduling messages, sending ephemeral messages, creating and renaming\nchannels, archiving channels, removing users from channels, setting channel topics and purposes,\nadding and removing reactions, pinning messages, adding bookmarks, and inviting users to channels.\n",
+  "supported_questions": "- List all users in my Slack workspace\n- Show me all public channels\n- List members of a public channel\n- Show me recent messages in a public channel\n- Show me thread replies for a recent message\n- List all channels I have access to\n- Show me user details for a workspace member\n- List channel members for a public channel\n- Send a message to a channel saying 'Hello team!'\n- Post a message in the general channel\n- Update the most recent message in a channel\n- Create a new public channel called 'project-updates'\n- Create a private channel named 'team-internal'\n- Rename a channel to 'new-channel-name'\n- Set the topic for a channel to 'Daily standup notes'\n- Update the purpose of a channel\n- Add a thumbsup reaction to the latest message in a channel\n- React with :rocket: to the latest message in a channel\n- Reply to a recent thread with 'Thanks for the update!'\n- Invite a user to a channel\n- Add a team member to the #project-updates channel\n- Send an ephemeral message to a user in a channel\n- Whisper a private reminder to a user in #general\n- Schedule a message in a channel for tomorrow at 9am\n- Send a reminder to a channel at 5pm today\n- Delete the bot's last message in a channel\n- Remove the :thumbsup: reaction from a message\n- Archive the #old-project channel\n- Remove a user from the #team channel\n- Pin the latest important message in a channel\n- Add a bookmark link to a channel\n- What messages were posted in channel {channel_id} last week?\n- Show me the conversation history for channel {channel_id}\n- Search for messages mentioning {keyword} in channel {channel_id}",
+  "unsupported_questions": "- Delete channel {channel_id}\n- Create a new user in the workspace\n- Update user profile information\n- Unarchive a channel",
   "first_operation": {
     "method_name": "list_users",
     "http_method": "get",
@@ -820,6 +820,46 @@
         "record_type": "CreatedMessage",
         "meta_fields": null,
         "is_download": false
+      },
+      {
+        "method_name": "delete_message",
+        "http_method": "post",
+        "path": "/chat.delete",
+        "entity": "messages",
+        "action": "delete",
+        "parameters": [
+          {
+            "name": "channel",
+            "python_name": "channel",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Channel ID containing the message to be deleted"
+            },
+            "required": true,
+            "description": "Channel ID containing the message to be deleted"
+          },
+          {
+            "name": "ts",
+            "python_name": "ts",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Timestamp of the message to be deleted"
+            },
+            "required": true,
+            "description": "Timestamp of the message to be deleted"
+          }
+        ],
+        "params_type_name": "MessagesDeleteParams",
+        "response_type": "MessageDeleteResponse",
+        "description": "Deletes a message from a channel. When used with a bot token, may only delete messages posted by that bot.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "MessageDeleteResponse",
+        "meta_fields": null,
+        "is_download": false
       }
     ],
     "channel_topics": [
@@ -1008,6 +1048,419 @@
         "meta_extractor": null,
         "needs_envelope": null,
         "record_type": "ReactionAddResponse",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "delete_reaction",
+        "http_method": "post",
+        "path": "/reactions.remove",
+        "entity": "reactions",
+        "action": "delete",
+        "parameters": [
+          {
+            "name": "channel",
+            "python_name": "channel",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Channel ID containing the message"
+            },
+            "required": true,
+            "description": "Channel ID containing the message"
+          },
+          {
+            "name": "timestamp",
+            "python_name": "timestamp",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Timestamp of the message to remove reaction from"
+            },
+            "required": true,
+            "description": "Timestamp of the message to remove reaction from"
+          },
+          {
+            "name": "name",
+            "python_name": "name",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Reaction emoji name to remove (without colons, e.g., \"thumbsup\")"
+            },
+            "required": true,
+            "description": "Reaction emoji name to remove (without colons, e.g., \"thumbsup\")"
+          }
+        ],
+        "params_type_name": "ReactionsDeleteParams",
+        "response_type": "ReactionRemoveResponse",
+        "description": "Removes a reaction (emoji) from a message",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "ReactionRemoveResponse",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "ephemeral_messages": [
+      {
+        "method_name": "create_ephemeral_message",
+        "http_method": "post",
+        "path": "/chat.postEphemeral",
+        "entity": "ephemeral_messages",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "channel",
+            "python_name": "channel",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Channel, private group, or IM channel to send the ephemeral message to. Can be an encoded ID or a name."
+            },
+            "required": true,
+            "description": "Channel, private group, or IM channel to send the ephemeral message to. Can be an encoded ID or a name."
+          },
+          {
+            "name": "user",
+            "python_name": "user",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "ID of the user who will receive the ephemeral message. The user should be in the channel specified by the channel argument."
+            },
+            "required": true,
+            "description": "ID of the user who will receive the ephemeral message. The user should be in the channel specified by the channel argument."
+          },
+          {
+            "name": "text",
+            "python_name": "text",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Message text content (supports mrkdwn formatting). How this field works depends on whether blocks are also provided."
+            },
+            "required": true,
+            "description": "Message text content (supports mrkdwn formatting). How this field works depends on whether blocks are also provided."
+          },
+          {
+            "name": "thread_ts",
+            "python_name": "thread_ts",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Provide another message's ts value to post this ephemeral message in a thread. The thread must already be active."
+            },
+            "required": false,
+            "description": "Provide another message's ts value to post this ephemeral message in a thread. The thread must already be active."
+          },
+          {
+            "name": "blocks",
+            "python_name": "blocks",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "A JSON-based array of structured blocks, presented as a URL-encoded string."
+            },
+            "required": false,
+            "description": "A JSON-based array of structured blocks, presented as a URL-encoded string."
+          }
+        ],
+        "params_type_name": "EphemeralMessagesCreateParams",
+        "response_type": "EphemeralMessageCreateResponse",
+        "description": "Sends an ephemeral message to a user in a channel. Ephemeral messages are visible only to the target user and do not persist across sessions.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "EphemeralMessageCreateResponse",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "scheduled_messages": [
+      {
+        "method_name": "create_scheduled_message",
+        "http_method": "post",
+        "path": "/chat.scheduleMessage",
+        "entity": "scheduled_messages",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "channel",
+            "python_name": "channel",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Channel, private group, or DM channel to send the scheduled message to. Can be an encoded ID or a name."
+            },
+            "required": true,
+            "description": "Channel, private group, or DM channel to send the scheduled message to. Can be an encoded ID or a name."
+          },
+          {
+            "name": "text",
+            "python_name": "text",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Message text content (supports mrkdwn formatting). How this field works depends on whether blocks are also provided."
+            },
+            "required": true,
+            "description": "Message text content (supports mrkdwn formatting). How this field works depends on whether blocks are also provided."
+          },
+          {
+            "name": "post_at",
+            "python_name": "post_at",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Unix timestamp representing the future time the message should post to Slack. Must be within 120 days."
+            },
+            "required": true,
+            "description": "Unix timestamp representing the future time the message should post to Slack. Must be within 120 days."
+          },
+          {
+            "name": "thread_ts",
+            "python_name": "thread_ts",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Provide another message's ts value to make this message a reply. Avoid using a reply's ts value; use its parent instead."
+            },
+            "required": false,
+            "description": "Provide another message's ts value to make this message a reply. Avoid using a reply's ts value; use its parent instead."
+          },
+          {
+            "name": "reply_broadcast",
+            "python_name": "reply_broadcast",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Used in conjunction with thread_ts and indicates whether reply should be made visible to everyone in the channel. Defaults to false."
+            },
+            "required": false,
+            "description": "Used in conjunction with thread_ts and indicates whether reply should be made visible to everyone in the channel. Defaults to false."
+          },
+          {
+            "name": "unfurl_links",
+            "python_name": "unfurl_links",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Pass true to enable unfurling of primarily text-based content."
+            },
+            "required": false,
+            "description": "Pass true to enable unfurling of primarily text-based content."
+          },
+          {
+            "name": "unfurl_media",
+            "python_name": "unfurl_media",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Pass false to disable unfurling of media content."
+            },
+            "required": false,
+            "description": "Pass false to disable unfurling of media content."
+          }
+        ],
+        "params_type_name": "ScheduledMessagesCreateParams",
+        "response_type": "ScheduledMessageCreateResponse",
+        "description": "Schedules a message for delivery to a channel at a specified time in the future. Messages can be scheduled up to 120 days in advance.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "ScheduledMessageCreateResponse",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "channel_archives": [
+      {
+        "method_name": "create_channel_archive",
+        "http_method": "post",
+        "path": "/conversations.archive",
+        "entity": "channel_archives",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "channel",
+            "python_name": "channel",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "ID of the channel to archive"
+            },
+            "required": true,
+            "description": "ID of the channel to archive"
+          }
+        ],
+        "params_type_name": "ChannelArchivesCreateParams",
+        "response_type": "ChannelArchiveResponse",
+        "description": "Archives a conversation. Not all types of conversations can be archived.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "ChannelArchiveResponse",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "channel_kicks": [
+      {
+        "method_name": "create_channel_kick",
+        "http_method": "post",
+        "path": "/conversations.kick",
+        "entity": "channel_kicks",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "channel",
+            "python_name": "channel",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "ID of the channel to remove the user from"
+            },
+            "required": true,
+            "description": "ID of the channel to remove the user from"
+          },
+          {
+            "name": "user",
+            "python_name": "user",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "User ID to be removed from the channel"
+            },
+            "required": true,
+            "description": "User ID to be removed from the channel"
+          }
+        ],
+        "params_type_name": "ChannelKicksCreateParams",
+        "response_type": "ChannelKickResponse",
+        "description": "Removes a user from a public or private channel",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "ChannelKickResponse",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "pins": [
+      {
+        "method_name": "create_pin",
+        "http_method": "post",
+        "path": "/pins.add",
+        "entity": "pins",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "channel",
+            "python_name": "channel",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Channel ID to pin the message to"
+            },
+            "required": true,
+            "description": "Channel ID to pin the message to"
+          },
+          {
+            "name": "timestamp",
+            "python_name": "timestamp",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Timestamp of the message to pin"
+            },
+            "required": true,
+            "description": "Timestamp of the message to pin"
+          }
+        ],
+        "params_type_name": "PinsCreateParams",
+        "response_type": "PinAddResponse",
+        "description": "Pins a message to a particular channel. Both channel and timestamp are required.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "PinAddResponse",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "bookmarks": [
+      {
+        "method_name": "create_bookmark",
+        "http_method": "post",
+        "path": "/bookmarks.add",
+        "entity": "bookmarks",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "channel_id",
+            "python_name": "channel_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Channel ID to add the bookmark to"
+            },
+            "required": true,
+            "description": "Channel ID to add the bookmark to"
+          },
+          {
+            "name": "title",
+            "python_name": "title",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Title for the bookmark"
+            },
+            "required": true,
+            "description": "Title for the bookmark"
+          },
+          {
+            "name": "type",
+            "python_name": "type",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Type of the bookmark (e.g., \"link\")"
+            },
+            "required": true,
+            "description": "Type of the bookmark (e.g., \"link\")"
+          },
+          {
+            "name": "link",
+            "python_name": "link",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "URL to bookmark (required for link type). Must begin with http:// or https://."
+            },
+            "required": false,
+            "description": "URL to bookmark (required for link type). Must begin with http:// or https://."
+          },
+          {
+            "name": "emoji",
+            "python_name": "emoji",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Emoji tag to apply to the bookmark (e.g., \":rocket:\")"
+            },
+            "required": false,
+            "description": "Emoji tag to apply to the bookmark (e.g., \":rocket:\")"
+          }
+        ],
+        "params_type_name": "BookmarksCreateParams",
+        "response_type": "Bookmark",
+        "description": "Adds a bookmark (link) to a channel. Bookmarks appear in the channel header for easy access.",
+        "record_extractor": "$.bookmark",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Bookmark",
         "meta_fields": null,
         "is_download": false
       }

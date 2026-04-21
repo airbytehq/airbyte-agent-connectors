@@ -2676,7 +2676,7 @@ SlackConnectorModel: ConnectorModel = ConnectorModel(
         ),
         EntityDefinition(
             name='messages',
-            actions=[Action.CREATE, Action.UPDATE],
+            actions=[Action.CREATE, Action.UPDATE, Action.DELETE],
             endpoints={
                 Action.CREATE: EndpointDefinition(
                     method='POST',
@@ -2919,6 +2919,46 @@ SlackConnectorModel: ConnectorModel = ConnectorModel(
                         'freshness': 'live',
                         'example_questions': ["Update the Slack message to say 'Hello team'"],
                         'search_strategy': 'Use messages.update to edit an existing Slack message. Required params: channel, ts, and text.',
+                    },
+                ),
+                Action.DELETE: EndpointDefinition(
+                    method='POST',
+                    path='/chat.delete',
+                    action=Action.DELETE,
+                    description='Deletes a message from a channel. When used with a bot token, may only delete messages posted by that bot.',
+                    body_fields=['channel', 'ts'],
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for deleting a message. Bot tokens can only delete messages posted by the bot.',
+                        'properties': {
+                            'channel': {'type': 'string', 'description': 'Channel ID containing the message to be deleted'},
+                            'ts': {'type': 'string', 'description': 'Timestamp of the message to be deleted'},
+                        },
+                        'required': ['channel', 'ts'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Response from deleting a message',
+                        'properties': {
+                            'ok': {'type': 'boolean', 'description': 'Whether the request was successful'},
+                            'channel': {
+                                'type': ['string', 'null'],
+                                'description': 'Channel ID where the message was deleted',
+                            },
+                            'ts': {
+                                'type': ['string', 'null'],
+                                'description': 'Timestamp of the deleted message',
+                            },
+                        },
+                    },
+                    record_extractor='$',
+                    ai_hints={
+                        'summary': 'Delete Slack messages',
+                        'when_to_use': 'When the user wants to delete or remove a message the bot previously sent',
+                        'trigger_phrases': ['delete message', 'remove message', 'unsend'],
+                        'freshness': 'live',
+                        'example_questions': ['Delete the last message the bot sent in a channel'],
+                        'search_strategy': 'Use messages.delete to remove a message. Required params: channel and ts (timestamp of the message to delete). Bot tokens can only delete messages posted by the bot.',
                     },
                 ),
             },
@@ -3556,7 +3596,7 @@ SlackConnectorModel: ConnectorModel = ConnectorModel(
         ),
         EntityDefinition(
             name='reactions',
-            actions=[Action.CREATE],
+            actions=[Action.CREATE, Action.DELETE],
             endpoints={
                 Action.CREATE: EndpointDefinition(
                     method='POST',
@@ -3582,6 +3622,527 @@ SlackConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$',
+                ),
+                Action.DELETE: EndpointDefinition(
+                    method='POST',
+                    path='/reactions.remove',
+                    action=Action.DELETE,
+                    description='Removes a reaction (emoji) from a message',
+                    body_fields=['channel', 'timestamp', 'name'],
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for removing a reaction from a message',
+                        'properties': {
+                            'channel': {'type': 'string', 'description': 'Channel ID containing the message'},
+                            'timestamp': {'type': 'string', 'description': 'Timestamp of the message to remove reaction from'},
+                            'name': {'type': 'string', 'description': 'Reaction emoji name to remove (without colons, e.g., "thumbsup")'},
+                        },
+                        'required': ['channel', 'timestamp', 'name'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Response from removing a reaction',
+                        'properties': {
+                            'ok': {'type': 'boolean', 'description': 'Whether the request was successful'},
+                        },
+                    },
+                    record_extractor='$',
+                    ai_hints={
+                        'summary': 'Remove reactions from Slack messages',
+                        'when_to_use': 'When the user wants to remove a reaction (emoji) from a message',
+                        'trigger_phrases': [
+                            'remove reaction',
+                            'unreact',
+                            'remove emoji',
+                            'take back reaction',
+                        ],
+                        'freshness': 'live',
+                        'example_questions': ['Remove the :thumbsup: reaction from a message'],
+                        'search_strategy': 'Use reactions.delete to remove a reaction from a message. Required params: channel, timestamp, and name (emoji name without colons).',
+                    },
+                ),
+            },
+        ),
+        EntityDefinition(
+            name='ephemeral_messages',
+            actions=[Action.CREATE],
+            endpoints={
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/chat.postEphemeral',
+                    action=Action.CREATE,
+                    description='Sends an ephemeral message to a user in a channel. Ephemeral messages are visible only to the target user and do not persist across sessions.',
+                    body_fields=[
+                        'channel',
+                        'user',
+                        'text',
+                        'thread_ts',
+                        'blocks',
+                    ],
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for sending an ephemeral message visible only to one user',
+                        'properties': {
+                            'channel': {'type': 'string', 'description': 'Channel, private group, or IM channel to send the ephemeral message to. Can be an encoded ID or a name.'},
+                            'user': {'type': 'string', 'description': 'ID of the user who will receive the ephemeral message. The user should be in the channel specified by the channel argument.'},
+                            'text': {'type': 'string', 'description': 'Message text content (supports mrkdwn formatting). How this field works depends on whether blocks are also provided.'},
+                            'thread_ts': {'type': 'string', 'description': "Provide another message's ts value to post this ephemeral message in a thread. The thread must already be active."},
+                            'blocks': {'type': 'string', 'description': 'A JSON-based array of structured blocks, presented as a URL-encoded string.'},
+                        },
+                        'required': ['channel', 'user', 'text'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Response from sending an ephemeral message',
+                        'properties': {
+                            'ok': {'type': 'boolean', 'description': 'Whether the request was successful'},
+                            'message_ts': {
+                                'type': ['string', 'null'],
+                                'description': 'Ephemeral message timestamp. Note this cannot be used with chat.update.',
+                            },
+                        },
+                    },
+                    record_extractor='$',
+                    ai_hints={
+                        'summary': 'Send ephemeral Slack messages visible only to one user',
+                        'when_to_use': 'When the user wants to send a private/ephemeral message that only one person can see in a channel, or for agent check-ins that should not clutter the channel',
+                        'trigger_phrases': [
+                            'send ephemeral',
+                            'private message in channel',
+                            'whisper to user',
+                            'send only to',
+                        ],
+                        'freshness': 'live',
+                        'example_questions': ['Send an ephemeral message to a user in a channel', 'Whisper a reminder to a user in a channel'],
+                        'search_strategy': 'Use ephemeral_messages.create to send a message visible only to a specific user in a channel. Required params: channel, user, and text.',
+                    },
+                ),
+            },
+        ),
+        EntityDefinition(
+            name='scheduled_messages',
+            actions=[Action.CREATE],
+            endpoints={
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/chat.scheduleMessage',
+                    action=Action.CREATE,
+                    description='Schedules a message for delivery to a channel at a specified time in the future. Messages can be scheduled up to 120 days in advance.',
+                    body_fields=[
+                        'channel',
+                        'text',
+                        'post_at',
+                        'thread_ts',
+                        'reply_broadcast',
+                        'unfurl_links',
+                        'unfurl_media',
+                    ],
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for scheduling a message for future delivery',
+                        'properties': {
+                            'channel': {'type': 'string', 'description': 'Channel, private group, or DM channel to send the scheduled message to. Can be an encoded ID or a name.'},
+                            'text': {'type': 'string', 'description': 'Message text content (supports mrkdwn formatting). How this field works depends on whether blocks are also provided.'},
+                            'post_at': {'type': 'integer', 'description': 'Unix timestamp representing the future time the message should post to Slack. Must be within 120 days.'},
+                            'thread_ts': {'type': 'string', 'description': "Provide another message's ts value to make this message a reply. Avoid using a reply's ts value; use its parent instead."},
+                            'reply_broadcast': {'type': 'boolean', 'description': 'Used in conjunction with thread_ts and indicates whether reply should be made visible to everyone in the channel. Defaults to false.'},
+                            'unfurl_links': {'type': 'boolean', 'description': 'Pass true to enable unfurling of primarily text-based content.'},
+                            'unfurl_media': {'type': 'boolean', 'description': 'Pass false to disable unfurling of media content.'},
+                        },
+                        'required': ['channel', 'text', 'post_at'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Response from scheduling a message',
+                        'properties': {
+                            'ok': {'type': 'boolean', 'description': 'Whether the request was successful'},
+                            'channel': {
+                                'type': ['string', 'null'],
+                                'description': 'Channel ID where the message will be posted',
+                            },
+                            'scheduled_message_id': {
+                                'type': ['string', 'null'],
+                                'description': 'ID of the scheduled message. Use with chat.deleteScheduledMessage to cancel.',
+                            },
+                            'post_at': {
+                                'type': ['integer', 'null'],
+                                'description': 'Unix timestamp when the message will be posted',
+                            },
+                            'message': {
+                                'oneOf': [
+                                    {
+                                        'type': 'object',
+                                        'description': 'Content of a scheduled message',
+                                        'properties': {
+                                            'text': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Message text content',
+                                            },
+                                            'username': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Username that will post the message',
+                                            },
+                                            'bot_id': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Bot ID if scheduled by a bot',
+                                            },
+                                            'type': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Message type (e.g., "delayed_message")',
+                                            },
+                                            'subtype': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Message subtype (e.g., "bot_message")',
+                                            },
+                                            'user': {
+                                                'type': ['string', 'null'],
+                                                'description': 'User ID who scheduled the message',
+                                            },
+                                            'team': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Team ID of the workspace',
+                                            },
+                                            'app_id': {
+                                                'type': ['string', 'null'],
+                                                'description': 'App ID if scheduled by an app',
+                                            },
+                                            'bot_profile': {
+                                                'type': ['object', 'null'],
+                                                'description': 'Bot profile information if scheduled by a bot',
+                                            },
+                                            'blocks': {
+                                                'type': ['array', 'null'],
+                                                'description': 'Rich text block elements in the message',
+                                                'items': {'type': 'object'},
+                                            },
+                                            'attachments': {
+                                                'type': ['array', 'null'],
+                                                'items': {
+                                                    'type': 'object',
+                                                    'description': 'Message attachment',
+                                                    'properties': {
+                                                        'id': {
+                                                            'type': ['integer', 'null'],
+                                                            'description': 'Attachment ID',
+                                                        },
+                                                        'fallback': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Fallback text',
+                                                        },
+                                                        'color': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Attachment color',
+                                                        },
+                                                        'pretext': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Pretext',
+                                                        },
+                                                        'author_name': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Author name',
+                                                        },
+                                                        'author_link': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Author link',
+                                                        },
+                                                        'author_icon': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Author icon URL',
+                                                        },
+                                                        'title': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Attachment title',
+                                                        },
+                                                        'title_link': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Title link',
+                                                        },
+                                                        'text': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Attachment text',
+                                                        },
+                                                        'fields': {
+                                                            'type': ['array', 'null'],
+                                                            'items': {'type': 'object'},
+                                                            'description': 'Attachment fields',
+                                                        },
+                                                        'image_url': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Image URL',
+                                                        },
+                                                        'thumb_url': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Thumbnail URL',
+                                                        },
+                                                        'footer': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Footer text',
+                                                        },
+                                                        'footer_icon': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Footer icon URL',
+                                                        },
+                                                        'ts': {
+                                                            'type': ['string', 'integer', 'null'],
+                                                            'description': 'Timestamp',
+                                                        },
+                                                    },
+                                                },
+                                                'description': 'Message attachments',
+                                            },
+                                        },
+                                    },
+                                    {'type': 'null'},
+                                ],
+                                'description': 'The scheduled message content',
+                            },
+                        },
+                    },
+                    record_extractor='$',
+                    ai_hints={
+                        'summary': 'Schedule Slack messages for future delivery',
+                        'when_to_use': 'When the user wants to schedule a message for later, set up reminders, or send end-of-day summaries at a specific time',
+                        'trigger_phrases': [
+                            'schedule a message',
+                            'send later',
+                            'post at',
+                            'schedule for tomorrow',
+                            'send a reminder at',
+                        ],
+                        'freshness': 'live',
+                        'example_questions': ['Schedule a message in a channel for tomorrow at 9am', 'Send a reminder to a channel at 5pm today'],
+                        'search_strategy': 'Use scheduled_messages.create to schedule a message for future delivery. Required params: channel, text, and post_at (Unix timestamp). Messages can be scheduled up to 120 days in advance.',
+                    },
+                ),
+            },
+        ),
+        EntityDefinition(
+            name='channel_archives',
+            actions=[Action.CREATE],
+            endpoints={
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/conversations.archive',
+                    action=Action.CREATE,
+                    description='Archives a conversation. Not all types of conversations can be archived.',
+                    body_fields=['channel'],
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for archiving a channel',
+                        'properties': {
+                            'channel': {'type': 'string', 'description': 'ID of the channel to archive'},
+                        },
+                        'required': ['channel'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Response from archiving a channel',
+                        'properties': {
+                            'ok': {'type': 'boolean', 'description': 'Whether the request was successful'},
+                        },
+                    },
+                    record_extractor='$',
+                    ai_hints={
+                        'summary': 'Archive Slack channels',
+                        'when_to_use': 'When the user wants to archive a channel that is no longer active',
+                        'trigger_phrases': ['archive channel', 'close channel', 'deactivate channel'],
+                        'freshness': 'live',
+                        'example_questions': ['Archive the #old-project channel'],
+                        'search_strategy': 'Use channel_archives.create to archive a channel. Required param: channel (the channel ID to archive).',
+                    },
+                ),
+            },
+        ),
+        EntityDefinition(
+            name='channel_kicks',
+            actions=[Action.CREATE],
+            endpoints={
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/conversations.kick',
+                    action=Action.CREATE,
+                    description='Removes a user from a public or private channel',
+                    body_fields=['channel', 'user'],
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for removing a user from a channel',
+                        'properties': {
+                            'channel': {'type': 'string', 'description': 'ID of the channel to remove the user from'},
+                            'user': {'type': 'string', 'description': 'User ID to be removed from the channel'},
+                        },
+                        'required': ['channel', 'user'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Response from removing a user from a channel',
+                        'properties': {
+                            'ok': {'type': 'boolean', 'description': 'Whether the request was successful'},
+                            'errors': {
+                                'type': ['object', 'null'],
+                                'description': 'Error details, empty object on success',
+                            },
+                        },
+                    },
+                    record_extractor='$',
+                    ai_hints={
+                        'summary': 'Remove users from Slack channels',
+                        'when_to_use': 'When the user wants to remove or kick someone from a channel',
+                        'trigger_phrases': ['remove user from channel', 'kick from channel', 'remove from channel'],
+                        'freshness': 'live',
+                        'example_questions': ['Remove a user from the #project channel'],
+                        'search_strategy': 'Use channel_kicks.create to remove a user from a channel. Required params: channel and user (user ID to remove).',
+                    },
+                ),
+            },
+        ),
+        EntityDefinition(
+            name='pins',
+            actions=[Action.CREATE],
+            endpoints={
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/pins.add',
+                    action=Action.CREATE,
+                    description='Pins a message to a particular channel. Both channel and timestamp are required.',
+                    body_fields=['channel', 'timestamp'],
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for pinning a message to a channel',
+                        'properties': {
+                            'channel': {'type': 'string', 'description': 'Channel ID to pin the message to'},
+                            'timestamp': {'type': 'string', 'description': 'Timestamp of the message to pin'},
+                        },
+                        'required': ['channel', 'timestamp'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Response from pinning a message',
+                        'properties': {
+                            'ok': {'type': 'boolean', 'description': 'Whether the request was successful'},
+                        },
+                    },
+                    record_extractor='$',
+                    ai_hints={
+                        'summary': 'Pin messages to Slack channels',
+                        'when_to_use': 'When the user wants to pin an important message to a channel for easy reference',
+                        'trigger_phrases': ['pin message', 'pin to channel', 'pin this'],
+                        'freshness': 'live',
+                        'example_questions': ['Pin the latest message in a channel'],
+                        'search_strategy': 'Use pins.create to pin a message to a channel. Required params: channel and timestamp (ts of the message to pin).',
+                    },
+                ),
+            },
+        ),
+        EntityDefinition(
+            name='bookmarks',
+            actions=[Action.CREATE],
+            endpoints={
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/bookmarks.add',
+                    action=Action.CREATE,
+                    description='Adds a bookmark (link) to a channel. Bookmarks appear in the channel header for easy access.',
+                    body_fields=[
+                        'channel_id',
+                        'title',
+                        'type',
+                        'link',
+                        'emoji',
+                    ],
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for adding a bookmark to a channel',
+                        'properties': {
+                            'channel_id': {'type': 'string', 'description': 'Channel ID to add the bookmark to'},
+                            'title': {'type': 'string', 'description': 'Title for the bookmark'},
+                            'type': {'type': 'string', 'description': 'Type of the bookmark (e.g., "link")'},
+                            'link': {'type': 'string', 'description': 'URL to bookmark (required for link type). Must begin with http:// or https://.'},
+                            'emoji': {'type': 'string', 'description': 'Emoji tag to apply to the bookmark (e.g., ":rocket:")'},
+                        },
+                        'required': ['channel_id', 'title', 'type'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Response from adding a bookmark',
+                        'properties': {
+                            'ok': {'type': 'boolean', 'description': 'Whether the request was successful'},
+                            'bookmark': {
+                                'type': 'object',
+                                'description': 'A channel bookmark',
+                                'properties': {
+                                    'id': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Bookmark ID',
+                                    },
+                                    'channel_id': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Channel ID the bookmark belongs to',
+                                    },
+                                    'title': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Bookmark title',
+                                    },
+                                    'link': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Bookmark URL',
+                                    },
+                                    'emoji': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Emoji tag',
+                                    },
+                                    'icon_url': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Icon URL (e.g., favicon)',
+                                    },
+                                    'type': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Bookmark type (e.g., "link")',
+                                    },
+                                    'entity_id': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Entity ID if bookmarking a message or file',
+                                    },
+                                    'date_created': {
+                                        'type': ['integer', 'null'],
+                                        'description': 'Unix timestamp of bookmark creation',
+                                    },
+                                    'date_updated': {
+                                        'type': ['integer', 'null'],
+                                        'description': 'Unix timestamp of last update',
+                                    },
+                                    'rank': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Sort rank',
+                                    },
+                                    'last_updated_by_user_id': {
+                                        'type': ['string', 'null'],
+                                        'description': 'User ID of last updater',
+                                    },
+                                    'last_updated_by_team_id': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Team ID of last updater',
+                                    },
+                                    'shortcut_id': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Shortcut ID if applicable',
+                                    },
+                                    'app_id': {
+                                        'type': ['string', 'null'],
+                                        'description': 'App ID if created by an app',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    record_extractor='$.bookmark',
+                    ai_hints={
+                        'summary': 'Add bookmarks to Slack channels',
+                        'when_to_use': 'When the user wants to add a link or resource as a bookmark in a channel header',
+                        'trigger_phrases': ['add bookmark', 'bookmark link', 'add link to channel'],
+                        'freshness': 'live',
+                        'example_questions': ['Add a bookmark to a channel with a link to our wiki'],
+                        'search_strategy': 'Use bookmarks.create to add a bookmark to a channel. Required params: channel_id, title, and type. For links, also include the link URL.',
+                    },
                 ),
             },
         ),
@@ -3753,17 +4314,24 @@ SlackConnectorModel: ConnectorModel = ConnectorModel(
             "Reply to a recent thread with 'Thanks for the update!'",
             'Invite a user to a channel',
             'Add a team member to the #project-updates channel',
+            'Send an ephemeral message to a user in a channel',
+            'Whisper a private reminder to a user in #general',
+            'Schedule a message in a channel for tomorrow at 9am',
+            'Send a reminder to a channel at 5pm today',
+            "Delete the bot's last message in a channel",
+            'Remove the :thumbsup: reaction from a message',
+            'Archive the #old-project channel',
+            'Remove a user from the #team channel',
+            'Pin the latest important message in a channel',
+            'Add a bookmark link to a channel',
         ],
         context_store_search=['What messages were posted in channel {channel_id} last week?', 'Show me the conversation history for channel {channel_id}', 'Search for messages mentioning {keyword} in channel {channel_id}'],
         search=['What messages were posted in channel {channel_id} last week?', 'Show me the conversation history for channel {channel_id}', 'Search for messages mentioning {keyword} in channel {channel_id}'],
         unsupported=[
-            'Delete a message from channel {channel_id}',
-            'Remove a reaction from a message',
-            'Archive channel {channel_id}',
-            'Remove user {user_id} from channel {channel_id}',
             'Delete channel {channel_id}',
             'Create a new user in the workspace',
             'Update user profile information',
+            'Unarchive a channel',
         ],
     ),
     response_error_check=ResponseErrorCheck(

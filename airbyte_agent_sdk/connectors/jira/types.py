@@ -148,6 +148,69 @@ class IssueCommentsUpdateParamsVisibility(TypedDict):
     value: NotRequired[str]
     identifier: NotRequired[str]
 
+class IssueTransitionsCreateParamsTransition(TypedDict):
+    """The transition to perform"""
+    id: str
+
+class IssueWorklogsCreateParamsCommentContentItemContentItem(TypedDict):
+    """Nested schema for IssueWorklogsCreateParamsCommentContentItem.content_item"""
+    type: NotRequired[str]
+    text: NotRequired[str]
+
+class IssueWorklogsCreateParamsCommentContentItem(TypedDict):
+    """Nested schema for IssueWorklogsCreateParamsComment.content_item"""
+    type: NotRequired[str]
+    content: NotRequired[list[IssueWorklogsCreateParamsCommentContentItemContentItem]]
+
+class IssueWorklogsCreateParamsComment(TypedDict):
+    """A comment about the work done in Atlassian Document Format (ADF)"""
+    type: NotRequired[str]
+    version: NotRequired[int]
+    content: NotRequired[list[IssueWorklogsCreateParamsCommentContentItem]]
+
+class IssueWorklogsCreateParamsVisibility(TypedDict):
+    """Restrict worklog visibility to a group or role"""
+    type: NotRequired[str]
+    value: NotRequired[str]
+    identifier: NotRequired[str]
+
+class IssueLinksCreateParamsType(TypedDict):
+    """The type of link (e.g., Blocks, Duplicate, Relates)"""
+    name: NotRequired[str]
+    id: NotRequired[str]
+    inward: NotRequired[str]
+    outward: NotRequired[str]
+
+class IssueLinksCreateParamsInwardissue(TypedDict):
+    """The inward issue (the issue that is affected by the link)"""
+    key: str
+    id: NotRequired[str]
+
+class IssueLinksCreateParamsOutwardissue(TypedDict):
+    """The outward issue (the issue that causes the link)"""
+    key: str
+    id: NotRequired[str]
+
+class IssueLinksCreateParamsCommentBodyContentItemContentItem(TypedDict):
+    """Nested schema for IssueLinksCreateParamsCommentBodyContentItem.content_item"""
+    type: NotRequired[str]
+    text: NotRequired[str]
+
+class IssueLinksCreateParamsCommentBodyContentItem(TypedDict):
+    """Nested schema for IssueLinksCreateParamsCommentBody.content_item"""
+    type: NotRequired[str]
+    content: NotRequired[list[IssueLinksCreateParamsCommentBodyContentItemContentItem]]
+
+class IssueLinksCreateParamsCommentBody(TypedDict):
+    """Nested schema for IssueLinksCreateParamsComment.body"""
+    type: NotRequired[str]
+    version: NotRequired[int]
+    content: NotRequired[list[IssueLinksCreateParamsCommentBodyContentItem]]
+
+class IssueLinksCreateParamsComment(TypedDict):
+    """A comment about the link in Atlassian Document Format (ADF)"""
+    body: NotRequired[IssueLinksCreateParamsCommentBody]
+
 # ===== OPERATION PARAMS TYPE DEFINITIONS =====
 
 class IssuesApiSearchParams(TypedDict):
@@ -282,13 +345,6 @@ class IssueCommentsDeleteParams(TypedDict):
     issue_id_or_key: str
     comment_id: str
 
-class IssueWorklogsListParams(TypedDict):
-    """Parameters for issue_worklogs.list operation"""
-    issue_id_or_key: str
-    start_at: NotRequired[int]
-    max_results: NotRequired[int]
-    expand: NotRequired[str]
-
 class IssueWorklogsGetParams(TypedDict):
     """Parameters for issue_worklogs.get operation"""
     issue_id_or_key: str
@@ -299,6 +355,48 @@ class IssuesAssigneeUpdateParams(TypedDict):
     """Parameters for issues_assignee.update operation"""
     account_id: NotRequired[str]
     issue_id_or_key: str
+
+class IssueTransitionsListParams(TypedDict):
+    """Parameters for issue_transitions.list operation"""
+    issue_id_or_key: str
+    expand: NotRequired[str]
+    transition_id: NotRequired[str]
+    skip_remote_only_condition: NotRequired[bool]
+    include_unavailable_transitions: NotRequired[bool]
+    sort_by_ops_bar_and_status: NotRequired[bool]
+
+class IssueTransitionsCreateParams(TypedDict):
+    """Parameters for issue_transitions.create operation"""
+    transition: IssueTransitionsCreateParamsTransition
+    fields: NotRequired[dict[str, Any]]
+    update: NotRequired[dict[str, Any]]
+    history_metadata: NotRequired[dict[str, Any]]
+    issue_id_or_key: str
+
+class IssueWorklogsListParams(TypedDict):
+    """Parameters for issue_worklogs.list operation"""
+    issue_id_or_key: str
+    start_at: NotRequired[int]
+    max_results: NotRequired[int]
+    expand: NotRequired[str]
+
+class IssueWorklogsCreateParams(TypedDict):
+    """Parameters for issue_worklogs.create operation"""
+    time_spent_seconds: NotRequired[int]
+    time_spent: NotRequired[str]
+    started: NotRequired[str]
+    comment: NotRequired[IssueWorklogsCreateParamsComment]
+    visibility: NotRequired[IssueWorklogsCreateParamsVisibility]
+    issue_id_or_key: str
+    notify_users: NotRequired[bool]
+    adjust_estimate: NotRequired[str]
+
+class IssueLinksCreateParams(TypedDict):
+    """Parameters for issue_links.create operation"""
+    type: IssueLinksCreateParamsType
+    inward_issue: IssueLinksCreateParamsInwardissue
+    outward_issue: IssueLinksCreateParamsOutwardissue
+    comment: NotRequired[IssueLinksCreateParamsComment]
 
 # ===== SEARCH TYPES =====
 

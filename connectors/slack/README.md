@@ -4,9 +4,10 @@ The Slack agent connector is a Python package that equips AI agents to interact 
 
 Slack is a business communication platform that offers messaging, file sharing, and integrations
 with other tools. This connector provides read access to users, channels, channel members, channel
-messages, and threads for workspace analytics. It also supports write operations including sending
-and updating messages, creating and renaming channels, setting channel topics and purposes,
-adding reactions to messages, and inviting users to channels.
+messages, and threads for workspace analytics. It also supports write operations including sending,
+updating, deleting, and scheduling messages, sending ephemeral messages, creating and renaming
+channels, archiving channels, removing users from channels, setting channel topics and purposes,
+adding and removing reactions, pinning messages, adding bookmarks, and inviting users to channels.
 
 
 ## Example questions
@@ -34,6 +35,16 @@ The Slack connector is optimized to handle prompts like these.
 - Reply to a recent thread with 'Thanks for the update!'
 - Invite a user to a channel
 - Add a team member to the #project-updates channel
+- Send an ephemeral message to a user in a channel
+- Whisper a private reminder to a user in #general
+- Schedule a message in a channel for tomorrow at 9am
+- Send a reminder to a channel at 5pm today
+- Delete the bot's last message in a channel
+- Remove the :thumbsup: reaction from a message
+- Archive the #old-project channel
+- Remove a user from the #team channel
+- Pin the latest important message in a channel
+- Add a bookmark link to a channel
 - What messages were posted in channel \{channel_id\} last week?
 - Show me the conversation history for channel \{channel_id\}
 - Search for messages mentioning \{keyword\} in channel \{channel_id\}
@@ -42,13 +53,10 @@ The Slack connector is optimized to handle prompts like these.
 
 The Slack connector isn't currently able to handle prompts like these.
 
-- Delete a message from channel \{channel_id\}
-- Remove a reaction from a message
-- Archive channel \{channel_id\}
-- Remove user \{user_id\} from channel \{channel_id\}
 - Delete channel \{channel_id\}
 - Create a new user in the workspace
 - Update user profile information
+- Unarchive a channel
 
 ## Installation
 
@@ -117,11 +125,17 @@ This connector supports the following entities and actions. For more details, se
 | Channels | [List](./REFERENCE.md#channels-list), [Get](./REFERENCE.md#channels-get), [Create](./REFERENCE.md#channels-create), [Update](./REFERENCE.md#channels-update), [Context Store Search](./REFERENCE.md#channels-context-store-search) |
 | Channel Messages | [List](./REFERENCE.md#channel-messages-list), [Context Store Search](./REFERENCE.md#channel-messages-context-store-search) |
 | Threads | [List](./REFERENCE.md#threads-list), [Context Store Search](./REFERENCE.md#threads-context-store-search) |
-| Messages | [Create](./REFERENCE.md#messages-create), [Update](./REFERENCE.md#messages-update) |
+| Messages | [Create](./REFERENCE.md#messages-create), [Update](./REFERENCE.md#messages-update), [Delete](./REFERENCE.md#messages-delete) |
 | Channel Topics | [Create](./REFERENCE.md#channel-topics-create) |
 | Channel Purposes | [Create](./REFERENCE.md#channel-purposes-create) |
 | Channel Invites | [Create](./REFERENCE.md#channel-invites-create) |
-| Reactions | [Create](./REFERENCE.md#reactions-create) |
+| Reactions | [Create](./REFERENCE.md#reactions-create), [Delete](./REFERENCE.md#reactions-delete) |
+| Ephemeral Messages | [Create](./REFERENCE.md#ephemeral-messages-create) |
+| Scheduled Messages | [Create](./REFERENCE.md#scheduled-messages-create) |
+| Channel Archives | [Create](./REFERENCE.md#channel-archives-create) |
+| Channel Kicks | [Create](./REFERENCE.md#channel-kicks-create) |
+| Pins | [Create](./REFERENCE.md#pins-create) |
+| Bookmarks | [Create](./REFERENCE.md#bookmarks-create) |
 
 
 ### Authentication

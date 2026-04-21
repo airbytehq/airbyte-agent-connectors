@@ -39,8 +39,8 @@
   },
   "replication_config": null,
   "custom_description": "Connector for Jira API",
-  "supported_questions": "- Show me all open issues in my Jira instance\n- List recent issues created in the last 7 days\n- List all projects in my Jira instance\n- Show me details for the most recently updated issue\n- List all users in my Jira instance\n- Show me comments on the most recent issue\n- Show me worklogs from the last 7 days\n- Assign a recent issue to a teammate\n- Unassign a recent issue\n- Create a new task called 'Sample task' in a project\n- Create a bug with high priority\n- Update the summary of a recent issue to 'Updated summary'\n- Change the priority of a recent issue to high\n- Add a comment to a recent issue saying 'Please investigate'\n- Update my most recent comment\n- Delete a test issue\n- Remove my most recent comment\n- What issues are assigned to {team_member} this week?\n- Find all high priority bugs in our current sprint\n- Show me overdue issues across all projects\n- What projects have the most issues?\n- Search for users named {user_name}",
-  "unsupported_questions": "- Log time on {issue_key}\n- Transition {issue_key} to Done",
+  "supported_questions": "- Show me all open issues in my Jira instance\n- List recent issues created in the last 7 days\n- List all projects in my Jira instance\n- Show me details for the most recently updated issue\n- List all users in my Jira instance\n- Show me comments on the most recent issue\n- Show me worklogs from the last 7 days\n- Assign a recent issue to a teammate\n- Unassign a recent issue\n- Create a new task called 'Sample task' in a project\n- Create a bug with high priority\n- Update the summary of a recent issue to 'Updated summary'\n- Change the priority of a recent issue to high\n- Add a comment to a recent issue saying 'Please investigate'\n- Update my most recent comment\n- Delete a test issue\n- Remove my most recent comment\n- Transition {issue_key} to In Progress\n- Move {issue_key} to Done\n- What transitions are available for {issue_key}?\n- Log 2 hours of work on {issue_key}\n- Log 30 minutes on {issue_key} with a comment about what I did\n- Link {issue_key_1} as blocking {issue_key_2}\n- Create a 'relates to' link between {issue_key_1} and {issue_key_2}\n- What issues are assigned to {team_member} this week?\n- Find all high priority bugs in our current sprint\n- Show me overdue issues across all projects\n- What projects have the most issues?\n- Search for users named {user_name}",
+  "unsupported_questions": "- Attach a file to {issue_key}\n- Add a watcher to {issue_key}",
   "first_operation": {
     "method_name": "search_issues",
     "http_method": "get",
@@ -1936,6 +1936,55 @@
     ],
     "issue_worklogs": [
       {
+        "method_name": "get_issue_worklog",
+        "http_method": "get",
+        "path": "/rest/api/3/issue/{issueIdOrKey}/worklog/{worklogId}",
+        "entity": "issue_worklogs",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "issueIdOrKey",
+            "python_name": "issue_id_or_key",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The issue ID or key (e.g., \"PROJ-123\" or \"10000\")"
+          },
+          {
+            "name": "worklogId",
+            "python_name": "worklog_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The worklog ID"
+          },
+          {
+            "name": "expand",
+            "python_name": "expand",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Comma-separated list of additional fields to include (properties)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "IssueWorklogsGetParams",
+        "response_type": "Worklog",
+        "description": "Retrieve a single worklog by its ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Worklog",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
         "method_name": "list_issue_worklogs",
         "http_method": "get",
         "path": "/rest/api/3/issue/{issueIdOrKey}/worklog",
@@ -2035,12 +2084,127 @@
         "is_download": false
       },
       {
-        "method_name": "get_issue_worklog",
-        "http_method": "get",
-        "path": "/rest/api/3/issue/{issueIdOrKey}/worklog/{worklogId}",
+        "method_name": "create_issue_worklog",
+        "http_method": "post",
+        "path": "/rest/api/3/issue/{issueIdOrKey}/worklog",
         "entity": "issue_worklogs",
-        "action": "get",
+        "action": "create",
         "parameters": [
+          {
+            "name": "timeSpentSeconds",
+            "python_name": "time_spent_seconds",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Time spent in seconds (e.g., 3600 for 1 hour). Provide this or timeSpent."
+            },
+            "required": false,
+            "description": "Time spent in seconds (e.g., 3600 for 1 hour). Provide this or timeSpent."
+          },
+          {
+            "name": "timeSpent",
+            "python_name": "time_spent",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Human-readable time spent (e.g., 3h 30m, 1d 2h). Provide this or timeSpentSeconds."
+            },
+            "required": false,
+            "description": "Human-readable time spent (e.g., 3h 30m, 1d 2h). Provide this or timeSpentSeconds."
+          },
+          {
+            "name": "started",
+            "python_name": "started",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "description": "The datetime when the work was started (ISO 8601 format, e.g., \"2024-01-15T09:00:00.000+0000\"). Defaults to current time."
+            },
+            "required": false,
+            "description": "The datetime when the work was started (ISO 8601 format, e.g., \"2024-01-15T09:00:00.000+0000\"). Defaults to current time."
+          },
+          {
+            "name": "comment",
+            "python_name": "comment",
+            "type": "IssueWorklogsCreateParamsComment",
+            "schema": {
+              "type": "object",
+              "description": "A comment about the work done in Atlassian Document Format (ADF)",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "default": "doc",
+                  "description": "Document type (always 'doc')"
+                },
+                "version": {
+                  "type": "integer",
+                  "default": 1,
+                  "description": "ADF version"
+                },
+                "content": {
+                  "type": "array",
+                  "description": "Array of content blocks",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "description": "Block type (e.g., 'paragraph')"
+                      },
+                      "content": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "description": "Content type (e.g., 'text')"
+                            },
+                            "text": {
+                              "type": "string",
+                              "description": "Text content"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "required": false,
+            "description": "A comment about the work done in Atlassian Document Format (ADF)"
+          },
+          {
+            "name": "visibility",
+            "python_name": "visibility",
+            "type": "IssueWorklogsCreateParamsVisibility",
+            "schema": {
+              "type": "object",
+              "description": "Restrict worklog visibility to a group or role",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "group",
+                    "role"
+                  ],
+                  "description": "The type of visibility restriction"
+                },
+                "value": {
+                  "type": "string",
+                  "description": "The name of the group or role"
+                },
+                "identifier": {
+                  "type": "string",
+                  "description": "The ID of the group or role"
+                }
+              }
+            },
+            "required": false,
+            "description": "Restrict worklog visibility to a group or role"
+          },
           {
             "name": "issueIdOrKey",
             "python_name": "issue_id_or_key",
@@ -2052,30 +2216,39 @@
             "description": "The issue ID or key (e.g., \"PROJ-123\" or \"10000\")"
           },
           {
-            "name": "worklogId",
-            "python_name": "worklog_id",
-            "type": "str",
+            "name": "notifyUsers",
+            "python_name": "notify_users",
+            "type": "bool",
             "schema": {
-              "type": "string"
-            },
-            "required": true,
-            "description": "The worklog ID"
-          },
-          {
-            "name": "expand",
-            "python_name": "expand",
-            "type": "str",
-            "schema": {
-              "type": "string"
+              "type": "boolean",
+              "default": true
             },
             "required": null,
-            "description": "Comma-separated list of additional fields to include (properties)",
+            "description": "Whether to notify users about the worklog. Default is true.",
+            "is_deep_object": false
+          },
+          {
+            "name": "adjustEstimate",
+            "python_name": "adjust_estimate",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "auto",
+              "enum": [
+                "new",
+                "leave",
+                "manual",
+                "auto"
+              ]
+            },
+            "required": null,
+            "description": "How to adjust the remaining estimate. Values are \"new\", \"leave\", \"manual\", \"auto\".",
             "is_deep_object": false
           }
         ],
-        "params_type_name": "IssueWorklogsGetParams",
+        "params_type_name": "IssueWorklogsCreateParams",
         "response_type": "Worklog",
-        "description": "Retrieve a single worklog by its ID",
+        "description": "Adds a worklog entry to an issue to track time spent.\nUse timeSpentSeconds or timeSpent (e.g., \"3h 30m\") to specify time.\nOptionally include a started datetime and a comment describing the work done.\n",
         "record_extractor": "$",
         "meta_extractor": null,
         "needs_envelope": null,
@@ -2122,6 +2295,326 @@
         "meta_extractor": null,
         "needs_envelope": null,
         "record_type": null,
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "issue_transitions": [
+      {
+        "method_name": "get_issue_transitions",
+        "http_method": "get",
+        "path": "/rest/api/3/issue/{issueIdOrKey}/transitions",
+        "entity": "issue_transitions",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "issueIdOrKey",
+            "python_name": "issue_id_or_key",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The issue ID or key (e.g., \"PROJ-123\" or \"10000\")"
+          },
+          {
+            "name": "expand",
+            "python_name": "expand",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Comma-separated list of parameters to expand (transitions.fields)",
+            "is_deep_object": false
+          },
+          {
+            "name": "transitionId",
+            "python_name": "transition_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Filter by transition ID to get details for a specific transition",
+            "is_deep_object": false
+          },
+          {
+            "name": "skipRemoteOnlyCondition",
+            "python_name": "skip_remote_only_condition",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "required": null,
+            "description": "Whether to skip conditions that rely on remote data",
+            "is_deep_object": false
+          },
+          {
+            "name": "includeUnavailableTransitions",
+            "python_name": "include_unavailable_transitions",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "required": null,
+            "description": "Whether to include transitions that are unavailable",
+            "is_deep_object": false
+          },
+          {
+            "name": "sortByOpsBarAndStatus",
+            "python_name": "sort_by_ops_bar_and_status",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "required": null,
+            "description": "Whether to sort transitions by OpsBar and status",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "IssueTransitionsListParams",
+        "response_type": "IssueTransitionsListResult",
+        "description": "Returns the available transitions for an issue. Transitions define the workflow steps an issue can move through (e.g., To Do -> In Progress -> Done). Use this to discover valid transition IDs before performing a transition.",
+        "record_extractor": "$.transitions",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[IssueTransition]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "transition_issue",
+        "http_method": "post",
+        "path": "/rest/api/3/issue/{issueIdOrKey}/transitions",
+        "entity": "issue_transitions",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "transition",
+            "python_name": "transition",
+            "type": "IssueTransitionsCreateParamsTransition",
+            "schema": {
+              "type": "object",
+              "description": "The transition to perform",
+              "required": [
+                "id"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "The ID of the transition to perform. Get available transition IDs from the GET transitions endpoint."
+                }
+              }
+            },
+            "required": true,
+            "description": "The transition to perform"
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "dict[str, Any]",
+            "schema": {
+              "type": "object",
+              "description": "Fields to set during the transition (if required by the transition screen)",
+              "additionalProperties": true
+            },
+            "required": false,
+            "description": "Fields to set during the transition (if required by the transition screen)"
+          },
+          {
+            "name": "update",
+            "python_name": "update",
+            "type": "dict[str, Any]",
+            "schema": {
+              "type": "object",
+              "description": "Additional update operations to perform during the transition",
+              "additionalProperties": true
+            },
+            "required": false,
+            "description": "Additional update operations to perform during the transition"
+          },
+          {
+            "name": "historyMetadata",
+            "python_name": "history_metadata",
+            "type": "dict[str, Any]",
+            "schema": {
+              "type": "object",
+              "description": "Metadata about the transition for the issue history",
+              "additionalProperties": true
+            },
+            "required": false,
+            "description": "Metadata about the transition for the issue history"
+          },
+          {
+            "name": "issueIdOrKey",
+            "python_name": "issue_id_or_key",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The issue ID or key (e.g., \"PROJ-123\" or \"10000\")"
+          }
+        ],
+        "params_type_name": "IssueTransitionsCreateParams",
+        "response_type": "dict[str, Any]",
+        "description": "Performs a status transition on an issue (e.g., To Do -> In Progress -> Done).\nThis is the primary way to change an issue's workflow status in Jira.\n\nTo use this endpoint:\n1. First, GET the available transitions for the issue to find valid transition IDs\n2. Then POST with the desired transition ID\n\nYou can optionally include field updates and comments as part of the transition.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": null,
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "issue_links": [
+      {
+        "method_name": "create_issue_link",
+        "http_method": "post",
+        "path": "/rest/api/3/issueLink",
+        "entity": "issue_links",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "type",
+            "python_name": "type",
+            "type": "IssueLinksCreateParamsType",
+            "schema": {
+              "type": "object",
+              "description": "The type of link (e.g., Blocks, Duplicate, Relates)",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "The name of the link type (e.g., Blocks, Duplicate, Relates, Cloners)"
+                },
+                "id": {
+                  "type": "string",
+                  "description": "The ID of the link type"
+                },
+                "inward": {
+                  "type": "string",
+                  "description": "The inward description (e.g., is blocked by)"
+                },
+                "outward": {
+                  "type": "string",
+                  "description": "The outward description (e.g., blocks)"
+                }
+              }
+            },
+            "required": true,
+            "description": "The type of link (e.g., Blocks, Duplicate, Relates)"
+          },
+          {
+            "name": "inwardIssue",
+            "python_name": "inward_issue",
+            "type": "IssueLinksCreateParamsInwardissue",
+            "schema": {
+              "type": "object",
+              "description": "The inward issue (the issue that is affected by the link)",
+              "required": [
+                "key"
+              ],
+              "properties": {
+                "key": {
+                  "type": "string",
+                  "description": "The issue key (e.g., PROJ-123)"
+                },
+                "id": {
+                  "type": "string",
+                  "description": "The issue ID"
+                }
+              }
+            },
+            "required": true,
+            "description": "The inward issue (the issue that is affected by the link)"
+          },
+          {
+            "name": "outwardIssue",
+            "python_name": "outward_issue",
+            "type": "IssueLinksCreateParamsOutwardissue",
+            "schema": {
+              "type": "object",
+              "description": "The outward issue (the issue that causes the link)",
+              "required": [
+                "key"
+              ],
+              "properties": {
+                "key": {
+                  "type": "string",
+                  "description": "The issue key (e.g., PROJ-456)"
+                },
+                "id": {
+                  "type": "string",
+                  "description": "The issue ID"
+                }
+              }
+            },
+            "required": true,
+            "description": "The outward issue (the issue that causes the link)"
+          },
+          {
+            "name": "comment",
+            "python_name": "comment",
+            "type": "IssueLinksCreateParamsComment",
+            "schema": {
+              "type": "object",
+              "description": "A comment about the link in Atlassian Document Format (ADF)",
+              "properties": {
+                "body": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "default": "doc"
+                    },
+                    "version": {
+                      "type": "integer",
+                      "default": 1
+                    },
+                    "content": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string"
+                          },
+                          "content": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                },
+                                "text": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "required": false,
+            "description": "A comment about the link in Atlassian Document Format (ADF)"
+          }
+        ],
+        "params_type_name": "IssueLinksCreateParams",
+        "response_type": "EmptyResponse",
+        "description": "Creates a link between two issues. Issue links define relationships such as\n\"blocks\", \"is blocked by\", \"relates to\", \"duplicates\", \"is duplicated by\", \"clones\", \"is cloned by\".\n\nCommon link type names: Blocks, Cloners, Duplicate, Relates.\nEach type has an inward and outward description (e.g., \"blocks\" / \"is blocked by\").\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "EmptyResponse",
         "meta_fields": null,
         "is_download": false
       }

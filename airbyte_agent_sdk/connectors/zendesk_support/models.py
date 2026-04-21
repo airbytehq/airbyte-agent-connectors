@@ -492,6 +492,252 @@ class ArticleAttachment(BaseModel):
     created_at: Union[str, Any] = Field(default=None)
     updated_at: Union[str, Any] = Field(default=None)
 
+class JobStatus(BaseModel):
+    """Job status for bulk operations"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[str, Any] = Field(default=None)
+    url: Union[str, Any] = Field(default=None)
+    total: Union[int | None, Any] = Field(default=None)
+    progress: Union[int | None, Any] = Field(default=None)
+    status: Union[str, Any] = Field(default=None)
+    message: Union[str | None, Any] = Field(default=None)
+
+class TicketCreateParamsTicketComment(BaseModel):
+    """An object that defines the initial comment on the ticket"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    body: Union[str, Any] = Field(default=None, description="The body of the comment")
+    """The body of the comment"""
+    html_body: Union[str, Any] = Field(default=None, description="The HTML body of the comment")
+    """The HTML body of the comment"""
+    public: Union[bool, Any] = Field(default=None, description="Whether the comment is public (default true)")
+    """Whether the comment is public (default true)"""
+
+class TicketCreateParamsTicketCustomFieldsItem(BaseModel):
+    """Nested schema for TicketCreateParamsTicket.custom_fields_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[int, Any] = Field(default=None)
+    value: Union[str, Any] = Field(default=None)
+
+class TicketCreateParamsTicket(BaseModel):
+    """The ticket object to create"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    subject: Union[str, Any] = Field(default=None, description="The subject of the ticket")
+    """The subject of the ticket"""
+    description: Union[str, Any] = Field(default=None, description="The initial comment/description body of the ticket (alias for comment.body)")
+    """The initial comment/description body of the ticket (alias for comment.body)"""
+    comment: Union[TicketCreateParamsTicketComment, Any] = Field(default=None, description="An object that defines the initial comment on the ticket")
+    """An object that defines the initial comment on the ticket"""
+    type_: Union[str, Any] = Field(default=None, alias="type", description="The type of the ticket")
+    """The type of the ticket"""
+    priority: Union[str, Any] = Field(default=None, description="The urgency of the ticket")
+    """The urgency of the ticket"""
+    status: Union[str, Any] = Field(default=None, description="The state of the ticket")
+    """The state of the ticket"""
+    requester_id: Union[int, Any] = Field(default=None, description="The user who requested this ticket")
+    """The user who requested this ticket"""
+    assignee_id: Union[int, Any] = Field(default=None, description="The agent currently assigned to the ticket")
+    """The agent currently assigned to the ticket"""
+    group_id: Union[int, Any] = Field(default=None, description="The group this ticket is assigned to")
+    """The group this ticket is assigned to"""
+    organization_id: Union[int, Any] = Field(default=None, description="The organization of the requester")
+    """The organization of the requester"""
+    tags: Union[list[str], Any] = Field(default=None, description="Tags to apply to the ticket")
+    """Tags to apply to the ticket"""
+    external_id: Union[str, Any] = Field(default=None, description="An external id to link Zendesk Support tickets to local records")
+    """An external id to link Zendesk Support tickets to local records"""
+    custom_fields: Union[list[TicketCreateParamsTicketCustomFieldsItem], Any] = Field(default=None, description="Custom fields for the ticket")
+    """Custom fields for the ticket"""
+    due_at: Union[str, Any] = Field(default=None, description="Due date for task-type tickets")
+    """Due date for task-type tickets"""
+    collaborator_ids: Union[list[int], Any] = Field(default=None, description="Users to add as CCs on the ticket")
+    """Users to add as CCs on the ticket"""
+
+class TicketCreateParams(BaseModel):
+    """Parameters for creating a new ticket. The body must be wrapped in a "ticket" key."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    ticket: Union[TicketCreateParamsTicket, Any] = Field(default=None)
+
+class TicketUpdateParamsTicketComment(BaseModel):
+    """A comment to add to the ticket"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    body: Union[str, Any] = Field(default=None, description="The body of the comment")
+    """The body of the comment"""
+    html_body: Union[str, Any] = Field(default=None, description="The HTML body of the comment")
+    """The HTML body of the comment"""
+    public: Union[bool, Any] = Field(default=None, description="Whether the comment is public (true) or an internal note (false)")
+    """Whether the comment is public (true) or an internal note (false)"""
+    author_id: Union[int, Any] = Field(default=None, description="The author of the comment")
+    """The author of the comment"""
+
+class TicketUpdateParamsTicketCustomFieldsItem(BaseModel):
+    """Nested schema for TicketUpdateParamsTicket.custom_fields_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[int, Any] = Field(default=None)
+    value: Union[str, Any] = Field(default=None)
+
+class TicketUpdateParamsTicket(BaseModel):
+    """The ticket fields to update"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    subject: Union[str, Any] = Field(default=None, description="The subject of the ticket")
+    """The subject of the ticket"""
+    comment: Union[TicketUpdateParamsTicketComment, Any] = Field(default=None, description="A comment to add to the ticket")
+    """A comment to add to the ticket"""
+    type_: Union[str, Any] = Field(default=None, alias="type", description="The type of the ticket")
+    """The type of the ticket"""
+    priority: Union[str, Any] = Field(default=None, description="The urgency of the ticket")
+    """The urgency of the ticket"""
+    status: Union[str, Any] = Field(default=None, description="The state of the ticket")
+    """The state of the ticket"""
+    assignee_id: Union[int, Any] = Field(default=None, description="The agent to assign to the ticket")
+    """The agent to assign to the ticket"""
+    group_id: Union[int, Any] = Field(default=None, description="The group to assign the ticket to")
+    """The group to assign the ticket to"""
+    tags: Union[list[str], Any] = Field(default=None, description="Tags for the ticket (replaces existing tags)")
+    """Tags for the ticket (replaces existing tags)"""
+    external_id: Union[str, Any] = Field(default=None, description="An external id to link Zendesk Support tickets to local records")
+    """An external id to link Zendesk Support tickets to local records"""
+    custom_fields: Union[list[TicketUpdateParamsTicketCustomFieldsItem], Any] = Field(default=None, description="Custom fields for the ticket")
+    """Custom fields for the ticket"""
+    due_at: Union[str, Any] = Field(default=None, description="Due date for task-type tickets")
+    """Due date for task-type tickets"""
+    collaborator_ids: Union[list[int], Any] = Field(default=None, description="Users to set as CCs on the ticket")
+    """Users to set as CCs on the ticket"""
+
+class TicketUpdateParams(BaseModel):
+    """Parameters for updating an existing ticket. The body must be wrapped in a "ticket" key."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    ticket: Union[TicketUpdateParamsTicket, Any] = Field(default=None)
+
+class TicketCommentCreateParamsTicketComment(BaseModel):
+    """The comment to add to the ticket"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    body: Union[str, Any] = Field(default=None, description="The body of the comment")
+    """The body of the comment"""
+    html_body: Union[str, Any] = Field(default=None, description="The HTML body of the comment")
+    """The HTML body of the comment"""
+    public: Union[bool, Any] = Field(default=None, description="Whether the comment is public (true) or an internal note (false). Defaults to true.")
+    """Whether the comment is public (true) or an internal note (false). Defaults to true."""
+    author_id: Union[int, Any] = Field(default=None, description="The author of the comment")
+    """The author of the comment"""
+
+class TicketCommentCreateParamsTicket(BaseModel):
+    """The ticket update containing the comment"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    comment: Union[TicketCommentCreateParamsTicketComment, Any] = Field(default=None, description="The comment to add to the ticket")
+    """The comment to add to the ticket"""
+
+class TicketCommentCreateParams(BaseModel):
+    """Parameters for adding a comment to an existing ticket. Sent as a ticket update with comment."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    ticket: Union[TicketCommentCreateParamsTicket, Any] = Field(default=None)
+
+class TicketBulkUpdateParamsTicket(BaseModel):
+    """The ticket fields to apply to all specified tickets"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    status: Union[str, Any] = Field(default=None, description="The state to set on all tickets")
+    """The state to set on all tickets"""
+    priority: Union[str, Any] = Field(default=None, description="The priority to set on all tickets")
+    """The priority to set on all tickets"""
+    assignee_id: Union[int, Any] = Field(default=None, description="The agent to assign all tickets to")
+    """The agent to assign all tickets to"""
+    group_id: Union[int, Any] = Field(default=None, description="The group to assign all tickets to")
+    """The group to assign all tickets to"""
+    tags: Union[list[str], Any] = Field(default=None, description="Tags for the tickets (replaces existing tags)")
+    """Tags for the tickets (replaces existing tags)"""
+    additional_tags: Union[list[str], Any] = Field(default=None, description="Tags to add to existing tags on the tickets")
+    """Tags to add to existing tags on the tickets"""
+    remove_tags: Union[list[str], Any] = Field(default=None, description="Tags to remove from the tickets")
+    """Tags to remove from the tickets"""
+
+class TicketBulkUpdateParams(BaseModel):
+    """Parameters for bulk updating multiple tickets. The body must be wrapped in a "ticket" key."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    ticket: Union[TicketBulkUpdateParamsTicket, Any] = Field(default=None)
+
+class UserCreateParamsUser(BaseModel):
+    """The user object to create"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: Union[str, Any] = Field(default=None, description="The user's name")
+    """The user's name"""
+    email: Union[str, Any] = Field(default=None, description="The user's primary email address")
+    """The user's primary email address"""
+    role: Union[str, Any] = Field(default=None, description="The user's role")
+    """The user's role"""
+    phone: Union[str, Any] = Field(default=None, description="The user's primary phone number")
+    """The user's primary phone number"""
+    organization_id: Union[int, Any] = Field(default=None, description="The id of the user's organization")
+    """The id of the user's organization"""
+    external_id: Union[str, Any] = Field(default=None, description="A unique identifier from another system")
+    """A unique identifier from another system"""
+    alias: Union[str, Any] = Field(default=None, description="An alias displayed to end users")
+    """An alias displayed to end users"""
+    notes: Union[str, Any] = Field(default=None, description="Notes about the user visible only to agents")
+    """Notes about the user visible only to agents"""
+    details: Union[str, Any] = Field(default=None, description="Any details about the user")
+    """Any details about the user"""
+    tags: Union[list[str], Any] = Field(default=None, description="Tags for the user")
+    """Tags for the user"""
+    verified: Union[bool, Any] = Field(default=None, description="If the user's primary identity is verified")
+    """If the user's primary identity is verified"""
+    user_fields: Union[dict[str, Any], Any] = Field(default=None, description="Custom fields for the user")
+    """Custom fields for the user"""
+
+class UserCreateParams(BaseModel):
+    """Parameters for creating a new user. The body must be wrapped in a "user" key."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    user: Union[UserCreateParamsUser, Any] = Field(default=None)
+
+class UserUpdateParamsUser(BaseModel):
+    """The user fields to update"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: Union[str, Any] = Field(default=None, description="The user's name")
+    """The user's name"""
+    email: Union[str, Any] = Field(default=None, description="The user's primary email address")
+    """The user's primary email address"""
+    role: Union[str, Any] = Field(default=None, description="The user's role")
+    """The user's role"""
+    phone: Union[str, Any] = Field(default=None, description="The user's primary phone number")
+    """The user's primary phone number"""
+    organization_id: Union[int, Any] = Field(default=None, description="The id of the user's organization")
+    """The id of the user's organization"""
+    external_id: Union[str, Any] = Field(default=None, description="A unique identifier from another system")
+    """A unique identifier from another system"""
+    alias: Union[str, Any] = Field(default=None, description="An alias displayed to end users")
+    """An alias displayed to end users"""
+    notes: Union[str, Any] = Field(default=None, description="Notes about the user visible only to agents")
+    """Notes about the user visible only to agents"""
+    details: Union[str, Any] = Field(default=None, description="Any details about the user")
+    """Any details about the user"""
+    tags: Union[list[str], Any] = Field(default=None, description="Tags for the user")
+    """Tags for the user"""
+    suspended: Union[bool, Any] = Field(default=None, description="If the agent is suspended")
+    """If the agent is suspended"""
+    user_fields: Union[dict[str, Any], Any] = Field(default=None, description="Custom fields for the user")
+    """Custom fields for the user"""
+
+class UserUpdateParams(BaseModel):
+    """Parameters for updating an existing user. The body must be wrapped in a "user" key."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    user: Union[UserUpdateParamsUser, Any] = Field(default=None)
+
 # ===== METADATA TYPE DEFINITIONS (PYDANTIC) =====
 # Meta types for operations that extract metadata (e.g., pagination info)
 

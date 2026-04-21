@@ -17,6 +17,113 @@ from typing import Any, Literal
 # ===== NESTED PARAM TYPE DEFINITIONS =====
 # Nested parameter schemas discovered during parameter extraction
 
+class TicketsCreateParamsTicketComment(TypedDict):
+    """An object that defines the initial comment on the ticket"""
+    body: NotRequired[str]
+    html_body: NotRequired[str]
+    public: NotRequired[bool]
+
+class TicketsCreateParamsTicketCustomFieldsItem(TypedDict):
+    """Nested schema for TicketsCreateParamsTicket.custom_fields_item"""
+    id: NotRequired[int]
+    value: NotRequired[str]
+
+class TicketsCreateParamsTicket(TypedDict):
+    """The ticket object to create"""
+    subject: str
+    description: NotRequired[str]
+    comment: NotRequired[TicketsCreateParamsTicketComment]
+    type: NotRequired[str]
+    priority: NotRequired[str]
+    status: NotRequired[str]
+    requester_id: NotRequired[int]
+    assignee_id: NotRequired[int]
+    group_id: NotRequired[int]
+    organization_id: NotRequired[int]
+    tags: NotRequired[list[str]]
+    external_id: NotRequired[str]
+    custom_fields: NotRequired[list[TicketsCreateParamsTicketCustomFieldsItem]]
+    due_at: NotRequired[str]
+    collaborator_ids: NotRequired[list[int]]
+
+class TicketsUpdateParamsTicketComment(TypedDict):
+    """A comment to add to the ticket"""
+    body: NotRequired[str]
+    html_body: NotRequired[str]
+    public: NotRequired[bool]
+    author_id: NotRequired[int]
+
+class TicketsUpdateParamsTicketCustomFieldsItem(TypedDict):
+    """Nested schema for TicketsUpdateParamsTicket.custom_fields_item"""
+    id: NotRequired[int]
+    value: NotRequired[str]
+
+class TicketsUpdateParamsTicket(TypedDict):
+    """The ticket fields to update"""
+    subject: NotRequired[str]
+    comment: NotRequired[TicketsUpdateParamsTicketComment]
+    type: NotRequired[str]
+    priority: NotRequired[str]
+    status: NotRequired[str]
+    assignee_id: NotRequired[int]
+    group_id: NotRequired[int]
+    tags: NotRequired[list[str]]
+    external_id: NotRequired[str]
+    custom_fields: NotRequired[list[TicketsUpdateParamsTicketCustomFieldsItem]]
+    due_at: NotRequired[str]
+    collaborator_ids: NotRequired[list[int]]
+
+class TicketCommentsCreateParamsTicketComment(TypedDict):
+    """The comment to add to the ticket"""
+    body: str
+    html_body: NotRequired[str]
+    public: NotRequired[bool]
+    author_id: NotRequired[int]
+
+class TicketCommentsCreateParamsTicket(TypedDict):
+    """The ticket update containing the comment"""
+    comment: TicketCommentsCreateParamsTicketComment
+
+class TicketBulkUpdatesCreateParamsTicket(TypedDict):
+    """The ticket fields to apply to all specified tickets"""
+    status: NotRequired[str]
+    priority: NotRequired[str]
+    assignee_id: NotRequired[int]
+    group_id: NotRequired[int]
+    tags: NotRequired[list[str]]
+    additional_tags: NotRequired[list[str]]
+    remove_tags: NotRequired[list[str]]
+
+class UsersCreateParamsUser(TypedDict):
+    """The user object to create"""
+    name: str
+    email: NotRequired[str]
+    role: NotRequired[str]
+    phone: NotRequired[str]
+    organization_id: NotRequired[int]
+    external_id: NotRequired[str]
+    alias: NotRequired[str]
+    notes: NotRequired[str]
+    details: NotRequired[str]
+    tags: NotRequired[list[str]]
+    verified: NotRequired[bool]
+    user_fields: NotRequired[dict[str, Any]]
+
+class UsersUpdateParamsUser(TypedDict):
+    """The user fields to update"""
+    name: NotRequired[str]
+    email: NotRequired[str]
+    role: NotRequired[str]
+    phone: NotRequired[str]
+    organization_id: NotRequired[int]
+    external_id: NotRequired[str]
+    alias: NotRequired[str]
+    notes: NotRequired[str]
+    details: NotRequired[str]
+    tags: NotRequired[list[str]]
+    suspended: NotRequired[bool]
+    user_fields: NotRequired[dict[str, Any]]
+
 # ===== OPERATION PARAMS TYPE DEFINITIONS =====
 
 class TicketsListParams(TypedDict):
@@ -27,9 +134,28 @@ class TicketsListParams(TypedDict):
     sort_order: NotRequired[str]
     per_page: NotRequired[int]
 
+class TicketsCreateParams(TypedDict):
+    """Parameters for tickets.create operation"""
+    ticket: TicketsCreateParamsTicket
+
 class TicketsGetParams(TypedDict):
     """Parameters for tickets.get operation"""
     ticket_id: str
+
+class TicketsUpdateParams(TypedDict):
+    """Parameters for tickets.update operation"""
+    ticket: TicketsUpdateParamsTicket
+    ticket_id: str
+
+class TicketCommentsCreateParams(TypedDict):
+    """Parameters for ticket_comments.create operation"""
+    ticket: TicketCommentsCreateParamsTicket
+    ticket_id: str
+
+class TicketBulkUpdatesCreateParams(TypedDict):
+    """Parameters for ticket_bulk_updates.create operation"""
+    ticket: TicketBulkUpdatesCreateParamsTicket
+    ids: str
 
 class DeletedTicketsListParams(TypedDict):
     """Parameters for deleted_tickets.list operation"""
@@ -45,8 +171,17 @@ class UsersListParams(TypedDict):
     external_id: NotRequired[str]
     per_page: NotRequired[int]
 
+class UsersCreateParams(TypedDict):
+    """Parameters for users.create operation"""
+    user: UsersCreateParamsUser
+
 class UsersGetParams(TypedDict):
     """Parameters for users.get operation"""
+    user_id: str
+
+class UsersUpdateParams(TypedDict):
+    """Parameters for users.update operation"""
+    user: UsersUpdateParamsUser
     user_id: str
 
 class OrganizationsListParams(TypedDict):
@@ -134,6 +269,10 @@ class ViewsGetParams(TypedDict):
     """Parameters for views.get operation"""
     view_id: str
 
+class MacrosGetParams(TypedDict):
+    """Parameters for macros.get operation"""
+    macro_id: str
+
 class MacrosListParams(TypedDict):
     """Parameters for macros.list operation"""
     page: NotRequired[int]
@@ -145,10 +284,6 @@ class MacrosListParams(TypedDict):
     sort_by: NotRequired[str]
     sort_order: NotRequired[str]
     per_page: NotRequired[int]
-
-class MacrosGetParams(TypedDict):
-    """Parameters for macros.get operation"""
-    macro_id: str
 
 class TriggersListParams(TypedDict):
     """Parameters for triggers.list operation"""

@@ -605,8 +605,11 @@ def generate_tool_description(
     entity_field_schemas = _collect_entity_field_schemas(model)
     _, rels_by_entity = _build_relationship_index(model.entities)
 
-    # Avoid a "PARAMETERS:" header because some docstring parsers treat it as a params section marker.
-    lines.append("ENTITIES:")
+    # Avoid single-word CAPS headers ("ENTITIES:", "PARAMETERS:") because griffe's Google-style
+    # parser classifies them as admonition/unknown sections, and pydantic-ai's _griffe.py only
+    # keeps sections of kind=text — everything under such a header is silently dropped from the
+    # tool description sent to the LLM. Use a prose sentence so the block stays classified as text.
+    lines.append("Valid entities and their available actions (use these names exactly):")
     for entity in model.entities:
         # Emit per-entity AI hints if available
         ai_hints = getattr(entity, "ai_hints", None) or {}
@@ -695,8 +698,8 @@ def generate_tool_description(
     lines.append("  - get: Returns entity directly (no envelope)")
     lines.append("  To paginate: pass starting_after=<last_id> while has_more is true")
 
-    # Guidelines
-    lines.append("GUIDELINES:")
+    # Guidelines — prose header; see note at ENTITIES above.
+    lines.append("General guidelines for calling this tool:")
     lines.append('  - Prefer cached search over direct API calls: action="context_store_search" whenever possible.')
     lines.append("  - Direct API actions (list/get/download) are slower and should be used only if search cannot answer the query.")
     lines.append("  - Keep results small: use params.fields, params.query.filter, small params.limit, and cursor pagination.")
@@ -706,9 +709,10 @@ def generate_tool_description(
     lines.append("    `like` requires exact substring match and fails on typos or word reordering.")
     lines.append("    Only fall back to `like` when you need exact substring matching (e.g. prefix search on IDs).")
 
-    # Search section — only if entities have searchable fields
+    # Search section — only if entities have searchable fields.
+    # Prose header; see note at ENTITIES above.
     if search_field_paths:
-        lines.append("SEARCH:")
+        lines.append("Context Store search (cached data):")
         lines.append('  execute(entity, action="context_store_search", params={')
         lines.append('    "query": {"filter": <condition>, "sort": [{"field": "asc|desc"}, ...]},')
         lines.append('    "limit": <int>, "cursor": <str>, "fields": ["field", "nested.field", ...]')

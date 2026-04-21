@@ -39,6 +39,13 @@ info:
     - "Show me the tickets assigned to me last week"
     - "List all unresolved tickets"
     - "Show me the details of recent tickets"
+    - "Create a new ticket with subject 'Login issue' and priority high"
+    - "Update ticket 12345 to status solved"
+    - "Add a comment to ticket 12345 saying 'This has been resolved'"
+    - "Set the priority of ticket 12345 to urgent and assign it to agent 98765"
+    - "Create a new end-user named 'Jane Doe' with email jane@example.com"
+    - "Update user 54321 with notes 'VIP customer'"
+
     search:
     - "What are the top 5 support issues our organization has faced this month?"
     - "Analyze the satisfaction ratings for our support team in the last 30 days"
@@ -46,11 +53,9 @@ info:
     - "Identify the most common ticket fields used in our support workflow"
     - "Summarize the performance of our SLA policies this quarter"
     unsupported:
-    - "Create a new support ticket for {customer}"
-    - "Update the priority of this ticket"
-    - "Assign this ticket to {team_member}"
     - "Delete these old support tickets"
-    - "Send an automatic response to {customer}"
+    - "Merge two tickets together"
+    - "Export all tickets to a CSV file"
   x-airbyte-skip-suggested-streams:
   - ticket_metric_events
   x-airbyte-skip-auth-methods:
@@ -2901,6 +2906,374 @@ components:
       - id
       - file_name
 
+    # ==================== JOB STATUS (for bulk operations) ====================
+    JobStatus:
+      type: object
+      x-airbyte-entity-name: ticket_bulk_updates
+      description: Job status for bulk operations
+      properties:
+        id:
+          type: string
+          description: The ID of the background job
+        url:
+          type: string
+          description: The URL to check job status
+        total:
+          type:
+          - integer
+          - "null"
+          description: The total number of tasks
+        progress:
+          type:
+          - integer
+          - "null"
+          description: The number of tasks completed
+        status:
+          type: string
+          description: The current status of the job
+        message:
+          type:
+          - string
+          - "null"
+          description: A message about the job status
+      required:
+      - id
+
+    # ==================== WRITE OPERATION SCHEMAS ====================
+
+    # --- Ticket Create/Update ---
+    TicketCreateParams:
+      type: object
+      description: Parameters for creating a new ticket. The body must be wrapped in a "ticket" key.
+      required:
+        - ticket
+      properties:
+        ticket:
+          type: object
+          description: The ticket object to create
+          required:
+            - subject
+          properties:
+            subject:
+              type: string
+              description: The subject of the ticket
+            description:
+              type: string
+              description: The initial comment/description body of the ticket (alias for comment.body)
+            comment:
+              type: object
+              description: An object that defines the initial comment on the ticket
+              properties:
+                body:
+                  type: string
+                  description: The body of the comment
+                html_body:
+                  type: string
+                  description: The HTML body of the comment
+                public:
+                  type: boolean
+                  description: Whether the comment is public (default true)
+            type:
+              type: string
+              enum: [problem, incident, question, task]
+              description: The type of the ticket
+            priority:
+              type: string
+              enum: [urgent, high, normal, low]
+              description: The urgency of the ticket
+            status:
+              type: string
+              enum: [new, open, pending, hold, solved]
+              description: The state of the ticket
+            requester_id:
+              type: integer
+              description: The user who requested this ticket
+            assignee_id:
+              type: integer
+              description: The agent currently assigned to the ticket
+            group_id:
+              type: integer
+              description: The group this ticket is assigned to
+            organization_id:
+              type: integer
+              description: The organization of the requester
+            tags:
+              type: array
+              items:
+                type: string
+              description: Tags to apply to the ticket
+            external_id:
+              type: string
+              description: An external id to link Zendesk Support tickets to local records
+            custom_fields:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  value:
+                    type: string
+              description: Custom fields for the ticket
+            due_at:
+              type: string
+              format: date-time
+              description: Due date for task-type tickets
+            collaborator_ids:
+              type: array
+              items:
+                type: integer
+              description: Users to add as CCs on the ticket
+
+    TicketUpdateParams:
+      type: object
+      description: Parameters for updating an existing ticket. The body must be wrapped in a "ticket" key.
+      required:
+        - ticket
+      properties:
+        ticket:
+          type: object
+          description: The ticket fields to update
+          properties:
+            subject:
+              type: string
+              description: The subject of the ticket
+            comment:
+              type: object
+              description: A comment to add to the ticket
+              properties:
+                body:
+                  type: string
+                  description: The body of the comment
+                html_body:
+                  type: string
+                  description: The HTML body of the comment
+                public:
+                  type: boolean
+                  description: Whether the comment is public (true) or an internal note (false)
+                author_id:
+                  type: integer
+                  description: The author of the comment
+            type:
+              type: string
+              enum: [problem, incident, question, task]
+              description: The type of the ticket
+            priority:
+              type: string
+              enum: [urgent, high, normal, low]
+              description: The urgency of the ticket
+            status:
+              type: string
+              enum: [new, open, pending, hold, solved]
+              description: The state of the ticket
+            assignee_id:
+              type: integer
+              description: The agent to assign to the ticket
+            group_id:
+              type: integer
+              description: The group to assign the ticket to
+            tags:
+              type: array
+              items:
+                type: string
+              description: Tags for the ticket (replaces existing tags)
+            external_id:
+              type: string
+              description: An external id to link Zendesk Support tickets to local records
+            custom_fields:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  value:
+                    type: string
+              description: Custom fields for the ticket
+            due_at:
+              type: string
+              format: date-time
+              description: Due date for task-type tickets
+            collaborator_ids:
+              type: array
+              items:
+                type: integer
+              description: Users to set as CCs on the ticket
+
+    TicketCommentCreateParams:
+      type: object
+      description: Parameters for adding a comment to an existing ticket. Sent as a ticket update with comment.
+      required:
+        - ticket
+      properties:
+        ticket:
+          type: object
+          description: The ticket update containing the comment
+          required:
+            - comment
+          properties:
+            comment:
+              type: object
+              description: The comment to add to the ticket
+              required:
+                - body
+              properties:
+                body:
+                  type: string
+                  description: The body of the comment
+                html_body:
+                  type: string
+                  description: The HTML body of the comment
+                public:
+                  type: boolean
+                  description: Whether the comment is public (true) or an internal note (false). Defaults to true.
+                author_id:
+                  type: integer
+                  description: The author of the comment
+
+    TicketBulkUpdateParams:
+      type: object
+      description: Parameters for bulk updating multiple tickets. The body must be wrapped in a "ticket" key.
+      required:
+        - ticket
+      properties:
+        ticket:
+          type: object
+          description: The ticket fields to apply to all specified tickets
+          properties:
+            status:
+              type: string
+              enum: [new, open, pending, hold, solved]
+              description: The state to set on all tickets
+            priority:
+              type: string
+              enum: [urgent, high, normal, low]
+              description: The priority to set on all tickets
+            assignee_id:
+              type: integer
+              description: The agent to assign all tickets to
+            group_id:
+              type: integer
+              description: The group to assign all tickets to
+            tags:
+              type: array
+              items:
+                type: string
+              description: Tags for the tickets (replaces existing tags)
+            additional_tags:
+              type: array
+              items:
+                type: string
+              description: Tags to add to existing tags on the tickets
+            remove_tags:
+              type: array
+              items:
+                type: string
+              description: Tags to remove from the tickets
+
+    # --- User Create/Update ---
+    UserCreateParams:
+      type: object
+      description: Parameters for creating a new user. The body must be wrapped in a "user" key.
+      required:
+        - user
+      properties:
+        user:
+          type: object
+          description: The user object to create
+          required:
+            - name
+          properties:
+            name:
+              type: string
+              description: The user's name
+            email:
+              type: string
+              description: The user's primary email address
+            role:
+              type: string
+              enum: [end-user, agent, admin]
+              description: The user's role
+            phone:
+              type: string
+              description: The user's primary phone number
+            organization_id:
+              type: integer
+              description: The id of the user's organization
+            external_id:
+              type: string
+              description: A unique identifier from another system
+            alias:
+              type: string
+              description: An alias displayed to end users
+            notes:
+              type: string
+              description: Notes about the user visible only to agents
+            details:
+              type: string
+              description: Any details about the user
+            tags:
+              type: array
+              items:
+                type: string
+              description: Tags for the user
+            verified:
+              type: boolean
+              description: If the user's primary identity is verified
+            user_fields:
+              type: object
+              description: Custom fields for the user
+
+    UserUpdateParams:
+      type: object
+      description: Parameters for updating an existing user. The body must be wrapped in a "user" key.
+      required:
+        - user
+      properties:
+        user:
+          type: object
+          description: The user fields to update
+          properties:
+            name:
+              type: string
+              description: The user's name
+            email:
+              type: string
+              description: The user's primary email address
+            role:
+              type: string
+              enum: [end-user, agent, admin]
+              description: The user's role
+            phone:
+              type: string
+              description: The user's primary phone number
+            organization_id:
+              type: integer
+              description: The id of the user's organization
+            external_id:
+              type: string
+              description: A unique identifier from another system
+            alias:
+              type: string
+              description: An alias displayed to end users
+            notes:
+              type: string
+              description: Notes about the user visible only to agents
+            details:
+              type: string
+              description: Any details about the user
+            tags:
+              type: array
+              items:
+                type: string
+              description: Tags for the user
+            suspended:
+              type: boolean
+              description: If the agent is suspended
+            user_fields:
+              type: object
+              description: Custom fields for the user
+
 paths:
   # ==================== TICKETS ====================
   /tickets.json:
@@ -2975,6 +3348,31 @@ paths:
                   count:
                     type: integer
                     description: Total count of records
+    post:
+      summary: Create a ticket
+      description: Creates a new ticket in Zendesk Support
+      operationId: CreateTicket
+      x-airbyte-entity: tickets
+      x-airbyte-action: create
+      x-airbyte-record-extractor: $.ticket
+      tags:
+      - Tickets
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TicketCreateParams"
+      responses:
+        "201":
+          description: Ticket created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ticket:
+                    $ref: "#/components/schemas/Ticket"
 
   /tickets/{ticket_id}.json:
     get:
@@ -3003,6 +3401,110 @@ paths:
                 properties:
                   ticket:
                     $ref: "#/components/schemas/Ticket"
+    put:
+      summary: Update a ticket
+      description: Updates an existing ticket. Can update status, priority, assignee, add comments, and more.
+      operationId: UpdateTicket
+      x-airbyte-entity: tickets
+      x-airbyte-action: update
+      x-airbyte-record-extractor: $.ticket
+      tags:
+      - Tickets
+      parameters:
+      - name: ticket_id
+        in: path
+        required: true
+        description: The ID of the ticket to update
+        schema:
+          type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TicketUpdateParams"
+      responses:
+        "200":
+          description: Updated ticket
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ticket:
+                    $ref: "#/components/schemas/Ticket"
+
+  # ==================== TICKET COMMENTS (WRITE) ====================
+  /tickets/{ticket_id}/comments:
+    put:
+      summary: Add a comment to a ticket
+      description: Adds a public reply or internal note to an existing ticket by updating it with a comment object.
+      operationId: CreateTicketComment
+      x-airbyte-entity: ticket_comments
+      x-airbyte-action: create
+      x-airbyte-record-extractor: $.ticket
+      x-airbyte-path-override:
+        path: /tickets/{ticket_id}.json
+      tags:
+      - Ticket Comments
+      parameters:
+      - name: ticket_id
+        in: path
+        required: true
+        description: The ID of the ticket to comment on
+        schema:
+          type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TicketCommentCreateParams"
+      responses:
+        "200":
+          description: Updated ticket with the new comment
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ticket:
+                    $ref: "#/components/schemas/Ticket"
+
+  # ==================== TICKETS BULK UPDATE ====================
+  /tickets/update_many.json:
+    put:
+      summary: Bulk update tickets
+      description: Updates multiple tickets at once. Accepts a comma-separated list of ticket IDs and applies the same changes to all of them.
+      operationId: BulkUpdateTickets
+      x-airbyte-entity: ticket_bulk_updates
+      x-airbyte-action: create
+      x-airbyte-record-extractor: $.job_status
+      tags:
+      - Tickets
+      parameters:
+      - name: ids
+        in: query
+        required: true
+        description: Comma-separated list of ticket IDs to update
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TicketBulkUpdateParams"
+      responses:
+        "200":
+          description: Job status for the bulk update
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  job_status:
+                    $ref: "#/components/schemas/JobStatus"
 
   # ==================== DELETED TICKETS ====================
   /deleted_tickets.json:
@@ -3137,6 +3639,31 @@ paths:
                   count:
                     type: integer
                     description: Total count of records
+    post:
+      summary: Create a user
+      description: Creates a new end-user, agent, or admin in Zendesk Support
+      operationId: CreateUser
+      x-airbyte-entity: users
+      x-airbyte-action: create
+      x-airbyte-record-extractor: $.user
+      tags:
+      - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserCreateParams"
+      responses:
+        "201":
+          description: User created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: "#/components/schemas/User"
 
   /users/{user_id}.json:
     get:
@@ -3158,6 +3685,38 @@ paths:
       responses:
         "200":
           description: User object
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: "#/components/schemas/User"
+    put:
+      summary: Update a user
+      description: Updates an existing user in Zendesk Support
+      operationId: UpdateUser
+      x-airbyte-entity: users
+      x-airbyte-action: update
+      x-airbyte-record-extractor: $.user
+      tags:
+      - Users
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        description: The ID of the user to update
+        schema:
+          type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserUpdateParams"
+      responses:
+        "200":
+          description: Updated user
           content:
             application/json:
               schema:
@@ -3925,6 +4484,35 @@ paths:
                     $ref: "#/components/schemas/View"
 
   # ==================== MACROS ====================
+  /macros/{macro_id}.json:
+    get:
+      summary: Get a macro
+      description: Returns a macro by its ID
+      operationId: GetMacro
+      x-airbyte-entity: macros
+      x-airbyte-action: get
+      x-airbyte-record-extractor: $.macro
+      tags:
+      - Macros
+      parameters:
+      - name: macro_id
+        in: path
+        required: true
+        description: The ID of the macro
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Macro object
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  macro:
+                    $ref: "#/components/schemas/Macro"
+
+  # ==================== MACROS ====================
   /macros.json:
     get:
       summary: List all macros
@@ -4016,34 +4604,6 @@ paths:
                   count:
                     type: integer
                     description: Total count of records
-
-  /macros/{macro_id}.json:
-    get:
-      summary: Get a macro
-      description: Returns a macro by its ID
-      operationId: GetMacro
-      x-airbyte-entity: macros
-      x-airbyte-action: get
-      x-airbyte-record-extractor: $.macro
-      tags:
-      - Macros
-      parameters:
-      - name: macro_id
-        in: path
-        required: true
-        description: The ID of the macro
-        schema:
-          type: integer
-      responses:
-        "200":
-          description: Macro object
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  macro:
-                    $ref: "#/components/schemas/Macro"
 
   # ==================== TRIGGERS ====================
   /triggers.json:

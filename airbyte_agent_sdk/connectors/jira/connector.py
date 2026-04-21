@@ -31,6 +31,17 @@ from .types import (
     IssueCommentsUpdateParamsVisibility,
     IssueFieldsApiSearchParams,
     IssueFieldsListParams,
+    IssueLinksCreateParams,
+    IssueLinksCreateParamsComment,
+    IssueLinksCreateParamsInwardissue,
+    IssueLinksCreateParamsOutwardissue,
+    IssueLinksCreateParamsType,
+    IssueTransitionsCreateParams,
+    IssueTransitionsCreateParamsTransition,
+    IssueTransitionsListParams,
+    IssueWorklogsCreateParams,
+    IssueWorklogsCreateParamsComment,
+    IssueWorklogsCreateParamsVisibility,
     IssueWorklogsGetParams,
     IssueWorklogsListParams,
     IssuesApiSearchParams,
@@ -75,12 +86,15 @@ from .models import (
     IssueFieldsListResult,
     IssueFieldsApiSearchResult,
     IssueCommentsListResult,
+    IssueTransitionsListResult,
     IssueWorklogsListResult,
+    EmptyResponse,
     Issue,
     IssueComment,
     IssueCreateResponse,
     IssueField,
     IssueFieldSearchResults,
+    IssueTransition,
     Project,
     User,
     Worklog,
@@ -146,7 +160,7 @@ class JiraConnector:
 
     connector_name = "jira"
     connector_version = "1.1.9"
-    sdk_version = "0.1.42"
+    sdk_version = "0.1.43"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -167,9 +181,13 @@ class JiraConnector:
         ("issue_comments", "get"): None,
         ("issue_comments", "update"): None,
         ("issue_comments", "delete"): None,
-        ("issue_worklogs", "list"): True,
         ("issue_worklogs", "get"): None,
         ("issues_assignee", "update"): None,
+        ("issue_transitions", "list"): True,
+        ("issue_transitions", "create"): None,
+        ("issue_worklogs", "list"): True,
+        ("issue_worklogs", "create"): None,
+        ("issue_links", "create"): None,
     }
 
     # Map of (entity, action) -> {python_param_name: api_param_name}
@@ -191,9 +209,13 @@ class JiraConnector:
         ('issue_comments', 'get'): {'issue_id_or_key': 'issueIdOrKey', 'comment_id': 'commentId', 'expand': 'expand'},
         ('issue_comments', 'update'): {'body': 'body', 'visibility': 'visibility', 'issue_id_or_key': 'issueIdOrKey', 'comment_id': 'commentId', 'notify_users': 'notifyUsers', 'expand': 'expand'},
         ('issue_comments', 'delete'): {'issue_id_or_key': 'issueIdOrKey', 'comment_id': 'commentId'},
-        ('issue_worklogs', 'list'): {'issue_id_or_key': 'issueIdOrKey', 'start_at': 'startAt', 'max_results': 'maxResults', 'expand': 'expand'},
         ('issue_worklogs', 'get'): {'issue_id_or_key': 'issueIdOrKey', 'worklog_id': 'worklogId', 'expand': 'expand'},
         ('issues_assignee', 'update'): {'account_id': 'accountId', 'issue_id_or_key': 'issueIdOrKey'},
+        ('issue_transitions', 'list'): {'issue_id_or_key': 'issueIdOrKey', 'expand': 'expand', 'transition_id': 'transitionId', 'skip_remote_only_condition': 'skipRemoteOnlyCondition', 'include_unavailable_transitions': 'includeUnavailableTransitions', 'sort_by_ops_bar_and_status': 'sortByOpsBarAndStatus'},
+        ('issue_transitions', 'create'): {'transition': 'transition', 'fields': 'fields', 'update': 'update', 'history_metadata': 'historyMetadata', 'issue_id_or_key': 'issueIdOrKey'},
+        ('issue_worklogs', 'list'): {'issue_id_or_key': 'issueIdOrKey', 'start_at': 'startAt', 'max_results': 'maxResults', 'expand': 'expand'},
+        ('issue_worklogs', 'create'): {'time_spent_seconds': 'timeSpentSeconds', 'time_spent': 'timeSpent', 'started': 'started', 'comment': 'comment', 'visibility': 'visibility', 'issue_id_or_key': 'issueIdOrKey', 'notify_users': 'notifyUsers', 'adjust_estimate': 'adjustEstimate'},
+        ('issue_links', 'create'): {'type': 'type', 'inward_issue': 'inwardIssue', 'outward_issue': 'outwardIssue', 'comment': 'comment'},
     }
 
     # Accepted auth_config types for isinstance validation
@@ -303,6 +325,8 @@ class JiraConnector:
         self.issue_comments = IssueCommentsQuery(self)
         self.issue_worklogs = IssueWorklogsQuery(self)
         self.issues_assignee = IssuesAssigneeQuery(self)
+        self.issue_transitions = IssueTransitionsQuery(self)
+        self.issue_links = IssueLinksQuery(self)
 
     # ===== TYPED EXECUTE METHOD (Recommended Interface) =====
 
@@ -446,14 +470,6 @@ class JiraConnector:
     async def execute(
         self,
         entity: Literal["issue_worklogs"],
-        action: Literal["list"],
-        params: "IssueWorklogsListParams"
-    ) -> "IssueWorklogsListResult": ...
-
-    @overload
-    async def execute(
-        self,
-        entity: Literal["issue_worklogs"],
         action: Literal["get"],
         params: "IssueWorklogsGetParams"
     ) -> "Worklog": ...
@@ -465,6 +481,46 @@ class JiraConnector:
         action: Literal["update"],
         params: "IssuesAssigneeUpdateParams"
     ) -> "dict[str, Any]": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["issue_transitions"],
+        action: Literal["list"],
+        params: "IssueTransitionsListParams"
+    ) -> "IssueTransitionsListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["issue_transitions"],
+        action: Literal["create"],
+        params: "IssueTransitionsCreateParams"
+    ) -> "dict[str, Any]": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["issue_worklogs"],
+        action: Literal["list"],
+        params: "IssueWorklogsListParams"
+    ) -> "IssueWorklogsListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["issue_worklogs"],
+        action: Literal["create"],
+        params: "IssueWorklogsCreateParams"
+    ) -> "Worklog": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["issue_links"],
+        action: Literal["create"],
+        params: "IssueLinksCreateParams"
+    ) -> "EmptyResponse": ...
 
 
     @overload
@@ -1857,6 +1913,37 @@ class IssueWorklogsQuery:
         """Initialize query with connector reference."""
         self._connector = connector
 
+    async def get(
+        self,
+        issue_id_or_key: str,
+        worklog_id: str,
+        expand: str | None = None,
+        **kwargs
+    ) -> Worklog:
+        """
+        Retrieve a single worklog by its ID
+
+        Args:
+            issue_id_or_key: The issue ID or key (e.g., "PROJ-123" or "10000")
+            worklog_id: The worklog ID
+            expand: Comma-separated list of additional fields to include (properties)
+            **kwargs: Additional parameters
+
+        Returns:
+            Worklog
+        """
+        params = {k: v for k, v in {
+            "issueIdOrKey": issue_id_or_key,
+            "worklogId": worklog_id,
+            "expand": expand,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("issue_worklogs", "get", params)
+        return result
+
+
+
     async def list(
         self,
         issue_id_or_key: str,
@@ -1895,33 +1982,51 @@ class IssueWorklogsQuery:
 
 
 
-    async def get(
+    async def create(
         self,
         issue_id_or_key: str,
-        worklog_id: str,
-        expand: str | None = None,
+        time_spent_seconds: int | None = None,
+        time_spent: str | None = None,
+        started: str | None = None,
+        comment: IssueWorklogsCreateParamsComment | None = None,
+        visibility: IssueWorklogsCreateParamsVisibility | None = None,
+        notify_users: bool | None = None,
+        adjust_estimate: str | None = None,
         **kwargs
     ) -> Worklog:
         """
-        Retrieve a single worklog by its ID
+        Adds a worklog entry to an issue to track time spent.
+Use timeSpentSeconds or timeSpent (e.g., "3h 30m") to specify time.
+Optionally include a started datetime and a comment describing the work done.
+
 
         Args:
+            time_spent_seconds: Time spent in seconds (e.g., 3600 for 1 hour). Provide this or timeSpent.
+            time_spent: Human-readable time spent (e.g., 3h 30m, 1d 2h). Provide this or timeSpentSeconds.
+            started: The datetime when the work was started (ISO 8601 format, e.g., "2024-01-15T09:00:00.000+0000"). Defaults to current time.
+            comment: A comment about the work done in Atlassian Document Format (ADF)
+            visibility: Restrict worklog visibility to a group or role
             issue_id_or_key: The issue ID or key (e.g., "PROJ-123" or "10000")
-            worklog_id: The worklog ID
-            expand: Comma-separated list of additional fields to include (properties)
+            notify_users: Whether to notify users about the worklog. Default is true.
+            adjust_estimate: How to adjust the remaining estimate. Values are "new", "leave", "manual", "auto".
             **kwargs: Additional parameters
 
         Returns:
             Worklog
         """
         params = {k: v for k, v in {
+            "timeSpentSeconds": time_spent_seconds,
+            "timeSpent": time_spent,
+            "started": started,
+            "comment": comment,
+            "visibility": visibility,
             "issueIdOrKey": issue_id_or_key,
-            "worklogId": worklog_id,
-            "expand": expand,
+            "notifyUsers": notify_users,
+            "adjustEstimate": adjust_estimate,
             **kwargs
         }.items() if v is not None}
 
-        result = await self._connector.execute("issue_worklogs", "get", params)
+        result = await self._connector.execute("issue_worklogs", "create", params)
         return result
 
 
@@ -2026,6 +2131,151 @@ class IssuesAssigneeQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("issues_assignee", "update", params)
+        return result
+
+
+
+class IssueTransitionsQuery:
+    """
+    Query class for IssueTransitions entity operations.
+    """
+
+    def __init__(self, connector: JiraConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        issue_id_or_key: str,
+        expand: str | None = None,
+        transition_id: str | None = None,
+        skip_remote_only_condition: bool | None = None,
+        include_unavailable_transitions: bool | None = None,
+        sort_by_ops_bar_and_status: bool | None = None,
+        **kwargs
+    ) -> IssueTransitionsListResult:
+        """
+        Returns the available transitions for an issue. Transitions define the workflow steps an issue can move through (e.g., To Do -> In Progress -> Done). Use this to discover valid transition IDs before performing a transition.
+
+        Args:
+            issue_id_or_key: The issue ID or key (e.g., "PROJ-123" or "10000")
+            expand: Comma-separated list of parameters to expand (transitions.fields)
+            transition_id: Filter by transition ID to get details for a specific transition
+            skip_remote_only_condition: Whether to skip conditions that rely on remote data
+            include_unavailable_transitions: Whether to include transitions that are unavailable
+            sort_by_ops_bar_and_status: Whether to sort transitions by OpsBar and status
+            **kwargs: Additional parameters
+
+        Returns:
+            IssueTransitionsListResult
+        """
+        params = {k: v for k, v in {
+            "issueIdOrKey": issue_id_or_key,
+            "expand": expand,
+            "transitionId": transition_id,
+            "skipRemoteOnlyCondition": skip_remote_only_condition,
+            "includeUnavailableTransitions": include_unavailable_transitions,
+            "sortByOpsBarAndStatus": sort_by_ops_bar_and_status,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("issue_transitions", "list", params)
+        # Cast generic envelope to concrete typed result
+        return IssueTransitionsListResult(
+            data=result.data
+        )
+
+
+
+    async def create(
+        self,
+        transition: IssueTransitionsCreateParamsTransition,
+        issue_id_or_key: str,
+        fields: dict[str, Any] | None = None,
+        update: dict[str, Any] | None = None,
+        history_metadata: dict[str, Any] | None = None,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Performs a status transition on an issue (e.g., To Do -> In Progress -> Done).
+This is the primary way to change an issue's workflow status in Jira.
+
+To use this endpoint:
+1. First, GET the available transitions for the issue to find valid transition IDs
+2. Then POST with the desired transition ID
+
+You can optionally include field updates and comments as part of the transition.
+
+
+        Args:
+            transition: The transition to perform
+            fields: Fields to set during the transition (if required by the transition screen)
+            update: Additional update operations to perform during the transition
+            history_metadata: Metadata about the transition for the issue history
+            issue_id_or_key: The issue ID or key (e.g., "PROJ-123" or "10000")
+            **kwargs: Additional parameters
+
+        Returns:
+            dict[str, Any]
+        """
+        params = {k: v for k, v in {
+            "transition": transition,
+            "fields": fields,
+            "update": update,
+            "historyMetadata": history_metadata,
+            "issueIdOrKey": issue_id_or_key,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("issue_transitions", "create", params)
+        return result
+
+
+
+class IssueLinksQuery:
+    """
+    Query class for IssueLinks entity operations.
+    """
+
+    def __init__(self, connector: JiraConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def create(
+        self,
+        type: IssueLinksCreateParamsType,
+        inward_issue: IssueLinksCreateParamsInwardissue,
+        outward_issue: IssueLinksCreateParamsOutwardissue,
+        comment: IssueLinksCreateParamsComment | None = None,
+        **kwargs
+    ) -> EmptyResponse:
+        """
+        Creates a link between two issues. Issue links define relationships such as
+"blocks", "is blocked by", "relates to", "duplicates", "is duplicated by", "clones", "is cloned by".
+
+Common link type names: Blocks, Cloners, Duplicate, Relates.
+Each type has an inward and outward description (e.g., "blocks" / "is blocked by").
+
+
+        Args:
+            type: The type of link (e.g., Blocks, Duplicate, Relates)
+            inward_issue: The inward issue (the issue that is affected by the link)
+            outward_issue: The outward issue (the issue that causes the link)
+            comment: A comment about the link in Atlassian Document Format (ADF)
+            **kwargs: Additional parameters
+
+        Returns:
+            EmptyResponse
+        """
+        params = {k: v for k, v in {
+            "type": type,
+            "inwardIssue": inward_issue,
+            "outwardIssue": outward_issue,
+            "comment": comment,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("issue_links", "create", params)
         return result
 
 

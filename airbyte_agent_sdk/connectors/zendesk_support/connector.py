@@ -46,18 +46,30 @@ from .types import (
     SlaPoliciesListParams,
     TagsListParams,
     TicketAuditsListParams,
+    TicketBulkUpdatesCreateParams,
+    TicketBulkUpdatesCreateParamsTicket,
+    TicketCommentsCreateParams,
+    TicketCommentsCreateParamsTicket,
     TicketCommentsListParams,
     TicketFieldsGetParams,
     TicketFieldsListParams,
     TicketFormsGetParams,
     TicketFormsListParams,
     TicketMetricsListParams,
+    TicketsCreateParams,
+    TicketsCreateParamsTicket,
     TicketsGetParams,
     TicketsListParams,
+    TicketsUpdateParams,
+    TicketsUpdateParamsTicket,
     TriggersGetParams,
     TriggersListParams,
+    UsersCreateParams,
+    UsersCreateParamsUser,
     UsersGetParams,
     UsersListParams,
+    UsersUpdateParams,
+    UsersUpdateParamsUser,
     ViewsGetParams,
     ViewsListParams,
     AirbyteSearchParams,
@@ -127,6 +139,7 @@ from .models import (
     DeletedTicket,
     Group,
     GroupMembership,
+    JobStatus,
     Macro,
     Organization,
     OrganizationMembership,
@@ -218,15 +231,21 @@ class ZendeskSupportConnector:
 
     connector_name = "zendesk-support"
     connector_version = "0.1.20"
-    sdk_version = "0.1.42"
+    sdk_version = "0.1.43"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
         ("tickets", "list"): True,
+        ("tickets", "create"): None,
         ("tickets", "get"): None,
+        ("tickets", "update"): None,
+        ("ticket_comments", "create"): None,
+        ("ticket_bulk_updates", "create"): None,
         ("deleted_tickets", "list"): True,
         ("users", "list"): True,
+        ("users", "create"): None,
         ("users", "get"): None,
+        ("users", "update"): None,
         ("organizations", "list"): True,
         ("organizations", "get"): None,
         ("groups", "list"): True,
@@ -243,8 +262,8 @@ class ZendeskSupportConnector:
         ("brands", "get"): None,
         ("views", "list"): True,
         ("views", "get"): None,
-        ("macros", "list"): True,
         ("macros", "get"): None,
+        ("macros", "list"): True,
         ("triggers", "list"): True,
         ("triggers", "get"): None,
         ("automations", "list"): True,
@@ -269,10 +288,16 @@ class ZendeskSupportConnector:
     # Used to convert snake_case TypedDict keys to API parameter names in execute()
     _PARAM_MAP = {
         ('tickets', 'list'): {'page': 'page', 'external_id': 'external_id', 'sort_by': 'sort_by', 'sort_order': 'sort_order', 'per_page': 'per_page'},
+        ('tickets', 'create'): {'ticket': 'ticket'},
         ('tickets', 'get'): {'ticket_id': 'ticket_id'},
+        ('tickets', 'update'): {'ticket': 'ticket', 'ticket_id': 'ticket_id'},
+        ('ticket_comments', 'create'): {'ticket': 'ticket', 'ticket_id': 'ticket_id'},
+        ('ticket_bulk_updates', 'create'): {'ticket': 'ticket', 'ids': 'ids'},
         ('deleted_tickets', 'list'): {'page': 'page', 'sort_by': 'sort_by', 'sort_order': 'sort_order', 'per_page': 'per_page'},
         ('users', 'list'): {'page': 'page', 'role': 'role', 'external_id': 'external_id', 'per_page': 'per_page'},
+        ('users', 'create'): {'user': 'user'},
         ('users', 'get'): {'user_id': 'user_id'},
+        ('users', 'update'): {'user': 'user', 'user_id': 'user_id'},
         ('organizations', 'list'): {'page': 'page', 'per_page': 'per_page'},
         ('organizations', 'get'): {'organization_id': 'organization_id'},
         ('groups', 'list'): {'page': 'page', 'exclude_deleted': 'exclude_deleted', 'per_page': 'per_page'},
@@ -288,8 +313,8 @@ class ZendeskSupportConnector:
         ('brands', 'get'): {'brand_id': 'brand_id'},
         ('views', 'list'): {'page': 'page', 'access': 'access', 'active': 'active', 'group_id': 'group_id', 'sort_by': 'sort_by', 'sort_order': 'sort_order', 'per_page': 'per_page'},
         ('views', 'get'): {'view_id': 'view_id'},
-        ('macros', 'list'): {'page': 'page', 'access': 'access', 'active': 'active', 'category': 'category', 'group_id': 'group_id', 'only_viewable': 'only_viewable', 'sort_by': 'sort_by', 'sort_order': 'sort_order', 'per_page': 'per_page'},
         ('macros', 'get'): {'macro_id': 'macro_id'},
+        ('macros', 'list'): {'page': 'page', 'access': 'access', 'active': 'active', 'category': 'category', 'group_id': 'group_id', 'only_viewable': 'only_viewable', 'sort_by': 'sort_by', 'sort_order': 'sort_order', 'per_page': 'per_page'},
         ('triggers', 'list'): {'page': 'page', 'active': 'active', 'category_id': 'category_id', 'sort_by': 'sort_by', 'sort_order': 'sort_order', 'per_page': 'per_page'},
         ('triggers', 'get'): {'trigger_id': 'trigger_id'},
         ('automations', 'list'): {'page': 'page', 'active': 'active', 'sort_by': 'sort_by', 'sort_order': 'sort_order', 'per_page': 'per_page'},
@@ -420,11 +445,12 @@ class ZendeskSupportConnector:
 
         # Initialize entity query objects
         self.tickets = TicketsQuery(self)
+        self.ticket_comments = TicketCommentsQuery(self)
+        self.ticket_bulk_updates = TicketBulkUpdatesQuery(self)
         self.deleted_tickets = DeletedTicketsQuery(self)
         self.users = UsersQuery(self)
         self.organizations = OrganizationsQuery(self)
         self.groups = GroupsQuery(self)
-        self.ticket_comments = TicketCommentsQuery(self)
         self.attachments = AttachmentsQuery(self)
         self.ticket_audits = TicketAuditsQuery(self)
         self.ticket_metrics = TicketMetricsQuery(self)
@@ -457,9 +483,41 @@ class ZendeskSupportConnector:
     async def execute(
         self,
         entity: Literal["tickets"],
+        action: Literal["create"],
+        params: "TicketsCreateParams"
+    ) -> "Ticket": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["tickets"],
         action: Literal["get"],
         params: "TicketsGetParams"
     ) -> "Ticket": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["tickets"],
+        action: Literal["update"],
+        params: "TicketsUpdateParams"
+    ) -> "Ticket": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["ticket_comments"],
+        action: Literal["create"],
+        params: "TicketCommentsCreateParams"
+    ) -> "Ticket": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["ticket_bulk_updates"],
+        action: Literal["create"],
+        params: "TicketBulkUpdatesCreateParams"
+    ) -> "JobStatus": ...
 
     @overload
     async def execute(
@@ -481,8 +539,24 @@ class ZendeskSupportConnector:
     async def execute(
         self,
         entity: Literal["users"],
+        action: Literal["create"],
+        params: "UsersCreateParams"
+    ) -> "User": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["users"],
         action: Literal["get"],
         params: "UsersGetParams"
+    ) -> "User": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["users"],
+        action: Literal["update"],
+        params: "UsersUpdateParams"
     ) -> "User": ...
 
     @overload
@@ -617,17 +691,17 @@ class ZendeskSupportConnector:
     async def execute(
         self,
         entity: Literal["macros"],
-        action: Literal["list"],
-        params: "MacrosListParams"
-    ) -> "MacrosListResult": ...
+        action: Literal["get"],
+        params: "MacrosGetParams"
+    ) -> "Macro": ...
 
     @overload
     async def execute(
         self,
         entity: Literal["macros"],
-        action: Literal["get"],
-        params: "MacrosGetParams"
-    ) -> "Macro": ...
+        action: Literal["list"],
+        params: "MacrosListParams"
+    ) -> "MacrosListResult": ...
 
     @overload
     async def execute(
@@ -778,14 +852,14 @@ class ZendeskSupportConnector:
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get", "download", "context_store_search"],
+        action: Literal["list", "create", "get", "update", "download", "context_store_search"],
         params: Mapping[str, Any]
     ) -> ZendeskSupportExecuteResult[Any] | ZendeskSupportExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get", "download", "context_store_search"],
+        action: Literal["list", "create", "get", "update", "download", "context_store_search"],
         params: Mapping[str, Any] | None = None
     ) -> Any:
         """
@@ -1264,6 +1338,31 @@ class TicketsQuery:
 
 
 
+    async def create(
+        self,
+        ticket: TicketsCreateParamsTicket,
+        **kwargs
+    ) -> Ticket:
+        """
+        Creates a new ticket in Zendesk Support
+
+        Args:
+            ticket: The ticket object to create
+            **kwargs: Additional parameters
+
+        Returns:
+            Ticket
+        """
+        params = {k: v for k, v in {
+            "ticket": ticket,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("tickets", "create", params)
+        return result
+
+
+
     async def get(
         self,
         ticket_id: str,
@@ -1285,6 +1384,34 @@ class TicketsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("tickets", "get", params)
+        return result
+
+
+
+    async def update(
+        self,
+        ticket: TicketsUpdateParamsTicket,
+        ticket_id: str,
+        **kwargs
+    ) -> Ticket:
+        """
+        Updates an existing ticket. Can update status, priority, assignee, add comments, and more.
+
+        Args:
+            ticket: The ticket fields to update
+            ticket_id: The ID of the ticket to update
+            **kwargs: Additional parameters
+
+        Returns:
+            Ticket
+        """
+        params = {k: v for k, v in {
+            "ticket": ticket,
+            "ticket_id": ticket_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("tickets", "update", params)
         return result
 
 
@@ -1383,6 +1510,192 @@ class TicketsQuery:
                 took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
             ),
         )
+
+class TicketCommentsQuery:
+    """
+    Query class for TicketComments entity operations.
+    """
+
+    def __init__(self, connector: ZendeskSupportConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def create(
+        self,
+        ticket: TicketCommentsCreateParamsTicket,
+        ticket_id: str,
+        **kwargs
+    ) -> Ticket:
+        """
+        Adds a public reply or internal note to an existing ticket by updating it with a comment object.
+
+        Args:
+            ticket: The ticket update containing the comment
+            ticket_id: The ID of the ticket to comment on
+            **kwargs: Additional parameters
+
+        Returns:
+            Ticket
+        """
+        params = {k: v for k, v in {
+            "ticket": ticket,
+            "ticket_id": ticket_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("ticket_comments", "create", params)
+        return result
+
+
+
+    async def list(
+        self,
+        ticket_id: str,
+        page: int | None = None,
+        include_inline_images: bool | None = None,
+        sort_order: str | None = None,
+        per_page: int | None = None,
+        **kwargs
+    ) -> TicketCommentsListResult:
+        """
+        Returns a list of comments for a specific ticket
+
+        Args:
+            ticket_id: The ID of the ticket
+            page: Page number for pagination
+            include_inline_images: Include inline images in the response
+            sort_order: Sort order for comments (always sorted by created_at)
+            per_page: Number of results per page
+            **kwargs: Additional parameters
+
+        Returns:
+            TicketCommentsListResult
+        """
+        params = {k: v for k, v in {
+            "ticket_id": ticket_id,
+            "page": page,
+            "include_inline_images": include_inline_images,
+            "sort_order": sort_order,
+            "per_page": per_page,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("ticket_comments", "list", params)
+        # Cast generic envelope to concrete typed result
+        return TicketCommentsListResult(
+            data=result.data,
+            meta=result.meta
+        )
+
+
+
+    async def context_store_search(
+        self,
+        query: TicketCommentsSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> TicketCommentsSearchResult:
+        """
+        Search ticket_comments records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (TicketCommentsSearchFilter):
+        - attachments: List of files or media attached to the comment
+        - audit_id: Identifier of the audit record associated with this comment event
+        - author_id: Identifier of the user who created the comment
+        - body: Content of the comment in its original format
+        - created_at: Timestamp when the comment was created
+        - event_type: Specific classification of the event within the ticket event stream
+        - html_body: HTML-formatted content of the comment
+        - id: Unique identifier for the comment event
+        - metadata: Additional structured information about the comment not covered by standard fields
+        - plain_body: Plain text content of the comment without formatting
+        - public: Boolean indicating whether the comment is visible to end users or is an internal note
+        - ticket_id: Identifier of the ticket to which this comment belongs
+        - timestamp: Timestamp of when the event occurred in the incremental export stream
+        - type_: Type of event, typically indicating this is a comment event
+        - uploads: Array of upload tokens or identifiers for files being attached to the comment
+        - via: Channel or method through which the comment was submitted
+        - via_reference_id: Reference identifier for the channel through which the comment was created
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's meta.cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            TicketCommentsSearchResult with typed records, pagination metadata, and optional search metadata
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("ticket_comments", "context_store_search", params)
+
+        # Parse response into typed result
+        meta_data = result.get("meta")
+        return TicketCommentsSearchResult(
+            data=[
+                TicketCommentsSearchData(**row)
+                for row in result.get("data", [])
+                if isinstance(row, dict)
+            ],
+            meta=AirbyteSearchMeta(
+                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
+                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
+                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
+            ),
+        )
+
+class TicketBulkUpdatesQuery:
+    """
+    Query class for TicketBulkUpdates entity operations.
+    """
+
+    def __init__(self, connector: ZendeskSupportConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def create(
+        self,
+        ticket: TicketBulkUpdatesCreateParamsTicket,
+        ids: str,
+        **kwargs
+    ) -> JobStatus:
+        """
+        Updates multiple tickets at once. Accepts a comma-separated list of ticket IDs and applies the same changes to all of them.
+
+        Args:
+            ticket: The ticket fields to apply to all specified tickets
+            ids: Comma-separated list of ticket IDs to update
+            **kwargs: Additional parameters
+
+        Returns:
+            JobStatus
+        """
+        params = {k: v for k, v in {
+            "ticket": ticket,
+            "ids": ids,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("ticket_bulk_updates", "create", params)
+        return result
+
+
 
 class DeletedTicketsQuery:
     """
@@ -1538,6 +1851,31 @@ class UsersQuery:
 
 
 
+    async def create(
+        self,
+        user: UsersCreateParamsUser,
+        **kwargs
+    ) -> User:
+        """
+        Creates a new end-user, agent, or admin in Zendesk Support
+
+        Args:
+            user: The user object to create
+            **kwargs: Additional parameters
+
+        Returns:
+            User
+        """
+        params = {k: v for k, v in {
+            "user": user,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("users", "create", params)
+        return result
+
+
+
     async def get(
         self,
         user_id: str,
@@ -1559,6 +1897,34 @@ class UsersQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("users", "get", params)
+        return result
+
+
+
+    async def update(
+        self,
+        user: UsersUpdateParamsUser,
+        user_id: str,
+        **kwargs
+    ) -> User:
+        """
+        Updates an existing user in Zendesk Support
+
+        Args:
+            user: The user fields to update
+            user_id: The ID of the user to update
+            **kwargs: Additional parameters
+
+        Returns:
+            User
+        """
+        params = {k: v for k, v in {
+            "user": user,
+            "user_id": user_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("users", "update", params)
         return result
 
 
@@ -1913,127 +2279,6 @@ class GroupsQuery:
         return GroupsSearchResult(
             data=[
                 GroupsSearchData(**row)
-                for row in result.get("data", [])
-                if isinstance(row, dict)
-            ],
-            meta=AirbyteSearchMeta(
-                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
-                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
-                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
-            ),
-        )
-
-class TicketCommentsQuery:
-    """
-    Query class for TicketComments entity operations.
-    """
-
-    def __init__(self, connector: ZendeskSupportConnector):
-        """Initialize query with connector reference."""
-        self._connector = connector
-
-    async def list(
-        self,
-        ticket_id: str,
-        page: int | None = None,
-        include_inline_images: bool | None = None,
-        sort_order: str | None = None,
-        per_page: int | None = None,
-        **kwargs
-    ) -> TicketCommentsListResult:
-        """
-        Returns a list of comments for a specific ticket
-
-        Args:
-            ticket_id: The ID of the ticket
-            page: Page number for pagination
-            include_inline_images: Include inline images in the response
-            sort_order: Sort order for comments (always sorted by created_at)
-            per_page: Number of results per page
-            **kwargs: Additional parameters
-
-        Returns:
-            TicketCommentsListResult
-        """
-        params = {k: v for k, v in {
-            "ticket_id": ticket_id,
-            "page": page,
-            "include_inline_images": include_inline_images,
-            "sort_order": sort_order,
-            "per_page": per_page,
-            **kwargs
-        }.items() if v is not None}
-
-        result = await self._connector.execute("ticket_comments", "list", params)
-        # Cast generic envelope to concrete typed result
-        return TicketCommentsListResult(
-            data=result.data,
-            meta=result.meta
-        )
-
-
-
-    async def context_store_search(
-        self,
-        query: TicketCommentsSearchQuery,
-        limit: int | None = None,
-        cursor: str | None = None,
-        fields: list[list[str]] | None = None,
-    ) -> TicketCommentsSearchResult:
-        """
-        Search ticket_comments records from Airbyte cache.
-
-        This operation searches cached data from Airbyte syncs.
-        Only available in hosted execution mode.
-
-        Available filter fields (TicketCommentsSearchFilter):
-        - attachments: List of files or media attached to the comment
-        - audit_id: Identifier of the audit record associated with this comment event
-        - author_id: Identifier of the user who created the comment
-        - body: Content of the comment in its original format
-        - created_at: Timestamp when the comment was created
-        - event_type: Specific classification of the event within the ticket event stream
-        - html_body: HTML-formatted content of the comment
-        - id: Unique identifier for the comment event
-        - metadata: Additional structured information about the comment not covered by standard fields
-        - plain_body: Plain text content of the comment without formatting
-        - public: Boolean indicating whether the comment is visible to end users or is an internal note
-        - ticket_id: Identifier of the ticket to which this comment belongs
-        - timestamp: Timestamp of when the event occurred in the incremental export stream
-        - type_: Type of event, typically indicating this is a comment event
-        - uploads: Array of upload tokens or identifiers for files being attached to the comment
-        - via: Channel or method through which the comment was submitted
-        - via_reference_id: Reference identifier for the channel through which the comment was created
-
-        Args:
-            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
-                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
-            limit: Maximum results to return (default 1000)
-            cursor: Pagination cursor from previous response's meta.cursor
-            fields: Field paths to include in results. Each path is a list of keys for nested access.
-                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
-
-        Returns:
-            TicketCommentsSearchResult with typed records, pagination metadata, and optional search metadata
-
-        Raises:
-            NotImplementedError: If called in local execution mode
-        """
-        params: dict[str, Any] = {"query": query}
-        if limit is not None:
-            params["limit"] = limit
-        if cursor is not None:
-            params["cursor"] = cursor
-        if fields is not None:
-            params["fields"] = fields
-
-        result = await self._connector.execute("ticket_comments", "context_store_search", params)
-
-        # Parse response into typed result
-        meta_data = result.get("meta")
-        return TicketCommentsSearchResult(
-            data=[
-                TicketCommentsSearchData(**row)
                 for row in result.get("data", [])
                 if isinstance(row, dict)
             ],
@@ -2775,6 +3020,31 @@ class MacrosQuery:
         """Initialize query with connector reference."""
         self._connector = connector
 
+    async def get(
+        self,
+        macro_id: str,
+        **kwargs
+    ) -> Macro:
+        """
+        Returns a macro by its ID
+
+        Args:
+            macro_id: The ID of the macro
+            **kwargs: Additional parameters
+
+        Returns:
+            Macro
+        """
+        params = {k: v for k, v in {
+            "macro_id": macro_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("macros", "get", params)
+        return result
+
+
+
     async def list(
         self,
         page: int | None = None,
@@ -2825,31 +3095,6 @@ class MacrosQuery:
             data=result.data,
             meta=result.meta
         )
-
-
-
-    async def get(
-        self,
-        macro_id: str,
-        **kwargs
-    ) -> Macro:
-        """
-        Returns a macro by its ID
-
-        Args:
-            macro_id: The ID of the macro
-            **kwargs: Additional parameters
-
-        Returns:
-            Macro
-        """
-        params = {k: v for k, v in {
-            "macro_id": macro_id,
-            **kwargs
-        }.items() if v is not None}
-
-        result = await self._connector.execute("macros", "get", params)
-        return result
 
 
 

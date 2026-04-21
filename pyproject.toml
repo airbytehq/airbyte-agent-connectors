@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "airbyte-agent-sdk"
-version = "0.1.42"
+version = "0.1.43"
 description = "Core SDK for Airbyte connectors with declarative YAML execution"
 authors = [{ name = "Airbyte", email = "contact@airbyte.io" }]
 readme = "README.md"
@@ -37,6 +37,7 @@ dev = [
     "ruff==0.7.3",
     "pdoc>=15.0.0",
     "poethepoet>=0.24.0",
+    "pydantic-ai>=0.0.14",
 ]
 
 [tool.setuptools.packages.find]

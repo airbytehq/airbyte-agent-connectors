@@ -16,6 +16,12 @@ The Zendesk-Support connector is optimized to handle prompts like these.
 - Show me the tickets assigned to me last week
 - List all unresolved tickets
 - Show me the details of recent tickets
+- Create a new ticket with subject 'Login issue' and priority high
+- Update ticket 12345 to status solved
+- Add a comment to ticket 12345 saying 'This has been resolved'
+- Set the priority of ticket 12345 to urgent and assign it to agent 98765
+- Create a new end-user named 'Jane Doe' with email jane@example.com
+- Update user 54321 with notes 'VIP customer'
 - What are the top 5 support issues our organization has faced this month?
 - Analyze the satisfaction ratings for our support team in the last 30 days
 - Compare ticket resolution times across different support groups
@@ -26,11 +32,9 @@ The Zendesk-Support connector is optimized to handle prompts like these.
 
 The Zendesk-Support connector isn't currently able to handle prompts like these.
 
-- Create a new support ticket for \{customer\}
-- Update the priority of this ticket
-- Assign this ticket to \{team_member\}
 - Delete these old support tickets
-- Send an automatic response to \{customer\}
+- Merge two tickets together
+- Export all tickets to a CSV file
 
 ## Installation
 
@@ -96,19 +100,20 @@ This connector supports the following entities and actions. For more details, se
 
 | Entity | Actions |
 |--------|---------|
-| Tickets | [List](./REFERENCE.md#tickets-list), [Get](./REFERENCE.md#tickets-get), [Context Store Search](./REFERENCE.md#tickets-context-store-search) |
+| Tickets | [List](./REFERENCE.md#tickets-list), [Create](./REFERENCE.md#tickets-create), [Get](./REFERENCE.md#tickets-get), [Update](./REFERENCE.md#tickets-update), [Context Store Search](./REFERENCE.md#tickets-context-store-search) |
+| Ticket Comments | [Create](./REFERENCE.md#ticket-comments-create), [List](./REFERENCE.md#ticket-comments-list), [Context Store Search](./REFERENCE.md#ticket-comments-context-store-search) |
+| Ticket Bulk Updates | [Create](./REFERENCE.md#ticket-bulk-updates-create) |
 | Deleted Tickets | [List](./REFERENCE.md#deleted-tickets-list), [Context Store Search](./REFERENCE.md#deleted-tickets-context-store-search) |
-| Users | [List](./REFERENCE.md#users-list), [Get](./REFERENCE.md#users-get), [Context Store Search](./REFERENCE.md#users-context-store-search) |
+| Users | [List](./REFERENCE.md#users-list), [Create](./REFERENCE.md#users-create), [Get](./REFERENCE.md#users-get), [Update](./REFERENCE.md#users-update), [Context Store Search](./REFERENCE.md#users-context-store-search) |
 | Organizations | [List](./REFERENCE.md#organizations-list), [Get](./REFERENCE.md#organizations-get), [Context Store Search](./REFERENCE.md#organizations-context-store-search) |
 | Groups | [List](./REFERENCE.md#groups-list), [Get](./REFERENCE.md#groups-get), [Context Store Search](./REFERENCE.md#groups-context-store-search) |
-| Ticket Comments | [List](./REFERENCE.md#ticket-comments-list), [Context Store Search](./REFERENCE.md#ticket-comments-context-store-search) |
 | Attachments | [Get](./REFERENCE.md#attachments-get), [Download](./REFERENCE.md#attachments-download) |
 | Ticket Audits | [List](./REFERENCE.md#ticket-audits-list), [List](./REFERENCE.md#ticket-audits-list), [Context Store Search](./REFERENCE.md#ticket-audits-context-store-search) |
 | Ticket Metrics | [List](./REFERENCE.md#ticket-metrics-list), [Context Store Search](./REFERENCE.md#ticket-metrics-context-store-search) |
 | Ticket Fields | [List](./REFERENCE.md#ticket-fields-list), [Get](./REFERENCE.md#ticket-fields-get), [Context Store Search](./REFERENCE.md#ticket-fields-context-store-search) |
 | Brands | [List](./REFERENCE.md#brands-list), [Get](./REFERENCE.md#brands-get), [Context Store Search](./REFERENCE.md#brands-context-store-search) |
 | Views | [List](./REFERENCE.md#views-list), [Get](./REFERENCE.md#views-get) |
-| Macros | [List](./REFERENCE.md#macros-list), [Get](./REFERENCE.md#macros-get) |
+| Macros | [Get](./REFERENCE.md#macros-get), [List](./REFERENCE.md#macros-list) |
 | Triggers | [List](./REFERENCE.md#triggers-list), [Get](./REFERENCE.md#triggers-get) |
 | Automations | [List](./REFERENCE.md#automations-list), [Get](./REFERENCE.md#automations-get) |
 | Tags | [List](./REFERENCE.md#tags-list), [Context Store Search](./REFERENCE.md#tags-context-store-search) |

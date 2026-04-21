@@ -20,7 +20,10 @@ from .connector_model import SlackConnectorModel
 from airbyte_agent_sdk.introspection import describe_entities, generate_tool_description
 from airbyte_agent_sdk.types import AirbyteAuthConfig
 from .types import (
+    BookmarksCreateParams,
+    ChannelArchivesCreateParams,
     ChannelInvitesCreateParams,
+    ChannelKicksCreateParams,
     ChannelMessagesListParams,
     ChannelPurposesCreateParams,
     ChannelTopicsCreateParams,
@@ -28,9 +31,14 @@ from .types import (
     ChannelsGetParams,
     ChannelsListParams,
     ChannelsUpdateParams,
+    EphemeralMessagesCreateParams,
     MessagesCreateParams,
+    MessagesDeleteParams,
     MessagesUpdateParams,
+    PinsCreateParams,
     ReactionsCreateParams,
+    ReactionsDeleteParams,
+    ScheduledMessagesCreateParams,
     ThreadsListParams,
     UsersGetParams,
     UsersListParams,
@@ -58,10 +66,18 @@ from .models import (
     ChannelsListResult,
     ChannelMessagesListResult,
     ThreadsListResult,
+    Bookmark,
     Channel,
+    ChannelArchiveResponse,
+    ChannelKickResponse,
     CreatedMessage,
+    EphemeralMessageCreateResponse,
     Message,
+    MessageDeleteResponse,
+    PinAddResponse,
     ReactionAddResponse,
+    ReactionRemoveResponse,
+    ScheduledMessageCreateResponse,
     Thread,
     User,
     AirbyteSearchMeta,
@@ -122,7 +138,7 @@ class SlackConnector:
 
     connector_name = "slack"
     connector_version = "0.1.20"
-    sdk_version = "0.1.42"
+    sdk_version = "0.1.43"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -140,6 +156,14 @@ class SlackConnector:
         ("channel_purposes", "create"): None,
         ("channel_invites", "create"): None,
         ("reactions", "create"): None,
+        ("reactions", "delete"): None,
+        ("ephemeral_messages", "create"): None,
+        ("scheduled_messages", "create"): None,
+        ("messages", "delete"): None,
+        ("channel_archives", "create"): None,
+        ("channel_kicks", "create"): None,
+        ("pins", "create"): None,
+        ("bookmarks", "create"): None,
     }
 
     # Map of (entity, action) -> {python_param_name: api_param_name}
@@ -159,6 +183,14 @@ class SlackConnector:
         ('channel_purposes', 'create'): {'channel': 'channel', 'purpose': 'purpose'},
         ('channel_invites', 'create'): {'channel': 'channel', 'users': 'users', 'force': 'force'},
         ('reactions', 'create'): {'channel': 'channel', 'timestamp': 'timestamp', 'name': 'name'},
+        ('reactions', 'delete'): {'channel': 'channel', 'timestamp': 'timestamp', 'name': 'name'},
+        ('ephemeral_messages', 'create'): {'channel': 'channel', 'user': 'user', 'text': 'text', 'thread_ts': 'thread_ts', 'blocks': 'blocks'},
+        ('scheduled_messages', 'create'): {'channel': 'channel', 'text': 'text', 'post_at': 'post_at', 'thread_ts': 'thread_ts', 'reply_broadcast': 'reply_broadcast', 'unfurl_links': 'unfurl_links', 'unfurl_media': 'unfurl_media'},
+        ('messages', 'delete'): {'channel': 'channel', 'ts': 'ts'},
+        ('channel_archives', 'create'): {'channel': 'channel'},
+        ('channel_kicks', 'create'): {'channel': 'channel', 'user': 'user'},
+        ('pins', 'create'): {'channel': 'channel', 'timestamp': 'timestamp'},
+        ('bookmarks', 'create'): {'channel_id': 'channel_id', 'title': 'title', 'type': 'type', 'link': 'link', 'emoji': 'emoji'},
     }
 
     # Accepted auth_config types for isinstance validation
@@ -272,6 +304,12 @@ class SlackConnector:
         self.channel_purposes = ChannelPurposesQuery(self)
         self.channel_invites = ChannelInvitesQuery(self)
         self.reactions = ReactionsQuery(self)
+        self.ephemeral_messages = EphemeralMessagesQuery(self)
+        self.scheduled_messages = ScheduledMessagesQuery(self)
+        self.channel_archives = ChannelArchivesQuery(self)
+        self.channel_kicks = ChannelKicksQuery(self)
+        self.pins = PinsQuery(self)
+        self.bookmarks = BookmarksQuery(self)
 
     # ===== TYPED EXECUTE METHOD (Recommended Interface) =====
 
@@ -387,19 +425,83 @@ class SlackConnector:
         params: "ReactionsCreateParams"
     ) -> "ReactionAddResponse": ...
 
+    @overload
+    async def execute(
+        self,
+        entity: Literal["reactions"],
+        action: Literal["delete"],
+        params: "ReactionsDeleteParams"
+    ) -> "ReactionRemoveResponse": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["ephemeral_messages"],
+        action: Literal["create"],
+        params: "EphemeralMessagesCreateParams"
+    ) -> "EphemeralMessageCreateResponse": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["scheduled_messages"],
+        action: Literal["create"],
+        params: "ScheduledMessagesCreateParams"
+    ) -> "ScheduledMessageCreateResponse": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["messages"],
+        action: Literal["delete"],
+        params: "MessagesDeleteParams"
+    ) -> "MessageDeleteResponse": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["channel_archives"],
+        action: Literal["create"],
+        params: "ChannelArchivesCreateParams"
+    ) -> "ChannelArchiveResponse": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["channel_kicks"],
+        action: Literal["create"],
+        params: "ChannelKicksCreateParams"
+    ) -> "ChannelKickResponse": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["pins"],
+        action: Literal["create"],
+        params: "PinsCreateParams"
+    ) -> "PinAddResponse": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["bookmarks"],
+        action: Literal["create"],
+        params: "BookmarksCreateParams"
+    ) -> "Bookmark": ...
+
 
     @overload
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get", "create", "update", "context_store_search"],
+        action: Literal["list", "get", "create", "update", "delete", "context_store_search"],
         params: Mapping[str, Any]
     ) -> SlackExecuteResult[Any] | SlackExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get", "create", "update", "context_store_search"],
+        action: Literal["list", "get", "create", "update", "delete", "context_store_search"],
         params: Mapping[str, Any] | None = None
     ) -> Any:
         """
@@ -1529,6 +1631,34 @@ class MessagesQuery:
 
 
 
+    async def delete(
+        self,
+        channel: str,
+        ts: str,
+        **kwargs
+    ) -> MessageDeleteResponse:
+        """
+        Deletes a message from a channel. When used with a bot token, may only delete messages posted by that bot.
+
+        Args:
+            channel: Channel ID containing the message to be deleted
+            ts: Timestamp of the message to be deleted
+            **kwargs: Additional parameters
+
+        Returns:
+            MessageDeleteResponse
+        """
+        params = {k: v for k, v in {
+            "channel": channel,
+            "ts": ts,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("messages", "delete", params)
+        return result
+
+
+
 class ChannelTopicsQuery:
     """
     Query class for ChannelTopics entity operations.
@@ -1679,6 +1809,289 @@ class ReactionsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("reactions", "create", params)
+        return result
+
+
+
+    async def delete(
+        self,
+        channel: str,
+        timestamp: str,
+        name: str,
+        **kwargs
+    ) -> ReactionRemoveResponse:
+        """
+        Removes a reaction (emoji) from a message
+
+        Args:
+            channel: Channel ID containing the message
+            timestamp: Timestamp of the message to remove reaction from
+            name: Reaction emoji name to remove (without colons, e.g., "thumbsup")
+            **kwargs: Additional parameters
+
+        Returns:
+            ReactionRemoveResponse
+        """
+        params = {k: v for k, v in {
+            "channel": channel,
+            "timestamp": timestamp,
+            "name": name,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("reactions", "delete", params)
+        return result
+
+
+
+class EphemeralMessagesQuery:
+    """
+    Query class for EphemeralMessages entity operations.
+    """
+
+    def __init__(self, connector: SlackConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def create(
+        self,
+        channel: str,
+        user: str,
+        text: str,
+        thread_ts: str | None = None,
+        blocks: str | None = None,
+        **kwargs
+    ) -> EphemeralMessageCreateResponse:
+        """
+        Sends an ephemeral message to a user in a channel. Ephemeral messages are visible only to the target user and do not persist across sessions.
+
+        Args:
+            channel: Channel, private group, or IM channel to send the ephemeral message to. Can be an encoded ID or a name.
+            user: ID of the user who will receive the ephemeral message. The user should be in the channel specified by the channel argument.
+            text: Message text content (supports mrkdwn formatting). How this field works depends on whether blocks are also provided.
+            thread_ts: Provide another message's ts value to post this ephemeral message in a thread. The thread must already be active.
+            blocks: A JSON-based array of structured blocks, presented as a URL-encoded string.
+            **kwargs: Additional parameters
+
+        Returns:
+            EphemeralMessageCreateResponse
+        """
+        params = {k: v for k, v in {
+            "channel": channel,
+            "user": user,
+            "text": text,
+            "thread_ts": thread_ts,
+            "blocks": blocks,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("ephemeral_messages", "create", params)
+        return result
+
+
+
+class ScheduledMessagesQuery:
+    """
+    Query class for ScheduledMessages entity operations.
+    """
+
+    def __init__(self, connector: SlackConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def create(
+        self,
+        channel: str,
+        text: str,
+        post_at: int,
+        thread_ts: str | None = None,
+        reply_broadcast: bool | None = None,
+        unfurl_links: bool | None = None,
+        unfurl_media: bool | None = None,
+        **kwargs
+    ) -> ScheduledMessageCreateResponse:
+        """
+        Schedules a message for delivery to a channel at a specified time in the future. Messages can be scheduled up to 120 days in advance.
+
+        Args:
+            channel: Channel, private group, or DM channel to send the scheduled message to. Can be an encoded ID or a name.
+            text: Message text content (supports mrkdwn formatting). How this field works depends on whether blocks are also provided.
+            post_at: Unix timestamp representing the future time the message should post to Slack. Must be within 120 days.
+            thread_ts: Provide another message's ts value to make this message a reply. Avoid using a reply's ts value; use its parent instead.
+            reply_broadcast: Used in conjunction with thread_ts and indicates whether reply should be made visible to everyone in the channel. Defaults to false.
+            unfurl_links: Pass true to enable unfurling of primarily text-based content.
+            unfurl_media: Pass false to disable unfurling of media content.
+            **kwargs: Additional parameters
+
+        Returns:
+            ScheduledMessageCreateResponse
+        """
+        params = {k: v for k, v in {
+            "channel": channel,
+            "text": text,
+            "post_at": post_at,
+            "thread_ts": thread_ts,
+            "reply_broadcast": reply_broadcast,
+            "unfurl_links": unfurl_links,
+            "unfurl_media": unfurl_media,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("scheduled_messages", "create", params)
+        return result
+
+
+
+class ChannelArchivesQuery:
+    """
+    Query class for ChannelArchives entity operations.
+    """
+
+    def __init__(self, connector: SlackConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def create(
+        self,
+        channel: str,
+        **kwargs
+    ) -> ChannelArchiveResponse:
+        """
+        Archives a conversation. Not all types of conversations can be archived.
+
+        Args:
+            channel: ID of the channel to archive
+            **kwargs: Additional parameters
+
+        Returns:
+            ChannelArchiveResponse
+        """
+        params = {k: v for k, v in {
+            "channel": channel,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("channel_archives", "create", params)
+        return result
+
+
+
+class ChannelKicksQuery:
+    """
+    Query class for ChannelKicks entity operations.
+    """
+
+    def __init__(self, connector: SlackConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def create(
+        self,
+        channel: str,
+        user: str,
+        **kwargs
+    ) -> ChannelKickResponse:
+        """
+        Removes a user from a public or private channel
+
+        Args:
+            channel: ID of the channel to remove the user from
+            user: User ID to be removed from the channel
+            **kwargs: Additional parameters
+
+        Returns:
+            ChannelKickResponse
+        """
+        params = {k: v for k, v in {
+            "channel": channel,
+            "user": user,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("channel_kicks", "create", params)
+        return result
+
+
+
+class PinsQuery:
+    """
+    Query class for Pins entity operations.
+    """
+
+    def __init__(self, connector: SlackConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def create(
+        self,
+        channel: str,
+        timestamp: str,
+        **kwargs
+    ) -> PinAddResponse:
+        """
+        Pins a message to a particular channel. Both channel and timestamp are required.
+
+        Args:
+            channel: Channel ID to pin the message to
+            timestamp: Timestamp of the message to pin
+            **kwargs: Additional parameters
+
+        Returns:
+            PinAddResponse
+        """
+        params = {k: v for k, v in {
+            "channel": channel,
+            "timestamp": timestamp,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("pins", "create", params)
+        return result
+
+
+
+class BookmarksQuery:
+    """
+    Query class for Bookmarks entity operations.
+    """
+
+    def __init__(self, connector: SlackConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def create(
+        self,
+        channel_id: str,
+        title: str,
+        type: str,
+        link: str | None = None,
+        emoji: str | None = None,
+        **kwargs
+    ) -> Bookmark:
+        """
+        Adds a bookmark (link) to a channel. Bookmarks appear in the channel header for easy access.
+
+        Args:
+            channel_id: Channel ID to add the bookmark to
+            title: Title for the bookmark
+            type: Type of the bookmark (e.g., "link")
+            link: URL to bookmark (required for link type). Must begin with http:// or https://.
+            emoji: Emoji tag to apply to the bookmark (e.g., ":rocket:")
+            **kwargs: Additional parameters
+
+        Returns:
+            Bookmark
+        """
+        params = {k: v for k, v in {
+            "channel_id": channel_id,
+            "title": title,
+            "type": type,
+            "link": link,
+            "emoji": emoji,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("bookmarks", "create", params)
         return result
 
 

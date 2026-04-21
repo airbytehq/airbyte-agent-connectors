@@ -49,6 +49,13 @@ info:
       - "Update my most recent comment"
       - "Delete a test issue"
       - "Remove my most recent comment"
+      - "Transition {issue_key} to In Progress"
+      - "Move {issue_key} to Done"
+      - "What transitions are available for {issue_key}?"
+      - "Log 2 hours of work on {issue_key}"
+      - "Log 30 minutes on {issue_key} with a comment about what I did"
+      - "Link {issue_key_1} as blocking {issue_key_2}"
+      - "Create a 'relates to' link between {issue_key_1} and {issue_key_2}"
     search:
       - "What issues are assigned to {team_member} this week?"
       - "Find all high priority bugs in our current sprint"
@@ -56,8 +63,8 @@ info:
       - "What projects have the most issues?"
       - "Search for users named {user_name}"
     unsupported:
-      - "Log time on {issue_key}"
-      - "Transition {issue_key} to Done"
+      - "Attach a file to {issue_key}"
+      - "Add a watcher to {issue_key}"
   x-airbyte-entity-relationships:
     - source_entity: issue_comments
       target_entity: issues
@@ -69,6 +76,12 @@ info:
       foreign_key: issueIdOrKey
       target_key: id
       cardinality: many_to_one
+    - source_entity: issue_transitions
+      target_entity: issues
+      foreign_key: issueIdOrKey
+      target_key: id
+      cardinality: many_to_one
+
   x-airbyte-context-store:
     entities:
       - entity: issues
@@ -1423,58 +1436,6 @@ paths:
         "404":
           description: Comment not found
 
-  /rest/api/3/issue/{issueIdOrKey}/worklog:
-    get:
-      summary: List issue worklogs
-      description: Retrieve all worklogs for a specific issue
-      operationId: listIssueWorklogs
-      x-airbyte-entity: issue_worklogs
-      x-airbyte-action: list
-      x-airbyte-record-extractor: $.worklogs
-      x-airbyte-meta-extractor:
-        next_offset: $.startAt
-        max_results: $.maxResults
-        total: $.total
-      parameters:
-        - name: issueIdOrKey
-          in: path
-          required: true
-          description: The issue ID or key (e.g., "PROJ-123" or "10000")
-          schema:
-            type: string
-        - name: startAt
-          in: query
-          description: The index of the first item to return in a page of results (page offset)
-          schema:
-            type: integer
-            format: int64
-            minimum: 0
-            default: 0
-        - name: maxResults
-          in: query
-          description: The maximum number of items to return per page
-          schema:
-            type: integer
-            format: int32
-            minimum: 1
-            default: 1048576
-        - name: expand
-          in: query
-          description: Comma-separated list of additional fields to include (properties)
-          schema:
-            type: string
-      responses:
-        "200":
-          description: Paginated list of worklogs
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/WorklogsList"
-        "401":
-          description: Unauthorized
-        "404":
-          description: Issue not found
-
   /rest/api/3/issue/{issueIdOrKey}/worklog/{worklogId}:
     get:
       summary: Get issue worklog by ID
@@ -1541,6 +1502,239 @@ paths:
                 $ref: "#/components/schemas/EmptyResponse"
         "400":
           description: Bad request - invalid accountId or user cannot be assigned
+        "401":
+          description: Unauthorized
+        "404":
+          description: Issue not found
+
+  /rest/api/3/issue/{issueIdOrKey}/transitions:
+    get:
+      summary: Get available transitions for an issue
+      description: Returns the available transitions for an issue. Transitions define the workflow steps an issue can move through (e.g., To Do -> In Progress -> Done). Use this to discover valid transition IDs before performing a transition.
+      operationId: getIssueTransitions
+      x-airbyte-entity: issue_transitions
+      x-airbyte-action: list
+      x-airbyte-record-extractor: $.transitions
+      parameters:
+        - name: issueIdOrKey
+          in: path
+          required: true
+          description: The issue ID or key (e.g., "PROJ-123" or "10000")
+          schema:
+            type: string
+        - name: expand
+          in: query
+          description: Comma-separated list of parameters to expand (transitions.fields)
+          schema:
+            type: string
+        - name: transitionId
+          in: query
+          description: Filter by transition ID to get details for a specific transition
+          schema:
+            type: string
+        - name: skipRemoteOnlyCondition
+          in: query
+          description: Whether to skip conditions that rely on remote data
+          schema:
+            type: boolean
+            default: false
+        - name: includeUnavailableTransitions
+          in: query
+          description: Whether to include transitions that are unavailable
+          schema:
+            type: boolean
+            default: false
+        - name: sortByOpsBarAndStatus
+          in: query
+          description: Whether to sort transitions by OpsBar and status
+          schema:
+            type: boolean
+            default: false
+      responses:
+        "200":
+          description: List of available transitions
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IssueTransitionsList"
+        "401":
+          description: Unauthorized
+        "404":
+          description: Issue not found
+    post:
+      summary: Transition an issue to a new status
+      description: |
+        Performs a status transition on an issue (e.g., To Do -> In Progress -> Done).
+        This is the primary way to change an issue's workflow status in Jira.
+
+        To use this endpoint:
+        1. First, GET the available transitions for the issue to find valid transition IDs
+        2. Then POST with the desired transition ID
+
+        You can optionally include field updates and comments as part of the transition.
+      operationId: transitionIssue
+      x-airbyte-entity: issue_transitions
+      x-airbyte-action: create
+      parameters:
+        - name: issueIdOrKey
+          in: path
+          required: true
+          description: The issue ID or key (e.g., "PROJ-123" or "10000")
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/IssueTransitionParams"
+      responses:
+        "204":
+          description: Transition performed successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmptyResponse"
+        "400":
+          description: Bad request - invalid transition ID or missing required fields
+        "401":
+          description: Unauthorized
+        "404":
+          description: Issue not found
+        "409":
+          description: Conflict - transition cannot be performed in current state
+
+  /rest/api/3/issue/{issueIdOrKey}/worklog:
+    get:
+      summary: List issue worklogs
+      description: Retrieve all worklogs for a specific issue
+      operationId: listIssueWorklogs
+      x-airbyte-entity: issue_worklogs
+      x-airbyte-action: list
+      x-airbyte-record-extractor: $.worklogs
+      x-airbyte-meta-extractor:
+        next_offset: $.startAt
+        max_results: $.maxResults
+        total: $.total
+      parameters:
+        - name: issueIdOrKey
+          in: path
+          required: true
+          description: The issue ID or key (e.g., "PROJ-123" or "10000")
+          schema:
+            type: string
+        - name: startAt
+          in: query
+          description: The index of the first item to return in a page of results (page offset)
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+            default: 0
+        - name: maxResults
+          in: query
+          description: The maximum number of items to return per page
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+            default: 1048576
+        - name: expand
+          in: query
+          description: Comma-separated list of additional fields to include (properties)
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Paginated list of worklogs
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WorklogsList"
+        "401":
+          description: Unauthorized
+        "404":
+          description: Issue not found
+    post:
+      summary: Add worklog to issue
+      description: |
+        Adds a worklog entry to an issue to track time spent.
+        Use timeSpentSeconds or timeSpent (e.g., "3h 30m") to specify time.
+        Optionally include a started datetime and a comment describing the work done.
+      operationId: createIssueWorklog
+      x-airbyte-entity: issue_worklogs
+      x-airbyte-action: create
+      parameters:
+        - name: issueIdOrKey
+          in: path
+          required: true
+          description: The issue ID or key (e.g., "PROJ-123" or "10000")
+          schema:
+            type: string
+        - name: notifyUsers
+          in: query
+          description: Whether to notify users about the worklog. Default is true.
+          schema:
+            type: boolean
+            default: true
+        - name: adjustEstimate
+          in: query
+          description: How to adjust the remaining estimate. Values are "new", "leave", "manual", "auto".
+          schema:
+            type: string
+            default: auto
+            enum:
+              - new
+              - leave
+              - manual
+              - auto
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WorklogCreateParams"
+      responses:
+        "201":
+          description: Worklog created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Worklog"
+        "400":
+          description: Bad request - invalid input
+        "401":
+          description: Unauthorized
+        "404":
+          description: Issue not found
+
+  /rest/api/3/issueLink:
+    post:
+      summary: Create an issue link
+      description: |
+        Creates a link between two issues. Issue links define relationships such as
+        "blocks", "is blocked by", "relates to", "duplicates", "is duplicated by", "clones", "is cloned by".
+
+        Common link type names: Blocks, Cloners, Duplicate, Relates.
+        Each type has an inward and outward description (e.g., "blocks" / "is blocked by").
+      operationId: createIssueLink
+      x-airbyte-entity: issue_links
+      x-airbyte-action: create
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/IssueLinkCreateParams"
+      responses:
+        "201":
+          description: Issue link created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmptyResponse"
+        "400":
+          description: Bad request - invalid input
         "401":
           description: Unauthorized
         "404":
@@ -3074,3 +3268,248 @@ components:
             identifier:
               type: string
               description: The ID of the group or role
+
+    # Issue Transition Schemas
+    IssueTransition:
+      type: object
+      description: A workflow transition that can be performed on an issue
+      properties:
+        id:
+          type: string
+          description: The ID of the transition (use this when performing a transition)
+        name:
+          type: string
+          description: The name of the transition (e.g., "In Progress", "Done")
+        to:
+          type: object
+          description: The target status after performing this transition
+          properties:
+            self:
+              type: string
+              format: uri
+            description:
+              type: string
+            iconUrl:
+              type: string
+              format: uri
+            name:
+              type: string
+              description: The name of the target status
+            id:
+              type: string
+            statusCategory:
+              type: object
+              properties:
+                self:
+                  type: string
+                  format: uri
+                id:
+                  type: integer
+                key:
+                  type: string
+                colorName:
+                  type: string
+                name:
+                  type: string
+        hasScreen:
+          type: boolean
+          description: Whether the transition has a screen associated with it
+        isGlobal:
+          type: boolean
+          description: Whether this is a global transition
+        isInitial:
+          type: boolean
+          description: Whether this is the initial transition
+        isConditional:
+          type: boolean
+          description: Whether the transition has conditions
+        isLooped:
+          type: boolean
+          description: Whether the transition loops back to the current status
+
+    IssueTransitionsList:
+      type: object
+      description: List of available transitions for an issue
+      properties:
+        expand:
+          type:
+            - string
+            - "null"
+          description: Expand options applied to the response
+        transitions:
+          type: array
+          items:
+            $ref: "#/components/schemas/IssueTransition"
+          description: Array of available transitions
+
+    IssueTransitionParams:
+      type: object
+      description: Parameters for transitioning an issue to a new status
+      required:
+        - transition
+      properties:
+        transition:
+          type: object
+          description: The transition to perform
+          required:
+            - id
+          properties:
+            id:
+              type: string
+              description: The ID of the transition to perform. Get available transition IDs from the GET transitions endpoint.
+        fields:
+          type: object
+          description: Fields to set during the transition (if required by the transition screen)
+          additionalProperties: true
+        update:
+          type: object
+          description: Additional update operations to perform during the transition
+          additionalProperties: true
+        historyMetadata:
+          type: object
+          description: Metadata about the transition for the issue history
+          additionalProperties: true
+
+    # Worklog Create Schema
+    WorklogCreateParams:
+      type: object
+      description: Parameters for adding a worklog entry to an issue. Either timeSpentSeconds or timeSpent must be provided.
+      properties:
+        timeSpentSeconds:
+          type: integer
+          description: Time spent in seconds (e.g., 3600 for 1 hour). Provide this or timeSpent.
+        timeSpent:
+          type: string
+          description: Human-readable time spent (e.g., 3h 30m, 1d 2h). Provide this or timeSpentSeconds.
+        started:
+          type: string
+          format: date-time
+          description: The datetime when the work was started (ISO 8601 format, e.g., "2024-01-15T09:00:00.000+0000"). Defaults to current time.
+        comment:
+          type: object
+          description: A comment about the work done in Atlassian Document Format (ADF)
+          properties:
+            type:
+              type: string
+              default: doc
+              description: Document type (always 'doc')
+            version:
+              type: integer
+              default: 1
+              description: ADF version
+            content:
+              type: array
+              description: Array of content blocks
+              items:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    description: Block type (e.g., 'paragraph')
+                  content:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          description: Content type (e.g., 'text')
+                        text:
+                          type: string
+                          description: Text content
+        visibility:
+          type: object
+          description: Restrict worklog visibility to a group or role
+          properties:
+            type:
+              type: string
+              enum:
+                - group
+                - role
+              description: The type of visibility restriction
+            value:
+              type: string
+              description: The name of the group or role
+            identifier:
+              type: string
+              description: The ID of the group or role
+
+    # Issue Link Schemas
+    IssueLinkCreateParams:
+      type: object
+      description: Parameters for creating a link between two issues
+      required:
+        - type
+        - inwardIssue
+        - outwardIssue
+      properties:
+        type:
+          type: object
+          description: The type of link (e.g., Blocks, Duplicate, Relates)
+          properties:
+            name:
+              type: string
+              description: The name of the link type (e.g., Blocks, Duplicate, Relates, Cloners)
+            id:
+              type: string
+              description: The ID of the link type
+            inward:
+              type: string
+              description: The inward description (e.g., is blocked by)
+            outward:
+              type: string
+              description: The outward description (e.g., blocks)
+        inwardIssue:
+          type: object
+          description: The inward issue (the issue that is affected by the link)
+          required:
+            - key
+          properties:
+            key:
+              type: string
+              description: The issue key (e.g., PROJ-123)
+            id:
+              type: string
+              description: The issue ID
+        outwardIssue:
+          type: object
+          description: The outward issue (the issue that causes the link)
+          required:
+            - key
+          properties:
+            key:
+              type: string
+              description: The issue key (e.g., PROJ-456)
+            id:
+              type: string
+              description: The issue ID
+        comment:
+          type: object
+          description: A comment about the link in Atlassian Document Format (ADF)
+          properties:
+            body:
+              type: object
+              properties:
+                type:
+                  type: string
+                  default: doc
+                version:
+                  type: integer
+                  default: 1
+                content:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      content:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            type:
+                              type: string
+                            text:
+                              type: string
+
