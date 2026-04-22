@@ -126,7 +126,7 @@ async def stripe_execute(entity: str, action: str, params: dict | None = None):
 
 # Parameterized usage:
 @agent.tool_plain
-@StripeConnector.tool_utils(update_docstring=True, enable_hosted_mode_features=True, max_output_chars=50_000)
+@StripeConnector.tool_utils(update_docstring=True, max_output_chars=50_000)
 async def stripe_execute(entity: str, action: str, params: dict | None = None):
     return await connector.execute(entity, action, params or {})
 ```
@@ -147,7 +147,6 @@ async def stripe_execute(entity: str, action: str, params: dict | None = None) -
 | Parameter | Default | Effect |
 |-----------|---------|--------|
 | `update_docstring` | `True` | Appends entity/action/schema descriptions to `__doc__` |
-| `enable_hosted_mode_features` | `True` | Includes context-store search guidance in docstring |
 | `max_output_chars` | `100_000` | Max serialized output; `None` disables |
 
 **Important**: `tool_utils` is NOT available on `HostedExecutor`. Always import the typed connector class.
