@@ -27,18 +27,23 @@ import asyncio
 from airbyte_agent_sdk import connect
 
 async def main():
-    stripe = connect(
+    async with connect(
         "stripe",
         client_id="your_client_id",
         client_secret="your_client_secret",
         connector_id="src_123",
-    )
-    result = await stripe.execute("customers", "list", params={"limit": 10})
-    for row in result.data:
-        print(row)
+    ) as stripe:
+        result = await stripe.execute("customers", "list", params={"limit": 10})
+        for row in result.data:
+            print(row)
 
 asyncio.run(main())
 ```
+
+The returned connector is also an async context manager — `async with`
+releases the underlying HTTP client automatically. If you need to manage
+the lifetime manually, assign the connector and call `await
+connector.close()` in a `finally` block.
 
 Use [`ask_sync`](#ask_sync) and direct [`connect()`](#connect) for scripts
 and notebooks; use [`ask`](#ask) and [`Workspace`](#Workspace) for async
@@ -90,13 +95,13 @@ Catch both SDK-defined and hosted-path errors in one `except`:
 import httpx
 from airbyte_agent_sdk import AirbyteError, connect
 
-stripe = connect("stripe", connector_id="src_123")
-try:
-    result = await stripe.execute("customers", "list")
-except (AirbyteError, httpx.HTTPError) as err:
-    # AirbyteError covers SDK-owned paths; httpx.HTTPError covers the
-    # hosted path which propagates httpx errors unwrapped.
-    print(f"Execution failed: {err!r}")
+async with connect("stripe", connector_id="src_123") as stripe:
+    try:
+        result = await stripe.execute("customers", "list")
+    except (AirbyteError, httpx.HTTPError) as err:
+        # AirbyteError covers SDK-owned paths; httpx.HTTPError covers the
+        # hosted path which propagates httpx errors unwrapped.
+        print(f"Execution failed: {err!r}")
 ```
 
 ## Advanced

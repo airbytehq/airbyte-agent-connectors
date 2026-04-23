@@ -63,20 +63,23 @@ def connect(
         from airbyte_agent_sdk import connect
 
         async def main():
-            stripe = connect(
+            async with connect(
                 "stripe",
                 client_id="your_client_id",
                 client_secret="your_client_secret",
                 connector_id="src_123",
-            )
-            result = await stripe.execute("customers", "list", params={"limit": 10})
-            print(result.data)
+            ) as stripe:
+                result = await stripe.execute("customers", "list", params={"limit": 10})
+                print(result.data)
 
         asyncio.run(main())
         ```
 
     The returned object's `execute()` is `async` — always `await` it from inside a
-    coroutine (see `asyncio.run(main())` above).
+    coroutine (see `asyncio.run(main())` above). The returned connector is also an
+    async context manager, so `async with connect(...) as connector:` releases the
+    underlying HTTP client automatically. If you prefer manual lifecycle management,
+    assign the connector and `await connector.close()` when done.
 
     Args:
         connector_name: Connector slug, e.g. `"stripe"` or `"zendesk-support"`.
