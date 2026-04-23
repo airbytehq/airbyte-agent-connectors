@@ -9,15 +9,15 @@ from airbyte_agent_sdk.cloud_utils import AirbyteCloudClient
 from airbyte_agent_sdk.config import resolve_credentials
 from airbyte_agent_sdk.connector_model_loader import load_connector_model
 from airbyte_agent_sdk.executor.hosted_executor import HostedExecutor
-from airbyte_agent_sdk.executor.models import AskResult, AutomationInfo, ConnectorInfo, WorkflowInfo
+from airbyte_agent_sdk.executor.models import AutomationInfo, ConnectorInfo, WorkflowInfo
 
 
 class Workspace:
     """Top-level entry point for Airbyte hosted-mode workspace operations.
 
-    Provides workspace-level methods: `ask`, list/create/delete connectors,
-    get a connector executor, and workflow/automation CRUD. Use `Workspace`
-    when you want to operate against a whole workspace (many connectors,
+    Provides workspace-level methods: list/create/delete connectors, get a
+    connector executor, and workflow/automation CRUD. Use `Workspace` when
+    you want to operate against a whole workspace (many connectors,
     workflows, automations); use [`connect()`](#connect) when you already
     know which connector you want to execute.
 
@@ -32,9 +32,8 @@ class Workspace:
                 client_secret="your_client_secret",
                 workspace_name="my-workspace",
             ) as ws:
-                result = await ws.ask("list my recent customers")
                 connectors = await ws.list_connectors()
-                print(result.outcome, len(connectors))
+                print(len(connectors))
 
         asyncio.run(main())
         ```
@@ -76,11 +75,6 @@ class Workspace:
             client_secret=resolved_secret,
             organization_id=self._organization_id,
         )
-
-    async def ask(self, prompt: str) -> AskResult:
-        """Ask a natural-language question across all connectors."""
-        response = await self._cloud_client.ask_workspace(self._workspace_name, prompt)
-        return AskResult.from_response(response)
 
     async def list_connectors(self) -> list[ConnectorInfo]:
         """List connector instances in this workspace."""

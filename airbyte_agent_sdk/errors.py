@@ -26,8 +26,8 @@ class AirbyteError(Exception):
     Not caught by ``AirbyteError``:
 
     * ``ValueError`` from argument validation at ``connect()``,
-      ``Workspace(...)``, ``ask()``/``ask_sync()`` (via
-      ``resolve_credentials()``), and ``HostedExecutor(...)``.
+      ``Workspace(...)`` (via ``resolve_credentials()``), and
+      ``HostedExecutor(...)``.
     * ``httpx.HTTPStatusError`` / ``httpx.RequestError`` propagated
       unwrapped from the hosted path (``HostedExecutor.execute()`` and
       ``AirbyteCloudClient``).
