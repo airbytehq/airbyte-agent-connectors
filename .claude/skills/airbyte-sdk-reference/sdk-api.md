@@ -160,9 +160,22 @@ async def stripe_execute(entity: str, action: str, params: dict | None = None) -
   - Class name: PascalCase + "Connector": `ZendeskSupportConnector`
 - `AirbyteAuthConfig` is importable from `airbyte_agent_sdk.types`.
 
-## close()
+## Resource cleanup
+
+The object returned by `connect()` is an async context manager. Prefer
+`async with` so HTTP resources are released automatically:
 
 ```python
-await connector.close()
-# Release HTTP resources. Call when done with the connector.
+async with connect("stripe") as stripe:
+    result = await stripe.customers.list(limit=10)
+```
+
+If you need manual control, call `close()` explicitly:
+
+```python
+connector = connect("stripe")
+try:
+    result = await connector.customers.list(limit=10)
+finally:
+    await connector.close()
 ```
