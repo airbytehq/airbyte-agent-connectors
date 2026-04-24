@@ -887,7 +887,8 @@ $defs:
         title: X-Airbyte-Skip-Suggested-Streams
         type: array
       x-airbyte-skip-auth-methods:
-        description: List of Airbyte auth methods to skip when validating auth compatibility.
+        description: List of Airbyte auth methods to skip when validating auth compatibility
+          and filtering auth options from the connector spec UI.
           Use the SelectiveAuthenticator option key (e.g., 'Private App Credentials',
           'oauth2.0')
         items:

@@ -213,7 +213,8 @@ class Info(BaseModel):
     x_airbyte_skip_auth_methods: list[str] = Field(
         default_factory=list,
         alias="x-airbyte-skip-auth-methods",
-        description="List of Airbyte auth methods to skip when validating auth compatibility. "
+        description="List of Airbyte auth methods to skip when validating auth compatibility "
+        "and filtering auth options from the connector spec UI. "
         "Use the SelectiveAuthenticator option key (e.g., 'Private App Credentials', 'oauth2.0')",
     )
     x_airbyte_skip_context_store: str | None = Field(
