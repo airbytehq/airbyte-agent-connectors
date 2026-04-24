@@ -1138,6 +1138,7 @@ components:
           tokenUrl: https://api.hubapi.com/oauth/v1/token
           refreshUrl: https://api.hubapi.com/oauth/v1/token
           scopes:
+            oauth: OAuth access
             crm.schemas.contacts.read: Read contact schemas
             crm.objects.contacts.read: Read contacts
             crm.objects.companies.read: Read companies
@@ -1151,6 +1152,7 @@ components:
             crm.objects.owners.read: Read owners
             crm.objects.leads.read: Read leads
             crm.objects.users.read: Read users
+            settings.users.read: Read user settings
             crm.objects.courses.read: Read courses
             crm.objects.projects.read: Read projects
             crm.objects.quotes.read: Read quotes
@@ -1161,94 +1163,26 @@ components:
             forms: Read forms
             sales-email-read: Read sales emails
       x-airbyte-oauth-scopes:
-        - scope: "crm.schemas.contacts.read"
+        - scope: "oauth"
           mode: read
           entities:
             - contacts
+            - companies
+            - deals
+            - tickets
+            - schemas
+            - objects
         - scope: "crm.objects.contacts.read"
           mode: read
           entities:
             - contacts
-        - scope: "crm.objects.companies.read"
-          mode: read
-          entities:
             - companies
-        - scope: "crm.schemas.companies.read"
-          mode: read
-          entities:
-            - companies
-        - scope: "crm.objects.deals.read"
-          mode: read
-          entities:
             - deals
-        - scope: "crm.schemas.deals.read"
-          mode: read
-          entities:
-            - deals
-        - scope: "tickets"
-          mode: read
-          entities:
             - tickets
-        - scope: "crm.schemas.custom.read"
+        - scope: "crm.schemas.contacts.read"
           mode: read
           entities:
-            - schemas
-        - scope: "crm.objects.custom.read"
-          mode: read
-          entities:
-            - objects
-        - scope: "crm.lists.read"
-          mode: read
-          entities:
-            - lists
-        - scope: "crm.objects.goals.read"
-          mode: read
-          entities:
-            - goals
-        - scope: "crm.objects.owners.read"
-          mode: read
-          entities:
-            - owners
-        - scope: "crm.objects.leads.read"
-          mode: read
-          entities:
-            - leads
-        - scope: "crm.objects.users.read"
-          mode: read
-          entities:
-            - users
-        - scope: "crm.objects.courses.read"
-          mode: read
-          entities:
-            - courses
-        - scope: "crm.objects.projects.read"
-          mode: read
-          entities:
-            - projects
-        - scope: "crm.objects.quotes.read"
-          mode: read
-          entities:
-            - quotes
-        - scope: "content"
-          mode: read
-          entities:
-            - content
-        - scope: "automation"
-          mode: read
-          entities:
-            - automation
-        - scope: "e-commerce"
-          mode: read
-          entities:
-            - ecommerce
-        - scope: "forms"
-          mode: read
-          entities:
-            - forms
-        - scope: "sales-email-read"
-          mode: read
-          entities:
-            - emails
+            - contacts
       x-airbyte-token-refresh:
         auth_style: body
         body_format: form
