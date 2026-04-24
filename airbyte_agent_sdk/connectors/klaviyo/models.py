@@ -195,6 +195,12 @@ class CampaignsList(BaseModel):
     data: Union[list[Campaign], Any] = Field(default=None)
     links: Union[CampaignsListLinks | None, Any] = Field(default=None)
 
+class EventLinks(BaseModel):
+    """Related links"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    self: Union[str | None, Any] = Field(default=None)
+
 class EventAttributes(BaseModel):
     """Event attributes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -208,11 +214,18 @@ class EventAttributes(BaseModel):
     event_properties: Union[dict[str, Any] | None, Any] = Field(default=None, description="Custom event properties")
     """Custom event properties"""
 
-class EventLinks(BaseModel):
-    """Related links"""
+class EventRelationshipsMetricData(BaseModel):
+    """Nested schema for EventRelationshipsMetric.data"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    self: Union[str | None, Any] = Field(default=None)
+    type_: Union[str | None, Any] = Field(default=None, alias="type")
+    id: Union[str | None, Any] = Field(default=None)
+
+class EventRelationshipsMetric(BaseModel):
+    """Nested schema for EventRelationships.metric"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: Union[EventRelationshipsMetricData | None, Any] = Field(default=None)
 
 class EventRelationshipsProfileData(BaseModel):
     """Nested schema for EventRelationshipsProfile.data"""
@@ -226,19 +239,6 @@ class EventRelationshipsProfile(BaseModel):
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     data: Union[EventRelationshipsProfileData | None, Any] = Field(default=None)
-
-class EventRelationshipsMetricData(BaseModel):
-    """Nested schema for EventRelationshipsMetric.data"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    type_: Union[str | None, Any] = Field(default=None, alias="type")
-    id: Union[str | None, Any] = Field(default=None)
-
-class EventRelationshipsMetric(BaseModel):
-    """Nested schema for EventRelationships.metric"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    data: Union[EventRelationshipsMetricData | None, Any] = Field(default=None)
 
 class EventRelationships(BaseModel):
     """Related resources"""
@@ -323,12 +323,6 @@ class MetricsList(BaseModel):
     data: Union[list[Metric], Any] = Field(default=None)
     links: Union[MetricsListLinks | None, Any] = Field(default=None)
 
-class FlowLinks(BaseModel):
-    """Related links"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    self: Union[str | None, Any] = Field(default=None)
-
 class FlowAttributes(BaseModel):
     """Flow attributes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -345,6 +339,12 @@ class FlowAttributes(BaseModel):
     """Last update timestamp"""
     trigger_type: Union[str | None, Any] = Field(default=None, description="Type of trigger for the flow")
     """Type of trigger for the flow"""
+
+class FlowLinks(BaseModel):
+    """Related links"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    self: Union[str | None, Any] = Field(default=None)
 
 class Flow(BaseModel):
     """A Klaviyo flow (automated sequence)"""
@@ -370,12 +370,6 @@ class FlowsList(BaseModel):
     data: Union[list[Flow], Any] = Field(default=None)
     links: Union[FlowsListLinks | None, Any] = Field(default=None)
 
-class TemplateLinks(BaseModel):
-    """Related links"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    self: Union[str | None, Any] = Field(default=None)
-
 class TemplateAttributes(BaseModel):
     """Template attributes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -392,6 +386,12 @@ class TemplateAttributes(BaseModel):
     """Creation timestamp"""
     updated: Union[str | None, Any] = Field(default=None, description="Last update timestamp")
     """Last update timestamp"""
+
+class TemplateLinks(BaseModel):
+    """Related links"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    self: Union[str | None, Any] = Field(default=None)
 
 class Template(BaseModel):
     """A Klaviyo email template"""
