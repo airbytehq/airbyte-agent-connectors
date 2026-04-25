@@ -13,3 +13,4 @@ Reference documentation for the Airbyte per-connector typed SDK packages. Use fo
 - [Connector discovery](./connector-discovery.md) — enumerating available connectors and locating per-connector documentation.
 - [PydanticAI patterns](./pydantic-ai.md) — wiring typed connectors into PydanticAI agents.
 - [Claude SDK patterns](./claude-sdk.md) — wiring typed connectors into the Anthropic Python SDK.
+- [CLI reference](./cli-reference.md) — `cassette`, `generate-docs`, `generate-sdk`, `test`, and `validate` subcommands.
