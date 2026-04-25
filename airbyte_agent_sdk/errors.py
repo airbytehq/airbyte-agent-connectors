@@ -4,6 +4,11 @@ This module intentionally has zero internal imports so that
 ``http/exceptions.py`` and ``executor/models.py`` can both import
 ``AirbyteError`` from it without risking a circular import through the
 ``exceptions.py`` back-compat shim.
+
+It also defines the connector-lookup exception hierarchy
+(``UnknownConnectorError``, ``ConnectorNotFoundError``,
+``ConnectorAmbiguityError``) which inherit ``ValueError`` for
+backward compatibility with existing ``except ValueError:`` handlers.
 """
 
 from __future__ import annotations
@@ -38,3 +43,15 @@ class AirbyteError(Exception):
     ``AirbyteError`` together with ``httpx.HTTPError`` (and optionally
     ``RuntimeError``) to cover the full failure surface.
     """
+
+
+class UnknownConnectorError(ValueError):
+    """Connector slug is not in the bundled SDK registry."""
+
+
+class ConnectorNotFoundError(ValueError):
+    """Workspace resolves to zero matching connectors."""
+
+
+class ConnectorAmbiguityError(ValueError):
+    """Workspace resolves to more than one matching connector."""

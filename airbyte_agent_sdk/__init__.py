@@ -123,7 +123,7 @@ from .ask import ask, ask_sync
 from .config import configure
 from .connect import connect
 from .constants import SDK_VERSION
-from .errors import AirbyteError
+from .errors import AirbyteError, ConnectorAmbiguityError, ConnectorNotFoundError, UnknownConnectorError
 from .executor import (
     ActionNotSupportedError,
     EntityNotFoundError,
@@ -176,6 +176,10 @@ __all__ = [
     "ActionNotSupportedError",
     "MissingParameterError",
     "InvalidParameterError",
+    # Connector-lookup exceptions
+    "UnknownConnectorError",
+    "ConnectorNotFoundError",
+    "ConnectorAmbiguityError",
     # HTTP exceptions
     "HTTPClientError",
     "HTTPStatusError",

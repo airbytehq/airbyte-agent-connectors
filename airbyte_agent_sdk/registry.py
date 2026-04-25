@@ -5,6 +5,8 @@ from __future__ import annotations
 import importlib
 from pathlib import Path
 
+from airbyte_agent_sdk.errors import UnknownConnectorError
+
 _SDK_DIR = Path(__file__).parent
 
 # In a published wheel, specs are bundled at airbyte_agent_sdk/specs/.
@@ -26,10 +28,10 @@ def get_spec_path(name: str) -> Path:
         name: Connector slug, e.g. "stripe" or "zendesk-support".
 
     Raises:
-        ValueError: If the connector name is not found.
+        UnknownConnectorError: If the connector name is not found.
     """
     if name not in _CONNECTOR_SET:
-        raise ValueError(f"Unknown connector: {name!r}. " f"Available connectors: {', '.join(_CONNECTORS)}")
+        raise UnknownConnectorError(f"Unknown connector: {name!r}. Available connectors: {', '.join(_CONNECTORS)}")
     return _SPECS_DIR / name / "connector.yaml"
 
 

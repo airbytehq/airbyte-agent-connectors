@@ -231,15 +231,7 @@ class HostedExecutor:
 
                 return result
 
-            except ValueError as e:
-                # Connector lookup validation error (0 or >1 connectors)
-                span.set_attribute("connector.success", False)
-                span.set_attribute("connector.error_type", "ValueError")
-                span.record_exception(e)
-                raise
-
             except Exception as e:
-                # HTTP errors and other exceptions
                 span.set_attribute("connector.success", False)
                 span.set_attribute("connector.error_type", type(e).__name__)
                 span.record_exception(e)

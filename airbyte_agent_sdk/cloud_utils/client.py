@@ -8,6 +8,7 @@ from typing import Any
 
 import httpx
 
+from airbyte_agent_sdk.errors import ConnectorAmbiguityError, ConnectorNotFoundError
 from airbyte_agent_sdk.http.exceptions import (
     AuthenticationError,
     ConnectorValidationError,
@@ -230,9 +231,10 @@ class AirbyteCloudClient:
             Connector ID (UUID string)
 
         Raises:
-            ValueError: If 0 or more than 1 connector is found
-            httpx.HTTPStatusError: If API returns 4xx/5xx status code
-            httpx.RequestError: If network request fails
+            ConnectorNotFoundError: If 0 connectors are found.
+            ConnectorAmbiguityError: If more than 1 connector is found.
+            httpx.HTTPStatusError: If API returns 4xx/5xx status code.
+            httpx.RequestError: If network request fails.
 
         Example:
             connector_id = await client.get_connector_id(
@@ -256,13 +258,15 @@ class AirbyteCloudClient:
         connectors = data["data"]
 
         if len(connectors) == 0:
-            raise ValueError(f"No connector found for workspace_name '{workspace_name}' and connector definition '{connector_definition_id}'")
+            raise ConnectorNotFoundError(
+                f"No connector found for workspace_name '{workspace_name}' and connector definition '{connector_definition_id}'."
+            )
 
         if len(connectors) > 1:
-            raise ValueError(
+            raise ConnectorAmbiguityError(
                 f"Multiple connectors found for workspace_name '{workspace_name}' "
-                f"and connector definition '{connector_definition_id}'. Expected exactly 1, "
-                f"found {len(connectors)}"
+                f"and connector definition '{connector_definition_id}'. "
+                f"Expected exactly 1, found {len(connectors)}."
             )
 
         connector_id = connectors[0]["id"]
