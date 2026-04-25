@@ -98,7 +98,7 @@
       {
         "name": "total_items",
         "python_name": "total_items",
-        "type": "int | None",
+        "type": "int",
         "schema": {
           "type": [
             "null",
@@ -110,7 +110,7 @@
       {
         "name": "page_count",
         "python_name": "page_count",
-        "type": "int | None",
+        "type": "int",
         "schema": {
           "type": [
             "null",
@@ -173,7 +173,7 @@
           {
             "name": "total_items",
             "python_name": "total_items",
-            "type": "int | None",
+            "type": "int",
             "schema": {
               "type": [
                 "null",
@@ -185,7 +185,7 @@
           {
             "name": "page_count",
             "python_name": "page_count",
-            "type": "int | None",
+            "type": "int",
             "schema": {
               "type": [
                 "null",
@@ -350,7 +350,7 @@
           {
             "name": "total_items",
             "python_name": "total_items",
-            "type": "int | None",
+            "type": "int",
             "schema": {
               "type": [
                 "null",
@@ -362,7 +362,7 @@
           {
             "name": "page_count",
             "python_name": "page_count",
-            "type": "int | None",
+            "type": "int",
             "schema": {
               "type": [
                 "null",
@@ -455,7 +455,7 @@
           {
             "name": "total_items",
             "python_name": "total_items",
-            "type": "int | None",
+            "type": "int",
             "schema": {
               "type": [
                 "null",
@@ -467,7 +467,7 @@
           {
             "name": "page_count",
             "python_name": "page_count",
-            "type": "int | None",
+            "type": "int",
             "schema": {
               "type": [
                 "null",
@@ -549,7 +549,7 @@
           {
             "name": "total_items",
             "python_name": "total_items",
-            "type": "int | None",
+            "type": "int",
             "schema": {
               "type": [
                 "null",
@@ -561,7 +561,7 @@
           {
             "name": "page_count",
             "python_name": "page_count",
-            "type": "int | None",
+            "type": "int",
             "schema": {
               "type": [
                 "null",

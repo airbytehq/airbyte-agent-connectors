@@ -8,7 +8,7 @@ and response envelope types.
 from __future__ import annotations
 
 from pydantic import BaseModel, ConfigDict, Field
-from typing import TypeVar, Generic, Union, Any
+from typing import TypeVar, Generic, Any
 
 # Authentication configuration
 
@@ -36,238 +36,238 @@ class Address(BaseModel):
     """Address object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    city: Union[str | None, Any] = Field(default=None)
-    country: Union[str | None, Any] = Field(default=None)
-    line1: Union[str | None, Any] = Field(default=None)
-    line2: Union[str | None, Any] = Field(default=None)
-    postal_code: Union[str | None, Any] = Field(default=None)
-    state: Union[str | None, Any] = Field(default=None)
+    city: str | None = Field(default=None)
+    country: str | None = Field(default=None)
+    line1: str | None = Field(default=None)
+    line2: str | None = Field(default=None)
+    postal_code: str | None = Field(default=None)
+    state: str | None = Field(default=None)
 
 class CustomerTaxId(BaseModel):
     """Tax identification information"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type_: Union[str | None, Any] = Field(default=None, alias="type", description="The type of tax ID")
+    type_: str | None | None = Field(default=None, alias="type", description="The type of tax ID")
     """The type of tax ID"""
-    value: Union[str | None, Any] = Field(default=None, description="The value of the tax ID")
+    value: str | None | None = Field(default=None, description="The value of the tax ID")
     """The value of the tax ID"""
-    country: Union[str | None, Any] = Field(default=None, description="The country of the tax ID")
+    country: str | None | None = Field(default=None, description="The country of the tax ID")
     """The country of the tax ID"""
 
 class Customer(BaseModel):
     """Customer object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    external_customer_id: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    email: Union[str | None, Any] = Field(default=None)
-    created_at: Union[str | None, Any] = Field(default=None)
-    payment_provider: Union[str | None, Any] = Field(default=None)
-    payment_provider_id: Union[str | None, Any] = Field(default=None)
-    timezone: Union[str | None, Any] = Field(default=None)
-    shipping_address: Union[Any, Any] = Field(default=None)
-    billing_address: Union[Any, Any] = Field(default=None)
-    balance: Union[str | None, Any] = Field(default=None)
-    currency: Union[str | None, Any] = Field(default=None)
-    tax_id: Union[CustomerTaxId | None, Any] = Field(default=None)
-    auto_collection: Union[bool | None, Any] = Field(default=None)
-    metadata: Union[dict[str, Any] | None, Any] = Field(default=None)
+    id: str
+    external_customer_id: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    email: str | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    payment_provider: str | None = Field(default=None)
+    payment_provider_id: str | None = Field(default=None)
+    timezone: str | None = Field(default=None)
+    shipping_address: Any | None = Field(default=None)
+    billing_address: Any | None = Field(default=None)
+    balance: str | None = Field(default=None)
+    currency: str | None = Field(default=None)
+    tax_id: CustomerTaxId | None = Field(default=None)
+    auto_collection: bool | None = Field(default=None)
+    metadata: dict[str, Any] | None = Field(default=None)
 
 class PaginationMetadata(BaseModel):
     """Pagination metadata"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    has_more: Union[bool | None, Any] = Field(default=None)
-    next_cursor: Union[str | None, Any] = Field(default=None)
+    has_more: bool | None = Field(default=None)
+    next_cursor: str | None = Field(default=None)
 
 class CustomersList(BaseModel):
     """Paginated list of customers"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[list[Customer], Any] = Field(default=None)
-    pagination_metadata: Union[PaginationMetadata, Any] = Field(default=None)
-
-class SubscriptionPlan(BaseModel):
-    """The plan associated with the subscription"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str | None, Any] = Field(default=None, description="The plan ID")
-    """The plan ID"""
-    name: Union[str | None, Any] = Field(default=None, description="The plan name")
-    """The plan name"""
+    data: list[Customer] | None = Field(default=None)
+    pagination_metadata: PaginationMetadata | None = Field(default=None)
 
 class SubscriptionCustomer(BaseModel):
     """The customer associated with the subscription"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str | None, Any] = Field(default=None, description="The customer ID")
+    id: str | None | None = Field(default=None, description="The customer ID")
     """The customer ID"""
-    external_customer_id: Union[str | None, Any] = Field(default=None, description="The external customer ID")
+    external_customer_id: str | None | None = Field(default=None, description="The external customer ID")
     """The external customer ID"""
+
+class SubscriptionPlan(BaseModel):
+    """The plan associated with the subscription"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None | None = Field(default=None, description="The plan ID")
+    """The plan ID"""
+    name: str | None | None = Field(default=None, description="The plan name")
+    """The plan name"""
 
 class Subscription(BaseModel):
     """Subscription object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    created_at: Union[str | None, Any] = Field(default=None)
-    start_date: Union[str | None, Any] = Field(default=None)
-    end_date: Union[str | None, Any] = Field(default=None)
-    status: Union[str | None, Any] = Field(default=None)
-    customer: Union[SubscriptionCustomer | None, Any] = Field(default=None)
-    plan: Union[SubscriptionPlan | None, Any] = Field(default=None)
-    current_billing_period_start_date: Union[str | None, Any] = Field(default=None)
-    current_billing_period_end_date: Union[str | None, Any] = Field(default=None)
-    active_plan_phase_order: Union[int | None, Any] = Field(default=None)
-    fixed_fee_quantity_schedule: Union[list[dict[str, Any]] | None, Any] = Field(default=None)
-    price_intervals: Union[list[dict[str, Any]] | None, Any] = Field(default=None)
-    redeemed_coupon: Union[dict[str, Any] | None, Any] = Field(default=None)
-    default_invoice_memo: Union[str | None, Any] = Field(default=None)
-    auto_collection: Union[bool | None, Any] = Field(default=None)
-    net_terms: Union[int | None, Any] = Field(default=None)
-    invoicing_threshold: Union[str | None, Any] = Field(default=None)
-    metadata: Union[dict[str, Any] | None, Any] = Field(default=None)
+    id: str
+    created_at: str | None = Field(default=None)
+    start_date: str | None = Field(default=None)
+    end_date: str | None = Field(default=None)
+    status: str | None = Field(default=None)
+    customer: SubscriptionCustomer | None = Field(default=None)
+    plan: SubscriptionPlan | None = Field(default=None)
+    current_billing_period_start_date: str | None = Field(default=None)
+    current_billing_period_end_date: str | None = Field(default=None)
+    active_plan_phase_order: int | None = Field(default=None)
+    fixed_fee_quantity_schedule: list[dict[str, Any]] | None = Field(default=None)
+    price_intervals: list[dict[str, Any]] | None = Field(default=None)
+    redeemed_coupon: dict[str, Any] | None = Field(default=None)
+    default_invoice_memo: str | None = Field(default=None)
+    auto_collection: bool | None = Field(default=None)
+    net_terms: int | None = Field(default=None)
+    invoicing_threshold: str | None = Field(default=None)
+    metadata: dict[str, Any] | None = Field(default=None)
 
 class SubscriptionsList(BaseModel):
     """Paginated list of subscriptions"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[list[Subscription], Any] = Field(default=None)
-    pagination_metadata: Union[PaginationMetadata, Any] = Field(default=None)
-
-class PlanProduct(BaseModel):
-    """The product associated with the plan"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str | None, Any] = Field(default=None, description="The product ID")
-    """The product ID"""
-    name: Union[str | None, Any] = Field(default=None, description="The product name")
-    """The product name"""
+    data: list[Subscription] | None = Field(default=None)
+    pagination_metadata: PaginationMetadata | None = Field(default=None)
 
 class PlanPricesItem(BaseModel):
     """Nested schema for Plan.prices_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str | None, Any] = Field(default=None, description="The unique identifier of the price")
+    id: str | None | None = Field(default=None, description="The unique identifier of the price")
     """The unique identifier of the price"""
-    name: Union[str | None, Any] = Field(default=None, description="The name of the price")
+    name: str | None | None = Field(default=None, description="The name of the price")
     """The name of the price"""
-    price_type: Union[str | None, Any] = Field(default=None, description="The type of price")
+    price_type: str | None | None = Field(default=None, description="The type of price")
     """The type of price"""
-    model_type: Union[str | None, Any] = Field(default=None, description="The model type of the price")
+    model_type: str | None | None = Field(default=None, description="The model type of the price")
     """The model type of the price"""
-    currency: Union[str | None, Any] = Field(default=None, description="The currency of the price")
+    currency: str | None | None = Field(default=None, description="The currency of the price")
     """The currency of the price"""
+
+class PlanProduct(BaseModel):
+    """The product associated with the plan"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None | None = Field(default=None, description="The product ID")
+    """The product ID"""
+    name: str | None | None = Field(default=None, description="The product name")
+    """The product name"""
 
 class Plan(BaseModel):
     """Plan object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    created_at: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    description: Union[str | None, Any] = Field(default=None)
-    status: Union[str | None, Any] = Field(default=None)
-    default_invoice_memo: Union[str | None, Any] = Field(default=None)
-    net_terms: Union[int | None, Any] = Field(default=None)
-    currency: Union[str | None, Any] = Field(default=None)
-    prices: Union[list[PlanPricesItem] | None, Any] = Field(default=None)
-    product: Union[PlanProduct | None, Any] = Field(default=None)
-    minimum: Union[dict[str, Any] | None, Any] = Field(default=None)
-    maximum: Union[dict[str, Any] | None, Any] = Field(default=None)
-    discount: Union[dict[str, Any] | None, Any] = Field(default=None)
-    trial_config: Union[dict[str, Any] | None, Any] = Field(default=None)
-    plan_phases: Union[list[dict[str, Any]] | None, Any] = Field(default=None)
-    external_plan_id: Union[str | None, Any] = Field(default=None)
-    invoicing_currency: Union[str | None, Any] = Field(default=None)
-    metadata: Union[dict[str, Any] | None, Any] = Field(default=None)
+    id: str
+    created_at: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    description: str | None = Field(default=None)
+    status: str | None = Field(default=None)
+    default_invoice_memo: str | None = Field(default=None)
+    net_terms: int | None = Field(default=None)
+    currency: str | None = Field(default=None)
+    prices: list[PlanPricesItem] | None = Field(default=None)
+    product: PlanProduct | None = Field(default=None)
+    minimum: dict[str, Any] | None = Field(default=None)
+    maximum: dict[str, Any] | None = Field(default=None)
+    discount: dict[str, Any] | None = Field(default=None)
+    trial_config: dict[str, Any] | None = Field(default=None)
+    plan_phases: list[dict[str, Any]] | None = Field(default=None)
+    external_plan_id: str | None = Field(default=None)
+    invoicing_currency: str | None = Field(default=None)
+    metadata: dict[str, Any] | None = Field(default=None)
 
 class PlansList(BaseModel):
     """Paginated list of plans"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[list[Plan], Any] = Field(default=None)
-    pagination_metadata: Union[PaginationMetadata, Any] = Field(default=None)
-
-class InvoiceLineItemsItem(BaseModel):
-    """Nested schema for Invoice.line_items_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str | None, Any] = Field(default=None, description="The unique identifier of the line item")
-    """The unique identifier of the line item"""
-    quantity: Union[float | None, Any] = Field(default=None, description="The quantity of the line item")
-    """The quantity of the line item"""
-    amount: Union[str | None, Any] = Field(default=None, description="The amount of the line item")
-    """The amount of the line item"""
-    name: Union[str | None, Any] = Field(default=None, description="The name of the line item")
-    """The name of the line item"""
-    start_date: Union[str | None, Any] = Field(default=None, description="The start date of the line item")
-    """The start date of the line item"""
-    end_date: Union[str | None, Any] = Field(default=None, description="The end date of the line item")
-    """The end date of the line item"""
+    data: list[Plan] | None = Field(default=None)
+    pagination_metadata: PaginationMetadata | None = Field(default=None)
 
 class InvoiceCustomer(BaseModel):
     """The customer associated with the invoice"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str | None, Any] = Field(default=None, description="The customer ID")
+    id: str | None | None = Field(default=None, description="The customer ID")
     """The customer ID"""
-    external_customer_id: Union[str | None, Any] = Field(default=None, description="The external customer ID")
+    external_customer_id: str | None | None = Field(default=None, description="The external customer ID")
     """The external customer ID"""
+
+class InvoiceLineItemsItem(BaseModel):
+    """Nested schema for Invoice.line_items_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None | None = Field(default=None, description="The unique identifier of the line item")
+    """The unique identifier of the line item"""
+    quantity: float | None | None = Field(default=None, description="The quantity of the line item")
+    """The quantity of the line item"""
+    amount: str | None | None = Field(default=None, description="The amount of the line item")
+    """The amount of the line item"""
+    name: str | None | None = Field(default=None, description="The name of the line item")
+    """The name of the line item"""
+    start_date: str | None | None = Field(default=None, description="The start date of the line item")
+    """The start date of the line item"""
+    end_date: str | None | None = Field(default=None, description="The end date of the line item")
+    """The end date of the line item"""
 
 class InvoiceSubscription(BaseModel):
     """The subscription associated with the invoice"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str | None, Any] = Field(default=None, description="The subscription ID")
+    id: str | None | None = Field(default=None, description="The subscription ID")
     """The subscription ID"""
 
 class Invoice(BaseModel):
     """Invoice object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    created_at: Union[str | None, Any] = Field(default=None)
-    invoice_date: Union[str | None, Any] = Field(default=None)
-    due_date: Union[str | None, Any] = Field(default=None)
-    invoice_pdf: Union[str | None, Any] = Field(default=None)
-    subtotal: Union[str | None, Any] = Field(default=None)
-    total: Union[str | None, Any] = Field(default=None)
-    amount_due: Union[str | None, Any] = Field(default=None)
-    status: Union[str | None, Any] = Field(default=None)
-    memo: Union[str | None, Any] = Field(default=None)
-    issue_failed_at: Union[str | None, Any] = Field(default=None)
-    sync_failed_at: Union[str | None, Any] = Field(default=None)
-    payment_failed_at: Union[str | None, Any] = Field(default=None)
-    payment_started_at: Union[str | None, Any] = Field(default=None)
-    voided_at: Union[str | None, Any] = Field(default=None)
-    paid_at: Union[str | None, Any] = Field(default=None)
-    issued_at: Union[str | None, Any] = Field(default=None)
-    hosted_invoice_url: Union[str | None, Any] = Field(default=None)
-    line_items: Union[list[InvoiceLineItemsItem] | None, Any] = Field(default=None)
-    subscription: Union[InvoiceSubscription | None, Any] = Field(default=None)
-    customer: Union[InvoiceCustomer | None, Any] = Field(default=None)
-    currency: Union[str | None, Any] = Field(default=None)
-    discount: Union[dict[str, Any] | None, Any] = Field(default=None)
-    minimum: Union[dict[str, Any] | None, Any] = Field(default=None)
-    maximum: Union[dict[str, Any] | None, Any] = Field(default=None)
-    credit_notes: Union[list[dict[str, Any]] | None, Any] = Field(default=None)
-    will_auto_issue: Union[bool | None, Any] = Field(default=None)
-    eligible_to_issue_at: Union[str | None, Any] = Field(default=None)
-    customer_balance_transactions: Union[list[dict[str, Any]] | None, Any] = Field(default=None)
-    auto_collection: Union[dict[str, Any] | None, Any] = Field(default=None)
-    invoice_number: Union[str | None, Any] = Field(default=None)
-    billing_address: Union[Any, Any] = Field(default=None)
-    shipping_address: Union[Any, Any] = Field(default=None)
-    metadata: Union[dict[str, Any] | None, Any] = Field(default=None)
+    id: str
+    created_at: str | None = Field(default=None)
+    invoice_date: str | None = Field(default=None)
+    due_date: str | None = Field(default=None)
+    invoice_pdf: str | None = Field(default=None)
+    subtotal: str | None = Field(default=None)
+    total: str | None = Field(default=None)
+    amount_due: str | None = Field(default=None)
+    status: str | None = Field(default=None)
+    memo: str | None = Field(default=None)
+    issue_failed_at: str | None = Field(default=None)
+    sync_failed_at: str | None = Field(default=None)
+    payment_failed_at: str | None = Field(default=None)
+    payment_started_at: str | None = Field(default=None)
+    voided_at: str | None = Field(default=None)
+    paid_at: str | None = Field(default=None)
+    issued_at: str | None = Field(default=None)
+    hosted_invoice_url: str | None = Field(default=None)
+    line_items: list[InvoiceLineItemsItem] | None = Field(default=None)
+    subscription: InvoiceSubscription | None = Field(default=None)
+    customer: InvoiceCustomer | None = Field(default=None)
+    currency: str | None = Field(default=None)
+    discount: dict[str, Any] | None = Field(default=None)
+    minimum: dict[str, Any] | None = Field(default=None)
+    maximum: dict[str, Any] | None = Field(default=None)
+    credit_notes: list[dict[str, Any]] | None = Field(default=None)
+    will_auto_issue: bool | None = Field(default=None)
+    eligible_to_issue_at: str | None = Field(default=None)
+    customer_balance_transactions: list[dict[str, Any]] | None = Field(default=None)
+    auto_collection: dict[str, Any] | None = Field(default=None)
+    invoice_number: str | None = Field(default=None)
+    billing_address: Any | None = Field(default=None)
+    shipping_address: Any | None = Field(default=None)
+    metadata: dict[str, Any] | None = Field(default=None)
 
 class InvoicesList(BaseModel):
     """Paginated list of invoices"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[list[Invoice], Any] = Field(default=None)
-    pagination_metadata: Union[PaginationMetadata, Any] = Field(default=None)
+    data: list[Invoice] | None = Field(default=None)
+    pagination_metadata: PaginationMetadata | None = Field(default=None)
 
 # ===== METADATA TYPE DEFINITIONS (PYDANTIC) =====
 # Meta types for operations that extract metadata (e.g., pagination info)
@@ -276,25 +276,25 @@ class CustomersListResultMeta(BaseModel):
     """Metadata for customers.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_cursor: Union[str | None, Any] = Field(default=None)
+    next_cursor: str | None = Field(default=None)
 
 class SubscriptionsListResultMeta(BaseModel):
     """Metadata for subscriptions.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_cursor: Union[str | None, Any] = Field(default=None)
+    next_cursor: str | None = Field(default=None)
 
 class PlansListResultMeta(BaseModel):
     """Metadata for plans.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_cursor: Union[str | None, Any] = Field(default=None)
+    next_cursor: str | None = Field(default=None)
 
 class InvoicesListResultMeta(BaseModel):
     """Metadata for invoices.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_cursor: Union[str | None, Any] = Field(default=None)
+    next_cursor: str | None = Field(default=None)
 
 # ===== CHECK RESULT MODEL =====
 

@@ -8,7 +8,7 @@ and response envelope types.
 from __future__ import annotations
 
 from pydantic import BaseModel, ConfigDict, Field
-from typing import TypeVar, Generic, Union, Any
+from typing import TypeVar, Generic, Any
 
 # Authentication configuration - multiple options available
 
@@ -46,297 +46,297 @@ class IssueCreateParams(BaseModel):
     """IssueCreateParams type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    title: Union[str, Any] = Field(default=None)
-    body: Union[str, Any] = Field(default=None)
-    labels: Union[list[str], Any] = Field(default=None)
-    assignees: Union[list[str], Any] = Field(default=None)
-    milestone: Union[int | None, Any] = Field(default=None)
-
-class IssueResponseIssueDependenciesSummary(BaseModel):
-    """Summary of issue dependencies"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    blocked_by: Union[int, Any] = Field(default=None)
-    blocking: Union[int, Any] = Field(default=None)
-    total_blocked_by: Union[int, Any] = Field(default=None)
-    total_blocking: Union[int, Any] = Field(default=None)
-
-class IssueResponseAssigneesItem(BaseModel):
-    """Nested schema for IssueResponse.assignees_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    login: Union[str, Any] = Field(default=None)
-    id: Union[int, Any] = Field(default=None)
-    node_id: Union[str, Any] = Field(default=None)
-    avatar_url: Union[str, Any] = Field(default=None)
-    url: Union[str, Any] = Field(default=None)
-    html_url: Union[str, Any] = Field(default=None)
-    type_: Union[str, Any] = Field(default=None, alias="type")
-    site_admin: Union[bool, Any] = Field(default=None)
-
-class IssueResponseAssignee(BaseModel):
-    """Primary user assigned to this issue"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    login: Union[str, Any] = Field(default=None)
-    id: Union[int, Any] = Field(default=None)
-    node_id: Union[str, Any] = Field(default=None)
-    avatar_url: Union[str, Any] = Field(default=None)
-    url: Union[str, Any] = Field(default=None)
-    html_url: Union[str, Any] = Field(default=None)
-    type_: Union[str, Any] = Field(default=None, alias="type")
-    site_admin: Union[bool, Any] = Field(default=None)
-
-class IssueResponseSubIssuesSummary(BaseModel):
-    """Summary of sub-issues"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    total: Union[int, Any] = Field(default=None)
-    completed: Union[int, Any] = Field(default=None)
-    percent_completed: Union[int, Any] = Field(default=None)
+    title: str
+    body: str | None = Field(default=None)
+    labels: list[str] | None = Field(default=None)
+    assignees: list[str] | None = Field(default=None)
+    milestone: int | None = Field(default=None)
 
 class IssueResponseUser(BaseModel):
     """The user who created the issue"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    login: Union[str, Any] = Field(default=None)
-    id: Union[int, Any] = Field(default=None)
-    node_id: Union[str, Any] = Field(default=None)
-    avatar_url: Union[str, Any] = Field(default=None)
-    url: Union[str, Any] = Field(default=None)
-    html_url: Union[str, Any] = Field(default=None)
-    type_: Union[str, Any] = Field(default=None, alias="type")
-    site_admin: Union[bool, Any] = Field(default=None)
-
-class IssueResponseReactions(BaseModel):
-    """Reaction counts"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    url: Union[str, Any] = Field(default=None)
-    total_count: Union[int, Any] = Field(default=None)
-    field_1: Union[int, Any] = Field(default=None, alias="+1")
-    field_1: Union[int, Any] = Field(default=None, alias="-1")
-    laugh: Union[int, Any] = Field(default=None)
-    hooray: Union[int, Any] = Field(default=None)
-    confused: Union[int, Any] = Field(default=None)
-    heart: Union[int, Any] = Field(default=None)
-    rocket: Union[int, Any] = Field(default=None)
-    eyes: Union[int, Any] = Field(default=None)
+    login: str | None = Field(default=None)
+    id: int | None = Field(default=None)
+    node_id: str | None = Field(default=None)
+    avatar_url: str | None = Field(default=None)
+    url: str | None = Field(default=None)
+    html_url: str | None = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    site_admin: bool | None = Field(default=None)
 
 class IssueResponseLabelsItem(BaseModel):
     """Nested schema for IssueResponse.labels_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    node_id: Union[str, Any] = Field(default=None)
-    url: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    color: Union[str, Any] = Field(default=None)
-    default: Union[bool, Any] = Field(default=None)
-    description: Union[str | None, Any] = Field(default=None)
+    id: int | None = Field(default=None)
+    node_id: str | None = Field(default=None)
+    url: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    color: str | None = Field(default=None)
+    default: bool | None = Field(default=None)
+    description: str | None | None = Field(default=None)
+
+class IssueResponseIssueDependenciesSummary(BaseModel):
+    """Summary of issue dependencies"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    blocked_by: int | None = Field(default=None)
+    blocking: int | None = Field(default=None)
+    total_blocked_by: int | None = Field(default=None)
+    total_blocking: int | None = Field(default=None)
+
+class IssueResponseAssigneesItem(BaseModel):
+    """Nested schema for IssueResponse.assignees_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    login: str | None = Field(default=None)
+    id: int | None = Field(default=None)
+    node_id: str | None = Field(default=None)
+    avatar_url: str | None = Field(default=None)
+    url: str | None = Field(default=None)
+    html_url: str | None = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    site_admin: bool | None = Field(default=None)
+
+class IssueResponseReactions(BaseModel):
+    """Reaction counts"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    url: str | None = Field(default=None)
+    total_count: int | None = Field(default=None)
+    field_1: int | None = Field(default=None, alias="+1")
+    field_1: int | None = Field(default=None, alias="-1")
+    laugh: int | None = Field(default=None)
+    hooray: int | None = Field(default=None)
+    confused: int | None = Field(default=None)
+    heart: int | None = Field(default=None)
+    rocket: int | None = Field(default=None)
+    eyes: int | None = Field(default=None)
+
+class IssueResponseSubIssuesSummary(BaseModel):
+    """Summary of sub-issues"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    total: int | None = Field(default=None)
+    completed: int | None = Field(default=None)
+    percent_completed: int | None = Field(default=None)
+
+class IssueResponseAssignee(BaseModel):
+    """Primary user assigned to this issue"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    login: str | None = Field(default=None)
+    id: int | None = Field(default=None)
+    node_id: str | None = Field(default=None)
+    avatar_url: str | None = Field(default=None)
+    url: str | None = Field(default=None)
+    html_url: str | None = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    site_admin: bool | None = Field(default=None)
 
 class IssueResponse(BaseModel):
     """IssueResponse type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    node_id: Union[str, Any] = Field(default=None)
-    url: Union[str, Any] = Field(default=None)
-    repository_url: Union[str, Any] = Field(default=None)
-    labels_url: Union[str, Any] = Field(default=None)
-    comments_url: Union[str, Any] = Field(default=None)
-    events_url: Union[str, Any] = Field(default=None)
-    html_url: Union[str, Any] = Field(default=None)
-    number: Union[int, Any] = Field(default=None)
-    state: Union[str, Any] = Field(default=None)
-    state_reason: Union[str | None, Any] = Field(default=None)
-    title: Union[str, Any] = Field(default=None)
-    body: Union[str | None, Any] = Field(default=None)
-    user: Union[IssueResponseUser | None, Any] = Field(default=None)
-    labels: Union[list[IssueResponseLabelsItem], Any] = Field(default=None)
-    assignees: Union[list[IssueResponseAssigneesItem], Any] = Field(default=None)
-    milestone: Union[dict[str, Any] | None, Any] = Field(default=None)
-    locked: Union[bool, Any] = Field(default=None)
-    comments: Union[int, Any] = Field(default=None)
-    closed_at: Union[str | None, Any] = Field(default=None)
-    created_at: Union[str, Any] = Field(default=None)
-    updated_at: Union[str, Any] = Field(default=None)
-    author_association: Union[str, Any] = Field(default=None)
-    active_lock_reason: Union[str | None, Any] = Field(default=None)
-    closed_by: Union[dict[str, Any] | None, Any] = Field(default=None)
-    timeline_url: Union[str, Any] = Field(default=None)
-    performed_via_github_app: Union[dict[str, Any] | None, Any] = Field(default=None)
-    assignee: Union[IssueResponseAssignee | None, Any] = Field(default=None)
-    reactions: Union[IssueResponseReactions, Any] = Field(default=None)
-    sub_issues_summary: Union[IssueResponseSubIssuesSummary, Any] = Field(default=None)
-    type_: Union[dict[str, Any] | None, Any] = Field(default=None, alias="type")
-    pinned_comment: Union[dict[str, Any] | None, Any] = Field(default=None)
-    issue_field_values: Union[list[dict[str, Any]], Any] = Field(default=None)
-    issue_dependencies_summary: Union[IssueResponseIssueDependenciesSummary, Any] = Field(default=None)
+    id: int | None = Field(default=None)
+    node_id: str | None = Field(default=None)
+    url: str | None = Field(default=None)
+    repository_url: str | None = Field(default=None)
+    labels_url: str | None = Field(default=None)
+    comments_url: str | None = Field(default=None)
+    events_url: str | None = Field(default=None)
+    html_url: str | None = Field(default=None)
+    number: int | None = Field(default=None)
+    state: str | None = Field(default=None)
+    state_reason: str | None = Field(default=None)
+    title: str | None = Field(default=None)
+    body: str | None = Field(default=None)
+    user: IssueResponseUser | None = Field(default=None)
+    labels: list[IssueResponseLabelsItem] | None = Field(default=None)
+    assignees: list[IssueResponseAssigneesItem] | None = Field(default=None)
+    milestone: dict[str, Any] | None = Field(default=None)
+    locked: bool | None = Field(default=None)
+    comments: int | None = Field(default=None)
+    closed_at: str | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
+    author_association: str | None = Field(default=None)
+    active_lock_reason: str | None = Field(default=None)
+    closed_by: dict[str, Any] | None = Field(default=None)
+    timeline_url: str | None = Field(default=None)
+    performed_via_github_app: dict[str, Any] | None = Field(default=None)
+    assignee: IssueResponseAssignee | None = Field(default=None)
+    reactions: IssueResponseReactions | None = Field(default=None)
+    sub_issues_summary: IssueResponseSubIssuesSummary | None = Field(default=None)
+    type_: dict[str, Any] | None = Field(default=None, alias="type")
+    pinned_comment: dict[str, Any] | None = Field(default=None)
+    issue_field_values: list[dict[str, Any]] | None = Field(default=None)
+    issue_dependencies_summary: IssueResponseIssueDependenciesSummary | None = Field(default=None)
 
 class IssueUpdateParams(BaseModel):
     """IssueUpdateParams type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    title: Union[str, Any] = Field(default=None)
-    body: Union[str, Any] = Field(default=None)
-    state: Union[str, Any] = Field(default=None)
-    state_reason: Union[str | None, Any] = Field(default=None)
-    labels: Union[list[str], Any] = Field(default=None)
-    assignees: Union[list[str], Any] = Field(default=None)
-    milestone: Union[int | None, Any] = Field(default=None)
+    title: str | None = Field(default=None)
+    body: str | None = Field(default=None)
+    state: str | None = Field(default=None)
+    state_reason: str | None = Field(default=None)
+    labels: list[str] | None = Field(default=None)
+    assignees: list[str] | None = Field(default=None)
+    milestone: int | None = Field(default=None)
 
 class CommentCreateParams(BaseModel):
     """CommentCreateParams type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    body: Union[str, Any] = Field(default=None)
-
-class CommentResponseUser(BaseModel):
-    """The user who created the comment"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    login: Union[str, Any] = Field(default=None)
-    id: Union[int, Any] = Field(default=None)
-    node_id: Union[str, Any] = Field(default=None)
-    avatar_url: Union[str, Any] = Field(default=None)
-    url: Union[str, Any] = Field(default=None)
-    html_url: Union[str, Any] = Field(default=None)
-    type_: Union[str, Any] = Field(default=None, alias="type")
-    site_admin: Union[bool, Any] = Field(default=None)
+    body: str
 
 class CommentResponseReactions(BaseModel):
     """Reaction counts"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    url: Union[str, Any] = Field(default=None)
-    total_count: Union[int, Any] = Field(default=None)
-    field_1: Union[int, Any] = Field(default=None, alias="+1")
-    field_1: Union[int, Any] = Field(default=None, alias="-1")
-    laugh: Union[int, Any] = Field(default=None)
-    hooray: Union[int, Any] = Field(default=None)
-    confused: Union[int, Any] = Field(default=None)
-    heart: Union[int, Any] = Field(default=None)
-    rocket: Union[int, Any] = Field(default=None)
-    eyes: Union[int, Any] = Field(default=None)
+    url: str | None = Field(default=None)
+    total_count: int | None = Field(default=None)
+    field_1: int | None = Field(default=None, alias="+1")
+    field_1: int | None = Field(default=None, alias="-1")
+    laugh: int | None = Field(default=None)
+    hooray: int | None = Field(default=None)
+    confused: int | None = Field(default=None)
+    heart: int | None = Field(default=None)
+    rocket: int | None = Field(default=None)
+    eyes: int | None = Field(default=None)
+
+class CommentResponseUser(BaseModel):
+    """The user who created the comment"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    login: str | None = Field(default=None)
+    id: int | None = Field(default=None)
+    node_id: str | None = Field(default=None)
+    avatar_url: str | None = Field(default=None)
+    url: str | None = Field(default=None)
+    html_url: str | None = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    site_admin: bool | None = Field(default=None)
 
 class CommentResponse(BaseModel):
     """CommentResponse type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    node_id: Union[str, Any] = Field(default=None)
-    url: Union[str, Any] = Field(default=None)
-    html_url: Union[str, Any] = Field(default=None)
-    body: Union[str, Any] = Field(default=None)
-    user: Union[CommentResponseUser | None, Any] = Field(default=None)
-    created_at: Union[str, Any] = Field(default=None)
-    updated_at: Union[str, Any] = Field(default=None)
-    issue_url: Union[str, Any] = Field(default=None)
-    author_association: Union[str, Any] = Field(default=None)
-    performed_via_github_app: Union[dict[str, Any] | None, Any] = Field(default=None)
-    reactions: Union[CommentResponseReactions, Any] = Field(default=None)
+    id: int | None = Field(default=None)
+    node_id: str | None = Field(default=None)
+    url: str | None = Field(default=None)
+    html_url: str | None = Field(default=None)
+    body: str | None = Field(default=None)
+    user: CommentResponseUser | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
+    issue_url: str | None = Field(default=None)
+    author_association: str | None = Field(default=None)
+    performed_via_github_app: dict[str, Any] | None = Field(default=None)
+    reactions: CommentResponseReactions | None = Field(default=None)
 
 class PullRequestCreateParams(BaseModel):
     """PullRequestCreateParams type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    title: Union[str, Any] = Field(default=None)
-    head: Union[str, Any] = Field(default=None)
-    base: Union[str, Any] = Field(default=None)
-    body: Union[str, Any] = Field(default=None)
-    draft: Union[bool, Any] = Field(default=None)
-    maintainer_can_modify: Union[bool, Any] = Field(default=None)
+    title: str
+    head: str
+    base: str
+    body: str | None = Field(default=None)
+    draft: bool | None = Field(default=None)
+    maintainer_can_modify: bool | None = Field(default=None)
 
 class PullRequestResponseAssigneesItem(BaseModel):
     """Nested schema for PullRequestResponse.assignees_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    login: Union[str, Any] = Field(default=None)
-    id: Union[int, Any] = Field(default=None)
-    node_id: Union[str, Any] = Field(default=None)
-    avatar_url: Union[str, Any] = Field(default=None)
-    url: Union[str, Any] = Field(default=None)
-    html_url: Union[str, Any] = Field(default=None)
-    type_: Union[str, Any] = Field(default=None, alias="type")
-    site_admin: Union[bool, Any] = Field(default=None)
+    login: str | None = Field(default=None)
+    id: int | None = Field(default=None)
+    node_id: str | None = Field(default=None)
+    avatar_url: str | None = Field(default=None)
+    url: str | None = Field(default=None)
+    html_url: str | None = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    site_admin: bool | None = Field(default=None)
 
 class PullRequestResponseUser(BaseModel):
     """The user who created the pull request"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    login: Union[str, Any] = Field(default=None)
-    id: Union[int, Any] = Field(default=None)
-    node_id: Union[str, Any] = Field(default=None)
-    avatar_url: Union[str, Any] = Field(default=None)
-    url: Union[str, Any] = Field(default=None)
-    html_url: Union[str, Any] = Field(default=None)
-    type_: Union[str, Any] = Field(default=None, alias="type")
-    site_admin: Union[bool, Any] = Field(default=None)
-
-class PullRequestResponseBase(BaseModel):
-    """The base branch"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    label: Union[str, Any] = Field(default=None)
-    ref: Union[str, Any] = Field(default=None)
-    sha: Union[str, Any] = Field(default=None)
-
-class PullRequestResponseLabelsItem(BaseModel):
-    """Nested schema for PullRequestResponse.labels_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[int, Any] = Field(default=None)
-    node_id: Union[str, Any] = Field(default=None)
-    url: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    color: Union[str, Any] = Field(default=None)
-    default: Union[bool, Any] = Field(default=None)
-    description: Union[str | None, Any] = Field(default=None)
+    login: str | None = Field(default=None)
+    id: int | None = Field(default=None)
+    node_id: str | None = Field(default=None)
+    avatar_url: str | None = Field(default=None)
+    url: str | None = Field(default=None)
+    html_url: str | None = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    site_admin: bool | None = Field(default=None)
 
 class PullRequestResponseHead(BaseModel):
     """The head branch"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    label: Union[str, Any] = Field(default=None)
-    ref: Union[str, Any] = Field(default=None)
-    sha: Union[str, Any] = Field(default=None)
+    label: str | None = Field(default=None)
+    ref: str | None = Field(default=None)
+    sha: str | None = Field(default=None)
+
+class PullRequestResponseLabelsItem(BaseModel):
+    """Nested schema for PullRequestResponse.labels_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int | None = Field(default=None)
+    node_id: str | None = Field(default=None)
+    url: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    color: str | None = Field(default=None)
+    default: bool | None = Field(default=None)
+    description: str | None | None = Field(default=None)
+
+class PullRequestResponseBase(BaseModel):
+    """The base branch"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    label: str | None = Field(default=None)
+    ref: str | None = Field(default=None)
+    sha: str | None = Field(default=None)
 
 class PullRequestResponse(BaseModel):
     """PullRequestResponse type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    node_id: Union[str, Any] = Field(default=None)
-    url: Union[str, Any] = Field(default=None)
-    html_url: Union[str, Any] = Field(default=None)
-    diff_url: Union[str, Any] = Field(default=None)
-    patch_url: Union[str, Any] = Field(default=None)
-    number: Union[int, Any] = Field(default=None)
-    state: Union[str, Any] = Field(default=None)
-    locked: Union[bool, Any] = Field(default=None)
-    title: Union[str, Any] = Field(default=None)
-    body: Union[str | None, Any] = Field(default=None)
-    user: Union[PullRequestResponseUser | None, Any] = Field(default=None)
-    created_at: Union[str, Any] = Field(default=None)
-    updated_at: Union[str, Any] = Field(default=None)
-    closed_at: Union[str | None, Any] = Field(default=None)
-    merged_at: Union[str | None, Any] = Field(default=None)
-    merge_commit_sha: Union[str | None, Any] = Field(default=None)
-    draft: Union[bool, Any] = Field(default=None)
-    head: Union[PullRequestResponseHead, Any] = Field(default=None)
-    base: Union[PullRequestResponseBase, Any] = Field(default=None)
-    author_association: Union[str, Any] = Field(default=None)
-    labels: Union[list[PullRequestResponseLabelsItem], Any] = Field(default=None)
-    milestone: Union[dict[str, Any] | None, Any] = Field(default=None)
-    assignees: Union[list[PullRequestResponseAssigneesItem], Any] = Field(default=None)
-    requested_reviewers: Union[list[dict[str, Any]], Any] = Field(default=None)
-    comments: Union[int, Any] = Field(default=None)
-    review_comments: Union[int, Any] = Field(default=None)
-    commits: Union[int, Any] = Field(default=None)
-    additions: Union[int, Any] = Field(default=None)
-    deletions: Union[int, Any] = Field(default=None)
-    changed_files: Union[int, Any] = Field(default=None)
+    id: int | None = Field(default=None)
+    node_id: str | None = Field(default=None)
+    url: str | None = Field(default=None)
+    html_url: str | None = Field(default=None)
+    diff_url: str | None = Field(default=None)
+    patch_url: str | None = Field(default=None)
+    number: int | None = Field(default=None)
+    state: str | None = Field(default=None)
+    locked: bool | None = Field(default=None)
+    title: str | None = Field(default=None)
+    body: str | None = Field(default=None)
+    user: PullRequestResponseUser | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
+    closed_at: str | None = Field(default=None)
+    merged_at: str | None = Field(default=None)
+    merge_commit_sha: str | None = Field(default=None)
+    draft: bool | None = Field(default=None)
+    head: PullRequestResponseHead | None = Field(default=None)
+    base: PullRequestResponseBase | None = Field(default=None)
+    author_association: str | None = Field(default=None)
+    labels: list[PullRequestResponseLabelsItem] | None = Field(default=None)
+    milestone: dict[str, Any] | None = Field(default=None)
+    assignees: list[PullRequestResponseAssigneesItem] | None = Field(default=None)
+    requested_reviewers: list[dict[str, Any]] | None = Field(default=None)
+    comments: int | None = Field(default=None)
+    review_comments: int | None = Field(default=None)
+    commits: int | None = Field(default=None)
+    additions: int | None = Field(default=None)
+    deletions: int | None = Field(default=None)
+    changed_files: int | None = Field(default=None)
 
 # ===== METADATA TYPE DEFINITIONS (PYDANTIC) =====
 # Meta types for operations that extract metadata (e.g., pagination info)
@@ -345,188 +345,188 @@ class RepositoriesListResultMeta(BaseModel):
     """Metadata for repositories.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    has_next_page: Union[bool, Any] = Field(default=None)
-    end_cursor: Union[str | None, Any] = Field(default=None)
+    has_next_page: bool | None = Field(default=None)
+    end_cursor: str | None = Field(default=None)
 
 class RepositoriesApiSearchResultMeta(BaseModel):
     """Metadata for repositories.Action.API_SEARCH operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    has_next_page: Union[bool, Any] = Field(default=None)
-    end_cursor: Union[str | None, Any] = Field(default=None)
-    total_count: Union[int, Any] = Field(default=None)
+    has_next_page: bool | None = Field(default=None)
+    end_cursor: str | None = Field(default=None)
+    total_count: int | None = Field(default=None)
 
 class OrgRepositoriesListResultMeta(BaseModel):
     """Metadata for org_repositories.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    has_next_page: Union[bool, Any] = Field(default=None)
-    end_cursor: Union[str | None, Any] = Field(default=None)
+    has_next_page: bool | None = Field(default=None)
+    end_cursor: str | None = Field(default=None)
 
 class BranchesListResultMeta(BaseModel):
     """Metadata for branches.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    has_next_page: Union[bool, Any] = Field(default=None)
-    end_cursor: Union[str | None, Any] = Field(default=None)
+    has_next_page: bool | None = Field(default=None)
+    end_cursor: str | None = Field(default=None)
 
 class CommitsListResultMeta(BaseModel):
     """Metadata for commits.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    has_next_page: Union[bool, Any] = Field(default=None)
-    end_cursor: Union[str | None, Any] = Field(default=None)
+    has_next_page: bool | None = Field(default=None)
+    end_cursor: str | None = Field(default=None)
 
 class ReleasesListResultMeta(BaseModel):
     """Metadata for releases.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    has_next_page: Union[bool, Any] = Field(default=None)
-    end_cursor: Union[str | None, Any] = Field(default=None)
+    has_next_page: bool | None = Field(default=None)
+    end_cursor: str | None = Field(default=None)
 
 class IssuesListResultMeta(BaseModel):
     """Metadata for issues.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    has_next_page: Union[bool, Any] = Field(default=None)
-    end_cursor: Union[str | None, Any] = Field(default=None)
+    has_next_page: bool | None = Field(default=None)
+    end_cursor: str | None = Field(default=None)
 
 class IssuesApiSearchResultMeta(BaseModel):
     """Metadata for issues.Action.API_SEARCH operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    has_next_page: Union[bool, Any] = Field(default=None)
-    end_cursor: Union[str | None, Any] = Field(default=None)
-    total_count: Union[int, Any] = Field(default=None)
+    has_next_page: bool | None = Field(default=None)
+    end_cursor: str | None = Field(default=None)
+    total_count: int | None = Field(default=None)
 
 class PullRequestsListResultMeta(BaseModel):
     """Metadata for pull_requests.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    has_next_page: Union[bool, Any] = Field(default=None)
-    end_cursor: Union[str | None, Any] = Field(default=None)
+    has_next_page: bool | None = Field(default=None)
+    end_cursor: str | None = Field(default=None)
 
 class PullRequestsApiSearchResultMeta(BaseModel):
     """Metadata for pull_requests.Action.API_SEARCH operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    has_next_page: Union[bool, Any] = Field(default=None)
-    end_cursor: Union[str | None, Any] = Field(default=None)
-    total_count: Union[int, Any] = Field(default=None)
+    has_next_page: bool | None = Field(default=None)
+    end_cursor: str | None = Field(default=None)
+    total_count: int | None = Field(default=None)
 
 class ReviewsListResultMeta(BaseModel):
     """Metadata for reviews.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    has_next_page: Union[bool, Any] = Field(default=None)
-    end_cursor: Union[str | None, Any] = Field(default=None)
+    has_next_page: bool | None = Field(default=None)
+    end_cursor: str | None = Field(default=None)
 
 class CommentsListResultMeta(BaseModel):
     """Metadata for comments.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    has_next_page: Union[bool, Any] = Field(default=None)
-    end_cursor: Union[str | None, Any] = Field(default=None)
+    has_next_page: bool | None = Field(default=None)
+    end_cursor: str | None = Field(default=None)
 
 class PrCommentsListResultMeta(BaseModel):
     """Metadata for pr_comments.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    has_next_page: Union[bool, Any] = Field(default=None)
-    end_cursor: Union[str | None, Any] = Field(default=None)
+    has_next_page: bool | None = Field(default=None)
+    end_cursor: str | None = Field(default=None)
 
 class LabelsListResultMeta(BaseModel):
     """Metadata for labels.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    has_next_page: Union[bool, Any] = Field(default=None)
-    end_cursor: Union[str | None, Any] = Field(default=None)
+    has_next_page: bool | None = Field(default=None)
+    end_cursor: str | None = Field(default=None)
 
 class MilestonesListResultMeta(BaseModel):
     """Metadata for milestones.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    has_next_page: Union[bool, Any] = Field(default=None)
-    end_cursor: Union[str | None, Any] = Field(default=None)
+    has_next_page: bool | None = Field(default=None)
+    end_cursor: str | None = Field(default=None)
 
 class OrganizationsListResultMeta(BaseModel):
     """Metadata for organizations.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    has_next_page: Union[bool, Any] = Field(default=None)
-    end_cursor: Union[str | None, Any] = Field(default=None)
+    has_next_page: bool | None = Field(default=None)
+    end_cursor: str | None = Field(default=None)
 
 class UsersListResultMeta(BaseModel):
     """Metadata for users.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    has_next_page: Union[bool, Any] = Field(default=None)
-    end_cursor: Union[str | None, Any] = Field(default=None)
+    has_next_page: bool | None = Field(default=None)
+    end_cursor: str | None = Field(default=None)
 
 class UsersApiSearchResultMeta(BaseModel):
     """Metadata for users.Action.API_SEARCH operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    has_next_page: Union[bool, Any] = Field(default=None)
-    end_cursor: Union[str | None, Any] = Field(default=None)
-    total_count: Union[int, Any] = Field(default=None)
+    has_next_page: bool | None = Field(default=None)
+    end_cursor: str | None = Field(default=None)
+    total_count: int | None = Field(default=None)
 
 class TeamsListResultMeta(BaseModel):
     """Metadata for teams.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    has_next_page: Union[bool, Any] = Field(default=None)
-    end_cursor: Union[str | None, Any] = Field(default=None)
+    has_next_page: bool | None = Field(default=None)
+    end_cursor: str | None = Field(default=None)
 
 class TagsListResultMeta(BaseModel):
     """Metadata for tags.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    has_next_page: Union[bool, Any] = Field(default=None)
-    end_cursor: Union[str | None, Any] = Field(default=None)
+    has_next_page: bool | None = Field(default=None)
+    end_cursor: str | None = Field(default=None)
 
 class StargazersListResultMeta(BaseModel):
     """Metadata for stargazers.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    has_next_page: Union[bool, Any] = Field(default=None)
-    end_cursor: Union[str, Any] = Field(default=None)
+    has_next_page: bool | None = Field(default=None)
+    end_cursor: str | None = Field(default=None)
 
 class ViewerRepositoriesListResultMeta(BaseModel):
     """Metadata for viewer_repositories.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    has_next_page: Union[bool, Any] = Field(default=None)
-    end_cursor: Union[str | None, Any] = Field(default=None)
+    has_next_page: bool | None = Field(default=None)
+    end_cursor: str | None = Field(default=None)
 
 class ProjectsListResultMeta(BaseModel):
     """Metadata for projects.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    has_next_page: Union[bool, Any] = Field(default=None)
-    end_cursor: Union[str | None, Any] = Field(default=None)
+    has_next_page: bool | None = Field(default=None)
+    end_cursor: str | None = Field(default=None)
 
 class ProjectItemsListResultMeta(BaseModel):
     """Metadata for project_items.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    has_next_page: Union[bool, Any] = Field(default=None)
-    end_cursor: Union[str | None, Any] = Field(default=None)
+    has_next_page: bool | None = Field(default=None)
+    end_cursor: str | None = Field(default=None)
 
 class DiscussionsListResultMeta(BaseModel):
     """Metadata for discussions.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    has_next_page: Union[bool, Any] = Field(default=None)
-    end_cursor: Union[str | None, Any] = Field(default=None)
+    has_next_page: bool | None = Field(default=None)
+    end_cursor: str | None = Field(default=None)
 
 class DiscussionsApiSearchResultMeta(BaseModel):
     """Metadata for discussions.Action.API_SEARCH operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    has_next_page: Union[bool, Any] = Field(default=None)
-    end_cursor: Union[str | None, Any] = Field(default=None)
-    total_count: Union[int, Any] = Field(default=None)
+    has_next_page: bool | None = Field(default=None)
+    end_cursor: str | None = Field(default=None)
+    total_count: int | None = Field(default=None)
 
 # ===== CHECK RESULT MODEL =====
 

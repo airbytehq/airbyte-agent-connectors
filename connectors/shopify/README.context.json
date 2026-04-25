@@ -128,7 +128,7 @@
       {
         "name": "next_page_url",
         "python_name": "next_page_url",
-        "type": "str | None",
+        "type": "str",
         "schema": {
           "type": "string",
           "nullable": true
@@ -233,7 +233,7 @@
           {
             "name": "next_page_url",
             "python_name": "next_page_url",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": "string",
               "nullable": true
@@ -424,7 +424,7 @@
           {
             "name": "next_page_url",
             "python_name": "next_page_url",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": "string",
               "nullable": true
@@ -606,7 +606,7 @@
           {
             "name": "next_page_url",
             "python_name": "next_page_url",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": "string",
               "nullable": true
@@ -701,7 +701,7 @@
           {
             "name": "next_page_url",
             "python_name": "next_page_url",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": "string",
               "nullable": true
@@ -782,7 +782,7 @@
           {
             "name": "next_page_url",
             "python_name": "next_page_url",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": "string",
               "nullable": true
@@ -942,7 +942,7 @@
           {
             "name": "next_page_url",
             "python_name": "next_page_url",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": "string",
               "nullable": true
@@ -973,7 +973,7 @@
           {
             "name": "next_page_url",
             "python_name": "next_page_url",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": "string",
               "nullable": true
@@ -1057,7 +1057,7 @@
           {
             "name": "next_page_url",
             "python_name": "next_page_url",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": "string",
               "nullable": true
@@ -1114,7 +1114,7 @@
           {
             "name": "next_page_url",
             "python_name": "next_page_url",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": "string",
               "nullable": true
@@ -1266,7 +1266,7 @@
           {
             "name": "next_page_url",
             "python_name": "next_page_url",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": "string",
               "nullable": true
@@ -1350,7 +1350,7 @@
           {
             "name": "next_page_url",
             "python_name": "next_page_url",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": "string",
               "nullable": true
@@ -1491,7 +1491,7 @@
           {
             "name": "next_page_url",
             "python_name": "next_page_url",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": "string",
               "nullable": true
@@ -1622,7 +1622,7 @@
           {
             "name": "next_page_url",
             "python_name": "next_page_url",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": "string",
               "nullable": true
@@ -1729,7 +1729,7 @@
           {
             "name": "next_page_url",
             "python_name": "next_page_url",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": "string",
               "nullable": true
@@ -1854,7 +1854,7 @@
           {
             "name": "next_page_url",
             "python_name": "next_page_url",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": "string",
               "nullable": true
@@ -1997,7 +1997,7 @@
           {
             "name": "next_page_url",
             "python_name": "next_page_url",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": "string",
               "nullable": true
@@ -2091,7 +2091,7 @@
           {
             "name": "next_page_url",
             "python_name": "next_page_url",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": "string",
               "nullable": true
@@ -2182,7 +2182,7 @@
           {
             "name": "next_page_url",
             "python_name": "next_page_url",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": "string",
               "nullable": true
@@ -2316,7 +2316,7 @@
           {
             "name": "next_page_url",
             "python_name": "next_page_url",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": "string",
               "nullable": true
@@ -2359,7 +2359,7 @@
           {
             "name": "next_page_url",
             "python_name": "next_page_url",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": "string",
               "nullable": true
@@ -2477,7 +2477,7 @@
           {
             "name": "next_page_url",
             "python_name": "next_page_url",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": "string",
               "nullable": true
@@ -2594,7 +2594,7 @@
           {
             "name": "next_page_url",
             "python_name": "next_page_url",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": "string",
               "nullable": true
@@ -2683,7 +2683,7 @@
           {
             "name": "next_page_url",
             "python_name": "next_page_url",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": "string",
               "nullable": true
@@ -2772,7 +2772,7 @@
           {
             "name": "next_page_url",
             "python_name": "next_page_url",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": "string",
               "nullable": true
@@ -2861,7 +2861,7 @@
           {
             "name": "next_page_url",
             "python_name": "next_page_url",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": "string",
               "nullable": true
@@ -2950,7 +2950,7 @@
           {
             "name": "next_page_url",
             "python_name": "next_page_url",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": "string",
               "nullable": true
@@ -3039,7 +3039,7 @@
           {
             "name": "next_page_url",
             "python_name": "next_page_url",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": "string",
               "nullable": true
@@ -3128,7 +3128,7 @@
           {
             "name": "next_page_url",
             "python_name": "next_page_url",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": "string",
               "nullable": true
@@ -3227,7 +3227,7 @@
           {
             "name": "next_page_url",
             "python_name": "next_page_url",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": "string",
               "nullable": true
@@ -3283,7 +3283,7 @@
           {
             "name": "next_page_url",
             "python_name": "next_page_url",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": "string",
               "nullable": true
@@ -3363,7 +3363,7 @@
           {
             "name": "next_page_url",
             "python_name": "next_page_url",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": "string",
               "nullable": true

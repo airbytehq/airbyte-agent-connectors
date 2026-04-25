@@ -1171,12 +1171,9 @@ components:
         resourceNames:
           type: array
           items:
-            $ref: "#/components/schemas/AccessibleCustomerResourceName"
+            type: string
+            description: Resource name of an accessible customer (e.g., customers/1234567890)
           description: Resource names of accessible customers
-
-    AccessibleCustomerResourceName:
-      type: string
-      description: Resource name of an accessible customer (e.g., customers/1234567890)
 
     AccountSearchResponse:
       type: object

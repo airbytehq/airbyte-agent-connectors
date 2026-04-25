@@ -152,7 +152,7 @@
       {
         "name": "nextPageToken",
         "python_name": "next_page_token",
-        "type": "str | None",
+        "type": "str",
         "schema": {
           "type": [
             "string",
@@ -164,7 +164,7 @@
       {
         "name": "isLast",
         "python_name": "is_last",
-        "type": "bool | None",
+        "type": "bool",
         "schema": {
           "type": [
             "boolean",
@@ -298,7 +298,7 @@
           {
             "name": "nextPageToken",
             "python_name": "next_page_token",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "string",
@@ -310,7 +310,7 @@
           {
             "name": "isLast",
             "python_name": "is_last",
-            "type": "bool | None",
+            "type": "bool",
             "schema": {
               "type": [
                 "boolean",
@@ -1056,7 +1056,7 @@
           {
             "name": "nextPage",
             "python_name": "next_page",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "string",

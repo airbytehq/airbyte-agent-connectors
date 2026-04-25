@@ -8,7 +8,7 @@ and response envelope types.
 from __future__ import annotations
 
 from pydantic import BaseModel, ConfigDict, Field
-from typing import TypeVar, Generic, Union, Any
+from typing import TypeVar, Generic, Any
 
 # Authentication configuration - multiple options available
 
@@ -54,687 +54,687 @@ class PaginationLinks(BaseModel):
     """Pagination links for navigating result pages"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    first: Union[str | None, Any] = Field(default=None)
-    previous: Union[str | None, Any] = Field(default=None)
-    next: Union[str | None, Any] = Field(default=None)
-    last: Union[str | None, Any] = Field(default=None)
+    first: str | None = Field(default=None)
+    previous: str | None = Field(default=None)
+    next: str | None = Field(default=None)
+    last: str | None = Field(default=None)
 
 class User(BaseModel):
     """A Harvest user"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    first_name: Union[str | None, Any] = Field(default=None)
-    last_name: Union[str | None, Any] = Field(default=None)
-    email: Union[str | None, Any] = Field(default=None)
-    telephone: Union[str | None, Any] = Field(default=None)
-    timezone: Union[str | None, Any] = Field(default=None)
-    has_access_to_all_future_projects: Union[bool | None, Any] = Field(default=None)
-    is_contractor: Union[bool | None, Any] = Field(default=None)
-    is_active: Union[bool | None, Any] = Field(default=None)
-    weekly_capacity: Union[int | None, Any] = Field(default=None)
-    default_hourly_rate: Union[float | None, Any] = Field(default=None)
-    cost_rate: Union[float | None, Any] = Field(default=None)
-    roles: Union[list[str] | None, Any] = Field(default=None)
-    access_roles: Union[list[str] | None, Any] = Field(default=None)
-    avatar_url: Union[str | None, Any] = Field(default=None)
-    created_at: Union[str | None, Any] = Field(default=None)
-    updated_at: Union[str | None, Any] = Field(default=None)
-    employee_id: Union[str | None, Any] = Field(default=None)
-    calendar_integration_enabled: Union[bool | None, Any] = Field(default=None)
-    calendar_integration_source: Union[str | None, Any] = Field(default=None)
-    can_create_projects: Union[bool | None, Any] = Field(default=None)
-    permissions_claims: Union[list[str] | None, Any] = Field(default=None)
+    id: int
+    first_name: str | None = Field(default=None)
+    last_name: str | None = Field(default=None)
+    email: str | None = Field(default=None)
+    telephone: str | None = Field(default=None)
+    timezone: str | None = Field(default=None)
+    has_access_to_all_future_projects: bool | None = Field(default=None)
+    is_contractor: bool | None = Field(default=None)
+    is_active: bool | None = Field(default=None)
+    weekly_capacity: int | None = Field(default=None)
+    default_hourly_rate: float | None = Field(default=None)
+    cost_rate: float | None = Field(default=None)
+    roles: list[str] | None = Field(default=None)
+    access_roles: list[str] | None = Field(default=None)
+    avatar_url: str | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
+    employee_id: str | None = Field(default=None)
+    calendar_integration_enabled: bool | None = Field(default=None)
+    calendar_integration_source: str | None = Field(default=None)
+    can_create_projects: bool | None = Field(default=None)
+    permissions_claims: list[str] | None = Field(default=None)
 
 class UsersList(BaseModel):
     """Paginated list of users"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    users: Union[list[User], Any] = Field(default=None)
-    per_page: Union[int, Any] = Field(default=None)
-    total_pages: Union[int, Any] = Field(default=None)
-    total_entries: Union[int, Any] = Field(default=None)
-    page: Union[int, Any] = Field(default=None)
-    next_page: Union[int | None, Any] = Field(default=None)
-    previous_page: Union[int | None, Any] = Field(default=None)
-    links: Union[PaginationLinks, Any] = Field(default=None)
+    users: list[User] | None = Field(default=None)
+    per_page: int | None = Field(default=None)
+    total_pages: int | None = Field(default=None)
+    total_entries: int | None = Field(default=None)
+    page: int | None = Field(default=None)
+    next_page: int | None = Field(default=None)
+    previous_page: int | None = Field(default=None)
+    links: PaginationLinks | None = Field(default=None)
 
 class Client(BaseModel):
     """A Harvest client"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    is_active: Union[bool | None, Any] = Field(default=None)
-    address: Union[str | None, Any] = Field(default=None)
-    statement_key: Union[str | None, Any] = Field(default=None)
-    currency: Union[str | None, Any] = Field(default=None)
-    created_at: Union[str | None, Any] = Field(default=None)
-    updated_at: Union[str | None, Any] = Field(default=None)
+    id: int
+    name: str | None = Field(default=None)
+    is_active: bool | None = Field(default=None)
+    address: str | None = Field(default=None)
+    statement_key: str | None = Field(default=None)
+    currency: str | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
 
 class ClientsList(BaseModel):
     """Paginated list of clients"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    clients: Union[list[Client], Any] = Field(default=None)
-    per_page: Union[int, Any] = Field(default=None)
-    total_pages: Union[int, Any] = Field(default=None)
-    total_entries: Union[int, Any] = Field(default=None)
-    page: Union[int, Any] = Field(default=None)
-    next_page: Union[int | None, Any] = Field(default=None)
-    previous_page: Union[int | None, Any] = Field(default=None)
-    links: Union[PaginationLinks, Any] = Field(default=None)
+    clients: list[Client] | None = Field(default=None)
+    per_page: int | None = Field(default=None)
+    total_pages: int | None = Field(default=None)
+    total_entries: int | None = Field(default=None)
+    page: int | None = Field(default=None)
+    next_page: int | None = Field(default=None)
+    previous_page: int | None = Field(default=None)
+    links: PaginationLinks | None = Field(default=None)
 
 class ContactClient(BaseModel):
     """The client associated with this contact"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int | None, Any] = Field(default=None, description="Client ID")
+    id: int | None | None = Field(default=None, description="Client ID")
     """Client ID"""
-    name: Union[str | None, Any] = Field(default=None, description="Client name")
+    name: str | None | None = Field(default=None, description="Client name")
     """Client name"""
 
 class Contact(BaseModel):
     """A Harvest contact associated with a client"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    title: Union[str | None, Any] = Field(default=None)
-    first_name: Union[str | None, Any] = Field(default=None)
-    last_name: Union[str | None, Any] = Field(default=None)
-    email: Union[str | None, Any] = Field(default=None)
-    phone_office: Union[str | None, Any] = Field(default=None)
-    phone_mobile: Union[str | None, Any] = Field(default=None)
-    fax: Union[str | None, Any] = Field(default=None)
-    created_at: Union[str | None, Any] = Field(default=None)
-    updated_at: Union[str | None, Any] = Field(default=None)
-    client: Union[ContactClient | None, Any] = Field(default=None)
+    id: int
+    title: str | None = Field(default=None)
+    first_name: str | None = Field(default=None)
+    last_name: str | None = Field(default=None)
+    email: str | None = Field(default=None)
+    phone_office: str | None = Field(default=None)
+    phone_mobile: str | None = Field(default=None)
+    fax: str | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
+    client: ContactClient | None = Field(default=None)
 
 class ContactsList(BaseModel):
     """Paginated list of contacts"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    contacts: Union[list[Contact], Any] = Field(default=None)
-    per_page: Union[int, Any] = Field(default=None)
-    total_pages: Union[int, Any] = Field(default=None)
-    total_entries: Union[int, Any] = Field(default=None)
-    page: Union[int, Any] = Field(default=None)
-    next_page: Union[int | None, Any] = Field(default=None)
-    previous_page: Union[int | None, Any] = Field(default=None)
-    links: Union[PaginationLinks, Any] = Field(default=None)
+    contacts: list[Contact] | None = Field(default=None)
+    per_page: int | None = Field(default=None)
+    total_pages: int | None = Field(default=None)
+    total_entries: int | None = Field(default=None)
+    page: int | None = Field(default=None)
+    next_page: int | None = Field(default=None)
+    previous_page: int | None = Field(default=None)
+    links: PaginationLinks | None = Field(default=None)
 
 class Company(BaseModel):
     """The Harvest company/account information"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    base_uri: Union[str | None, Any] = Field(default=None)
-    full_domain: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    is_active: Union[bool | None, Any] = Field(default=None)
-    week_start_day: Union[str | None, Any] = Field(default=None)
-    wants_timestamp_timers: Union[bool | None, Any] = Field(default=None)
-    time_format: Union[str | None, Any] = Field(default=None)
-    date_format: Union[str | None, Any] = Field(default=None)
-    plan_type: Union[str | None, Any] = Field(default=None)
-    clock: Union[str | None, Any] = Field(default=None)
-    currency_code_display: Union[str | None, Any] = Field(default=None)
-    currency_symbol_display: Union[str | None, Any] = Field(default=None)
-    decimal_symbol: Union[str | None, Any] = Field(default=None)
-    thousands_separator: Union[str | None, Any] = Field(default=None)
-    color_scheme: Union[str | None, Any] = Field(default=None)
-    weekly_capacity: Union[int | None, Any] = Field(default=None)
-    expense_feature: Union[bool | None, Any] = Field(default=None)
-    invoice_feature: Union[bool | None, Any] = Field(default=None)
-    estimate_feature: Union[bool | None, Any] = Field(default=None)
-    approval_feature: Union[bool | None, Any] = Field(default=None)
-    team_feature: Union[bool | None, Any] = Field(default=None)
-    currency: Union[str | None, Any] = Field(default=None)
-    saml_sign_in_required: Union[bool | None, Any] = Field(default=None)
-    day_entry_notes_required: Union[bool | None, Any] = Field(default=None)
+    base_uri: str | None = Field(default=None)
+    full_domain: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    is_active: bool | None = Field(default=None)
+    week_start_day: str | None = Field(default=None)
+    wants_timestamp_timers: bool | None = Field(default=None)
+    time_format: str | None = Field(default=None)
+    date_format: str | None = Field(default=None)
+    plan_type: str | None = Field(default=None)
+    clock: str | None = Field(default=None)
+    currency_code_display: str | None = Field(default=None)
+    currency_symbol_display: str | None = Field(default=None)
+    decimal_symbol: str | None = Field(default=None)
+    thousands_separator: str | None = Field(default=None)
+    color_scheme: str | None = Field(default=None)
+    weekly_capacity: int | None = Field(default=None)
+    expense_feature: bool | None = Field(default=None)
+    invoice_feature: bool | None = Field(default=None)
+    estimate_feature: bool | None = Field(default=None)
+    approval_feature: bool | None = Field(default=None)
+    team_feature: bool | None = Field(default=None)
+    currency: str | None = Field(default=None)
+    saml_sign_in_required: bool | None = Field(default=None)
+    day_entry_notes_required: bool | None = Field(default=None)
 
 class ProjectClient(BaseModel):
     """The client associated with the project"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int | None, Any] = Field(default=None, description="Client ID")
+    id: int | None | None = Field(default=None, description="Client ID")
     """Client ID"""
-    name: Union[str | None, Any] = Field(default=None, description="Client name")
+    name: str | None | None = Field(default=None, description="Client name")
     """Client name"""
-    currency: Union[str | None, Any] = Field(default=None, description="Client currency")
+    currency: str | None | None = Field(default=None, description="Client currency")
     """Client currency"""
 
 class Project(BaseModel):
     """A Harvest project"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    code: Union[str | None, Any] = Field(default=None)
-    is_active: Union[bool | None, Any] = Field(default=None)
-    is_billable: Union[bool | None, Any] = Field(default=None)
-    is_fixed_fee: Union[bool | None, Any] = Field(default=None)
-    bill_by: Union[str | None, Any] = Field(default=None)
-    hourly_rate: Union[float | None, Any] = Field(default=None)
-    budget_by: Union[str | None, Any] = Field(default=None)
-    budget_is_monthly: Union[bool | None, Any] = Field(default=None)
-    budget: Union[float | None, Any] = Field(default=None)
-    cost_budget: Union[float | None, Any] = Field(default=None)
-    cost_budget_include_expenses: Union[bool | None, Any] = Field(default=None)
-    notify_when_over_budget: Union[bool | None, Any] = Field(default=None)
-    over_budget_notification_percentage: Union[float | None, Any] = Field(default=None)
-    over_budget_notification_date: Union[str | None, Any] = Field(default=None)
-    show_budget_to_all: Union[bool | None, Any] = Field(default=None)
-    fee: Union[float | None, Any] = Field(default=None)
-    notes: Union[str | None, Any] = Field(default=None)
-    starts_on: Union[str | None, Any] = Field(default=None)
-    ends_on: Union[str | None, Any] = Field(default=None)
-    created_at: Union[str | None, Any] = Field(default=None)
-    updated_at: Union[str | None, Any] = Field(default=None)
-    client: Union[ProjectClient | None, Any] = Field(default=None)
+    id: int
+    name: str | None = Field(default=None)
+    code: str | None = Field(default=None)
+    is_active: bool | None = Field(default=None)
+    is_billable: bool | None = Field(default=None)
+    is_fixed_fee: bool | None = Field(default=None)
+    bill_by: str | None = Field(default=None)
+    hourly_rate: float | None = Field(default=None)
+    budget_by: str | None = Field(default=None)
+    budget_is_monthly: bool | None = Field(default=None)
+    budget: float | None = Field(default=None)
+    cost_budget: float | None = Field(default=None)
+    cost_budget_include_expenses: bool | None = Field(default=None)
+    notify_when_over_budget: bool | None = Field(default=None)
+    over_budget_notification_percentage: float | None = Field(default=None)
+    over_budget_notification_date: str | None = Field(default=None)
+    show_budget_to_all: bool | None = Field(default=None)
+    fee: float | None = Field(default=None)
+    notes: str | None = Field(default=None)
+    starts_on: str | None = Field(default=None)
+    ends_on: str | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
+    client: ProjectClient | None = Field(default=None)
 
 class ProjectsList(BaseModel):
     """Paginated list of projects"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    projects: Union[list[Project], Any] = Field(default=None)
-    per_page: Union[int, Any] = Field(default=None)
-    total_pages: Union[int, Any] = Field(default=None)
-    total_entries: Union[int, Any] = Field(default=None)
-    page: Union[int, Any] = Field(default=None)
-    next_page: Union[int | None, Any] = Field(default=None)
-    previous_page: Union[int | None, Any] = Field(default=None)
-    links: Union[PaginationLinks, Any] = Field(default=None)
+    projects: list[Project] | None = Field(default=None)
+    per_page: int | None = Field(default=None)
+    total_pages: int | None = Field(default=None)
+    total_entries: int | None = Field(default=None)
+    page: int | None = Field(default=None)
+    next_page: int | None = Field(default=None)
+    previous_page: int | None = Field(default=None)
+    links: PaginationLinks | None = Field(default=None)
 
 class Task(BaseModel):
     """A Harvest task"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    billable_by_default: Union[bool | None, Any] = Field(default=None)
-    default_hourly_rate: Union[float | None, Any] = Field(default=None)
-    is_default: Union[bool | None, Any] = Field(default=None)
-    is_active: Union[bool | None, Any] = Field(default=None)
-    created_at: Union[str | None, Any] = Field(default=None)
-    updated_at: Union[str | None, Any] = Field(default=None)
+    id: int
+    name: str | None = Field(default=None)
+    billable_by_default: bool | None = Field(default=None)
+    default_hourly_rate: float | None = Field(default=None)
+    is_default: bool | None = Field(default=None)
+    is_active: bool | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
 
 class TasksList(BaseModel):
     """Paginated list of tasks"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    tasks: Union[list[Task], Any] = Field(default=None)
-    per_page: Union[int, Any] = Field(default=None)
-    total_pages: Union[int, Any] = Field(default=None)
-    total_entries: Union[int, Any] = Field(default=None)
-    page: Union[int, Any] = Field(default=None)
-    next_page: Union[int | None, Any] = Field(default=None)
-    previous_page: Union[int | None, Any] = Field(default=None)
-    links: Union[PaginationLinks, Any] = Field(default=None)
+    tasks: list[Task] | None = Field(default=None)
+    per_page: int | None = Field(default=None)
+    total_pages: int | None = Field(default=None)
+    total_entries: int | None = Field(default=None)
+    page: int | None = Field(default=None)
+    next_page: int | None = Field(default=None)
+    previous_page: int | None = Field(default=None)
+    links: PaginationLinks | None = Field(default=None)
 
 class TimeEntryInvoice(BaseModel):
     """The invoice associated with the time entry"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int | None, Any] = Field(default=None, description="Invoice ID")
+    id: int | None | None = Field(default=None, description="Invoice ID")
     """Invoice ID"""
-    number: Union[str | None, Any] = Field(default=None, description="Invoice number")
+    number: str | None | None = Field(default=None, description="Invoice number")
     """Invoice number"""
-
-class TimeEntryUser(BaseModel):
-    """The user associated with the time entry"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[int | None, Any] = Field(default=None, description="User ID")
-    """User ID"""
-    name: Union[str | None, Any] = Field(default=None, description="User name")
-    """User name"""
-
-class TimeEntryProject(BaseModel):
-    """The project associated with the time entry"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[int | None, Any] = Field(default=None, description="Project ID")
-    """Project ID"""
-    name: Union[str | None, Any] = Field(default=None, description="Project name")
-    """Project name"""
-
-class TimeEntryTask(BaseModel):
-    """The task associated with the time entry"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[int | None, Any] = Field(default=None, description="Task ID")
-    """Task ID"""
-    name: Union[str | None, Any] = Field(default=None, description="Task name")
-    """Task name"""
 
 class TimeEntryClient(BaseModel):
     """The client associated with the time entry"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int | None, Any] = Field(default=None, description="Client ID")
+    id: int | None | None = Field(default=None, description="Client ID")
     """Client ID"""
-    name: Union[str | None, Any] = Field(default=None, description="Client name")
+    name: str | None | None = Field(default=None, description="Client name")
     """Client name"""
+
+class TimeEntryProject(BaseModel):
+    """The project associated with the time entry"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int | None | None = Field(default=None, description="Project ID")
+    """Project ID"""
+    name: str | None | None = Field(default=None, description="Project name")
+    """Project name"""
+
+class TimeEntryUser(BaseModel):
+    """The user associated with the time entry"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int | None | None = Field(default=None, description="User ID")
+    """User ID"""
+    name: str | None | None = Field(default=None, description="User name")
+    """User name"""
+
+class TimeEntryTask(BaseModel):
+    """The task associated with the time entry"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int | None | None = Field(default=None, description="Task ID")
+    """Task ID"""
+    name: str | None | None = Field(default=None, description="Task name")
+    """Task name"""
 
 class TimeEntry(BaseModel):
     """A Harvest time entry"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    spent_date: Union[str | None, Any] = Field(default=None)
-    hours: Union[float | None, Any] = Field(default=None)
-    hours_without_timer: Union[float | None, Any] = Field(default=None)
-    rounded_hours: Union[float | None, Any] = Field(default=None)
-    notes: Union[str | None, Any] = Field(default=None)
-    is_locked: Union[bool | None, Any] = Field(default=None)
-    locked_reason: Union[str | None, Any] = Field(default=None)
-    is_closed: Union[bool | None, Any] = Field(default=None)
-    is_billed: Union[bool | None, Any] = Field(default=None)
-    timer_started_at: Union[str | None, Any] = Field(default=None)
-    started_time: Union[str | None, Any] = Field(default=None)
-    ended_time: Union[str | None, Any] = Field(default=None)
-    is_running: Union[bool | None, Any] = Field(default=None)
-    billable: Union[bool | None, Any] = Field(default=None)
-    budgeted: Union[bool | None, Any] = Field(default=None)
-    billable_rate: Union[float | None, Any] = Field(default=None)
-    cost_rate: Union[float | None, Any] = Field(default=None)
-    created_at: Union[str | None, Any] = Field(default=None)
-    updated_at: Union[str | None, Any] = Field(default=None)
-    approval_status: Union[str | None, Any] = Field(default=None)
-    is_explicitly_locked: Union[bool | None, Any] = Field(default=None)
-    user: Union[TimeEntryUser | None, Any] = Field(default=None)
-    client: Union[TimeEntryClient | None, Any] = Field(default=None)
-    project: Union[TimeEntryProject | None, Any] = Field(default=None)
-    task: Union[TimeEntryTask | None, Any] = Field(default=None)
-    user_assignment: Union[dict[str, Any] | None, Any] = Field(default=None)
-    task_assignment: Union[dict[str, Any] | None, Any] = Field(default=None)
-    external_reference: Union[dict[str, Any] | None, Any] = Field(default=None)
-    invoice: Union[TimeEntryInvoice | None, Any] = Field(default=None)
+    id: int
+    spent_date: str | None = Field(default=None)
+    hours: float | None = Field(default=None)
+    hours_without_timer: float | None = Field(default=None)
+    rounded_hours: float | None = Field(default=None)
+    notes: str | None = Field(default=None)
+    is_locked: bool | None = Field(default=None)
+    locked_reason: str | None = Field(default=None)
+    is_closed: bool | None = Field(default=None)
+    is_billed: bool | None = Field(default=None)
+    timer_started_at: str | None = Field(default=None)
+    started_time: str | None = Field(default=None)
+    ended_time: str | None = Field(default=None)
+    is_running: bool | None = Field(default=None)
+    billable: bool | None = Field(default=None)
+    budgeted: bool | None = Field(default=None)
+    billable_rate: float | None = Field(default=None)
+    cost_rate: float | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
+    approval_status: str | None = Field(default=None)
+    is_explicitly_locked: bool | None = Field(default=None)
+    user: TimeEntryUser | None = Field(default=None)
+    client: TimeEntryClient | None = Field(default=None)
+    project: TimeEntryProject | None = Field(default=None)
+    task: TimeEntryTask | None = Field(default=None)
+    user_assignment: dict[str, Any] | None = Field(default=None)
+    task_assignment: dict[str, Any] | None = Field(default=None)
+    external_reference: dict[str, Any] | None = Field(default=None)
+    invoice: TimeEntryInvoice | None = Field(default=None)
 
 class TimeEntriesList(BaseModel):
     """Paginated list of time entries"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    time_entries: Union[list[TimeEntry], Any] = Field(default=None)
-    per_page: Union[int, Any] = Field(default=None)
-    total_pages: Union[int, Any] = Field(default=None)
-    total_entries: Union[int, Any] = Field(default=None)
-    page: Union[int, Any] = Field(default=None)
-    next_page: Union[int | None, Any] = Field(default=None)
-    previous_page: Union[int | None, Any] = Field(default=None)
-    links: Union[PaginationLinks, Any] = Field(default=None)
+    time_entries: list[TimeEntry] | None = Field(default=None)
+    per_page: int | None = Field(default=None)
+    total_pages: int | None = Field(default=None)
+    total_entries: int | None = Field(default=None)
+    page: int | None = Field(default=None)
+    next_page: int | None = Field(default=None)
+    previous_page: int | None = Field(default=None)
+    links: PaginationLinks | None = Field(default=None)
 
 class Invoice(BaseModel):
     """A Harvest invoice"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    client_key: Union[str | None, Any] = Field(default=None)
-    number: Union[str | None, Any] = Field(default=None)
-    purchase_order: Union[str | None, Any] = Field(default=None)
-    amount: Union[float | None, Any] = Field(default=None)
-    due_amount: Union[float | None, Any] = Field(default=None)
-    tax: Union[float | None, Any] = Field(default=None)
-    tax_amount: Union[float | None, Any] = Field(default=None)
-    tax2: Union[float | None, Any] = Field(default=None)
-    tax2_amount: Union[float | None, Any] = Field(default=None)
-    discount: Union[float | None, Any] = Field(default=None)
-    discount_amount: Union[float | None, Any] = Field(default=None)
-    subject: Union[str | None, Any] = Field(default=None)
-    notes: Union[str | None, Any] = Field(default=None)
-    currency: Union[str | None, Any] = Field(default=None)
-    state: Union[str | None, Any] = Field(default=None)
-    period_start: Union[str | None, Any] = Field(default=None)
-    period_end: Union[str | None, Any] = Field(default=None)
-    issue_date: Union[str | None, Any] = Field(default=None)
-    due_date: Union[str | None, Any] = Field(default=None)
-    payment_term: Union[str | None, Any] = Field(default=None)
-    payment_options: Union[list[str] | None, Any] = Field(default=None)
-    sent_at: Union[str | None, Any] = Field(default=None)
-    paid_at: Union[str | None, Any] = Field(default=None)
-    paid_date: Union[str | None, Any] = Field(default=None)
-    closed_at: Union[str | None, Any] = Field(default=None)
-    recurring_invoice_id: Union[int | None, Any] = Field(default=None)
-    created_at: Union[str | None, Any] = Field(default=None)
-    updated_at: Union[str | None, Any] = Field(default=None)
-    client: Union[dict[str, Any] | None, Any] = Field(default=None)
-    estimate: Union[dict[str, Any] | None, Any] = Field(default=None)
-    retainer: Union[dict[str, Any] | None, Any] = Field(default=None)
-    creator: Union[dict[str, Any] | None, Any] = Field(default=None)
-    line_items: Union[list[dict[str, Any]] | None, Any] = Field(default=None)
+    id: int
+    client_key: str | None = Field(default=None)
+    number: str | None = Field(default=None)
+    purchase_order: str | None = Field(default=None)
+    amount: float | None = Field(default=None)
+    due_amount: float | None = Field(default=None)
+    tax: float | None = Field(default=None)
+    tax_amount: float | None = Field(default=None)
+    tax2: float | None = Field(default=None)
+    tax2_amount: float | None = Field(default=None)
+    discount: float | None = Field(default=None)
+    discount_amount: float | None = Field(default=None)
+    subject: str | None = Field(default=None)
+    notes: str | None = Field(default=None)
+    currency: str | None = Field(default=None)
+    state: str | None = Field(default=None)
+    period_start: str | None = Field(default=None)
+    period_end: str | None = Field(default=None)
+    issue_date: str | None = Field(default=None)
+    due_date: str | None = Field(default=None)
+    payment_term: str | None = Field(default=None)
+    payment_options: list[str] | None = Field(default=None)
+    sent_at: str | None = Field(default=None)
+    paid_at: str | None = Field(default=None)
+    paid_date: str | None = Field(default=None)
+    closed_at: str | None = Field(default=None)
+    recurring_invoice_id: int | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
+    client: dict[str, Any] | None = Field(default=None)
+    estimate: dict[str, Any] | None = Field(default=None)
+    retainer: dict[str, Any] | None = Field(default=None)
+    creator: dict[str, Any] | None = Field(default=None)
+    line_items: list[dict[str, Any]] | None = Field(default=None)
 
 class InvoicesList(BaseModel):
     """Paginated list of invoices"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    invoices: Union[list[Invoice], Any] = Field(default=None)
-    per_page: Union[int, Any] = Field(default=None)
-    total_pages: Union[int, Any] = Field(default=None)
-    total_entries: Union[int, Any] = Field(default=None)
-    page: Union[int, Any] = Field(default=None)
-    next_page: Union[int | None, Any] = Field(default=None)
-    previous_page: Union[int | None, Any] = Field(default=None)
-    links: Union[PaginationLinks, Any] = Field(default=None)
+    invoices: list[Invoice] | None = Field(default=None)
+    per_page: int | None = Field(default=None)
+    total_pages: int | None = Field(default=None)
+    total_entries: int | None = Field(default=None)
+    page: int | None = Field(default=None)
+    next_page: int | None = Field(default=None)
+    previous_page: int | None = Field(default=None)
+    links: PaginationLinks | None = Field(default=None)
 
 class InvoiceItemCategory(BaseModel):
     """A Harvest invoice item category"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    use_as_service: Union[bool | None, Any] = Field(default=None)
-    use_as_expense: Union[bool | None, Any] = Field(default=None)
-    created_at: Union[str | None, Any] = Field(default=None)
-    updated_at: Union[str | None, Any] = Field(default=None)
+    id: int
+    name: str | None = Field(default=None)
+    use_as_service: bool | None = Field(default=None)
+    use_as_expense: bool | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
 
 class InvoiceItemCategoriesList(BaseModel):
     """Paginated list of invoice item categories"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    invoice_item_categories: Union[list[InvoiceItemCategory], Any] = Field(default=None)
-    per_page: Union[int, Any] = Field(default=None)
-    total_pages: Union[int, Any] = Field(default=None)
-    total_entries: Union[int, Any] = Field(default=None)
-    page: Union[int, Any] = Field(default=None)
-    next_page: Union[int | None, Any] = Field(default=None)
-    previous_page: Union[int | None, Any] = Field(default=None)
-    links: Union[PaginationLinks, Any] = Field(default=None)
+    invoice_item_categories: list[InvoiceItemCategory] | None = Field(default=None)
+    per_page: int | None = Field(default=None)
+    total_pages: int | None = Field(default=None)
+    total_entries: int | None = Field(default=None)
+    page: int | None = Field(default=None)
+    next_page: int | None = Field(default=None)
+    previous_page: int | None = Field(default=None)
+    links: PaginationLinks | None = Field(default=None)
 
 class Estimate(BaseModel):
     """A Harvest estimate"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    client_key: Union[str | None, Any] = Field(default=None)
-    number: Union[str | None, Any] = Field(default=None)
-    purchase_order: Union[str | None, Any] = Field(default=None)
-    amount: Union[float | None, Any] = Field(default=None)
-    tax: Union[float | None, Any] = Field(default=None)
-    tax_amount: Union[float | None, Any] = Field(default=None)
-    tax2: Union[float | None, Any] = Field(default=None)
-    tax2_amount: Union[float | None, Any] = Field(default=None)
-    discount: Union[float | None, Any] = Field(default=None)
-    discount_amount: Union[float | None, Any] = Field(default=None)
-    subject: Union[str | None, Any] = Field(default=None)
-    notes: Union[str | None, Any] = Field(default=None)
-    currency: Union[str | None, Any] = Field(default=None)
-    state: Union[str | None, Any] = Field(default=None)
-    issue_date: Union[str | None, Any] = Field(default=None)
-    sent_at: Union[str | None, Any] = Field(default=None)
-    accepted_at: Union[str | None, Any] = Field(default=None)
-    declined_at: Union[str | None, Any] = Field(default=None)
-    created_at: Union[str | None, Any] = Field(default=None)
-    updated_at: Union[str | None, Any] = Field(default=None)
-    client: Union[dict[str, Any] | None, Any] = Field(default=None)
-    creator: Union[dict[str, Any] | None, Any] = Field(default=None)
-    line_items: Union[list[dict[str, Any]] | None, Any] = Field(default=None)
+    id: int
+    client_key: str | None = Field(default=None)
+    number: str | None = Field(default=None)
+    purchase_order: str | None = Field(default=None)
+    amount: float | None = Field(default=None)
+    tax: float | None = Field(default=None)
+    tax_amount: float | None = Field(default=None)
+    tax2: float | None = Field(default=None)
+    tax2_amount: float | None = Field(default=None)
+    discount: float | None = Field(default=None)
+    discount_amount: float | None = Field(default=None)
+    subject: str | None = Field(default=None)
+    notes: str | None = Field(default=None)
+    currency: str | None = Field(default=None)
+    state: str | None = Field(default=None)
+    issue_date: str | None = Field(default=None)
+    sent_at: str | None = Field(default=None)
+    accepted_at: str | None = Field(default=None)
+    declined_at: str | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
+    client: dict[str, Any] | None = Field(default=None)
+    creator: dict[str, Any] | None = Field(default=None)
+    line_items: list[dict[str, Any]] | None = Field(default=None)
 
 class EstimatesList(BaseModel):
     """Paginated list of estimates"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    estimates: Union[list[Estimate], Any] = Field(default=None)
-    per_page: Union[int, Any] = Field(default=None)
-    total_pages: Union[int, Any] = Field(default=None)
-    total_entries: Union[int, Any] = Field(default=None)
-    page: Union[int, Any] = Field(default=None)
-    next_page: Union[int | None, Any] = Field(default=None)
-    previous_page: Union[int | None, Any] = Field(default=None)
-    links: Union[PaginationLinks, Any] = Field(default=None)
+    estimates: list[Estimate] | None = Field(default=None)
+    per_page: int | None = Field(default=None)
+    total_pages: int | None = Field(default=None)
+    total_entries: int | None = Field(default=None)
+    page: int | None = Field(default=None)
+    next_page: int | None = Field(default=None)
+    previous_page: int | None = Field(default=None)
+    links: PaginationLinks | None = Field(default=None)
 
 class EstimateItemCategory(BaseModel):
     """A Harvest estimate item category"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    created_at: Union[str | None, Any] = Field(default=None)
-    updated_at: Union[str | None, Any] = Field(default=None)
+    id: int
+    name: str | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
 
 class EstimateItemCategoriesList(BaseModel):
     """Paginated list of estimate item categories"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    estimate_item_categories: Union[list[EstimateItemCategory], Any] = Field(default=None)
-    per_page: Union[int, Any] = Field(default=None)
-    total_pages: Union[int, Any] = Field(default=None)
-    total_entries: Union[int, Any] = Field(default=None)
-    page: Union[int, Any] = Field(default=None)
-    next_page: Union[int | None, Any] = Field(default=None)
-    previous_page: Union[int | None, Any] = Field(default=None)
-    links: Union[PaginationLinks, Any] = Field(default=None)
+    estimate_item_categories: list[EstimateItemCategory] | None = Field(default=None)
+    per_page: int | None = Field(default=None)
+    total_pages: int | None = Field(default=None)
+    total_entries: int | None = Field(default=None)
+    page: int | None = Field(default=None)
+    next_page: int | None = Field(default=None)
+    previous_page: int | None = Field(default=None)
+    links: PaginationLinks | None = Field(default=None)
 
 class Expense(BaseModel):
     """A Harvest expense"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    notes: Union[str | None, Any] = Field(default=None)
-    total_cost: Union[float | None, Any] = Field(default=None)
-    units: Union[float | None, Any] = Field(default=None)
-    is_closed: Union[bool | None, Any] = Field(default=None)
-    is_locked: Union[bool | None, Any] = Field(default=None)
-    is_billed: Union[bool | None, Any] = Field(default=None)
-    locked_reason: Union[str | None, Any] = Field(default=None)
-    spent_date: Union[str | None, Any] = Field(default=None)
-    created_at: Union[str | None, Any] = Field(default=None)
-    updated_at: Union[str | None, Any] = Field(default=None)
-    billable: Union[bool | None, Any] = Field(default=None)
-    approval_status: Union[str | None, Any] = Field(default=None)
-    is_explicitly_locked: Union[bool | None, Any] = Field(default=None)
-    receipt: Union[dict[str, Any] | None, Any] = Field(default=None)
-    user: Union[dict[str, Any] | None, Any] = Field(default=None)
-    user_assignment: Union[dict[str, Any] | None, Any] = Field(default=None)
-    project: Union[dict[str, Any] | None, Any] = Field(default=None)
-    expense_category: Union[dict[str, Any] | None, Any] = Field(default=None)
-    client: Union[dict[str, Any] | None, Any] = Field(default=None)
-    invoice: Union[dict[str, Any] | None, Any] = Field(default=None)
+    id: int
+    notes: str | None = Field(default=None)
+    total_cost: float | None = Field(default=None)
+    units: float | None = Field(default=None)
+    is_closed: bool | None = Field(default=None)
+    is_locked: bool | None = Field(default=None)
+    is_billed: bool | None = Field(default=None)
+    locked_reason: str | None = Field(default=None)
+    spent_date: str | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
+    billable: bool | None = Field(default=None)
+    approval_status: str | None = Field(default=None)
+    is_explicitly_locked: bool | None = Field(default=None)
+    receipt: dict[str, Any] | None = Field(default=None)
+    user: dict[str, Any] | None = Field(default=None)
+    user_assignment: dict[str, Any] | None = Field(default=None)
+    project: dict[str, Any] | None = Field(default=None)
+    expense_category: dict[str, Any] | None = Field(default=None)
+    client: dict[str, Any] | None = Field(default=None)
+    invoice: dict[str, Any] | None = Field(default=None)
 
 class ExpensesList(BaseModel):
     """Paginated list of expenses"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    expenses: Union[list[Expense], Any] = Field(default=None)
-    per_page: Union[int, Any] = Field(default=None)
-    total_pages: Union[int, Any] = Field(default=None)
-    total_entries: Union[int, Any] = Field(default=None)
-    page: Union[int, Any] = Field(default=None)
-    next_page: Union[int | None, Any] = Field(default=None)
-    previous_page: Union[int | None, Any] = Field(default=None)
-    links: Union[PaginationLinks, Any] = Field(default=None)
+    expenses: list[Expense] | None = Field(default=None)
+    per_page: int | None = Field(default=None)
+    total_pages: int | None = Field(default=None)
+    total_entries: int | None = Field(default=None)
+    page: int | None = Field(default=None)
+    next_page: int | None = Field(default=None)
+    previous_page: int | None = Field(default=None)
+    links: PaginationLinks | None = Field(default=None)
 
 class ExpenseCategory(BaseModel):
     """A Harvest expense category"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    unit_name: Union[str | None, Any] = Field(default=None)
-    unit_price: Union[float | None, Any] = Field(default=None)
-    is_active: Union[bool | None, Any] = Field(default=None)
-    created_at: Union[str | None, Any] = Field(default=None)
-    updated_at: Union[str | None, Any] = Field(default=None)
+    id: int
+    name: str | None = Field(default=None)
+    unit_name: str | None = Field(default=None)
+    unit_price: float | None = Field(default=None)
+    is_active: bool | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
 
 class ExpenseCategoriesList(BaseModel):
     """Paginated list of expense categories"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    expense_categories: Union[list[ExpenseCategory], Any] = Field(default=None)
-    per_page: Union[int, Any] = Field(default=None)
-    total_pages: Union[int, Any] = Field(default=None)
-    total_entries: Union[int, Any] = Field(default=None)
-    page: Union[int, Any] = Field(default=None)
-    next_page: Union[int | None, Any] = Field(default=None)
-    previous_page: Union[int | None, Any] = Field(default=None)
-    links: Union[PaginationLinks, Any] = Field(default=None)
+    expense_categories: list[ExpenseCategory] | None = Field(default=None)
+    per_page: int | None = Field(default=None)
+    total_pages: int | None = Field(default=None)
+    total_entries: int | None = Field(default=None)
+    page: int | None = Field(default=None)
+    next_page: int | None = Field(default=None)
+    previous_page: int | None = Field(default=None)
+    links: PaginationLinks | None = Field(default=None)
 
 class Role(BaseModel):
     """A Harvest role"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    user_ids: Union[list[int] | None, Any] = Field(default=None)
-    created_at: Union[str | None, Any] = Field(default=None)
-    updated_at: Union[str | None, Any] = Field(default=None)
+    id: int
+    name: str | None = Field(default=None)
+    user_ids: list[int] | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
 
 class RolesList(BaseModel):
     """Paginated list of roles"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    roles: Union[list[Role], Any] = Field(default=None)
-    per_page: Union[int, Any] = Field(default=None)
-    total_pages: Union[int, Any] = Field(default=None)
-    total_entries: Union[int, Any] = Field(default=None)
-    page: Union[int, Any] = Field(default=None)
-    next_page: Union[int | None, Any] = Field(default=None)
-    previous_page: Union[int | None, Any] = Field(default=None)
-    links: Union[PaginationLinks, Any] = Field(default=None)
-
-class UserAssignmentProject(BaseModel):
-    """The project associated with the assignment"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[int | None, Any] = Field(default=None, description="Project ID")
-    """Project ID"""
-    name: Union[str | None, Any] = Field(default=None, description="Project name")
-    """Project name"""
-    code: Union[str | None, Any] = Field(default=None, description="Project code")
-    """Project code"""
+    roles: list[Role] | None = Field(default=None)
+    per_page: int | None = Field(default=None)
+    total_pages: int | None = Field(default=None)
+    total_entries: int | None = Field(default=None)
+    page: int | None = Field(default=None)
+    next_page: int | None = Field(default=None)
+    previous_page: int | None = Field(default=None)
+    links: PaginationLinks | None = Field(default=None)
 
 class UserAssignmentUser(BaseModel):
     """The user associated with the assignment"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int | None, Any] = Field(default=None, description="User ID")
+    id: int | None | None = Field(default=None, description="User ID")
     """User ID"""
-    name: Union[str | None, Any] = Field(default=None, description="User name")
+    name: str | None | None = Field(default=None, description="User name")
     """User name"""
+
+class UserAssignmentProject(BaseModel):
+    """The project associated with the assignment"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int | None | None = Field(default=None, description="Project ID")
+    """Project ID"""
+    name: str | None | None = Field(default=None, description="Project name")
+    """Project name"""
+    code: str | None | None = Field(default=None, description="Project code")
+    """Project code"""
 
 class UserAssignment(BaseModel):
     """A Harvest user assignment linking a user to a project"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    is_project_manager: Union[bool | None, Any] = Field(default=None)
-    is_active: Union[bool | None, Any] = Field(default=None)
-    budget: Union[float | None, Any] = Field(default=None)
-    created_at: Union[str | None, Any] = Field(default=None)
-    updated_at: Union[str | None, Any] = Field(default=None)
-    hourly_rate: Union[float | None, Any] = Field(default=None)
-    use_default_rates: Union[bool | None, Any] = Field(default=None)
-    project: Union[UserAssignmentProject | None, Any] = Field(default=None)
-    user: Union[UserAssignmentUser | None, Any] = Field(default=None)
+    id: int
+    is_project_manager: bool | None = Field(default=None)
+    is_active: bool | None = Field(default=None)
+    budget: float | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
+    hourly_rate: float | None = Field(default=None)
+    use_default_rates: bool | None = Field(default=None)
+    project: UserAssignmentProject | None = Field(default=None)
+    user: UserAssignmentUser | None = Field(default=None)
 
 class UserAssignmentsList(BaseModel):
     """Paginated list of user assignments"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    user_assignments: Union[list[UserAssignment], Any] = Field(default=None)
-    per_page: Union[int, Any] = Field(default=None)
-    total_pages: Union[int, Any] = Field(default=None)
-    total_entries: Union[int, Any] = Field(default=None)
-    page: Union[int, Any] = Field(default=None)
-    next_page: Union[int | None, Any] = Field(default=None)
-    previous_page: Union[int | None, Any] = Field(default=None)
-    links: Union[PaginationLinks, Any] = Field(default=None)
+    user_assignments: list[UserAssignment] | None = Field(default=None)
+    per_page: int | None = Field(default=None)
+    total_pages: int | None = Field(default=None)
+    total_entries: int | None = Field(default=None)
+    page: int | None = Field(default=None)
+    next_page: int | None = Field(default=None)
+    previous_page: int | None = Field(default=None)
+    links: PaginationLinks | None = Field(default=None)
 
 class TaskAssignmentTask(BaseModel):
     """The task associated with the assignment"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int | None, Any] = Field(default=None, description="Task ID")
+    id: int | None | None = Field(default=None, description="Task ID")
     """Task ID"""
-    name: Union[str | None, Any] = Field(default=None, description="Task name")
+    name: str | None | None = Field(default=None, description="Task name")
     """Task name"""
 
 class TaskAssignmentProject(BaseModel):
     """The project associated with the assignment"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int | None, Any] = Field(default=None, description="Project ID")
+    id: int | None | None = Field(default=None, description="Project ID")
     """Project ID"""
-    name: Union[str | None, Any] = Field(default=None, description="Project name")
+    name: str | None | None = Field(default=None, description="Project name")
     """Project name"""
-    code: Union[str | None, Any] = Field(default=None, description="Project code")
+    code: str | None | None = Field(default=None, description="Project code")
     """Project code"""
 
 class TaskAssignment(BaseModel):
     """A Harvest task assignment linking a task to a project"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    billable: Union[bool | None, Any] = Field(default=None)
-    is_active: Union[bool | None, Any] = Field(default=None)
-    created_at: Union[str | None, Any] = Field(default=None)
-    updated_at: Union[str | None, Any] = Field(default=None)
-    hourly_rate: Union[float | None, Any] = Field(default=None)
-    budget: Union[float | None, Any] = Field(default=None)
-    project: Union[TaskAssignmentProject | None, Any] = Field(default=None)
-    task: Union[TaskAssignmentTask | None, Any] = Field(default=None)
+    id: int
+    billable: bool | None = Field(default=None)
+    is_active: bool | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
+    hourly_rate: float | None = Field(default=None)
+    budget: float | None = Field(default=None)
+    project: TaskAssignmentProject | None = Field(default=None)
+    task: TaskAssignmentTask | None = Field(default=None)
 
 class TaskAssignmentsList(BaseModel):
     """Paginated list of task assignments"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    task_assignments: Union[list[TaskAssignment], Any] = Field(default=None)
-    per_page: Union[int, Any] = Field(default=None)
-    total_pages: Union[int, Any] = Field(default=None)
-    total_entries: Union[int, Any] = Field(default=None)
-    page: Union[int, Any] = Field(default=None)
-    next_page: Union[int | None, Any] = Field(default=None)
-    previous_page: Union[int | None, Any] = Field(default=None)
-    links: Union[PaginationLinks, Any] = Field(default=None)
+    task_assignments: list[TaskAssignment] | None = Field(default=None)
+    per_page: int | None = Field(default=None)
+    total_pages: int | None = Field(default=None)
+    total_entries: int | None = Field(default=None)
+    page: int | None = Field(default=None)
+    next_page: int | None = Field(default=None)
+    previous_page: int | None = Field(default=None)
+    links: PaginationLinks | None = Field(default=None)
 
 class TimeProject(BaseModel):
     """A time report entry grouped by project"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    project_id: Union[int | None, Any] = Field(default=None)
-    project_name: Union[str | None, Any] = Field(default=None)
-    client_id: Union[int | None, Any] = Field(default=None)
-    client_name: Union[str | None, Any] = Field(default=None)
-    total_hours: Union[float | None, Any] = Field(default=None)
-    billable_hours: Union[float | None, Any] = Field(default=None)
-    currency: Union[str | None, Any] = Field(default=None)
-    billable_amount: Union[float | None, Any] = Field(default=None)
+    project_id: int | None = Field(default=None)
+    project_name: str | None = Field(default=None)
+    client_id: int | None = Field(default=None)
+    client_name: str | None = Field(default=None)
+    total_hours: float | None = Field(default=None)
+    billable_hours: float | None = Field(default=None)
+    currency: str | None = Field(default=None)
+    billable_amount: float | None = Field(default=None)
 
 class TimeProjectsList(BaseModel):
     """Paginated list of time report entries by project"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    results: Union[list[TimeProject], Any] = Field(default=None)
-    per_page: Union[int, Any] = Field(default=None)
-    total_pages: Union[int, Any] = Field(default=None)
-    total_entries: Union[int, Any] = Field(default=None)
-    page: Union[int, Any] = Field(default=None)
-    next_page: Union[int | None, Any] = Field(default=None)
-    previous_page: Union[int | None, Any] = Field(default=None)
-    links: Union[PaginationLinks, Any] = Field(default=None)
+    results: list[TimeProject] | None = Field(default=None)
+    per_page: int | None = Field(default=None)
+    total_pages: int | None = Field(default=None)
+    total_entries: int | None = Field(default=None)
+    page: int | None = Field(default=None)
+    next_page: int | None = Field(default=None)
+    previous_page: int | None = Field(default=None)
+    links: PaginationLinks | None = Field(default=None)
 
 class TimeTask(BaseModel):
     """A time report entry grouped by task"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    task_id: Union[int | None, Any] = Field(default=None)
-    task_name: Union[str | None, Any] = Field(default=None)
-    total_hours: Union[float | None, Any] = Field(default=None)
-    billable_hours: Union[float | None, Any] = Field(default=None)
-    currency: Union[str | None, Any] = Field(default=None)
-    billable_amount: Union[float | None, Any] = Field(default=None)
+    task_id: int | None = Field(default=None)
+    task_name: str | None = Field(default=None)
+    total_hours: float | None = Field(default=None)
+    billable_hours: float | None = Field(default=None)
+    currency: str | None = Field(default=None)
+    billable_amount: float | None = Field(default=None)
 
 class TimeTasksList(BaseModel):
     """Paginated list of time report entries by task"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    results: Union[list[TimeTask], Any] = Field(default=None)
-    per_page: Union[int, Any] = Field(default=None)
-    total_pages: Union[int, Any] = Field(default=None)
-    total_entries: Union[int, Any] = Field(default=None)
-    page: Union[int, Any] = Field(default=None)
-    next_page: Union[int | None, Any] = Field(default=None)
-    previous_page: Union[int | None, Any] = Field(default=None)
-    links: Union[PaginationLinks, Any] = Field(default=None)
+    results: list[TimeTask] | None = Field(default=None)
+    per_page: int | None = Field(default=None)
+    total_pages: int | None = Field(default=None)
+    total_entries: int | None = Field(default=None)
+    page: int | None = Field(default=None)
+    next_page: int | None = Field(default=None)
+    previous_page: int | None = Field(default=None)
+    links: PaginationLinks | None = Field(default=None)
 
 # ===== METADATA TYPE DEFINITIONS (PYDANTIC) =====
 # Meta types for operations that extract metadata (e.g., pagination info)
@@ -743,103 +743,103 @@ class UsersListResultMeta(BaseModel):
     """Metadata for users.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_link: Union[str | None, Any] = Field(default=None)
+    next_link: str | None = Field(default=None)
 
 class ClientsListResultMeta(BaseModel):
     """Metadata for clients.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_link: Union[str | None, Any] = Field(default=None)
+    next_link: str | None = Field(default=None)
 
 class ContactsListResultMeta(BaseModel):
     """Metadata for contacts.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_link: Union[str | None, Any] = Field(default=None)
+    next_link: str | None = Field(default=None)
 
 class ProjectsListResultMeta(BaseModel):
     """Metadata for projects.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_link: Union[str | None, Any] = Field(default=None)
+    next_link: str | None = Field(default=None)
 
 class TasksListResultMeta(BaseModel):
     """Metadata for tasks.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_link: Union[str | None, Any] = Field(default=None)
+    next_link: str | None = Field(default=None)
 
 class TimeEntriesListResultMeta(BaseModel):
     """Metadata for time_entries.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_link: Union[str | None, Any] = Field(default=None)
+    next_link: str | None = Field(default=None)
 
 class InvoicesListResultMeta(BaseModel):
     """Metadata for invoices.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_link: Union[str | None, Any] = Field(default=None)
+    next_link: str | None = Field(default=None)
 
 class InvoiceItemCategoriesListResultMeta(BaseModel):
     """Metadata for invoice_item_categories.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_link: Union[str | None, Any] = Field(default=None)
+    next_link: str | None = Field(default=None)
 
 class EstimatesListResultMeta(BaseModel):
     """Metadata for estimates.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_link: Union[str | None, Any] = Field(default=None)
+    next_link: str | None = Field(default=None)
 
 class EstimateItemCategoriesListResultMeta(BaseModel):
     """Metadata for estimate_item_categories.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_link: Union[str | None, Any] = Field(default=None)
+    next_link: str | None = Field(default=None)
 
 class ExpensesListResultMeta(BaseModel):
     """Metadata for expenses.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_link: Union[str | None, Any] = Field(default=None)
+    next_link: str | None = Field(default=None)
 
 class ExpenseCategoriesListResultMeta(BaseModel):
     """Metadata for expense_categories.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_link: Union[str | None, Any] = Field(default=None)
+    next_link: str | None = Field(default=None)
 
 class RolesListResultMeta(BaseModel):
     """Metadata for roles.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_link: Union[str | None, Any] = Field(default=None)
+    next_link: str | None = Field(default=None)
 
 class UserAssignmentsListResultMeta(BaseModel):
     """Metadata for user_assignments.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_link: Union[str | None, Any] = Field(default=None)
+    next_link: str | None = Field(default=None)
 
 class TaskAssignmentsListResultMeta(BaseModel):
     """Metadata for task_assignments.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_link: Union[str | None, Any] = Field(default=None)
+    next_link: str | None = Field(default=None)
 
 class TimeProjectsListResultMeta(BaseModel):
     """Metadata for time_projects.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_link: Union[str | None, Any] = Field(default=None)
+    next_link: str | None = Field(default=None)
 
 class TimeTasksListResultMeta(BaseModel):
     """Metadata for time_tasks.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_link: Union[str | None, Any] = Field(default=None)
+    next_link: str | None = Field(default=None)
 
 # ===== CHECK RESULT MODEL =====
 

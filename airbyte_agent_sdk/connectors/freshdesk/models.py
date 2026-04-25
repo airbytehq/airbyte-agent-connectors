@@ -8,7 +8,7 @@ and response envelope types.
 from __future__ import annotations
 
 from pydantic import BaseModel, ConfigDict, Field
-from typing import TypeVar, Generic, Union, Any
+from typing import TypeVar, Generic, Any
 
 # Authentication configuration
 
@@ -26,265 +26,265 @@ class Ticket(BaseModel):
     """A Freshdesk support ticket"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    subject: Union[str | None, Any] = Field(default=None)
-    description: Union[str | None, Any] = Field(default=None)
-    description_text: Union[str | None, Any] = Field(default=None)
-    status: Union[int | None, Any] = Field(default=None)
-    priority: Union[int | None, Any] = Field(default=None)
-    source: Union[int | None, Any] = Field(default=None)
-    type_: Union[str | None, Any] = Field(default=None, alias="type")
-    requester_id: Union[int | None, Any] = Field(default=None)
-    responder_id: Union[int | None, Any] = Field(default=None)
-    company_id: Union[int | None, Any] = Field(default=None)
-    group_id: Union[int | None, Any] = Field(default=None)
-    product_id: Union[int | None, Any] = Field(default=None)
-    email_config_id: Union[int | None, Any] = Field(default=None)
-    cc_emails: Union[list[str] | None, Any] = Field(default=None)
-    fwd_emails: Union[list[str] | None, Any] = Field(default=None)
-    reply_cc_emails: Union[list[str] | None, Any] = Field(default=None)
-    to_emails: Union[list[str] | None, Any] = Field(default=None)
-    spam: Union[bool | None, Any] = Field(default=None)
-    deleted: Union[bool | None, Any] = Field(default=None)
-    fr_escalated: Union[bool | None, Any] = Field(default=None)
-    is_escalated: Union[bool | None, Any] = Field(default=None)
-    fr_due_by: Union[str | None, Any] = Field(default=None)
-    due_by: Union[str | None, Any] = Field(default=None)
-    tags: Union[list[str] | None, Any] = Field(default=None)
-    custom_fields: Union[dict[str, Any] | None, Any] = Field(default=None)
-    attachments: Union[list[dict[str, Any]] | None, Any] = Field(default=None)
-    created_at: Union[str | None, Any] = Field(default=None)
-    updated_at: Union[str | None, Any] = Field(default=None)
-    association_type: Union[int | None, Any] = Field(default=None)
-    associated_tickets_count: Union[int | None, Any] = Field(default=None)
-    ticket_cc_emails: Union[list[str] | None, Any] = Field(default=None)
-    ticket_bcc_emails: Union[list[str] | None, Any] = Field(default=None)
-    support_email: Union[str | None, Any] = Field(default=None)
-    source_additional_info: Union[dict[str, Any] | None, Any] = Field(default=None)
-    structured_description: Union[dict[str, Any] | None, Any] = Field(default=None)
-    form_id: Union[int | None, Any] = Field(default=None)
-    nr_due_by: Union[str | None, Any] = Field(default=None)
-    nr_escalated: Union[bool | None, Any] = Field(default=None)
+    id: int
+    subject: str | None = Field(default=None)
+    description: str | None = Field(default=None)
+    description_text: str | None = Field(default=None)
+    status: int | None = Field(default=None)
+    priority: int | None = Field(default=None)
+    source: int | None = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    requester_id: int | None = Field(default=None)
+    responder_id: int | None = Field(default=None)
+    company_id: int | None = Field(default=None)
+    group_id: int | None = Field(default=None)
+    product_id: int | None = Field(default=None)
+    email_config_id: int | None = Field(default=None)
+    cc_emails: list[str] | None = Field(default=None)
+    fwd_emails: list[str] | None = Field(default=None)
+    reply_cc_emails: list[str] | None = Field(default=None)
+    to_emails: list[str] | None = Field(default=None)
+    spam: bool | None = Field(default=None)
+    deleted: bool | None = Field(default=None)
+    fr_escalated: bool | None = Field(default=None)
+    is_escalated: bool | None = Field(default=None)
+    fr_due_by: str | None = Field(default=None)
+    due_by: str | None = Field(default=None)
+    tags: list[str] | None = Field(default=None)
+    custom_fields: dict[str, Any] | None = Field(default=None)
+    attachments: list[dict[str, Any]] | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
+    association_type: int | None = Field(default=None)
+    associated_tickets_count: int | None = Field(default=None)
+    ticket_cc_emails: list[str] | None = Field(default=None)
+    ticket_bcc_emails: list[str] | None = Field(default=None)
+    support_email: str | None = Field(default=None)
+    source_additional_info: dict[str, Any] | None = Field(default=None)
+    structured_description: dict[str, Any] | None = Field(default=None)
+    form_id: int | None = Field(default=None)
+    nr_due_by: str | None = Field(default=None)
+    nr_escalated: bool | None = Field(default=None)
 
 class Contact(BaseModel):
     """A Freshdesk contact (customer)"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    email: Union[str | None, Any] = Field(default=None)
-    phone: Union[str | None, Any] = Field(default=None)
-    mobile: Union[str | None, Any] = Field(default=None)
-    active: Union[bool | None, Any] = Field(default=None)
-    address: Union[str | None, Any] = Field(default=None)
-    avatar: Union[dict[str, Any] | None, Any] = Field(default=None)
-    company_id: Union[int | None, Any] = Field(default=None)
-    view_all_tickets: Union[bool | None, Any] = Field(default=None)
-    custom_fields: Union[dict[str, Any] | None, Any] = Field(default=None)
-    deleted: Union[bool | None, Any] = Field(default=None)
-    description: Union[str | None, Any] = Field(default=None)
-    job_title: Union[str | None, Any] = Field(default=None)
-    language: Union[str | None, Any] = Field(default=None)
-    twitter_id: Union[str | None, Any] = Field(default=None)
-    unique_external_id: Union[str | None, Any] = Field(default=None)
-    other_emails: Union[list[str] | None, Any] = Field(default=None)
-    other_companies: Union[list[dict[str, Any]] | None, Any] = Field(default=None)
-    tags: Union[list[str] | None, Any] = Field(default=None)
-    time_zone: Union[str | None, Any] = Field(default=None)
-    facebook_id: Union[str | None, Any] = Field(default=None)
-    csat_rating: Union[int | None, Any] = Field(default=None)
-    preferred_source: Union[str | None, Any] = Field(default=None)
-    first_name: Union[str | None, Any] = Field(default=None)
-    last_name: Union[str | None, Any] = Field(default=None)
-    visitor_id: Union[str | None, Any] = Field(default=None)
-    org_contact_id: Union[int | None, Any] = Field(default=None)
-    org_contact_id_str: Union[str | None, Any] = Field(default=None)
-    other_phone_numbers: Union[list[str] | None, Any] = Field(default=None)
-    created_at: Union[str | None, Any] = Field(default=None)
-    updated_at: Union[str | None, Any] = Field(default=None)
+    id: int
+    name: str | None = Field(default=None)
+    email: str | None = Field(default=None)
+    phone: str | None = Field(default=None)
+    mobile: str | None = Field(default=None)
+    active: bool | None = Field(default=None)
+    address: str | None = Field(default=None)
+    avatar: dict[str, Any] | None = Field(default=None)
+    company_id: int | None = Field(default=None)
+    view_all_tickets: bool | None = Field(default=None)
+    custom_fields: dict[str, Any] | None = Field(default=None)
+    deleted: bool | None = Field(default=None)
+    description: str | None = Field(default=None)
+    job_title: str | None = Field(default=None)
+    language: str | None = Field(default=None)
+    twitter_id: str | None = Field(default=None)
+    unique_external_id: str | None = Field(default=None)
+    other_emails: list[str] | None = Field(default=None)
+    other_companies: list[dict[str, Any]] | None = Field(default=None)
+    tags: list[str] | None = Field(default=None)
+    time_zone: str | None = Field(default=None)
+    facebook_id: str | None = Field(default=None)
+    csat_rating: int | None = Field(default=None)
+    preferred_source: str | None = Field(default=None)
+    first_name: str | None = Field(default=None)
+    last_name: str | None = Field(default=None)
+    visitor_id: str | None = Field(default=None)
+    org_contact_id: int | None = Field(default=None)
+    org_contact_id_str: str | None = Field(default=None)
+    other_phone_numbers: list[str] | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
 
 class AgentContact(BaseModel):
     """Contact details of the agent"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    active: Union[bool | None, Any] = Field(default=None, description="Whether the contact is active")
+    active: bool | None | None = Field(default=None, description="Whether the contact is active")
     """Whether the contact is active"""
-    email: Union[str | None, Any] = Field(default=None, description="Email of the agent")
+    email: str | None | None = Field(default=None, description="Email of the agent")
     """Email of the agent"""
-    job_title: Union[str | None, Any] = Field(default=None, description="Job title")
+    job_title: str | None | None = Field(default=None, description="Job title")
     """Job title"""
-    language: Union[str | None, Any] = Field(default=None, description="Language")
+    language: str | None | None = Field(default=None, description="Language")
     """Language"""
-    last_login_at: Union[str | None, Any] = Field(default=None, description="Last login timestamp")
+    last_login_at: str | None | None = Field(default=None, description="Last login timestamp")
     """Last login timestamp"""
-    mobile: Union[str | None, Any] = Field(default=None, description="Mobile number")
+    mobile: str | None | None = Field(default=None, description="Mobile number")
     """Mobile number"""
-    name: Union[str | None, Any] = Field(default=None, description="Name of the agent")
+    name: str | None | None = Field(default=None, description="Name of the agent")
     """Name of the agent"""
-    phone: Union[str | None, Any] = Field(default=None, description="Phone number")
+    phone: str | None | None = Field(default=None, description="Phone number")
     """Phone number"""
-    time_zone: Union[str | None, Any] = Field(default=None, description="Time zone")
+    time_zone: str | None | None = Field(default=None, description="Time zone")
     """Time zone"""
-    created_at: Union[str | None, Any] = Field(default=None, description="Contact creation timestamp")
+    created_at: str | None | None = Field(default=None, description="Contact creation timestamp")
     """Contact creation timestamp"""
-    updated_at: Union[str | None, Any] = Field(default=None, description="Contact update timestamp")
+    updated_at: str | None | None = Field(default=None, description="Contact update timestamp")
     """Contact update timestamp"""
 
 class Agent(BaseModel):
     """A Freshdesk agent"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    available: Union[bool | None, Any] = Field(default=None)
-    available_since: Union[str | None, Any] = Field(default=None)
-    occasional: Union[bool | None, Any] = Field(default=None)
-    signature: Union[str | None, Any] = Field(default=None)
-    ticket_scope: Union[int | None, Any] = Field(default=None)
-    type_: Union[str | None, Any] = Field(default=None, alias="type")
-    skill_ids: Union[list[int] | None, Any] = Field(default=None)
-    group_ids: Union[list[int] | None, Any] = Field(default=None)
-    role_ids: Union[list[int] | None, Any] = Field(default=None)
-    focus_mode: Union[bool | None, Any] = Field(default=None)
-    contact: Union[AgentContact | None, Any] = Field(default=None)
-    last_active_at: Union[str | None, Any] = Field(default=None)
-    deactivated: Union[bool | None, Any] = Field(default=None)
-    agent_operational_status: Union[str | None, Any] = Field(default=None)
-    org_agent_id: Union[str | None, Any] = Field(default=None)
-    org_group_ids: Union[list[str] | None, Any] = Field(default=None)
-    contribution_group_ids: Union[list[int] | None, Any] = Field(default=None)
-    org_contribution_group_ids: Union[list[str] | None, Any] = Field(default=None)
-    scope: Union[Any, Any] = Field(default=None)
-    availability: Union[Any, Any] = Field(default=None)
-    created_at: Union[str | None, Any] = Field(default=None)
-    updated_at: Union[str | None, Any] = Field(default=None)
+    id: int
+    available: bool | None = Field(default=None)
+    available_since: str | None = Field(default=None)
+    occasional: bool | None = Field(default=None)
+    signature: str | None = Field(default=None)
+    ticket_scope: int | None = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    skill_ids: list[int] | None = Field(default=None)
+    group_ids: list[int] | None = Field(default=None)
+    role_ids: list[int] | None = Field(default=None)
+    focus_mode: bool | None = Field(default=None)
+    contact: AgentContact | None = Field(default=None)
+    last_active_at: str | None = Field(default=None)
+    deactivated: bool | None = Field(default=None)
+    agent_operational_status: str | None = Field(default=None)
+    org_agent_id: str | None = Field(default=None)
+    org_group_ids: list[str] | None = Field(default=None)
+    contribution_group_ids: list[int] | None = Field(default=None)
+    org_contribution_group_ids: list[str] | None = Field(default=None)
+    scope: Any | None = Field(default=None)
+    availability: Any | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
 
 class Group(BaseModel):
     """A Freshdesk group"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    description: Union[str | None, Any] = Field(default=None)
-    agent_ids: Union[list[int] | None, Any] = Field(default=None)
-    auto_ticket_assign: Union[int | None, Any] = Field(default=None)
-    business_hour_id: Union[int | None, Any] = Field(default=None)
-    escalate_to: Union[int | None, Any] = Field(default=None)
-    unassigned_for: Union[str | None, Any] = Field(default=None)
-    group_type: Union[str | None, Any] = Field(default=None)
-    allow_agents_to_change_availability: Union[bool | None, Any] = Field(default=None)
-    agent_availability_status: Union[bool | None, Any] = Field(default=None)
-    created_at: Union[str | None, Any] = Field(default=None)
-    updated_at: Union[str | None, Any] = Field(default=None)
+    id: int
+    name: str | None = Field(default=None)
+    description: str | None = Field(default=None)
+    agent_ids: list[int] | None = Field(default=None)
+    auto_ticket_assign: int | None = Field(default=None)
+    business_hour_id: int | None = Field(default=None)
+    escalate_to: int | None = Field(default=None)
+    unassigned_for: str | None = Field(default=None)
+    group_type: str | None = Field(default=None)
+    allow_agents_to_change_availability: bool | None = Field(default=None)
+    agent_availability_status: bool | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
 
 class Company(BaseModel):
     """A Freshdesk company"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    description: Union[str | None, Any] = Field(default=None)
-    domains: Union[list[str] | None, Any] = Field(default=None)
-    note: Union[str | None, Any] = Field(default=None)
-    health_score: Union[str | None, Any] = Field(default=None)
-    account_tier: Union[str | None, Any] = Field(default=None)
-    renewal_date: Union[str | None, Any] = Field(default=None)
-    industry: Union[str | None, Any] = Field(default=None)
-    custom_fields: Union[dict[str, Any] | None, Any] = Field(default=None)
-    org_company_id: Union[Any, Any] = Field(default=None)
-    org_company_id_str: Union[str | None, Any] = Field(default=None)
-    created_at: Union[str | None, Any] = Field(default=None)
-    updated_at: Union[str | None, Any] = Field(default=None)
+    id: int
+    name: str | None = Field(default=None)
+    description: str | None = Field(default=None)
+    domains: list[str] | None = Field(default=None)
+    note: str | None = Field(default=None)
+    health_score: str | None = Field(default=None)
+    account_tier: str | None = Field(default=None)
+    renewal_date: str | None = Field(default=None)
+    industry: str | None = Field(default=None)
+    custom_fields: dict[str, Any] | None = Field(default=None)
+    org_company_id: Any | None = Field(default=None)
+    org_company_id_str: str | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
 
 class Role(BaseModel):
     """A Freshdesk role"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    description: Union[str | None, Any] = Field(default=None)
-    default: Union[bool | None, Any] = Field(default=None)
-    agent_type: Union[int | None, Any] = Field(default=None)
-    created_at: Union[str | None, Any] = Field(default=None)
-    updated_at: Union[str | None, Any] = Field(default=None)
+    id: int
+    name: str | None = Field(default=None)
+    description: str | None = Field(default=None)
+    default: bool | None = Field(default=None)
+    agent_type: int | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
 
 class SatisfactionRating(BaseModel):
     """A Freshdesk satisfaction rating"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    survey_id: Union[int | None, Any] = Field(default=None)
-    user_id: Union[int | None, Any] = Field(default=None)
-    agent_id: Union[int | None, Any] = Field(default=None)
-    group_id: Union[int | None, Any] = Field(default=None)
-    ticket_id: Union[int | None, Any] = Field(default=None)
-    feedback: Union[str | None, Any] = Field(default=None)
-    ratings: Union[dict[str, Any] | None, Any] = Field(default=None)
-    created_at: Union[str | None, Any] = Field(default=None)
-    updated_at: Union[str | None, Any] = Field(default=None)
+    id: int
+    survey_id: int | None = Field(default=None)
+    user_id: int | None = Field(default=None)
+    agent_id: int | None = Field(default=None)
+    group_id: int | None = Field(default=None)
+    ticket_id: int | None = Field(default=None)
+    feedback: str | None = Field(default=None)
+    ratings: dict[str, Any] | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
 
 class SurveyQuestionsItem(BaseModel):
     """Nested schema for Survey.questions_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str | None, Any] = Field(default=None, description="Question ID")
+    id: str | None | None = Field(default=None, description="Question ID")
     """Question ID"""
-    label: Union[str | None, Any] = Field(default=None, description="Question label")
+    label: str | None | None = Field(default=None, description="Question label")
     """Question label"""
-    accepted_ratings: Union[list[int] | None, Any] = Field(default=None, description="Accepted rating values")
+    accepted_ratings: list[int] | None | None = Field(default=None, description="Accepted rating values")
     """Accepted rating values"""
 
 class Survey(BaseModel):
     """A Freshdesk survey"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    title: Union[str | None, Any] = Field(default=None)
-    active: Union[bool | None, Any] = Field(default=None)
-    questions: Union[list[SurveyQuestionsItem] | None, Any] = Field(default=None)
-    created_at: Union[str | None, Any] = Field(default=None)
-    updated_at: Union[str | None, Any] = Field(default=None)
+    id: int
+    title: str | None = Field(default=None)
+    active: bool | None = Field(default=None)
+    questions: list[SurveyQuestionsItem] | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
 
 class TimeEntry(BaseModel):
     """A Freshdesk time entry"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    agent_id: Union[int | None, Any] = Field(default=None)
-    ticket_id: Union[int | None, Any] = Field(default=None)
-    company_id: Union[int | None, Any] = Field(default=None)
-    billable: Union[bool | None, Any] = Field(default=None)
-    note: Union[str | None, Any] = Field(default=None)
-    time_spent: Union[str | None, Any] = Field(default=None)
-    timer_running: Union[bool | None, Any] = Field(default=None)
-    executed_at: Union[str | None, Any] = Field(default=None)
-    start_time: Union[str | None, Any] = Field(default=None)
-    time_spent_in_seconds: Union[int | None, Any] = Field(default=None)
-    created_at: Union[str | None, Any] = Field(default=None)
-    updated_at: Union[str | None, Any] = Field(default=None)
+    id: int
+    agent_id: int | None = Field(default=None)
+    ticket_id: int | None = Field(default=None)
+    company_id: int | None = Field(default=None)
+    billable: bool | None = Field(default=None)
+    note: str | None = Field(default=None)
+    time_spent: str | None = Field(default=None)
+    timer_running: bool | None = Field(default=None)
+    executed_at: str | None = Field(default=None)
+    start_time: str | None = Field(default=None)
+    time_spent_in_seconds: int | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
 
 class TicketField(BaseModel):
     """A Freshdesk ticket field definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    label: Union[str | None, Any] = Field(default=None)
-    label_for_customers: Union[str | None, Any] = Field(default=None)
-    description: Union[str | None, Any] = Field(default=None)
-    position: Union[int | None, Any] = Field(default=None)
-    type_: Union[str | None, Any] = Field(default=None, alias="type")
-    default: Union[bool | None, Any] = Field(default=None)
-    required_for_closure: Union[bool | None, Any] = Field(default=None)
-    required_for_agents: Union[bool | None, Any] = Field(default=None)
-    required_for_customers: Union[bool | None, Any] = Field(default=None)
-    customers_can_edit: Union[bool | None, Any] = Field(default=None)
-    displayed_to_customers: Union[bool | None, Any] = Field(default=None)
-    customers_can_filter: Union[bool | None, Any] = Field(default=None)
-    portal_cc: Union[bool | None, Any] = Field(default=None)
-    portal_cc_to: Union[str | None, Any] = Field(default=None)
-    choices: Union[Any, Any] = Field(default=None)
-    created_at: Union[str | None, Any] = Field(default=None)
-    updated_at: Union[str | None, Any] = Field(default=None)
+    id: int
+    name: str | None = Field(default=None)
+    label: str | None = Field(default=None)
+    label_for_customers: str | None = Field(default=None)
+    description: str | None = Field(default=None)
+    position: int | None = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    default: bool | None = Field(default=None)
+    required_for_closure: bool | None = Field(default=None)
+    required_for_agents: bool | None = Field(default=None)
+    required_for_customers: bool | None = Field(default=None)
+    customers_can_edit: bool | None = Field(default=None)
+    displayed_to_customers: bool | None = Field(default=None)
+    customers_can_filter: bool | None = Field(default=None)
+    portal_cc: bool | None = Field(default=None)
+    portal_cc_to: str | None = Field(default=None)
+    choices: Any | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
 
 # ===== METADATA TYPE DEFINITIONS (PYDANTIC) =====
 # Meta types for operations that extract metadata (e.g., pagination info)
@@ -293,61 +293,61 @@ class TicketsListResultMeta(BaseModel):
     """Metadata for tickets.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next: Union[str | None, Any] = Field(default=None)
+    next: str | None = Field(default=None)
 
 class ContactsListResultMeta(BaseModel):
     """Metadata for contacts.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next: Union[str | None, Any] = Field(default=None)
+    next: str | None = Field(default=None)
 
 class AgentsListResultMeta(BaseModel):
     """Metadata for agents.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next: Union[str | None, Any] = Field(default=None)
+    next: str | None = Field(default=None)
 
 class GroupsListResultMeta(BaseModel):
     """Metadata for groups.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next: Union[str | None, Any] = Field(default=None)
+    next: str | None = Field(default=None)
 
 class CompaniesListResultMeta(BaseModel):
     """Metadata for companies.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next: Union[str | None, Any] = Field(default=None)
+    next: str | None = Field(default=None)
 
 class RolesListResultMeta(BaseModel):
     """Metadata for roles.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next: Union[str | None, Any] = Field(default=None)
+    next: str | None = Field(default=None)
 
 class SatisfactionRatingsListResultMeta(BaseModel):
     """Metadata for satisfaction_ratings.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next: Union[str | None, Any] = Field(default=None)
+    next: str | None = Field(default=None)
 
 class SurveysListResultMeta(BaseModel):
     """Metadata for surveys.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next: Union[str | None, Any] = Field(default=None)
+    next: str | None = Field(default=None)
 
 class TimeEntriesListResultMeta(BaseModel):
     """Metadata for time_entries.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next: Union[str | None, Any] = Field(default=None)
+    next: str | None = Field(default=None)
 
 class TicketFieldsListResultMeta(BaseModel):
     """Metadata for ticket_fields.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next: Union[str | None, Any] = Field(default=None)
+    next: str | None = Field(default=None)
 
 # ===== CHECK RESULT MODEL =====
 

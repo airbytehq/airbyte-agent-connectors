@@ -8,7 +8,7 @@ and response envelope types.
 from __future__ import annotations
 
 from pydantic import BaseModel, ConfigDict, Field
-from typing import TypeVar, Generic, Union, Any
+from typing import TypeVar, Generic, Any
 
 # Authentication configuration
 
@@ -36,295 +36,295 @@ class Contact(BaseModel):
     """A SendGrid marketing contact"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    email: Union[str | None, Any] = Field(default=None)
-    first_name: Union[str | None, Any] = Field(default=None)
-    last_name: Union[str | None, Any] = Field(default=None)
-    unique_name: Union[str | None, Any] = Field(default=None)
-    alternate_emails: Union[list[str] | None, Any] = Field(default=None)
-    address_line_1: Union[str | None, Any] = Field(default=None)
-    address_line_2: Union[str | None, Any] = Field(default=None)
-    city: Union[str | None, Any] = Field(default=None)
-    state_province_region: Union[str | None, Any] = Field(default=None)
-    country: Union[str | None, Any] = Field(default=None)
-    postal_code: Union[str | None, Any] = Field(default=None)
-    phone_number: Union[str | None, Any] = Field(default=None)
-    whatsapp: Union[str | None, Any] = Field(default=None)
-    line: Union[str | None, Any] = Field(default=None)
-    facebook: Union[str | None, Any] = Field(default=None)
-    list_ids: Union[list[str] | None, Any] = Field(default=None)
-    segment_ids: Union[list[str] | None, Any] = Field(default=None)
-    custom_fields: Union[dict[str, Any] | None, Any] = Field(default=None)
-    created_at: Union[str | None, Any] = Field(default=None)
-    updated_at: Union[str | None, Any] = Field(default=None)
+    id: str | None = Field(default=None)
+    email: str | None = Field(default=None)
+    first_name: str | None = Field(default=None)
+    last_name: str | None = Field(default=None)
+    unique_name: str | None = Field(default=None)
+    alternate_emails: list[str] | None = Field(default=None)
+    address_line_1: str | None = Field(default=None)
+    address_line_2: str | None = Field(default=None)
+    city: str | None = Field(default=None)
+    state_province_region: str | None = Field(default=None)
+    country: str | None = Field(default=None)
+    postal_code: str | None = Field(default=None)
+    phone_number: str | None = Field(default=None)
+    whatsapp: str | None = Field(default=None)
+    line: str | None = Field(default=None)
+    facebook: str | None = Field(default=None)
+    list_ids: list[str] | None = Field(default=None)
+    segment_ids: list[str] | None = Field(default=None)
+    custom_fields: dict[str, Any] | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
 
 class ContactsListMetadata(BaseModel):
     """Nested schema for ContactsList._metadata"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next: Union[str | None, Any] = Field(default=None)
+    next: str | None | None = Field(default=None)
 
 class ContactsList(BaseModel):
     """Response containing a list of contacts"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    result: Union[list[Contact], Any] = Field(default=None)
-    contact_count: Union[int, Any] = Field(default=None)
-    metadata: Union[ContactsListMetadata, Any] = Field(default=None, alias="_metadata")
+    result: list[Contact] | None = Field(default=None)
+    contact_count: int | None = Field(default=None)
+    metadata: ContactsListMetadata | None = Field(default=None, alias="_metadata")
 
 class ListMetadata(BaseModel):
     """Metadata about the list resource"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    self: Union[str, Any] = Field(default=None)
+    self: str | None = Field(default=None)
 
 class List(BaseModel):
     """A SendGrid marketing list"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    contact_count: Union[int, Any] = Field(default=None)
-    metadata: Union[ListMetadata | None, Any] = Field(default=None, alias="_metadata")
+    id: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    contact_count: int | None = Field(default=None)
+    metadata: ListMetadata | None = Field(default=None, alias="_metadata")
 
 class ListsListMetadata(BaseModel):
     """Nested schema for ListsList._metadata"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next: Union[str | None, Any] = Field(default=None)
+    next: str | None | None = Field(default=None)
 
 class ListsList(BaseModel):
     """Response containing a list of marketing lists"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    result: Union[list[List], Any] = Field(default=None)
-    metadata: Union[ListsListMetadata, Any] = Field(default=None, alias="_metadata")
+    result: list[List] | None = Field(default=None)
+    metadata: ListsListMetadata | None = Field(default=None, alias="_metadata")
 
 class SegmentStatus(BaseModel):
     """Segment status details"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    query_validation: Union[str, Any] = Field(default=None)
+    query_validation: str | None = Field(default=None)
 
 class Segment(BaseModel):
     """A SendGrid marketing segment"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    contacts_count: Union[int, Any] = Field(default=None)
-    created_at: Union[str | None, Any] = Field(default=None)
-    updated_at: Union[str | None, Any] = Field(default=None)
-    sample_updated_at: Union[str | None, Any] = Field(default=None)
-    next_sample_update: Union[str | None, Any] = Field(default=None)
-    parent_list_ids: Union[list[str | None] | None, Any] = Field(default=None)
-    query_version: Union[str, Any] = Field(default=None)
-    status: Union[SegmentStatus | None, Any] = Field(default=None)
+    id: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    contacts_count: int | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
+    sample_updated_at: str | None = Field(default=None)
+    next_sample_update: str | None = Field(default=None)
+    parent_list_ids: list[str | None] | None = Field(default=None)
+    query_version: str | None = Field(default=None)
+    status: SegmentStatus | None = Field(default=None)
 
 class SegmentsList(BaseModel):
     """Response containing a list of segments"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    results: Union[list[Segment], Any] = Field(default=None)
+    results: list[Segment] | None = Field(default=None)
 
 class Campaign(BaseModel):
     """A SendGrid marketing campaign"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    status: Union[str, Any] = Field(default=None)
-    channels: Union[list[str] | None, Any] = Field(default=None)
-    is_abtest: Union[bool, Any] = Field(default=None)
-    created_at: Union[str | None, Any] = Field(default=None)
-    updated_at: Union[str | None, Any] = Field(default=None)
+    id: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    status: str | None = Field(default=None)
+    channels: list[str] | None = Field(default=None)
+    is_abtest: bool | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
 
 class CampaignsListMetadata(BaseModel):
     """Nested schema for CampaignsList._metadata"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next: Union[str | None, Any] = Field(default=None)
+    next: str | None | None = Field(default=None)
 
 class CampaignsList(BaseModel):
     """Response containing a list of campaigns"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    result: Union[list[Campaign], Any] = Field(default=None)
-    metadata: Union[CampaignsListMetadata, Any] = Field(default=None, alias="_metadata")
+    result: list[Campaign] | None = Field(default=None)
+    metadata: CampaignsListMetadata | None = Field(default=None, alias="_metadata")
 
 class SingleSendSendTo(BaseModel):
     """Recipients configuration"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    list_ids: Union[list[str] | None, Any] = Field(default=None)
-    segment_ids: Union[list[str] | None, Any] = Field(default=None)
-    all: Union[bool, Any] = Field(default=None)
+    list_ids: list[str] | None | None = Field(default=None)
+    segment_ids: list[str] | None | None = Field(default=None)
+    all: bool | None = Field(default=None)
 
 class SingleSendEmailConfig(BaseModel):
     """Email configuration details"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    subject: Union[str | None, Any] = Field(default=None)
-    html_content: Union[str | None, Any] = Field(default=None)
-    plain_content: Union[str | None, Any] = Field(default=None)
-    generate_plain_content: Union[bool, Any] = Field(default=None)
-    design_id: Union[str | None, Any] = Field(default=None)
-    editor: Union[str | None, Any] = Field(default=None)
-    suppression_group_id: Union[int | None, Any] = Field(default=None)
-    custom_unsubscribe_url: Union[str | None, Any] = Field(default=None)
-    sender_id: Union[int | None, Any] = Field(default=None)
-    ip_pool: Union[str | None, Any] = Field(default=None)
+    subject: str | None | None = Field(default=None)
+    html_content: str | None | None = Field(default=None)
+    plain_content: str | None | None = Field(default=None)
+    generate_plain_content: bool | None = Field(default=None)
+    design_id: str | None | None = Field(default=None)
+    editor: str | None | None = Field(default=None)
+    suppression_group_id: int | None | None = Field(default=None)
+    custom_unsubscribe_url: str | None | None = Field(default=None)
+    sender_id: int | None | None = Field(default=None)
+    ip_pool: str | None | None = Field(default=None)
 
 class SingleSend(BaseModel):
     """A SendGrid single send"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    status: Union[str, Any] = Field(default=None)
-    categories: Union[list[str] | None, Any] = Field(default=None)
-    send_at: Union[str | None, Any] = Field(default=None)
-    send_to: Union[SingleSendSendTo | None, Any] = Field(default=None)
-    email_config: Union[SingleSendEmailConfig | None, Any] = Field(default=None)
-    is_abtest: Union[bool, Any] = Field(default=None)
-    created_at: Union[str, Any] = Field(default=None)
-    updated_at: Union[str, Any] = Field(default=None)
+    id: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    status: str | None = Field(default=None)
+    categories: list[str] | None = Field(default=None)
+    send_at: str | None = Field(default=None)
+    send_to: SingleSendSendTo | None = Field(default=None)
+    email_config: SingleSendEmailConfig | None = Field(default=None)
+    is_abtest: bool | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
 
 class SingleSendsListMetadata(BaseModel):
     """Nested schema for SingleSendsList._metadata"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next: Union[str | None, Any] = Field(default=None)
+    next: str | None | None = Field(default=None)
 
 class SingleSendsList(BaseModel):
     """Response containing a list of single sends"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    result: Union[list[SingleSend], Any] = Field(default=None)
-    metadata: Union[SingleSendsListMetadata, Any] = Field(default=None, alias="_metadata")
+    result: list[SingleSend] | None = Field(default=None)
+    metadata: SingleSendsListMetadata | None = Field(default=None, alias="_metadata")
 
 class Template(BaseModel):
     """A SendGrid transactional template"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    generation: Union[str, Any] = Field(default=None)
-    updated_at: Union[str | None, Any] = Field(default=None)
-    versions: Union[list[Any] | None, Any] = Field(default=None)
+    id: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    generation: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
+    versions: list[Any] | None = Field(default=None)
 
 class TemplatesListMetadata(BaseModel):
     """Nested schema for TemplatesList._metadata"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next: Union[str | None, Any] = Field(default=None)
+    next: str | None | None = Field(default=None)
 
 class TemplatesList(BaseModel):
     """Response containing a list of templates"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    templates: Union[list[Template], Any] = Field(default=None)
-    metadata: Union[TemplatesListMetadata, Any] = Field(default=None, alias="_metadata")
+    templates: list[Template] | None = Field(default=None)
+    metadata: TemplatesListMetadata | None = Field(default=None, alias="_metadata")
 
 class SingleSendStatsStats(BaseModel):
     """Email statistics for the single send"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    bounce_drops: Union[int, Any] = Field(default=None)
-    bounces: Union[int, Any] = Field(default=None)
-    clicks: Union[int, Any] = Field(default=None)
-    delivered: Union[int, Any] = Field(default=None)
-    invalid_emails: Union[int, Any] = Field(default=None)
-    opens: Union[int, Any] = Field(default=None)
-    requests: Union[int, Any] = Field(default=None)
-    spam_report_drops: Union[int, Any] = Field(default=None)
-    spam_reports: Union[int, Any] = Field(default=None)
-    unique_clicks: Union[int, Any] = Field(default=None)
-    unique_opens: Union[int, Any] = Field(default=None)
-    unsubscribes: Union[int, Any] = Field(default=None)
+    bounce_drops: int | None = Field(default=None)
+    bounces: int | None = Field(default=None)
+    clicks: int | None = Field(default=None)
+    delivered: int | None = Field(default=None)
+    invalid_emails: int | None = Field(default=None)
+    opens: int | None = Field(default=None)
+    requests: int | None = Field(default=None)
+    spam_report_drops: int | None = Field(default=None)
+    spam_reports: int | None = Field(default=None)
+    unique_clicks: int | None = Field(default=None)
+    unique_opens: int | None = Field(default=None)
+    unsubscribes: int | None = Field(default=None)
 
 class SingleSendStats(BaseModel):
     """Stats for a single send"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    ab_phase: Union[str | None, Any] = Field(default=None)
-    ab_variation: Union[str | None, Any] = Field(default=None)
-    aggregation: Union[str | None, Any] = Field(default=None)
-    stats: Union[SingleSendStatsStats | None, Any] = Field(default=None)
+    id: str | None = Field(default=None)
+    ab_phase: str | None = Field(default=None)
+    ab_variation: str | None = Field(default=None)
+    aggregation: str | None = Field(default=None)
+    stats: SingleSendStatsStats | None = Field(default=None)
 
 class SingleSendStatsListMetadata(BaseModel):
     """Nested schema for SingleSendStatsList._metadata"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next: Union[str | None, Any] = Field(default=None)
+    next: str | None | None = Field(default=None)
 
 class SingleSendStatsList(BaseModel):
     """Response containing a list of single send stats"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    results: Union[list[SingleSendStats], Any] = Field(default=None)
-    metadata: Union[SingleSendStatsListMetadata, Any] = Field(default=None, alias="_metadata")
+    results: list[SingleSendStats] | None = Field(default=None)
+    metadata: SingleSendStatsListMetadata | None = Field(default=None, alias="_metadata")
 
 class Bounce(BaseModel):
     """A bounced email record"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    created: Union[int, Any] = Field(default=None)
-    email: Union[str, Any] = Field(default=None)
-    reason: Union[str, Any] = Field(default=None)
-    status: Union[str, Any] = Field(default=None)
+    created: int | None = Field(default=None)
+    email: str | None = Field(default=None)
+    reason: str | None = Field(default=None)
+    status: str | None = Field(default=None)
 
 class Block(BaseModel):
     """A blocked email record"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    created: Union[int, Any] = Field(default=None)
-    email: Union[str, Any] = Field(default=None)
-    reason: Union[str, Any] = Field(default=None)
-    status: Union[str, Any] = Field(default=None)
+    created: int | None = Field(default=None)
+    email: str | None = Field(default=None)
+    reason: str | None = Field(default=None)
+    status: str | None = Field(default=None)
 
 class SpamReport(BaseModel):
     """A spam report record"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    created: Union[int, Any] = Field(default=None)
-    email: Union[str, Any] = Field(default=None)
-    ip: Union[str, Any] = Field(default=None)
+    created: int | None = Field(default=None)
+    email: str | None = Field(default=None)
+    ip: str | None = Field(default=None)
 
 class InvalidEmail(BaseModel):
     """An invalid email record"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    created: Union[int, Any] = Field(default=None)
-    email: Union[str, Any] = Field(default=None)
-    reason: Union[str, Any] = Field(default=None)
+    created: int | None = Field(default=None)
+    email: str | None = Field(default=None)
+    reason: str | None = Field(default=None)
 
 class GlobalSuppression(BaseModel):
     """A globally suppressed email address"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    created: Union[int, Any] = Field(default=None)
-    email: Union[str, Any] = Field(default=None)
+    created: int | None = Field(default=None)
+    email: str | None = Field(default=None)
 
 class SuppressionGroup(BaseModel):
     """A suppression (unsubscribe) group"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    description: Union[str, Any] = Field(default=None)
-    is_default: Union[bool, Any] = Field(default=None)
-    unsubscribes: Union[int, Any] = Field(default=None)
+    id: int | None = Field(default=None)
+    name: str | None = Field(default=None)
+    description: str | None = Field(default=None)
+    is_default: bool | None = Field(default=None)
+    unsubscribes: int | None = Field(default=None)
 
 class SuppressionGroupMember(BaseModel):
     """A member of a suppression group"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    email: Union[str, Any] = Field(default=None)
-    group_id: Union[int, Any] = Field(default=None)
-    group_name: Union[str, Any] = Field(default=None)
-    created_at: Union[int, Any] = Field(default=None)
+    email: str | None = Field(default=None)
+    group_id: int | None = Field(default=None)
+    group_name: str | None = Field(default=None)
+    created_at: int | None = Field(default=None)
 
 # ===== METADATA TYPE DEFINITIONS (PYDANTIC) =====
 # Meta types for operations that extract metadata (e.g., pagination info)
@@ -333,74 +333,74 @@ class ContactsListResultMeta(BaseModel):
     """Metadata for contacts.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next: Union[str | None, Any] = Field(default=None)
-    contact_count: Union[int, Any] = Field(default=None)
+    next: str | None = Field(default=None)
+    contact_count: int | None = Field(default=None)
 
 class ListsListResultMeta(BaseModel):
     """Metadata for lists.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next: Union[str | None, Any] = Field(default=None)
+    next: str | None = Field(default=None)
 
 class CampaignsListResultMeta(BaseModel):
     """Metadata for campaigns.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next: Union[str | None, Any] = Field(default=None)
+    next: str | None = Field(default=None)
 
 class SinglesendsListResultMeta(BaseModel):
     """Metadata for singlesends.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next: Union[str | None, Any] = Field(default=None)
+    next: str | None = Field(default=None)
 
 class TemplatesListResultMeta(BaseModel):
     """Metadata for templates.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next: Union[str | None, Any] = Field(default=None)
+    next: str | None = Field(default=None)
 
 class SinglesendStatsListResultMeta(BaseModel):
     """Metadata for singlesend_stats.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next: Union[str | None, Any] = Field(default=None)
+    next: str | None = Field(default=None)
 
 class BouncesListResultMeta(BaseModel):
     """Metadata for bounces.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next: Union[str | None, Any] = Field(default=None)
+    next: str | None = Field(default=None)
 
 class BlocksListResultMeta(BaseModel):
     """Metadata for blocks.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next: Union[str | None, Any] = Field(default=None)
+    next: str | None = Field(default=None)
 
 class SpamReportsListResultMeta(BaseModel):
     """Metadata for spam_reports.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next: Union[str | None, Any] = Field(default=None)
+    next: str | None = Field(default=None)
 
 class InvalidEmailsListResultMeta(BaseModel):
     """Metadata for invalid_emails.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next: Union[str | None, Any] = Field(default=None)
+    next: str | None = Field(default=None)
 
 class GlobalSuppressionsListResultMeta(BaseModel):
     """Metadata for global_suppressions.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next: Union[str | None, Any] = Field(default=None)
+    next: str | None = Field(default=None)
 
 class SuppressionGroupMembersListResultMeta(BaseModel):
     """Metadata for suppression_group_members.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next: Union[str | None, Any] = Field(default=None)
+    next: str | None = Field(default=None)
 
 # ===== CHECK RESULT MODEL =====
 

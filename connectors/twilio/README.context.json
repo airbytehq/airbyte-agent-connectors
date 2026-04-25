@@ -94,7 +94,7 @@
       {
         "name": "next_page_uri",
         "python_name": "next_page_uri",
-        "type": "str | None",
+        "type": "str",
         "schema": {
           "type": [
             "null",
@@ -105,7 +105,7 @@
       {
         "name": "first_page_uri",
         "python_name": "first_page_uri",
-        "type": "str | None",
+        "type": "str",
         "schema": {
           "type": [
             "null",
@@ -116,7 +116,7 @@
       {
         "name": "page",
         "python_name": "page",
-        "type": "int | None",
+        "type": "int",
         "schema": {
           "type": [
             "null",
@@ -127,7 +127,7 @@
       {
         "name": "page_size",
         "python_name": "page_size",
-        "type": "int | None",
+        "type": "int",
         "schema": {
           "type": [
             "null",
@@ -178,7 +178,7 @@
           {
             "name": "next_page_uri",
             "python_name": "next_page_uri",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",
@@ -189,7 +189,7 @@
           {
             "name": "first_page_uri",
             "python_name": "first_page_uri",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",
@@ -200,7 +200,7 @@
           {
             "name": "page",
             "python_name": "page",
-            "type": "int | None",
+            "type": "int",
             "schema": {
               "type": [
                 "null",
@@ -211,7 +211,7 @@
           {
             "name": "page_size",
             "python_name": "page_size",
-            "type": "int | None",
+            "type": "int",
             "schema": {
               "type": [
                 "null",
@@ -300,7 +300,7 @@
           {
             "name": "next_page_uri",
             "python_name": "next_page_uri",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",
@@ -311,7 +311,7 @@
           {
             "name": "first_page_uri",
             "python_name": "first_page_uri",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",
@@ -322,7 +322,7 @@
           {
             "name": "page",
             "python_name": "page",
-            "type": "int | None",
+            "type": "int",
             "schema": {
               "type": [
                 "null",
@@ -333,7 +333,7 @@
           {
             "name": "page_size",
             "python_name": "page_size",
-            "type": "int | None",
+            "type": "int",
             "schema": {
               "type": [
                 "null",
@@ -460,7 +460,7 @@
           {
             "name": "next_page_uri",
             "python_name": "next_page_uri",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",
@@ -471,7 +471,7 @@
           {
             "name": "first_page_uri",
             "python_name": "first_page_uri",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",
@@ -482,7 +482,7 @@
           {
             "name": "page",
             "python_name": "page",
-            "type": "int | None",
+            "type": "int",
             "schema": {
               "type": [
                 "null",
@@ -493,7 +493,7 @@
           {
             "name": "page_size",
             "python_name": "page_size",
-            "type": "int | None",
+            "type": "int",
             "schema": {
               "type": [
                 "null",
@@ -620,7 +620,7 @@
           {
             "name": "next_page_uri",
             "python_name": "next_page_uri",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",
@@ -631,7 +631,7 @@
           {
             "name": "first_page_uri",
             "python_name": "first_page_uri",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",
@@ -642,7 +642,7 @@
           {
             "name": "page",
             "python_name": "page",
-            "type": "int | None",
+            "type": "int",
             "schema": {
               "type": [
                 "null",
@@ -653,7 +653,7 @@
           {
             "name": "page_size",
             "python_name": "page_size",
-            "type": "int | None",
+            "type": "int",
             "schema": {
               "type": [
                 "null",
@@ -780,7 +780,7 @@
           {
             "name": "next_page_uri",
             "python_name": "next_page_uri",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",
@@ -791,7 +791,7 @@
           {
             "name": "first_page_uri",
             "python_name": "first_page_uri",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",
@@ -802,7 +802,7 @@
           {
             "name": "page",
             "python_name": "page",
-            "type": "int | None",
+            "type": "int",
             "schema": {
               "type": [
                 "null",
@@ -813,7 +813,7 @@
           {
             "name": "page_size",
             "python_name": "page_size",
-            "type": "int | None",
+            "type": "int",
             "schema": {
               "type": [
                 "null",
@@ -912,7 +912,7 @@
           {
             "name": "next_page_uri",
             "python_name": "next_page_uri",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",
@@ -923,7 +923,7 @@
           {
             "name": "first_page_uri",
             "python_name": "first_page_uri",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",
@@ -934,7 +934,7 @@
           {
             "name": "page",
             "python_name": "page",
-            "type": "int | None",
+            "type": "int",
             "schema": {
               "type": [
                 "null",
@@ -945,7 +945,7 @@
           {
             "name": "page_size",
             "python_name": "page_size",
-            "type": "int | None",
+            "type": "int",
             "schema": {
               "type": [
                 "null",
@@ -1044,7 +1044,7 @@
           {
             "name": "next_page_uri",
             "python_name": "next_page_uri",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",
@@ -1055,7 +1055,7 @@
           {
             "name": "first_page_uri",
             "python_name": "first_page_uri",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",
@@ -1066,7 +1066,7 @@
           {
             "name": "page",
             "python_name": "page",
-            "type": "int | None",
+            "type": "int",
             "schema": {
               "type": [
                 "null",
@@ -1077,7 +1077,7 @@
           {
             "name": "page_size",
             "python_name": "page_size",
-            "type": "int | None",
+            "type": "int",
             "schema": {
               "type": [
                 "null",
@@ -1138,7 +1138,7 @@
           {
             "name": "next_page_uri",
             "python_name": "next_page_uri",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",
@@ -1149,7 +1149,7 @@
           {
             "name": "first_page_uri",
             "python_name": "first_page_uri",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",
@@ -1160,7 +1160,7 @@
           {
             "name": "page",
             "python_name": "page",
-            "type": "int | None",
+            "type": "int",
             "schema": {
               "type": [
                 "null",
@@ -1171,7 +1171,7 @@
           {
             "name": "page_size",
             "python_name": "page_size",
-            "type": "int | None",
+            "type": "int",
             "schema": {
               "type": [
                 "null",
@@ -1270,7 +1270,7 @@
           {
             "name": "next_page_uri",
             "python_name": "next_page_uri",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",
@@ -1281,7 +1281,7 @@
           {
             "name": "first_page_uri",
             "python_name": "first_page_uri",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",
@@ -1292,7 +1292,7 @@
           {
             "name": "page",
             "python_name": "page",
-            "type": "int | None",
+            "type": "int",
             "schema": {
               "type": [
                 "null",
@@ -1303,7 +1303,7 @@
           {
             "name": "page_size",
             "python_name": "page_size",
-            "type": "int | None",
+            "type": "int",
             "schema": {
               "type": [
                 "null",
@@ -1402,7 +1402,7 @@
           {
             "name": "next_page_uri",
             "python_name": "next_page_uri",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",
@@ -1413,7 +1413,7 @@
           {
             "name": "first_page_uri",
             "python_name": "first_page_uri",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",
@@ -1424,7 +1424,7 @@
           {
             "name": "page",
             "python_name": "page",
-            "type": "int | None",
+            "type": "int",
             "schema": {
               "type": [
                 "null",
@@ -1435,7 +1435,7 @@
           {
             "name": "page_size",
             "python_name": "page_size",
-            "type": "int | None",
+            "type": "int",
             "schema": {
               "type": [
                 "null",
@@ -1534,7 +1534,7 @@
           {
             "name": "next_page_uri",
             "python_name": "next_page_uri",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",
@@ -1545,7 +1545,7 @@
           {
             "name": "first_page_uri",
             "python_name": "first_page_uri",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",
@@ -1556,7 +1556,7 @@
           {
             "name": "page",
             "python_name": "page",
-            "type": "int | None",
+            "type": "int",
             "schema": {
               "type": [
                 "null",
@@ -1567,7 +1567,7 @@
           {
             "name": "page_size",
             "python_name": "page_size",
-            "type": "int | None",
+            "type": "int",
             "schema": {
               "type": [
                 "null",

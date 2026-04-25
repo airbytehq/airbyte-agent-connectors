@@ -8,7 +8,7 @@ and response envelope types.
 from __future__ import annotations
 
 from pydantic import BaseModel, ConfigDict, Field
-from typing import TypeVar, Generic, Union, Any
+from typing import TypeVar, Generic, Any
 from typing import Optional
 
 # Authentication configuration
@@ -45,137 +45,137 @@ class Site(BaseModel):
     """A Search Console site resource."""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    site_url: Union[str | None, Any] = Field(default=None, alias="siteUrl")
-    permission_level: Union[str | None, Any] = Field(default=None, alias="permissionLevel")
+    site_url: str | None = Field(default=None, alias="siteUrl")
+    permission_level: str | None = Field(default=None, alias="permissionLevel")
 
 class SitesList(BaseModel):
     """Response containing a list of sites."""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    site_entry: Union[list[Site], Any] = Field(default=None, alias="siteEntry")
+    site_entry: list[Site] | None = Field(default=None, alias="siteEntry")
 
 class SitemapContent(BaseModel):
     """Information about a specific content type in a sitemap."""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type_: Union[str | None, Any] = Field(default=None, alias="type")
-    submitted: Union[str | None, Any] = Field(default=None)
-    indexed: Union[str | None, Any] = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    submitted: str | None = Field(default=None)
+    indexed: str | None = Field(default=None)
 
 class Sitemap(BaseModel):
     """A sitemap resource with details about a submitted sitemap."""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    path: Union[str | None, Any] = Field(default=None)
-    last_submitted: Union[str | None, Any] = Field(default=None, alias="lastSubmitted")
-    is_pending: Union[bool | None, Any] = Field(default=None, alias="isPending")
-    is_sitemaps_index: Union[bool | None, Any] = Field(default=None, alias="isSitemapsIndex")
-    type_: Union[str | None, Any] = Field(default=None, alias="type")
-    last_downloaded: Union[str | None, Any] = Field(default=None, alias="lastDownloaded")
-    warnings: Union[str | None, Any] = Field(default=None)
-    errors: Union[str | None, Any] = Field(default=None)
-    contents: Union[list[SitemapContent] | None, Any] = Field(default=None)
+    path: str | None = Field(default=None)
+    last_submitted: str | None = Field(default=None, alias="lastSubmitted")
+    is_pending: bool | None = Field(default=None, alias="isPending")
+    is_sitemaps_index: bool | None = Field(default=None, alias="isSitemapsIndex")
+    type_: str | None = Field(default=None, alias="type")
+    last_downloaded: str | None = Field(default=None, alias="lastDownloaded")
+    warnings: str | None = Field(default=None)
+    errors: str | None = Field(default=None)
+    contents: list[SitemapContent] | None = Field(default=None)
 
 class SitemapsList(BaseModel):
     """Response containing a list of sitemaps."""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    sitemap: Union[list[Sitemap], Any] = Field(default=None)
+    sitemap: list[Sitemap] | None = Field(default=None)
 
 class SearchAnalyticsByDateRequest(BaseModel):
     """Request body for search analytics query grouped by date."""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    start_date: Union[str, Any] = Field(default=None, alias="startDate")
-    end_date: Union[str, Any] = Field(default=None, alias="endDate")
-    dimensions: Union[list[str], Any] = Field(default=None)
-    row_limit: Union[int, Any] = Field(default=None, alias="rowLimit")
-    start_row: Union[int, Any] = Field(default=None, alias="startRow")
-    type_: Union[str, Any] = Field(default=None, alias="type")
-    aggregation_type: Union[str, Any] = Field(default=None, alias="aggregationType")
-    data_state: Union[str, Any] = Field(default=None, alias="dataState")
+    start_date: str = Field(alias="startDate")
+    end_date: str = Field(alias="endDate")
+    dimensions: list[str] | None = Field(default=None)
+    row_limit: int | None = Field(default=None, alias="rowLimit")
+    start_row: int | None = Field(default=None, alias="startRow")
+    type_: str | None = Field(default=None, alias="type")
+    aggregation_type: str | None = Field(default=None, alias="aggregationType")
+    data_state: str | None = Field(default=None, alias="dataState")
 
 class SearchAnalyticsByCountryRequest(BaseModel):
     """Request body for search analytics query grouped by date and country."""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    start_date: Union[str, Any] = Field(default=None, alias="startDate")
-    end_date: Union[str, Any] = Field(default=None, alias="endDate")
-    dimensions: Union[list[str], Any] = Field(default=None)
-    row_limit: Union[int, Any] = Field(default=None, alias="rowLimit")
-    start_row: Union[int, Any] = Field(default=None, alias="startRow")
-    type_: Union[str, Any] = Field(default=None, alias="type")
-    aggregation_type: Union[str, Any] = Field(default=None, alias="aggregationType")
-    data_state: Union[str, Any] = Field(default=None, alias="dataState")
+    start_date: str = Field(alias="startDate")
+    end_date: str = Field(alias="endDate")
+    dimensions: list[str] | None = Field(default=None)
+    row_limit: int | None = Field(default=None, alias="rowLimit")
+    start_row: int | None = Field(default=None, alias="startRow")
+    type_: str | None = Field(default=None, alias="type")
+    aggregation_type: str | None = Field(default=None, alias="aggregationType")
+    data_state: str | None = Field(default=None, alias="dataState")
 
 class SearchAnalyticsByDeviceRequest(BaseModel):
     """Request body for search analytics query grouped by date and device."""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    start_date: Union[str, Any] = Field(default=None, alias="startDate")
-    end_date: Union[str, Any] = Field(default=None, alias="endDate")
-    dimensions: Union[list[str], Any] = Field(default=None)
-    row_limit: Union[int, Any] = Field(default=None, alias="rowLimit")
-    start_row: Union[int, Any] = Field(default=None, alias="startRow")
-    type_: Union[str, Any] = Field(default=None, alias="type")
-    aggregation_type: Union[str, Any] = Field(default=None, alias="aggregationType")
-    data_state: Union[str, Any] = Field(default=None, alias="dataState")
+    start_date: str = Field(alias="startDate")
+    end_date: str = Field(alias="endDate")
+    dimensions: list[str] | None = Field(default=None)
+    row_limit: int | None = Field(default=None, alias="rowLimit")
+    start_row: int | None = Field(default=None, alias="startRow")
+    type_: str | None = Field(default=None, alias="type")
+    aggregation_type: str | None = Field(default=None, alias="aggregationType")
+    data_state: str | None = Field(default=None, alias="dataState")
 
 class SearchAnalyticsByPageRequest(BaseModel):
     """Request body for search analytics query grouped by date and page."""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    start_date: Union[str, Any] = Field(default=None, alias="startDate")
-    end_date: Union[str, Any] = Field(default=None, alias="endDate")
-    dimensions: Union[list[str], Any] = Field(default=None)
-    row_limit: Union[int, Any] = Field(default=None, alias="rowLimit")
-    start_row: Union[int, Any] = Field(default=None, alias="startRow")
-    type_: Union[str, Any] = Field(default=None, alias="type")
-    aggregation_type: Union[str, Any] = Field(default=None, alias="aggregationType")
-    data_state: Union[str, Any] = Field(default=None, alias="dataState")
+    start_date: str = Field(alias="startDate")
+    end_date: str = Field(alias="endDate")
+    dimensions: list[str] | None = Field(default=None)
+    row_limit: int | None = Field(default=None, alias="rowLimit")
+    start_row: int | None = Field(default=None, alias="startRow")
+    type_: str | None = Field(default=None, alias="type")
+    aggregation_type: str | None = Field(default=None, alias="aggregationType")
+    data_state: str | None = Field(default=None, alias="dataState")
 
 class SearchAnalyticsByQueryRequest(BaseModel):
     """Request body for search analytics query grouped by date and query."""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    start_date: Union[str, Any] = Field(default=None, alias="startDate")
-    end_date: Union[str, Any] = Field(default=None, alias="endDate")
-    dimensions: Union[list[str], Any] = Field(default=None)
-    row_limit: Union[int, Any] = Field(default=None, alias="rowLimit")
-    start_row: Union[int, Any] = Field(default=None, alias="startRow")
-    type_: Union[str, Any] = Field(default=None, alias="type")
-    aggregation_type: Union[str, Any] = Field(default=None, alias="aggregationType")
-    data_state: Union[str, Any] = Field(default=None, alias="dataState")
+    start_date: str = Field(alias="startDate")
+    end_date: str = Field(alias="endDate")
+    dimensions: list[str] | None = Field(default=None)
+    row_limit: int | None = Field(default=None, alias="rowLimit")
+    start_row: int | None = Field(default=None, alias="startRow")
+    type_: str | None = Field(default=None, alias="type")
+    aggregation_type: str | None = Field(default=None, alias="aggregationType")
+    data_state: str | None = Field(default=None, alias="dataState")
 
 class SearchAnalyticsAllFieldsRequest(BaseModel):
     """Request body for search analytics query grouped by all dimensions."""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    start_date: Union[str, Any] = Field(default=None, alias="startDate")
-    end_date: Union[str, Any] = Field(default=None, alias="endDate")
-    dimensions: Union[list[str], Any] = Field(default=None)
-    row_limit: Union[int, Any] = Field(default=None, alias="rowLimit")
-    start_row: Union[int, Any] = Field(default=None, alias="startRow")
-    type_: Union[str, Any] = Field(default=None, alias="type")
-    aggregation_type: Union[str, Any] = Field(default=None, alias="aggregationType")
-    data_state: Union[str, Any] = Field(default=None, alias="dataState")
+    start_date: str = Field(alias="startDate")
+    end_date: str = Field(alias="endDate")
+    dimensions: list[str] | None = Field(default=None)
+    row_limit: int | None = Field(default=None, alias="rowLimit")
+    start_row: int | None = Field(default=None, alias="startRow")
+    type_: str | None = Field(default=None, alias="type")
+    aggregation_type: str | None = Field(default=None, alias="aggregationType")
+    data_state: str | None = Field(default=None, alias="dataState")
 
 class SearchAnalyticsRow(BaseModel):
     """A row of search analytics data."""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    keys: Union[list[str] | None, Any] = Field(default=None)
-    clicks: Union[float | None, Any] = Field(default=None)
-    impressions: Union[float | None, Any] = Field(default=None)
-    ctr: Union[float | None, Any] = Field(default=None)
-    position: Union[float | None, Any] = Field(default=None)
+    keys: list[str] | None = Field(default=None)
+    clicks: float | None = Field(default=None)
+    impressions: float | None = Field(default=None)
+    ctr: float | None = Field(default=None)
+    position: float | None = Field(default=None)
 
 class SearchAnalyticsResponse(BaseModel):
     """Response containing search analytics data."""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    rows: Union[list[SearchAnalyticsRow], Any] = Field(default=None)
-    response_aggregation_type: Union[str | None, Any] = Field(default=None, alias="responseAggregationType")
+    rows: list[SearchAnalyticsRow] | None = Field(default=None)
+    response_aggregation_type: str | None = Field(default=None, alias="responseAggregationType")
 
 # ===== METADATA TYPE DEFINITIONS (PYDANTIC) =====
 # Meta types for operations that extract metadata (e.g., pagination info)
@@ -184,37 +184,37 @@ class SearchAnalyticsByDateListResultMeta(BaseModel):
     """Metadata for search_analytics_by_date.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    response_aggregation_type: Union[str | None, Any] = Field(default=None)
+    response_aggregation_type: str | None = Field(default=None)
 
 class SearchAnalyticsByCountryListResultMeta(BaseModel):
     """Metadata for search_analytics_by_country.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    response_aggregation_type: Union[str | None, Any] = Field(default=None)
+    response_aggregation_type: str | None = Field(default=None)
 
 class SearchAnalyticsByDeviceListResultMeta(BaseModel):
     """Metadata for search_analytics_by_device.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    response_aggregation_type: Union[str | None, Any] = Field(default=None)
+    response_aggregation_type: str | None = Field(default=None)
 
 class SearchAnalyticsByPageListResultMeta(BaseModel):
     """Metadata for search_analytics_by_page.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    response_aggregation_type: Union[str | None, Any] = Field(default=None)
+    response_aggregation_type: str | None = Field(default=None)
 
 class SearchAnalyticsByQueryListResultMeta(BaseModel):
     """Metadata for search_analytics_by_query.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    response_aggregation_type: Union[str | None, Any] = Field(default=None)
+    response_aggregation_type: str | None = Field(default=None)
 
 class SearchAnalyticsAllFieldsListResultMeta(BaseModel):
     """Metadata for search_analytics_all_fields.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    response_aggregation_type: Union[str | None, Any] = Field(default=None)
+    response_aggregation_type: str | None = Field(default=None)
 
 # ===== CHECK RESULT MODEL =====
 

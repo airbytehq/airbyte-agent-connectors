@@ -8,7 +8,7 @@ and response envelope types.
 from __future__ import annotations
 
 from pydantic import BaseModel, ConfigDict, Field
-from typing import TypeVar, Generic, Union, Any
+from typing import TypeVar, Generic, Any
 {% set has_optional_fields = namespace(value=False) -%}
 {% if auth_config %}
 {%- for option in auth_config.options %}
@@ -139,21 +139,28 @@ class {{ schema.name }}(BaseModel):
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
 {% if schema.fields %}
-{% for field in schema.fields -%}
-{%- set python_name = field.python_name | default(field.name | snake_case) %}
-{% if python_name != field.name %}
-    {{ python_name }}: Union[{{ field.type }}, Any] = Field(default=None, alias="{{ field.name }}"{% if field.description %}, description="{{ field.description }}"{% endif %})
+{% for field in schema.fields %}
+{% set python_name = field.python_name | default(field.name | snake_case) %}
+{% set alias = python_name != field.name %}
+{% if field.required and alias %}
+    {{ python_name }}: {{ field.type }} = Field(alias="{{ field.name }}"{% if field.description %}, description="{{ field.description }}"{% endif %})
+{% elif field.required and field.description %}
+    {{ python_name }}: {{ field.type }} = Field(description="{{ field.description }}")
+{% elif field.required %}
+    {{ python_name }}: {{ field.type }}
+{% elif alias %}
+    {{ python_name }}: {{ field.type }} | None = Field(default=None, alias="{{ field.name }}"{% if field.description %}, description="{{ field.description }}"{% endif %})
 {% else %}
-    {{ python_name }}: Union[{{ field.type }}, Any] = Field(default=None{% if field.description %}, description="{{ field.description }}"{% endif %})
+    {{ python_name }}: {{ field.type }} | None = Field(default=None{% if field.description %}, description="{{ field.description }}"{% endif %})
 {% endif %}
-{%- if field.description %}
+{% if field.description %}
     """{{ field.description }}"""
 {% endif %}
 {% endfor %}
-{%- else %}
+{% else %}
     pass
 {% endif %}
-{%- endfor %}
+{% endfor %}
 
 # ===== METADATA TYPE DEFINITIONS (PYDANTIC) =====
 # Meta types for operations that extract metadata (e.g., pagination info)
@@ -165,19 +172,19 @@ class {{ envelope.name }}Meta(BaseModel):
     """Metadata for {{ envelope.entity }}.{{ envelope.action }} operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-{% for field in envelope.meta_fields -%}
-{%- set python_name = field.python_name | default(field.name | snake_case) %}
+{% for field in envelope.meta_fields %}
+{% set python_name = field.python_name | default(field.name | snake_case) %}
 {% if python_name != field.name %}
-    {{ python_name }}: Union[{{ field.type }}, Any] = Field(default=None, alias="{{ field.name }}"{% if field.description %}, description="{{ field.description }}"{% endif %})
+    {{ python_name }}: {{ field.type }} | None = Field(default=None, alias="{{ field.name }}"{% if field.description %}, description="{{ field.description }}"{% endif %})
 {% else %}
-    {{ python_name }}: Union[{{ field.type }}, Any] = Field(default=None{% if field.description %}, description="{{ field.description }}"{% endif %})
+    {{ python_name }}: {{ field.type }} | None = Field(default=None{% if field.description %}, description="{{ field.description }}"{% endif %})
 {% endif %}
-{%- if field.description %}
+{% if field.description %}
     """{{ field.description }}"""
 {% endif %}
 {% endfor %}
 {% endif %}
-{%- endfor %}
+{% endfor %}
 {% endif %}
 
 # ===== CHECK RESULT MODEL =====

@@ -8,7 +8,7 @@ and response envelope types.
 from __future__ import annotations
 
 from pydantic import BaseModel, ConfigDict, Field
-from typing import TypeVar, Generic, Union, Any
+from typing import TypeVar, Generic, Any
 
 # Authentication configuration
 
@@ -41,168 +41,168 @@ class Annotation(BaseModel):
     """A chart annotation object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    date: Union[str | None, Any] = Field(default=None)
-    details: Union[str | None, Any] = Field(default=None)
-    label: Union[str | None, Any] = Field(default=None)
+    id: int
+    date: str | None = Field(default=None)
+    details: str | None = Field(default=None)
+    label: str | None = Field(default=None)
 
 class AnnotationV3Category(BaseModel):
     """The annotation category"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None, description="Category ID")
+    id: int | None = Field(default=None, description="Category ID")
     """Category ID"""
-    category: Union[str, Any] = Field(default=None, description="Category name")
+    category: str | None = Field(default=None, description="Category name")
     """Category name"""
 
 class AnnotationV3(BaseModel):
     """A chart annotation object (v3 API format)"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    start: Union[str | None, Any] = Field(default=None)
-    end: Union[str | None, Any] = Field(default=None)
-    label: Union[str | None, Any] = Field(default=None)
-    details: Union[str | None, Any] = Field(default=None)
-    category: Union[AnnotationV3Category | None, Any] = Field(default=None)
-    chart_id: Union[str | None, Any] = Field(default=None)
+    id: int | None = Field(default=None)
+    start: str | None = Field(default=None)
+    end: str | None = Field(default=None)
+    label: str | None = Field(default=None)
+    details: str | None = Field(default=None)
+    category: AnnotationV3Category | None = Field(default=None)
+    chart_id: str | None = Field(default=None)
 
 class AnnotationsList(BaseModel):
     """List of annotations"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[list[Annotation], Any] = Field(default=None)
+    data: list[Annotation] | None = Field(default=None)
 
 class AnnotationGetResponse(BaseModel):
     """Single annotation response"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[AnnotationV3, Any] = Field(default=None)
+    data: AnnotationV3 | None = Field(default=None)
 
 class Cohort(BaseModel):
     """A user cohort object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    app_id: Union[int | None, Any] = Field(default=None, alias="appId")
-    archived: Union[bool | None, Any] = Field(default=None)
-    chart_id: Union[str | None, Any] = Field(default=None)
-    created_at: Union[int | None, Any] = Field(default=None, alias="createdAt")
-    definition: Union[dict[str, Any] | None, Any] = Field(default=None)
-    description: Union[str | None, Any] = Field(default=None)
-    edit_id: Union[str | None, Any] = Field(default=None)
-    finished: Union[bool | None, Any] = Field(default=None)
-    hidden: Union[bool | None, Any] = Field(default=None)
-    id: Union[str | None, Any] = Field(default=None)
-    is_official_content: Union[bool | None, Any] = Field(default=None)
-    is_predictive: Union[bool | None, Any] = Field(default=None)
-    last_computed: Union[int | None, Any] = Field(default=None, alias="lastComputed")
-    last_mod: Union[int | None, Any] = Field(default=None, alias="lastMod")
-    last_viewed: Union[int | None, Any] = Field(default=None)
-    location_id: Union[str | None, Any] = Field(default=None)
-    metadata: Union[list[str] | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    owners: Union[list[str] | None, Any] = Field(default=None)
-    popularity: Union[int | None, Any] = Field(default=None)
-    published: Union[bool | None, Any] = Field(default=None)
-    shortcut_ids: Union[list[str] | None, Any] = Field(default=None)
-    size: Union[int | None, Any] = Field(default=None)
-    type_: Union[str | None, Any] = Field(default=None, alias="type")
-    view_count: Union[int | None, Any] = Field(default=None)
-    viewers: Union[list[str] | None, Any] = Field(default=None)
-    include_data_app_types: Union[list[str] | None, Any] = Field(default=None)
-    per_app_metadata: Union[dict[str, Any] | None, Any] = Field(default=None)
-    cohort_definition_type: Union[str | None, Any] = Field(default=None)
-    cohort_output_type: Union[str | None, Any] = Field(default=None)
-    is_generated_content: Union[bool | None, Any] = Field(default=None)
+    app_id: int | None = Field(default=None, alias="appId")
+    archived: bool | None = Field(default=None)
+    chart_id: str | None = Field(default=None)
+    created_at: int | None = Field(default=None, alias="createdAt")
+    definition: dict[str, Any] | None = Field(default=None)
+    description: str | None = Field(default=None)
+    edit_id: str | None = Field(default=None)
+    finished: bool | None = Field(default=None)
+    hidden: bool | None = Field(default=None)
+    id: str | None
+    is_official_content: bool | None = Field(default=None)
+    is_predictive: bool | None = Field(default=None)
+    last_computed: int | None = Field(default=None, alias="lastComputed")
+    last_mod: int | None = Field(default=None, alias="lastMod")
+    last_viewed: int | None = Field(default=None)
+    location_id: str | None = Field(default=None)
+    metadata: list[str] | None = Field(default=None)
+    name: str | None = Field(default=None)
+    owners: list[str] | None = Field(default=None)
+    popularity: int | None = Field(default=None)
+    published: bool | None = Field(default=None)
+    shortcut_ids: list[str] | None = Field(default=None)
+    size: int | None = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    view_count: int | None = Field(default=None)
+    viewers: list[str] | None = Field(default=None)
+    include_data_app_types: list[str] | None = Field(default=None)
+    per_app_metadata: dict[str, Any] | None = Field(default=None)
+    cohort_definition_type: str | None = Field(default=None)
+    cohort_output_type: str | None = Field(default=None)
+    is_generated_content: bool | None = Field(default=None)
 
 class CohortGetResponse(BaseModel):
     """Single cohort response wrapper"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    cohort: Union[Cohort, Any] = Field(default=None)
+    cohort: Cohort | None = Field(default=None)
 
 class CohortsList(BaseModel):
     """List of cohorts"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    cohorts: Union[list[Cohort], Any] = Field(default=None)
+    cohorts: list[Cohort] | None = Field(default=None)
 
 class EventType(BaseModel):
     """An event type definition with weekly totals"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    autohidden: Union[bool | None, Any] = Field(default=None)
-    clusters_hidden: Union[bool | None, Any] = Field(default=None)
-    deleted: Union[bool | None, Any] = Field(default=None)
-    display: Union[str | None, Any] = Field(default=None)
-    flow_hidden: Union[bool | None, Any] = Field(default=None)
-    hidden: Union[bool | None, Any] = Field(default=None)
-    id: Union[float, Any] = Field(default=None)
-    in_waitroom: Union[bool | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    non_active: Union[bool | None, Any] = Field(default=None)
-    timeline_hidden: Union[bool | None, Any] = Field(default=None)
-    totals: Union[float | None, Any] = Field(default=None)
-    totals_delta: Union[float | None, Any] = Field(default=None)
-    value: Union[str | None, Any] = Field(default=None)
-    waitroom_approved: Union[bool | None, Any] = Field(default=None)
+    autohidden: bool | None = Field(default=None)
+    clusters_hidden: bool | None = Field(default=None)
+    deleted: bool | None = Field(default=None)
+    display: str | None = Field(default=None)
+    flow_hidden: bool | None = Field(default=None)
+    hidden: bool | None = Field(default=None)
+    id: float
+    in_waitroom: bool | None = Field(default=None)
+    name: str | None = Field(default=None)
+    non_active: bool | None = Field(default=None)
+    timeline_hidden: bool | None = Field(default=None)
+    totals: float | None = Field(default=None)
+    totals_delta: float | None = Field(default=None)
+    value: str | None = Field(default=None)
+    waitroom_approved: bool | None = Field(default=None)
 
 class EventsListResponse(BaseModel):
     """List of event types"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[list[EventType], Any] = Field(default=None)
+    data: list[EventType] | None = Field(default=None)
 
 class ActiveUsersDataSeriesmetaItem(BaseModel):
     """Nested schema for ActiveUsersData.seriesMeta_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    segment_index: Union[int, Any] = Field(default=None, alias="segmentIndex")
+    segment_index: int | None = Field(default=None, alias="segmentIndex")
 
 class ActiveUsersData(BaseModel):
     """Active or new user count data"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    series: Union[list[list[float]] | None, Any] = Field(default=None)
-    series_collapsed: Union[list[list[float]] | None, Any] = Field(default=None, alias="seriesCollapsed")
-    series_labels: Union[list[Any] | None, Any] = Field(default=None, alias="seriesLabels")
-    series_meta: Union[list[ActiveUsersDataSeriesmetaItem] | None, Any] = Field(default=None, alias="seriesMeta")
-    x_values: Union[list[str] | None, Any] = Field(default=None, alias="xValues")
+    series: list[list[float]] | None = Field(default=None)
+    series_collapsed: list[list[float]] | None = Field(default=None, alias="seriesCollapsed")
+    series_labels: list[Any] | None = Field(default=None, alias="seriesLabels")
+    series_meta: list[ActiveUsersDataSeriesmetaItem] | None = Field(default=None, alias="seriesMeta")
+    x_values: list[str] | None = Field(default=None, alias="xValues")
 
 class ActiveUsersResponse(BaseModel):
     """Active users response wrapper"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[ActiveUsersData, Any] = Field(default=None)
-
-class AverageSessionLengthDataSeriesmetaItem(BaseModel):
-    """Nested schema for AverageSessionLengthData.seriesMeta_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    segment_index: Union[int, Any] = Field(default=None, alias="segmentIndex")
-    session_index: Union[int, Any] = Field(default=None, alias="sessionIndex")
+    data: ActiveUsersData | None = Field(default=None)
 
 class AverageSessionLengthDataSeriescollapsedItemItem(BaseModel):
     """Nested schema for AverageSessionLengthData.seriesCollapsed_item_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    set_id: Union[str, Any] = Field(default=None, alias="setId")
-    value: Union[float, Any] = Field(default=None)
+    set_id: str | None = Field(default=None, alias="setId")
+    value: float | None = Field(default=None)
+
+class AverageSessionLengthDataSeriesmetaItem(BaseModel):
+    """Nested schema for AverageSessionLengthData.seriesMeta_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    segment_index: int | None = Field(default=None, alias="segmentIndex")
+    session_index: int | None = Field(default=None, alias="sessionIndex")
 
 class AverageSessionLengthData(BaseModel):
     """Average session length data"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    series: Union[list[list[float]] | None, Any] = Field(default=None)
-    series_collapsed: Union[list[list[AverageSessionLengthDataSeriescollapsedItemItem]] | None, Any] = Field(default=None, alias="seriesCollapsed")
-    series_meta: Union[list[AverageSessionLengthDataSeriesmetaItem] | None, Any] = Field(default=None, alias="seriesMeta")
-    x_values: Union[list[str] | None, Any] = Field(default=None, alias="xValues")
+    series: list[list[float]] | None = Field(default=None)
+    series_collapsed: list[list[AverageSessionLengthDataSeriescollapsedItemItem]] | None = Field(default=None, alias="seriesCollapsed")
+    series_meta: list[AverageSessionLengthDataSeriesmetaItem] | None = Field(default=None, alias="seriesMeta")
+    x_values: list[str] | None = Field(default=None, alias="xValues")
 
 class AverageSessionLengthResponse(BaseModel):
     """Average session length response wrapper"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[AverageSessionLengthData, Any] = Field(default=None)
+    data: AverageSessionLengthData | None = Field(default=None)
 
 # ===== METADATA TYPE DEFINITIONS (PYDANTIC) =====
 # Meta types for operations that extract metadata (e.g., pagination info)

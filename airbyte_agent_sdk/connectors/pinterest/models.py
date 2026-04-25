@@ -8,7 +8,7 @@ and response envelope types.
 from __future__ import annotations
 
 from pydantic import BaseModel, ConfigDict, Field
-from typing import TypeVar, Generic, Union, Any
+from typing import TypeVar, Generic, Any
 from typing import Optional
 
 # Authentication configuration
@@ -41,493 +41,493 @@ class AdAccountOwner(BaseModel):
     """Owner details of the ad account"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str | None, Any] = Field(default=None, description="Unique identifier of the owner")
+    id: str | None | None = Field(default=None, description="Unique identifier of the owner")
     """Unique identifier of the owner"""
-    username: Union[str | None, Any] = Field(default=None, description="Username of the owner")
+    username: str | None | None = Field(default=None, description="Username of the owner")
     """Username of the owner"""
 
 class AdAccount(BaseModel):
     """Pinterest ad account object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    owner: Union[AdAccountOwner | None, Any] = Field(default=None)
-    country: Union[str | None, Any] = Field(default=None)
-    currency: Union[str | None, Any] = Field(default=None)
-    created_time: Union[int | None, Any] = Field(default=None)
-    updated_time: Union[int | None, Any] = Field(default=None)
-    permissions: Union[list[str | None] | None, Any] = Field(default=None)
+    id: str | None
+    name: str | None = Field(default=None)
+    owner: AdAccountOwner | None = Field(default=None)
+    country: str | None = Field(default=None)
+    currency: str | None = Field(default=None)
+    created_time: int | None = Field(default=None)
+    updated_time: int | None = Field(default=None)
+    permissions: list[str | None] | None = Field(default=None)
 
 class AdAccountsList(BaseModel):
     """Paginated list of ad accounts"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    items: Union[list[AdAccount], Any] = Field(default=None)
-    bookmark: Union[str | None, Any] = Field(default=None)
-
-class BoardMedia(BaseModel):
-    """Media content for the board"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    image_cover_url: Union[str | None, Any] = Field(default=None, description="Cover image URL")
-    """Cover image URL"""
-    pin_thumbnail_urls: Union[list[str] | None, Any] = Field(default=None, description="Thumbnail URLs of pins")
-    """Thumbnail URLs of pins"""
+    items: list[AdAccount] | None = Field(default=None)
+    bookmark: str | None = Field(default=None)
 
 class BoardOwner(BaseModel):
     """Board owner details"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    username: Union[str | None, Any] = Field(default=None, description="Username of the board owner")
+    username: str | None | None = Field(default=None, description="Username of the board owner")
     """Username of the board owner"""
+
+class BoardMedia(BaseModel):
+    """Media content for the board"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    image_cover_url: str | None | None = Field(default=None, description="Cover image URL")
+    """Cover image URL"""
+    pin_thumbnail_urls: list[str] | None | None = Field(default=None, description="Thumbnail URLs of pins")
+    """Thumbnail URLs of pins"""
 
 class Board(BaseModel):
     """Pinterest board object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    description: Union[str | None, Any] = Field(default=None)
-    owner: Union[BoardOwner | None, Any] = Field(default=None)
-    is_ads_only: Union[bool | None, Any] = Field(default=None)
-    privacy: Union[str | None, Any] = Field(default=None)
-    follower_count: Union[int | None, Any] = Field(default=None)
-    collaborator_count: Union[int | None, Any] = Field(default=None)
-    pin_count: Union[int | None, Any] = Field(default=None)
-    media: Union[BoardMedia | None, Any] = Field(default=None)
-    created_at: Union[str | None, Any] = Field(default=None)
-    board_pins_modified_at: Union[str | None, Any] = Field(default=None)
+    id: str | None
+    name: str | None = Field(default=None)
+    description: str | None = Field(default=None)
+    owner: BoardOwner | None = Field(default=None)
+    is_ads_only: bool | None = Field(default=None)
+    privacy: str | None = Field(default=None)
+    follower_count: int | None = Field(default=None)
+    collaborator_count: int | None = Field(default=None)
+    pin_count: int | None = Field(default=None)
+    media: BoardMedia | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    board_pins_modified_at: str | None = Field(default=None)
 
 class BoardsList(BaseModel):
     """Paginated list of boards"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    items: Union[list[Board], Any] = Field(default=None)
-    bookmark: Union[str | None, Any] = Field(default=None)
+    items: list[Board] | None = Field(default=None)
+    bookmark: str | None = Field(default=None)
 
 class CampaignTrackingUrls(BaseModel):
     """Third-party tracking URLs"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    impression: Union[list[str] | None, Any] = Field(default=None, description="Impression tracking URLs")
+    impression: list[str] | None | None = Field(default=None, description="Impression tracking URLs")
     """Impression tracking URLs"""
-    click: Union[list[str] | None, Any] = Field(default=None, description="Click tracking URLs")
+    click: list[str] | None | None = Field(default=None, description="Click tracking URLs")
     """Click tracking URLs"""
-    engagement: Union[list[str] | None, Any] = Field(default=None, description="Engagement tracking URLs")
+    engagement: list[str] | None | None = Field(default=None, description="Engagement tracking URLs")
     """Engagement tracking URLs"""
-    buyable_button: Union[list[str] | None, Any] = Field(default=None, description="Buyable button tracking URLs")
+    buyable_button: list[str] | None | None = Field(default=None, description="Buyable button tracking URLs")
     """Buyable button tracking URLs"""
-    audience_verification: Union[list[str] | None, Any] = Field(default=None, description="Audience verification tracking URLs")
+    audience_verification: list[str] | None | None = Field(default=None, description="Audience verification tracking URLs")
     """Audience verification tracking URLs"""
 
 class Campaign(BaseModel):
     """Pinterest campaign object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str | None, Any] = Field(default=None)
-    ad_account_id: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    status: Union[str | None, Any] = Field(default=None)
-    lifetime_spend_cap: Union[int | None, Any] = Field(default=None)
-    daily_spend_cap: Union[int | None, Any] = Field(default=None)
-    order_line_id: Union[str | None, Any] = Field(default=None)
-    tracking_urls: Union[CampaignTrackingUrls | None, Any] = Field(default=None)
-    objective_type: Union[str | None, Any] = Field(default=None)
-    created_time: Union[int | None, Any] = Field(default=None)
-    updated_time: Union[int | None, Any] = Field(default=None)
-    type_: Union[str | None, Any] = Field(default=None, alias="type")
-    start_time: Union[int | None, Any] = Field(default=None)
-    end_time: Union[int | None, Any] = Field(default=None)
-    summary_status: Union[str | None, Any] = Field(default=None)
-    is_campaign_budget_optimization: Union[bool | None, Any] = Field(default=None)
-    is_flexible_daily_budgets: Union[bool | None, Any] = Field(default=None)
-    is_performance_plus: Union[bool | None, Any] = Field(default=None)
-    is_top_of_search: Union[bool | None, Any] = Field(default=None)
-    is_automated_campaign: Union[bool | None, Any] = Field(default=None)
-    bid_options: Union[dict[str, Any] | None, Any] = Field(default=None)
+    id: str | None
+    ad_account_id: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    status: str | None = Field(default=None)
+    lifetime_spend_cap: int | None = Field(default=None)
+    daily_spend_cap: int | None = Field(default=None)
+    order_line_id: str | None = Field(default=None)
+    tracking_urls: CampaignTrackingUrls | None = Field(default=None)
+    objective_type: str | None = Field(default=None)
+    created_time: int | None = Field(default=None)
+    updated_time: int | None = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    start_time: int | None = Field(default=None)
+    end_time: int | None = Field(default=None)
+    summary_status: str | None = Field(default=None)
+    is_campaign_budget_optimization: bool | None = Field(default=None)
+    is_flexible_daily_budgets: bool | None = Field(default=None)
+    is_performance_plus: bool | None = Field(default=None)
+    is_top_of_search: bool | None = Field(default=None)
+    is_automated_campaign: bool | None = Field(default=None)
+    bid_options: dict[str, Any] | None = Field(default=None)
 
 class CampaignsList(BaseModel):
     """Paginated list of campaigns"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    items: Union[list[Campaign], Any] = Field(default=None)
-    bookmark: Union[str | None, Any] = Field(default=None)
+    items: list[Campaign] | None = Field(default=None)
+    bookmark: str | None = Field(default=None)
 
 class AdGroupTrackingUrls(BaseModel):
     """Third-party tracking URLs"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    impression: Union[list[str] | None, Any] = Field(default=None, description="Impression tracking URLs")
+    impression: list[str] | None | None = Field(default=None, description="Impression tracking URLs")
     """Impression tracking URLs"""
-    click: Union[list[str] | None, Any] = Field(default=None, description="Click tracking URLs")
+    click: list[str] | None | None = Field(default=None, description="Click tracking URLs")
     """Click tracking URLs"""
-    engagement: Union[list[str] | None, Any] = Field(default=None, description="Engagement tracking URLs")
+    engagement: list[str] | None | None = Field(default=None, description="Engagement tracking URLs")
     """Engagement tracking URLs"""
-    buyable_button: Union[list[str] | None, Any] = Field(default=None, description="Buyable button tracking URLs")
+    buyable_button: list[str] | None | None = Field(default=None, description="Buyable button tracking URLs")
     """Buyable button tracking URLs"""
-    audience_verification: Union[list[str] | None, Any] = Field(default=None, description="Audience verification tracking URLs")
+    audience_verification: list[str] | None | None = Field(default=None, description="Audience verification tracking URLs")
     """Audience verification tracking URLs"""
 
 class AdGroup(BaseModel):
     """Pinterest ad group object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str | None, Any] = Field(default=None)
-    ad_account_id: Union[str | None, Any] = Field(default=None)
-    campaign_id: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    status: Union[str | None, Any] = Field(default=None)
-    budget_in_micro_currency: Union[float | None, Any] = Field(default=None)
-    bid_in_micro_currency: Union[float | None, Any] = Field(default=None)
-    budget_type: Union[str | None, Any] = Field(default=None)
-    start_time: Union[float | None, Any] = Field(default=None)
-    end_time: Union[float | None, Any] = Field(default=None)
-    targeting_spec: Union[dict[str, Any] | None, Any] = Field(default=None)
-    lifetime_frequency_cap: Union[float | None, Any] = Field(default=None)
-    tracking_urls: Union[AdGroupTrackingUrls | None, Any] = Field(default=None)
-    auto_targeting_enabled: Union[bool | None, Any] = Field(default=None)
-    placement_group: Union[str | None, Any] = Field(default=None)
-    pacing_delivery_type: Union[str | None, Any] = Field(default=None)
-    conversion_learning_mode_type: Union[str | None, Any] = Field(default=None)
-    summary_status: Union[str | None, Any] = Field(default=None)
-    feed_profile_id: Union[str | None, Any] = Field(default=None)
-    billable_event: Union[str | None, Any] = Field(default=None)
-    type_: Union[str | None, Any] = Field(default=None, alias="type")
-    created_time: Union[float | None, Any] = Field(default=None)
-    updated_time: Union[float | None, Any] = Field(default=None)
-    bid_strategy_type: Union[str | None, Any] = Field(default=None)
-    optimization_goal_metadata: Union[dict[str, Any] | None, Any] = Field(default=None)
-    placement_traffic_type: Union[str | None, Any] = Field(default=None)
-    targeting_template_ids: Union[list[str] | None, Any] = Field(default=None)
-    is_creative_optimization: Union[bool | None, Any] = Field(default=None)
-    promotion_id: Union[str | None, Any] = Field(default=None)
-    promotion_ids: Union[list[str] | None, Any] = Field(default=None)
-    promotion_application_level: Union[str | None, Any] = Field(default=None)
-    bid_multiplier: Union[float | None, Any] = Field(default=None)
+    id: str | None
+    ad_account_id: str | None = Field(default=None)
+    campaign_id: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    status: str | None = Field(default=None)
+    budget_in_micro_currency: float | None = Field(default=None)
+    bid_in_micro_currency: float | None = Field(default=None)
+    budget_type: str | None = Field(default=None)
+    start_time: float | None = Field(default=None)
+    end_time: float | None = Field(default=None)
+    targeting_spec: dict[str, Any] | None = Field(default=None)
+    lifetime_frequency_cap: float | None = Field(default=None)
+    tracking_urls: AdGroupTrackingUrls | None = Field(default=None)
+    auto_targeting_enabled: bool | None = Field(default=None)
+    placement_group: str | None = Field(default=None)
+    pacing_delivery_type: str | None = Field(default=None)
+    conversion_learning_mode_type: str | None = Field(default=None)
+    summary_status: str | None = Field(default=None)
+    feed_profile_id: str | None = Field(default=None)
+    billable_event: str | None = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    created_time: float | None = Field(default=None)
+    updated_time: float | None = Field(default=None)
+    bid_strategy_type: str | None = Field(default=None)
+    optimization_goal_metadata: dict[str, Any] | None = Field(default=None)
+    placement_traffic_type: str | None = Field(default=None)
+    targeting_template_ids: list[str] | None = Field(default=None)
+    is_creative_optimization: bool | None = Field(default=None)
+    promotion_id: str | None = Field(default=None)
+    promotion_ids: list[str] | None = Field(default=None)
+    promotion_application_level: str | None = Field(default=None)
+    bid_multiplier: float | None = Field(default=None)
 
 class AdGroupsList(BaseModel):
     """Paginated list of ad groups"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    items: Union[list[AdGroup], Any] = Field(default=None)
-    bookmark: Union[str | None, Any] = Field(default=None)
+    items: list[AdGroup] | None = Field(default=None)
+    bookmark: str | None = Field(default=None)
 
 class AdTrackingUrls(BaseModel):
     """Third-party tracking URLs"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    impression: Union[list[str] | None, Any] = Field(default=None, description="Impression tracking URLs")
+    impression: list[str] | None | None = Field(default=None, description="Impression tracking URLs")
     """Impression tracking URLs"""
-    click: Union[list[str] | None, Any] = Field(default=None, description="Click tracking URLs")
+    click: list[str] | None | None = Field(default=None, description="Click tracking URLs")
     """Click tracking URLs"""
-    engagement: Union[list[str] | None, Any] = Field(default=None, description="Engagement tracking URLs")
+    engagement: list[str] | None | None = Field(default=None, description="Engagement tracking URLs")
     """Engagement tracking URLs"""
-    buyable_button: Union[list[str] | None, Any] = Field(default=None, description="Buyable button tracking URLs")
+    buyable_button: list[str] | None | None = Field(default=None, description="Buyable button tracking URLs")
     """Buyable button tracking URLs"""
-    audience_verification: Union[list[str] | None, Any] = Field(default=None, description="Audience verification tracking URLs")
+    audience_verification: list[str] | None | None = Field(default=None, description="Audience verification tracking URLs")
     """Audience verification tracking URLs"""
 
 class Ad(BaseModel):
     """Pinterest ad object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str | None, Any] = Field(default=None)
-    ad_group_id: Union[str | None, Any] = Field(default=None)
-    ad_account_id: Union[str | None, Any] = Field(default=None)
-    campaign_id: Union[str | None, Any] = Field(default=None)
-    pin_id: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    status: Union[str | None, Any] = Field(default=None)
-    creative_type: Union[str | None, Any] = Field(default=None)
-    destination_url: Union[str | None, Any] = Field(default=None)
-    click_tracking_url: Union[str | None, Any] = Field(default=None)
-    view_tracking_url: Union[str | None, Any] = Field(default=None)
-    android_deep_link: Union[str | None, Any] = Field(default=None)
-    ios_deep_link: Union[str | None, Any] = Field(default=None)
-    carousel_android_deep_links: Union[list[str] | None, Any] = Field(default=None)
-    carousel_destination_urls: Union[list[str] | None, Any] = Field(default=None)
-    carousel_ios_deep_links: Union[list[str] | None, Any] = Field(default=None)
-    tracking_urls: Union[AdTrackingUrls | None, Any] = Field(default=None)
-    is_pin_deleted: Union[bool | None, Any] = Field(default=None)
-    is_removable: Union[bool | None, Any] = Field(default=None)
-    lead_form_id: Union[str | None, Any] = Field(default=None)
-    collection_items_destination_url_template: Union[str | None, Any] = Field(default=None)
-    created_time: Union[int | None, Any] = Field(default=None)
-    updated_time: Union[int | None, Any] = Field(default=None)
-    rejected_reasons: Union[list[str] | None, Any] = Field(default=None)
-    rejection_labels: Union[list[str] | None, Any] = Field(default=None)
-    review_status: Union[str | None, Any] = Field(default=None)
-    type_: Union[str | None, Any] = Field(default=None, alias="type")
-    summary_status: Union[str | None, Any] = Field(default=None)
-    quiz_pin_data: Union[dict[str, Any] | None, Any] = Field(default=None)
-    grid_click_type: Union[str | None, Any] = Field(default=None)
-    customizable_cta_type: Union[str | None, Any] = Field(default=None)
-    disclosure_type: Union[str | None, Any] = Field(default=None)
-    disclosure_url: Union[str | None, Any] = Field(default=None)
+    id: str | None
+    ad_group_id: str | None = Field(default=None)
+    ad_account_id: str | None = Field(default=None)
+    campaign_id: str | None = Field(default=None)
+    pin_id: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    status: str | None = Field(default=None)
+    creative_type: str | None = Field(default=None)
+    destination_url: str | None = Field(default=None)
+    click_tracking_url: str | None = Field(default=None)
+    view_tracking_url: str | None = Field(default=None)
+    android_deep_link: str | None = Field(default=None)
+    ios_deep_link: str | None = Field(default=None)
+    carousel_android_deep_links: list[str] | None = Field(default=None)
+    carousel_destination_urls: list[str] | None = Field(default=None)
+    carousel_ios_deep_links: list[str] | None = Field(default=None)
+    tracking_urls: AdTrackingUrls | None = Field(default=None)
+    is_pin_deleted: bool | None = Field(default=None)
+    is_removable: bool | None = Field(default=None)
+    lead_form_id: str | None = Field(default=None)
+    collection_items_destination_url_template: str | None = Field(default=None)
+    created_time: int | None = Field(default=None)
+    updated_time: int | None = Field(default=None)
+    rejected_reasons: list[str] | None = Field(default=None)
+    rejection_labels: list[str] | None = Field(default=None)
+    review_status: str | None = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    summary_status: str | None = Field(default=None)
+    quiz_pin_data: dict[str, Any] | None = Field(default=None)
+    grid_click_type: str | None = Field(default=None)
+    customizable_cta_type: str | None = Field(default=None)
+    disclosure_type: str | None = Field(default=None)
+    disclosure_url: str | None = Field(default=None)
 
 class AdsList(BaseModel):
     """Paginated list of ads"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    items: Union[list[Ad], Any] = Field(default=None)
-    bookmark: Union[str | None, Any] = Field(default=None)
+    items: list[Ad] | None = Field(default=None)
+    bookmark: str | None = Field(default=None)
 
 class BoardSection(BaseModel):
     """Pinterest board section object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
+    id: str | None
+    name: str | None = Field(default=None)
 
 class BoardSectionsList(BaseModel):
     """Paginated list of board sections"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    items: Union[list[BoardSection], Any] = Field(default=None)
-    bookmark: Union[str | None, Any] = Field(default=None)
-
-class BoardPinMedia(BaseModel):
-    """Media content"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    media_type: Union[str | None, Any] = Field(default=None, description="Type of media")
-    """Type of media"""
+    items: list[BoardSection] | None = Field(default=None)
+    bookmark: str | None = Field(default=None)
 
 class BoardPinBoardOwner(BaseModel):
     """Board owner info"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    username: Union[str | None, Any] = Field(default=None, description="Username of the board owner")
+    username: str | None | None = Field(default=None, description="Username of the board owner")
     """Username of the board owner"""
+
+class BoardPinMedia(BaseModel):
+    """Media content"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    media_type: str | None | None = Field(default=None, description="Type of media")
+    """Type of media"""
 
 class BoardPin(BaseModel):
     """Pinterest pin on a board"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str | None, Any] = Field(default=None)
-    created_at: Union[str | None, Any] = Field(default=None)
-    creative_type: Union[str | None, Any] = Field(default=None)
-    is_standard: Union[bool | None, Any] = Field(default=None)
-    is_owner: Union[bool | None, Any] = Field(default=None)
-    dominant_color: Union[str | None, Any] = Field(default=None)
-    parent_pin_id: Union[str | None, Any] = Field(default=None)
-    link: Union[str | None, Any] = Field(default=None)
-    title: Union[str | None, Any] = Field(default=None)
-    description: Union[str | None, Any] = Field(default=None)
-    alt_text: Union[str | None, Any] = Field(default=None)
-    board_id: Union[str | None, Any] = Field(default=None)
-    board_section_id: Union[str | None, Any] = Field(default=None)
-    board_owner: Union[BoardPinBoardOwner | None, Any] = Field(default=None)
-    media: Union[BoardPinMedia | None, Any] = Field(default=None)
-    pin_metrics: Union[dict[str, Any] | None, Any] = Field(default=None)
-    has_been_promoted: Union[bool | None, Any] = Field(default=None)
-    is_removable: Union[bool | None, Any] = Field(default=None)
-    product_tags: Union[list[dict[str, Any]] | None, Any] = Field(default=None)
+    id: str | None
+    created_at: str | None = Field(default=None)
+    creative_type: str | None = Field(default=None)
+    is_standard: bool | None = Field(default=None)
+    is_owner: bool | None = Field(default=None)
+    dominant_color: str | None = Field(default=None)
+    parent_pin_id: str | None = Field(default=None)
+    link: str | None = Field(default=None)
+    title: str | None = Field(default=None)
+    description: str | None = Field(default=None)
+    alt_text: str | None = Field(default=None)
+    board_id: str | None = Field(default=None)
+    board_section_id: str | None = Field(default=None)
+    board_owner: BoardPinBoardOwner | None = Field(default=None)
+    media: BoardPinMedia | None = Field(default=None)
+    pin_metrics: dict[str, Any] | None = Field(default=None)
+    has_been_promoted: bool | None = Field(default=None)
+    is_removable: bool | None = Field(default=None)
+    product_tags: list[dict[str, Any]] | None = Field(default=None)
 
 class BoardPinsList(BaseModel):
     """Paginated list of board pins"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    items: Union[list[BoardPin], Any] = Field(default=None)
-    bookmark: Union[str | None, Any] = Field(default=None)
+    items: list[BoardPin] | None = Field(default=None)
+    bookmark: str | None = Field(default=None)
 
 class Catalog(BaseModel):
     """Pinterest catalog object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str | None, Any] = Field(default=None)
-    created_at: Union[str | None, Any] = Field(default=None)
-    updated_at: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    catalog_type: Union[str | None, Any] = Field(default=None)
+    id: str | None
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    catalog_type: str | None = Field(default=None)
 
 class CatalogsList(BaseModel):
     """Paginated list of catalogs"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    items: Union[list[Catalog], Any] = Field(default=None)
-    bookmark: Union[str | None, Any] = Field(default=None)
+    items: list[Catalog] | None = Field(default=None)
+    bookmark: str | None = Field(default=None)
 
 class CatalogsFeedPreferredProcessingSchedule(BaseModel):
     """Preferred processing schedule"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    time: Union[str | None, Any] = Field(default=None, description="Preferred processing time")
+    time: str | None | None = Field(default=None, description="Preferred processing time")
     """Preferred processing time"""
-    timezone: Union[str | None, Any] = Field(default=None, description="Timezone for processing")
+    timezone: str | None | None = Field(default=None, description="Timezone for processing")
     """Timezone for processing"""
 
 class CatalogsFeed(BaseModel):
     """Pinterest catalog feed object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str | None, Any] = Field(default=None)
-    created_at: Union[str | None, Any] = Field(default=None)
-    updated_at: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    format: Union[str | None, Any] = Field(default=None)
-    catalog_type: Union[str | None, Any] = Field(default=None)
-    location: Union[str | None, Any] = Field(default=None)
-    preferred_processing_schedule: Union[CatalogsFeedPreferredProcessingSchedule | None, Any] = Field(default=None)
-    status: Union[str | None, Any] = Field(default=None)
-    default_currency: Union[str | None, Any] = Field(default=None)
-    default_locale: Union[str | None, Any] = Field(default=None)
-    default_country: Union[str | None, Any] = Field(default=None)
-    default_availability: Union[str | None, Any] = Field(default=None)
+    id: str | None
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    format: str | None = Field(default=None)
+    catalog_type: str | None = Field(default=None)
+    location: str | None = Field(default=None)
+    preferred_processing_schedule: CatalogsFeedPreferredProcessingSchedule | None = Field(default=None)
+    status: str | None = Field(default=None)
+    default_currency: str | None = Field(default=None)
+    default_locale: str | None = Field(default=None)
+    default_country: str | None = Field(default=None)
+    default_availability: str | None = Field(default=None)
 
 class CatalogsFeedsList(BaseModel):
     """Paginated list of catalog feeds"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    items: Union[list[CatalogsFeed], Any] = Field(default=None)
-    bookmark: Union[str | None, Any] = Field(default=None)
+    items: list[CatalogsFeed] | None = Field(default=None)
+    bookmark: str | None = Field(default=None)
 
 class CatalogsProductGroup(BaseModel):
     """Pinterest catalog product group object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str | None, Any] = Field(default=None)
-    created_at: Union[int | None, Any] = Field(default=None)
-    updated_at: Union[int | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    description: Union[str | None, Any] = Field(default=None)
-    feed_id: Union[str | None, Any] = Field(default=None)
-    is_featured: Union[bool | None, Any] = Field(default=None)
-    status: Union[str | None, Any] = Field(default=None)
-    type_: Union[str | None, Any] = Field(default=None, alias="type")
+    id: str | None
+    created_at: int | None = Field(default=None)
+    updated_at: int | None = Field(default=None)
+    name: str | None = Field(default=None)
+    description: str | None = Field(default=None)
+    feed_id: str | None = Field(default=None)
+    is_featured: bool | None = Field(default=None)
+    status: str | None = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
 
 class CatalogsProductGroupsList(BaseModel):
     """Paginated list of catalog product groups"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    items: Union[list[CatalogsProductGroup], Any] = Field(default=None)
-    bookmark: Union[str | None, Any] = Field(default=None)
+    items: list[CatalogsProductGroup] | None = Field(default=None)
+    bookmark: str | None = Field(default=None)
 
 class AudienceRule(BaseModel):
     """Audience targeting rules"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    country: Union[str | None, Any] = Field(default=None, description="Country criteria")
+    country: str | None | None = Field(default=None, description="Country criteria")
     """Country criteria"""
-    customer_list_id: Union[str | None, Any] = Field(default=None, description="Customer list ID")
+    customer_list_id: str | None | None = Field(default=None, description="Customer list ID")
     """Customer list ID"""
-    engagement_domain: Union[list[str] | None, Any] = Field(default=None, description="Domains for engagement tracking")
+    engagement_domain: list[str] | None | None = Field(default=None, description="Domains for engagement tracking")
     """Domains for engagement tracking"""
-    engagement_type: Union[str | None, Any] = Field(default=None, description="Engagement type")
+    engagement_type: str | None | None = Field(default=None, description="Engagement type")
     """Engagement type"""
-    event: Union[str | None, Any] = Field(default=None, description="Pinterest tag event")
+    event: str | None | None = Field(default=None, description="Pinterest tag event")
     """Pinterest tag event"""
-    retention_days: Union[int | None, Any] = Field(default=None, description="Days to retain audience data")
+    retention_days: int | None | None = Field(default=None, description="Days to retain audience data")
     """Days to retain audience data"""
-    visitor_source_id: Union[str | None, Any] = Field(default=None, description="Visitor source ID")
+    visitor_source_id: str | None | None = Field(default=None, description="Visitor source ID")
     """Visitor source ID"""
 
 class Audience(BaseModel):
     """Pinterest audience object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str | None, Any] = Field(default=None)
-    ad_account_id: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    audience_type: Union[str | None, Any] = Field(default=None)
-    description: Union[str | None, Any] = Field(default=None)
-    rule: Union[AudienceRule | None, Any] = Field(default=None)
-    size: Union[int | None, Any] = Field(default=None)
-    status: Union[str | None, Any] = Field(default=None)
-    type_: Union[str | None, Any] = Field(default=None, alias="type")
-    created_timestamp: Union[int | None, Any] = Field(default=None)
-    updated_timestamp: Union[int | None, Any] = Field(default=None)
-    created_by_company_name: Union[str | None, Any] = Field(default=None)
+    id: str | None
+    ad_account_id: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    audience_type: str | None = Field(default=None)
+    description: str | None = Field(default=None)
+    rule: AudienceRule | None = Field(default=None)
+    size: int | None = Field(default=None)
+    status: str | None = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    created_timestamp: int | None = Field(default=None)
+    updated_timestamp: int | None = Field(default=None)
+    created_by_company_name: str | None = Field(default=None)
 
 class AudiencesList(BaseModel):
     """Paginated list of audiences"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    items: Union[list[Audience], Any] = Field(default=None)
-    bookmark: Union[str | None, Any] = Field(default=None)
+    items: list[Audience] | None = Field(default=None)
+    bookmark: str | None = Field(default=None)
 
 class ConversionTagConfigs(BaseModel):
     """Tag configurations"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    aem_enabled: Union[bool | None, Any] = Field(default=None, description="AEM email integration enabled")
+    aem_enabled: bool | None | None = Field(default=None, description="AEM email integration enabled")
     """AEM email integration enabled"""
-    md_frequency: Union[float | None, Any] = Field(default=None, description="Metadata ingestion frequency")
+    md_frequency: float | None | None = Field(default=None, description="Metadata ingestion frequency")
     """Metadata ingestion frequency"""
-    aem_fnln_enabled: Union[bool | None, Any] = Field(default=None, description="AEM name integration enabled")
+    aem_fnln_enabled: bool | None | None = Field(default=None, description="AEM name integration enabled")
     """AEM name integration enabled"""
-    aem_ph_enabled: Union[bool | None, Any] = Field(default=None, description="AEM phone integration enabled")
+    aem_ph_enabled: bool | None | None = Field(default=None, description="AEM phone integration enabled")
     """AEM phone integration enabled"""
-    aem_ge_enabled: Union[bool | None, Any] = Field(default=None, description="AEM gender integration enabled")
+    aem_ge_enabled: bool | None | None = Field(default=None, description="AEM gender integration enabled")
     """AEM gender integration enabled"""
-    aem_db_enabled: Union[bool | None, Any] = Field(default=None, description="AEM birthdate integration enabled")
+    aem_db_enabled: bool | None | None = Field(default=None, description="AEM birthdate integration enabled")
     """AEM birthdate integration enabled"""
-    aem_loc_enabled: Union[bool | None, Any] = Field(default=None, description="AEM location integration enabled")
+    aem_loc_enabled: bool | None | None = Field(default=None, description="AEM location integration enabled")
     """AEM location integration enabled"""
 
 class ConversionTag(BaseModel):
     """Pinterest conversion tag object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str | None, Any] = Field(default=None)
-    ad_account_id: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    code_snippet: Union[str | None, Any] = Field(default=None)
-    enhanced_match_status: Union[str | None, Any] = Field(default=None)
-    last_fired_time_ms: Union[int | None, Any] = Field(default=None)
-    status: Union[str | None, Any] = Field(default=None)
-    version: Union[str | None, Any] = Field(default=None)
-    configs: Union[ConversionTagConfigs | None, Any] = Field(default=None)
+    id: str | None
+    ad_account_id: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    code_snippet: str | None = Field(default=None)
+    enhanced_match_status: str | None = Field(default=None)
+    last_fired_time_ms: int | None = Field(default=None)
+    status: str | None = Field(default=None)
+    version: str | None = Field(default=None)
+    configs: ConversionTagConfigs | None = Field(default=None)
 
 class ConversionTagsList(BaseModel):
     """Paginated list of conversion tags"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    items: Union[list[ConversionTag], Any] = Field(default=None)
-    bookmark: Union[str | None, Any] = Field(default=None)
+    items: list[ConversionTag] | None = Field(default=None)
+    bookmark: str | None = Field(default=None)
 
 class CustomerList(BaseModel):
     """Pinterest customer list object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str | None, Any] = Field(default=None)
-    ad_account_id: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    created_time: Union[int | None, Any] = Field(default=None)
-    updated_time: Union[int | None, Any] = Field(default=None)
-    num_batches: Union[int | None, Any] = Field(default=None)
-    num_removed_user_records: Union[int | None, Any] = Field(default=None)
-    num_uploaded_user_records: Union[int | None, Any] = Field(default=None)
-    status: Union[str | None, Any] = Field(default=None)
-    type_: Union[str | None, Any] = Field(default=None, alias="type")
+    id: str | None
+    ad_account_id: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    created_time: int | None = Field(default=None)
+    updated_time: int | None = Field(default=None)
+    num_batches: int | None = Field(default=None)
+    num_removed_user_records: int | None = Field(default=None)
+    num_uploaded_user_records: int | None = Field(default=None)
+    status: str | None = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
 
 class CustomerListsList(BaseModel):
     """Paginated list of customer lists"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    items: Union[list[CustomerList], Any] = Field(default=None)
-    bookmark: Union[str | None, Any] = Field(default=None)
+    items: list[CustomerList] | None = Field(default=None)
+    bookmark: str | None = Field(default=None)
 
 class Keyword(BaseModel):
     """Pinterest keyword object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str | None, Any] = Field(default=None)
-    archived: Union[bool | None, Any] = Field(default=None)
-    parent_id: Union[str | None, Any] = Field(default=None)
-    parent_type: Union[str | None, Any] = Field(default=None)
-    type_: Union[str | None, Any] = Field(default=None, alias="type")
-    bid: Union[int | None, Any] = Field(default=None)
-    match_type: Union[str | None, Any] = Field(default=None)
-    value: Union[str | None, Any] = Field(default=None)
+    id: str | None
+    archived: bool | None = Field(default=None)
+    parent_id: str | None = Field(default=None)
+    parent_type: str | None = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    bid: int | None = Field(default=None)
+    match_type: str | None = Field(default=None)
+    value: str | None = Field(default=None)
 
 class KeywordsList(BaseModel):
     """Paginated list of keywords"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    items: Union[list[Keyword], Any] = Field(default=None)
-    bookmark: Union[str | None, Any] = Field(default=None)
+    items: list[Keyword] | None = Field(default=None)
+    bookmark: str | None = Field(default=None)
 
 # ===== METADATA TYPE DEFINITIONS (PYDANTIC) =====
 # Meta types for operations that extract metadata (e.g., pagination info)
@@ -536,85 +536,85 @@ class AdAccountsListResultMeta(BaseModel):
     """Metadata for ad_accounts.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    cursor: Union[str | None, Any] = Field(default=None)
+    cursor: str | None = Field(default=None)
 
 class BoardsListResultMeta(BaseModel):
     """Metadata for boards.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    cursor: Union[str | None, Any] = Field(default=None)
+    cursor: str | None = Field(default=None)
 
 class CampaignsListResultMeta(BaseModel):
     """Metadata for campaigns.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    cursor: Union[str | None, Any] = Field(default=None)
+    cursor: str | None = Field(default=None)
 
 class AdGroupsListResultMeta(BaseModel):
     """Metadata for ad_groups.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    cursor: Union[str | None, Any] = Field(default=None)
+    cursor: str | None = Field(default=None)
 
 class AdsListResultMeta(BaseModel):
     """Metadata for ads.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    cursor: Union[str | None, Any] = Field(default=None)
+    cursor: str | None = Field(default=None)
 
 class BoardSectionsListResultMeta(BaseModel):
     """Metadata for board_sections.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    cursor: Union[str | None, Any] = Field(default=None)
+    cursor: str | None = Field(default=None)
 
 class BoardPinsListResultMeta(BaseModel):
     """Metadata for board_pins.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    cursor: Union[str | None, Any] = Field(default=None)
+    cursor: str | None = Field(default=None)
 
 class CatalogsListResultMeta(BaseModel):
     """Metadata for catalogs.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    cursor: Union[str | None, Any] = Field(default=None)
+    cursor: str | None = Field(default=None)
 
 class CatalogsFeedsListResultMeta(BaseModel):
     """Metadata for catalogs_feeds.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    cursor: Union[str | None, Any] = Field(default=None)
+    cursor: str | None = Field(default=None)
 
 class CatalogsProductGroupsListResultMeta(BaseModel):
     """Metadata for catalogs_product_groups.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    cursor: Union[str | None, Any] = Field(default=None)
+    cursor: str | None = Field(default=None)
 
 class AudiencesListResultMeta(BaseModel):
     """Metadata for audiences.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    cursor: Union[str | None, Any] = Field(default=None)
+    cursor: str | None = Field(default=None)
 
 class ConversionTagsListResultMeta(BaseModel):
     """Metadata for conversion_tags.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    cursor: Union[str | None, Any] = Field(default=None)
+    cursor: str | None = Field(default=None)
 
 class CustomerListsListResultMeta(BaseModel):
     """Metadata for customer_lists.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    cursor: Union[str | None, Any] = Field(default=None)
+    cursor: str | None = Field(default=None)
 
 class KeywordsListResultMeta(BaseModel):
     """Metadata for keywords.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    cursor: Union[str | None, Any] = Field(default=None)
+    cursor: str | None = Field(default=None)
 
 # ===== CHECK RESULT MODEL =====
 

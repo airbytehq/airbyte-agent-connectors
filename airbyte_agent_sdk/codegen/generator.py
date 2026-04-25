@@ -1573,6 +1573,12 @@ class ConnectorGenerator:
         action_title = to_pascal_case(action)
         return f"{entity_title}{action_title}Result"
 
+    @staticmethod
+    def _strip_trailing_optional(type_name: str) -> str:
+        """Drop a trailing ' | None' so the template alone controls nullability."""
+        suffix = " | None"
+        return type_name[: -len(suffix)] if type_name.endswith(suffix) else type_name
+
     def _infer_meta_type(self, response_schema: dict[str, Any], meta_extractor: dict[str, str]) -> str:
         """Infer the TypedDict structure for metadata from meta extractor config.
 
@@ -1609,7 +1615,7 @@ class ConnectorGenerator:
                     {
                         "name": field_name,
                         "python_name": self._sanitize_field_name(field_name),
-                        "type": "str | None",
+                        "type": "str",
                         "schema": {"type": "string", "nullable": True},
                     }
                 )
@@ -1629,7 +1635,7 @@ class ConnectorGenerator:
                 {
                     "name": field_name,
                     "python_name": self._sanitize_field_name(field_name),
-                    "type": field_type,
+                    "type": self._strip_trailing_optional(field_type),
                     "schema": field_schema,  # Store original schema for docs
                 }
             )
@@ -1908,13 +1914,20 @@ class ConnectorGenerator:
                 context=context,
             )
 
+            # Strip trailing " | None" from the type string so that
+            # nullability is controlled solely by the template's
+            # required/optional branching — avoids "Foo | None | None".
+            is_required = field_name in required
+            if not is_required:
+                type_name = self._strip_trailing_optional(type_name)
+
             fields.append(
                 {
                     "name": field_name,
                     "python_name": self._sanitize_field_name(field_name),
                     "type": type_name,
                     "schema": field_schema,  # Store original schema for docs
-                    "required": field_name in required,
+                    "required": is_required,
                     "description": field_schema.description if hasattr(field_schema, "description") else "",
                 }
             )

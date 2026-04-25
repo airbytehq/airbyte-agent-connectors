@@ -8,7 +8,7 @@ and response envelope types.
 from __future__ import annotations
 
 from pydantic import BaseModel, ConfigDict, Field
-from typing import TypeVar, Generic, Union, Any
+from typing import TypeVar, Generic, Any
 from typing import Optional
 
 # Authentication configuration
@@ -39,552 +39,552 @@ class AmazonSellerPartnerReplicationConfig(BaseModel):
 
 # ===== RESPONSE TYPE DEFINITIONS (PYDANTIC) =====
 
-class OrderShippingaddress(BaseModel):
-    """Shipping address for the order"""
+class OrderAutomatedshippingsettings(BaseModel):
+    """Automated shipping settings"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    city: Union[str, Any] = Field(default=None, alias="City")
-    state_or_region: Union[str, Any] = Field(default=None, alias="StateOrRegion")
-    postal_code: Union[str, Any] = Field(default=None, alias="PostalCode")
-    country_code: Union[str, Any] = Field(default=None, alias="CountryCode")
+    has_automated_shipping_settings: bool | None = Field(default=None, alias="HasAutomatedShippingSettings")
 
 class OrderOrdertotal(BaseModel):
     """Total amount of the order"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    currency_code: Union[str, Any] = Field(default=None, alias="CurrencyCode")
-    amount: Union[str, Any] = Field(default=None, alias="Amount")
+    currency_code: str | None = Field(default=None, alias="CurrencyCode")
+    amount: str | None = Field(default=None, alias="Amount")
 
-class OrderAutomatedshippingsettings(BaseModel):
-    """Automated shipping settings"""
+class OrderShippingaddress(BaseModel):
+    """Shipping address for the order"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    has_automated_shipping_settings: Union[bool, Any] = Field(default=None, alias="HasAutomatedShippingSettings")
+    city: str | None = Field(default=None, alias="City")
+    state_or_region: str | None = Field(default=None, alias="StateOrRegion")
+    postal_code: str | None = Field(default=None, alias="PostalCode")
+    country_code: str | None = Field(default=None, alias="CountryCode")
 
 class OrderDefaultshipfromlocationaddress(BaseModel):
     """Default ship-from address"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    name: Union[str, Any] = Field(default=None, alias="Name")
-    address_line1: Union[str, Any] = Field(default=None, alias="AddressLine1")
-    city: Union[str, Any] = Field(default=None, alias="City")
-    state_or_region: Union[str, Any] = Field(default=None, alias="StateOrRegion")
-    postal_code: Union[str, Any] = Field(default=None, alias="PostalCode")
-    country_code: Union[str, Any] = Field(default=None, alias="CountryCode")
+    name: str | None = Field(default=None, alias="Name")
+    address_line1: str | None = Field(default=None, alias="AddressLine1")
+    city: str | None = Field(default=None, alias="City")
+    state_or_region: str | None = Field(default=None, alias="StateOrRegion")
+    postal_code: str | None = Field(default=None, alias="PostalCode")
+    country_code: str | None = Field(default=None, alias="CountryCode")
 
 class Order(BaseModel):
     """Amazon order object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    amazon_order_id: Union[str, Any] = Field(default=None, alias="AmazonOrderId")
-    seller_order_id: Union[str, Any] = Field(default=None, alias="SellerOrderId")
-    purchase_date: Union[str, Any] = Field(default=None, alias="PurchaseDate")
-    last_update_date: Union[str, Any] = Field(default=None, alias="LastUpdateDate")
-    order_status: Union[str, Any] = Field(default=None, alias="OrderStatus")
-    fulfillment_channel: Union[str, Any] = Field(default=None, alias="FulfillmentChannel")
-    sales_channel: Union[str, Any] = Field(default=None, alias="SalesChannel")
-    ship_service_level: Union[str, Any] = Field(default=None, alias="ShipServiceLevel")
-    order_total: Union[OrderOrdertotal, Any] = Field(default=None, alias="OrderTotal")
-    number_of_items_shipped: Union[int, Any] = Field(default=None, alias="NumberOfItemsShipped")
-    number_of_items_unshipped: Union[int, Any] = Field(default=None, alias="NumberOfItemsUnshipped")
-    payment_method: Union[str, Any] = Field(default=None, alias="PaymentMethod")
-    payment_method_details: Union[list[str], Any] = Field(default=None, alias="PaymentMethodDetails")
-    marketplace_id: Union[str, Any] = Field(default=None, alias="MarketplaceId")
-    shipment_service_level_category: Union[str, Any] = Field(default=None, alias="ShipmentServiceLevelCategory")
-    order_type: Union[str, Any] = Field(default=None, alias="OrderType")
-    earliest_ship_date: Union[str, Any] = Field(default=None, alias="EarliestShipDate")
-    latest_ship_date: Union[str, Any] = Field(default=None, alias="LatestShipDate")
-    earliest_delivery_date: Union[str, Any] = Field(default=None, alias="EarliestDeliveryDate")
-    latest_delivery_date: Union[str, Any] = Field(default=None, alias="LatestDeliveryDate")
-    is_business_order: Union[bool, Any] = Field(default=None, alias="IsBusinessOrder")
-    is_prime: Union[bool, Any] = Field(default=None, alias="IsPrime")
-    is_global_express_enabled: Union[bool, Any] = Field(default=None, alias="IsGlobalExpressEnabled")
-    is_premium_order: Union[bool, Any] = Field(default=None, alias="IsPremiumOrder")
-    is_sold_by_ab: Union[bool, Any] = Field(default=None, alias="IsSoldByAB")
-    is_replacement_order: Union[str, Any] = Field(default=None, alias="IsReplacementOrder")
-    is_ispu: Union[bool, Any] = Field(default=None, alias="IsISPU")
-    is_access_point_order: Union[bool, Any] = Field(default=None, alias="IsAccessPointOrder")
-    has_regulated_items: Union[bool, Any] = Field(default=None, alias="HasRegulatedItems")
-    shipping_address: Union[OrderShippingaddress, Any] = Field(default=None, alias="ShippingAddress")
-    default_ship_from_location_address: Union[OrderDefaultshipfromlocationaddress, Any] = Field(default=None, alias="DefaultShipFromLocationAddress")
-    automated_shipping_settings: Union[OrderAutomatedshippingsettings, Any] = Field(default=None, alias="AutomatedShippingSettings")
-    buyer_info: Union[dict[str, Any], Any] = Field(default=None, alias="BuyerInfo")
+    amazon_order_id: str = Field(alias="AmazonOrderId")
+    seller_order_id: str | None = Field(default=None, alias="SellerOrderId")
+    purchase_date: str | None = Field(default=None, alias="PurchaseDate")
+    last_update_date: str | None = Field(default=None, alias="LastUpdateDate")
+    order_status: str | None = Field(default=None, alias="OrderStatus")
+    fulfillment_channel: str | None = Field(default=None, alias="FulfillmentChannel")
+    sales_channel: str | None = Field(default=None, alias="SalesChannel")
+    ship_service_level: str | None = Field(default=None, alias="ShipServiceLevel")
+    order_total: OrderOrdertotal | None = Field(default=None, alias="OrderTotal")
+    number_of_items_shipped: int | None = Field(default=None, alias="NumberOfItemsShipped")
+    number_of_items_unshipped: int | None = Field(default=None, alias="NumberOfItemsUnshipped")
+    payment_method: str | None = Field(default=None, alias="PaymentMethod")
+    payment_method_details: list[str] | None = Field(default=None, alias="PaymentMethodDetails")
+    marketplace_id: str | None = Field(default=None, alias="MarketplaceId")
+    shipment_service_level_category: str | None = Field(default=None, alias="ShipmentServiceLevelCategory")
+    order_type: str | None = Field(default=None, alias="OrderType")
+    earliest_ship_date: str | None = Field(default=None, alias="EarliestShipDate")
+    latest_ship_date: str | None = Field(default=None, alias="LatestShipDate")
+    earliest_delivery_date: str | None = Field(default=None, alias="EarliestDeliveryDate")
+    latest_delivery_date: str | None = Field(default=None, alias="LatestDeliveryDate")
+    is_business_order: bool | None = Field(default=None, alias="IsBusinessOrder")
+    is_prime: bool | None = Field(default=None, alias="IsPrime")
+    is_global_express_enabled: bool | None = Field(default=None, alias="IsGlobalExpressEnabled")
+    is_premium_order: bool | None = Field(default=None, alias="IsPremiumOrder")
+    is_sold_by_ab: bool | None = Field(default=None, alias="IsSoldByAB")
+    is_replacement_order: str | None = Field(default=None, alias="IsReplacementOrder")
+    is_ispu: bool | None = Field(default=None, alias="IsISPU")
+    is_access_point_order: bool | None = Field(default=None, alias="IsAccessPointOrder")
+    has_regulated_items: bool | None = Field(default=None, alias="HasRegulatedItems")
+    shipping_address: OrderShippingaddress | None = Field(default=None, alias="ShippingAddress")
+    default_ship_from_location_address: OrderDefaultshipfromlocationaddress | None = Field(default=None, alias="DefaultShipFromLocationAddress")
+    automated_shipping_settings: OrderAutomatedshippingsettings | None = Field(default=None, alias="AutomatedShippingSettings")
+    buyer_info: dict[str, Any] | None = Field(default=None, alias="BuyerInfo")
 
 class OrdersListPayload(BaseModel):
     """Nested schema for OrdersList.payload"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    orders: Union[list[Order], Any] = Field(default=None, alias="Orders")
-    next_token: Union[str, Any] = Field(default=None, alias="NextToken", description="Pagination token for next page")
+    orders: list[Order] | None = Field(default=None, alias="Orders")
+    next_token: str | None = Field(default=None, alias="NextToken", description="Pagination token for next page")
     """Pagination token for next page"""
 
 class OrdersList(BaseModel):
     """Paginated list of orders"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    payload: Union[OrdersListPayload, Any] = Field(default=None)
-
-class OrderItemCodfeediscount(BaseModel):
-    """Cash on delivery fee discount"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    currency_code: Union[str, Any] = Field(default=None, alias="CurrencyCode")
-    amount: Union[str, Any] = Field(default=None, alias="Amount")
-
-class OrderItemTaxcollection(BaseModel):
-    """Tax collection information"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    model: Union[str, Any] = Field(default=None, alias="Model")
-    responsible_party: Union[str, Any] = Field(default=None, alias="ResponsibleParty")
-
-class OrderItemCodfee(BaseModel):
-    """Cash on delivery fee"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    currency_code: Union[str, Any] = Field(default=None, alias="CurrencyCode")
-    amount: Union[str, Any] = Field(default=None, alias="Amount")
-
-class OrderItemPromotiondiscount(BaseModel):
-    """Promotion discount"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    currency_code: Union[str, Any] = Field(default=None, alias="CurrencyCode")
-    amount: Union[str, Any] = Field(default=None, alias="Amount")
-
-class OrderItemItemprice(BaseModel):
-    """Item price"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    currency_code: Union[str, Any] = Field(default=None, alias="CurrencyCode")
-    amount: Union[str, Any] = Field(default=None, alias="Amount")
-
-class OrderItemPointsgrantedPointsmonetaryvalue(BaseModel):
-    """Nested schema for OrderItemPointsgranted.PointsMonetaryValue"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    currency_code: Union[str, Any] = Field(default=None, alias="CurrencyCode")
-    amount: Union[str, Any] = Field(default=None, alias="Amount")
-
-class OrderItemPointsgranted(BaseModel):
-    """Points granted for the purchase"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    points_number: Union[int, Any] = Field(default=None, alias="PointsNumber")
-    points_monetary_value: Union[OrderItemPointsgrantedPointsmonetaryvalue, Any] = Field(default=None, alias="PointsMonetaryValue")
-
-class OrderItemShippingdiscounttax(BaseModel):
-    """Shipping discount tax"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    currency_code: Union[str, Any] = Field(default=None, alias="CurrencyCode")
-    amount: Union[str, Any] = Field(default=None, alias="Amount")
-
-class OrderItemShippingdiscount(BaseModel):
-    """Shipping discount"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    currency_code: Union[str, Any] = Field(default=None, alias="CurrencyCode")
-    amount: Union[str, Any] = Field(default=None, alias="Amount")
-
-class OrderItemBuyerrequestedcancel(BaseModel):
-    """Buyer cancellation request information"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    is_buyer_requested_cancel: Union[str, Any] = Field(default=None, alias="IsBuyerRequestedCancel")
-    buyer_cancel_reason: Union[str, Any] = Field(default=None, alias="BuyerCancelReason")
-
-class OrderItemItemtax(BaseModel):
-    """Item tax"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    currency_code: Union[str, Any] = Field(default=None, alias="CurrencyCode")
-    amount: Union[str, Any] = Field(default=None, alias="Amount")
-
-class OrderItemShippingprice(BaseModel):
-    """Shipping price"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    currency_code: Union[str, Any] = Field(default=None, alias="CurrencyCode")
-    amount: Union[str, Any] = Field(default=None, alias="Amount")
-
-class OrderItemBuyerinfoBuyercustomizedinfo(BaseModel):
-    """Nested schema for OrderItemBuyerinfo.BuyerCustomizedInfo"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    customized_url: Union[str, Any] = Field(default=None, alias="CustomizedURL")
-
-class OrderItemBuyerinfoGiftwrapprice(BaseModel):
-    """Nested schema for OrderItemBuyerinfo.GiftWrapPrice"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    currency_code: Union[str, Any] = Field(default=None, alias="CurrencyCode")
-    amount: Union[str, Any] = Field(default=None, alias="Amount")
-
-class OrderItemBuyerinfo(BaseModel):
-    """Buyer information for the item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    buyer_customized_info: Union[OrderItemBuyerinfoBuyercustomizedinfo, Any] = Field(default=None, alias="BuyerCustomizedInfo")
-    gift_message_text: Union[str, Any] = Field(default=None, alias="GiftMessageText")
-    gift_wrap_price: Union[OrderItemBuyerinfoGiftwrapprice, Any] = Field(default=None, alias="GiftWrapPrice")
-    gift_wrap_level: Union[str, Any] = Field(default=None, alias="GiftWrapLevel")
-
-class OrderItemShippingtax(BaseModel):
-    """Shipping tax"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    currency_code: Union[str, Any] = Field(default=None, alias="CurrencyCode")
-    amount: Union[str, Any] = Field(default=None, alias="Amount")
-
-class OrderItemProductinfo(BaseModel):
-    """Product information"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    number_of_items: Union[str, Any] = Field(default=None, alias="NumberOfItems")
+    payload: OrdersListPayload | None = Field(default=None)
 
 class OrderItemPromotiondiscounttax(BaseModel):
     """Promotion discount tax"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    currency_code: Union[str, Any] = Field(default=None, alias="CurrencyCode")
-    amount: Union[str, Any] = Field(default=None, alias="Amount")
+    currency_code: str | None = Field(default=None, alias="CurrencyCode")
+    amount: str | None = Field(default=None, alias="Amount")
+
+class OrderItemTaxcollection(BaseModel):
+    """Tax collection information"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    model: str | None = Field(default=None, alias="Model")
+    responsible_party: str | None = Field(default=None, alias="ResponsibleParty")
+
+class OrderItemItemtax(BaseModel):
+    """Item tax"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    currency_code: str | None = Field(default=None, alias="CurrencyCode")
+    amount: str | None = Field(default=None, alias="Amount")
+
+class OrderItemShippingtax(BaseModel):
+    """Shipping tax"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    currency_code: str | None = Field(default=None, alias="CurrencyCode")
+    amount: str | None = Field(default=None, alias="Amount")
+
+class OrderItemShippingdiscount(BaseModel):
+    """Shipping discount"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    currency_code: str | None = Field(default=None, alias="CurrencyCode")
+    amount: str | None = Field(default=None, alias="Amount")
+
+class OrderItemItemprice(BaseModel):
+    """Item price"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    currency_code: str | None = Field(default=None, alias="CurrencyCode")
+    amount: str | None = Field(default=None, alias="Amount")
+
+class OrderItemCodfee(BaseModel):
+    """Cash on delivery fee"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    currency_code: str | None = Field(default=None, alias="CurrencyCode")
+    amount: str | None = Field(default=None, alias="Amount")
+
+class OrderItemPromotiondiscount(BaseModel):
+    """Promotion discount"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    currency_code: str | None = Field(default=None, alias="CurrencyCode")
+    amount: str | None = Field(default=None, alias="Amount")
+
+class OrderItemBuyerrequestedcancel(BaseModel):
+    """Buyer cancellation request information"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    is_buyer_requested_cancel: str | None = Field(default=None, alias="IsBuyerRequestedCancel")
+    buyer_cancel_reason: str | None = Field(default=None, alias="BuyerCancelReason")
+
+class OrderItemCodfeediscount(BaseModel):
+    """Cash on delivery fee discount"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    currency_code: str | None = Field(default=None, alias="CurrencyCode")
+    amount: str | None = Field(default=None, alias="Amount")
+
+class OrderItemShippingprice(BaseModel):
+    """Shipping price"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    currency_code: str | None = Field(default=None, alias="CurrencyCode")
+    amount: str | None = Field(default=None, alias="Amount")
+
+class OrderItemShippingdiscounttax(BaseModel):
+    """Shipping discount tax"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    currency_code: str | None = Field(default=None, alias="CurrencyCode")
+    amount: str | None = Field(default=None, alias="Amount")
+
+class OrderItemBuyerinfoBuyercustomizedinfo(BaseModel):
+    """Nested schema for OrderItemBuyerinfo.BuyerCustomizedInfo"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    customized_url: str | None = Field(default=None, alias="CustomizedURL")
+
+class OrderItemBuyerinfoGiftwrapprice(BaseModel):
+    """Nested schema for OrderItemBuyerinfo.GiftWrapPrice"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    currency_code: str | None = Field(default=None, alias="CurrencyCode")
+    amount: str | None = Field(default=None, alias="Amount")
+
+class OrderItemBuyerinfo(BaseModel):
+    """Buyer information for the item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    buyer_customized_info: OrderItemBuyerinfoBuyercustomizedinfo | None = Field(default=None, alias="BuyerCustomizedInfo")
+    gift_message_text: str | None = Field(default=None, alias="GiftMessageText")
+    gift_wrap_price: OrderItemBuyerinfoGiftwrapprice | None = Field(default=None, alias="GiftWrapPrice")
+    gift_wrap_level: str | None = Field(default=None, alias="GiftWrapLevel")
+
+class OrderItemProductinfo(BaseModel):
+    """Product information"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    number_of_items: str | None = Field(default=None, alias="NumberOfItems")
+
+class OrderItemPointsgrantedPointsmonetaryvalue(BaseModel):
+    """Nested schema for OrderItemPointsgranted.PointsMonetaryValue"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    currency_code: str | None = Field(default=None, alias="CurrencyCode")
+    amount: str | None = Field(default=None, alias="Amount")
+
+class OrderItemPointsgranted(BaseModel):
+    """Points granted for the purchase"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    points_number: int | None = Field(default=None, alias="PointsNumber")
+    points_monetary_value: OrderItemPointsgrantedPointsmonetaryvalue | None = Field(default=None, alias="PointsMonetaryValue")
 
 class OrderItem(BaseModel):
     """Amazon order item object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    order_item_id: Union[str, Any] = Field(default=None, alias="OrderItemId")
-    amazon_order_id: Union[str, Any] = Field(default=None, alias="AmazonOrderId")
-    asin: Union[str, Any] = Field(default=None, alias="ASIN")
-    seller_sku: Union[str, Any] = Field(default=None, alias="SellerSKU")
-    title: Union[str, Any] = Field(default=None, alias="Title")
-    quantity_ordered: Union[int, Any] = Field(default=None, alias="QuantityOrdered")
-    quantity_shipped: Union[int, Any] = Field(default=None, alias="QuantityShipped")
-    item_price: Union[OrderItemItemprice, Any] = Field(default=None, alias="ItemPrice")
-    item_tax: Union[OrderItemItemtax, Any] = Field(default=None, alias="ItemTax")
-    shipping_price: Union[OrderItemShippingprice, Any] = Field(default=None, alias="ShippingPrice")
-    shipping_tax: Union[OrderItemShippingtax, Any] = Field(default=None, alias="ShippingTax")
-    shipping_discount: Union[OrderItemShippingdiscount, Any] = Field(default=None, alias="ShippingDiscount")
-    shipping_discount_tax: Union[OrderItemShippingdiscounttax, Any] = Field(default=None, alias="ShippingDiscountTax")
-    promotion_discount: Union[OrderItemPromotiondiscount, Any] = Field(default=None, alias="PromotionDiscount")
-    promotion_discount_tax: Union[OrderItemPromotiondiscounttax, Any] = Field(default=None, alias="PromotionDiscountTax")
-    promotion_ids: Union[list[str], Any] = Field(default=None, alias="PromotionIds")
-    cod_fee: Union[OrderItemCodfee, Any] = Field(default=None, alias="CODFee")
-    cod_fee_discount: Union[OrderItemCodfeediscount, Any] = Field(default=None, alias="CODFeeDiscount")
-    is_gift: Union[str, Any] = Field(default=None, alias="IsGift")
-    condition_id: Union[str, Any] = Field(default=None, alias="ConditionId")
-    condition_subtype_id: Union[str, Any] = Field(default=None, alias="ConditionSubtypeId")
-    condition_note: Union[str, Any] = Field(default=None, alias="ConditionNote")
-    is_transparency: Union[bool, Any] = Field(default=None, alias="IsTransparency")
-    serial_number_required: Union[bool, Any] = Field(default=None, alias="SerialNumberRequired")
-    ioss_number: Union[str, Any] = Field(default=None, alias="IossNumber")
-    deemed_reseller_category: Union[str, Any] = Field(default=None, alias="DeemedResellerCategory")
-    store_chain_store_id: Union[str, Any] = Field(default=None, alias="StoreChainStoreId")
-    product_info: Union[OrderItemProductinfo, Any] = Field(default=None, alias="ProductInfo")
-    buyer_info: Union[OrderItemBuyerinfo, Any] = Field(default=None, alias="BuyerInfo")
-    buyer_requested_cancel: Union[OrderItemBuyerrequestedcancel, Any] = Field(default=None, alias="BuyerRequestedCancel")
-    points_granted: Union[OrderItemPointsgranted, Any] = Field(default=None, alias="PointsGranted")
-    tax_collection: Union[OrderItemTaxcollection, Any] = Field(default=None, alias="TaxCollection")
-    price_designation: Union[str, Any] = Field(default=None, alias="PriceDesignation")
+    order_item_id: str = Field(alias="OrderItemId")
+    amazon_order_id: str | None = Field(default=None, alias="AmazonOrderId")
+    asin: str | None = Field(default=None, alias="ASIN")
+    seller_sku: str | None = Field(default=None, alias="SellerSKU")
+    title: str | None = Field(default=None, alias="Title")
+    quantity_ordered: int | None = Field(default=None, alias="QuantityOrdered")
+    quantity_shipped: int | None = Field(default=None, alias="QuantityShipped")
+    item_price: OrderItemItemprice | None = Field(default=None, alias="ItemPrice")
+    item_tax: OrderItemItemtax | None = Field(default=None, alias="ItemTax")
+    shipping_price: OrderItemShippingprice | None = Field(default=None, alias="ShippingPrice")
+    shipping_tax: OrderItemShippingtax | None = Field(default=None, alias="ShippingTax")
+    shipping_discount: OrderItemShippingdiscount | None = Field(default=None, alias="ShippingDiscount")
+    shipping_discount_tax: OrderItemShippingdiscounttax | None = Field(default=None, alias="ShippingDiscountTax")
+    promotion_discount: OrderItemPromotiondiscount | None = Field(default=None, alias="PromotionDiscount")
+    promotion_discount_tax: OrderItemPromotiondiscounttax | None = Field(default=None, alias="PromotionDiscountTax")
+    promotion_ids: list[str] | None = Field(default=None, alias="PromotionIds")
+    cod_fee: OrderItemCodfee | None = Field(default=None, alias="CODFee")
+    cod_fee_discount: OrderItemCodfeediscount | None = Field(default=None, alias="CODFeeDiscount")
+    is_gift: str | None = Field(default=None, alias="IsGift")
+    condition_id: str | None = Field(default=None, alias="ConditionId")
+    condition_subtype_id: str | None = Field(default=None, alias="ConditionSubtypeId")
+    condition_note: str | None = Field(default=None, alias="ConditionNote")
+    is_transparency: bool | None = Field(default=None, alias="IsTransparency")
+    serial_number_required: bool | None = Field(default=None, alias="SerialNumberRequired")
+    ioss_number: str | None = Field(default=None, alias="IossNumber")
+    deemed_reseller_category: str | None = Field(default=None, alias="DeemedResellerCategory")
+    store_chain_store_id: str | None = Field(default=None, alias="StoreChainStoreId")
+    product_info: OrderItemProductinfo | None = Field(default=None, alias="ProductInfo")
+    buyer_info: OrderItemBuyerinfo | None = Field(default=None, alias="BuyerInfo")
+    buyer_requested_cancel: OrderItemBuyerrequestedcancel | None = Field(default=None, alias="BuyerRequestedCancel")
+    points_granted: OrderItemPointsgranted | None = Field(default=None, alias="PointsGranted")
+    tax_collection: OrderItemTaxcollection | None = Field(default=None, alias="TaxCollection")
+    price_designation: str | None = Field(default=None, alias="PriceDesignation")
 
 class OrderItemsListPayload(BaseModel):
     """Nested schema for OrderItemsList.payload"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    amazon_order_id: Union[str, Any] = Field(default=None, alias="AmazonOrderId")
-    order_items: Union[list[OrderItem], Any] = Field(default=None, alias="OrderItems")
-    next_token: Union[str, Any] = Field(default=None, alias="NextToken")
+    amazon_order_id: str | None = Field(default=None, alias="AmazonOrderId")
+    order_items: list[OrderItem] | None = Field(default=None, alias="OrderItems")
+    next_token: str | None = Field(default=None, alias="NextToken")
 
 class OrderItemsList(BaseModel):
     """Paginated list of order items"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    payload: Union[OrderItemsListPayload, Any] = Field(default=None)
+    payload: OrderItemsListPayload | None = Field(default=None)
 
 class FinancialEventGroupOriginaltotal(BaseModel):
     """Original total in seller's currency"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    currency_code: Union[str, Any] = Field(default=None, alias="CurrencyCode")
-    currency_amount: Union[float, Any] = Field(default=None, alias="CurrencyAmount")
+    currency_code: str | None = Field(default=None, alias="CurrencyCode")
+    currency_amount: float | None = Field(default=None, alias="CurrencyAmount")
 
 class FinancialEventGroupBeginningbalance(BaseModel):
     """Beginning balance"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    currency_code: Union[str, Any] = Field(default=None, alias="CurrencyCode")
-    currency_amount: Union[float, Any] = Field(default=None, alias="CurrencyAmount")
+    currency_code: str | None = Field(default=None, alias="CurrencyCode")
+    currency_amount: float | None = Field(default=None, alias="CurrencyAmount")
 
 class FinancialEventGroupConvertedtotal(BaseModel):
     """Converted total"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    currency_code: Union[str, Any] = Field(default=None, alias="CurrencyCode")
-    currency_amount: Union[float, Any] = Field(default=None, alias="CurrencyAmount")
+    currency_code: str | None = Field(default=None, alias="CurrencyCode")
+    currency_amount: float | None = Field(default=None, alias="CurrencyAmount")
 
 class FinancialEventGroup(BaseModel):
     """A financial event group"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    financial_event_group_id: Union[str, Any] = Field(default=None, alias="FinancialEventGroupId")
-    processing_status: Union[str, Any] = Field(default=None, alias="ProcessingStatus")
-    fund_transfer_status: Union[str, Any] = Field(default=None, alias="FundTransferStatus")
-    original_total: Union[FinancialEventGroupOriginaltotal, Any] = Field(default=None, alias="OriginalTotal")
-    converted_total: Union[FinancialEventGroupConvertedtotal, Any] = Field(default=None, alias="ConvertedTotal")
-    fund_transfer_date: Union[str, Any] = Field(default=None, alias="FundTransferDate")
-    trace_id: Union[str, Any] = Field(default=None, alias="TraceId")
-    account_tail: Union[str, Any] = Field(default=None, alias="AccountTail")
-    beginning_balance: Union[FinancialEventGroupBeginningbalance, Any] = Field(default=None, alias="BeginningBalance")
-    financial_event_group_start: Union[str, Any] = Field(default=None, alias="FinancialEventGroupStart")
-    financial_event_group_end: Union[str, Any] = Field(default=None, alias="FinancialEventGroupEnd")
+    financial_event_group_id: str = Field(alias="FinancialEventGroupId")
+    processing_status: str | None = Field(default=None, alias="ProcessingStatus")
+    fund_transfer_status: str | None = Field(default=None, alias="FundTransferStatus")
+    original_total: FinancialEventGroupOriginaltotal | None = Field(default=None, alias="OriginalTotal")
+    converted_total: FinancialEventGroupConvertedtotal | None = Field(default=None, alias="ConvertedTotal")
+    fund_transfer_date: str | None = Field(default=None, alias="FundTransferDate")
+    trace_id: str | None = Field(default=None, alias="TraceId")
+    account_tail: str | None = Field(default=None, alias="AccountTail")
+    beginning_balance: FinancialEventGroupBeginningbalance | None = Field(default=None, alias="BeginningBalance")
+    financial_event_group_start: str | None = Field(default=None, alias="FinancialEventGroupStart")
+    financial_event_group_end: str | None = Field(default=None, alias="FinancialEventGroupEnd")
 
 class FinancialEventGroupListPayload(BaseModel):
     """Nested schema for FinancialEventGroupList.payload"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    financial_event_group_list: Union[list[FinancialEventGroup], Any] = Field(default=None, alias="FinancialEventGroupList")
-    next_token: Union[str, Any] = Field(default=None, alias="NextToken")
+    financial_event_group_list: list[FinancialEventGroup] | None = Field(default=None, alias="FinancialEventGroupList")
+    next_token: str | None = Field(default=None, alias="NextToken")
 
 class FinancialEventGroupList(BaseModel):
     """Paginated list of financial event groups"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    payload: Union[FinancialEventGroupListPayload, Any] = Field(default=None)
+    payload: FinancialEventGroupListPayload | None = Field(default=None)
 
 class FinancialEventsDebtrecoveryeventlistItemChargeinstrumentlistItemAmount(BaseModel):
     """Nested schema for FinancialEventsDebtrecoveryeventlistItemChargeinstrumentlistItem.Amount"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    currency_code: Union[str, Any] = Field(default=None, alias="CurrencyCode")
-    currency_amount: Union[float, Any] = Field(default=None, alias="CurrencyAmount")
+    currency_code: str | None = Field(default=None, alias="CurrencyCode")
+    currency_amount: float | None = Field(default=None, alias="CurrencyAmount")
 
 class FinancialEventsDebtrecoveryeventlistItemChargeinstrumentlistItem(BaseModel):
     """Nested schema for FinancialEventsDebtrecoveryeventlistItem.ChargeInstrumentList_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    description: Union[str, Any] = Field(default=None, alias="Description")
-    tail: Union[str, Any] = Field(default=None, alias="Tail")
-    amount: Union[FinancialEventsDebtrecoveryeventlistItemChargeinstrumentlistItemAmount, Any] = Field(default=None, alias="Amount")
-
-class FinancialEventsDebtrecoveryeventlistItemDebtrecoveryitemlistItemRecoveryamount(BaseModel):
-    """Nested schema for FinancialEventsDebtrecoveryeventlistItemDebtrecoveryitemlistItem.RecoveryAmount"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    currency_code: Union[str, Any] = Field(default=None, alias="CurrencyCode")
-    currency_amount: Union[float, Any] = Field(default=None, alias="CurrencyAmount")
+    description: str | None = Field(default=None, alias="Description")
+    tail: str | None = Field(default=None, alias="Tail")
+    amount: FinancialEventsDebtrecoveryeventlistItemChargeinstrumentlistItemAmount | None = Field(default=None, alias="Amount")
 
 class FinancialEventsDebtrecoveryeventlistItemDebtrecoveryitemlistItemOriginalamount(BaseModel):
     """Nested schema for FinancialEventsDebtrecoveryeventlistItemDebtrecoveryitemlistItem.OriginalAmount"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    currency_code: Union[str, Any] = Field(default=None, alias="CurrencyCode")
-    currency_amount: Union[float, Any] = Field(default=None, alias="CurrencyAmount")
+    currency_code: str | None = Field(default=None, alias="CurrencyCode")
+    currency_amount: float | None = Field(default=None, alias="CurrencyAmount")
+
+class FinancialEventsDebtrecoveryeventlistItemDebtrecoveryitemlistItemRecoveryamount(BaseModel):
+    """Nested schema for FinancialEventsDebtrecoveryeventlistItemDebtrecoveryitemlistItem.RecoveryAmount"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    currency_code: str | None = Field(default=None, alias="CurrencyCode")
+    currency_amount: float | None = Field(default=None, alias="CurrencyAmount")
 
 class FinancialEventsDebtrecoveryeventlistItemDebtrecoveryitemlistItem(BaseModel):
     """Nested schema for FinancialEventsDebtrecoveryeventlistItem.DebtRecoveryItemList_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    recovery_amount: Union[FinancialEventsDebtrecoveryeventlistItemDebtrecoveryitemlistItemRecoveryamount, Any] = Field(default=None, alias="RecoveryAmount")
-    original_amount: Union[FinancialEventsDebtrecoveryeventlistItemDebtrecoveryitemlistItemOriginalamount, Any] = Field(default=None, alias="OriginalAmount")
-    group_begin_date: Union[str, Any] = Field(default=None, alias="GroupBeginDate")
-    group_end_date: Union[str, Any] = Field(default=None, alias="GroupEndDate")
+    recovery_amount: FinancialEventsDebtrecoveryeventlistItemDebtrecoveryitemlistItemRecoveryamount | None = Field(default=None, alias="RecoveryAmount")
+    original_amount: FinancialEventsDebtrecoveryeventlistItemDebtrecoveryitemlistItemOriginalamount | None = Field(default=None, alias="OriginalAmount")
+    group_begin_date: str | None = Field(default=None, alias="GroupBeginDate")
+    group_end_date: str | None = Field(default=None, alias="GroupEndDate")
 
 class FinancialEventsDebtrecoveryeventlistItemRecoveryamount(BaseModel):
     """Nested schema for FinancialEventsDebtrecoveryeventlistItem.RecoveryAmount"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    currency_code: Union[str, Any] = Field(default=None, alias="CurrencyCode")
-    currency_amount: Union[float, Any] = Field(default=None, alias="CurrencyAmount")
+    currency_code: str | None = Field(default=None, alias="CurrencyCode")
+    currency_amount: float | None = Field(default=None, alias="CurrencyAmount")
 
 class FinancialEventsDebtrecoveryeventlistItem(BaseModel):
     """Nested schema for FinancialEvents.DebtRecoveryEventList_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    debt_recovery_type: Union[str, Any] = Field(default=None, alias="DebtRecoveryType")
-    recovery_amount: Union[FinancialEventsDebtrecoveryeventlistItemRecoveryamount, Any] = Field(default=None, alias="RecoveryAmount")
-    debt_recovery_item_list: Union[list[FinancialEventsDebtrecoveryeventlistItemDebtrecoveryitemlistItem], Any] = Field(default=None, alias="DebtRecoveryItemList")
-    charge_instrument_list: Union[list[FinancialEventsDebtrecoveryeventlistItemChargeinstrumentlistItem], Any] = Field(default=None, alias="ChargeInstrumentList")
+    debt_recovery_type: str | None = Field(default=None, alias="DebtRecoveryType")
+    recovery_amount: FinancialEventsDebtrecoveryeventlistItemRecoveryamount | None = Field(default=None, alias="RecoveryAmount")
+    debt_recovery_item_list: list[FinancialEventsDebtrecoveryeventlistItemDebtrecoveryitemlistItem] | None = Field(default=None, alias="DebtRecoveryItemList")
+    charge_instrument_list: list[FinancialEventsDebtrecoveryeventlistItemChargeinstrumentlistItem] | None = Field(default=None, alias="ChargeInstrumentList")
 
 class FinancialEventsServicefeeeventlistItemFeelistItemFeeamount(BaseModel):
     """Nested schema for FinancialEventsServicefeeeventlistItemFeelistItem.FeeAmount"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    currency_code: Union[str, Any] = Field(default=None, alias="CurrencyCode")
-    currency_amount: Union[float, Any] = Field(default=None, alias="CurrencyAmount")
+    currency_code: str | None = Field(default=None, alias="CurrencyCode")
+    currency_amount: float | None = Field(default=None, alias="CurrencyAmount")
 
 class FinancialEventsServicefeeeventlistItemFeelistItem(BaseModel):
     """Nested schema for FinancialEventsServicefeeeventlistItem.FeeList_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    fee_type: Union[str, Any] = Field(default=None, alias="FeeType")
-    fee_amount: Union[FinancialEventsServicefeeeventlistItemFeelistItemFeeamount, Any] = Field(default=None, alias="FeeAmount")
+    fee_type: str | None = Field(default=None, alias="FeeType")
+    fee_amount: FinancialEventsServicefeeeventlistItemFeelistItemFeeamount | None = Field(default=None, alias="FeeAmount")
 
 class FinancialEventsServicefeeeventlistItem(BaseModel):
     """Nested schema for FinancialEvents.ServiceFeeEventList_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    fee_list: Union[list[FinancialEventsServicefeeeventlistItemFeelistItem], Any] = Field(default=None, alias="FeeList")
+    fee_list: list[FinancialEventsServicefeeeventlistItemFeelistItem] | None = Field(default=None, alias="FeeList")
 
 class FinancialEvents(BaseModel):
     """A collection of financial events grouped by type"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    shipment_event_list: Union[list[dict[str, Any]], Any] = Field(default=None, alias="ShipmentEventList")
-    shipment_settle_event_list: Union[list[dict[str, Any]], Any] = Field(default=None, alias="ShipmentSettleEventList")
-    refund_event_list: Union[list[dict[str, Any]], Any] = Field(default=None, alias="RefundEventList")
-    guarantee_claim_event_list: Union[list[dict[str, Any]], Any] = Field(default=None, alias="GuaranteeClaimEventList")
-    chargeback_event_list: Union[list[dict[str, Any]], Any] = Field(default=None, alias="ChargebackEventList")
-    charge_refund_event_list: Union[list[dict[str, Any]], Any] = Field(default=None, alias="ChargeRefundEventList")
-    pay_with_amazon_event_list: Union[list[dict[str, Any]], Any] = Field(default=None, alias="PayWithAmazonEventList")
-    service_provider_credit_event_list: Union[list[dict[str, Any]], Any] = Field(default=None, alias="ServiceProviderCreditEventList")
-    retrocharge_event_list: Union[list[dict[str, Any]], Any] = Field(default=None, alias="RetrochargeEventList")
-    rental_transaction_event_list: Union[list[dict[str, Any]], Any] = Field(default=None, alias="RentalTransactionEventList")
-    product_ads_payment_event_list: Union[list[dict[str, Any]], Any] = Field(default=None, alias="ProductAdsPaymentEventList")
-    service_fee_event_list: Union[list[FinancialEventsServicefeeeventlistItem], Any] = Field(default=None, alias="ServiceFeeEventList")
-    seller_deal_payment_event_list: Union[list[dict[str, Any]], Any] = Field(default=None, alias="SellerDealPaymentEventList")
-    debt_recovery_event_list: Union[list[FinancialEventsDebtrecoveryeventlistItem], Any] = Field(default=None, alias="DebtRecoveryEventList")
-    loan_servicing_event_list: Union[list[dict[str, Any]], Any] = Field(default=None, alias="LoanServicingEventList")
-    adjustment_event_list: Union[list[dict[str, Any]], Any] = Field(default=None, alias="AdjustmentEventList")
-    safet_reimbursement_event_list: Union[list[dict[str, Any]], Any] = Field(default=None, alias="SAFETReimbursementEventList")
-    seller_review_enrollment_payment_event_list: Union[list[dict[str, Any]], Any] = Field(default=None, alias="SellerReviewEnrollmentPaymentEventList")
-    fba_liquidation_event_list: Union[list[dict[str, Any]], Any] = Field(default=None, alias="FBALiquidationEventList")
-    coupon_payment_event_list: Union[list[dict[str, Any]], Any] = Field(default=None, alias="CouponPaymentEventList")
-    imaging_services_fee_event_list: Union[list[dict[str, Any]], Any] = Field(default=None, alias="ImagingServicesFeeEventList")
-    network_commingling_transaction_event_list: Union[list[dict[str, Any]], Any] = Field(default=None, alias="NetworkComminglingTransactionEventList")
-    affordability_expense_event_list: Union[list[dict[str, Any]], Any] = Field(default=None, alias="AffordabilityExpenseEventList")
-    affordability_expense_reversal_event_list: Union[list[dict[str, Any]], Any] = Field(default=None, alias="AffordabilityExpenseReversalEventList")
-    trial_shipment_event_list: Union[list[dict[str, Any]], Any] = Field(default=None, alias="TrialShipmentEventList")
-    tds_reimbursement_event_list: Union[list[dict[str, Any]], Any] = Field(default=None, alias="TDSReimbursementEventList")
-    tax_withholding_event_list: Union[list[dict[str, Any]], Any] = Field(default=None, alias="TaxWithholdingEventList")
-    removal_shipment_event_list: Union[list[dict[str, Any]], Any] = Field(default=None, alias="RemovalShipmentEventList")
-    removal_shipment_adjustment_event_list: Union[list[dict[str, Any]], Any] = Field(default=None, alias="RemovalShipmentAdjustmentEventList")
-    value_added_service_charge_event_list: Union[list[dict[str, Any]], Any] = Field(default=None, alias="ValueAddedServiceChargeEventList")
-    capacity_reservation_billing_event_list: Union[list[dict[str, Any]], Any] = Field(default=None, alias="CapacityReservationBillingEventList")
-    failed_adhoc_disbursement_event_list: Union[list[dict[str, Any]], Any] = Field(default=None, alias="FailedAdhocDisbursementEventList")
-    adhoc_disbursement_event_list: Union[list[dict[str, Any]], Any] = Field(default=None, alias="AdhocDisbursementEventList")
-    performance_bond_refund_event_list: Union[list[dict[str, Any]], Any] = Field(default=None, alias="PerformanceBondRefundEventList")
-    ebt_refund_reimbursement_only_event_list: Union[list[dict[str, Any]], Any] = Field(default=None, alias="EBTRefundReimbursementOnlyEventList")
+    shipment_event_list: list[dict[str, Any]] | None = Field(default=None, alias="ShipmentEventList")
+    shipment_settle_event_list: list[dict[str, Any]] | None = Field(default=None, alias="ShipmentSettleEventList")
+    refund_event_list: list[dict[str, Any]] | None = Field(default=None, alias="RefundEventList")
+    guarantee_claim_event_list: list[dict[str, Any]] | None = Field(default=None, alias="GuaranteeClaimEventList")
+    chargeback_event_list: list[dict[str, Any]] | None = Field(default=None, alias="ChargebackEventList")
+    charge_refund_event_list: list[dict[str, Any]] | None = Field(default=None, alias="ChargeRefundEventList")
+    pay_with_amazon_event_list: list[dict[str, Any]] | None = Field(default=None, alias="PayWithAmazonEventList")
+    service_provider_credit_event_list: list[dict[str, Any]] | None = Field(default=None, alias="ServiceProviderCreditEventList")
+    retrocharge_event_list: list[dict[str, Any]] | None = Field(default=None, alias="RetrochargeEventList")
+    rental_transaction_event_list: list[dict[str, Any]] | None = Field(default=None, alias="RentalTransactionEventList")
+    product_ads_payment_event_list: list[dict[str, Any]] | None = Field(default=None, alias="ProductAdsPaymentEventList")
+    service_fee_event_list: list[FinancialEventsServicefeeeventlistItem] | None = Field(default=None, alias="ServiceFeeEventList")
+    seller_deal_payment_event_list: list[dict[str, Any]] | None = Field(default=None, alias="SellerDealPaymentEventList")
+    debt_recovery_event_list: list[FinancialEventsDebtrecoveryeventlistItem] | None = Field(default=None, alias="DebtRecoveryEventList")
+    loan_servicing_event_list: list[dict[str, Any]] | None = Field(default=None, alias="LoanServicingEventList")
+    adjustment_event_list: list[dict[str, Any]] | None = Field(default=None, alias="AdjustmentEventList")
+    safet_reimbursement_event_list: list[dict[str, Any]] | None = Field(default=None, alias="SAFETReimbursementEventList")
+    seller_review_enrollment_payment_event_list: list[dict[str, Any]] | None = Field(default=None, alias="SellerReviewEnrollmentPaymentEventList")
+    fba_liquidation_event_list: list[dict[str, Any]] | None = Field(default=None, alias="FBALiquidationEventList")
+    coupon_payment_event_list: list[dict[str, Any]] | None = Field(default=None, alias="CouponPaymentEventList")
+    imaging_services_fee_event_list: list[dict[str, Any]] | None = Field(default=None, alias="ImagingServicesFeeEventList")
+    network_commingling_transaction_event_list: list[dict[str, Any]] | None = Field(default=None, alias="NetworkComminglingTransactionEventList")
+    affordability_expense_event_list: list[dict[str, Any]] | None = Field(default=None, alias="AffordabilityExpenseEventList")
+    affordability_expense_reversal_event_list: list[dict[str, Any]] | None = Field(default=None, alias="AffordabilityExpenseReversalEventList")
+    trial_shipment_event_list: list[dict[str, Any]] | None = Field(default=None, alias="TrialShipmentEventList")
+    tds_reimbursement_event_list: list[dict[str, Any]] | None = Field(default=None, alias="TDSReimbursementEventList")
+    tax_withholding_event_list: list[dict[str, Any]] | None = Field(default=None, alias="TaxWithholdingEventList")
+    removal_shipment_event_list: list[dict[str, Any]] | None = Field(default=None, alias="RemovalShipmentEventList")
+    removal_shipment_adjustment_event_list: list[dict[str, Any]] | None = Field(default=None, alias="RemovalShipmentAdjustmentEventList")
+    value_added_service_charge_event_list: list[dict[str, Any]] | None = Field(default=None, alias="ValueAddedServiceChargeEventList")
+    capacity_reservation_billing_event_list: list[dict[str, Any]] | None = Field(default=None, alias="CapacityReservationBillingEventList")
+    failed_adhoc_disbursement_event_list: list[dict[str, Any]] | None = Field(default=None, alias="FailedAdhocDisbursementEventList")
+    adhoc_disbursement_event_list: list[dict[str, Any]] | None = Field(default=None, alias="AdhocDisbursementEventList")
+    performance_bond_refund_event_list: list[dict[str, Any]] | None = Field(default=None, alias="PerformanceBondRefundEventList")
+    ebt_refund_reimbursement_only_event_list: list[dict[str, Any]] | None = Field(default=None, alias="EBTRefundReimbursementOnlyEventList")
 
 class FinancialEventsResponsePayload(BaseModel):
     """Nested schema for FinancialEventsResponse.payload"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    financial_events: Union[FinancialEvents, Any] = Field(default=None, alias="FinancialEvents")
-    next_token: Union[str, Any] = Field(default=None, alias="NextToken")
+    financial_events: FinancialEvents | None = Field(default=None, alias="FinancialEvents")
+    next_token: str | None = Field(default=None, alias="NextToken")
 
 class FinancialEventsResponse(BaseModel):
     """Response wrapper for financial events"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    payload: Union[FinancialEventsResponsePayload, Any] = Field(default=None)
+    payload: FinancialEventsResponsePayload | None = Field(default=None)
 
 class CatalogItemSummariesItemBrowseclassification(BaseModel):
     """Nested schema for CatalogItemSummariesItem.browseClassification"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    display_name: Union[str, Any] = Field(default=None, alias="displayName")
-    classification_id: Union[str, Any] = Field(default=None, alias="classificationId")
+    display_name: str | None = Field(default=None, alias="displayName")
+    classification_id: str | None = Field(default=None, alias="classificationId")
 
 class CatalogItemSummariesItem(BaseModel):
     """Nested schema for CatalogItem.summaries_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    marketplace_id: Union[str, Any] = Field(default=None, alias="marketplaceId")
-    adult_product: Union[bool, Any] = Field(default=None, alias="adultProduct")
-    autographed: Union[bool, Any] = Field(default=None)
-    brand: Union[str, Any] = Field(default=None)
-    browse_classification: Union[CatalogItemSummariesItemBrowseclassification, Any] = Field(default=None, alias="browseClassification")
-    color: Union[str, Any] = Field(default=None)
-    item_classification: Union[str, Any] = Field(default=None, alias="itemClassification")
-    item_name: Union[str, Any] = Field(default=None, alias="itemName")
-    manufacturer: Union[str, Any] = Field(default=None)
-    memorabilia: Union[bool, Any] = Field(default=None)
-    model_number: Union[str, Any] = Field(default=None, alias="modelNumber")
-    package_quantity: Union[int, Any] = Field(default=None, alias="packageQuantity")
-    part_number: Union[str, Any] = Field(default=None, alias="partNumber")
-    size: Union[str, Any] = Field(default=None)
-    style: Union[str, Any] = Field(default=None)
-    trade_in_eligible: Union[bool, Any] = Field(default=None, alias="tradeInEligible")
-    website_display_group: Union[str, Any] = Field(default=None, alias="websiteDisplayGroup")
-    website_display_group_name: Union[str, Any] = Field(default=None, alias="websiteDisplayGroupName")
+    marketplace_id: str | None = Field(default=None, alias="marketplaceId")
+    adult_product: bool | None = Field(default=None, alias="adultProduct")
+    autographed: bool | None = Field(default=None)
+    brand: str | None = Field(default=None)
+    browse_classification: CatalogItemSummariesItemBrowseclassification | None = Field(default=None, alias="browseClassification")
+    color: str | None = Field(default=None)
+    item_classification: str | None = Field(default=None, alias="itemClassification")
+    item_name: str | None = Field(default=None, alias="itemName")
+    manufacturer: str | None = Field(default=None)
+    memorabilia: bool | None = Field(default=None)
+    model_number: str | None = Field(default=None, alias="modelNumber")
+    package_quantity: int | None = Field(default=None, alias="packageQuantity")
+    part_number: str | None = Field(default=None, alias="partNumber")
+    size: str | None = Field(default=None)
+    style: str | None = Field(default=None)
+    trade_in_eligible: bool | None = Field(default=None, alias="tradeInEligible")
+    website_display_group: str | None = Field(default=None, alias="websiteDisplayGroup")
+    website_display_group_name: str | None = Field(default=None, alias="websiteDisplayGroupName")
 
 class CatalogItem(BaseModel):
     """Amazon catalog item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    asin: Union[str, Any] = Field(default=None)
-    attributes: Union[dict[str, Any], Any] = Field(default=None)
-    classifications: Union[list[dict[str, Any]], Any] = Field(default=None)
-    dimensions: Union[list[dict[str, Any]], Any] = Field(default=None)
-    identifiers: Union[list[dict[str, Any]], Any] = Field(default=None)
-    images: Union[list[dict[str, Any]], Any] = Field(default=None)
-    product_types: Union[list[dict[str, Any]], Any] = Field(default=None, alias="productTypes")
-    relationships: Union[list[dict[str, Any]], Any] = Field(default=None)
-    sales_ranks: Union[list[dict[str, Any]], Any] = Field(default=None, alias="salesRanks")
-    summaries: Union[list[CatalogItemSummariesItem], Any] = Field(default=None)
-    vendor_details: Union[list[dict[str, Any]], Any] = Field(default=None, alias="vendorDetails")
-
-class CatalogItemsListPagination(BaseModel):
-    """Nested schema for CatalogItemsList.pagination"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    next_token: Union[str, Any] = Field(default=None, alias="nextToken")
-    previous_token: Union[str, Any] = Field(default=None, alias="previousToken")
-
-class CatalogItemsListRefinementsClassificationsItem(BaseModel):
-    """Nested schema for CatalogItemsListRefinements.classifications_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    number_of_results: Union[int, Any] = Field(default=None, alias="numberOfResults")
-    display_name: Union[str, Any] = Field(default=None, alias="displayName")
-    classification_id: Union[str, Any] = Field(default=None, alias="classificationId")
+    asin: str
+    attributes: dict[str, Any] | None = Field(default=None)
+    classifications: list[dict[str, Any]] | None = Field(default=None)
+    dimensions: list[dict[str, Any]] | None = Field(default=None)
+    identifiers: list[dict[str, Any]] | None = Field(default=None)
+    images: list[dict[str, Any]] | None = Field(default=None)
+    product_types: list[dict[str, Any]] | None = Field(default=None, alias="productTypes")
+    relationships: list[dict[str, Any]] | None = Field(default=None)
+    sales_ranks: list[dict[str, Any]] | None = Field(default=None, alias="salesRanks")
+    summaries: list[CatalogItemSummariesItem] | None = Field(default=None)
+    vendor_details: list[dict[str, Any]] | None = Field(default=None, alias="vendorDetails")
 
 class CatalogItemsListRefinementsBrandsItem(BaseModel):
     """Nested schema for CatalogItemsListRefinements.brands_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    number_of_results: Union[int, Any] = Field(default=None, alias="numberOfResults")
-    brand_name: Union[str, Any] = Field(default=None, alias="brandName")
+    number_of_results: int | None = Field(default=None, alias="numberOfResults")
+    brand_name: str | None = Field(default=None, alias="brandName")
+
+class CatalogItemsListRefinementsClassificationsItem(BaseModel):
+    """Nested schema for CatalogItemsListRefinements.classifications_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    number_of_results: int | None = Field(default=None, alias="numberOfResults")
+    display_name: str | None = Field(default=None, alias="displayName")
+    classification_id: str | None = Field(default=None, alias="classificationId")
 
 class CatalogItemsListRefinements(BaseModel):
     """Nested schema for CatalogItemsList.refinements"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    brands: Union[list[CatalogItemsListRefinementsBrandsItem], Any] = Field(default=None)
-    classifications: Union[list[CatalogItemsListRefinementsClassificationsItem], Any] = Field(default=None)
+    brands: list[CatalogItemsListRefinementsBrandsItem] | None = Field(default=None)
+    classifications: list[CatalogItemsListRefinementsClassificationsItem] | None = Field(default=None)
+
+class CatalogItemsListPagination(BaseModel):
+    """Nested schema for CatalogItemsList.pagination"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next_token: str | None = Field(default=None, alias="nextToken")
+    previous_token: str | None = Field(default=None, alias="previousToken")
 
 class CatalogItemsList(BaseModel):
     """Catalog items search results"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    number_of_results: Union[int, Any] = Field(default=None, alias="numberOfResults")
-    pagination: Union[CatalogItemsListPagination, Any] = Field(default=None)
-    refinements: Union[CatalogItemsListRefinements, Any] = Field(default=None)
-    items: Union[list[CatalogItem], Any] = Field(default=None)
+    number_of_results: int | None = Field(default=None, alias="numberOfResults")
+    pagination: CatalogItemsListPagination | None = Field(default=None)
+    refinements: CatalogItemsListRefinements | None = Field(default=None)
+    items: list[CatalogItem] | None = Field(default=None)
 
 class Report(BaseModel):
     """Amazon SP-API report"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    report_id: Union[str, Any] = Field(default=None, alias="reportId")
-    report_type: Union[str, Any] = Field(default=None, alias="reportType")
-    created_time: Union[str, Any] = Field(default=None, alias="createdTime")
-    processing_status: Union[str, Any] = Field(default=None, alias="processingStatus")
-    data_start_time: Union[str, Any] = Field(default=None, alias="dataStartTime")
-    data_end_time: Union[str, Any] = Field(default=None, alias="dataEndTime")
-    report_schedule_id: Union[str, Any] = Field(default=None, alias="reportScheduleId")
-    processing_start_time: Union[str, Any] = Field(default=None, alias="processingStartTime")
-    processing_end_time: Union[str, Any] = Field(default=None, alias="processingEndTime")
-    report_document_id: Union[str, Any] = Field(default=None, alias="reportDocumentId")
-    marketplace_ids: Union[list[str], Any] = Field(default=None, alias="marketplaceIds")
+    report_id: str = Field(alias="reportId")
+    report_type: str | None = Field(default=None, alias="reportType")
+    created_time: str | None = Field(default=None, alias="createdTime")
+    processing_status: str | None = Field(default=None, alias="processingStatus")
+    data_start_time: str | None = Field(default=None, alias="dataStartTime")
+    data_end_time: str | None = Field(default=None, alias="dataEndTime")
+    report_schedule_id: str | None = Field(default=None, alias="reportScheduleId")
+    processing_start_time: str | None = Field(default=None, alias="processingStartTime")
+    processing_end_time: str | None = Field(default=None, alias="processingEndTime")
+    report_document_id: str | None = Field(default=None, alias="reportDocumentId")
+    marketplace_ids: list[str] | None = Field(default=None, alias="marketplaceIds")
 
 class ReportsList(BaseModel):
     """Paginated list of reports"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    reports: Union[list[Report], Any] = Field(default=None)
-    next_token: Union[str, Any] = Field(default=None, alias="nextToken")
+    reports: list[Report] | None = Field(default=None)
+    next_token: str | None = Field(default=None, alias="nextToken")
 
 # ===== METADATA TYPE DEFINITIONS (PYDANTIC) =====
 # Meta types for operations that extract metadata (e.g., pagination info)
@@ -593,38 +593,38 @@ class OrdersListResultMeta(BaseModel):
     """Metadata for orders.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_token: Union[str, Any] = Field(default=None)
+    next_token: str | None = Field(default=None)
 
 class OrderItemsListResultMeta(BaseModel):
     """Metadata for order_items.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_token: Union[str, Any] = Field(default=None)
+    next_token: str | None = Field(default=None)
 
 class ListFinancialEventGroupsListResultMeta(BaseModel):
     """Metadata for list_financial_event_groups.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_token: Union[str, Any] = Field(default=None)
+    next_token: str | None = Field(default=None)
 
 class ListFinancialEventsListResultMeta(BaseModel):
     """Metadata for list_financial_events.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_token: Union[str, Any] = Field(default=None)
+    next_token: str | None = Field(default=None)
 
 class CatalogItemsListResultMeta(BaseModel):
     """Metadata for catalog_items.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_token: Union[str, Any] = Field(default=None)
-    number_of_results: Union[int, Any] = Field(default=None)
+    next_token: str | None = Field(default=None)
+    number_of_results: int | None = Field(default=None)
 
 class ReportsListResultMeta(BaseModel):
     """Metadata for reports.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_token: Union[str, Any] = Field(default=None)
+    next_token: str | None = Field(default=None)
 
 # ===== CHECK RESULT MODEL =====
 

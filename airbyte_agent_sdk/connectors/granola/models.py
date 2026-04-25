@@ -8,7 +8,7 @@ and response envelope types.
 from __future__ import annotations
 
 from pydantic import BaseModel, ConfigDict, Field
-from typing import TypeVar, Generic, Union, Any
+from typing import TypeVar, Generic, Any
 
 # Authentication configuration
 
@@ -26,80 +26,80 @@ class Owner(BaseModel):
     """The owner of the note"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    name: Union[str | None, Any] = Field(default=None)
-    email: Union[str | None, Any] = Field(default=None)
+    name: str | None = Field(default=None)
+    email: str | None = Field(default=None)
 
 class Attendee(BaseModel):
     """A meeting attendee"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    name: Union[str | None, Any] = Field(default=None)
-    email: Union[str | None, Any] = Field(default=None)
+    name: str | None = Field(default=None)
+    email: str | None = Field(default=None)
 
 class CalendarEventInvitee(BaseModel):
     """A calendar event invitee"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    email: Union[str | None, Any] = Field(default=None)
+    email: str | None = Field(default=None)
 
 class CalendarEvent(BaseModel):
     """Associated calendar event details"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    event_title: Union[str | None, Any] = Field(default=None)
-    invitees: Union[list[CalendarEventInvitee] | None, Any] = Field(default=None)
-    organiser: Union[str | None, Any] = Field(default=None)
-    calendar_event_id: Union[str | None, Any] = Field(default=None)
-    scheduled_start_time: Union[str | None, Any] = Field(default=None)
-    scheduled_end_time: Union[str | None, Any] = Field(default=None)
+    event_title: str | None = Field(default=None)
+    invitees: list[CalendarEventInvitee] | None = Field(default=None)
+    organiser: str | None = Field(default=None)
+    calendar_event_id: str | None = Field(default=None)
+    scheduled_start_time: str | None = Field(default=None)
+    scheduled_end_time: str | None = Field(default=None)
 
 class FolderMembership(BaseModel):
     """Folder the note belongs to"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    object_: Union[str | None, Any] = Field(default=None, alias="object")
-    name: Union[str | None, Any] = Field(default=None)
+    id: str | None = Field(default=None)
+    object_: str | None = Field(default=None, alias="object")
+    name: str | None = Field(default=None)
 
 class TranscriptSpeaker(BaseModel):
     """Speaker information in transcript"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    source: Union[str | None, Any] = Field(default=None)
+    source: str | None = Field(default=None)
 
 class TranscriptEntry(BaseModel):
     """A single transcript entry"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    speaker: Union[Any, Any] = Field(default=None)
-    text: Union[str | None, Any] = Field(default=None)
-    start_time: Union[str | None, Any] = Field(default=None)
-    end_time: Union[str | None, Any] = Field(default=None)
+    speaker: Any | None = Field(default=None)
+    text: str | None = Field(default=None)
+    start_time: str | None = Field(default=None)
+    end_time: str | None = Field(default=None)
 
 class Note(BaseModel):
     """A Granola meeting note"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    object_: Union[str | None, Any] = Field(default=None, alias="object")
-    title: Union[str | None, Any] = Field(default=None)
-    owner: Union[Any, Any] = Field(default=None)
-    created_at: Union[str | None, Any] = Field(default=None)
-    updated_at: Union[str | None, Any] = Field(default=None)
-    calendar_event: Union[Any, Any] = Field(default=None)
-    attendees: Union[list[Attendee] | None, Any] = Field(default=None)
-    folder_membership: Union[list[FolderMembership] | None, Any] = Field(default=None)
-    summary_text: Union[str | None, Any] = Field(default=None)
-    summary_markdown: Union[str | None, Any] = Field(default=None)
-    transcript: Union[list[TranscriptEntry] | None, Any] = Field(default=None)
+    id: str
+    object_: str | None = Field(default=None, alias="object")
+    title: str | None = Field(default=None)
+    owner: Any | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
+    calendar_event: Any | None = Field(default=None)
+    attendees: list[Attendee] | None = Field(default=None)
+    folder_membership: list[FolderMembership] | None = Field(default=None)
+    summary_text: str | None = Field(default=None)
+    summary_markdown: str | None = Field(default=None)
+    transcript: list[TranscriptEntry] | None = Field(default=None)
 
 class NotesList(BaseModel):
     """Paginated list of notes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    notes: Union[list[Note], Any] = Field(default=None)
-    has_more: Union[bool, Any] = Field(default=None, alias="hasMore")
-    cursor: Union[str | None, Any] = Field(default=None)
+    notes: list[Note] | None = Field(default=None)
+    has_more: bool | None = Field(default=None, alias="hasMore")
+    cursor: str | None = Field(default=None)
 
 # ===== METADATA TYPE DEFINITIONS (PYDANTIC) =====
 # Meta types for operations that extract metadata (e.g., pagination info)
@@ -108,8 +108,8 @@ class NotesListResultMeta(BaseModel):
     """Metadata for notes.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    cursor: Union[str | None, Any] = Field(default=None)
-    has_more: Union[bool, Any] = Field(default=None)
+    cursor: str | None = Field(default=None)
+    has_more: bool | None = Field(default=None)
 
 # ===== CHECK RESULT MODEL =====
 

@@ -189,7 +189,7 @@
           {
             "name": "nextPageToken",
             "python_name": "next_page_token",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "string",
@@ -201,7 +201,7 @@
           {
             "name": "resultSizeEstimate",
             "python_name": "result_size_estimate",
-            "type": "int | None",
+            "type": "int",
             "schema": {
               "type": [
                 "integer",
@@ -696,7 +696,7 @@
           {
             "name": "nextPageToken",
             "python_name": "next_page_token",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "string",
@@ -708,7 +708,7 @@
           {
             "name": "resultSizeEstimate",
             "python_name": "result_size_estimate",
-            "type": "int | None",
+            "type": "int",
             "schema": {
               "type": [
                 "integer",
@@ -1002,7 +1002,7 @@
           {
             "name": "nextPageToken",
             "python_name": "next_page_token",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "string",
@@ -1014,7 +1014,7 @@
           {
             "name": "resultSizeEstimate",
             "python_name": "result_size_estimate",
-            "type": "int | None",
+            "type": "int",
             "schema": {
               "type": [
                 "integer",

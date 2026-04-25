@@ -8,7 +8,7 @@ and response envelope types.
 from __future__ import annotations
 
 from pydantic import BaseModel, ConfigDict, Field
-from typing import TypeVar, Generic, Union, Any
+from typing import TypeVar, Generic, Any
 
 # Authentication configuration
 
@@ -26,124 +26,124 @@ class Issue(BaseModel):
     """Linear issue object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    title: Union[str, Any] = Field(default=None)
-    description: Union[Any, Any] = Field(default=None)
-    state: Union[Any, Any] = Field(default=None)
-    priority: Union[Any, Any] = Field(default=None)
-    assignee: Union[Any, Any] = Field(default=None)
-    team: Union[Any, Any] = Field(default=None)
-    project: Union[Any, Any] = Field(default=None)
-    created_at: Union[str, Any] = Field(default=None, alias="createdAt")
-    updated_at: Union[str, Any] = Field(default=None, alias="updatedAt")
+    id: str
+    title: str
+    description: Any | None = Field(default=None)
+    state: Any | None = Field(default=None)
+    priority: Any | None = Field(default=None)
+    assignee: Any | None = Field(default=None)
+    team: Any | None = Field(default=None)
+    project: Any | None = Field(default=None)
+    created_at: str | None = Field(default=None, alias="createdAt")
+    updated_at: str | None = Field(default=None, alias="updatedAt")
 
 class IssuesListResponseDataIssuesPageinfo(BaseModel):
     """Pagination information"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    has_next_page: Union[bool, Any] = Field(default=None, alias="hasNextPage", description="Whether there are more items available")
+    has_next_page: bool | None = Field(default=None, alias="hasNextPage", description="Whether there are more items available")
     """Whether there are more items available"""
-    end_cursor: Union[str | None, Any] = Field(default=None, alias="endCursor", description="Cursor to fetch next page")
+    end_cursor: str | None | None = Field(default=None, alias="endCursor", description="Cursor to fetch next page")
     """Cursor to fetch next page"""
 
 class IssuesListResponseDataIssues(BaseModel):
     """Nested schema for IssuesListResponseData.issues"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    nodes: Union[list[Issue], Any] = Field(default=None)
-    page_info: Union[IssuesListResponseDataIssuesPageinfo, Any] = Field(default=None, alias="pageInfo", description="Pagination information")
+    nodes: list[Issue] | None = Field(default=None)
+    page_info: IssuesListResponseDataIssuesPageinfo | None = Field(default=None, alias="pageInfo", description="Pagination information")
     """Pagination information"""
 
 class IssuesListResponseData(BaseModel):
     """Nested schema for IssuesListResponse.data"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    issues: Union[IssuesListResponseDataIssues, Any] = Field(default=None)
+    issues: IssuesListResponseDataIssues | None = Field(default=None)
 
 class IssuesListResponse(BaseModel):
     """GraphQL response for issues list"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[IssuesListResponseData, Any] = Field(default=None)
+    data: IssuesListResponseData | None = Field(default=None)
 
 class IssueResponseData(BaseModel):
     """Nested schema for IssueResponse.data"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    issue: Union[Issue, Any] = Field(default=None)
+    issue: Issue | None = Field(default=None)
 
 class IssueResponse(BaseModel):
     """GraphQL response for single issue"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[IssueResponseData, Any] = Field(default=None)
+    data: IssueResponseData | None = Field(default=None)
 
 class Project(BaseModel):
     """Linear project object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    description: Union[Any, Any] = Field(default=None)
-    state: Union[Any, Any] = Field(default=None)
-    start_date: Union[Any, Any] = Field(default=None, alias="startDate")
-    target_date: Union[Any, Any] = Field(default=None, alias="targetDate")
-    lead: Union[Any, Any] = Field(default=None)
-    created_at: Union[str, Any] = Field(default=None, alias="createdAt")
-    updated_at: Union[str, Any] = Field(default=None, alias="updatedAt")
+    id: str
+    name: str
+    description: Any | None = Field(default=None)
+    state: Any | None = Field(default=None)
+    start_date: Any | None = Field(default=None, alias="startDate")
+    target_date: Any | None = Field(default=None, alias="targetDate")
+    lead: Any | None = Field(default=None)
+    created_at: str | None = Field(default=None, alias="createdAt")
+    updated_at: str | None = Field(default=None, alias="updatedAt")
 
 class ProjectsListResponseDataProjectsPageinfo(BaseModel):
     """Pagination information"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    has_next_page: Union[bool, Any] = Field(default=None, alias="hasNextPage", description="Whether there are more items available")
+    has_next_page: bool | None = Field(default=None, alias="hasNextPage", description="Whether there are more items available")
     """Whether there are more items available"""
-    end_cursor: Union[str | None, Any] = Field(default=None, alias="endCursor", description="Cursor to fetch next page")
+    end_cursor: str | None | None = Field(default=None, alias="endCursor", description="Cursor to fetch next page")
     """Cursor to fetch next page"""
 
 class ProjectsListResponseDataProjects(BaseModel):
     """Nested schema for ProjectsListResponseData.projects"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    nodes: Union[list[Project], Any] = Field(default=None)
-    page_info: Union[ProjectsListResponseDataProjectsPageinfo, Any] = Field(default=None, alias="pageInfo", description="Pagination information")
+    nodes: list[Project] | None = Field(default=None)
+    page_info: ProjectsListResponseDataProjectsPageinfo | None = Field(default=None, alias="pageInfo", description="Pagination information")
     """Pagination information"""
 
 class ProjectsListResponseData(BaseModel):
     """Nested schema for ProjectsListResponse.data"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    projects: Union[ProjectsListResponseDataProjects, Any] = Field(default=None)
+    projects: ProjectsListResponseDataProjects | None = Field(default=None)
 
 class ProjectsListResponse(BaseModel):
     """GraphQL response for projects list"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[ProjectsListResponseData, Any] = Field(default=None)
+    data: ProjectsListResponseData | None = Field(default=None)
 
 class ProjectResponseData(BaseModel):
     """Nested schema for ProjectResponse.data"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    project: Union[Project, Any] = Field(default=None)
+    project: Project | None = Field(default=None)
 
 class ProjectResponse(BaseModel):
     """GraphQL response for single project"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[ProjectResponseData, Any] = Field(default=None)
+    data: ProjectResponseData | None = Field(default=None)
 
 class ProjectCreateParams(BaseModel):
     """Parameters for creating a project"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    name: Union[str, Any] = Field(default=None)
-    team_ids: Union[list[str], Any] = Field(default=None, alias="teamIds")
-    description: Union[str, Any] = Field(default=None)
-    state: Union[str, Any] = Field(default=None)
-    start_date: Union[str, Any] = Field(default=None, alias="startDate")
-    target_date: Union[str, Any] = Field(default=None, alias="targetDate")
-    lead_id: Union[str, Any] = Field(default=None, alias="leadId")
+    name: str
+    team_ids: list[str] = Field(alias="teamIds")
+    description: str | None = Field(default=None)
+    state: str | None = Field(default=None)
+    start_date: str | None = Field(default=None, alias="startDate")
+    target_date: str | None = Field(default=None, alias="targetDate")
+    lead_id: str | None = Field(default=None, alias="leadId")
 
 class ProjectUpdateParams(BaseModel):
     """Parameters for updating a project. All fields except id are optional for partial updates.
@@ -151,150 +151,150 @@ Use this to rename projects, change descriptions, update dates, or change the pr
 """
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    description: Union[str, Any] = Field(default=None)
-    state: Union[str, Any] = Field(default=None)
-    start_date: Union[str, Any] = Field(default=None, alias="startDate")
-    target_date: Union[str, Any] = Field(default=None, alias="targetDate")
-    lead_id: Union[str, Any] = Field(default=None, alias="leadId")
+    id: str
+    name: str | None = Field(default=None)
+    description: str | None = Field(default=None)
+    state: str | None = Field(default=None)
+    start_date: str | None = Field(default=None, alias="startDate")
+    target_date: str | None = Field(default=None, alias="targetDate")
+    lead_id: str | None = Field(default=None, alias="leadId")
 
 class ProjectMutationPayload(BaseModel):
     """Project mutation result"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    success: Union[bool, Any] = Field(default=None)
-    project: Union[Project, Any] = Field(default=None)
+    success: bool | None = Field(default=None)
+    project: Project | None = Field(default=None)
 
 class ProjectCreateResponseData(BaseModel):
     """Nested schema for ProjectCreateResponse.data"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    project_create: Union[ProjectMutationPayload, Any] = Field(default=None, alias="projectCreate")
+    project_create: ProjectMutationPayload | None = Field(default=None, alias="projectCreate")
 
 class ProjectCreateResponse(BaseModel):
     """GraphQL response for project creation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[ProjectCreateResponseData, Any] = Field(default=None)
+    data: ProjectCreateResponseData | None = Field(default=None)
 
 class ProjectUpdateResponseData(BaseModel):
     """Nested schema for ProjectUpdateResponse.data"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    project_update: Union[ProjectMutationPayload, Any] = Field(default=None, alias="projectUpdate")
+    project_update: ProjectMutationPayload | None = Field(default=None, alias="projectUpdate")
 
 class ProjectUpdateResponse(BaseModel):
     """GraphQL response for project update"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[ProjectUpdateResponseData, Any] = Field(default=None)
+    data: ProjectUpdateResponseData | None = Field(default=None)
 
 class Team(BaseModel):
     """Linear team object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    key: Union[str, Any] = Field(default=None)
-    description: Union[Any, Any] = Field(default=None)
-    timezone: Union[Any, Any] = Field(default=None)
-    created_at: Union[str, Any] = Field(default=None, alias="createdAt")
-    updated_at: Union[str, Any] = Field(default=None, alias="updatedAt")
+    id: str
+    name: str
+    key: str
+    description: Any | None = Field(default=None)
+    timezone: Any | None = Field(default=None)
+    created_at: str | None = Field(default=None, alias="createdAt")
+    updated_at: str | None = Field(default=None, alias="updatedAt")
 
 class TeamsListResponseDataTeamsPageinfo(BaseModel):
     """Pagination information"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    has_next_page: Union[bool, Any] = Field(default=None, alias="hasNextPage", description="Whether there are more items available")
+    has_next_page: bool | None = Field(default=None, alias="hasNextPage", description="Whether there are more items available")
     """Whether there are more items available"""
-    end_cursor: Union[str | None, Any] = Field(default=None, alias="endCursor", description="Cursor to fetch next page")
+    end_cursor: str | None | None = Field(default=None, alias="endCursor", description="Cursor to fetch next page")
     """Cursor to fetch next page"""
 
 class TeamsListResponseDataTeams(BaseModel):
     """Nested schema for TeamsListResponseData.teams"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    nodes: Union[list[Team], Any] = Field(default=None)
-    page_info: Union[TeamsListResponseDataTeamsPageinfo, Any] = Field(default=None, alias="pageInfo", description="Pagination information")
+    nodes: list[Team] | None = Field(default=None)
+    page_info: TeamsListResponseDataTeamsPageinfo | None = Field(default=None, alias="pageInfo", description="Pagination information")
     """Pagination information"""
 
 class TeamsListResponseData(BaseModel):
     """Nested schema for TeamsListResponse.data"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    teams: Union[TeamsListResponseDataTeams, Any] = Field(default=None)
+    teams: TeamsListResponseDataTeams | None = Field(default=None)
 
 class TeamsListResponse(BaseModel):
     """GraphQL response for teams list"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[TeamsListResponseData, Any] = Field(default=None)
+    data: TeamsListResponseData | None = Field(default=None)
 
 class TeamResponseData(BaseModel):
     """Nested schema for TeamResponse.data"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    team: Union[Team, Any] = Field(default=None)
+    team: Team | None = Field(default=None)
 
 class TeamResponse(BaseModel):
     """GraphQL response for single team"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[TeamResponseData, Any] = Field(default=None)
+    data: TeamResponseData | None = Field(default=None)
 
 class WorkflowState(BaseModel):
     """Linear workflow state object representing a status in a team's workflow"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    type_: Union[str, Any] = Field(default=None, alias="type")
-    position: Union[Any, Any] = Field(default=None)
-    color: Union[Any, Any] = Field(default=None)
-    team: Union[Any, Any] = Field(default=None)
-    created_at: Union[str, Any] = Field(default=None, alias="createdAt")
-    updated_at: Union[str, Any] = Field(default=None, alias="updatedAt")
+    id: str
+    name: str
+    type_: str = Field(alias="type")
+    position: Any | None = Field(default=None)
+    color: Any | None = Field(default=None)
+    team: Any | None = Field(default=None)
+    created_at: str | None = Field(default=None, alias="createdAt")
+    updated_at: str | None = Field(default=None, alias="updatedAt")
 
 class WorkflowStatesListResponseDataWorkflowstatesPageinfo(BaseModel):
     """Pagination information"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    has_next_page: Union[bool, Any] = Field(default=None, alias="hasNextPage", description="Whether there are more items available")
+    has_next_page: bool | None = Field(default=None, alias="hasNextPage", description="Whether there are more items available")
     """Whether there are more items available"""
-    end_cursor: Union[str | None, Any] = Field(default=None, alias="endCursor", description="Cursor to fetch next page")
+    end_cursor: str | None | None = Field(default=None, alias="endCursor", description="Cursor to fetch next page")
     """Cursor to fetch next page"""
 
 class WorkflowStatesListResponseDataWorkflowstates(BaseModel):
     """Nested schema for WorkflowStatesListResponseData.workflowStates"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    nodes: Union[list[WorkflowState], Any] = Field(default=None)
-    page_info: Union[WorkflowStatesListResponseDataWorkflowstatesPageinfo, Any] = Field(default=None, alias="pageInfo", description="Pagination information")
+    nodes: list[WorkflowState] | None = Field(default=None)
+    page_info: WorkflowStatesListResponseDataWorkflowstatesPageinfo | None = Field(default=None, alias="pageInfo", description="Pagination information")
     """Pagination information"""
 
 class WorkflowStatesListResponseData(BaseModel):
     """Nested schema for WorkflowStatesListResponse.data"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    workflow_states: Union[WorkflowStatesListResponseDataWorkflowstates, Any] = Field(default=None, alias="workflowStates")
+    workflow_states: WorkflowStatesListResponseDataWorkflowstates | None = Field(default=None, alias="workflowStates")
 
 class WorkflowStatesListResponse(BaseModel):
     """GraphQL response for workflow states list"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[WorkflowStatesListResponseData, Any] = Field(default=None)
+    data: WorkflowStatesListResponseData | None = Field(default=None)
 
 class IssueCreateParams(BaseModel):
     """Parameters for creating an issue"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    team_id: Union[str, Any] = Field(default=None, alias="teamId")
-    title: Union[str, Any] = Field(default=None)
-    description: Union[str, Any] = Field(default=None)
-    state_id: Union[str, Any] = Field(default=None, alias="stateId")
-    priority: Union[int, Any] = Field(default=None)
-    project_id: Union[str, Any] = Field(default=None, alias="projectId")
+    team_id: str = Field(alias="teamId")
+    title: str
+    description: str | None = Field(default=None)
+    state_id: str | None = Field(default=None, alias="stateId")
+    priority: int | None = Field(default=None)
+    project_id: str | None = Field(default=None, alias="projectId")
 
 class IssueUpdateParams(BaseModel):
     """Parameters for updating an issue. All fields except id are optional for partial updates.
@@ -304,215 +304,215 @@ Omit assigneeId to leave the current assignee unchanged.
 """
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    title: Union[str, Any] = Field(default=None)
-    description: Union[str, Any] = Field(default=None)
-    state_id: Union[str, Any] = Field(default=None, alias="stateId")
-    priority: Union[int, Any] = Field(default=None)
-    assignee_id: Union[str, Any] = Field(default=None, alias="assigneeId")
-    project_id: Union[str, Any] = Field(default=None, alias="projectId")
+    id: str
+    title: str | None = Field(default=None)
+    description: str | None = Field(default=None)
+    state_id: str | None = Field(default=None, alias="stateId")
+    priority: int | None = Field(default=None)
+    assignee_id: str | None = Field(default=None, alias="assigneeId")
+    project_id: str | None = Field(default=None, alias="projectId")
 
 class IssueWithState(BaseModel):
     """Issue object with state ID and assignee ID included"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    title: Union[str, Any] = Field(default=None)
-    description: Union[Any, Any] = Field(default=None)
-    state: Union[Any, Any] = Field(default=None)
-    priority: Union[Any, Any] = Field(default=None)
-    assignee: Union[Any, Any] = Field(default=None)
-    project: Union[Any, Any] = Field(default=None)
-    created_at: Union[str, Any] = Field(default=None, alias="createdAt")
-    updated_at: Union[str, Any] = Field(default=None, alias="updatedAt")
+    id: str | None = Field(default=None)
+    title: str | None = Field(default=None)
+    description: Any | None = Field(default=None)
+    state: Any | None = Field(default=None)
+    priority: Any | None = Field(default=None)
+    assignee: Any | None = Field(default=None)
+    project: Any | None = Field(default=None)
+    created_at: str | None = Field(default=None, alias="createdAt")
+    updated_at: str | None = Field(default=None, alias="updatedAt")
 
 class IssueMutationPayload(BaseModel):
     """Issue mutation result"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    success: Union[bool, Any] = Field(default=None)
-    issue: Union[IssueWithState, Any] = Field(default=None)
+    success: bool | None = Field(default=None)
+    issue: IssueWithState | None = Field(default=None)
 
 class IssueCreateResponseData(BaseModel):
     """Nested schema for IssueCreateResponse.data"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    issue_create: Union[IssueMutationPayload, Any] = Field(default=None, alias="issueCreate")
+    issue_create: IssueMutationPayload | None = Field(default=None, alias="issueCreate")
 
 class IssueCreateResponse(BaseModel):
     """GraphQL response for issue creation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[IssueCreateResponseData, Any] = Field(default=None)
+    data: IssueCreateResponseData | None = Field(default=None)
 
 class IssueUpdateResponseData(BaseModel):
     """Nested schema for IssueUpdateResponse.data"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    issue_update: Union[IssueMutationPayload, Any] = Field(default=None, alias="issueUpdate")
+    issue_update: IssueMutationPayload | None = Field(default=None, alias="issueUpdate")
 
 class IssueUpdateResponse(BaseModel):
     """GraphQL response for issue update"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[IssueUpdateResponseData, Any] = Field(default=None)
+    data: IssueUpdateResponseData | None = Field(default=None)
 
 class User(BaseModel):
     """Linear user object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    email: Union[str, Any] = Field(default=None)
-    display_name: Union[Any, Any] = Field(default=None, alias="displayName")
-    active: Union[bool, Any] = Field(default=None)
-    admin: Union[bool, Any] = Field(default=None)
-    created_at: Union[str, Any] = Field(default=None, alias="createdAt")
-    updated_at: Union[str, Any] = Field(default=None, alias="updatedAt")
+    id: str
+    name: str
+    email: str
+    display_name: Any | None = Field(default=None, alias="displayName")
+    active: bool | None = Field(default=None)
+    admin: bool | None = Field(default=None)
+    created_at: str | None = Field(default=None, alias="createdAt")
+    updated_at: str | None = Field(default=None, alias="updatedAt")
 
 class UsersListResponseDataUsersPageinfo(BaseModel):
     """Pagination information"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    has_next_page: Union[bool, Any] = Field(default=None, alias="hasNextPage", description="Whether there are more items available")
+    has_next_page: bool | None = Field(default=None, alias="hasNextPage", description="Whether there are more items available")
     """Whether there are more items available"""
-    end_cursor: Union[str | None, Any] = Field(default=None, alias="endCursor", description="Cursor to fetch next page")
+    end_cursor: str | None | None = Field(default=None, alias="endCursor", description="Cursor to fetch next page")
     """Cursor to fetch next page"""
 
 class UsersListResponseDataUsers(BaseModel):
     """Nested schema for UsersListResponseData.users"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    nodes: Union[list[User], Any] = Field(default=None)
-    page_info: Union[UsersListResponseDataUsersPageinfo, Any] = Field(default=None, alias="pageInfo", description="Pagination information")
+    nodes: list[User] | None = Field(default=None)
+    page_info: UsersListResponseDataUsersPageinfo | None = Field(default=None, alias="pageInfo", description="Pagination information")
     """Pagination information"""
 
 class UsersListResponseData(BaseModel):
     """Nested schema for UsersListResponse.data"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    users: Union[UsersListResponseDataUsers, Any] = Field(default=None)
+    users: UsersListResponseDataUsers | None = Field(default=None)
 
 class UsersListResponse(BaseModel):
     """GraphQL response for users list"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[UsersListResponseData, Any] = Field(default=None)
+    data: UsersListResponseData | None = Field(default=None)
 
 class UserResponseData(BaseModel):
     """Nested schema for UserResponse.data"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    user: Union[User, Any] = Field(default=None)
+    user: User | None = Field(default=None)
 
 class UserResponse(BaseModel):
     """GraphQL response for single user"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[UserResponseData, Any] = Field(default=None)
+    data: UserResponseData | None = Field(default=None)
 
 class Comment(BaseModel):
     """Linear comment object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    body: Union[str, Any] = Field(default=None)
-    user: Union[Any, Any] = Field(default=None)
-    issue: Union[Any, Any] = Field(default=None)
-    created_at: Union[str, Any] = Field(default=None, alias="createdAt")
-    updated_at: Union[str, Any] = Field(default=None, alias="updatedAt")
+    id: str
+    body: str
+    user: Any | None = Field(default=None)
+    issue: Any | None = Field(default=None)
+    created_at: str | None = Field(default=None, alias="createdAt")
+    updated_at: str | None = Field(default=None, alias="updatedAt")
 
 class CommentsListResponseDataIssueCommentsPageinfo(BaseModel):
     """Pagination information"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    has_next_page: Union[bool, Any] = Field(default=None, alias="hasNextPage", description="Whether there are more items available")
+    has_next_page: bool | None = Field(default=None, alias="hasNextPage", description="Whether there are more items available")
     """Whether there are more items available"""
-    end_cursor: Union[str | None, Any] = Field(default=None, alias="endCursor", description="Cursor to fetch next page")
+    end_cursor: str | None | None = Field(default=None, alias="endCursor", description="Cursor to fetch next page")
     """Cursor to fetch next page"""
 
 class CommentsListResponseDataIssueComments(BaseModel):
     """Nested schema for CommentsListResponseDataIssue.comments"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    nodes: Union[list[Comment], Any] = Field(default=None)
-    page_info: Union[CommentsListResponseDataIssueCommentsPageinfo, Any] = Field(default=None, alias="pageInfo", description="Pagination information")
+    nodes: list[Comment] | None = Field(default=None)
+    page_info: CommentsListResponseDataIssueCommentsPageinfo | None = Field(default=None, alias="pageInfo", description="Pagination information")
     """Pagination information"""
 
 class CommentsListResponseDataIssue(BaseModel):
     """Nested schema for CommentsListResponseData.issue"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    comments: Union[CommentsListResponseDataIssueComments, Any] = Field(default=None)
+    comments: CommentsListResponseDataIssueComments | None = Field(default=None)
 
 class CommentsListResponseData(BaseModel):
     """Nested schema for CommentsListResponse.data"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    issue: Union[CommentsListResponseDataIssue, Any] = Field(default=None)
+    issue: CommentsListResponseDataIssue | None = Field(default=None)
 
 class CommentsListResponse(BaseModel):
     """GraphQL response for comments list"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[CommentsListResponseData, Any] = Field(default=None)
+    data: CommentsListResponseData | None = Field(default=None)
 
 class CommentResponseData(BaseModel):
     """Nested schema for CommentResponse.data"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    comment: Union[Comment, Any] = Field(default=None)
+    comment: Comment | None = Field(default=None)
 
 class CommentResponse(BaseModel):
     """GraphQL response for single comment"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[CommentResponseData, Any] = Field(default=None)
+    data: CommentResponseData | None = Field(default=None)
 
 class CommentCreateParams(BaseModel):
     """Parameters for creating a comment"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    issue_id: Union[str, Any] = Field(default=None, alias="issueId")
-    body: Union[str, Any] = Field(default=None)
+    issue_id: str = Field(alias="issueId")
+    body: str
 
 class CommentUpdateParams(BaseModel):
     """Parameters for updating a comment"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    body: Union[str, Any] = Field(default=None)
+    id: str
+    body: str
 
 class CommentMutationPayload(BaseModel):
     """Comment mutation result"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    success: Union[bool, Any] = Field(default=None)
-    comment: Union[Comment, Any] = Field(default=None)
+    success: bool | None = Field(default=None)
+    comment: Comment | None = Field(default=None)
 
 class CommentCreateResponseData(BaseModel):
     """Nested schema for CommentCreateResponse.data"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    comment_create: Union[CommentMutationPayload, Any] = Field(default=None, alias="commentCreate")
+    comment_create: CommentMutationPayload | None = Field(default=None, alias="commentCreate")
 
 class CommentCreateResponse(BaseModel):
     """GraphQL response for comment creation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[CommentCreateResponseData, Any] = Field(default=None)
+    data: CommentCreateResponseData | None = Field(default=None)
 
 class CommentUpdateResponseData(BaseModel):
     """Nested schema for CommentUpdateResponse.data"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    comment_update: Union[CommentMutationPayload, Any] = Field(default=None, alias="commentUpdate")
+    comment_update: CommentMutationPayload | None = Field(default=None, alias="commentUpdate")
 
 class CommentUpdateResponse(BaseModel):
     """GraphQL response for comment update"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[CommentUpdateResponseData, Any] = Field(default=None)
+    data: CommentUpdateResponseData | None = Field(default=None)
 
 # ===== METADATA TYPE DEFINITIONS (PYDANTIC) =====
 # Meta types for operations that extract metadata (e.g., pagination info)
@@ -521,43 +521,43 @@ class IssuesListResultMeta(BaseModel):
     """Metadata for issues.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    has_next_page: Union[bool, Any] = Field(default=None, alias="hasNextPage")
-    end_cursor: Union[str | None, Any] = Field(default=None, alias="endCursor")
+    has_next_page: bool | None = Field(default=None, alias="hasNextPage")
+    end_cursor: str | None = Field(default=None, alias="endCursor")
 
 class ProjectsListResultMeta(BaseModel):
     """Metadata for projects.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    has_next_page: Union[bool, Any] = Field(default=None, alias="hasNextPage")
-    end_cursor: Union[str | None, Any] = Field(default=None, alias="endCursor")
+    has_next_page: bool | None = Field(default=None, alias="hasNextPage")
+    end_cursor: str | None = Field(default=None, alias="endCursor")
 
 class TeamsListResultMeta(BaseModel):
     """Metadata for teams.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    has_next_page: Union[bool, Any] = Field(default=None, alias="hasNextPage")
-    end_cursor: Union[str | None, Any] = Field(default=None, alias="endCursor")
+    has_next_page: bool | None = Field(default=None, alias="hasNextPage")
+    end_cursor: str | None = Field(default=None, alias="endCursor")
 
 class WorkflowStatesListResultMeta(BaseModel):
     """Metadata for workflow_states.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    has_next_page: Union[bool, Any] = Field(default=None, alias="hasNextPage")
-    end_cursor: Union[str | None, Any] = Field(default=None, alias="endCursor")
+    has_next_page: bool | None = Field(default=None, alias="hasNextPage")
+    end_cursor: str | None = Field(default=None, alias="endCursor")
 
 class UsersListResultMeta(BaseModel):
     """Metadata for users.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    has_next_page: Union[bool, Any] = Field(default=None, alias="hasNextPage")
-    end_cursor: Union[str | None, Any] = Field(default=None, alias="endCursor")
+    has_next_page: bool | None = Field(default=None, alias="hasNextPage")
+    end_cursor: str | None = Field(default=None, alias="endCursor")
 
 class CommentsListResultMeta(BaseModel):
     """Metadata for comments.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    has_next_page: Union[bool, Any] = Field(default=None, alias="hasNextPage")
-    end_cursor: Union[str | None, Any] = Field(default=None, alias="endCursor")
+    has_next_page: bool | None = Field(default=None, alias="hasNextPage")
+    end_cursor: str | None = Field(default=None, alias="endCursor")
 
 # ===== CHECK RESULT MODEL =====
 

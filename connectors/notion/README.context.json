@@ -111,7 +111,7 @@
       {
         "name": "next_cursor",
         "python_name": "next_cursor",
-        "type": "str | None",
+        "type": "str",
         "schema": {
           "type": [
             "string",
@@ -123,7 +123,7 @@
       {
         "name": "has_more",
         "python_name": "has_more",
-        "type": "bool | None",
+        "type": "bool",
         "schema": {
           "type": [
             "boolean",
@@ -184,7 +184,7 @@
           {
             "name": "next_cursor",
             "python_name": "next_cursor",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "string",
@@ -196,7 +196,7 @@
           {
             "name": "has_more",
             "python_name": "has_more",
-            "type": "bool | None",
+            "type": "bool",
             "schema": {
               "type": [
                 "boolean",
@@ -324,7 +324,7 @@
           {
             "name": "next_cursor",
             "python_name": "next_cursor",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "string",
@@ -336,7 +336,7 @@
           {
             "name": "has_more",
             "python_name": "has_more",
-            "type": "bool | None",
+            "type": "bool",
             "schema": {
               "type": [
                 "boolean",
@@ -464,7 +464,7 @@
           {
             "name": "next_cursor",
             "python_name": "next_cursor",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "string",
@@ -476,7 +476,7 @@
           {
             "name": "has_more",
             "python_name": "has_more",
-            "type": "bool | None",
+            "type": "bool",
             "schema": {
               "type": [
                 "boolean",
@@ -575,7 +575,7 @@
           {
             "name": "next_cursor",
             "python_name": "next_cursor",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "string",
@@ -587,7 +587,7 @@
           {
             "name": "has_more",
             "python_name": "has_more",
-            "type": "bool | None",
+            "type": "bool",
             "schema": {
               "type": [
                 "boolean",
@@ -687,7 +687,7 @@
           {
             "name": "next_cursor",
             "python_name": "next_cursor",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "string",
@@ -699,7 +699,7 @@
           {
             "name": "has_more",
             "python_name": "has_more",
-            "type": "bool | None",
+            "type": "bool",
             "schema": {
               "type": [
                 "boolean",

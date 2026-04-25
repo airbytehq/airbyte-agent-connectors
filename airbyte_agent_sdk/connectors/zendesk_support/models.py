@@ -8,7 +8,7 @@ and response envelope types.
 from __future__ import annotations
 
 from pydantic import BaseModel, ConfigDict, Field
-from typing import TypeVar, Generic, Union, Any
+from typing import TypeVar, Generic, Any
 from typing import Optional
 
 # Authentication configuration - multiple options available
@@ -41,702 +41,702 @@ class Ticket(BaseModel):
     """Zendesk Support ticket object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    url: Union[str, Any] = Field(default=None)
-    external_id: Union[str | None, Any] = Field(default=None)
-    type_: Union[str | None, Any] = Field(default=None, alias="type")
-    subject: Union[str | None, Any] = Field(default=None)
-    raw_subject: Union[str | None, Any] = Field(default=None)
-    description: Union[str, Any] = Field(default=None)
-    priority: Union[str | None, Any] = Field(default=None)
-    status: Union[str, Any] = Field(default=None)
-    recipient: Union[str | None, Any] = Field(default=None)
-    requester_id: Union[int, Any] = Field(default=None)
-    submitter_id: Union[int, Any] = Field(default=None)
-    assignee_id: Union[int | None, Any] = Field(default=None)
-    organization_id: Union[int | None, Any] = Field(default=None)
-    group_id: Union[int | None, Any] = Field(default=None)
-    collaborator_ids: Union[list[int], Any] = Field(default=None)
-    follower_ids: Union[list[int], Any] = Field(default=None)
-    email_cc_ids: Union[list[int], Any] = Field(default=None)
-    forum_topic_id: Union[int | None, Any] = Field(default=None)
-    problem_id: Union[int | None, Any] = Field(default=None)
-    has_incidents: Union[bool, Any] = Field(default=None)
-    is_public: Union[bool, Any] = Field(default=None)
-    due_at: Union[str | None, Any] = Field(default=None)
-    tags: Union[list[str], Any] = Field(default=None)
-    custom_fields: Union[list[dict[str, Any]], Any] = Field(default=None)
-    satisfaction_rating: Union[dict[str, Any], Any] = Field(default=None)
-    sharing_agreement_ids: Union[list[int], Any] = Field(default=None)
-    custom_status_id: Union[int, Any] = Field(default=None)
-    fields: Union[list[dict[str, Any]], Any] = Field(default=None)
-    followup_ids: Union[list[int], Any] = Field(default=None)
-    ticket_form_id: Union[int, Any] = Field(default=None)
-    brand_id: Union[int, Any] = Field(default=None)
-    allow_channelback: Union[bool, Any] = Field(default=None)
-    allow_attachments: Union[bool, Any] = Field(default=None)
-    from_messaging_channel: Union[bool, Any] = Field(default=None)
-    generated_timestamp: Union[int, Any] = Field(default=None)
-    result_type: Union[str | None, Any] = Field(default=None)
-    created_at: Union[str, Any] = Field(default=None)
-    updated_at: Union[str, Any] = Field(default=None)
-    via: Union[dict[str, Any], Any] = Field(default=None)
+    id: int
+    url: str | None = Field(default=None)
+    external_id: str | None = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    subject: str | None = Field(default=None)
+    raw_subject: str | None = Field(default=None)
+    description: str | None = Field(default=None)
+    priority: str | None = Field(default=None)
+    status: str | None = Field(default=None)
+    recipient: str | None = Field(default=None)
+    requester_id: int | None = Field(default=None)
+    submitter_id: int | None = Field(default=None)
+    assignee_id: int | None = Field(default=None)
+    organization_id: int | None = Field(default=None)
+    group_id: int | None = Field(default=None)
+    collaborator_ids: list[int] | None = Field(default=None)
+    follower_ids: list[int] | None = Field(default=None)
+    email_cc_ids: list[int] | None = Field(default=None)
+    forum_topic_id: int | None = Field(default=None)
+    problem_id: int | None = Field(default=None)
+    has_incidents: bool | None = Field(default=None)
+    is_public: bool | None = Field(default=None)
+    due_at: str | None = Field(default=None)
+    tags: list[str] | None = Field(default=None)
+    custom_fields: list[dict[str, Any]] | None = Field(default=None)
+    satisfaction_rating: dict[str, Any] | None = Field(default=None)
+    sharing_agreement_ids: list[int] | None = Field(default=None)
+    custom_status_id: int | None = Field(default=None)
+    fields: list[dict[str, Any]] | None = Field(default=None)
+    followup_ids: list[int] | None = Field(default=None)
+    ticket_form_id: int | None = Field(default=None)
+    brand_id: int | None = Field(default=None)
+    allow_channelback: bool | None = Field(default=None)
+    allow_attachments: bool | None = Field(default=None)
+    from_messaging_channel: bool | None = Field(default=None)
+    generated_timestamp: int | None = Field(default=None)
+    result_type: str | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
+    via: dict[str, Any] | None = Field(default=None)
 
 class DeletedTicketActor(BaseModel):
     """The user who performed the deletion action"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int | None, Any] = Field(default=None, description="The unique identifier of the user")
+    id: int | None | None = Field(default=None, description="The unique identifier of the user")
     """The unique identifier of the user"""
-    name: Union[str | None, Any] = Field(default=None, description="The name of the user")
+    name: str | None | None = Field(default=None, description="The name of the user")
     """The name of the user"""
 
 class DeletedTicket(BaseModel):
     """Zendesk Support deleted ticket object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    subject: Union[str | None, Any] = Field(default=None)
-    description: Union[str | None, Any] = Field(default=None)
-    deleted_at: Union[str | None, Any] = Field(default=None)
-    previous_state: Union[str | None, Any] = Field(default=None)
-    actor: Union[DeletedTicketActor | None, Any] = Field(default=None)
+    id: int
+    subject: str | None = Field(default=None)
+    description: str | None = Field(default=None)
+    deleted_at: str | None = Field(default=None)
+    previous_state: str | None = Field(default=None)
+    actor: DeletedTicketActor | None = Field(default=None)
 
 class User(BaseModel):
     """Zendesk Support user object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    url: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    email: Union[str | None, Any] = Field(default=None)
-    alias: Union[str | None, Any] = Field(default=None)
-    phone: Union[str | None, Any] = Field(default=None)
-    time_zone: Union[str, Any] = Field(default=None)
-    locale: Union[str, Any] = Field(default=None)
-    locale_id: Union[int, Any] = Field(default=None)
-    organization_id: Union[int | None, Any] = Field(default=None)
-    role: Union[str, Any] = Field(default=None)
-    role_type: Union[int | None, Any] = Field(default=None)
-    custom_role_id: Union[int | None, Any] = Field(default=None)
-    external_id: Union[str | None, Any] = Field(default=None)
-    tags: Union[list[str], Any] = Field(default=None)
-    active: Union[bool, Any] = Field(default=None)
-    verified: Union[bool, Any] = Field(default=None)
-    shared: Union[bool, Any] = Field(default=None)
-    shared_agent: Union[bool, Any] = Field(default=None)
-    shared_phone_number: Union[bool | None, Any] = Field(default=None)
-    signature: Union[str | None, Any] = Field(default=None)
-    details: Union[str | None, Any] = Field(default=None)
-    notes: Union[str | None, Any] = Field(default=None)
-    suspended: Union[bool, Any] = Field(default=None)
-    restricted_agent: Union[bool, Any] = Field(default=None)
-    only_private_comments: Union[bool, Any] = Field(default=None)
-    moderator: Union[bool, Any] = Field(default=None)
-    ticket_restriction: Union[str | None, Any] = Field(default=None)
-    default_group_id: Union[int | None, Any] = Field(default=None)
-    report_csv: Union[bool, Any] = Field(default=None)
-    photo: Union[dict[str, Any] | None, Any] = Field(default=None)
-    user_fields: Union[dict[str, Any], Any] = Field(default=None)
-    last_login_at: Union[str | None, Any] = Field(default=None)
-    two_factor_auth_enabled: Union[bool | None, Any] = Field(default=None)
-    iana_time_zone: Union[str, Any] = Field(default=None)
-    permanently_deleted: Union[bool, Any] = Field(default=None)
-    created_at: Union[str, Any] = Field(default=None)
-    updated_at: Union[str, Any] = Field(default=None)
+    id: int
+    url: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    email: str | None = Field(default=None)
+    alias: str | None = Field(default=None)
+    phone: str | None = Field(default=None)
+    time_zone: str | None = Field(default=None)
+    locale: str | None = Field(default=None)
+    locale_id: int | None = Field(default=None)
+    organization_id: int | None = Field(default=None)
+    role: str | None = Field(default=None)
+    role_type: int | None = Field(default=None)
+    custom_role_id: int | None = Field(default=None)
+    external_id: str | None = Field(default=None)
+    tags: list[str] | None = Field(default=None)
+    active: bool | None = Field(default=None)
+    verified: bool | None = Field(default=None)
+    shared: bool | None = Field(default=None)
+    shared_agent: bool | None = Field(default=None)
+    shared_phone_number: bool | None = Field(default=None)
+    signature: str | None = Field(default=None)
+    details: str | None = Field(default=None)
+    notes: str | None = Field(default=None)
+    suspended: bool | None = Field(default=None)
+    restricted_agent: bool | None = Field(default=None)
+    only_private_comments: bool | None = Field(default=None)
+    moderator: bool | None = Field(default=None)
+    ticket_restriction: str | None = Field(default=None)
+    default_group_id: int | None = Field(default=None)
+    report_csv: bool | None = Field(default=None)
+    photo: dict[str, Any] | None = Field(default=None)
+    user_fields: dict[str, Any] | None = Field(default=None)
+    last_login_at: str | None = Field(default=None)
+    two_factor_auth_enabled: bool | None = Field(default=None)
+    iana_time_zone: str | None = Field(default=None)
+    permanently_deleted: bool | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
 
 class Organization(BaseModel):
     """Zendesk Support organization object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    url: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    details: Union[str | None, Any] = Field(default=None)
-    notes: Union[str | None, Any] = Field(default=None)
-    group_id: Union[int | None, Any] = Field(default=None)
-    shared_tickets: Union[bool, Any] = Field(default=None)
-    shared_comments: Union[bool, Any] = Field(default=None)
-    external_id: Union[str | None, Any] = Field(default=None)
-    domain_names: Union[list[str], Any] = Field(default=None)
-    tags: Union[list[str], Any] = Field(default=None)
-    organization_fields: Union[dict[str, Any], Any] = Field(default=None)
-    created_at: Union[str, Any] = Field(default=None)
-    updated_at: Union[str, Any] = Field(default=None)
+    id: int
+    url: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    details: str | None = Field(default=None)
+    notes: str | None = Field(default=None)
+    group_id: int | None = Field(default=None)
+    shared_tickets: bool | None = Field(default=None)
+    shared_comments: bool | None = Field(default=None)
+    external_id: str | None = Field(default=None)
+    domain_names: list[str] | None = Field(default=None)
+    tags: list[str] | None = Field(default=None)
+    organization_fields: dict[str, Any] | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
 
 class Group(BaseModel):
     """Zendesk Support group object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    url: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    description: Union[str, Any] = Field(default=None)
-    default: Union[bool, Any] = Field(default=None)
-    deleted: Union[bool, Any] = Field(default=None)
-    is_public: Union[bool, Any] = Field(default=None)
-    created_at: Union[str, Any] = Field(default=None)
-    updated_at: Union[str, Any] = Field(default=None)
+    id: int
+    url: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    description: str | None = Field(default=None)
+    default: bool | None = Field(default=None)
+    deleted: bool | None = Field(default=None)
+    is_public: bool | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
 
 class TicketComment(BaseModel):
     """Zendesk Support ticket comment object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    type_: Union[str, Any] = Field(default=None, alias="type")
-    body: Union[str, Any] = Field(default=None)
-    html_body: Union[str, Any] = Field(default=None)
-    plain_body: Union[str, Any] = Field(default=None)
-    public: Union[bool, Any] = Field(default=None)
-    author_id: Union[int, Any] = Field(default=None)
-    attachments: Union[list[dict[str, Any]], Any] = Field(default=None)
-    audit_id: Union[int, Any] = Field(default=None)
-    via: Union[dict[str, Any], Any] = Field(default=None)
-    metadata: Union[dict[str, Any], Any] = Field(default=None)
-    created_at: Union[str, Any] = Field(default=None)
+    id: int
+    type_: str | None = Field(default=None, alias="type")
+    body: str | None = Field(default=None)
+    html_body: str | None = Field(default=None)
+    plain_body: str | None = Field(default=None)
+    public: bool | None = Field(default=None)
+    author_id: int | None = Field(default=None)
+    attachments: list[dict[str, Any]] | None = Field(default=None)
+    audit_id: int | None = Field(default=None)
+    via: dict[str, Any] | None = Field(default=None)
+    metadata: dict[str, Any] | None = Field(default=None)
+    created_at: str | None = Field(default=None)
 
 class Attachment(BaseModel):
     """Zendesk Support attachment object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    file_name: Union[str, Any] = Field(default=None)
-    content_url: Union[str, Any] = Field(default=None)
-    mapped_content_url: Union[str, Any] = Field(default=None)
-    content_type: Union[str, Any] = Field(default=None)
-    size: Union[int, Any] = Field(default=None)
-    width: Union[int | None, Any] = Field(default=None)
-    height: Union[int | None, Any] = Field(default=None)
-    inline: Union[bool, Any] = Field(default=None)
-    deleted: Union[bool, Any] = Field(default=None)
-    malware_access_override: Union[bool, Any] = Field(default=None)
-    malware_scan_result: Union[str, Any] = Field(default=None)
-    url: Union[str, Any] = Field(default=None)
-    thumbnails: Union[list[dict[str, Any]], Any] = Field(default=None)
+    id: int
+    file_name: str | None = Field(default=None)
+    content_url: str | None = Field(default=None)
+    mapped_content_url: str | None = Field(default=None)
+    content_type: str | None = Field(default=None)
+    size: int | None = Field(default=None)
+    width: int | None = Field(default=None)
+    height: int | None = Field(default=None)
+    inline: bool | None = Field(default=None)
+    deleted: bool | None = Field(default=None)
+    malware_access_override: bool | None = Field(default=None)
+    malware_scan_result: str | None = Field(default=None)
+    url: str | None = Field(default=None)
+    thumbnails: list[dict[str, Any]] | None = Field(default=None)
 
 class TicketAudit(BaseModel):
     """Zendesk Support ticket audit object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    ticket_id: Union[int, Any] = Field(default=None)
-    author_id: Union[int, Any] = Field(default=None)
-    metadata: Union[dict[str, Any], Any] = Field(default=None)
-    via: Union[dict[str, Any], Any] = Field(default=None)
-    events: Union[list[dict[str, Any]], Any] = Field(default=None)
-    created_at: Union[str, Any] = Field(default=None)
+    id: int
+    ticket_id: int | None = Field(default=None)
+    author_id: int | None = Field(default=None)
+    metadata: dict[str, Any] | None = Field(default=None)
+    via: dict[str, Any] | None = Field(default=None)
+    events: list[dict[str, Any]] | None = Field(default=None)
+    created_at: str | None = Field(default=None)
 
 class TicketMetric(BaseModel):
     """Zendesk Support ticket metric object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    url: Union[str, Any] = Field(default=None)
-    ticket_id: Union[int, Any] = Field(default=None)
-    group_stations: Union[int, Any] = Field(default=None)
-    assignee_stations: Union[int, Any] = Field(default=None)
-    reopens: Union[int, Any] = Field(default=None)
-    replies: Union[int, Any] = Field(default=None)
-    assignee_updated_at: Union[str | None, Any] = Field(default=None)
-    requester_updated_at: Union[str, Any] = Field(default=None)
-    status_updated_at: Union[str, Any] = Field(default=None)
-    initially_assigned_at: Union[str | None, Any] = Field(default=None)
-    assigned_at: Union[str | None, Any] = Field(default=None)
-    solved_at: Union[str | None, Any] = Field(default=None)
-    latest_comment_added_at: Union[str, Any] = Field(default=None)
-    reply_time_in_minutes: Union[dict[str, Any], Any] = Field(default=None)
-    first_resolution_time_in_minutes: Union[dict[str, Any], Any] = Field(default=None)
-    full_resolution_time_in_minutes: Union[dict[str, Any], Any] = Field(default=None)
-    agent_wait_time_in_minutes: Union[dict[str, Any], Any] = Field(default=None)
-    requester_wait_time_in_minutes: Union[dict[str, Any], Any] = Field(default=None)
-    on_hold_time_in_minutes: Union[dict[str, Any], Any] = Field(default=None)
-    created_at: Union[str, Any] = Field(default=None)
-    updated_at: Union[str, Any] = Field(default=None)
+    id: int
+    url: str | None = Field(default=None)
+    ticket_id: int | None = Field(default=None)
+    group_stations: int | None = Field(default=None)
+    assignee_stations: int | None = Field(default=None)
+    reopens: int | None = Field(default=None)
+    replies: int | None = Field(default=None)
+    assignee_updated_at: str | None = Field(default=None)
+    requester_updated_at: str | None = Field(default=None)
+    status_updated_at: str | None = Field(default=None)
+    initially_assigned_at: str | None = Field(default=None)
+    assigned_at: str | None = Field(default=None)
+    solved_at: str | None = Field(default=None)
+    latest_comment_added_at: str | None = Field(default=None)
+    reply_time_in_minutes: dict[str, Any] | None = Field(default=None)
+    first_resolution_time_in_minutes: dict[str, Any] | None = Field(default=None)
+    full_resolution_time_in_minutes: dict[str, Any] | None = Field(default=None)
+    agent_wait_time_in_minutes: dict[str, Any] | None = Field(default=None)
+    requester_wait_time_in_minutes: dict[str, Any] | None = Field(default=None)
+    on_hold_time_in_minutes: dict[str, Any] | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
 
 class TicketField(BaseModel):
     """Zendesk Support ticket field object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    url: Union[str, Any] = Field(default=None)
-    type_: Union[str, Any] = Field(default=None, alias="type")
-    title: Union[str, Any] = Field(default=None)
-    raw_title: Union[str, Any] = Field(default=None)
-    description: Union[str, Any] = Field(default=None)
-    raw_description: Union[str, Any] = Field(default=None)
-    position: Union[int, Any] = Field(default=None)
-    active: Union[bool, Any] = Field(default=None)
-    required: Union[bool, Any] = Field(default=None)
-    collapsed_for_agents: Union[bool, Any] = Field(default=None)
-    regexp_for_validation: Union[str | None, Any] = Field(default=None)
-    title_in_portal: Union[str, Any] = Field(default=None)
-    raw_title_in_portal: Union[str, Any] = Field(default=None)
-    visible_in_portal: Union[bool, Any] = Field(default=None)
-    editable_in_portal: Union[bool, Any] = Field(default=None)
-    required_in_portal: Union[bool, Any] = Field(default=None)
-    tag: Union[str | None, Any] = Field(default=None)
-    custom_field_options: Union[list[dict[str, Any]], Any] = Field(default=None)
-    system_field_options: Union[list[dict[str, Any]], Any] = Field(default=None)
-    sub_type_id: Union[int, Any] = Field(default=None)
-    removable: Union[bool, Any] = Field(default=None)
-    agent_description: Union[str | None, Any] = Field(default=None)
-    created_at: Union[str, Any] = Field(default=None)
-    updated_at: Union[str, Any] = Field(default=None)
+    id: int
+    url: str | None = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    title: str | None = Field(default=None)
+    raw_title: str | None = Field(default=None)
+    description: str | None = Field(default=None)
+    raw_description: str | None = Field(default=None)
+    position: int | None = Field(default=None)
+    active: bool | None = Field(default=None)
+    required: bool | None = Field(default=None)
+    collapsed_for_agents: bool | None = Field(default=None)
+    regexp_for_validation: str | None = Field(default=None)
+    title_in_portal: str | None = Field(default=None)
+    raw_title_in_portal: str | None = Field(default=None)
+    visible_in_portal: bool | None = Field(default=None)
+    editable_in_portal: bool | None = Field(default=None)
+    required_in_portal: bool | None = Field(default=None)
+    tag: str | None = Field(default=None)
+    custom_field_options: list[dict[str, Any]] | None = Field(default=None)
+    system_field_options: list[dict[str, Any]] | None = Field(default=None)
+    sub_type_id: int | None = Field(default=None)
+    removable: bool | None = Field(default=None)
+    agent_description: str | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
 
 class Brand(BaseModel):
     """Zendesk Support brand object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    url: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    brand_url: Union[str, Any] = Field(default=None)
-    subdomain: Union[str, Any] = Field(default=None)
-    host_mapping: Union[str | None, Any] = Field(default=None)
-    has_help_center: Union[bool, Any] = Field(default=None)
-    help_center_state: Union[str, Any] = Field(default=None)
-    active: Union[bool, Any] = Field(default=None)
-    default: Union[bool, Any] = Field(default=None)
-    is_deleted: Union[bool, Any] = Field(default=None)
-    logo: Union[dict[str, Any] | None, Any] = Field(default=None)
-    ticket_form_ids: Union[list[int], Any] = Field(default=None)
-    signature_template: Union[str, Any] = Field(default=None)
-    created_at: Union[str, Any] = Field(default=None)
-    updated_at: Union[str, Any] = Field(default=None)
+    id: int
+    url: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    brand_url: str | None = Field(default=None)
+    subdomain: str | None = Field(default=None)
+    host_mapping: str | None = Field(default=None)
+    has_help_center: bool | None = Field(default=None)
+    help_center_state: str | None = Field(default=None)
+    active: bool | None = Field(default=None)
+    default: bool | None = Field(default=None)
+    is_deleted: bool | None = Field(default=None)
+    logo: dict[str, Any] | None = Field(default=None)
+    ticket_form_ids: list[int] | None = Field(default=None)
+    signature_template: str | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
 
 class View(BaseModel):
     """Zendesk Support view object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    url: Union[str, Any] = Field(default=None)
-    title: Union[str, Any] = Field(default=None)
-    active: Union[bool, Any] = Field(default=None)
-    position: Union[int, Any] = Field(default=None)
-    description: Union[str | None, Any] = Field(default=None)
-    execution: Union[dict[str, Any], Any] = Field(default=None)
-    conditions: Union[dict[str, Any], Any] = Field(default=None)
-    restriction: Union[dict[str, Any] | None, Any] = Field(default=None)
-    raw_title: Union[str, Any] = Field(default=None)
-    created_at: Union[str, Any] = Field(default=None)
-    updated_at: Union[str, Any] = Field(default=None)
+    id: int
+    url: str | None = Field(default=None)
+    title: str | None = Field(default=None)
+    active: bool | None = Field(default=None)
+    position: int | None = Field(default=None)
+    description: str | None = Field(default=None)
+    execution: dict[str, Any] | None = Field(default=None)
+    conditions: dict[str, Any] | None = Field(default=None)
+    restriction: dict[str, Any] | None = Field(default=None)
+    raw_title: str | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
 
 class Macro(BaseModel):
     """Zendesk Support macro object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    url: Union[str, Any] = Field(default=None)
-    title: Union[str, Any] = Field(default=None)
-    active: Union[bool, Any] = Field(default=None)
-    position: Union[int, Any] = Field(default=None)
-    description: Union[str, Any] = Field(default=None)
-    actions: Union[list[dict[str, Any]], Any] = Field(default=None)
-    restriction: Union[dict[str, Any] | None, Any] = Field(default=None)
-    raw_title: Union[str, Any] = Field(default=None)
-    created_at: Union[str, Any] = Field(default=None)
-    updated_at: Union[str, Any] = Field(default=None)
+    id: int
+    url: str | None = Field(default=None)
+    title: str | None = Field(default=None)
+    active: bool | None = Field(default=None)
+    position: int | None = Field(default=None)
+    description: str | None = Field(default=None)
+    actions: list[dict[str, Any]] | None = Field(default=None)
+    restriction: dict[str, Any] | None = Field(default=None)
+    raw_title: str | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
 
 class Trigger(BaseModel):
     """Zendesk Support trigger object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    url: Union[str, Any] = Field(default=None)
-    title: Union[str, Any] = Field(default=None)
-    active: Union[bool, Any] = Field(default=None)
-    position: Union[int, Any] = Field(default=None)
-    description: Union[str | None, Any] = Field(default=None)
-    conditions: Union[dict[str, Any], Any] = Field(default=None)
-    actions: Union[list[dict[str, Any]], Any] = Field(default=None)
-    raw_title: Union[str, Any] = Field(default=None)
-    category_id: Union[str, Any] = Field(default=None)
-    created_at: Union[str, Any] = Field(default=None)
-    updated_at: Union[str, Any] = Field(default=None)
+    id: int
+    url: str | None = Field(default=None)
+    title: str | None = Field(default=None)
+    active: bool | None = Field(default=None)
+    position: int | None = Field(default=None)
+    description: str | None = Field(default=None)
+    conditions: dict[str, Any] | None = Field(default=None)
+    actions: list[dict[str, Any]] | None = Field(default=None)
+    raw_title: str | None = Field(default=None)
+    category_id: str | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
 
 class Automation(BaseModel):
     """Zendesk Support automation object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    url: Union[str, Any] = Field(default=None)
-    title: Union[str, Any] = Field(default=None)
-    active: Union[bool, Any] = Field(default=None)
-    position: Union[int, Any] = Field(default=None)
-    conditions: Union[dict[str, Any], Any] = Field(default=None)
-    actions: Union[list[dict[str, Any]], Any] = Field(default=None)
-    raw_title: Union[str, Any] = Field(default=None)
-    created_at: Union[str, Any] = Field(default=None)
-    updated_at: Union[str, Any] = Field(default=None)
+    id: int
+    url: str | None = Field(default=None)
+    title: str | None = Field(default=None)
+    active: bool | None = Field(default=None)
+    position: int | None = Field(default=None)
+    conditions: dict[str, Any] | None = Field(default=None)
+    actions: list[dict[str, Any]] | None = Field(default=None)
+    raw_title: str | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
 
 class Tag(BaseModel):
     """Zendesk Support tag object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    name: Union[str, Any] = Field(default=None)
-    count: Union[int, Any] = Field(default=None)
+    name: str
+    count: int | None = Field(default=None)
 
 class SatisfactionRating(BaseModel):
     """Zendesk Support satisfaction rating object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    url: Union[str, Any] = Field(default=None)
-    assignee_id: Union[int | None, Any] = Field(default=None)
-    group_id: Union[int | None, Any] = Field(default=None)
-    requester_id: Union[int, Any] = Field(default=None)
-    ticket_id: Union[int, Any] = Field(default=None)
-    score: Union[str, Any] = Field(default=None)
-    comment: Union[str | None, Any] = Field(default=None)
-    reason: Union[str | None, Any] = Field(default=None)
-    reason_id: Union[int | None, Any] = Field(default=None)
-    reason_code: Union[int | None, Any] = Field(default=None)
-    created_at: Union[str, Any] = Field(default=None)
-    updated_at: Union[str, Any] = Field(default=None)
+    id: int
+    url: str | None = Field(default=None)
+    assignee_id: int | None = Field(default=None)
+    group_id: int | None = Field(default=None)
+    requester_id: int | None = Field(default=None)
+    ticket_id: int | None = Field(default=None)
+    score: str | None = Field(default=None)
+    comment: str | None = Field(default=None)
+    reason: str | None = Field(default=None)
+    reason_id: int | None = Field(default=None)
+    reason_code: int | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
 
 class GroupMembership(BaseModel):
     """Zendesk Support group membership object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    url: Union[str, Any] = Field(default=None)
-    user_id: Union[int, Any] = Field(default=None)
-    group_id: Union[int, Any] = Field(default=None)
-    default: Union[bool, Any] = Field(default=None)
-    created_at: Union[str, Any] = Field(default=None)
-    updated_at: Union[str, Any] = Field(default=None)
+    id: int
+    url: str | None = Field(default=None)
+    user_id: int | None = Field(default=None)
+    group_id: int | None = Field(default=None)
+    default: bool | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
 
 class OrganizationMembership(BaseModel):
     """Zendesk Support organization membership object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    url: Union[str, Any] = Field(default=None)
-    user_id: Union[int, Any] = Field(default=None)
-    organization_id: Union[int, Any] = Field(default=None)
-    default: Union[bool, Any] = Field(default=None)
-    organization_name: Union[str, Any] = Field(default=None)
-    view_tickets: Union[bool, Any] = Field(default=None)
-    created_at: Union[str, Any] = Field(default=None)
-    updated_at: Union[str, Any] = Field(default=None)
+    id: int
+    url: str | None = Field(default=None)
+    user_id: int | None = Field(default=None)
+    organization_id: int | None = Field(default=None)
+    default: bool | None = Field(default=None)
+    organization_name: str | None = Field(default=None)
+    view_tickets: bool | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
 
 class SLAPolicy(BaseModel):
     """Zendesk Support SLA policy object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    url: Union[str, Any] = Field(default=None)
-    title: Union[str, Any] = Field(default=None)
-    description: Union[str, Any] = Field(default=None)
-    position: Union[int, Any] = Field(default=None)
-    filter: Union[dict[str, Any], Any] = Field(default=None)
-    policy_metrics: Union[list[dict[str, Any]], Any] = Field(default=None)
-    created_at: Union[str, Any] = Field(default=None)
-    updated_at: Union[str, Any] = Field(default=None)
+    id: int
+    url: str | None = Field(default=None)
+    title: str | None = Field(default=None)
+    description: str | None = Field(default=None)
+    position: int | None = Field(default=None)
+    filter: dict[str, Any] | None = Field(default=None)
+    policy_metrics: list[dict[str, Any]] | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
 
 class TicketForm(BaseModel):
     """Zendesk Support ticket form object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    url: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    display_name: Union[str, Any] = Field(default=None)
-    raw_name: Union[str, Any] = Field(default=None)
-    raw_display_name: Union[str, Any] = Field(default=None)
-    position: Union[int, Any] = Field(default=None)
-    active: Union[bool, Any] = Field(default=None)
-    end_user_visible: Union[bool, Any] = Field(default=None)
-    default: Union[bool, Any] = Field(default=None)
-    in_all_brands: Union[bool, Any] = Field(default=None)
-    restricted_brand_ids: Union[list[int], Any] = Field(default=None)
-    ticket_field_ids: Union[list[int], Any] = Field(default=None)
-    agent_conditions: Union[list[dict[str, Any]], Any] = Field(default=None)
-    end_user_conditions: Union[list[dict[str, Any]], Any] = Field(default=None)
-    created_at: Union[str, Any] = Field(default=None)
-    updated_at: Union[str, Any] = Field(default=None)
+    id: int
+    url: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    display_name: str | None = Field(default=None)
+    raw_name: str | None = Field(default=None)
+    raw_display_name: str | None = Field(default=None)
+    position: int | None = Field(default=None)
+    active: bool | None = Field(default=None)
+    end_user_visible: bool | None = Field(default=None)
+    default: bool | None = Field(default=None)
+    in_all_brands: bool | None = Field(default=None)
+    restricted_brand_ids: list[int] | None = Field(default=None)
+    ticket_field_ids: list[int] | None = Field(default=None)
+    agent_conditions: list[dict[str, Any]] | None = Field(default=None)
+    end_user_conditions: list[dict[str, Any]] | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
 
 class Article(BaseModel):
     """Help Center article object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    url: Union[str, Any] = Field(default=None)
-    html_url: Union[str, Any] = Field(default=None)
-    title: Union[str, Any] = Field(default=None)
-    body: Union[str, Any] = Field(default=None)
-    locale: Union[str, Any] = Field(default=None)
-    author_id: Union[int, Any] = Field(default=None)
-    section_id: Union[int, Any] = Field(default=None)
-    created_at: Union[str, Any] = Field(default=None)
-    updated_at: Union[str, Any] = Field(default=None)
-    vote_sum: Union[int, Any] = Field(default=None)
-    vote_count: Union[int, Any] = Field(default=None)
-    label_names: Union[list[str], Any] = Field(default=None)
-    draft: Union[bool, Any] = Field(default=None)
-    promoted: Union[bool, Any] = Field(default=None)
-    position: Union[int, Any] = Field(default=None)
+    id: int
+    url: str | None = Field(default=None)
+    html_url: str | None = Field(default=None)
+    title: str | None = Field(default=None)
+    body: str | None = Field(default=None)
+    locale: str | None = Field(default=None)
+    author_id: int | None = Field(default=None)
+    section_id: int | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
+    vote_sum: int | None = Field(default=None)
+    vote_count: int | None = Field(default=None)
+    label_names: list[str] | None = Field(default=None)
+    draft: bool | None = Field(default=None)
+    promoted: bool | None = Field(default=None)
+    position: int | None = Field(default=None)
 
 class ArticleAttachment(BaseModel):
     """Article attachment object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    url: Union[str, Any] = Field(default=None)
-    article_id: Union[int, Any] = Field(default=None)
-    file_name: Union[str, Any] = Field(default=None)
-    content_type: Union[str, Any] = Field(default=None)
-    content_url: Union[str, Any] = Field(default=None)
-    size: Union[int, Any] = Field(default=None)
-    inline: Union[bool, Any] = Field(default=None)
-    created_at: Union[str, Any] = Field(default=None)
-    updated_at: Union[str, Any] = Field(default=None)
+    id: int
+    url: str | None = Field(default=None)
+    article_id: int | None = Field(default=None)
+    file_name: str
+    content_type: str | None = Field(default=None)
+    content_url: str | None = Field(default=None)
+    size: int | None = Field(default=None)
+    inline: bool | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
 
 class JobStatus(BaseModel):
     """Job status for bulk operations"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    url: Union[str, Any] = Field(default=None)
-    total: Union[int | None, Any] = Field(default=None)
-    progress: Union[int | None, Any] = Field(default=None)
-    status: Union[str, Any] = Field(default=None)
-    message: Union[str | None, Any] = Field(default=None)
-
-class TicketCreateParamsTicketComment(BaseModel):
-    """An object that defines the initial comment on the ticket"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    body: Union[str, Any] = Field(default=None, description="The body of the comment")
-    """The body of the comment"""
-    html_body: Union[str, Any] = Field(default=None, description="The HTML body of the comment")
-    """The HTML body of the comment"""
-    public: Union[bool, Any] = Field(default=None, description="Whether the comment is public (default true)")
-    """Whether the comment is public (default true)"""
+    id: str
+    url: str | None = Field(default=None)
+    total: int | None = Field(default=None)
+    progress: int | None = Field(default=None)
+    status: str | None = Field(default=None)
+    message: str | None = Field(default=None)
 
 class TicketCreateParamsTicketCustomFieldsItem(BaseModel):
     """Nested schema for TicketCreateParamsTicket.custom_fields_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    value: Union[str, Any] = Field(default=None)
+    id: int | None = Field(default=None)
+    value: str | None = Field(default=None)
+
+class TicketCreateParamsTicketComment(BaseModel):
+    """An object that defines the initial comment on the ticket"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    body: str | None = Field(default=None, description="The body of the comment")
+    """The body of the comment"""
+    html_body: str | None = Field(default=None, description="The HTML body of the comment")
+    """The HTML body of the comment"""
+    public: bool | None = Field(default=None, description="Whether the comment is public (default true)")
+    """Whether the comment is public (default true)"""
 
 class TicketCreateParamsTicket(BaseModel):
     """The ticket object to create"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    subject: Union[str, Any] = Field(default=None, description="The subject of the ticket")
+    subject: str = Field(description="The subject of the ticket")
     """The subject of the ticket"""
-    description: Union[str, Any] = Field(default=None, description="The initial comment/description body of the ticket (alias for comment.body)")
+    description: str | None = Field(default=None, description="The initial comment/description body of the ticket (alias for comment.body)")
     """The initial comment/description body of the ticket (alias for comment.body)"""
-    comment: Union[TicketCreateParamsTicketComment, Any] = Field(default=None, description="An object that defines the initial comment on the ticket")
+    comment: TicketCreateParamsTicketComment | None = Field(default=None, description="An object that defines the initial comment on the ticket")
     """An object that defines the initial comment on the ticket"""
-    type_: Union[str, Any] = Field(default=None, alias="type", description="The type of the ticket")
+    type_: str | None = Field(default=None, alias="type", description="The type of the ticket")
     """The type of the ticket"""
-    priority: Union[str, Any] = Field(default=None, description="The urgency of the ticket")
+    priority: str | None = Field(default=None, description="The urgency of the ticket")
     """The urgency of the ticket"""
-    status: Union[str, Any] = Field(default=None, description="The state of the ticket")
+    status: str | None = Field(default=None, description="The state of the ticket")
     """The state of the ticket"""
-    requester_id: Union[int, Any] = Field(default=None, description="The user who requested this ticket")
+    requester_id: int | None = Field(default=None, description="The user who requested this ticket")
     """The user who requested this ticket"""
-    assignee_id: Union[int, Any] = Field(default=None, description="The agent currently assigned to the ticket")
+    assignee_id: int | None = Field(default=None, description="The agent currently assigned to the ticket")
     """The agent currently assigned to the ticket"""
-    group_id: Union[int, Any] = Field(default=None, description="The group this ticket is assigned to")
+    group_id: int | None = Field(default=None, description="The group this ticket is assigned to")
     """The group this ticket is assigned to"""
-    organization_id: Union[int, Any] = Field(default=None, description="The organization of the requester")
+    organization_id: int | None = Field(default=None, description="The organization of the requester")
     """The organization of the requester"""
-    tags: Union[list[str], Any] = Field(default=None, description="Tags to apply to the ticket")
+    tags: list[str] | None = Field(default=None, description="Tags to apply to the ticket")
     """Tags to apply to the ticket"""
-    external_id: Union[str, Any] = Field(default=None, description="An external id to link Zendesk Support tickets to local records")
+    external_id: str | None = Field(default=None, description="An external id to link Zendesk Support tickets to local records")
     """An external id to link Zendesk Support tickets to local records"""
-    custom_fields: Union[list[TicketCreateParamsTicketCustomFieldsItem], Any] = Field(default=None, description="Custom fields for the ticket")
+    custom_fields: list[TicketCreateParamsTicketCustomFieldsItem] | None = Field(default=None, description="Custom fields for the ticket")
     """Custom fields for the ticket"""
-    due_at: Union[str, Any] = Field(default=None, description="Due date for task-type tickets")
+    due_at: str | None = Field(default=None, description="Due date for task-type tickets")
     """Due date for task-type tickets"""
-    collaborator_ids: Union[list[int], Any] = Field(default=None, description="Users to add as CCs on the ticket")
+    collaborator_ids: list[int] | None = Field(default=None, description="Users to add as CCs on the ticket")
     """Users to add as CCs on the ticket"""
 
 class TicketCreateParams(BaseModel):
     """Parameters for creating a new ticket. The body must be wrapped in a "ticket" key."""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    ticket: Union[TicketCreateParamsTicket, Any] = Field(default=None)
-
-class TicketUpdateParamsTicketComment(BaseModel):
-    """A comment to add to the ticket"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    body: Union[str, Any] = Field(default=None, description="The body of the comment")
-    """The body of the comment"""
-    html_body: Union[str, Any] = Field(default=None, description="The HTML body of the comment")
-    """The HTML body of the comment"""
-    public: Union[bool, Any] = Field(default=None, description="Whether the comment is public (true) or an internal note (false)")
-    """Whether the comment is public (true) or an internal note (false)"""
-    author_id: Union[int, Any] = Field(default=None, description="The author of the comment")
-    """The author of the comment"""
+    ticket: TicketCreateParamsTicket
 
 class TicketUpdateParamsTicketCustomFieldsItem(BaseModel):
     """Nested schema for TicketUpdateParamsTicket.custom_fields_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    value: Union[str, Any] = Field(default=None)
+    id: int | None = Field(default=None)
+    value: str | None = Field(default=None)
+
+class TicketUpdateParamsTicketComment(BaseModel):
+    """A comment to add to the ticket"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    body: str | None = Field(default=None, description="The body of the comment")
+    """The body of the comment"""
+    html_body: str | None = Field(default=None, description="The HTML body of the comment")
+    """The HTML body of the comment"""
+    public: bool | None = Field(default=None, description="Whether the comment is public (true) or an internal note (false)")
+    """Whether the comment is public (true) or an internal note (false)"""
+    author_id: int | None = Field(default=None, description="The author of the comment")
+    """The author of the comment"""
 
 class TicketUpdateParamsTicket(BaseModel):
     """The ticket fields to update"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    subject: Union[str, Any] = Field(default=None, description="The subject of the ticket")
+    subject: str | None = Field(default=None, description="The subject of the ticket")
     """The subject of the ticket"""
-    comment: Union[TicketUpdateParamsTicketComment, Any] = Field(default=None, description="A comment to add to the ticket")
+    comment: TicketUpdateParamsTicketComment | None = Field(default=None, description="A comment to add to the ticket")
     """A comment to add to the ticket"""
-    type_: Union[str, Any] = Field(default=None, alias="type", description="The type of the ticket")
+    type_: str | None = Field(default=None, alias="type", description="The type of the ticket")
     """The type of the ticket"""
-    priority: Union[str, Any] = Field(default=None, description="The urgency of the ticket")
+    priority: str | None = Field(default=None, description="The urgency of the ticket")
     """The urgency of the ticket"""
-    status: Union[str, Any] = Field(default=None, description="The state of the ticket")
+    status: str | None = Field(default=None, description="The state of the ticket")
     """The state of the ticket"""
-    assignee_id: Union[int, Any] = Field(default=None, description="The agent to assign to the ticket")
+    assignee_id: int | None = Field(default=None, description="The agent to assign to the ticket")
     """The agent to assign to the ticket"""
-    group_id: Union[int, Any] = Field(default=None, description="The group to assign the ticket to")
+    group_id: int | None = Field(default=None, description="The group to assign the ticket to")
     """The group to assign the ticket to"""
-    tags: Union[list[str], Any] = Field(default=None, description="Tags for the ticket (replaces existing tags)")
+    tags: list[str] | None = Field(default=None, description="Tags for the ticket (replaces existing tags)")
     """Tags for the ticket (replaces existing tags)"""
-    external_id: Union[str, Any] = Field(default=None, description="An external id to link Zendesk Support tickets to local records")
+    external_id: str | None = Field(default=None, description="An external id to link Zendesk Support tickets to local records")
     """An external id to link Zendesk Support tickets to local records"""
-    custom_fields: Union[list[TicketUpdateParamsTicketCustomFieldsItem], Any] = Field(default=None, description="Custom fields for the ticket")
+    custom_fields: list[TicketUpdateParamsTicketCustomFieldsItem] | None = Field(default=None, description="Custom fields for the ticket")
     """Custom fields for the ticket"""
-    due_at: Union[str, Any] = Field(default=None, description="Due date for task-type tickets")
+    due_at: str | None = Field(default=None, description="Due date for task-type tickets")
     """Due date for task-type tickets"""
-    collaborator_ids: Union[list[int], Any] = Field(default=None, description="Users to set as CCs on the ticket")
+    collaborator_ids: list[int] | None = Field(default=None, description="Users to set as CCs on the ticket")
     """Users to set as CCs on the ticket"""
 
 class TicketUpdateParams(BaseModel):
     """Parameters for updating an existing ticket. The body must be wrapped in a "ticket" key."""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    ticket: Union[TicketUpdateParamsTicket, Any] = Field(default=None)
+    ticket: TicketUpdateParamsTicket
 
 class TicketCommentCreateParamsTicketComment(BaseModel):
     """The comment to add to the ticket"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    body: Union[str, Any] = Field(default=None, description="The body of the comment")
+    body: str = Field(description="The body of the comment")
     """The body of the comment"""
-    html_body: Union[str, Any] = Field(default=None, description="The HTML body of the comment")
+    html_body: str | None = Field(default=None, description="The HTML body of the comment")
     """The HTML body of the comment"""
-    public: Union[bool, Any] = Field(default=None, description="Whether the comment is public (true) or an internal note (false). Defaults to true.")
+    public: bool | None = Field(default=None, description="Whether the comment is public (true) or an internal note (false). Defaults to true.")
     """Whether the comment is public (true) or an internal note (false). Defaults to true."""
-    author_id: Union[int, Any] = Field(default=None, description="The author of the comment")
+    author_id: int | None = Field(default=None, description="The author of the comment")
     """The author of the comment"""
 
 class TicketCommentCreateParamsTicket(BaseModel):
     """The ticket update containing the comment"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    comment: Union[TicketCommentCreateParamsTicketComment, Any] = Field(default=None, description="The comment to add to the ticket")
+    comment: TicketCommentCreateParamsTicketComment = Field(description="The comment to add to the ticket")
     """The comment to add to the ticket"""
 
 class TicketCommentCreateParams(BaseModel):
     """Parameters for adding a comment to an existing ticket. Sent as a ticket update with comment."""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    ticket: Union[TicketCommentCreateParamsTicket, Any] = Field(default=None)
+    ticket: TicketCommentCreateParamsTicket
 
 class TicketBulkUpdateParamsTicket(BaseModel):
     """The ticket fields to apply to all specified tickets"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    status: Union[str, Any] = Field(default=None, description="The state to set on all tickets")
+    status: str | None = Field(default=None, description="The state to set on all tickets")
     """The state to set on all tickets"""
-    priority: Union[str, Any] = Field(default=None, description="The priority to set on all tickets")
+    priority: str | None = Field(default=None, description="The priority to set on all tickets")
     """The priority to set on all tickets"""
-    assignee_id: Union[int, Any] = Field(default=None, description="The agent to assign all tickets to")
+    assignee_id: int | None = Field(default=None, description="The agent to assign all tickets to")
     """The agent to assign all tickets to"""
-    group_id: Union[int, Any] = Field(default=None, description="The group to assign all tickets to")
+    group_id: int | None = Field(default=None, description="The group to assign all tickets to")
     """The group to assign all tickets to"""
-    tags: Union[list[str], Any] = Field(default=None, description="Tags for the tickets (replaces existing tags)")
+    tags: list[str] | None = Field(default=None, description="Tags for the tickets (replaces existing tags)")
     """Tags for the tickets (replaces existing tags)"""
-    additional_tags: Union[list[str], Any] = Field(default=None, description="Tags to add to existing tags on the tickets")
+    additional_tags: list[str] | None = Field(default=None, description="Tags to add to existing tags on the tickets")
     """Tags to add to existing tags on the tickets"""
-    remove_tags: Union[list[str], Any] = Field(default=None, description="Tags to remove from the tickets")
+    remove_tags: list[str] | None = Field(default=None, description="Tags to remove from the tickets")
     """Tags to remove from the tickets"""
 
 class TicketBulkUpdateParams(BaseModel):
     """Parameters for bulk updating multiple tickets. The body must be wrapped in a "ticket" key."""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    ticket: Union[TicketBulkUpdateParamsTicket, Any] = Field(default=None)
+    ticket: TicketBulkUpdateParamsTicket
 
 class UserCreateParamsUser(BaseModel):
     """The user object to create"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    name: Union[str, Any] = Field(default=None, description="The user's name")
+    name: str = Field(description="The user's name")
     """The user's name"""
-    email: Union[str, Any] = Field(default=None, description="The user's primary email address")
+    email: str | None = Field(default=None, description="The user's primary email address")
     """The user's primary email address"""
-    role: Union[str, Any] = Field(default=None, description="The user's role")
+    role: str | None = Field(default=None, description="The user's role")
     """The user's role"""
-    phone: Union[str, Any] = Field(default=None, description="The user's primary phone number")
+    phone: str | None = Field(default=None, description="The user's primary phone number")
     """The user's primary phone number"""
-    organization_id: Union[int, Any] = Field(default=None, description="The id of the user's organization")
+    organization_id: int | None = Field(default=None, description="The id of the user's organization")
     """The id of the user's organization"""
-    external_id: Union[str, Any] = Field(default=None, description="A unique identifier from another system")
+    external_id: str | None = Field(default=None, description="A unique identifier from another system")
     """A unique identifier from another system"""
-    alias: Union[str, Any] = Field(default=None, description="An alias displayed to end users")
+    alias: str | None = Field(default=None, description="An alias displayed to end users")
     """An alias displayed to end users"""
-    notes: Union[str, Any] = Field(default=None, description="Notes about the user visible only to agents")
+    notes: str | None = Field(default=None, description="Notes about the user visible only to agents")
     """Notes about the user visible only to agents"""
-    details: Union[str, Any] = Field(default=None, description="Any details about the user")
+    details: str | None = Field(default=None, description="Any details about the user")
     """Any details about the user"""
-    tags: Union[list[str], Any] = Field(default=None, description="Tags for the user")
+    tags: list[str] | None = Field(default=None, description="Tags for the user")
     """Tags for the user"""
-    verified: Union[bool, Any] = Field(default=None, description="If the user's primary identity is verified")
+    verified: bool | None = Field(default=None, description="If the user's primary identity is verified")
     """If the user's primary identity is verified"""
-    user_fields: Union[dict[str, Any], Any] = Field(default=None, description="Custom fields for the user")
+    user_fields: dict[str, Any] | None = Field(default=None, description="Custom fields for the user")
     """Custom fields for the user"""
 
 class UserCreateParams(BaseModel):
     """Parameters for creating a new user. The body must be wrapped in a "user" key."""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    user: Union[UserCreateParamsUser, Any] = Field(default=None)
+    user: UserCreateParamsUser
 
 class UserUpdateParamsUser(BaseModel):
     """The user fields to update"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    name: Union[str, Any] = Field(default=None, description="The user's name")
+    name: str | None = Field(default=None, description="The user's name")
     """The user's name"""
-    email: Union[str, Any] = Field(default=None, description="The user's primary email address")
+    email: str | None = Field(default=None, description="The user's primary email address")
     """The user's primary email address"""
-    role: Union[str, Any] = Field(default=None, description="The user's role")
+    role: str | None = Field(default=None, description="The user's role")
     """The user's role"""
-    phone: Union[str, Any] = Field(default=None, description="The user's primary phone number")
+    phone: str | None = Field(default=None, description="The user's primary phone number")
     """The user's primary phone number"""
-    organization_id: Union[int, Any] = Field(default=None, description="The id of the user's organization")
+    organization_id: int | None = Field(default=None, description="The id of the user's organization")
     """The id of the user's organization"""
-    external_id: Union[str, Any] = Field(default=None, description="A unique identifier from another system")
+    external_id: str | None = Field(default=None, description="A unique identifier from another system")
     """A unique identifier from another system"""
-    alias: Union[str, Any] = Field(default=None, description="An alias displayed to end users")
+    alias: str | None = Field(default=None, description="An alias displayed to end users")
     """An alias displayed to end users"""
-    notes: Union[str, Any] = Field(default=None, description="Notes about the user visible only to agents")
+    notes: str | None = Field(default=None, description="Notes about the user visible only to agents")
     """Notes about the user visible only to agents"""
-    details: Union[str, Any] = Field(default=None, description="Any details about the user")
+    details: str | None = Field(default=None, description="Any details about the user")
     """Any details about the user"""
-    tags: Union[list[str], Any] = Field(default=None, description="Tags for the user")
+    tags: list[str] | None = Field(default=None, description="Tags for the user")
     """Tags for the user"""
-    suspended: Union[bool, Any] = Field(default=None, description="If the agent is suspended")
+    suspended: bool | None = Field(default=None, description="If the agent is suspended")
     """If the agent is suspended"""
-    user_fields: Union[dict[str, Any], Any] = Field(default=None, description="Custom fields for the user")
+    user_fields: dict[str, Any] | None = Field(default=None, description="Custom fields for the user")
     """Custom fields for the user"""
 
 class UserUpdateParams(BaseModel):
     """Parameters for updating an existing user. The body must be wrapped in a "user" key."""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    user: Union[UserUpdateParamsUser, Any] = Field(default=None)
+    user: UserUpdateParamsUser
 
 # ===== METADATA TYPE DEFINITIONS (PYDANTIC) =====
 # Meta types for operations that extract metadata (e.g., pagination info)
@@ -745,177 +745,177 @@ class TicketsListResultMeta(BaseModel):
     """Metadata for tickets.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page: Union[str | None, Any] = Field(default=None)
-    previous_page: Union[str | None, Any] = Field(default=None)
-    count: Union[int, Any] = Field(default=None)
+    next_page: str | None = Field(default=None)
+    previous_page: str | None = Field(default=None)
+    count: int | None = Field(default=None)
 
 class DeletedTicketsListResultMeta(BaseModel):
     """Metadata for deleted_tickets.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page: Union[str | None, Any] = Field(default=None)
-    previous_page: Union[str | None, Any] = Field(default=None)
-    count: Union[int, Any] = Field(default=None)
+    next_page: str | None = Field(default=None)
+    previous_page: str | None = Field(default=None)
+    count: int | None = Field(default=None)
 
 class UsersListResultMeta(BaseModel):
     """Metadata for users.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page: Union[str | None, Any] = Field(default=None)
-    previous_page: Union[str | None, Any] = Field(default=None)
-    count: Union[int, Any] = Field(default=None)
+    next_page: str | None = Field(default=None)
+    previous_page: str | None = Field(default=None)
+    count: int | None = Field(default=None)
 
 class OrganizationsListResultMeta(BaseModel):
     """Metadata for organizations.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page: Union[str | None, Any] = Field(default=None)
-    previous_page: Union[str | None, Any] = Field(default=None)
-    count: Union[int, Any] = Field(default=None)
+    next_page: str | None = Field(default=None)
+    previous_page: str | None = Field(default=None)
+    count: int | None = Field(default=None)
 
 class GroupsListResultMeta(BaseModel):
     """Metadata for groups.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page: Union[str | None, Any] = Field(default=None)
-    previous_page: Union[str | None, Any] = Field(default=None)
-    count: Union[int, Any] = Field(default=None)
+    next_page: str | None = Field(default=None)
+    previous_page: str | None = Field(default=None)
+    count: int | None = Field(default=None)
 
 class TicketCommentsListResultMeta(BaseModel):
     """Metadata for ticket_comments.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page: Union[str | None, Any] = Field(default=None)
-    previous_page: Union[str | None, Any] = Field(default=None)
-    count: Union[int, Any] = Field(default=None)
+    next_page: str | None = Field(default=None)
+    previous_page: str | None = Field(default=None)
+    count: int | None = Field(default=None)
 
 class TicketAuditsListResultMeta(BaseModel):
     """Metadata for ticket_audits.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page: Union[str | None, Any] = Field(default=None)
-    previous_page: Union[str | None, Any] = Field(default=None)
-    count: Union[int, Any] = Field(default=None)
+    next_page: str | None = Field(default=None)
+    previous_page: str | None = Field(default=None)
+    count: int | None = Field(default=None)
 
 class TicketMetricsListResultMeta(BaseModel):
     """Metadata for ticket_metrics.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page: Union[str | None, Any] = Field(default=None)
-    previous_page: Union[str | None, Any] = Field(default=None)
-    count: Union[int, Any] = Field(default=None)
+    next_page: str | None = Field(default=None)
+    previous_page: str | None = Field(default=None)
+    count: int | None = Field(default=None)
 
 class TicketFieldsListResultMeta(BaseModel):
     """Metadata for ticket_fields.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page: Union[str | None, Any] = Field(default=None)
-    previous_page: Union[str | None, Any] = Field(default=None)
-    count: Union[int, Any] = Field(default=None)
+    next_page: str | None = Field(default=None)
+    previous_page: str | None = Field(default=None)
+    count: int | None = Field(default=None)
 
 class BrandsListResultMeta(BaseModel):
     """Metadata for brands.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page: Union[str | None, Any] = Field(default=None)
-    previous_page: Union[str | None, Any] = Field(default=None)
-    count: Union[int, Any] = Field(default=None)
+    next_page: str | None = Field(default=None)
+    previous_page: str | None = Field(default=None)
+    count: int | None = Field(default=None)
 
 class ViewsListResultMeta(BaseModel):
     """Metadata for views.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page: Union[str | None, Any] = Field(default=None)
-    previous_page: Union[str | None, Any] = Field(default=None)
-    count: Union[int, Any] = Field(default=None)
+    next_page: str | None = Field(default=None)
+    previous_page: str | None = Field(default=None)
+    count: int | None = Field(default=None)
 
 class MacrosListResultMeta(BaseModel):
     """Metadata for macros.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page: Union[str | None, Any] = Field(default=None)
-    previous_page: Union[str | None, Any] = Field(default=None)
-    count: Union[int, Any] = Field(default=None)
+    next_page: str | None = Field(default=None)
+    previous_page: str | None = Field(default=None)
+    count: int | None = Field(default=None)
 
 class TriggersListResultMeta(BaseModel):
     """Metadata for triggers.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page: Union[str | None, Any] = Field(default=None)
-    previous_page: Union[str | None, Any] = Field(default=None)
-    count: Union[int, Any] = Field(default=None)
+    next_page: str | None = Field(default=None)
+    previous_page: str | None = Field(default=None)
+    count: int | None = Field(default=None)
 
 class AutomationsListResultMeta(BaseModel):
     """Metadata for automations.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page: Union[str | None, Any] = Field(default=None)
-    previous_page: Union[str | None, Any] = Field(default=None)
-    count: Union[int, Any] = Field(default=None)
+    next_page: str | None = Field(default=None)
+    previous_page: str | None = Field(default=None)
+    count: int | None = Field(default=None)
 
 class TagsListResultMeta(BaseModel):
     """Metadata for tags.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page: Union[str | None, Any] = Field(default=None)
-    previous_page: Union[str | None, Any] = Field(default=None)
-    count: Union[int, Any] = Field(default=None)
+    next_page: str | None = Field(default=None)
+    previous_page: str | None = Field(default=None)
+    count: int | None = Field(default=None)
 
 class SatisfactionRatingsListResultMeta(BaseModel):
     """Metadata for satisfaction_ratings.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page: Union[str | None, Any] = Field(default=None)
-    previous_page: Union[str | None, Any] = Field(default=None)
-    count: Union[int, Any] = Field(default=None)
+    next_page: str | None = Field(default=None)
+    previous_page: str | None = Field(default=None)
+    count: int | None = Field(default=None)
 
 class GroupMembershipsListResultMeta(BaseModel):
     """Metadata for group_memberships.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page: Union[str | None, Any] = Field(default=None)
-    previous_page: Union[str | None, Any] = Field(default=None)
-    count: Union[int, Any] = Field(default=None)
+    next_page: str | None = Field(default=None)
+    previous_page: str | None = Field(default=None)
+    count: int | None = Field(default=None)
 
 class OrganizationMembershipsListResultMeta(BaseModel):
     """Metadata for organization_memberships.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page: Union[str | None, Any] = Field(default=None)
-    previous_page: Union[str | None, Any] = Field(default=None)
-    count: Union[int, Any] = Field(default=None)
+    next_page: str | None = Field(default=None)
+    previous_page: str | None = Field(default=None)
+    count: int | None = Field(default=None)
 
 class SlaPoliciesListResultMeta(BaseModel):
     """Metadata for sla_policies.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page: Union[str | None, Any] = Field(default=None)
-    previous_page: Union[str | None, Any] = Field(default=None)
-    count: Union[int, Any] = Field(default=None)
+    next_page: str | None = Field(default=None)
+    previous_page: str | None = Field(default=None)
+    count: int | None = Field(default=None)
 
 class TicketFormsListResultMeta(BaseModel):
     """Metadata for ticket_forms.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page: Union[str | None, Any] = Field(default=None)
-    previous_page: Union[str | None, Any] = Field(default=None)
-    count: Union[int, Any] = Field(default=None)
+    next_page: str | None = Field(default=None)
+    previous_page: str | None = Field(default=None)
+    count: int | None = Field(default=None)
 
 class ArticlesListResultMeta(BaseModel):
     """Metadata for articles.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page: Union[str | None, Any] = Field(default=None)
-    previous_page: Union[str | None, Any] = Field(default=None)
-    count: Union[int, Any] = Field(default=None)
+    next_page: str | None = Field(default=None)
+    previous_page: str | None = Field(default=None)
+    count: int | None = Field(default=None)
 
 class ArticleAttachmentsListResultMeta(BaseModel):
     """Metadata for article_attachments.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page: Union[str | None, Any] = Field(default=None)
-    previous_page: Union[str | None, Any] = Field(default=None)
-    count: Union[int, Any] = Field(default=None)
+    next_page: str | None = Field(default=None)
+    previous_page: str | None = Field(default=None)
+    count: int | None = Field(default=None)
 
 # ===== CHECK RESULT MODEL =====
 

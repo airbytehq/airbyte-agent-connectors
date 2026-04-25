@@ -8,7 +8,7 @@ and response envelope types.
 from __future__ import annotations
 
 from pydantic import BaseModel, ConfigDict, Field
-from typing import TypeVar, Generic, Union, Any
+from typing import TypeVar, Generic, Any
 
 # Authentication configuration
 
@@ -24,648 +24,648 @@ class JiraAuthConfig(BaseModel):
 
 # ===== RESPONSE TYPE DEFINITIONS (PYDANTIC) =====
 
-class ProjectAvatarurls(BaseModel):
-    """URLs for project avatars in different sizes"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    field_16x16: Union[str, Any] = Field(default=None, alias="16x16")
-    field_24x24: Union[str, Any] = Field(default=None, alias="24x24")
-    field_32x32: Union[str, Any] = Field(default=None, alias="32x32")
-    field_48x48: Union[str, Any] = Field(default=None, alias="48x48")
-
-class ProjectVersionsItem(BaseModel):
-    """Nested schema for Project.versions_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    self: Union[str, Any] = Field(default=None)
-    id: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    description: Union[str, Any] = Field(default=None)
-    archived: Union[bool, Any] = Field(default=None)
-    released: Union[bool, Any] = Field(default=None)
-    start_date: Union[str | None, Any] = Field(default=None, alias="startDate")
-    release_date: Union[str | None, Any] = Field(default=None, alias="releaseDate")
-    overdue: Union[bool | None, Any] = Field(default=None)
-    user_start_date: Union[str | None, Any] = Field(default=None, alias="userStartDate")
-    user_release_date: Union[str | None, Any] = Field(default=None, alias="userReleaseDate")
-    project_id: Union[int, Any] = Field(default=None, alias="projectId")
-
 class ProjectProjectcategory(BaseModel):
     """Project category information"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    self: Union[str, Any] = Field(default=None)
-    id: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    description: Union[str, Any] = Field(default=None)
+    self: str | None = Field(default=None)
+    id: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    description: str | None = Field(default=None)
 
 class ProjectComponentsItem(BaseModel):
     """Nested schema for Project.components_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    self: Union[str, Any] = Field(default=None)
-    id: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    description: Union[str, Any] = Field(default=None)
-    is_assignee_type_valid: Union[bool, Any] = Field(default=None, alias="isAssigneeTypeValid")
+    self: str | None = Field(default=None)
+    id: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    description: str | None = Field(default=None)
+    is_assignee_type_valid: bool | None = Field(default=None, alias="isAssigneeTypeValid")
 
-class ProjectLeadAvatarurls(BaseModel):
-    """URLs for user avatars in different sizes"""
+class ProjectVersionsItem(BaseModel):
+    """Nested schema for Project.versions_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    field_16x16: Union[str, Any] = Field(default=None, alias="16x16")
-    field_24x24: Union[str, Any] = Field(default=None, alias="24x24")
-    field_32x32: Union[str, Any] = Field(default=None, alias="32x32")
-    field_48x48: Union[str, Any] = Field(default=None, alias="48x48")
-
-class ProjectLead(BaseModel):
-    """Project lead user (available with expand=lead)"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    self: Union[str, Any] = Field(default=None)
-    account_id: Union[str, Any] = Field(default=None, alias="accountId")
-    account_type: Union[str, Any] = Field(default=None, alias="accountType")
-    avatar_urls: Union[ProjectLeadAvatarurls, Any] = Field(default=None, alias="avatarUrls", description="URLs for user avatars in different sizes")
-    """URLs for user avatars in different sizes"""
-    display_name: Union[str, Any] = Field(default=None, alias="displayName")
-    active: Union[bool, Any] = Field(default=None)
+    self: str | None = Field(default=None)
+    id: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    description: str | None = Field(default=None)
+    archived: bool | None = Field(default=None)
+    released: bool | None = Field(default=None)
+    start_date: str | None | None = Field(default=None, alias="startDate")
+    release_date: str | None | None = Field(default=None, alias="releaseDate")
+    overdue: bool | None | None = Field(default=None)
+    user_start_date: str | None | None = Field(default=None, alias="userStartDate")
+    user_release_date: str | None | None = Field(default=None, alias="userReleaseDate")
+    project_id: int | None = Field(default=None, alias="projectId")
 
 class ProjectIssuetypesItem(BaseModel):
     """Nested schema for Project.issueTypes_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    self: Union[str, Any] = Field(default=None)
-    id: Union[str, Any] = Field(default=None)
-    description: Union[str, Any] = Field(default=None)
-    icon_url: Union[str, Any] = Field(default=None, alias="iconUrl")
-    name: Union[str, Any] = Field(default=None)
-    subtask: Union[bool, Any] = Field(default=None)
-    avatar_id: Union[int | None, Any] = Field(default=None, alias="avatarId")
-    hierarchy_level: Union[int | None, Any] = Field(default=None, alias="hierarchyLevel")
+    self: str | None = Field(default=None)
+    id: str | None = Field(default=None)
+    description: str | None = Field(default=None)
+    icon_url: str | None = Field(default=None, alias="iconUrl")
+    name: str | None = Field(default=None)
+    subtask: bool | None = Field(default=None)
+    avatar_id: int | None | None = Field(default=None, alias="avatarId")
+    hierarchy_level: int | None | None = Field(default=None, alias="hierarchyLevel")
+
+class ProjectLeadAvatarurls(BaseModel):
+    """URLs for user avatars in different sizes"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    field_16x16: str | None = Field(default=None, alias="16x16")
+    field_24x24: str | None = Field(default=None, alias="24x24")
+    field_32x32: str | None = Field(default=None, alias="32x32")
+    field_48x48: str | None = Field(default=None, alias="48x48")
+
+class ProjectLead(BaseModel):
+    """Project lead user (available with expand=lead)"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    self: str | None = Field(default=None)
+    account_id: str | None = Field(default=None, alias="accountId")
+    account_type: str | None = Field(default=None, alias="accountType")
+    avatar_urls: ProjectLeadAvatarurls | None = Field(default=None, alias="avatarUrls", description="URLs for user avatars in different sizes")
+    """URLs for user avatars in different sizes"""
+    display_name: str | None = Field(default=None, alias="displayName")
+    active: bool | None = Field(default=None)
+
+class ProjectAvatarurls(BaseModel):
+    """URLs for project avatars in different sizes"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    field_16x16: str | None = Field(default=None, alias="16x16")
+    field_24x24: str | None = Field(default=None, alias="24x24")
+    field_32x32: str | None = Field(default=None, alias="32x32")
+    field_48x48: str | None = Field(default=None, alias="48x48")
 
 class Project(BaseModel):
     """Jira project object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    key: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    self: Union[str, Any] = Field(default=None)
-    expand: Union[str | None, Any] = Field(default=None)
-    description: Union[str | None, Any] = Field(default=None)
-    lead: Union[ProjectLead | None, Any] = Field(default=None)
-    avatar_urls: Union[ProjectAvatarurls, Any] = Field(default=None, alias="avatarUrls")
-    project_type_key: Union[str, Any] = Field(default=None, alias="projectTypeKey")
-    simplified: Union[bool, Any] = Field(default=None)
-    style: Union[str, Any] = Field(default=None)
-    is_private: Union[bool, Any] = Field(default=None, alias="isPrivate")
-    properties: Union[dict[str, Any], Any] = Field(default=None)
-    project_category: Union[ProjectProjectcategory | None, Any] = Field(default=None, alias="projectCategory")
-    entity_id: Union[str | None, Any] = Field(default=None, alias="entityId")
-    uuid: Union[str | None, Any] = Field(default=None)
-    url: Union[str | None, Any] = Field(default=None)
-    assignee_type: Union[str | None, Any] = Field(default=None, alias="assigneeType")
-    components: Union[list[ProjectComponentsItem] | None, Any] = Field(default=None)
-    issue_types: Union[list[ProjectIssuetypesItem] | None, Any] = Field(default=None, alias="issueTypes")
-    versions: Union[list[ProjectVersionsItem] | None, Any] = Field(default=None)
-    roles: Union[dict[str, str] | None, Any] = Field(default=None)
+    id: str | None = Field(default=None)
+    key: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    self: str | None = Field(default=None)
+    expand: str | None = Field(default=None)
+    description: str | None = Field(default=None)
+    lead: ProjectLead | None = Field(default=None)
+    avatar_urls: ProjectAvatarurls | None = Field(default=None, alias="avatarUrls")
+    project_type_key: str | None = Field(default=None, alias="projectTypeKey")
+    simplified: bool | None = Field(default=None)
+    style: str | None = Field(default=None)
+    is_private: bool | None = Field(default=None, alias="isPrivate")
+    properties: dict[str, Any] | None = Field(default=None)
+    project_category: ProjectProjectcategory | None = Field(default=None, alias="projectCategory")
+    entity_id: str | None = Field(default=None, alias="entityId")
+    uuid: str | None = Field(default=None)
+    url: str | None = Field(default=None)
+    assignee_type: str | None = Field(default=None, alias="assigneeType")
+    components: list[ProjectComponentsItem] | None = Field(default=None)
+    issue_types: list[ProjectIssuetypesItem] | None = Field(default=None, alias="issueTypes")
+    versions: list[ProjectVersionsItem] | None = Field(default=None)
+    roles: dict[str, str] | None = Field(default=None)
 
 class ProjectsList(BaseModel):
     """Paginated list of projects from search results"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    self: Union[str, Any] = Field(default=None)
-    next_page: Union[str | None, Any] = Field(default=None, alias="nextPage")
-    max_results: Union[int, Any] = Field(default=None, alias="maxResults")
-    start_at: Union[int, Any] = Field(default=None, alias="startAt")
-    total: Union[int, Any] = Field(default=None)
-    is_last: Union[bool, Any] = Field(default=None, alias="isLast")
-    values: Union[list[Project], Any] = Field(default=None)
-
-class IssueFieldsIssuetype(BaseModel):
-    """Issue type information"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    self: Union[str, Any] = Field(default=None)
-    id: Union[str, Any] = Field(default=None)
-    description: Union[str, Any] = Field(default=None)
-    icon_url: Union[str, Any] = Field(default=None, alias="iconUrl")
-    name: Union[str, Any] = Field(default=None)
-    subtask: Union[bool, Any] = Field(default=None)
-    avatar_id: Union[int | None, Any] = Field(default=None, alias="avatarId")
-    hierarchy_level: Union[int | None, Any] = Field(default=None, alias="hierarchyLevel")
+    self: str | None = Field(default=None)
+    next_page: str | None = Field(default=None, alias="nextPage")
+    max_results: int | None = Field(default=None, alias="maxResults")
+    start_at: int | None = Field(default=None, alias="startAt")
+    total: int | None = Field(default=None)
+    is_last: bool | None = Field(default=None, alias="isLast")
+    values: list[Project] | None = Field(default=None)
 
 class IssueFieldsPriority(BaseModel):
     """Issue priority information"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    self: Union[str, Any] = Field(default=None)
-    icon_url: Union[str, Any] = Field(default=None, alias="iconUrl")
-    name: Union[str, Any] = Field(default=None)
-    id: Union[str, Any] = Field(default=None)
-
-class IssueFieldsStatusStatuscategory(BaseModel):
-    """Nested schema for IssueFieldsStatus.statusCategory"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    self: Union[str, Any] = Field(default=None)
-    id: Union[int, Any] = Field(default=None)
-    key: Union[str, Any] = Field(default=None)
-    color_name: Union[str, Any] = Field(default=None, alias="colorName")
-    name: Union[str, Any] = Field(default=None)
-
-class IssueFieldsStatus(BaseModel):
-    """Issue status information"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    self: Union[str, Any] = Field(default=None)
-    description: Union[str, Any] = Field(default=None)
-    icon_url: Union[str, Any] = Field(default=None, alias="iconUrl")
-    name: Union[str, Any] = Field(default=None)
-    id: Union[str, Any] = Field(default=None)
-    status_category: Union[IssueFieldsStatusStatuscategory, Any] = Field(default=None, alias="statusCategory")
-
-class IssueFieldsReporterAvatarurls(BaseModel):
-    """URLs for user avatars in different sizes"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    field_16x16: Union[str, Any] = Field(default=None, alias="16x16")
-    field_24x24: Union[str, Any] = Field(default=None, alias="24x24")
-    field_32x32: Union[str, Any] = Field(default=None, alias="32x32")
-    field_48x48: Union[str, Any] = Field(default=None, alias="48x48")
-
-class IssueFieldsReporter(BaseModel):
-    """Issue reporter user information"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    self: Union[str, Any] = Field(default=None)
-    account_id: Union[str, Any] = Field(default=None, alias="accountId")
-    email_address: Union[str, Any] = Field(default=None, alias="emailAddress")
-    avatar_urls: Union[IssueFieldsReporterAvatarurls, Any] = Field(default=None, alias="avatarUrls", description="URLs for user avatars in different sizes")
-    """URLs for user avatars in different sizes"""
-    display_name: Union[str, Any] = Field(default=None, alias="displayName")
-    active: Union[bool, Any] = Field(default=None)
-    time_zone: Union[str, Any] = Field(default=None, alias="timeZone")
-    account_type: Union[str, Any] = Field(default=None, alias="accountType")
-
-class IssueFieldsProjectProjectcategory(BaseModel):
-    """Nested schema for IssueFieldsProject.projectCategory"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    self: Union[str, Any] = Field(default=None)
-    id: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    description: Union[str, Any] = Field(default=None)
-
-class IssueFieldsProjectAvatarurls(BaseModel):
-    """URLs for user avatars in different sizes"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    field_16x16: Union[str, Any] = Field(default=None, alias="16x16")
-    field_24x24: Union[str, Any] = Field(default=None, alias="24x24")
-    field_32x32: Union[str, Any] = Field(default=None, alias="32x32")
-    field_48x48: Union[str, Any] = Field(default=None, alias="48x48")
-
-class IssueFieldsProject(BaseModel):
-    """Project information"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    self: Union[str, Any] = Field(default=None)
-    id: Union[str, Any] = Field(default=None)
-    key: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    project_type_key: Union[str, Any] = Field(default=None, alias="projectTypeKey")
-    simplified: Union[bool, Any] = Field(default=None)
-    avatar_urls: Union[IssueFieldsProjectAvatarurls, Any] = Field(default=None, alias="avatarUrls", description="URLs for user avatars in different sizes")
-    """URLs for user avatars in different sizes"""
-    project_category: Union[IssueFieldsProjectProjectcategory | None, Any] = Field(default=None, alias="projectCategory")
+    self: str | None = Field(default=None)
+    icon_url: str | None = Field(default=None, alias="iconUrl")
+    name: str | None = Field(default=None)
+    id: str | None = Field(default=None)
 
 class IssueFieldsAssigneeAvatarurls(BaseModel):
     """URLs for user avatars in different sizes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    field_16x16: Union[str, Any] = Field(default=None, alias="16x16")
-    field_24x24: Union[str, Any] = Field(default=None, alias="24x24")
-    field_32x32: Union[str, Any] = Field(default=None, alias="32x32")
-    field_48x48: Union[str, Any] = Field(default=None, alias="48x48")
+    field_16x16: str | None = Field(default=None, alias="16x16")
+    field_24x24: str | None = Field(default=None, alias="24x24")
+    field_32x32: str | None = Field(default=None, alias="32x32")
+    field_48x48: str | None = Field(default=None, alias="48x48")
 
 class IssueFieldsAssignee(BaseModel):
     """Issue assignee user information (null if unassigned)"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    self: Union[str, Any] = Field(default=None)
-    account_id: Union[str, Any] = Field(default=None, alias="accountId")
-    email_address: Union[str, Any] = Field(default=None, alias="emailAddress")
-    avatar_urls: Union[IssueFieldsAssigneeAvatarurls, Any] = Field(default=None, alias="avatarUrls", description="URLs for user avatars in different sizes")
+    self: str | None = Field(default=None)
+    account_id: str | None = Field(default=None, alias="accountId")
+    email_address: str | None = Field(default=None, alias="emailAddress")
+    avatar_urls: IssueFieldsAssigneeAvatarurls | None = Field(default=None, alias="avatarUrls", description="URLs for user avatars in different sizes")
     """URLs for user avatars in different sizes"""
-    display_name: Union[str, Any] = Field(default=None, alias="displayName")
-    active: Union[bool, Any] = Field(default=None)
-    time_zone: Union[str, Any] = Field(default=None, alias="timeZone")
-    account_type: Union[str, Any] = Field(default=None, alias="accountType")
+    display_name: str | None = Field(default=None, alias="displayName")
+    active: bool | None = Field(default=None)
+    time_zone: str | None = Field(default=None, alias="timeZone")
+    account_type: str | None = Field(default=None, alias="accountType")
+
+class IssueFieldsStatusStatuscategory(BaseModel):
+    """Nested schema for IssueFieldsStatus.statusCategory"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    self: str | None = Field(default=None)
+    id: int | None = Field(default=None)
+    key: str | None = Field(default=None)
+    color_name: str | None = Field(default=None, alias="colorName")
+    name: str | None = Field(default=None)
+
+class IssueFieldsStatus(BaseModel):
+    """Issue status information"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    self: str | None = Field(default=None)
+    description: str | None = Field(default=None)
+    icon_url: str | None = Field(default=None, alias="iconUrl")
+    name: str | None = Field(default=None)
+    id: str | None = Field(default=None)
+    status_category: IssueFieldsStatusStatuscategory | None = Field(default=None, alias="statusCategory")
+
+class IssueFieldsReporterAvatarurls(BaseModel):
+    """URLs for user avatars in different sizes"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    field_16x16: str | None = Field(default=None, alias="16x16")
+    field_24x24: str | None = Field(default=None, alias="24x24")
+    field_32x32: str | None = Field(default=None, alias="32x32")
+    field_48x48: str | None = Field(default=None, alias="48x48")
+
+class IssueFieldsReporter(BaseModel):
+    """Issue reporter user information"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    self: str | None = Field(default=None)
+    account_id: str | None = Field(default=None, alias="accountId")
+    email_address: str | None = Field(default=None, alias="emailAddress")
+    avatar_urls: IssueFieldsReporterAvatarurls | None = Field(default=None, alias="avatarUrls", description="URLs for user avatars in different sizes")
+    """URLs for user avatars in different sizes"""
+    display_name: str | None = Field(default=None, alias="displayName")
+    active: bool | None = Field(default=None)
+    time_zone: str | None = Field(default=None, alias="timeZone")
+    account_type: str | None = Field(default=None, alias="accountType")
+
+class IssueFieldsIssuetype(BaseModel):
+    """Issue type information"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    self: str | None = Field(default=None)
+    id: str | None = Field(default=None)
+    description: str | None = Field(default=None)
+    icon_url: str | None = Field(default=None, alias="iconUrl")
+    name: str | None = Field(default=None)
+    subtask: bool | None = Field(default=None)
+    avatar_id: int | None | None = Field(default=None, alias="avatarId")
+    hierarchy_level: int | None | None = Field(default=None, alias="hierarchyLevel")
+
+class IssueFieldsProjectAvatarurls(BaseModel):
+    """URLs for user avatars in different sizes"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    field_16x16: str | None = Field(default=None, alias="16x16")
+    field_24x24: str | None = Field(default=None, alias="24x24")
+    field_32x32: str | None = Field(default=None, alias="32x32")
+    field_48x48: str | None = Field(default=None, alias="48x48")
+
+class IssueFieldsProjectProjectcategory(BaseModel):
+    """Nested schema for IssueFieldsProject.projectCategory"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    self: str | None = Field(default=None)
+    id: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    description: str | None = Field(default=None)
+
+class IssueFieldsProject(BaseModel):
+    """Project information"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    self: str | None = Field(default=None)
+    id: str | None = Field(default=None)
+    key: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    project_type_key: str | None = Field(default=None, alias="projectTypeKey")
+    simplified: bool | None = Field(default=None)
+    avatar_urls: IssueFieldsProjectAvatarurls | None = Field(default=None, alias="avatarUrls", description="URLs for user avatars in different sizes")
+    """URLs for user avatars in different sizes"""
+    project_category: IssueFieldsProjectProjectcategory | None | None = Field(default=None, alias="projectCategory")
 
 class IssueFields(BaseModel):
     """Issue fields (actual fields depend on 'fields' parameter in request)"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    summary: Union[str, Any] = Field(default=None, description="Issue summary/title")
+    summary: str | None = Field(default=None, description="Issue summary/title")
     """Issue summary/title"""
-    issuetype: Union[IssueFieldsIssuetype, Any] = Field(default=None, description="Issue type information")
+    issuetype: IssueFieldsIssuetype | None = Field(default=None, description="Issue type information")
     """Issue type information"""
-    created: Union[str, Any] = Field(default=None, description="Issue creation timestamp")
+    created: str | None = Field(default=None, description="Issue creation timestamp")
     """Issue creation timestamp"""
-    updated: Union[str, Any] = Field(default=None, description="Issue last update timestamp")
+    updated: str | None = Field(default=None, description="Issue last update timestamp")
     """Issue last update timestamp"""
-    project: Union[IssueFieldsProject, Any] = Field(default=None, description="Project information")
+    project: IssueFieldsProject | None = Field(default=None, description="Project information")
     """Project information"""
-    reporter: Union[IssueFieldsReporter | None, Any] = Field(default=None, description="Issue reporter user information")
+    reporter: IssueFieldsReporter | None | None = Field(default=None, description="Issue reporter user information")
     """Issue reporter user information"""
-    assignee: Union[IssueFieldsAssignee | None, Any] = Field(default=None, description="Issue assignee user information (null if unassigned)")
+    assignee: IssueFieldsAssignee | None | None = Field(default=None, description="Issue assignee user information (null if unassigned)")
     """Issue assignee user information (null if unassigned)"""
-    priority: Union[IssueFieldsPriority | None, Any] = Field(default=None, description="Issue priority information")
+    priority: IssueFieldsPriority | None | None = Field(default=None, description="Issue priority information")
     """Issue priority information"""
-    status: Union[IssueFieldsStatus, Any] = Field(default=None, description="Issue status information")
+    status: IssueFieldsStatus | None = Field(default=None, description="Issue status information")
     """Issue status information"""
 
 class Issue(BaseModel):
     """Jira issue object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    key: Union[str, Any] = Field(default=None)
-    self: Union[str, Any] = Field(default=None)
-    expand: Union[str | None, Any] = Field(default=None)
-    fields: Union[IssueFields, Any] = Field(default=None)
+    id: str | None = Field(default=None)
+    key: str | None = Field(default=None)
+    self: str | None = Field(default=None)
+    expand: str | None = Field(default=None)
+    fields: IssueFields | None = Field(default=None)
 
 class IssuesList(BaseModel):
     """Paginated list of issues from JQL search"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    issues: Union[list[Issue], Any] = Field(default=None)
-    total: Union[int, Any] = Field(default=None)
-    max_results: Union[int | None, Any] = Field(default=None, alias="maxResults")
-    start_at: Union[int | None, Any] = Field(default=None, alias="startAt")
-    next_page_token: Union[str | None, Any] = Field(default=None, alias="nextPageToken")
-    is_last: Union[bool | None, Any] = Field(default=None, alias="isLast")
-
-class UserApplicationrolesItemsItemGroupdetailsItem(BaseModel):
-    """Nested schema for UserApplicationrolesItemsItem.groupDetails_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: Union[str, Any] = Field(default=None)
-    group_id: Union[str, Any] = Field(default=None, alias="groupId")
-    self: Union[str, Any] = Field(default=None)
-
-class UserApplicationrolesItemsItemDefaultgroupsdetailsItem(BaseModel):
-    """Nested schema for UserApplicationrolesItemsItem.defaultGroupsDetails_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: Union[str, Any] = Field(default=None)
-    group_id: Union[str, Any] = Field(default=None, alias="groupId")
-    self: Union[str, Any] = Field(default=None)
-
-class UserApplicationrolesItemsItem(BaseModel):
-    """Nested schema for UserApplicationroles.items_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    key: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    groups: Union[list[str], Any] = Field(default=None)
-    group_details: Union[list[UserApplicationrolesItemsItemGroupdetailsItem], Any] = Field(default=None, alias="groupDetails")
-    default_groups: Union[list[str], Any] = Field(default=None, alias="defaultGroups")
-    default_groups_details: Union[list[UserApplicationrolesItemsItemDefaultgroupsdetailsItem], Any] = Field(default=None, alias="defaultGroupsDetails")
-    selected_by_default: Union[bool, Any] = Field(default=None, alias="selectedByDefault")
-    defined: Union[bool, Any] = Field(default=None)
-    number_of_seats: Union[int, Any] = Field(default=None, alias="numberOfSeats")
-    remaining_seats: Union[int, Any] = Field(default=None, alias="remainingSeats")
-    user_count: Union[int, Any] = Field(default=None, alias="userCount")
-    user_count_description: Union[str, Any] = Field(default=None, alias="userCountDescription")
-    has_unlimited_seats: Union[bool, Any] = Field(default=None, alias="hasUnlimitedSeats")
-    platform: Union[bool, Any] = Field(default=None)
-
-class UserApplicationroles(BaseModel):
-    """User application roles (available with expand=applicationRoles)"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    size: Union[int, Any] = Field(default=None, description="Number of application roles")
-    """Number of application roles"""
-    items: Union[list[UserApplicationrolesItemsItem], Any] = Field(default=None, description="Array of application role objects")
-    """Array of application role objects"""
+    issues: list[Issue] | None = Field(default=None)
+    total: int | None = Field(default=None)
+    max_results: int | None = Field(default=None, alias="maxResults")
+    start_at: int | None = Field(default=None, alias="startAt")
+    next_page_token: str | None = Field(default=None, alias="nextPageToken")
+    is_last: bool | None = Field(default=None, alias="isLast")
 
 class UserGroupsItemsItem(BaseModel):
     """Nested schema for UserGroups.items_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    name: Union[str, Any] = Field(default=None)
-    group_id: Union[str, Any] = Field(default=None, alias="groupId")
-    self: Union[str, Any] = Field(default=None)
+    name: str | None = Field(default=None)
+    group_id: str | None = Field(default=None, alias="groupId")
+    self: str | None = Field(default=None)
 
 class UserGroups(BaseModel):
     """User groups (available with expand=groups)"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    size: Union[int, Any] = Field(default=None, description="Number of groups")
+    size: int | None = Field(default=None, description="Number of groups")
     """Number of groups"""
-    items: Union[list[UserGroupsItemsItem], Any] = Field(default=None, description="Array of group objects")
+    items: list[UserGroupsItemsItem] | None = Field(default=None, description="Array of group objects")
     """Array of group objects"""
+
+class UserApplicationrolesItemsItemDefaultgroupsdetailsItem(BaseModel):
+    """Nested schema for UserApplicationrolesItemsItem.defaultGroupsDetails_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: str | None = Field(default=None)
+    group_id: str | None = Field(default=None, alias="groupId")
+    self: str | None = Field(default=None)
+
+class UserApplicationrolesItemsItemGroupdetailsItem(BaseModel):
+    """Nested schema for UserApplicationrolesItemsItem.groupDetails_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: str | None = Field(default=None)
+    group_id: str | None = Field(default=None, alias="groupId")
+    self: str | None = Field(default=None)
+
+class UserApplicationrolesItemsItem(BaseModel):
+    """Nested schema for UserApplicationroles.items_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    key: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    groups: list[str] | None = Field(default=None)
+    group_details: list[UserApplicationrolesItemsItemGroupdetailsItem] | None = Field(default=None, alias="groupDetails")
+    default_groups: list[str] | None = Field(default=None, alias="defaultGroups")
+    default_groups_details: list[UserApplicationrolesItemsItemDefaultgroupsdetailsItem] | None = Field(default=None, alias="defaultGroupsDetails")
+    selected_by_default: bool | None = Field(default=None, alias="selectedByDefault")
+    defined: bool | None = Field(default=None)
+    number_of_seats: int | None = Field(default=None, alias="numberOfSeats")
+    remaining_seats: int | None = Field(default=None, alias="remainingSeats")
+    user_count: int | None = Field(default=None, alias="userCount")
+    user_count_description: str | None = Field(default=None, alias="userCountDescription")
+    has_unlimited_seats: bool | None = Field(default=None, alias="hasUnlimitedSeats")
+    platform: bool | None = Field(default=None)
+
+class UserApplicationroles(BaseModel):
+    """User application roles (available with expand=applicationRoles)"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    size: int | None = Field(default=None, description="Number of application roles")
+    """Number of application roles"""
+    items: list[UserApplicationrolesItemsItem] | None = Field(default=None, description="Array of application role objects")
+    """Array of application role objects"""
 
 class UserAvatarurls(BaseModel):
     """URLs for user avatars in different sizes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    field_16x16: Union[str, Any] = Field(default=None, alias="16x16")
-    field_24x24: Union[str, Any] = Field(default=None, alias="24x24")
-    field_32x32: Union[str, Any] = Field(default=None, alias="32x32")
-    field_48x48: Union[str, Any] = Field(default=None, alias="48x48")
+    field_16x16: str | None = Field(default=None, alias="16x16")
+    field_24x24: str | None = Field(default=None, alias="24x24")
+    field_32x32: str | None = Field(default=None, alias="32x32")
+    field_48x48: str | None = Field(default=None, alias="48x48")
 
 class User(BaseModel):
     """Jira user object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    self: Union[str, Any] = Field(default=None)
-    account_id: Union[str, Any] = Field(default=None, alias="accountId")
-    account_type: Union[str, Any] = Field(default=None, alias="accountType")
-    email_address: Union[str | None, Any] = Field(default=None, alias="emailAddress")
-    avatar_urls: Union[UserAvatarurls, Any] = Field(default=None, alias="avatarUrls")
-    display_name: Union[str, Any] = Field(default=None, alias="displayName")
-    active: Union[bool, Any] = Field(default=None)
-    time_zone: Union[str | None, Any] = Field(default=None, alias="timeZone")
-    locale: Union[str | None, Any] = Field(default=None)
-    expand: Union[str | None, Any] = Field(default=None)
-    groups: Union[UserGroups | None, Any] = Field(default=None)
-    application_roles: Union[UserApplicationroles | None, Any] = Field(default=None, alias="applicationRoles")
+    self: str | None = Field(default=None)
+    account_id: str | None = Field(default=None, alias="accountId")
+    account_type: str | None = Field(default=None, alias="accountType")
+    email_address: str | None = Field(default=None, alias="emailAddress")
+    avatar_urls: UserAvatarurls | None = Field(default=None, alias="avatarUrls")
+    display_name: str | None = Field(default=None, alias="displayName")
+    active: bool | None = Field(default=None)
+    time_zone: str | None = Field(default=None, alias="timeZone")
+    locale: str | None = Field(default=None)
+    expand: str | None = Field(default=None)
+    groups: UserGroups | None = Field(default=None)
+    application_roles: UserApplicationroles | None = Field(default=None, alias="applicationRoles")
 
 class IssueFieldSchema(BaseModel):
     """Schema information for the field"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type_: Union[str, Any] = Field(default=None, alias="type", description="Field type (e.g., string, number, array)")
+    type_: str | None = Field(default=None, alias="type", description="Field type (e.g., string, number, array)")
     """Field type (e.g., string, number, array)"""
-    system: Union[str | None, Any] = Field(default=None, description="System field identifier")
+    system: str | None | None = Field(default=None, description="System field identifier")
     """System field identifier"""
-    items: Union[str | None, Any] = Field(default=None, description="Type of items in array fields")
+    items: str | None | None = Field(default=None, description="Type of items in array fields")
     """Type of items in array fields"""
-    custom: Union[str | None, Any] = Field(default=None, description="Custom field type identifier")
+    custom: str | None | None = Field(default=None, description="Custom field type identifier")
     """Custom field type identifier"""
-    custom_id: Union[int | None, Any] = Field(default=None, alias="customId", description="Custom field ID")
+    custom_id: int | None | None = Field(default=None, alias="customId", description="Custom field ID")
     """Custom field ID"""
-    configuration: Union[dict[str, Any] | None, Any] = Field(default=None, description="Field configuration")
+    configuration: dict[str, Any] | None | None = Field(default=None, description="Field configuration")
     """Field configuration"""
 
 class IssueField(BaseModel):
     """Jira issue field object (custom or system field)"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    key: Union[str | None, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    custom: Union[bool | None, Any] = Field(default=None)
-    orderable: Union[bool | None, Any] = Field(default=None)
-    navigable: Union[bool | None, Any] = Field(default=None)
-    searchable: Union[bool | None, Any] = Field(default=None)
-    clause_names: Union[list[str] | None, Any] = Field(default=None, alias="clauseNames")
-    schema_: Union[IssueFieldSchema | None, Any] = Field(default=None, alias="schema")
-    untranslated_name: Union[str | None, Any] = Field(default=None, alias="untranslatedName")
-    type_display_name: Union[str | None, Any] = Field(default=None, alias="typeDisplayName")
-    description: Union[str | None, Any] = Field(default=None)
-    searcher_key: Union[str | None, Any] = Field(default=None, alias="searcherKey")
-    screens_count: Union[int | None, Any] = Field(default=None, alias="screensCount")
-    contexts_count: Union[int | None, Any] = Field(default=None, alias="contextsCount")
-    is_locked: Union[bool | None, Any] = Field(default=None, alias="isLocked")
-    last_used: Union[str | None, Any] = Field(default=None, alias="lastUsed")
+    id: str | None = Field(default=None)
+    key: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    custom: bool | None = Field(default=None)
+    orderable: bool | None = Field(default=None)
+    navigable: bool | None = Field(default=None)
+    searchable: bool | None = Field(default=None)
+    clause_names: list[str] | None = Field(default=None, alias="clauseNames")
+    schema_: IssueFieldSchema | None = Field(default=None, alias="schema")
+    untranslated_name: str | None = Field(default=None, alias="untranslatedName")
+    type_display_name: str | None = Field(default=None, alias="typeDisplayName")
+    description: str | None = Field(default=None)
+    searcher_key: str | None = Field(default=None, alias="searcherKey")
+    screens_count: int | None = Field(default=None, alias="screensCount")
+    contexts_count: int | None = Field(default=None, alias="contextsCount")
+    is_locked: bool | None = Field(default=None, alias="isLocked")
+    last_used: str | None = Field(default=None, alias="lastUsed")
 
 class IssueFieldSearchResults(BaseModel):
     """Paginated search results for issue fields"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    max_results: Union[int, Any] = Field(default=None, alias="maxResults")
-    start_at: Union[int, Any] = Field(default=None, alias="startAt")
-    total: Union[int, Any] = Field(default=None)
-    is_last: Union[bool, Any] = Field(default=None, alias="isLast")
-    values: Union[list[IssueField], Any] = Field(default=None)
-
-class IssueCommentAuthorAvatarurls(BaseModel):
-    """URLs for user avatars in different sizes"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    field_16x16: Union[str, Any] = Field(default=None, alias="16x16")
-    field_24x24: Union[str, Any] = Field(default=None, alias="24x24")
-    field_32x32: Union[str, Any] = Field(default=None, alias="32x32")
-    field_48x48: Union[str, Any] = Field(default=None, alias="48x48")
-
-class IssueCommentAuthor(BaseModel):
-    """Comment author user information"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    self: Union[str, Any] = Field(default=None)
-    account_id: Union[str, Any] = Field(default=None, alias="accountId")
-    email_address: Union[str, Any] = Field(default=None, alias="emailAddress")
-    display_name: Union[str, Any] = Field(default=None, alias="displayName")
-    active: Union[bool, Any] = Field(default=None)
-    time_zone: Union[str, Any] = Field(default=None, alias="timeZone")
-    account_type: Union[str, Any] = Field(default=None, alias="accountType")
-    avatar_urls: Union[IssueCommentAuthorAvatarurls, Any] = Field(default=None, alias="avatarUrls", description="URLs for user avatars in different sizes")
-    """URLs for user avatars in different sizes"""
-
-class IssueCommentVisibility(BaseModel):
-    """Visibility restrictions for the comment"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    type_: Union[str, Any] = Field(default=None, alias="type")
-    value: Union[str, Any] = Field(default=None)
-    identifier: Union[str | None, Any] = Field(default=None)
+    max_results: int | None = Field(default=None, alias="maxResults")
+    start_at: int | None = Field(default=None, alias="startAt")
+    total: int | None = Field(default=None)
+    is_last: bool | None = Field(default=None, alias="isLast")
+    values: list[IssueField] | None = Field(default=None)
 
 class IssueCommentBodyContentItemContentItem(BaseModel):
     """Nested schema for IssueCommentBodyContentItem.content_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type_: Union[str, Any] = Field(default=None, alias="type", description="Content type (e.g., 'text')")
+    type_: str | None = Field(default=None, alias="type", description="Content type (e.g., 'text')")
     """Content type (e.g., 'text')"""
-    text: Union[str, Any] = Field(default=None, description="Text content")
+    text: str | None = Field(default=None, description="Text content")
     """Text content"""
 
 class IssueCommentBodyContentItem(BaseModel):
     """Nested schema for IssueCommentBody.content_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type_: Union[str, Any] = Field(default=None, alias="type", description="Block type (e.g., 'paragraph')")
+    type_: str | None = Field(default=None, alias="type", description="Block type (e.g., 'paragraph')")
     """Block type (e.g., 'paragraph')"""
-    content: Union[list[IssueCommentBodyContentItemContentItem], Any] = Field(default=None, description="Nested content items")
+    content: list[IssueCommentBodyContentItemContentItem] | None = Field(default=None, description="Nested content items")
     """Nested content items"""
 
 class IssueCommentBody(BaseModel):
     """Comment content in ADF (Atlassian Document Format)"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type_: Union[str, Any] = Field(default=None, alias="type", description="Document type (always 'doc')")
+    type_: str | None = Field(default=None, alias="type", description="Document type (always 'doc')")
     """Document type (always 'doc')"""
-    version: Union[int, Any] = Field(default=None, description="ADF version")
+    version: int | None = Field(default=None, description="ADF version")
     """ADF version"""
-    content: Union[list[IssueCommentBodyContentItem], Any] = Field(default=None, description="Array of content blocks")
+    content: list[IssueCommentBodyContentItem] | None = Field(default=None, description="Array of content blocks")
     """Array of content blocks"""
+
+class IssueCommentVisibility(BaseModel):
+    """Visibility restrictions for the comment"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    type_: str | None = Field(default=None, alias="type")
+    value: str | None = Field(default=None)
+    identifier: str | None | None = Field(default=None)
 
 class IssueCommentUpdateauthorAvatarurls(BaseModel):
     """URLs for user avatars in different sizes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    field_16x16: Union[str, Any] = Field(default=None, alias="16x16")
-    field_24x24: Union[str, Any] = Field(default=None, alias="24x24")
-    field_32x32: Union[str, Any] = Field(default=None, alias="32x32")
-    field_48x48: Union[str, Any] = Field(default=None, alias="48x48")
+    field_16x16: str | None = Field(default=None, alias="16x16")
+    field_24x24: str | None = Field(default=None, alias="24x24")
+    field_32x32: str | None = Field(default=None, alias="32x32")
+    field_48x48: str | None = Field(default=None, alias="48x48")
 
 class IssueCommentUpdateauthor(BaseModel):
     """User who last updated the comment"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    self: Union[str, Any] = Field(default=None)
-    account_id: Union[str, Any] = Field(default=None, alias="accountId")
-    email_address: Union[str, Any] = Field(default=None, alias="emailAddress")
-    display_name: Union[str, Any] = Field(default=None, alias="displayName")
-    active: Union[bool, Any] = Field(default=None)
-    time_zone: Union[str, Any] = Field(default=None, alias="timeZone")
-    account_type: Union[str, Any] = Field(default=None, alias="accountType")
-    avatar_urls: Union[IssueCommentUpdateauthorAvatarurls, Any] = Field(default=None, alias="avatarUrls", description="URLs for user avatars in different sizes")
+    self: str | None = Field(default=None)
+    account_id: str | None = Field(default=None, alias="accountId")
+    email_address: str | None = Field(default=None, alias="emailAddress")
+    display_name: str | None = Field(default=None, alias="displayName")
+    active: bool | None = Field(default=None)
+    time_zone: str | None = Field(default=None, alias="timeZone")
+    account_type: str | None = Field(default=None, alias="accountType")
+    avatar_urls: IssueCommentUpdateauthorAvatarurls | None = Field(default=None, alias="avatarUrls", description="URLs for user avatars in different sizes")
+    """URLs for user avatars in different sizes"""
+
+class IssueCommentAuthorAvatarurls(BaseModel):
+    """URLs for user avatars in different sizes"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    field_16x16: str | None = Field(default=None, alias="16x16")
+    field_24x24: str | None = Field(default=None, alias="24x24")
+    field_32x32: str | None = Field(default=None, alias="32x32")
+    field_48x48: str | None = Field(default=None, alias="48x48")
+
+class IssueCommentAuthor(BaseModel):
+    """Comment author user information"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    self: str | None = Field(default=None)
+    account_id: str | None = Field(default=None, alias="accountId")
+    email_address: str | None = Field(default=None, alias="emailAddress")
+    display_name: str | None = Field(default=None, alias="displayName")
+    active: bool | None = Field(default=None)
+    time_zone: str | None = Field(default=None, alias="timeZone")
+    account_type: str | None = Field(default=None, alias="accountType")
+    avatar_urls: IssueCommentAuthorAvatarurls | None = Field(default=None, alias="avatarUrls", description="URLs for user avatars in different sizes")
     """URLs for user avatars in different sizes"""
 
 class IssueComment(BaseModel):
     """Jira issue comment object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    self: Union[str, Any] = Field(default=None)
-    body: Union[IssueCommentBody, Any] = Field(default=None)
-    author: Union[IssueCommentAuthor, Any] = Field(default=None)
-    update_author: Union[IssueCommentUpdateauthor, Any] = Field(default=None, alias="updateAuthor")
-    created: Union[str, Any] = Field(default=None)
-    updated: Union[str, Any] = Field(default=None)
-    jsd_public: Union[bool, Any] = Field(default=None, alias="jsdPublic")
-    visibility: Union[IssueCommentVisibility | None, Any] = Field(default=None)
-    rendered_body: Union[str | None, Any] = Field(default=None, alias="renderedBody")
-    properties: Union[list[dict[str, Any]] | None, Any] = Field(default=None)
+    id: str | None = Field(default=None)
+    self: str | None = Field(default=None)
+    body: IssueCommentBody | None = Field(default=None)
+    author: IssueCommentAuthor | None = Field(default=None)
+    update_author: IssueCommentUpdateauthor | None = Field(default=None, alias="updateAuthor")
+    created: str | None = Field(default=None)
+    updated: str | None = Field(default=None)
+    jsd_public: bool | None = Field(default=None, alias="jsdPublic")
+    visibility: IssueCommentVisibility | None = Field(default=None)
+    rendered_body: str | None = Field(default=None, alias="renderedBody")
+    properties: list[dict[str, Any]] | None = Field(default=None)
 
 class IssueCommentsList(BaseModel):
     """Paginated list of issue comments"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    start_at: Union[int, Any] = Field(default=None, alias="startAt")
-    max_results: Union[int, Any] = Field(default=None, alias="maxResults")
-    total: Union[int, Any] = Field(default=None)
-    comments: Union[list[IssueComment], Any] = Field(default=None)
-
-class WorklogAuthorAvatarurls(BaseModel):
-    """URLs for user avatars in different sizes"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    field_16x16: Union[str, Any] = Field(default=None, alias="16x16")
-    field_24x24: Union[str, Any] = Field(default=None, alias="24x24")
-    field_32x32: Union[str, Any] = Field(default=None, alias="32x32")
-    field_48x48: Union[str, Any] = Field(default=None, alias="48x48")
-
-class WorklogAuthor(BaseModel):
-    """Worklog author user information"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    self: Union[str, Any] = Field(default=None)
-    account_id: Union[str, Any] = Field(default=None, alias="accountId")
-    email_address: Union[str, Any] = Field(default=None, alias="emailAddress")
-    display_name: Union[str, Any] = Field(default=None, alias="displayName")
-    active: Union[bool, Any] = Field(default=None)
-    time_zone: Union[str, Any] = Field(default=None, alias="timeZone")
-    account_type: Union[str, Any] = Field(default=None, alias="accountType")
-    avatar_urls: Union[WorklogAuthorAvatarurls, Any] = Field(default=None, alias="avatarUrls", description="URLs for user avatars in different sizes")
-    """URLs for user avatars in different sizes"""
+    start_at: int | None = Field(default=None, alias="startAt")
+    max_results: int | None = Field(default=None, alias="maxResults")
+    total: int | None = Field(default=None)
+    comments: list[IssueComment] | None = Field(default=None)
 
 class WorklogCommentContentItemContentItem(BaseModel):
     """Nested schema for WorklogCommentContentItem.content_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type_: Union[str, Any] = Field(default=None, alias="type", description="Content type (e.g., 'text')")
+    type_: str | None = Field(default=None, alias="type", description="Content type (e.g., 'text')")
     """Content type (e.g., 'text')"""
-    text: Union[str, Any] = Field(default=None, description="Text content")
+    text: str | None = Field(default=None, description="Text content")
     """Text content"""
 
 class WorklogCommentContentItem(BaseModel):
     """Nested schema for WorklogComment.content_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type_: Union[str, Any] = Field(default=None, alias="type", description="Block type (e.g., 'paragraph')")
+    type_: str | None = Field(default=None, alias="type", description="Block type (e.g., 'paragraph')")
     """Block type (e.g., 'paragraph')"""
-    content: Union[list[WorklogCommentContentItemContentItem], Any] = Field(default=None, description="Nested content items")
+    content: list[WorklogCommentContentItemContentItem] | None = Field(default=None, description="Nested content items")
     """Nested content items"""
 
 class WorklogComment(BaseModel):
     """Comment associated with the worklog (ADF format)"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type_: Union[str, Any] = Field(default=None, alias="type", description="Document type (always 'doc')")
+    type_: str | None = Field(default=None, alias="type", description="Document type (always 'doc')")
     """Document type (always 'doc')"""
-    version: Union[int, Any] = Field(default=None, description="ADF version")
+    version: int | None = Field(default=None, description="ADF version")
     """ADF version"""
-    content: Union[list[WorklogCommentContentItem], Any] = Field(default=None, description="Array of content blocks")
+    content: list[WorklogCommentContentItem] | None = Field(default=None, description="Array of content blocks")
     """Array of content blocks"""
 
 class WorklogVisibility(BaseModel):
     """Visibility restrictions for the worklog"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type_: Union[str, Any] = Field(default=None, alias="type")
-    value: Union[str, Any] = Field(default=None)
-    identifier: Union[str | None, Any] = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    value: str | None = Field(default=None)
+    identifier: str | None | None = Field(default=None)
+
+class WorklogAuthorAvatarurls(BaseModel):
+    """URLs for user avatars in different sizes"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    field_16x16: str | None = Field(default=None, alias="16x16")
+    field_24x24: str | None = Field(default=None, alias="24x24")
+    field_32x32: str | None = Field(default=None, alias="32x32")
+    field_48x48: str | None = Field(default=None, alias="48x48")
+
+class WorklogAuthor(BaseModel):
+    """Worklog author user information"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    self: str | None = Field(default=None)
+    account_id: str | None = Field(default=None, alias="accountId")
+    email_address: str | None = Field(default=None, alias="emailAddress")
+    display_name: str | None = Field(default=None, alias="displayName")
+    active: bool | None = Field(default=None)
+    time_zone: str | None = Field(default=None, alias="timeZone")
+    account_type: str | None = Field(default=None, alias="accountType")
+    avatar_urls: WorklogAuthorAvatarurls | None = Field(default=None, alias="avatarUrls", description="URLs for user avatars in different sizes")
+    """URLs for user avatars in different sizes"""
 
 class WorklogUpdateauthorAvatarurls(BaseModel):
     """URLs for user avatars in different sizes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    field_16x16: Union[str, Any] = Field(default=None, alias="16x16")
-    field_24x24: Union[str, Any] = Field(default=None, alias="24x24")
-    field_32x32: Union[str, Any] = Field(default=None, alias="32x32")
-    field_48x48: Union[str, Any] = Field(default=None, alias="48x48")
+    field_16x16: str | None = Field(default=None, alias="16x16")
+    field_24x24: str | None = Field(default=None, alias="24x24")
+    field_32x32: str | None = Field(default=None, alias="32x32")
+    field_48x48: str | None = Field(default=None, alias="48x48")
 
 class WorklogUpdateauthor(BaseModel):
     """User who last updated the worklog"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    self: Union[str, Any] = Field(default=None)
-    account_id: Union[str, Any] = Field(default=None, alias="accountId")
-    email_address: Union[str, Any] = Field(default=None, alias="emailAddress")
-    display_name: Union[str, Any] = Field(default=None, alias="displayName")
-    active: Union[bool, Any] = Field(default=None)
-    time_zone: Union[str, Any] = Field(default=None, alias="timeZone")
-    account_type: Union[str, Any] = Field(default=None, alias="accountType")
-    avatar_urls: Union[WorklogUpdateauthorAvatarurls, Any] = Field(default=None, alias="avatarUrls", description="URLs for user avatars in different sizes")
+    self: str | None = Field(default=None)
+    account_id: str | None = Field(default=None, alias="accountId")
+    email_address: str | None = Field(default=None, alias="emailAddress")
+    display_name: str | None = Field(default=None, alias="displayName")
+    active: bool | None = Field(default=None)
+    time_zone: str | None = Field(default=None, alias="timeZone")
+    account_type: str | None = Field(default=None, alias="accountType")
+    avatar_urls: WorklogUpdateauthorAvatarurls | None = Field(default=None, alias="avatarUrls", description="URLs for user avatars in different sizes")
     """URLs for user avatars in different sizes"""
 
 class Worklog(BaseModel):
     """Jira worklog object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    self: Union[str, Any] = Field(default=None)
-    author: Union[WorklogAuthor, Any] = Field(default=None)
-    update_author: Union[WorklogUpdateauthor, Any] = Field(default=None, alias="updateAuthor")
-    comment: Union[WorklogComment, Any] = Field(default=None)
-    created: Union[str, Any] = Field(default=None)
-    updated: Union[str, Any] = Field(default=None)
-    started: Union[str, Any] = Field(default=None)
-    time_spent: Union[str, Any] = Field(default=None, alias="timeSpent")
-    time_spent_seconds: Union[int, Any] = Field(default=None, alias="timeSpentSeconds")
-    issue_id: Union[str, Any] = Field(default=None, alias="issueId")
-    visibility: Union[WorklogVisibility | None, Any] = Field(default=None)
-    properties: Union[list[dict[str, Any]] | None, Any] = Field(default=None)
+    id: str | None = Field(default=None)
+    self: str | None = Field(default=None)
+    author: WorklogAuthor | None = Field(default=None)
+    update_author: WorklogUpdateauthor | None = Field(default=None, alias="updateAuthor")
+    comment: WorklogComment | None = Field(default=None)
+    created: str | None = Field(default=None)
+    updated: str | None = Field(default=None)
+    started: str | None = Field(default=None)
+    time_spent: str | None = Field(default=None, alias="timeSpent")
+    time_spent_seconds: int | None = Field(default=None, alias="timeSpentSeconds")
+    issue_id: str | None = Field(default=None, alias="issueId")
+    visibility: WorklogVisibility | None = Field(default=None)
+    properties: list[dict[str, Any]] | None = Field(default=None)
 
 class WorklogsList(BaseModel):
     """Paginated list of issue worklogs"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    start_at: Union[int, Any] = Field(default=None, alias="startAt")
-    max_results: Union[int, Any] = Field(default=None, alias="maxResults")
-    total: Union[int, Any] = Field(default=None)
-    worklogs: Union[list[Worklog], Any] = Field(default=None)
+    start_at: int | None = Field(default=None, alias="startAt")
+    max_results: int | None = Field(default=None, alias="maxResults")
+    total: int | None = Field(default=None)
+    worklogs: list[Worklog] | None = Field(default=None)
 
 class IssueAssigneeParams(BaseModel):
     """Parameters for assigning an issue to a user"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    account_id: Union[str, Any] = Field(default=None, alias="accountId")
+    account_id: str | None = Field(default=None, alias="accountId")
 
 class EmptyResponse(BaseModel):
     """Empty response object (returned for 204 No Content responses)"""
@@ -673,452 +673,452 @@ class EmptyResponse(BaseModel):
 
     pass
 
-class IssueCreateParamsFieldsProject(BaseModel):
-    """The project to create the issue in"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str, Any] = Field(default=None, description="Project ID")
-    """Project ID"""
-    key: Union[str, Any] = Field(default=None, description="Project key (e.g., 'PROJ')")
-    """Project key (e.g., 'PROJ')"""
-
-class IssueCreateParamsFieldsIssuetype(BaseModel):
-    """The type of issue (e.g., Bug, Task, Story)"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str, Any] = Field(default=None, description="Issue type ID")
-    """Issue type ID"""
-    name: Union[str, Any] = Field(default=None, description="Issue type name (e.g., 'Bug', 'Task', 'Story')")
-    """Issue type name (e.g., 'Bug', 'Task', 'Story')"""
-
-class IssueCreateParamsFieldsParent(BaseModel):
-    """Parent issue for subtasks"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    key: Union[str, Any] = Field(default=None, description="Parent issue key")
-    """Parent issue key"""
-
-class IssueCreateParamsFieldsPriority(BaseModel):
-    """Issue priority"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str, Any] = Field(default=None, description="Priority ID")
-    """Priority ID"""
-    name: Union[str, Any] = Field(default=None, description="Priority name (e.g., 'Highest', 'High', 'Medium', 'Low', 'Lowest')")
-    """Priority name (e.g., 'Highest', 'High', 'Medium', 'Low', 'Lowest')"""
-
 class IssueCreateParamsFieldsAssignee(BaseModel):
     """The user to assign the issue to"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    account_id: Union[str, Any] = Field(default=None, alias="accountId", description="The account ID of the user")
+    account_id: str | None = Field(default=None, alias="accountId", description="The account ID of the user")
     """The account ID of the user"""
 
 class IssueCreateParamsFieldsDescriptionContentItemContentItem(BaseModel):
     """Nested schema for IssueCreateParamsFieldsDescriptionContentItem.content_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type_: Union[str, Any] = Field(default=None, alias="type", description="Content type (e.g., 'text')")
+    type_: str | None = Field(default=None, alias="type", description="Content type (e.g., 'text')")
     """Content type (e.g., 'text')"""
-    text: Union[str, Any] = Field(default=None, description="Text content")
+    text: str | None = Field(default=None, description="Text content")
     """Text content"""
 
 class IssueCreateParamsFieldsDescriptionContentItem(BaseModel):
     """Nested schema for IssueCreateParamsFieldsDescription.content_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type_: Union[str, Any] = Field(default=None, alias="type", description="Block type (e.g., 'paragraph')")
+    type_: str | None = Field(default=None, alias="type", description="Block type (e.g., 'paragraph')")
     """Block type (e.g., 'paragraph')"""
-    content: Union[list[IssueCreateParamsFieldsDescriptionContentItemContentItem], Any] = Field(default=None)
+    content: list[IssueCreateParamsFieldsDescriptionContentItemContentItem] | None = Field(default=None)
 
 class IssueCreateParamsFieldsDescription(BaseModel):
     """Issue description in Atlassian Document Format (ADF)"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type_: Union[str, Any] = Field(default=None, alias="type", description="Document type (always 'doc')")
+    type_: str | None = Field(default=None, alias="type", description="Document type (always 'doc')")
     """Document type (always 'doc')"""
-    version: Union[int, Any] = Field(default=None, description="ADF version")
+    version: int | None = Field(default=None, description="ADF version")
     """ADF version"""
-    content: Union[list[IssueCreateParamsFieldsDescriptionContentItem], Any] = Field(default=None, description="Array of content blocks")
+    content: list[IssueCreateParamsFieldsDescriptionContentItem] | None = Field(default=None, description="Array of content blocks")
     """Array of content blocks"""
+
+class IssueCreateParamsFieldsIssuetype(BaseModel):
+    """The type of issue (e.g., Bug, Task, Story)"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None, description="Issue type ID")
+    """Issue type ID"""
+    name: str | None = Field(default=None, description="Issue type name (e.g., 'Bug', 'Task', 'Story')")
+    """Issue type name (e.g., 'Bug', 'Task', 'Story')"""
+
+class IssueCreateParamsFieldsProject(BaseModel):
+    """The project to create the issue in"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None, description="Project ID")
+    """Project ID"""
+    key: str | None = Field(default=None, description="Project key (e.g., 'PROJ')")
+    """Project key (e.g., 'PROJ')"""
+
+class IssueCreateParamsFieldsPriority(BaseModel):
+    """Issue priority"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None, description="Priority ID")
+    """Priority ID"""
+    name: str | None = Field(default=None, description="Priority name (e.g., 'Highest', 'High', 'Medium', 'Low', 'Lowest')")
+    """Priority name (e.g., 'Highest', 'High', 'Medium', 'Low', 'Lowest')"""
+
+class IssueCreateParamsFieldsParent(BaseModel):
+    """Parent issue for subtasks"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    key: str | None = Field(default=None, description="Parent issue key")
+    """Parent issue key"""
 
 class IssueCreateParamsFields(BaseModel):
     """The issue fields to set"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    project: Union[IssueCreateParamsFieldsProject, Any] = Field(default=None, description="The project to create the issue in")
+    project: IssueCreateParamsFieldsProject = Field(description="The project to create the issue in")
     """The project to create the issue in"""
-    issuetype: Union[IssueCreateParamsFieldsIssuetype, Any] = Field(default=None, description="The type of issue (e.g., Bug, Task, Story)")
+    issuetype: IssueCreateParamsFieldsIssuetype = Field(description="The type of issue (e.g., Bug, Task, Story)")
     """The type of issue (e.g., Bug, Task, Story)"""
-    summary: Union[str, Any] = Field(default=None, description="A brief summary of the issue (title)")
+    summary: str = Field(description="A brief summary of the issue (title)")
     """A brief summary of the issue (title)"""
-    description: Union[IssueCreateParamsFieldsDescription, Any] = Field(default=None, description="Issue description in Atlassian Document Format (ADF)")
+    description: IssueCreateParamsFieldsDescription | None = Field(default=None, description="Issue description in Atlassian Document Format (ADF)")
     """Issue description in Atlassian Document Format (ADF)"""
-    priority: Union[IssueCreateParamsFieldsPriority, Any] = Field(default=None, description="Issue priority")
+    priority: IssueCreateParamsFieldsPriority | None = Field(default=None, description="Issue priority")
     """Issue priority"""
-    assignee: Union[IssueCreateParamsFieldsAssignee, Any] = Field(default=None, description="The user to assign the issue to")
+    assignee: IssueCreateParamsFieldsAssignee | None = Field(default=None, description="The user to assign the issue to")
     """The user to assign the issue to"""
-    labels: Union[list[str], Any] = Field(default=None, description="Labels to add to the issue")
+    labels: list[str] | None = Field(default=None, description="Labels to add to the issue")
     """Labels to add to the issue"""
-    parent: Union[IssueCreateParamsFieldsParent, Any] = Field(default=None, description="Parent issue for subtasks")
+    parent: IssueCreateParamsFieldsParent | None = Field(default=None, description="Parent issue for subtasks")
     """Parent issue for subtasks"""
 
 class IssueCreateParams(BaseModel):
     """Parameters for creating a new issue"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    fields: Union[IssueCreateParamsFields, Any] = Field(default=None)
-    update: Union[dict[str, Any], Any] = Field(default=None)
+    fields: IssueCreateParamsFields
+    update: dict[str, Any] | None = Field(default=None)
 
 class IssueCreateResponse(BaseModel):
     """Response from creating an issue"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    key: Union[str, Any] = Field(default=None)
-    self: Union[str, Any] = Field(default=None)
+    id: str | None = Field(default=None)
+    key: str | None = Field(default=None)
+    self: str | None = Field(default=None)
+
+class IssueUpdateParamsTransition(BaseModel):
+    """Transition the issue to a new status"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None, description="The ID of the transition to perform")
+    """The ID of the transition to perform"""
 
 class IssueUpdateParamsFieldsDescriptionContentItemContentItem(BaseModel):
     """Nested schema for IssueUpdateParamsFieldsDescriptionContentItem.content_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type_: Union[str, Any] = Field(default=None, alias="type", description="Content type (e.g., 'text')")
+    type_: str | None = Field(default=None, alias="type", description="Content type (e.g., 'text')")
     """Content type (e.g., 'text')"""
-    text: Union[str, Any] = Field(default=None, description="Text content")
+    text: str | None = Field(default=None, description="Text content")
     """Text content"""
 
 class IssueUpdateParamsFieldsDescriptionContentItem(BaseModel):
     """Nested schema for IssueUpdateParamsFieldsDescription.content_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type_: Union[str, Any] = Field(default=None, alias="type", description="Block type (e.g., 'paragraph')")
+    type_: str | None = Field(default=None, alias="type", description="Block type (e.g., 'paragraph')")
     """Block type (e.g., 'paragraph')"""
-    content: Union[list[IssueUpdateParamsFieldsDescriptionContentItemContentItem], Any] = Field(default=None)
+    content: list[IssueUpdateParamsFieldsDescriptionContentItemContentItem] | None = Field(default=None)
 
 class IssueUpdateParamsFieldsDescription(BaseModel):
     """Issue description in Atlassian Document Format (ADF)"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type_: Union[str, Any] = Field(default=None, alias="type", description="Document type (always 'doc')")
+    type_: str | None = Field(default=None, alias="type", description="Document type (always 'doc')")
     """Document type (always 'doc')"""
-    version: Union[int, Any] = Field(default=None, description="ADF version")
+    version: int | None = Field(default=None, description="ADF version")
     """ADF version"""
-    content: Union[list[IssueUpdateParamsFieldsDescriptionContentItem], Any] = Field(default=None, description="Array of content blocks")
+    content: list[IssueUpdateParamsFieldsDescriptionContentItem] | None = Field(default=None, description="Array of content blocks")
     """Array of content blocks"""
-
-class IssueUpdateParamsFieldsPriority(BaseModel):
-    """Issue priority"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str, Any] = Field(default=None, description="Priority ID")
-    """Priority ID"""
-    name: Union[str, Any] = Field(default=None, description="Priority name (e.g., 'Highest', 'High', 'Medium', 'Low', 'Lowest')")
-    """Priority name (e.g., 'Highest', 'High', 'Medium', 'Low', 'Lowest')"""
 
 class IssueUpdateParamsFieldsAssignee(BaseModel):
     """The user to assign the issue to"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    account_id: Union[str, Any] = Field(default=None, alias="accountId", description="The account ID of the user (use null to unassign)")
+    account_id: str | None = Field(default=None, alias="accountId", description="The account ID of the user (use null to unassign)")
     """The account ID of the user (use null to unassign)"""
+
+class IssueUpdateParamsFieldsPriority(BaseModel):
+    """Issue priority"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None, description="Priority ID")
+    """Priority ID"""
+    name: str | None = Field(default=None, description="Priority name (e.g., 'Highest', 'High', 'Medium', 'Low', 'Lowest')")
+    """Priority name (e.g., 'Highest', 'High', 'Medium', 'Low', 'Lowest')"""
 
 class IssueUpdateParamsFields(BaseModel):
     """The issue fields to update"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    summary: Union[str, Any] = Field(default=None, description="A brief summary of the issue (title)")
+    summary: str | None = Field(default=None, description="A brief summary of the issue (title)")
     """A brief summary of the issue (title)"""
-    description: Union[IssueUpdateParamsFieldsDescription, Any] = Field(default=None, description="Issue description in Atlassian Document Format (ADF)")
+    description: IssueUpdateParamsFieldsDescription | None = Field(default=None, description="Issue description in Atlassian Document Format (ADF)")
     """Issue description in Atlassian Document Format (ADF)"""
-    priority: Union[IssueUpdateParamsFieldsPriority, Any] = Field(default=None, description="Issue priority")
+    priority: IssueUpdateParamsFieldsPriority | None = Field(default=None, description="Issue priority")
     """Issue priority"""
-    assignee: Union[IssueUpdateParamsFieldsAssignee, Any] = Field(default=None, description="The user to assign the issue to")
+    assignee: IssueUpdateParamsFieldsAssignee | None = Field(default=None, description="The user to assign the issue to")
     """The user to assign the issue to"""
-    labels: Union[list[str], Any] = Field(default=None, description="Labels for the issue")
+    labels: list[str] | None = Field(default=None, description="Labels for the issue")
     """Labels for the issue"""
-
-class IssueUpdateParamsTransition(BaseModel):
-    """Transition the issue to a new status"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str, Any] = Field(default=None, description="The ID of the transition to perform")
-    """The ID of the transition to perform"""
 
 class IssueUpdateParams(BaseModel):
     """Parameters for updating an issue. Only fields included are updated."""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    fields: Union[IssueUpdateParamsFields, Any] = Field(default=None)
-    update: Union[dict[str, Any], Any] = Field(default=None)
-    transition: Union[IssueUpdateParamsTransition, Any] = Field(default=None)
+    fields: IssueUpdateParamsFields | None = Field(default=None)
+    update: dict[str, Any] | None = Field(default=None)
+    transition: IssueUpdateParamsTransition | None = Field(default=None)
+
+class CommentCreateParamsVisibility(BaseModel):
+    """Restrict comment visibility to a group or role"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    type_: str | None = Field(default=None, alias="type", description="The type of visibility restriction")
+    """The type of visibility restriction"""
+    value: str | None = Field(default=None, description="The name of the group or role")
+    """The name of the group or role"""
+    identifier: str | None = Field(default=None, description="The ID of the group or role")
+    """The ID of the group or role"""
 
 class CommentCreateParamsBodyContentItemContentItem(BaseModel):
     """Nested schema for CommentCreateParamsBodyContentItem.content_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type_: Union[str, Any] = Field(default=None, alias="type", description="Content type (e.g., 'text')")
+    type_: str | None = Field(default=None, alias="type", description="Content type (e.g., 'text')")
     """Content type (e.g., 'text')"""
-    text: Union[str, Any] = Field(default=None, description="Text content")
+    text: str | None = Field(default=None, description="Text content")
     """Text content"""
 
 class CommentCreateParamsBodyContentItem(BaseModel):
     """Nested schema for CommentCreateParamsBody.content_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type_: Union[str, Any] = Field(default=None, alias="type", description="Block type (e.g., 'paragraph')")
+    type_: str | None = Field(default=None, alias="type", description="Block type (e.g., 'paragraph')")
     """Block type (e.g., 'paragraph')"""
-    content: Union[list[CommentCreateParamsBodyContentItemContentItem], Any] = Field(default=None)
+    content: list[CommentCreateParamsBodyContentItemContentItem] | None = Field(default=None)
 
 class CommentCreateParamsBody(BaseModel):
     """Comment content in Atlassian Document Format (ADF)"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type_: Union[str, Any] = Field(default=None, alias="type", description="Document type (always 'doc')")
+    type_: str = Field(alias="type", description="Document type (always 'doc')")
     """Document type (always 'doc')"""
-    version: Union[int, Any] = Field(default=None, description="ADF version")
+    version: int = Field(description="ADF version")
     """ADF version"""
-    content: Union[list[CommentCreateParamsBodyContentItem], Any] = Field(default=None, description="Array of content blocks")
+    content: list[CommentCreateParamsBodyContentItem] = Field(description="Array of content blocks")
     """Array of content blocks"""
-
-class CommentCreateParamsVisibility(BaseModel):
-    """Restrict comment visibility to a group or role"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    type_: Union[str, Any] = Field(default=None, alias="type", description="The type of visibility restriction")
-    """The type of visibility restriction"""
-    value: Union[str, Any] = Field(default=None, description="The name of the group or role")
-    """The name of the group or role"""
-    identifier: Union[str, Any] = Field(default=None, description="The ID of the group or role")
-    """The ID of the group or role"""
 
 class CommentCreateParams(BaseModel):
     """Parameters for creating a comment on an issue"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    body: Union[CommentCreateParamsBody, Any] = Field(default=None)
-    visibility: Union[CommentCreateParamsVisibility, Any] = Field(default=None)
-    properties: Union[list[dict[str, Any]], Any] = Field(default=None)
+    body: CommentCreateParamsBody
+    visibility: CommentCreateParamsVisibility | None = Field(default=None)
+    properties: list[dict[str, Any]] | None = Field(default=None)
 
 class CommentUpdateParamsBodyContentItemContentItem(BaseModel):
     """Nested schema for CommentUpdateParamsBodyContentItem.content_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type_: Union[str, Any] = Field(default=None, alias="type", description="Content type (e.g., 'text')")
+    type_: str | None = Field(default=None, alias="type", description="Content type (e.g., 'text')")
     """Content type (e.g., 'text')"""
-    text: Union[str, Any] = Field(default=None, description="Text content")
+    text: str | None = Field(default=None, description="Text content")
     """Text content"""
 
 class CommentUpdateParamsBodyContentItem(BaseModel):
     """Nested schema for CommentUpdateParamsBody.content_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type_: Union[str, Any] = Field(default=None, alias="type", description="Block type (e.g., 'paragraph')")
+    type_: str | None = Field(default=None, alias="type", description="Block type (e.g., 'paragraph')")
     """Block type (e.g., 'paragraph')"""
-    content: Union[list[CommentUpdateParamsBodyContentItemContentItem], Any] = Field(default=None)
+    content: list[CommentUpdateParamsBodyContentItemContentItem] | None = Field(default=None)
 
 class CommentUpdateParamsBody(BaseModel):
     """Updated comment content in Atlassian Document Format (ADF)"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type_: Union[str, Any] = Field(default=None, alias="type", description="Document type (always 'doc')")
+    type_: str = Field(alias="type", description="Document type (always 'doc')")
     """Document type (always 'doc')"""
-    version: Union[int, Any] = Field(default=None, description="ADF version")
+    version: int = Field(description="ADF version")
     """ADF version"""
-    content: Union[list[CommentUpdateParamsBodyContentItem], Any] = Field(default=None, description="Array of content blocks")
+    content: list[CommentUpdateParamsBodyContentItem] = Field(description="Array of content blocks")
     """Array of content blocks"""
 
 class CommentUpdateParamsVisibility(BaseModel):
     """Restrict comment visibility to a group or role"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type_: Union[str, Any] = Field(default=None, alias="type", description="The type of visibility restriction")
+    type_: str | None = Field(default=None, alias="type", description="The type of visibility restriction")
     """The type of visibility restriction"""
-    value: Union[str, Any] = Field(default=None, description="The name of the group or role")
+    value: str | None = Field(default=None, description="The name of the group or role")
     """The name of the group or role"""
-    identifier: Union[str, Any] = Field(default=None, description="The ID of the group or role")
+    identifier: str | None = Field(default=None, description="The ID of the group or role")
     """The ID of the group or role"""
 
 class CommentUpdateParams(BaseModel):
     """Parameters for updating a comment. Only fields included are updated."""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    body: Union[CommentUpdateParamsBody, Any] = Field(default=None)
-    visibility: Union[CommentUpdateParamsVisibility, Any] = Field(default=None)
+    body: CommentUpdateParamsBody
+    visibility: CommentUpdateParamsVisibility | None = Field(default=None)
 
 class IssueTransitionToStatuscategory(BaseModel):
     """Nested schema for IssueTransitionTo.statusCategory"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    self: Union[str, Any] = Field(default=None)
-    id: Union[int, Any] = Field(default=None)
-    key: Union[str, Any] = Field(default=None)
-    color_name: Union[str, Any] = Field(default=None, alias="colorName")
-    name: Union[str, Any] = Field(default=None)
+    self: str | None = Field(default=None)
+    id: int | None = Field(default=None)
+    key: str | None = Field(default=None)
+    color_name: str | None = Field(default=None, alias="colorName")
+    name: str | None = Field(default=None)
 
 class IssueTransitionTo(BaseModel):
     """The target status after performing this transition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    self: Union[str, Any] = Field(default=None)
-    description: Union[str, Any] = Field(default=None)
-    icon_url: Union[str, Any] = Field(default=None, alias="iconUrl")
-    name: Union[str, Any] = Field(default=None, description="The name of the target status")
+    self: str | None = Field(default=None)
+    description: str | None = Field(default=None)
+    icon_url: str | None = Field(default=None, alias="iconUrl")
+    name: str | None = Field(default=None, description="The name of the target status")
     """The name of the target status"""
-    id: Union[str, Any] = Field(default=None)
-    status_category: Union[IssueTransitionToStatuscategory, Any] = Field(default=None, alias="statusCategory")
+    id: str | None = Field(default=None)
+    status_category: IssueTransitionToStatuscategory | None = Field(default=None, alias="statusCategory")
 
 class IssueTransition(BaseModel):
     """A workflow transition that can be performed on an issue"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    to: Union[IssueTransitionTo, Any] = Field(default=None)
-    has_screen: Union[bool, Any] = Field(default=None, alias="hasScreen")
-    is_global: Union[bool, Any] = Field(default=None, alias="isGlobal")
-    is_initial: Union[bool, Any] = Field(default=None, alias="isInitial")
-    is_conditional: Union[bool, Any] = Field(default=None, alias="isConditional")
-    is_looped: Union[bool, Any] = Field(default=None, alias="isLooped")
+    id: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    to: IssueTransitionTo | None = Field(default=None)
+    has_screen: bool | None = Field(default=None, alias="hasScreen")
+    is_global: bool | None = Field(default=None, alias="isGlobal")
+    is_initial: bool | None = Field(default=None, alias="isInitial")
+    is_conditional: bool | None = Field(default=None, alias="isConditional")
+    is_looped: bool | None = Field(default=None, alias="isLooped")
 
 class IssueTransitionsList(BaseModel):
     """List of available transitions for an issue"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    expand: Union[str | None, Any] = Field(default=None)
-    transitions: Union[list[IssueTransition], Any] = Field(default=None)
+    expand: str | None = Field(default=None)
+    transitions: list[IssueTransition] | None = Field(default=None)
 
 class IssueTransitionParamsTransition(BaseModel):
     """The transition to perform"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None, description="The ID of the transition to perform. Get available transition IDs from the GET transitions endpoint.")
+    id: str = Field(description="The ID of the transition to perform. Get available transition IDs from the GET transitions endpoint.")
     """The ID of the transition to perform. Get available transition IDs from the GET transitions endpoint."""
 
 class IssueTransitionParams(BaseModel):
     """Parameters for transitioning an issue to a new status"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    transition: Union[IssueTransitionParamsTransition, Any] = Field(default=None)
-    fields: Union[dict[str, Any], Any] = Field(default=None)
-    update: Union[dict[str, Any], Any] = Field(default=None)
-    history_metadata: Union[dict[str, Any], Any] = Field(default=None, alias="historyMetadata")
+    transition: IssueTransitionParamsTransition
+    fields: dict[str, Any] | None = Field(default=None)
+    update: dict[str, Any] | None = Field(default=None)
+    history_metadata: dict[str, Any] | None = Field(default=None, alias="historyMetadata")
+
+class WorklogCreateParamsVisibility(BaseModel):
+    """Restrict worklog visibility to a group or role"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    type_: str | None = Field(default=None, alias="type", description="The type of visibility restriction")
+    """The type of visibility restriction"""
+    value: str | None = Field(default=None, description="The name of the group or role")
+    """The name of the group or role"""
+    identifier: str | None = Field(default=None, description="The ID of the group or role")
+    """The ID of the group or role"""
 
 class WorklogCreateParamsCommentContentItemContentItem(BaseModel):
     """Nested schema for WorklogCreateParamsCommentContentItem.content_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type_: Union[str, Any] = Field(default=None, alias="type", description="Content type (e.g., 'text')")
+    type_: str | None = Field(default=None, alias="type", description="Content type (e.g., 'text')")
     """Content type (e.g., 'text')"""
-    text: Union[str, Any] = Field(default=None, description="Text content")
+    text: str | None = Field(default=None, description="Text content")
     """Text content"""
 
 class WorklogCreateParamsCommentContentItem(BaseModel):
     """Nested schema for WorklogCreateParamsComment.content_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type_: Union[str, Any] = Field(default=None, alias="type", description="Block type (e.g., 'paragraph')")
+    type_: str | None = Field(default=None, alias="type", description="Block type (e.g., 'paragraph')")
     """Block type (e.g., 'paragraph')"""
-    content: Union[list[WorklogCreateParamsCommentContentItemContentItem], Any] = Field(default=None)
+    content: list[WorklogCreateParamsCommentContentItemContentItem] | None = Field(default=None)
 
 class WorklogCreateParamsComment(BaseModel):
     """A comment about the work done in Atlassian Document Format (ADF)"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type_: Union[str, Any] = Field(default=None, alias="type", description="Document type (always 'doc')")
+    type_: str | None = Field(default=None, alias="type", description="Document type (always 'doc')")
     """Document type (always 'doc')"""
-    version: Union[int, Any] = Field(default=None, description="ADF version")
+    version: int | None = Field(default=None, description="ADF version")
     """ADF version"""
-    content: Union[list[WorklogCreateParamsCommentContentItem], Any] = Field(default=None, description="Array of content blocks")
+    content: list[WorklogCreateParamsCommentContentItem] | None = Field(default=None, description="Array of content blocks")
     """Array of content blocks"""
-
-class WorklogCreateParamsVisibility(BaseModel):
-    """Restrict worklog visibility to a group or role"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    type_: Union[str, Any] = Field(default=None, alias="type", description="The type of visibility restriction")
-    """The type of visibility restriction"""
-    value: Union[str, Any] = Field(default=None, description="The name of the group or role")
-    """The name of the group or role"""
-    identifier: Union[str, Any] = Field(default=None, description="The ID of the group or role")
-    """The ID of the group or role"""
 
 class WorklogCreateParams(BaseModel):
     """Parameters for adding a worklog entry to an issue. Either timeSpentSeconds or timeSpent must be provided."""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    time_spent_seconds: Union[int, Any] = Field(default=None, alias="timeSpentSeconds")
-    time_spent: Union[str, Any] = Field(default=None, alias="timeSpent")
-    started: Union[str, Any] = Field(default=None)
-    comment: Union[WorklogCreateParamsComment, Any] = Field(default=None)
-    visibility: Union[WorklogCreateParamsVisibility, Any] = Field(default=None)
+    time_spent_seconds: int | None = Field(default=None, alias="timeSpentSeconds")
+    time_spent: str | None = Field(default=None, alias="timeSpent")
+    started: str | None = Field(default=None)
+    comment: WorklogCreateParamsComment | None = Field(default=None)
+    visibility: WorklogCreateParamsVisibility | None = Field(default=None)
 
 class IssueLinkCreateParamsType(BaseModel):
     """The type of link (e.g., Blocks, Duplicate, Relates)"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    name: Union[str, Any] = Field(default=None, description="The name of the link type (e.g., Blocks, Duplicate, Relates, Cloners)")
+    name: str | None = Field(default=None, description="The name of the link type (e.g., Blocks, Duplicate, Relates, Cloners)")
     """The name of the link type (e.g., Blocks, Duplicate, Relates, Cloners)"""
-    id: Union[str, Any] = Field(default=None, description="The ID of the link type")
+    id: str | None = Field(default=None, description="The ID of the link type")
     """The ID of the link type"""
-    inward: Union[str, Any] = Field(default=None, description="The inward description (e.g., is blocked by)")
+    inward: str | None = Field(default=None, description="The inward description (e.g., is blocked by)")
     """The inward description (e.g., is blocked by)"""
-    outward: Union[str, Any] = Field(default=None, description="The outward description (e.g., blocks)")
+    outward: str | None = Field(default=None, description="The outward description (e.g., blocks)")
     """The outward description (e.g., blocks)"""
 
 class IssueLinkCreateParamsInwardissue(BaseModel):
     """The inward issue (the issue that is affected by the link)"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    key: Union[str, Any] = Field(default=None, description="The issue key (e.g., PROJ-123)")
+    key: str = Field(description="The issue key (e.g., PROJ-123)")
     """The issue key (e.g., PROJ-123)"""
-    id: Union[str, Any] = Field(default=None, description="The issue ID")
+    id: str | None = Field(default=None, description="The issue ID")
     """The issue ID"""
 
 class IssueLinkCreateParamsCommentBodyContentItemContentItem(BaseModel):
     """Nested schema for IssueLinkCreateParamsCommentBodyContentItem.content_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type_: Union[str, Any] = Field(default=None, alias="type")
-    text: Union[str, Any] = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    text: str | None = Field(default=None)
 
 class IssueLinkCreateParamsCommentBodyContentItem(BaseModel):
     """Nested schema for IssueLinkCreateParamsCommentBody.content_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type_: Union[str, Any] = Field(default=None, alias="type")
-    content: Union[list[IssueLinkCreateParamsCommentBodyContentItemContentItem], Any] = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    content: list[IssueLinkCreateParamsCommentBodyContentItemContentItem] | None = Field(default=None)
 
 class IssueLinkCreateParamsCommentBody(BaseModel):
     """Nested schema for IssueLinkCreateParamsComment.body"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type_: Union[str, Any] = Field(default=None, alias="type")
-    version: Union[int, Any] = Field(default=None)
-    content: Union[list[IssueLinkCreateParamsCommentBodyContentItem], Any] = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    version: int | None = Field(default=None)
+    content: list[IssueLinkCreateParamsCommentBodyContentItem] | None = Field(default=None)
 
 class IssueLinkCreateParamsComment(BaseModel):
     """A comment about the link in Atlassian Document Format (ADF)"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    body: Union[IssueLinkCreateParamsCommentBody, Any] = Field(default=None)
+    body: IssueLinkCreateParamsCommentBody | None = Field(default=None)
 
 class IssueLinkCreateParamsOutwardissue(BaseModel):
     """The outward issue (the issue that causes the link)"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    key: Union[str, Any] = Field(default=None, description="The issue key (e.g., PROJ-456)")
+    key: str = Field(description="The issue key (e.g., PROJ-456)")
     """The issue key (e.g., PROJ-456)"""
-    id: Union[str, Any] = Field(default=None, description="The issue ID")
+    id: str | None = Field(default=None, description="The issue ID")
     """The issue ID"""
 
 class IssueLinkCreateParams(BaseModel):
     """Parameters for creating a link between two issues"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type_: Union[IssueLinkCreateParamsType, Any] = Field(default=None, alias="type")
-    inward_issue: Union[IssueLinkCreateParamsInwardissue, Any] = Field(default=None, alias="inwardIssue")
-    outward_issue: Union[IssueLinkCreateParamsOutwardissue, Any] = Field(default=None, alias="outwardIssue")
-    comment: Union[IssueLinkCreateParamsComment, Any] = Field(default=None)
+    type_: IssueLinkCreateParamsType = Field(alias="type")
+    inward_issue: IssueLinkCreateParamsInwardissue = Field(alias="inwardIssue")
+    outward_issue: IssueLinkCreateParamsOutwardissue = Field(alias="outwardIssue")
+    comment: IssueLinkCreateParamsComment | None = Field(default=None)
 
 # ===== METADATA TYPE DEFINITIONS (PYDANTIC) =====
 # Meta types for operations that extract metadata (e.g., pagination info)
@@ -1127,32 +1127,32 @@ class IssuesApiSearchResultMeta(BaseModel):
     """Metadata for issues.Action.API_SEARCH operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page_token: Union[str | None, Any] = Field(default=None, alias="nextPageToken")
-    is_last: Union[bool | None, Any] = Field(default=None, alias="isLast")
-    total: Union[int, Any] = Field(default=None)
+    next_page_token: str | None = Field(default=None, alias="nextPageToken")
+    is_last: bool | None = Field(default=None, alias="isLast")
+    total: int | None = Field(default=None)
 
 class ProjectsApiSearchResultMeta(BaseModel):
     """Metadata for projects.Action.API_SEARCH operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page: Union[str | None, Any] = Field(default=None, alias="nextPage")
-    total: Union[int, Any] = Field(default=None)
+    next_page: str | None = Field(default=None, alias="nextPage")
+    total: int | None = Field(default=None)
 
 class IssueCommentsListResultMeta(BaseModel):
     """Metadata for issue_comments.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_offset: Union[int, Any] = Field(default=None)
-    max_results: Union[int, Any] = Field(default=None)
-    total: Union[int, Any] = Field(default=None)
+    next_offset: int | None = Field(default=None)
+    max_results: int | None = Field(default=None)
+    total: int | None = Field(default=None)
 
 class IssueWorklogsListResultMeta(BaseModel):
     """Metadata for issue_worklogs.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_offset: Union[int, Any] = Field(default=None)
-    max_results: Union[int, Any] = Field(default=None)
-    total: Union[int, Any] = Field(default=None)
+    next_offset: int | None = Field(default=None)
+    max_results: int | None = Field(default=None)
+    total: int | None = Field(default=None)
 
 # ===== CHECK RESULT MODEL =====
 

@@ -8,7 +8,7 @@ and response envelope types.
 from __future__ import annotations
 
 from pydantic import BaseModel, ConfigDict, Field
-from typing import TypeVar, Generic, Union, Any
+from typing import TypeVar, Generic, Any
 
 # Authentication configuration
 
@@ -36,342 +36,342 @@ class Account(BaseModel):
     """Zendesk Chat account information"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    account_key: Union[str, Any] = Field(default=None)
-    status: Union[str | None, Any] = Field(default=None)
-    create_date: Union[str | None, Any] = Field(default=None)
-    billing: Union[Any, Any] = Field(default=None)
-    plan: Union[Any, Any] = Field(default=None)
+    account_key: str
+    status: str | None = Field(default=None)
+    create_date: str | None = Field(default=None)
+    billing: Any | None = Field(default=None)
+    plan: Any | None = Field(default=None)
 
 class Billing(BaseModel):
     """Account billing information"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    company: Union[str | None, Any] = Field(default=None)
-    first_name: Union[str | None, Any] = Field(default=None)
-    last_name: Union[str | None, Any] = Field(default=None)
-    email: Union[str | None, Any] = Field(default=None)
-    phone: Union[str | None, Any] = Field(default=None)
-    address1: Union[str | None, Any] = Field(default=None)
-    address2: Union[str | None, Any] = Field(default=None)
-    city: Union[str | None, Any] = Field(default=None)
-    state: Union[str | None, Any] = Field(default=None)
-    postal_code: Union[str | None, Any] = Field(default=None)
-    country_code: Union[str | None, Any] = Field(default=None)
-    additional_info: Union[str | None, Any] = Field(default=None)
-    cycle: Union[int | None, Any] = Field(default=None)
+    company: str | None = Field(default=None)
+    first_name: str | None = Field(default=None)
+    last_name: str | None = Field(default=None)
+    email: str | None = Field(default=None)
+    phone: str | None = Field(default=None)
+    address1: str | None = Field(default=None)
+    address2: str | None = Field(default=None)
+    city: str | None = Field(default=None)
+    state: str | None = Field(default=None)
+    postal_code: str | None = Field(default=None)
+    country_code: str | None = Field(default=None)
+    additional_info: str | None = Field(default=None)
+    cycle: int | None = Field(default=None)
 
 class Plan(BaseModel):
     """Account plan details"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    name: Union[str | None, Any] = Field(default=None)
-    price: Union[float | None, Any] = Field(default=None)
-    max_agents: Union[int | None, Any] = Field(default=None)
-    max_departments: Union[str | None, Any] = Field(default=None)
-    max_concurrent_chats: Union[str | None, Any] = Field(default=None)
-    max_history_search_days: Union[str | None, Any] = Field(default=None)
-    max_advanced_triggers: Union[str | None, Any] = Field(default=None)
-    max_basic_triggers: Union[str | None, Any] = Field(default=None)
-    analytics: Union[bool | None, Any] = Field(default=None)
-    file_upload: Union[bool | None, Any] = Field(default=None)
-    rest_api: Union[bool | None, Any] = Field(default=None)
-    goals: Union[int | None, Any] = Field(default=None)
-    high_load: Union[bool | None, Any] = Field(default=None)
-    integrations: Union[bool | None, Any] = Field(default=None)
-    ip_restriction: Union[bool | None, Any] = Field(default=None)
-    monitoring: Union[bool | None, Any] = Field(default=None)
-    operating_hours: Union[bool | None, Any] = Field(default=None)
-    sla: Union[bool | None, Any] = Field(default=None)
-    support: Union[bool | None, Any] = Field(default=None)
-    unbranding: Union[bool | None, Any] = Field(default=None)
-    agent_leaderboard: Union[bool | None, Any] = Field(default=None)
-    agent_reports: Union[bool | None, Any] = Field(default=None)
-    chat_reports: Union[bool | None, Any] = Field(default=None)
-    daily_reports: Union[bool | None, Any] = Field(default=None)
-    email_reports: Union[bool | None, Any] = Field(default=None)
-    widget_customization: Union[str | None, Any] = Field(default=None)
-    long_desc: Union[str | None, Any] = Field(default=None)
-    short_desc: Union[str | None, Any] = Field(default=None)
+    name: str | None = Field(default=None)
+    price: float | None = Field(default=None)
+    max_agents: int | None = Field(default=None)
+    max_departments: str | None = Field(default=None)
+    max_concurrent_chats: str | None = Field(default=None)
+    max_history_search_days: str | None = Field(default=None)
+    max_advanced_triggers: str | None = Field(default=None)
+    max_basic_triggers: str | None = Field(default=None)
+    analytics: bool | None = Field(default=None)
+    file_upload: bool | None = Field(default=None)
+    rest_api: bool | None = Field(default=None)
+    goals: int | None = Field(default=None)
+    high_load: bool | None = Field(default=None)
+    integrations: bool | None = Field(default=None)
+    ip_restriction: bool | None = Field(default=None)
+    monitoring: bool | None = Field(default=None)
+    operating_hours: bool | None = Field(default=None)
+    sla: bool | None = Field(default=None)
+    support: bool | None = Field(default=None)
+    unbranding: bool | None = Field(default=None)
+    agent_leaderboard: bool | None = Field(default=None)
+    agent_reports: bool | None = Field(default=None)
+    chat_reports: bool | None = Field(default=None)
+    daily_reports: bool | None = Field(default=None)
+    email_reports: bool | None = Field(default=None)
+    widget_customization: str | None = Field(default=None)
+    long_desc: str | None = Field(default=None)
+    short_desc: str | None = Field(default=None)
 
 class Agent(BaseModel):
     """Zendesk Chat agent"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    email: Union[str | None, Any] = Field(default=None)
-    display_name: Union[str | None, Any] = Field(default=None)
-    first_name: Union[str | None, Any] = Field(default=None)
-    last_name: Union[str | None, Any] = Field(default=None)
-    enabled: Union[bool | None, Any] = Field(default=None)
-    role_id: Union[int | None, Any] = Field(default=None)
-    roles: Union[Any, Any] = Field(default=None)
-    departments: Union[list[int] | None, Any] = Field(default=None)
-    enabled_departments: Union[list[int] | None, Any] = Field(default=None)
-    skills: Union[list[int] | None, Any] = Field(default=None)
-    scope: Union[str | None, Any] = Field(default=None)
-    create_date: Union[str | None, Any] = Field(default=None)
-    last_login: Union[str | None, Any] = Field(default=None)
-    login_count: Union[int | None, Any] = Field(default=None)
+    id: int
+    email: str | None = Field(default=None)
+    display_name: str | None = Field(default=None)
+    first_name: str | None = Field(default=None)
+    last_name: str | None = Field(default=None)
+    enabled: bool | None = Field(default=None)
+    role_id: int | None = Field(default=None)
+    roles: Any | None = Field(default=None)
+    departments: list[int] | None = Field(default=None)
+    enabled_departments: list[int] | None = Field(default=None)
+    skills: list[int] | None = Field(default=None)
+    scope: str | None = Field(default=None)
+    create_date: str | None = Field(default=None)
+    last_login: str | None = Field(default=None)
+    login_count: int | None = Field(default=None)
 
 class AgentRoles(BaseModel):
     """Agent role flags"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    administrator: Union[bool | None, Any] = Field(default=None)
-    owner: Union[bool | None, Any] = Field(default=None)
+    administrator: bool | None = Field(default=None)
+    owner: bool | None = Field(default=None)
 
 class AgentTimeline(BaseModel):
     """Agent activity timeline entry"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    agent_id: Union[int, Any] = Field(default=None)
-    start_time: Union[str | None, Any] = Field(default=None)
-    status: Union[str | None, Any] = Field(default=None)
-    duration: Union[float | None, Any] = Field(default=None)
-    engagement_count: Union[int | None, Any] = Field(default=None)
+    agent_id: int
+    start_time: str | None = Field(default=None)
+    status: str | None = Field(default=None)
+    duration: float | None = Field(default=None)
+    engagement_count: int | None = Field(default=None)
 
 class Ban(BaseModel):
     """Banned visitor"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    type_: Union[str | None, Any] = Field(default=None, alias="type")
-    ip_address: Union[str | None, Any] = Field(default=None)
-    visitor_id: Union[str | None, Any] = Field(default=None)
-    visitor_name: Union[str | None, Any] = Field(default=None)
-    reason: Union[str | None, Any] = Field(default=None)
-    created_at: Union[str | None, Any] = Field(default=None)
-
-class ChatEngagement(BaseModel):
-    """ChatEngagement type definition"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str | None, Any] = Field(default=None)
-    agent_id: Union[str | None, Any] = Field(default=None)
-    agent_name: Union[str | None, Any] = Field(default=None)
-    agent_full_name: Union[str | None, Any] = Field(default=None)
-    department_id: Union[int | None, Any] = Field(default=None)
-    timestamp: Union[str | None, Any] = Field(default=None)
-    duration: Union[float | None, Any] = Field(default=None)
-    accepted: Union[bool | None, Any] = Field(default=None)
-    assigned: Union[bool | None, Any] = Field(default=None)
-    started_by: Union[str | None, Any] = Field(default=None)
-    rating: Union[str | None, Any] = Field(default=None)
-    comment: Union[str | None, Any] = Field(default=None)
-    count: Union[Any, Any] = Field(default=None)
-    response_time: Union[Any, Any] = Field(default=None)
-    skills_requested: Union[list[int] | None, Any] = Field(default=None)
-    skills_fulfilled: Union[bool | None, Any] = Field(default=None)
-
-class WebpathItem(BaseModel):
-    """WebpathItem type definition"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    from_: Union[str | None, Any] = Field(default=None, alias="from")
-    timestamp: Union[str | None, Any] = Field(default=None)
-
-class ChatHistoryItem(BaseModel):
-    """ChatHistoryItem type definition"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    type_: Union[str | None, Any] = Field(default=None, alias="type")
-    timestamp: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    nick: Union[str | None, Any] = Field(default=None)
-    msg: Union[str | None, Any] = Field(default=None)
-    msg_id: Union[str | None, Any] = Field(default=None)
-    channel: Union[str | None, Any] = Field(default=None)
-    department_id: Union[int | None, Any] = Field(default=None)
-    department_name: Union[str | None, Any] = Field(default=None)
-    rating: Union[str | None, Any] = Field(default=None)
-    new_rating: Union[str | None, Any] = Field(default=None)
-    tags: Union[list[str] | None, Any] = Field(default=None)
-    new_tags: Union[list[str] | None, Any] = Field(default=None)
-    options: Union[str | None, Any] = Field(default=None)
+    id: int
+    type_: str | None = Field(default=None, alias="type")
+    ip_address: str | None = Field(default=None)
+    visitor_id: str | None = Field(default=None)
+    visitor_name: str | None = Field(default=None)
+    reason: str | None = Field(default=None)
+    created_at: str | None = Field(default=None)
 
 class ChatConversion(BaseModel):
     """ChatConversion type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str | None, Any] = Field(default=None)
-    goal_id: Union[int | None, Any] = Field(default=None)
-    goal_name: Union[str | None, Any] = Field(default=None)
-    timestamp: Union[str | None, Any] = Field(default=None)
-    attribution: Union[Any, Any] = Field(default=None)
+    id: str | None = Field(default=None)
+    goal_id: int | None = Field(default=None)
+    goal_name: str | None = Field(default=None)
+    timestamp: str | None = Field(default=None)
+    attribution: Any | None = Field(default=None)
+
+class WebpathItem(BaseModel):
+    """WebpathItem type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    from_: str | None = Field(default=None, alias="from")
+    timestamp: str | None = Field(default=None)
+
+class ChatEngagement(BaseModel):
+    """ChatEngagement type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None)
+    agent_id: str | None = Field(default=None)
+    agent_name: str | None = Field(default=None)
+    agent_full_name: str | None = Field(default=None)
+    department_id: int | None = Field(default=None)
+    timestamp: str | None = Field(default=None)
+    duration: float | None = Field(default=None)
+    accepted: bool | None = Field(default=None)
+    assigned: bool | None = Field(default=None)
+    started_by: str | None = Field(default=None)
+    rating: str | None = Field(default=None)
+    comment: str | None = Field(default=None)
+    count: Any | None = Field(default=None)
+    response_time: Any | None = Field(default=None)
+    skills_requested: list[int] | None = Field(default=None)
+    skills_fulfilled: bool | None = Field(default=None)
+
+class ChatHistoryItem(BaseModel):
+    """ChatHistoryItem type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    type_: str | None = Field(default=None, alias="type")
+    timestamp: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    nick: str | None = Field(default=None)
+    msg: str | None = Field(default=None)
+    msg_id: str | None = Field(default=None)
+    channel: str | None = Field(default=None)
+    department_id: int | None = Field(default=None)
+    department_name: str | None = Field(default=None)
+    rating: str | None = Field(default=None)
+    new_rating: str | None = Field(default=None)
+    tags: list[str] | None = Field(default=None)
+    new_tags: list[str] | None = Field(default=None)
+    options: str | None = Field(default=None)
 
 class Chat(BaseModel):
     """Chat conversation transcript"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    type_: Union[str | None, Any] = Field(default=None, alias="type")
-    timestamp: Union[str | None, Any] = Field(default=None)
-    update_timestamp: Union[str | None, Any] = Field(default=None)
-    duration: Union[int | None, Any] = Field(default=None)
-    department_id: Union[int | None, Any] = Field(default=None)
-    department_name: Union[str | None, Any] = Field(default=None)
-    agent_ids: Union[list[str] | None, Any] = Field(default=None)
-    agent_names: Union[list[str] | None, Any] = Field(default=None)
-    visitor: Union[Any, Any] = Field(default=None)
-    session: Union[Any, Any] = Field(default=None)
-    history: Union[list[ChatHistoryItem] | None, Any] = Field(default=None)
-    engagements: Union[list[ChatEngagement] | None, Any] = Field(default=None)
-    conversions: Union[list[ChatConversion] | None, Any] = Field(default=None)
-    count: Union[Any, Any] = Field(default=None)
-    response_time: Union[Any, Any] = Field(default=None)
-    rating: Union[str | None, Any] = Field(default=None)
-    comment: Union[str | None, Any] = Field(default=None)
-    tags: Union[list[str] | None, Any] = Field(default=None)
-    started_by: Union[str | None, Any] = Field(default=None)
-    triggered: Union[bool | None, Any] = Field(default=None)
-    triggered_response: Union[bool | None, Any] = Field(default=None)
-    missed: Union[bool | None, Any] = Field(default=None)
-    unread: Union[bool | None, Any] = Field(default=None)
-    deleted: Union[bool | None, Any] = Field(default=None)
-    message: Union[str | None, Any] = Field(default=None)
-    webpath: Union[list[WebpathItem] | None, Any] = Field(default=None)
-    zendesk_ticket_id: Union[int | None, Any] = Field(default=None)
+    id: str
+    type_: str | None = Field(default=None, alias="type")
+    timestamp: str | None = Field(default=None)
+    update_timestamp: str | None = Field(default=None)
+    duration: int | None = Field(default=None)
+    department_id: int | None = Field(default=None)
+    department_name: str | None = Field(default=None)
+    agent_ids: list[str] | None = Field(default=None)
+    agent_names: list[str] | None = Field(default=None)
+    visitor: Any | None = Field(default=None)
+    session: Any | None = Field(default=None)
+    history: list[ChatHistoryItem] | None = Field(default=None)
+    engagements: list[ChatEngagement] | None = Field(default=None)
+    conversions: list[ChatConversion] | None = Field(default=None)
+    count: Any | None = Field(default=None)
+    response_time: Any | None = Field(default=None)
+    rating: str | None = Field(default=None)
+    comment: str | None = Field(default=None)
+    tags: list[str] | None = Field(default=None)
+    started_by: str | None = Field(default=None)
+    triggered: bool | None = Field(default=None)
+    triggered_response: bool | None = Field(default=None)
+    missed: bool | None = Field(default=None)
+    unread: bool | None = Field(default=None)
+    deleted: bool | None = Field(default=None)
+    message: str | None = Field(default=None)
+    webpath: list[WebpathItem] | None = Field(default=None)
+    zendesk_ticket_id: int | None = Field(default=None)
 
 class Visitor(BaseModel):
     """Visitor type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    email: Union[str | None, Any] = Field(default=None)
-    phone: Union[str | None, Any] = Field(default=None)
-    notes: Union[str | None, Any] = Field(default=None)
+    id: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    email: str | None = Field(default=None)
+    phone: str | None = Field(default=None)
+    notes: str | None = Field(default=None)
 
 class ChatSession(BaseModel):
     """ChatSession type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str | None, Any] = Field(default=None)
-    browser: Union[str | None, Any] = Field(default=None)
-    platform: Union[str | None, Any] = Field(default=None)
-    user_agent: Union[str | None, Any] = Field(default=None)
-    ip: Union[str | None, Any] = Field(default=None)
-    city: Union[str | None, Any] = Field(default=None)
-    region: Union[str | None, Any] = Field(default=None)
-    country_code: Union[str | None, Any] = Field(default=None)
-    country_name: Union[str | None, Any] = Field(default=None)
-    start_date: Union[str | None, Any] = Field(default=None)
-    end_date: Union[str | None, Any] = Field(default=None)
+    id: str | None = Field(default=None)
+    browser: str | None = Field(default=None)
+    platform: str | None = Field(default=None)
+    user_agent: str | None = Field(default=None)
+    ip: str | None = Field(default=None)
+    city: str | None = Field(default=None)
+    region: str | None = Field(default=None)
+    country_code: str | None = Field(default=None)
+    country_name: str | None = Field(default=None)
+    start_date: str | None = Field(default=None)
+    end_date: str | None = Field(default=None)
 
 class ConversionAttribution(BaseModel):
     """ConversionAttribution type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    agent_id: Union[int | None, Any] = Field(default=None)
-    agent_name: Union[str | None, Any] = Field(default=None)
-    department_id: Union[int | None, Any] = Field(default=None)
-    department_name: Union[str | None, Any] = Field(default=None)
-    chat_timestamp: Union[str | None, Any] = Field(default=None)
+    agent_id: int | None = Field(default=None)
+    agent_name: str | None = Field(default=None)
+    department_id: int | None = Field(default=None)
+    department_name: str | None = Field(default=None)
+    chat_timestamp: str | None = Field(default=None)
 
 class MessageCount(BaseModel):
     """MessageCount type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    total: Union[int | None, Any] = Field(default=None)
-    agent: Union[int | None, Any] = Field(default=None)
-    visitor: Union[int | None, Any] = Field(default=None)
+    total: int | None = Field(default=None)
+    agent: int | None = Field(default=None)
+    visitor: int | None = Field(default=None)
 
 class ResponseTime(BaseModel):
     """ResponseTime type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    first: Union[int | None, Any] = Field(default=None)
-    avg: Union[float | None, Any] = Field(default=None)
-    max: Union[int | None, Any] = Field(default=None)
+    first: int | None = Field(default=None)
+    avg: float | None = Field(default=None)
+    max: int | None = Field(default=None)
 
 class Department(BaseModel):
     """Department type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    description: Union[str | None, Any] = Field(default=None)
-    enabled: Union[bool | None, Any] = Field(default=None)
-    members: Union[list[int] | None, Any] = Field(default=None)
-    settings: Union[Any, Any] = Field(default=None)
+    id: int
+    name: str | None = Field(default=None)
+    description: str | None = Field(default=None)
+    enabled: bool | None = Field(default=None)
+    members: list[int] | None = Field(default=None)
+    settings: Any | None = Field(default=None)
 
 class DepartmentSettings(BaseModel):
     """DepartmentSettings type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    chat_limit: Union[int | None, Any] = Field(default=None)
+    chat_limit: int | None = Field(default=None)
 
 class Goal(BaseModel):
     """Goal type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    description: Union[str | None, Any] = Field(default=None)
-    enabled: Union[bool | None, Any] = Field(default=None)
-    attribution_model: Union[str | None, Any] = Field(default=None)
-    attribution_window: Union[int | None, Any] = Field(default=None)
-    attribution_period: Union[int | None, Any] = Field(default=None)
-    settings: Union[dict[str, Any] | None, Any] = Field(default=None)
+    id: int
+    name: str | None = Field(default=None)
+    description: str | None = Field(default=None)
+    enabled: bool | None = Field(default=None)
+    attribution_model: str | None = Field(default=None)
+    attribution_window: int | None = Field(default=None)
+    attribution_period: int | None = Field(default=None)
+    settings: dict[str, Any] | None = Field(default=None)
 
 class Role(BaseModel):
     """Role type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    description: Union[str | None, Any] = Field(default=None)
-    enabled: Union[bool | None, Any] = Field(default=None)
-    permissions: Union[dict[str, Any] | None, Any] = Field(default=None)
-    members_count: Union[int | None, Any] = Field(default=None)
+    id: int
+    name: str | None = Field(default=None)
+    description: str | None = Field(default=None)
+    enabled: bool | None = Field(default=None)
+    permissions: dict[str, Any] | None = Field(default=None)
+    members_count: int | None = Field(default=None)
 
 class RoutingSettings(BaseModel):
     """RoutingSettings type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    routing_mode: Union[str | None, Any] = Field(default=None)
-    chat_limit: Union[dict[str, Any] | None, Any] = Field(default=None)
-    skill_routing: Union[dict[str, Any] | None, Any] = Field(default=None)
-    reassignment: Union[dict[str, Any] | None, Any] = Field(default=None)
-    auto_idle: Union[dict[str, Any] | None, Any] = Field(default=None)
-    auto_accept: Union[dict[str, Any] | None, Any] = Field(default=None)
+    routing_mode: str | None = Field(default=None)
+    chat_limit: dict[str, Any] | None = Field(default=None)
+    skill_routing: dict[str, Any] | None = Field(default=None)
+    reassignment: dict[str, Any] | None = Field(default=None)
+    auto_idle: dict[str, Any] | None = Field(default=None)
+    auto_accept: dict[str, Any] | None = Field(default=None)
 
 class Shortcut(BaseModel):
     """Shortcut type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    message: Union[str | None, Any] = Field(default=None)
-    options: Union[str | None, Any] = Field(default=None)
-    tags: Union[list[str] | None, Any] = Field(default=None)
-    departments: Union[list[int] | None, Any] = Field(default=None)
-    agents: Union[list[int] | None, Any] = Field(default=None)
-    scope: Union[str | None, Any] = Field(default=None)
+    id: str
+    name: str | None = Field(default=None)
+    message: str | None = Field(default=None)
+    options: str | None = Field(default=None)
+    tags: list[str] | None = Field(default=None)
+    departments: list[int] | None = Field(default=None)
+    agents: list[int] | None = Field(default=None)
+    scope: str | None = Field(default=None)
 
 class Skill(BaseModel):
     """Skill type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    description: Union[str | None, Any] = Field(default=None)
-    enabled: Union[bool | None, Any] = Field(default=None)
-    members: Union[list[int] | None, Any] = Field(default=None)
+    id: int
+    name: str | None = Field(default=None)
+    description: str | None = Field(default=None)
+    enabled: bool | None = Field(default=None)
+    members: list[int] | None = Field(default=None)
 
 class Trigger(BaseModel):
     """Trigger type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    description: Union[str | None, Any] = Field(default=None)
-    enabled: Union[bool | None, Any] = Field(default=None)
-    run_once: Union[bool | None, Any] = Field(default=None)
-    conditions: Union[list[dict[str, Any]] | None, Any] = Field(default=None)
-    actions: Union[list[dict[str, Any]] | None, Any] = Field(default=None)
-    departments: Union[list[int] | None, Any] = Field(default=None)
-    definition: Union[dict[str, Any] | None, Any] = Field(default=None)
+    id: int
+    name: str | None = Field(default=None)
+    description: str | None = Field(default=None)
+    enabled: bool | None = Field(default=None)
+    run_once: bool | None = Field(default=None)
+    conditions: list[dict[str, Any]] | None = Field(default=None)
+    actions: list[dict[str, Any]] | None = Field(default=None)
+    departments: list[int] | None = Field(default=None)
+    definition: dict[str, Any] | None = Field(default=None)
 
 # ===== METADATA TYPE DEFINITIONS (PYDANTIC) =====
 # Meta types for operations that extract metadata (e.g., pagination info)
@@ -380,15 +380,15 @@ class AgentTimelineListResultMeta(BaseModel):
     """Metadata for agent_timeline.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page: Union[str | None, Any] = Field(default=None)
-    count: Union[int, Any] = Field(default=None)
+    next_page: str | None = Field(default=None)
+    count: int | None = Field(default=None)
 
 class ChatsListResultMeta(BaseModel):
     """Metadata for chats.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page: Union[str | None, Any] = Field(default=None)
-    count: Union[int, Any] = Field(default=None)
+    next_page: str | None = Field(default=None)
+    count: int | None = Field(default=None)
 
 # ===== CHECK RESULT MODEL =====
 

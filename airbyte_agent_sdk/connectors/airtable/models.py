@@ -8,7 +8,7 @@ and response envelope types.
 from __future__ import annotations
 
 from pydantic import BaseModel, ConfigDict, Field
-from typing import TypeVar, Generic, Union, Any
+from typing import TypeVar, Generic, Any
 
 # Authentication configuration
 
@@ -26,64 +26,64 @@ class Base(BaseModel):
     """An Airtable base (workspace)"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    permission_level: Union[str | None, Any] = Field(default=None, alias="permissionLevel")
+    id: str
+    name: str | None = Field(default=None)
+    permission_level: str | None = Field(default=None, alias="permissionLevel")
 
 class BasesList(BaseModel):
     """Paginated list of bases"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    bases: Union[list[Base], Any] = Field(default=None)
-    offset: Union[str | None, Any] = Field(default=None)
+    bases: list[Base] | None = Field(default=None)
+    offset: str | None = Field(default=None)
 
 class View(BaseModel):
     """A view in a table"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    type_: Union[str | None, Any] = Field(default=None, alias="type")
+    id: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
 
 class TableField(BaseModel):
     """A field (column) in a table"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    type_: Union[str | None, Any] = Field(default=None, alias="type")
-    options: Union[dict[str, Any] | None, Any] = Field(default=None)
+    id: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    options: dict[str, Any] | None = Field(default=None)
 
 class Table(BaseModel):
     """A table within an Airtable base"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    primary_field_id: Union[str | None, Any] = Field(default=None, alias="primaryFieldId")
-    fields: Union[list[TableField] | None, Any] = Field(default=None)
-    views: Union[list[View] | None, Any] = Field(default=None)
+    id: str
+    name: str | None = Field(default=None)
+    primary_field_id: str | None = Field(default=None, alias="primaryFieldId")
+    fields: list[TableField] | None = Field(default=None)
+    views: list[View] | None = Field(default=None)
 
 class TablesList(BaseModel):
     """List of tables in a base"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    tables: Union[list[Table], Any] = Field(default=None)
+    tables: list[Table] | None = Field(default=None)
 
 class Record(BaseModel):
     """A record (row) in an Airtable table"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    created_time: Union[str | None, Any] = Field(default=None, alias="createdTime")
-    fields: Union[dict[str, Any] | None, Any] = Field(default=None)
+    id: str
+    created_time: str | None = Field(default=None, alias="createdTime")
+    fields: dict[str, Any] | None = Field(default=None)
 
 class RecordsList(BaseModel):
     """Paginated list of records"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    records: Union[list[Record], Any] = Field(default=None)
-    offset: Union[str | None, Any] = Field(default=None)
+    records: list[Record] | None = Field(default=None)
+    offset: str | None = Field(default=None)
 
 # ===== METADATA TYPE DEFINITIONS (PYDANTIC) =====
 # Meta types for operations that extract metadata (e.g., pagination info)
@@ -92,13 +92,13 @@ class BasesListResultMeta(BaseModel):
     """Metadata for bases.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    offset: Union[str | None, Any] = Field(default=None)
+    offset: str | None = Field(default=None)
 
 class RecordsListResultMeta(BaseModel):
     """Metadata for records.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    offset: Union[str | None, Any] = Field(default=None)
+    offset: str | None = Field(default=None)
 
 # ===== CHECK RESULT MODEL =====
 

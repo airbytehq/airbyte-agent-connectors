@@ -201,7 +201,7 @@
           {
             "name": "after",
             "python_name": "after",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "string",
@@ -283,7 +283,7 @@
           {
             "name": "after",
             "python_name": "after",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "string",
@@ -461,7 +461,7 @@
           {
             "name": "after",
             "python_name": "after",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "string",
@@ -639,7 +639,7 @@
           {
             "name": "after",
             "python_name": "after",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "string",
@@ -817,7 +817,7 @@
           {
             "name": "after",
             "python_name": "after",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "string",
@@ -971,7 +971,7 @@
           {
             "name": "after",
             "python_name": "after",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "string",
@@ -1095,7 +1095,7 @@
           {
             "name": "after",
             "python_name": "after",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "string",
@@ -1177,7 +1177,7 @@
           {
             "name": "after",
             "python_name": "after",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "string",
@@ -1259,7 +1259,7 @@
           {
             "name": "after",
             "python_name": "after",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "string",
@@ -1341,7 +1341,7 @@
           {
             "name": "after",
             "python_name": "after",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "string",
@@ -1693,7 +1693,7 @@
           {
             "name": "after",
             "python_name": "after",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "string",

@@ -8,7 +8,7 @@ and response envelope types.
 from __future__ import annotations
 
 from pydantic import BaseModel, ConfigDict, Field
-from typing import TypeVar, Generic, Union, Any
+from typing import TypeVar, Generic, Any
 
 # Authentication configuration
 
@@ -36,472 +36,472 @@ class LinkedinAdsReplicationConfig(BaseModel):
 
 # ===== RESPONSE TYPE DEFINITIONS (PYDANTIC) =====
 
-class AccountChangeauditstampsCreated(BaseModel):
-    """Nested schema for AccountChangeauditstamps.created"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    actor: Union[str | None, Any] = Field(default=None)
-    time: Union[int | None, Any] = Field(default=None)
-
 class AccountChangeauditstampsLastmodified(BaseModel):
     """Nested schema for AccountChangeauditstamps.lastModified"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    actor: Union[str | None, Any] = Field(default=None)
-    time: Union[int | None, Any] = Field(default=None)
+    actor: str | None | None = Field(default=None)
+    time: int | None | None = Field(default=None)
+
+class AccountChangeauditstampsCreated(BaseModel):
+    """Nested schema for AccountChangeauditstamps.created"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    actor: str | None | None = Field(default=None)
+    time: int | None | None = Field(default=None)
 
 class AccountChangeauditstamps(BaseModel):
     """Creation and last modification audit stamps"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    created: Union[AccountChangeauditstampsCreated | None, Any] = Field(default=None)
-    last_modified: Union[AccountChangeauditstampsLastmodified | None, Any] = Field(default=None, alias="lastModified")
+    created: AccountChangeauditstampsCreated | None | None = Field(default=None)
+    last_modified: AccountChangeauditstampsLastmodified | None | None = Field(default=None, alias="lastModified")
 
 class AccountVersion(BaseModel):
     """Version information"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    version_tag: Union[str | None, Any] = Field(default=None, alias="versionTag")
+    version_tag: str | None | None = Field(default=None, alias="versionTag")
 
 class Account(BaseModel):
     """LinkedIn ad account object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    currency: Union[str | None, Any] = Field(default=None)
-    status: Union[str | None, Any] = Field(default=None)
-    type_: Union[str | None, Any] = Field(default=None, alias="type")
-    reference: Union[str | None, Any] = Field(default=None)
-    test: Union[bool | None, Any] = Field(default=None)
-    change_audit_stamps: Union[AccountChangeauditstamps | None, Any] = Field(default=None, alias="changeAuditStamps")
-    notified_on_campaign_optimization: Union[bool | None, Any] = Field(default=None, alias="notifiedOnCampaignOptimization")
-    notified_on_creative_approval: Union[bool | None, Any] = Field(default=None, alias="notifiedOnCreativeApproval")
-    notified_on_creative_rejection: Union[bool | None, Any] = Field(default=None, alias="notifiedOnCreativeRejection")
-    notified_on_end_of_campaign: Union[bool | None, Any] = Field(default=None, alias="notifiedOnEndOfCampaign")
-    notified_on_new_features_enabled: Union[bool | None, Any] = Field(default=None, alias="notifiedOnNewFeaturesEnabled")
-    serving_statuses: Union[list[str] | None, Any] = Field(default=None, alias="servingStatuses")
-    version: Union[AccountVersion | None, Any] = Field(default=None)
+    id: int | None = Field(default=None)
+    name: str | None = Field(default=None)
+    currency: str | None = Field(default=None)
+    status: str | None = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    reference: str | None = Field(default=None)
+    test: bool | None = Field(default=None)
+    change_audit_stamps: AccountChangeauditstamps | None = Field(default=None, alias="changeAuditStamps")
+    notified_on_campaign_optimization: bool | None = Field(default=None, alias="notifiedOnCampaignOptimization")
+    notified_on_creative_approval: bool | None = Field(default=None, alias="notifiedOnCreativeApproval")
+    notified_on_creative_rejection: bool | None = Field(default=None, alias="notifiedOnCreativeRejection")
+    notified_on_end_of_campaign: bool | None = Field(default=None, alias="notifiedOnEndOfCampaign")
+    notified_on_new_features_enabled: bool | None = Field(default=None, alias="notifiedOnNewFeaturesEnabled")
+    serving_statuses: list[str] | None = Field(default=None, alias="servingStatuses")
+    version: AccountVersion | None = Field(default=None)
 
 class AccountsListMetadata(BaseModel):
     """Nested schema for AccountsList.metadata"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page_token: Union[str, Any] = Field(default=None, alias="nextPageToken")
+    next_page_token: str | None = Field(default=None, alias="nextPageToken")
 
 class AccountsList(BaseModel):
     """Paginated list of ad accounts"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    elements: Union[list[Account], Any] = Field(default=None)
-    metadata: Union[AccountsListMetadata, Any] = Field(default=None)
+    elements: list[Account] | None = Field(default=None)
+    metadata: AccountsListMetadata | None = Field(default=None)
 
 class AccountUserChangeauditstampsLastmodified(BaseModel):
     """Nested schema for AccountUserChangeauditstamps.lastModified"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    actor: Union[str | None, Any] = Field(default=None)
-    time: Union[int | None, Any] = Field(default=None)
+    actor: str | None | None = Field(default=None)
+    time: int | None | None = Field(default=None)
 
 class AccountUserChangeauditstampsCreated(BaseModel):
     """Nested schema for AccountUserChangeauditstamps.created"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    actor: Union[str | None, Any] = Field(default=None)
-    time: Union[int | None, Any] = Field(default=None)
+    actor: str | None | None = Field(default=None)
+    time: int | None | None = Field(default=None)
 
 class AccountUserChangeauditstamps(BaseModel):
     """Creation and last modification audit stamps"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    created: Union[AccountUserChangeauditstampsCreated | None, Any] = Field(default=None)
-    last_modified: Union[AccountUserChangeauditstampsLastmodified | None, Any] = Field(default=None, alias="lastModified")
+    created: AccountUserChangeauditstampsCreated | None | None = Field(default=None)
+    last_modified: AccountUserChangeauditstampsLastmodified | None | None = Field(default=None, alias="lastModified")
 
 class AccountUser(BaseModel):
     """LinkedIn ad account user object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    account: Union[str | None, Any] = Field(default=None)
-    user: Union[str | None, Any] = Field(default=None)
-    role: Union[str | None, Any] = Field(default=None)
-    change_audit_stamps: Union[AccountUserChangeauditstamps | None, Any] = Field(default=None, alias="changeAuditStamps")
+    account: str | None = Field(default=None)
+    user: str | None = Field(default=None)
+    role: str | None = Field(default=None)
+    change_audit_stamps: AccountUserChangeauditstamps | None = Field(default=None, alias="changeAuditStamps")
 
 class AccountUsersListMetadata(BaseModel):
     """Nested schema for AccountUsersList.metadata"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page_token: Union[str, Any] = Field(default=None, alias="nextPageToken")
+    next_page_token: str | None = Field(default=None, alias="nextPageToken")
 
 class AccountUsersList(BaseModel):
     """Paginated list of account users"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    elements: Union[list[AccountUser], Any] = Field(default=None)
-    metadata: Union[AccountUsersListMetadata, Any] = Field(default=None)
-
-class CampaignUnitcost(BaseModel):
-    """Cost per unit (bid amount)"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    amount: Union[str | None, Any] = Field(default=None)
-    currency_code: Union[str | None, Any] = Field(default=None, alias="currencyCode")
-
-class CampaignChangeauditstampsLastmodified(BaseModel):
-    """Nested schema for CampaignChangeauditstamps.lastModified"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    actor: Union[str | None, Any] = Field(default=None)
-    time: Union[int | None, Any] = Field(default=None)
-
-class CampaignChangeauditstampsCreated(BaseModel):
-    """Nested schema for CampaignChangeauditstamps.created"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    actor: Union[str | None, Any] = Field(default=None)
-    time: Union[int | None, Any] = Field(default=None)
-
-class CampaignChangeauditstamps(BaseModel):
-    """Creation and last modification audit stamps"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    created: Union[CampaignChangeauditstampsCreated | None, Any] = Field(default=None)
-    last_modified: Union[CampaignChangeauditstampsLastmodified | None, Any] = Field(default=None, alias="lastModified")
-
-class CampaignRunschedule(BaseModel):
-    """Campaign run schedule"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    start: Union[int | None, Any] = Field(default=None)
-    end: Union[int | None, Any] = Field(default=None)
-
-class CampaignLocale(BaseModel):
-    """Campaign locale settings"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    country: Union[str | None, Any] = Field(default=None)
-    language: Union[str | None, Any] = Field(default=None)
+    elements: list[AccountUser] | None = Field(default=None)
+    metadata: AccountUsersListMetadata | None = Field(default=None)
 
 class CampaignDailybudget(BaseModel):
     """Daily budget configuration"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    amount: Union[str | None, Any] = Field(default=None)
-    currency_code: Union[str | None, Any] = Field(default=None, alias="currencyCode")
+    amount: str | None | None = Field(default=None)
+    currency_code: str | None | None = Field(default=None, alias="currencyCode")
+
+class CampaignLocale(BaseModel):
+    """Campaign locale settings"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    country: str | None | None = Field(default=None)
+    language: str | None | None = Field(default=None)
+
+class CampaignRunschedule(BaseModel):
+    """Campaign run schedule"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    start: int | None | None = Field(default=None)
+    end: int | None | None = Field(default=None)
 
 class CampaignVersion(BaseModel):
     """Version information"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    version_tag: Union[str | None, Any] = Field(default=None, alias="versionTag")
+    version_tag: str | None | None = Field(default=None, alias="versionTag")
+
+class CampaignChangeauditstampsLastmodified(BaseModel):
+    """Nested schema for CampaignChangeauditstamps.lastModified"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    actor: str | None | None = Field(default=None)
+    time: int | None | None = Field(default=None)
+
+class CampaignChangeauditstampsCreated(BaseModel):
+    """Nested schema for CampaignChangeauditstamps.created"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    actor: str | None | None = Field(default=None)
+    time: int | None | None = Field(default=None)
+
+class CampaignChangeauditstamps(BaseModel):
+    """Creation and last modification audit stamps"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    created: CampaignChangeauditstampsCreated | None | None = Field(default=None)
+    last_modified: CampaignChangeauditstampsLastmodified | None | None = Field(default=None, alias="lastModified")
+
+class CampaignUnitcost(BaseModel):
+    """Cost per unit (bid amount)"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    amount: str | None | None = Field(default=None)
+    currency_code: str | None | None = Field(default=None, alias="currencyCode")
 
 class CampaignTotalbudget(BaseModel):
     """Total budget configuration"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    amount: Union[str | None, Any] = Field(default=None)
-    currency_code: Union[str | None, Any] = Field(default=None, alias="currencyCode")
+    amount: str | None | None = Field(default=None)
+    currency_code: str | None | None = Field(default=None, alias="currencyCode")
 
 class Campaign(BaseModel):
     """LinkedIn ad campaign object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    account: Union[str | None, Any] = Field(default=None)
-    campaign_group: Union[str | None, Any] = Field(default=None, alias="campaignGroup")
-    status: Union[str | None, Any] = Field(default=None)
-    type_: Union[str | None, Any] = Field(default=None, alias="type")
-    cost_type: Union[str | None, Any] = Field(default=None, alias="costType")
-    format: Union[str | None, Any] = Field(default=None)
-    objective_type: Union[str | None, Any] = Field(default=None, alias="objectiveType")
-    optimization_target_type: Union[str | None, Any] = Field(default=None, alias="optimizationTargetType")
-    creative_selection: Union[str | None, Any] = Field(default=None, alias="creativeSelection")
-    pacing_strategy: Union[str | None, Any] = Field(default=None, alias="pacingStrategy")
-    audience_expansion_enabled: Union[bool | None, Any] = Field(default=None, alias="audienceExpansionEnabled")
-    offsite_delivery_enabled: Union[bool | None, Any] = Field(default=None, alias="offsiteDeliveryEnabled")
-    story_delivery_enabled: Union[bool | None, Any] = Field(default=None, alias="storyDeliveryEnabled")
-    test: Union[bool | None, Any] = Field(default=None)
-    associated_entity: Union[str | None, Any] = Field(default=None, alias="associatedEntity")
-    connected_television_only: Union[bool | None, Any] = Field(default=None, alias="connectedTelevisionOnly")
-    political_intent: Union[str | None, Any] = Field(default=None, alias="politicalIntent")
-    change_audit_stamps: Union[CampaignChangeauditstamps | None, Any] = Field(default=None, alias="changeAuditStamps")
-    daily_budget: Union[CampaignDailybudget | None, Any] = Field(default=None, alias="dailyBudget")
-    total_budget: Union[CampaignTotalbudget | None, Any] = Field(default=None, alias="totalBudget")
-    unit_cost: Union[CampaignUnitcost | None, Any] = Field(default=None, alias="unitCost")
-    run_schedule: Union[CampaignRunschedule | None, Any] = Field(default=None, alias="runSchedule")
-    locale: Union[CampaignLocale | None, Any] = Field(default=None)
-    targeting_criteria: Union[dict[str, Any] | None, Any] = Field(default=None, alias="targetingCriteria")
-    offsite_preferences: Union[dict[str, Any] | None, Any] = Field(default=None, alias="offsitePreferences")
-    serving_statuses: Union[list[str] | None, Any] = Field(default=None, alias="servingStatuses")
-    version: Union[CampaignVersion | None, Any] = Field(default=None)
+    id: int | None = Field(default=None)
+    name: str | None = Field(default=None)
+    account: str | None = Field(default=None)
+    campaign_group: str | None = Field(default=None, alias="campaignGroup")
+    status: str | None = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    cost_type: str | None = Field(default=None, alias="costType")
+    format: str | None = Field(default=None)
+    objective_type: str | None = Field(default=None, alias="objectiveType")
+    optimization_target_type: str | None = Field(default=None, alias="optimizationTargetType")
+    creative_selection: str | None = Field(default=None, alias="creativeSelection")
+    pacing_strategy: str | None = Field(default=None, alias="pacingStrategy")
+    audience_expansion_enabled: bool | None = Field(default=None, alias="audienceExpansionEnabled")
+    offsite_delivery_enabled: bool | None = Field(default=None, alias="offsiteDeliveryEnabled")
+    story_delivery_enabled: bool | None = Field(default=None, alias="storyDeliveryEnabled")
+    test: bool | None = Field(default=None)
+    associated_entity: str | None = Field(default=None, alias="associatedEntity")
+    connected_television_only: bool | None = Field(default=None, alias="connectedTelevisionOnly")
+    political_intent: str | None = Field(default=None, alias="politicalIntent")
+    change_audit_stamps: CampaignChangeauditstamps | None = Field(default=None, alias="changeAuditStamps")
+    daily_budget: CampaignDailybudget | None = Field(default=None, alias="dailyBudget")
+    total_budget: CampaignTotalbudget | None = Field(default=None, alias="totalBudget")
+    unit_cost: CampaignUnitcost | None = Field(default=None, alias="unitCost")
+    run_schedule: CampaignRunschedule | None = Field(default=None, alias="runSchedule")
+    locale: CampaignLocale | None = Field(default=None)
+    targeting_criteria: dict[str, Any] | None = Field(default=None, alias="targetingCriteria")
+    offsite_preferences: dict[str, Any] | None = Field(default=None, alias="offsitePreferences")
+    serving_statuses: list[str] | None = Field(default=None, alias="servingStatuses")
+    version: CampaignVersion | None = Field(default=None)
 
 class CampaignsListMetadata(BaseModel):
     """Nested schema for CampaignsList.metadata"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page_token: Union[str, Any] = Field(default=None, alias="nextPageToken")
+    next_page_token: str | None = Field(default=None, alias="nextPageToken")
 
 class CampaignsList(BaseModel):
     """Paginated list of campaigns"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    elements: Union[list[Campaign], Any] = Field(default=None)
-    metadata: Union[CampaignsListMetadata, Any] = Field(default=None)
-
-class CampaignGroupRunschedule(BaseModel):
-    """Campaign group run schedule"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    start: Union[int | None, Any] = Field(default=None)
-    end: Union[int | None, Any] = Field(default=None)
-
-class CampaignGroupChangeauditstampsCreated(BaseModel):
-    """Nested schema for CampaignGroupChangeauditstamps.created"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    actor: Union[str | None, Any] = Field(default=None)
-    time: Union[int | None, Any] = Field(default=None)
+    elements: list[Campaign] | None = Field(default=None)
+    metadata: CampaignsListMetadata | None = Field(default=None)
 
 class CampaignGroupChangeauditstampsLastmodified(BaseModel):
     """Nested schema for CampaignGroupChangeauditstamps.lastModified"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    actor: Union[str | None, Any] = Field(default=None)
-    time: Union[int | None, Any] = Field(default=None)
+    actor: str | None | None = Field(default=None)
+    time: int | None | None = Field(default=None)
+
+class CampaignGroupChangeauditstampsCreated(BaseModel):
+    """Nested schema for CampaignGroupChangeauditstamps.created"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    actor: str | None | None = Field(default=None)
+    time: int | None | None = Field(default=None)
 
 class CampaignGroupChangeauditstamps(BaseModel):
     """Creation and last modification audit stamps"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    created: Union[CampaignGroupChangeauditstampsCreated | None, Any] = Field(default=None)
-    last_modified: Union[CampaignGroupChangeauditstampsLastmodified | None, Any] = Field(default=None, alias="lastModified")
+    created: CampaignGroupChangeauditstampsCreated | None | None = Field(default=None)
+    last_modified: CampaignGroupChangeauditstampsLastmodified | None | None = Field(default=None, alias="lastModified")
 
 class CampaignGroupTotalbudget(BaseModel):
     """Total budget for the campaign group"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    amount: Union[str | None, Any] = Field(default=None)
-    currency_code: Union[str | None, Any] = Field(default=None, alias="currencyCode")
+    amount: str | None | None = Field(default=None)
+    currency_code: str | None | None = Field(default=None, alias="currencyCode")
+
+class CampaignGroupRunschedule(BaseModel):
+    """Campaign group run schedule"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    start: int | None | None = Field(default=None)
+    end: int | None | None = Field(default=None)
 
 class CampaignGroup(BaseModel):
     """LinkedIn ad campaign group object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    account: Union[str | None, Any] = Field(default=None)
-    status: Union[str | None, Any] = Field(default=None)
-    test: Union[bool | None, Any] = Field(default=None)
-    backfilled: Union[bool | None, Any] = Field(default=None)
-    change_audit_stamps: Union[CampaignGroupChangeauditstamps | None, Any] = Field(default=None, alias="changeAuditStamps")
-    total_budget: Union[CampaignGroupTotalbudget | None, Any] = Field(default=None, alias="totalBudget")
-    run_schedule: Union[CampaignGroupRunschedule | None, Any] = Field(default=None, alias="runSchedule")
-    serving_statuses: Union[list[str] | None, Any] = Field(default=None, alias="servingStatuses")
-    allowed_campaign_types: Union[list[str] | None, Any] = Field(default=None, alias="allowedCampaignTypes")
+    id: int | None = Field(default=None)
+    name: str | None = Field(default=None)
+    account: str | None = Field(default=None)
+    status: str | None = Field(default=None)
+    test: bool | None = Field(default=None)
+    backfilled: bool | None = Field(default=None)
+    change_audit_stamps: CampaignGroupChangeauditstamps | None = Field(default=None, alias="changeAuditStamps")
+    total_budget: CampaignGroupTotalbudget | None = Field(default=None, alias="totalBudget")
+    run_schedule: CampaignGroupRunschedule | None = Field(default=None, alias="runSchedule")
+    serving_statuses: list[str] | None = Field(default=None, alias="servingStatuses")
+    allowed_campaign_types: list[str] | None = Field(default=None, alias="allowedCampaignTypes")
 
 class CampaignGroupsListMetadata(BaseModel):
     """Nested schema for CampaignGroupsList.metadata"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page_token: Union[str, Any] = Field(default=None, alias="nextPageToken")
+    next_page_token: str | None = Field(default=None, alias="nextPageToken")
 
 class CampaignGroupsList(BaseModel):
     """Paginated list of campaign groups"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    elements: Union[list[CampaignGroup], Any] = Field(default=None)
-    metadata: Union[CampaignGroupsListMetadata, Any] = Field(default=None)
-
-class CreativeLeadgencalltoaction(BaseModel):
-    """Lead generation call to action"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    destination: Union[str | None, Any] = Field(default=None)
-    label: Union[str | None, Any] = Field(default=None)
+    elements: list[CampaignGroup] | None = Field(default=None)
+    metadata: CampaignGroupsListMetadata | None = Field(default=None)
 
 class CreativeReview(BaseModel):
     """Review status and rejection reasons"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    status: Union[str | None, Any] = Field(default=None)
-    rejection_reasons: Union[list[Any] | None, Any] = Field(default=None, alias="rejectionReasons")
+    status: str | None | None = Field(default=None)
+    rejection_reasons: list[Any] | None | None = Field(default=None, alias="rejectionReasons")
+
+class CreativeLeadgencalltoaction(BaseModel):
+    """Lead generation call to action"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    destination: str | None | None = Field(default=None)
+    label: str | None | None = Field(default=None)
 
 class Creative(BaseModel):
     """LinkedIn ad creative object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    account: Union[str | None, Any] = Field(default=None)
-    campaign: Union[str | None, Any] = Field(default=None)
-    intended_status: Union[str | None, Any] = Field(default=None, alias="intendedStatus")
-    is_serving: Union[bool | None, Any] = Field(default=None, alias="isServing")
-    is_test: Union[bool | None, Any] = Field(default=None, alias="isTest")
-    created_at: Union[int | None, Any] = Field(default=None, alias="createdAt")
-    created_by: Union[str | None, Any] = Field(default=None, alias="createdBy")
-    last_modified_at: Union[int | None, Any] = Field(default=None, alias="lastModifiedAt")
-    last_modified_by: Union[str | None, Any] = Field(default=None, alias="lastModifiedBy")
-    content: Union[dict[str, Any] | None, Any] = Field(default=None)
-    review: Union[CreativeReview | None, Any] = Field(default=None)
-    serving_hold_reasons: Union[list[str] | None, Any] = Field(default=None, alias="servingHoldReasons")
-    leadgen_call_to_action: Union[CreativeLeadgencalltoaction | None, Any] = Field(default=None, alias="leadgenCallToAction")
+    id: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    account: str | None = Field(default=None)
+    campaign: str | None = Field(default=None)
+    intended_status: str | None = Field(default=None, alias="intendedStatus")
+    is_serving: bool | None = Field(default=None, alias="isServing")
+    is_test: bool | None = Field(default=None, alias="isTest")
+    created_at: int | None = Field(default=None, alias="createdAt")
+    created_by: str | None = Field(default=None, alias="createdBy")
+    last_modified_at: int | None = Field(default=None, alias="lastModifiedAt")
+    last_modified_by: str | None = Field(default=None, alias="lastModifiedBy")
+    content: dict[str, Any] | None = Field(default=None)
+    review: CreativeReview | None = Field(default=None)
+    serving_hold_reasons: list[str] | None = Field(default=None, alias="servingHoldReasons")
+    leadgen_call_to_action: CreativeLeadgencalltoaction | None = Field(default=None, alias="leadgenCallToAction")
 
 class CreativesListMetadata(BaseModel):
     """Nested schema for CreativesList.metadata"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page_token: Union[str, Any] = Field(default=None, alias="nextPageToken")
+    next_page_token: str | None = Field(default=None, alias="nextPageToken")
 
 class CreativesList(BaseModel):
     """Paginated list of creatives"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    elements: Union[list[Creative], Any] = Field(default=None)
-    metadata: Union[CreativesListMetadata, Any] = Field(default=None)
+    elements: list[Creative] | None = Field(default=None)
+    metadata: CreativesListMetadata | None = Field(default=None)
 
 class ConversionValue(BaseModel):
     """Conversion value"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    amount: Union[str | None, Any] = Field(default=None)
-    currency_code: Union[str | None, Any] = Field(default=None, alias="currencyCode")
+    amount: str | None | None = Field(default=None)
+    currency_code: str | None | None = Field(default=None, alias="currencyCode")
 
 class Conversion(BaseModel):
     """LinkedIn ad conversion tracking rule"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    account: Union[str | None, Any] = Field(default=None)
-    type_: Union[str | None, Any] = Field(default=None, alias="type")
-    attribution_type: Union[str | None, Any] = Field(default=None, alias="attributionType")
-    conversion_method: Union[str | None, Any] = Field(default=None, alias="conversionMethod")
-    value_type: Union[str | None, Any] = Field(default=None, alias="valueType")
-    enabled: Union[bool | None, Any] = Field(default=None)
-    created: Union[int | None, Any] = Field(default=None)
-    last_modified: Union[int | None, Any] = Field(default=None, alias="lastModified")
-    post_click_attribution_window_size: Union[int | None, Any] = Field(default=None, alias="postClickAttributionWindowSize")
-    view_through_attribution_window_size: Union[int | None, Any] = Field(default=None, alias="viewThroughAttributionWindowSize")
-    campaigns: Union[list[str] | None, Any] = Field(default=None)
-    associated_campaigns: Union[list[Any] | None, Any] = Field(default=None, alias="associatedCampaigns")
-    image_pixel_tag: Union[str | None, Any] = Field(default=None, alias="imagePixelTag")
-    last_callback_at: Union[int | None, Any] = Field(default=None, alias="lastCallbackAt")
-    latest_first_party_callback_at: Union[int | None, Any] = Field(default=None, alias="latestFirstPartyCallbackAt")
-    url_match_rule_expression: Union[list[Any] | None, Any] = Field(default=None, alias="urlMatchRuleExpression")
-    url_rules: Union[list[Any] | None, Any] = Field(default=None, alias="urlRules")
-    value: Union[ConversionValue | None, Any] = Field(default=None)
+    id: int | None = Field(default=None)
+    name: str | None = Field(default=None)
+    account: str | None = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    attribution_type: str | None = Field(default=None, alias="attributionType")
+    conversion_method: str | None = Field(default=None, alias="conversionMethod")
+    value_type: str | None = Field(default=None, alias="valueType")
+    enabled: bool | None = Field(default=None)
+    created: int | None = Field(default=None)
+    last_modified: int | None = Field(default=None, alias="lastModified")
+    post_click_attribution_window_size: int | None = Field(default=None, alias="postClickAttributionWindowSize")
+    view_through_attribution_window_size: int | None = Field(default=None, alias="viewThroughAttributionWindowSize")
+    campaigns: list[str] | None = Field(default=None)
+    associated_campaigns: list[Any] | None = Field(default=None, alias="associatedCampaigns")
+    image_pixel_tag: str | None = Field(default=None, alias="imagePixelTag")
+    last_callback_at: int | None = Field(default=None, alias="lastCallbackAt")
+    latest_first_party_callback_at: int | None = Field(default=None, alias="latestFirstPartyCallbackAt")
+    url_match_rule_expression: list[Any] | None = Field(default=None, alias="urlMatchRuleExpression")
+    url_rules: list[Any] | None = Field(default=None, alias="urlRules")
+    value: ConversionValue | None = Field(default=None)
 
 class ConversionsListPaging(BaseModel):
     """Nested schema for ConversionsList.paging"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    total: Union[int, Any] = Field(default=None)
-    count: Union[int, Any] = Field(default=None)
-    start: Union[int, Any] = Field(default=None)
+    total: int | None = Field(default=None)
+    count: int | None = Field(default=None)
+    start: int | None = Field(default=None)
 
 class ConversionsList(BaseModel):
     """Paginated list of conversions"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    elements: Union[list[Conversion], Any] = Field(default=None)
-    paging: Union[ConversionsListPaging, Any] = Field(default=None)
+    elements: list[Conversion] | None = Field(default=None)
+    paging: ConversionsListPaging | None = Field(default=None)
 
 class AdAnalyticsRecordDaterangeStart(BaseModel):
     """Nested schema for AdAnalyticsRecordDaterange.start"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    year: Union[int, Any] = Field(default=None)
-    month: Union[int, Any] = Field(default=None)
-    day: Union[int, Any] = Field(default=None)
+    year: int | None = Field(default=None)
+    month: int | None = Field(default=None)
+    day: int | None = Field(default=None)
 
 class AdAnalyticsRecordDaterangeEnd(BaseModel):
     """Nested schema for AdAnalyticsRecordDaterange.end"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    year: Union[int, Any] = Field(default=None)
-    month: Union[int, Any] = Field(default=None)
-    day: Union[int, Any] = Field(default=None)
+    year: int | None = Field(default=None)
+    month: int | None = Field(default=None)
+    day: int | None = Field(default=None)
 
 class AdAnalyticsRecordDaterange(BaseModel):
     """Date range for this analytics record"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    start: Union[AdAnalyticsRecordDaterangeStart, Any] = Field(default=None)
-    end: Union[AdAnalyticsRecordDaterangeEnd, Any] = Field(default=None)
+    start: AdAnalyticsRecordDaterangeStart | None = Field(default=None)
+    end: AdAnalyticsRecordDaterangeEnd | None = Field(default=None)
 
 class AdAnalyticsRecord(BaseModel):
     """Ad analytics data record with performance metrics"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    date_range: Union[AdAnalyticsRecordDaterange | None, Any] = Field(default=None, alias="dateRange")
-    pivot_values: Union[list[str] | None, Any] = Field(default=None, alias="pivotValues")
-    impressions: Union[int | None, Any] = Field(default=None)
-    clicks: Union[int | None, Any] = Field(default=None)
-    cost_in_local_currency: Union[str | None, Any] = Field(default=None, alias="costInLocalCurrency")
-    cost_in_usd: Union[str | None, Any] = Field(default=None, alias="costInUsd")
-    likes: Union[int | None, Any] = Field(default=None)
-    shares: Union[int | None, Any] = Field(default=None)
-    comments: Union[int | None, Any] = Field(default=None)
-    reactions: Union[int | None, Any] = Field(default=None)
-    follows: Union[int | None, Any] = Field(default=None)
-    total_engagements: Union[int | None, Any] = Field(default=None, alias="totalEngagements")
-    landing_page_clicks: Union[int | None, Any] = Field(default=None, alias="landingPageClicks")
-    company_page_clicks: Union[int | None, Any] = Field(default=None, alias="companyPageClicks")
-    external_website_conversions: Union[int | None, Any] = Field(default=None, alias="externalWebsiteConversions")
-    external_website_post_click_conversions: Union[int | None, Any] = Field(default=None, alias="externalWebsitePostClickConversions")
-    external_website_post_view_conversions: Union[int | None, Any] = Field(default=None, alias="externalWebsitePostViewConversions")
-    conversion_value_in_local_currency: Union[str | None, Any] = Field(default=None, alias="conversionValueInLocalCurrency")
-    approximate_member_reach: Union[int | None, Any] = Field(default=None, alias="approximateMemberReach")
-    card_clicks: Union[int | None, Any] = Field(default=None, alias="cardClicks")
-    card_impressions: Union[int | None, Any] = Field(default=None, alias="cardImpressions")
-    video_starts: Union[int | None, Any] = Field(default=None, alias="videoStarts")
-    video_views: Union[int | None, Any] = Field(default=None, alias="videoViews")
-    video_first_quartile_completions: Union[int | None, Any] = Field(default=None, alias="videoFirstQuartileCompletions")
-    video_midpoint_completions: Union[int | None, Any] = Field(default=None, alias="videoMidpointCompletions")
-    video_third_quartile_completions: Union[int | None, Any] = Field(default=None, alias="videoThirdQuartileCompletions")
-    video_completions: Union[int | None, Any] = Field(default=None, alias="videoCompletions")
-    full_screen_plays: Union[int | None, Any] = Field(default=None, alias="fullScreenPlays")
-    one_click_leads: Union[int | None, Any] = Field(default=None, alias="oneClickLeads")
-    one_click_lead_form_opens: Union[int | None, Any] = Field(default=None, alias="oneClickLeadFormOpens")
-    other_engagements: Union[int | None, Any] = Field(default=None, alias="otherEngagements")
-    ad_unit_clicks: Union[int | None, Any] = Field(default=None, alias="adUnitClicks")
-    action_clicks: Union[int | None, Any] = Field(default=None, alias="actionClicks")
-    text_url_clicks: Union[int | None, Any] = Field(default=None, alias="textUrlClicks")
-    comment_likes: Union[int | None, Any] = Field(default=None, alias="commentLikes")
-    sends: Union[int | None, Any] = Field(default=None)
-    opens: Union[int | None, Any] = Field(default=None)
-    download_clicks: Union[int | None, Any] = Field(default=None, alias="downloadClicks")
-    job_applications: Union[int | None, Any] = Field(default=None, alias="jobApplications")
-    job_apply_clicks: Union[int | None, Any] = Field(default=None, alias="jobApplyClicks")
-    registrations: Union[int | None, Any] = Field(default=None)
-    talent_leads: Union[int | None, Any] = Field(default=None, alias="talentLeads")
-    valid_work_email_leads: Union[int | None, Any] = Field(default=None, alias="validWorkEmailLeads")
-    post_click_job_applications: Union[int | None, Any] = Field(default=None, alias="postClickJobApplications")
-    post_click_job_apply_clicks: Union[int | None, Any] = Field(default=None, alias="postClickJobApplyClicks")
-    post_click_registrations: Union[int | None, Any] = Field(default=None, alias="postClickRegistrations")
-    post_view_job_applications: Union[int | None, Any] = Field(default=None, alias="postViewJobApplications")
-    post_view_job_apply_clicks: Union[int | None, Any] = Field(default=None, alias="postViewJobApplyClicks")
-    post_view_registrations: Union[int | None, Any] = Field(default=None, alias="postViewRegistrations")
-    lead_generation_mail_contact_info_shares: Union[int | None, Any] = Field(default=None, alias="leadGenerationMailContactInfoShares")
-    lead_generation_mail_interested_clicks: Union[int | None, Any] = Field(default=None, alias="leadGenerationMailInterestedClicks")
-    document_completions: Union[int | None, Any] = Field(default=None, alias="documentCompletions")
-    document_first_quartile_completions: Union[int | None, Any] = Field(default=None, alias="documentFirstQuartileCompletions")
-    document_midpoint_completions: Union[int | None, Any] = Field(default=None, alias="documentMidpointCompletions")
-    document_third_quartile_completions: Union[int | None, Any] = Field(default=None, alias="documentThirdQuartileCompletions")
+    date_range: AdAnalyticsRecordDaterange | None = Field(default=None, alias="dateRange")
+    pivot_values: list[str] | None = Field(default=None, alias="pivotValues")
+    impressions: int | None = Field(default=None)
+    clicks: int | None = Field(default=None)
+    cost_in_local_currency: str | None = Field(default=None, alias="costInLocalCurrency")
+    cost_in_usd: str | None = Field(default=None, alias="costInUsd")
+    likes: int | None = Field(default=None)
+    shares: int | None = Field(default=None)
+    comments: int | None = Field(default=None)
+    reactions: int | None = Field(default=None)
+    follows: int | None = Field(default=None)
+    total_engagements: int | None = Field(default=None, alias="totalEngagements")
+    landing_page_clicks: int | None = Field(default=None, alias="landingPageClicks")
+    company_page_clicks: int | None = Field(default=None, alias="companyPageClicks")
+    external_website_conversions: int | None = Field(default=None, alias="externalWebsiteConversions")
+    external_website_post_click_conversions: int | None = Field(default=None, alias="externalWebsitePostClickConversions")
+    external_website_post_view_conversions: int | None = Field(default=None, alias="externalWebsitePostViewConversions")
+    conversion_value_in_local_currency: str | None = Field(default=None, alias="conversionValueInLocalCurrency")
+    approximate_member_reach: int | None = Field(default=None, alias="approximateMemberReach")
+    card_clicks: int | None = Field(default=None, alias="cardClicks")
+    card_impressions: int | None = Field(default=None, alias="cardImpressions")
+    video_starts: int | None = Field(default=None, alias="videoStarts")
+    video_views: int | None = Field(default=None, alias="videoViews")
+    video_first_quartile_completions: int | None = Field(default=None, alias="videoFirstQuartileCompletions")
+    video_midpoint_completions: int | None = Field(default=None, alias="videoMidpointCompletions")
+    video_third_quartile_completions: int | None = Field(default=None, alias="videoThirdQuartileCompletions")
+    video_completions: int | None = Field(default=None, alias="videoCompletions")
+    full_screen_plays: int | None = Field(default=None, alias="fullScreenPlays")
+    one_click_leads: int | None = Field(default=None, alias="oneClickLeads")
+    one_click_lead_form_opens: int | None = Field(default=None, alias="oneClickLeadFormOpens")
+    other_engagements: int | None = Field(default=None, alias="otherEngagements")
+    ad_unit_clicks: int | None = Field(default=None, alias="adUnitClicks")
+    action_clicks: int | None = Field(default=None, alias="actionClicks")
+    text_url_clicks: int | None = Field(default=None, alias="textUrlClicks")
+    comment_likes: int | None = Field(default=None, alias="commentLikes")
+    sends: int | None = Field(default=None)
+    opens: int | None = Field(default=None)
+    download_clicks: int | None = Field(default=None, alias="downloadClicks")
+    job_applications: int | None = Field(default=None, alias="jobApplications")
+    job_apply_clicks: int | None = Field(default=None, alias="jobApplyClicks")
+    registrations: int | None = Field(default=None)
+    talent_leads: int | None = Field(default=None, alias="talentLeads")
+    valid_work_email_leads: int | None = Field(default=None, alias="validWorkEmailLeads")
+    post_click_job_applications: int | None = Field(default=None, alias="postClickJobApplications")
+    post_click_job_apply_clicks: int | None = Field(default=None, alias="postClickJobApplyClicks")
+    post_click_registrations: int | None = Field(default=None, alias="postClickRegistrations")
+    post_view_job_applications: int | None = Field(default=None, alias="postViewJobApplications")
+    post_view_job_apply_clicks: int | None = Field(default=None, alias="postViewJobApplyClicks")
+    post_view_registrations: int | None = Field(default=None, alias="postViewRegistrations")
+    lead_generation_mail_contact_info_shares: int | None = Field(default=None, alias="leadGenerationMailContactInfoShares")
+    lead_generation_mail_interested_clicks: int | None = Field(default=None, alias="leadGenerationMailInterestedClicks")
+    document_completions: int | None = Field(default=None, alias="documentCompletions")
+    document_first_quartile_completions: int | None = Field(default=None, alias="documentFirstQuartileCompletions")
+    document_midpoint_completions: int | None = Field(default=None, alias="documentMidpointCompletions")
+    document_third_quartile_completions: int | None = Field(default=None, alias="documentThirdQuartileCompletions")
 
 class AdAnalyticsResponsePaging(BaseModel):
     """Nested schema for AdAnalyticsResponse.paging"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    count: Union[int, Any] = Field(default=None)
-    start: Union[int, Any] = Field(default=None)
+    count: int | None = Field(default=None)
+    start: int | None = Field(default=None)
 
 class AdAnalyticsResponse(BaseModel):
     """Ad analytics API response"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    elements: Union[list[AdAnalyticsRecord], Any] = Field(default=None)
-    paging: Union[AdAnalyticsResponsePaging, Any] = Field(default=None)
+    elements: list[AdAnalyticsRecord] | None = Field(default=None)
+    paging: AdAnalyticsResponsePaging | None = Field(default=None)
 
 # ===== METADATA TYPE DEFINITIONS (PYDANTIC) =====
 # Meta types for operations that extract metadata (e.g., pagination info)
@@ -510,37 +510,37 @@ class AccountsListResultMeta(BaseModel):
     """Metadata for accounts.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page_token: Union[str, Any] = Field(default=None, alias="nextPageToken")
+    next_page_token: str | None = Field(default=None, alias="nextPageToken")
 
 class AccountUsersListResultMeta(BaseModel):
     """Metadata for account_users.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page_token: Union[str, Any] = Field(default=None, alias="nextPageToken")
+    next_page_token: str | None = Field(default=None, alias="nextPageToken")
 
 class CampaignsListResultMeta(BaseModel):
     """Metadata for campaigns.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page_token: Union[str, Any] = Field(default=None, alias="nextPageToken")
+    next_page_token: str | None = Field(default=None, alias="nextPageToken")
 
 class CampaignGroupsListResultMeta(BaseModel):
     """Metadata for campaign_groups.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page_token: Union[str, Any] = Field(default=None, alias="nextPageToken")
+    next_page_token: str | None = Field(default=None, alias="nextPageToken")
 
 class CreativesListResultMeta(BaseModel):
     """Metadata for creatives.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page_token: Union[str, Any] = Field(default=None, alias="nextPageToken")
+    next_page_token: str | None = Field(default=None, alias="nextPageToken")
 
 class ConversionsListResultMeta(BaseModel):
     """Metadata for conversions.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    total: Union[int, Any] = Field(default=None)
+    total: int | None = Field(default=None)
 
 # ===== CHECK RESULT MODEL =====
 

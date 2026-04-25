@@ -80,7 +80,7 @@
       {
         "name": "next_cursor",
         "python_name": "next_cursor",
-        "type": "str | None",
+        "type": "str",
         "schema": {
           "type": [
             "null",
@@ -140,7 +140,7 @@
           {
             "name": "next_cursor",
             "python_name": "next_cursor",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",
@@ -228,7 +228,7 @@
           {
             "name": "next_cursor",
             "python_name": "next_cursor",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",
@@ -316,7 +316,7 @@
           {
             "name": "next_cursor",
             "python_name": "next_cursor",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",
@@ -404,7 +404,7 @@
           {
             "name": "next_cursor",
             "python_name": "next_cursor",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",
@@ -492,7 +492,7 @@
           {
             "name": "next_cursor",
             "python_name": "next_cursor",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",
@@ -834,7 +834,7 @@
           {
             "name": "next_cursor",
             "python_name": "next_cursor",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",

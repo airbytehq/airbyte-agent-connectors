@@ -128,7 +128,7 @@
       {
         "name": "next_link",
         "python_name": "next_link",
-        "type": "str | None",
+        "type": "str",
         "schema": {
           "type": [
             "null",
@@ -177,7 +177,7 @@
           {
             "name": "next_link",
             "python_name": "next_link",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",
@@ -254,7 +254,7 @@
           {
             "name": "next_link",
             "python_name": "next_link",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",
@@ -331,7 +331,7 @@
           {
             "name": "next_link",
             "python_name": "next_link",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",
@@ -427,7 +427,7 @@
           {
             "name": "next_link",
             "python_name": "next_link",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",
@@ -504,7 +504,7 @@
           {
             "name": "next_link",
             "python_name": "next_link",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",
@@ -581,7 +581,7 @@
           {
             "name": "next_link",
             "python_name": "next_link",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",
@@ -658,7 +658,7 @@
           {
             "name": "next_link",
             "python_name": "next_link",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",
@@ -735,7 +735,7 @@
           {
             "name": "next_link",
             "python_name": "next_link",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",
@@ -812,7 +812,7 @@
           {
             "name": "next_link",
             "python_name": "next_link",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",
@@ -889,7 +889,7 @@
           {
             "name": "next_link",
             "python_name": "next_link",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",
@@ -966,7 +966,7 @@
           {
             "name": "next_link",
             "python_name": "next_link",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",
@@ -1043,7 +1043,7 @@
           {
             "name": "next_link",
             "python_name": "next_link",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",
@@ -1120,7 +1120,7 @@
           {
             "name": "next_link",
             "python_name": "next_link",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",
@@ -1197,7 +1197,7 @@
           {
             "name": "next_link",
             "python_name": "next_link",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",
@@ -1246,7 +1246,7 @@
           {
             "name": "next_link",
             "python_name": "next_link",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",
@@ -1319,7 +1319,7 @@
           {
             "name": "next_link",
             "python_name": "next_link",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",
@@ -1392,7 +1392,7 @@
           {
             "name": "next_link",
             "python_name": "next_link",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",

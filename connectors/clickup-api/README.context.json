@@ -308,7 +308,7 @@
           {
             "name": "last_page",
             "python_name": "last_page",
-            "type": "bool | None",
+            "type": "bool",
             "schema": {
               "type": [
                 "boolean",
@@ -568,7 +568,7 @@
           {
             "name": "last_page",
             "python_name": "last_page",
-            "type": "bool | None",
+            "type": "bool",
             "schema": {
               "type": [
                 "boolean",
@@ -921,7 +921,7 @@
           {
             "name": "last_page",
             "python_name": "last_page",
-            "type": "bool | None",
+            "type": "bool",
             "schema": {
               "type": [
                 "boolean",
@@ -1108,7 +1108,7 @@
           {
             "name": "next_cursor",
             "python_name": "next_cursor",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "string",

@@ -8,7 +8,7 @@ and response envelope types.
 from __future__ import annotations
 
 from pydantic import BaseModel, ConfigDict, Field
-from typing import TypeVar, Generic, Union, Any
+from typing import TypeVar, Generic, Any
 
 # Authentication configuration
 
@@ -34,816 +34,816 @@ class WoocommerceReplicationConfig(BaseModel):
 
 # ===== RESPONSE TYPE DEFINITIONS (PYDANTIC) =====
 
-class CustomerShipping(BaseModel):
-    """List of shipping address data"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    first_name: Union[str | None, Any] = Field(default=None)
-    last_name: Union[str | None, Any] = Field(default=None)
-    company: Union[str | None, Any] = Field(default=None)
-    address_1: Union[str | None, Any] = Field(default=None)
-    address_2: Union[str | None, Any] = Field(default=None)
-    city: Union[str | None, Any] = Field(default=None)
-    state: Union[str | None, Any] = Field(default=None)
-    postcode: Union[str | None, Any] = Field(default=None)
-    country: Union[str | None, Any] = Field(default=None)
-
 class CustomerBilling(BaseModel):
     """List of billing address data"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    first_name: Union[str | None, Any] = Field(default=None)
-    last_name: Union[str | None, Any] = Field(default=None)
-    company: Union[str | None, Any] = Field(default=None)
-    address_1: Union[str | None, Any] = Field(default=None)
-    address_2: Union[str | None, Any] = Field(default=None)
-    city: Union[str | None, Any] = Field(default=None)
-    state: Union[str | None, Any] = Field(default=None)
-    postcode: Union[str | None, Any] = Field(default=None)
-    country: Union[str | None, Any] = Field(default=None)
-    email: Union[str | None, Any] = Field(default=None)
-    phone: Union[str | None, Any] = Field(default=None)
+    first_name: str | None | None = Field(default=None)
+    last_name: str | None | None = Field(default=None)
+    company: str | None | None = Field(default=None)
+    address_1: str | None | None = Field(default=None)
+    address_2: str | None | None = Field(default=None)
+    city: str | None | None = Field(default=None)
+    state: str | None | None = Field(default=None)
+    postcode: str | None | None = Field(default=None)
+    country: str | None | None = Field(default=None)
+    email: str | None | None = Field(default=None)
+    phone: str | None | None = Field(default=None)
+
+class CustomerShipping(BaseModel):
+    """List of shipping address data"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    first_name: str | None | None = Field(default=None)
+    last_name: str | None | None = Field(default=None)
+    company: str | None | None = Field(default=None)
+    address_1: str | None | None = Field(default=None)
+    address_2: str | None | None = Field(default=None)
+    city: str | None | None = Field(default=None)
+    state: str | None | None = Field(default=None)
+    postcode: str | None | None = Field(default=None)
+    country: str | None | None = Field(default=None)
 
 class CustomerMetaDataItem(BaseModel):
     """Nested schema for Customer.meta_data_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int | None, Any] = Field(default=None)
-    key: Union[str | None, Any] = Field(default=None)
-    value: Union[str | None, Any] = Field(default=None)
+    id: int | None | None = Field(default=None)
+    key: str | None | None = Field(default=None)
+    value: str | None | None = Field(default=None)
 
 class Customer(BaseModel):
     """Customer type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int | None, Any] = Field(default=None)
-    date_created: Union[str | None, Any] = Field(default=None)
-    date_created_gmt: Union[str | None, Any] = Field(default=None)
-    date_modified: Union[str | None, Any] = Field(default=None)
-    date_modified_gmt: Union[str | None, Any] = Field(default=None)
-    email: Union[str | None, Any] = Field(default=None)
-    first_name: Union[str | None, Any] = Field(default=None)
-    last_name: Union[str | None, Any] = Field(default=None)
-    role: Union[str | None, Any] = Field(default=None)
-    username: Union[str | None, Any] = Field(default=None)
-    billing: Union[CustomerBilling | None, Any] = Field(default=None)
-    shipping: Union[CustomerShipping | None, Any] = Field(default=None)
-    is_paying_customer: Union[bool | None, Any] = Field(default=None)
-    avatar_url: Union[str | None, Any] = Field(default=None)
-    meta_data: Union[list[CustomerMetaDataItem] | None, Any] = Field(default=None)
-
-class OrderShipping(BaseModel):
-    """Shipping address"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    first_name: Union[str | None, Any] = Field(default=None)
-    last_name: Union[str | None, Any] = Field(default=None)
-    company: Union[str | None, Any] = Field(default=None)
-    address_1: Union[str | None, Any] = Field(default=None)
-    address_2: Union[str | None, Any] = Field(default=None)
-    city: Union[str | None, Any] = Field(default=None)
-    state: Union[str | None, Any] = Field(default=None)
-    postcode: Union[str | None, Any] = Field(default=None)
-    country: Union[str | None, Any] = Field(default=None)
-
-class OrderShippingLinesItemTaxesItem(BaseModel):
-    """Nested schema for OrderShippingLinesItem.taxes_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[int | None, Any] = Field(default=None)
-    total: Union[str | None, Any] = Field(default=None)
-    subtotal: Union[str | None, Any] = Field(default=None)
+    id: int | None = Field(default=None)
+    date_created: str | None = Field(default=None)
+    date_created_gmt: str | None = Field(default=None)
+    date_modified: str | None = Field(default=None)
+    date_modified_gmt: str | None = Field(default=None)
+    email: str | None = Field(default=None)
+    first_name: str | None = Field(default=None)
+    last_name: str | None = Field(default=None)
+    role: str | None = Field(default=None)
+    username: str | None = Field(default=None)
+    billing: CustomerBilling | None = Field(default=None)
+    shipping: CustomerShipping | None = Field(default=None)
+    is_paying_customer: bool | None = Field(default=None)
+    avatar_url: str | None = Field(default=None)
+    meta_data: list[CustomerMetaDataItem] | None = Field(default=None)
 
 class OrderShippingLinesItemMetaDataItem(BaseModel):
     """Nested schema for OrderShippingLinesItem.meta_data_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int | None, Any] = Field(default=None)
-    key: Union[str | None, Any] = Field(default=None)
-    value: Union[Any, Any] = Field(default=None)
+    id: int | None | None = Field(default=None)
+    key: str | None | None = Field(default=None)
+    value: Any | None = Field(default=None)
+
+class OrderShippingLinesItemTaxesItem(BaseModel):
+    """Nested schema for OrderShippingLinesItem.taxes_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int | None | None = Field(default=None)
+    total: str | None | None = Field(default=None)
+    subtotal: str | None | None = Field(default=None)
 
 class OrderShippingLinesItem(BaseModel):
     """Nested schema for Order.shipping_lines_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int | None, Any] = Field(default=None)
-    method_title: Union[str | None, Any] = Field(default=None)
-    method_id: Union[str | None, Any] = Field(default=None)
-    total: Union[str | None, Any] = Field(default=None)
-    total_tax: Union[str | None, Any] = Field(default=None)
-    taxes: Union[list[OrderShippingLinesItemTaxesItem] | None, Any] = Field(default=None)
-    meta_data: Union[list[OrderShippingLinesItemMetaDataItem] | None, Any] = Field(default=None)
-
-class OrderFeeLinesItemTaxesItem(BaseModel):
-    """Nested schema for OrderFeeLinesItem.taxes_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[int | None, Any] = Field(default=None)
-    total: Union[str | None, Any] = Field(default=None)
-    subtotal: Union[str | None, Any] = Field(default=None)
-
-class OrderFeeLinesItemMetaDataItem(BaseModel):
-    """Nested schema for OrderFeeLinesItem.meta_data_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[int | None, Any] = Field(default=None)
-    key: Union[str | None, Any] = Field(default=None)
-    value: Union[Any, Any] = Field(default=None)
-
-class OrderFeeLinesItem(BaseModel):
-    """Nested schema for Order.fee_lines_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[int | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    tax_class: Union[str | None, Any] = Field(default=None)
-    tax_status: Union[str | None, Any] = Field(default=None)
-    total: Union[str | None, Any] = Field(default=None)
-    total_tax: Union[str | None, Any] = Field(default=None)
-    taxes: Union[list[OrderFeeLinesItemTaxesItem] | None, Any] = Field(default=None)
-    meta_data: Union[list[OrderFeeLinesItemMetaDataItem] | None, Any] = Field(default=None)
+    id: int | None | None = Field(default=None)
+    method_title: str | None | None = Field(default=None)
+    method_id: str | None | None = Field(default=None)
+    total: str | None | None = Field(default=None)
+    total_tax: str | None | None = Field(default=None)
+    taxes: list[OrderShippingLinesItemTaxesItem] | None | None = Field(default=None)
+    meta_data: list[OrderShippingLinesItemMetaDataItem] | None | None = Field(default=None)
 
 class OrderCouponLinesItemMetaDataItem(BaseModel):
     """Nested schema for OrderCouponLinesItem.meta_data_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int | None, Any] = Field(default=None)
-    key: Union[str | None, Any] = Field(default=None)
-    value: Union[Any, Any] = Field(default=None)
+    id: int | None | None = Field(default=None)
+    key: str | None | None = Field(default=None)
+    value: Any | None = Field(default=None)
 
 class OrderCouponLinesItem(BaseModel):
     """Nested schema for Order.coupon_lines_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int | None, Any] = Field(default=None)
-    code: Union[str | None, Any] = Field(default=None)
-    discount: Union[str | None, Any] = Field(default=None)
-    discount_tax: Union[str | None, Any] = Field(default=None)
-    meta_data: Union[list[OrderCouponLinesItemMetaDataItem] | None, Any] = Field(default=None)
-
-class OrderLineItemsItemTaxesItem(BaseModel):
-    """Nested schema for OrderLineItemsItem.taxes_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[int | None, Any] = Field(default=None)
-    total: Union[str | None, Any] = Field(default=None)
-    subtotal: Union[str | None, Any] = Field(default=None)
+    id: int | None | None = Field(default=None)
+    code: str | None | None = Field(default=None)
+    discount: str | None | None = Field(default=None)
+    discount_tax: str | None | None = Field(default=None)
+    meta_data: list[OrderCouponLinesItemMetaDataItem] | None | None = Field(default=None)
 
 class OrderLineItemsItemMetaDataItem(BaseModel):
     """Nested schema for OrderLineItemsItem.meta_data_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int | None, Any] = Field(default=None)
-    key: Union[str | None, Any] = Field(default=None)
-    value: Union[Any, Any] = Field(default=None)
-    display_key: Union[str | None, Any] = Field(default=None)
-    display_value: Union[str | None, Any] = Field(default=None)
+    id: int | None | None = Field(default=None)
+    key: str | None | None = Field(default=None)
+    value: Any | None = Field(default=None)
+    display_key: str | None | None = Field(default=None)
+    display_value: str | None | None = Field(default=None)
+
+class OrderLineItemsItemTaxesItem(BaseModel):
+    """Nested schema for OrderLineItemsItem.taxes_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int | None | None = Field(default=None)
+    total: str | None | None = Field(default=None)
+    subtotal: str | None | None = Field(default=None)
 
 class OrderLineItemsItemImage(BaseModel):
     """Nested schema for OrderLineItemsItem.image"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[Any, Any] = Field(default=None)
-    src: Union[str | None, Any] = Field(default=None)
+    id: Any | None = Field(default=None)
+    src: str | None | None = Field(default=None)
 
 class OrderLineItemsItem(BaseModel):
     """Nested schema for Order.line_items_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    product_id: Union[int | None, Any] = Field(default=None)
-    variation_id: Union[int | None, Any] = Field(default=None)
-    quantity: Union[int | None, Any] = Field(default=None)
-    tax_class: Union[str | None, Any] = Field(default=None)
-    subtotal: Union[str | None, Any] = Field(default=None)
-    subtotal_tax: Union[str | None, Any] = Field(default=None)
-    total: Union[str | None, Any] = Field(default=None)
-    total_tax: Union[str | None, Any] = Field(default=None)
-    taxes: Union[list[OrderLineItemsItemTaxesItem] | None, Any] = Field(default=None)
-    meta_data: Union[list[OrderLineItemsItemMetaDataItem] | None, Any] = Field(default=None)
-    sku: Union[str | None, Any] = Field(default=None)
-    price: Union[float | None, Any] = Field(default=None)
-    image: Union[OrderLineItemsItemImage | None, Any] = Field(default=None)
-    parent_name: Union[str | None, Any] = Field(default=None)
+    id: int | None | None = Field(default=None)
+    name: str | None | None = Field(default=None)
+    product_id: int | None | None = Field(default=None)
+    variation_id: int | None | None = Field(default=None)
+    quantity: int | None | None = Field(default=None)
+    tax_class: str | None | None = Field(default=None)
+    subtotal: str | None | None = Field(default=None)
+    subtotal_tax: str | None | None = Field(default=None)
+    total: str | None | None = Field(default=None)
+    total_tax: str | None | None = Field(default=None)
+    taxes: list[OrderLineItemsItemTaxesItem] | None | None = Field(default=None)
+    meta_data: list[OrderLineItemsItemMetaDataItem] | None | None = Field(default=None)
+    sku: str | None | None = Field(default=None)
+    price: float | None | None = Field(default=None)
+    image: OrderLineItemsItemImage | None | None = Field(default=None)
+    parent_name: str | None | None = Field(default=None)
 
-class OrderMetaDataItem(BaseModel):
-    """Nested schema for Order.meta_data_item"""
+class OrderShipping(BaseModel):
+    """Shipping address"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int | None, Any] = Field(default=None)
-    key: Union[str | None, Any] = Field(default=None)
-    value: Union[Any, Any] = Field(default=None)
-
-class OrderTaxLinesItemMetaDataItem(BaseModel):
-    """Nested schema for OrderTaxLinesItem.meta_data_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[int | None, Any] = Field(default=None)
-    key: Union[str | None, Any] = Field(default=None)
-    value: Union[Any, Any] = Field(default=None)
-
-class OrderTaxLinesItem(BaseModel):
-    """Nested schema for Order.tax_lines_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[int | None, Any] = Field(default=None)
-    rate_code: Union[str | None, Any] = Field(default=None)
-    rate_id: Union[int | None, Any] = Field(default=None)
-    label: Union[str | None, Any] = Field(default=None)
-    compound: Union[bool | None, Any] = Field(default=None)
-    tax_total: Union[str | None, Any] = Field(default=None)
-    shipping_tax_total: Union[str | None, Any] = Field(default=None)
-    meta_data: Union[list[OrderTaxLinesItemMetaDataItem] | None, Any] = Field(default=None)
-
-class OrderBilling(BaseModel):
-    """Billing address"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    first_name: Union[str | None, Any] = Field(default=None)
-    last_name: Union[str | None, Any] = Field(default=None)
-    company: Union[str | None, Any] = Field(default=None)
-    address_1: Union[str | None, Any] = Field(default=None)
-    address_2: Union[str | None, Any] = Field(default=None)
-    city: Union[str | None, Any] = Field(default=None)
-    state: Union[str | None, Any] = Field(default=None)
-    postcode: Union[str | None, Any] = Field(default=None)
-    country: Union[str | None, Any] = Field(default=None)
-    email: Union[str | None, Any] = Field(default=None)
-    phone: Union[str | None, Any] = Field(default=None)
+    first_name: str | None | None = Field(default=None)
+    last_name: str | None | None = Field(default=None)
+    company: str | None | None = Field(default=None)
+    address_1: str | None | None = Field(default=None)
+    address_2: str | None | None = Field(default=None)
+    city: str | None | None = Field(default=None)
+    state: str | None | None = Field(default=None)
+    postcode: str | None | None = Field(default=None)
+    country: str | None | None = Field(default=None)
 
 class OrderRefundsItem(BaseModel):
     """Nested schema for Order.refunds_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int | None, Any] = Field(default=None)
-    reason: Union[str | None, Any] = Field(default=None)
-    total: Union[str | None, Any] = Field(default=None)
+    id: int | None | None = Field(default=None)
+    reason: str | None | None = Field(default=None)
+    total: str | None | None = Field(default=None)
+
+class OrderFeeLinesItemMetaDataItem(BaseModel):
+    """Nested schema for OrderFeeLinesItem.meta_data_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int | None | None = Field(default=None)
+    key: str | None | None = Field(default=None)
+    value: Any | None = Field(default=None)
+
+class OrderFeeLinesItemTaxesItem(BaseModel):
+    """Nested schema for OrderFeeLinesItem.taxes_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int | None | None = Field(default=None)
+    total: str | None | None = Field(default=None)
+    subtotal: str | None | None = Field(default=None)
+
+class OrderFeeLinesItem(BaseModel):
+    """Nested schema for Order.fee_lines_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int | None | None = Field(default=None)
+    name: str | None | None = Field(default=None)
+    tax_class: str | None | None = Field(default=None)
+    tax_status: str | None | None = Field(default=None)
+    total: str | None | None = Field(default=None)
+    total_tax: str | None | None = Field(default=None)
+    taxes: list[OrderFeeLinesItemTaxesItem] | None | None = Field(default=None)
+    meta_data: list[OrderFeeLinesItemMetaDataItem] | None | None = Field(default=None)
+
+class OrderTaxLinesItemMetaDataItem(BaseModel):
+    """Nested schema for OrderTaxLinesItem.meta_data_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int | None | None = Field(default=None)
+    key: str | None | None = Field(default=None)
+    value: Any | None = Field(default=None)
+
+class OrderTaxLinesItem(BaseModel):
+    """Nested schema for Order.tax_lines_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int | None | None = Field(default=None)
+    rate_code: str | None | None = Field(default=None)
+    rate_id: int | None | None = Field(default=None)
+    label: str | None | None = Field(default=None)
+    compound: bool | None | None = Field(default=None)
+    tax_total: str | None | None = Field(default=None)
+    shipping_tax_total: str | None | None = Field(default=None)
+    meta_data: list[OrderTaxLinesItemMetaDataItem] | None | None = Field(default=None)
+
+class OrderMetaDataItem(BaseModel):
+    """Nested schema for Order.meta_data_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int | None | None = Field(default=None)
+    key: str | None | None = Field(default=None)
+    value: Any | None = Field(default=None)
+
+class OrderBilling(BaseModel):
+    """Billing address"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    first_name: str | None | None = Field(default=None)
+    last_name: str | None | None = Field(default=None)
+    company: str | None | None = Field(default=None)
+    address_1: str | None | None = Field(default=None)
+    address_2: str | None | None = Field(default=None)
+    city: str | None | None = Field(default=None)
+    state: str | None | None = Field(default=None)
+    postcode: str | None | None = Field(default=None)
+    country: str | None | None = Field(default=None)
+    email: str | None | None = Field(default=None)
+    phone: str | None | None = Field(default=None)
 
 class Order(BaseModel):
     """Order type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int | None, Any] = Field(default=None)
-    parent_id: Union[int | None, Any] = Field(default=None)
-    number: Union[str | None, Any] = Field(default=None)
-    order_key: Union[str | None, Any] = Field(default=None)
-    created_via: Union[str | None, Any] = Field(default=None)
-    version: Union[str | None, Any] = Field(default=None)
-    status: Union[str | None, Any] = Field(default=None)
-    currency: Union[str | None, Any] = Field(default=None)
-    currency_symbol: Union[str | None, Any] = Field(default=None)
-    date_created: Union[str | None, Any] = Field(default=None)
-    date_created_gmt: Union[str | None, Any] = Field(default=None)
-    date_modified: Union[str | None, Any] = Field(default=None)
-    date_modified_gmt: Union[str | None, Any] = Field(default=None)
-    discount_total: Union[str | None, Any] = Field(default=None)
-    discount_tax: Union[str | None, Any] = Field(default=None)
-    shipping_total: Union[str | None, Any] = Field(default=None)
-    shipping_tax: Union[str | None, Any] = Field(default=None)
-    cart_tax: Union[str | None, Any] = Field(default=None)
-    total: Union[str | None, Any] = Field(default=None)
-    total_tax: Union[str | None, Any] = Field(default=None)
-    prices_include_tax: Union[bool | None, Any] = Field(default=None)
-    customer_id: Union[int | None, Any] = Field(default=None)
-    customer_ip_address: Union[str | None, Any] = Field(default=None)
-    customer_user_agent: Union[str | None, Any] = Field(default=None)
-    customer_note: Union[str | None, Any] = Field(default=None)
-    billing: Union[OrderBilling | None, Any] = Field(default=None)
-    shipping: Union[OrderShipping | None, Any] = Field(default=None)
-    payment_method: Union[str | None, Any] = Field(default=None)
-    payment_method_title: Union[str | None, Any] = Field(default=None)
-    transaction_id: Union[str | None, Any] = Field(default=None)
-    date_paid: Union[str | None, Any] = Field(default=None)
-    date_paid_gmt: Union[str | None, Any] = Field(default=None)
-    date_completed: Union[str | None, Any] = Field(default=None)
-    date_completed_gmt: Union[str | None, Any] = Field(default=None)
-    cart_hash: Union[str | None, Any] = Field(default=None)
-    meta_data: Union[list[OrderMetaDataItem] | None, Any] = Field(default=None)
-    line_items: Union[list[OrderLineItemsItem] | None, Any] = Field(default=None)
-    tax_lines: Union[list[OrderTaxLinesItem] | None, Any] = Field(default=None)
-    shipping_lines: Union[list[OrderShippingLinesItem] | None, Any] = Field(default=None)
-    fee_lines: Union[list[OrderFeeLinesItem] | None, Any] = Field(default=None)
-    coupon_lines: Union[list[OrderCouponLinesItem] | None, Any] = Field(default=None)
-    refunds: Union[list[OrderRefundsItem] | None, Any] = Field(default=None)
-    payment_url: Union[str | None, Any] = Field(default=None)
-    is_editable: Union[bool | None, Any] = Field(default=None)
-    needs_payment: Union[bool | None, Any] = Field(default=None)
-    needs_processing: Union[bool | None, Any] = Field(default=None)
-
-class ProductCategoriesItem(BaseModel):
-    """Nested schema for Product.categories_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[int | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    slug: Union[str | None, Any] = Field(default=None)
-
-class ProductMetaDataItem(BaseModel):
-    """Nested schema for Product.meta_data_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[int | None, Any] = Field(default=None)
-    key: Union[str | None, Any] = Field(default=None)
-    value: Union[Any, Any] = Field(default=None)
-
-class ProductDefaultAttributesItem(BaseModel):
-    """Nested schema for Product.default_attributes_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[int | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    option: Union[str | None, Any] = Field(default=None)
-
-class ProductImagesItem(BaseModel):
-    """Nested schema for Product.images_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[int | None, Any] = Field(default=None)
-    date_created: Union[str | None, Any] = Field(default=None)
-    date_created_gmt: Union[str | None, Any] = Field(default=None)
-    date_modified: Union[str | None, Any] = Field(default=None)
-    date_modified_gmt: Union[str | None, Any] = Field(default=None)
-    src: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    alt: Union[str | None, Any] = Field(default=None)
-
-class ProductDownloadsItem(BaseModel):
-    """Nested schema for Product.downloads_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    file: Union[str | None, Any] = Field(default=None)
-
-class ProductDimensions(BaseModel):
-    """Product dimensions"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    length: Union[str | None, Any] = Field(default=None)
-    width: Union[str | None, Any] = Field(default=None)
-    height: Union[str | None, Any] = Field(default=None)
+    id: int | None = Field(default=None)
+    parent_id: int | None = Field(default=None)
+    number: str | None = Field(default=None)
+    order_key: str | None = Field(default=None)
+    created_via: str | None = Field(default=None)
+    version: str | None = Field(default=None)
+    status: str | None = Field(default=None)
+    currency: str | None = Field(default=None)
+    currency_symbol: str | None = Field(default=None)
+    date_created: str | None = Field(default=None)
+    date_created_gmt: str | None = Field(default=None)
+    date_modified: str | None = Field(default=None)
+    date_modified_gmt: str | None = Field(default=None)
+    discount_total: str | None = Field(default=None)
+    discount_tax: str | None = Field(default=None)
+    shipping_total: str | None = Field(default=None)
+    shipping_tax: str | None = Field(default=None)
+    cart_tax: str | None = Field(default=None)
+    total: str | None = Field(default=None)
+    total_tax: str | None = Field(default=None)
+    prices_include_tax: bool | None = Field(default=None)
+    customer_id: int | None = Field(default=None)
+    customer_ip_address: str | None = Field(default=None)
+    customer_user_agent: str | None = Field(default=None)
+    customer_note: str | None = Field(default=None)
+    billing: OrderBilling | None = Field(default=None)
+    shipping: OrderShipping | None = Field(default=None)
+    payment_method: str | None = Field(default=None)
+    payment_method_title: str | None = Field(default=None)
+    transaction_id: str | None = Field(default=None)
+    date_paid: str | None = Field(default=None)
+    date_paid_gmt: str | None = Field(default=None)
+    date_completed: str | None = Field(default=None)
+    date_completed_gmt: str | None = Field(default=None)
+    cart_hash: str | None = Field(default=None)
+    meta_data: list[OrderMetaDataItem] | None = Field(default=None)
+    line_items: list[OrderLineItemsItem] | None = Field(default=None)
+    tax_lines: list[OrderTaxLinesItem] | None = Field(default=None)
+    shipping_lines: list[OrderShippingLinesItem] | None = Field(default=None)
+    fee_lines: list[OrderFeeLinesItem] | None = Field(default=None)
+    coupon_lines: list[OrderCouponLinesItem] | None = Field(default=None)
+    refunds: list[OrderRefundsItem] | None = Field(default=None)
+    payment_url: str | None = Field(default=None)
+    is_editable: bool | None = Field(default=None)
+    needs_payment: bool | None = Field(default=None)
+    needs_processing: bool | None = Field(default=None)
 
 class ProductTagsItem(BaseModel):
     """Nested schema for Product.tags_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    slug: Union[str | None, Any] = Field(default=None)
+    id: int | None | None = Field(default=None)
+    name: str | None | None = Field(default=None)
+    slug: str | None | None = Field(default=None)
+
+class ProductCategoriesItem(BaseModel):
+    """Nested schema for Product.categories_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int | None | None = Field(default=None)
+    name: str | None | None = Field(default=None)
+    slug: str | None | None = Field(default=None)
+
+class ProductMetaDataItem(BaseModel):
+    """Nested schema for Product.meta_data_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int | None | None = Field(default=None)
+    key: str | None | None = Field(default=None)
+    value: Any | None = Field(default=None)
+
+class ProductDimensions(BaseModel):
+    """Product dimensions"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    length: str | None | None = Field(default=None)
+    width: str | None | None = Field(default=None)
+    height: str | None | None = Field(default=None)
+
+class ProductImagesItem(BaseModel):
+    """Nested schema for Product.images_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int | None | None = Field(default=None)
+    date_created: str | None | None = Field(default=None)
+    date_created_gmt: str | None | None = Field(default=None)
+    date_modified: str | None | None = Field(default=None)
+    date_modified_gmt: str | None | None = Field(default=None)
+    src: str | None | None = Field(default=None)
+    name: str | None | None = Field(default=None)
+    alt: str | None | None = Field(default=None)
+
+class ProductDownloadsItem(BaseModel):
+    """Nested schema for Product.downloads_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None | None = Field(default=None)
+    name: str | None | None = Field(default=None)
+    file: str | None | None = Field(default=None)
+
+class ProductDefaultAttributesItem(BaseModel):
+    """Nested schema for Product.default_attributes_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int | None | None = Field(default=None)
+    name: str | None | None = Field(default=None)
+    option: str | None | None = Field(default=None)
 
 class ProductAttributesItem(BaseModel):
     """Nested schema for Product.attributes_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    position: Union[int | None, Any] = Field(default=None)
-    visible: Union[bool | None, Any] = Field(default=None)
-    variation: Union[bool | None, Any] = Field(default=None)
-    options: Union[list[str | None] | None, Any] = Field(default=None)
+    id: int | None | None = Field(default=None)
+    name: str | None | None = Field(default=None)
+    position: int | None | None = Field(default=None)
+    visible: bool | None | None = Field(default=None)
+    variation: bool | None | None = Field(default=None)
+    options: list[str | None] | None | None = Field(default=None)
 
 class Product(BaseModel):
     """Product type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    slug: Union[str | None, Any] = Field(default=None)
-    permalink: Union[str | None, Any] = Field(default=None)
-    date_created: Union[str | None, Any] = Field(default=None)
-    date_created_gmt: Union[str | None, Any] = Field(default=None)
-    date_modified: Union[str | None, Any] = Field(default=None)
-    date_modified_gmt: Union[str | None, Any] = Field(default=None)
-    type_: Union[str | None, Any] = Field(default=None, alias="type")
-    status: Union[str | None, Any] = Field(default=None)
-    featured: Union[bool | None, Any] = Field(default=None)
-    catalog_visibility: Union[str | None, Any] = Field(default=None)
-    description: Union[str | None, Any] = Field(default=None)
-    short_description: Union[str | None, Any] = Field(default=None)
-    sku: Union[str | None, Any] = Field(default=None)
-    price: Union[str | None, Any] = Field(default=None)
-    regular_price: Union[str | None, Any] = Field(default=None)
-    sale_price: Union[str | None, Any] = Field(default=None)
-    date_on_sale_from: Union[str | None, Any] = Field(default=None)
-    date_on_sale_from_gmt: Union[str | None, Any] = Field(default=None)
-    date_on_sale_to: Union[str | None, Any] = Field(default=None)
-    date_on_sale_to_gmt: Union[str | None, Any] = Field(default=None)
-    price_html: Union[str | None, Any] = Field(default=None)
-    on_sale: Union[bool | None, Any] = Field(default=None)
-    purchasable: Union[bool | None, Any] = Field(default=None)
-    total_sales: Union[int | None, Any] = Field(default=None)
-    virtual: Union[bool | None, Any] = Field(default=None)
-    downloadable: Union[bool | None, Any] = Field(default=None)
-    downloads: Union[list[ProductDownloadsItem] | None, Any] = Field(default=None)
-    download_limit: Union[int | None, Any] = Field(default=None)
-    download_expiry: Union[int | None, Any] = Field(default=None)
-    external_url: Union[str | None, Any] = Field(default=None)
-    button_text: Union[str | None, Any] = Field(default=None)
-    tax_status: Union[str | None, Any] = Field(default=None)
-    tax_class: Union[str | None, Any] = Field(default=None)
-    manage_stock: Union[bool | None, Any] = Field(default=None)
-    stock_quantity: Union[int | None, Any] = Field(default=None)
-    stock_status: Union[str | None, Any] = Field(default=None)
-    backorders: Union[str | None, Any] = Field(default=None)
-    backorders_allowed: Union[bool | None, Any] = Field(default=None)
-    backordered: Union[bool | None, Any] = Field(default=None)
-    sold_individually: Union[bool | None, Any] = Field(default=None)
-    weight: Union[str | None, Any] = Field(default=None)
-    dimensions: Union[ProductDimensions | None, Any] = Field(default=None)
-    shipping_required: Union[bool | None, Any] = Field(default=None)
-    shipping_taxable: Union[bool | None, Any] = Field(default=None)
-    shipping_class: Union[str | None, Any] = Field(default=None)
-    shipping_class_id: Union[int | None, Any] = Field(default=None)
-    reviews_allowed: Union[bool | None, Any] = Field(default=None)
-    average_rating: Union[str | None, Any] = Field(default=None)
-    rating_count: Union[int | None, Any] = Field(default=None)
-    related_ids: Union[list[int | None] | None, Any] = Field(default=None)
-    upsell_ids: Union[list[int | None] | None, Any] = Field(default=None)
-    cross_sell_ids: Union[list[int | None] | None, Any] = Field(default=None)
-    parent_id: Union[int | None, Any] = Field(default=None)
-    purchase_note: Union[str | None, Any] = Field(default=None)
-    categories: Union[list[ProductCategoriesItem] | None, Any] = Field(default=None)
-    tags: Union[list[ProductTagsItem] | None, Any] = Field(default=None)
-    images: Union[list[ProductImagesItem] | None, Any] = Field(default=None)
-    attributes: Union[list[ProductAttributesItem] | None, Any] = Field(default=None)
-    default_attributes: Union[list[ProductDefaultAttributesItem] | None, Any] = Field(default=None)
-    variations: Union[list[int | None] | None, Any] = Field(default=None)
-    grouped_products: Union[list[int | None] | None, Any] = Field(default=None)
-    menu_order: Union[int | None, Any] = Field(default=None)
-    meta_data: Union[list[ProductMetaDataItem] | None, Any] = Field(default=None)
-    low_stock_amount: Union[int | None, Any] = Field(default=None)
-    brands: Union[list[dict[str, Any]] | None, Any] = Field(default=None)
-    has_options: Union[bool | None, Any] = Field(default=None)
-    post_password: Union[str | None, Any] = Field(default=None)
-    global_unique_id: Union[str | None, Any] = Field(default=None)
+    id: int | None = Field(default=None)
+    name: str | None = Field(default=None)
+    slug: str | None = Field(default=None)
+    permalink: str | None = Field(default=None)
+    date_created: str | None = Field(default=None)
+    date_created_gmt: str | None = Field(default=None)
+    date_modified: str | None = Field(default=None)
+    date_modified_gmt: str | None = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    status: str | None = Field(default=None)
+    featured: bool | None = Field(default=None)
+    catalog_visibility: str | None = Field(default=None)
+    description: str | None = Field(default=None)
+    short_description: str | None = Field(default=None)
+    sku: str | None = Field(default=None)
+    price: str | None = Field(default=None)
+    regular_price: str | None = Field(default=None)
+    sale_price: str | None = Field(default=None)
+    date_on_sale_from: str | None = Field(default=None)
+    date_on_sale_from_gmt: str | None = Field(default=None)
+    date_on_sale_to: str | None = Field(default=None)
+    date_on_sale_to_gmt: str | None = Field(default=None)
+    price_html: str | None = Field(default=None)
+    on_sale: bool | None = Field(default=None)
+    purchasable: bool | None = Field(default=None)
+    total_sales: int | None = Field(default=None)
+    virtual: bool | None = Field(default=None)
+    downloadable: bool | None = Field(default=None)
+    downloads: list[ProductDownloadsItem] | None = Field(default=None)
+    download_limit: int | None = Field(default=None)
+    download_expiry: int | None = Field(default=None)
+    external_url: str | None = Field(default=None)
+    button_text: str | None = Field(default=None)
+    tax_status: str | None = Field(default=None)
+    tax_class: str | None = Field(default=None)
+    manage_stock: bool | None = Field(default=None)
+    stock_quantity: int | None = Field(default=None)
+    stock_status: str | None = Field(default=None)
+    backorders: str | None = Field(default=None)
+    backorders_allowed: bool | None = Field(default=None)
+    backordered: bool | None = Field(default=None)
+    sold_individually: bool | None = Field(default=None)
+    weight: str | None = Field(default=None)
+    dimensions: ProductDimensions | None = Field(default=None)
+    shipping_required: bool | None = Field(default=None)
+    shipping_taxable: bool | None = Field(default=None)
+    shipping_class: str | None = Field(default=None)
+    shipping_class_id: int | None = Field(default=None)
+    reviews_allowed: bool | None = Field(default=None)
+    average_rating: str | None = Field(default=None)
+    rating_count: int | None = Field(default=None)
+    related_ids: list[int | None] | None = Field(default=None)
+    upsell_ids: list[int | None] | None = Field(default=None)
+    cross_sell_ids: list[int | None] | None = Field(default=None)
+    parent_id: int | None = Field(default=None)
+    purchase_note: str | None = Field(default=None)
+    categories: list[ProductCategoriesItem] | None = Field(default=None)
+    tags: list[ProductTagsItem] | None = Field(default=None)
+    images: list[ProductImagesItem] | None = Field(default=None)
+    attributes: list[ProductAttributesItem] | None = Field(default=None)
+    default_attributes: list[ProductDefaultAttributesItem] | None = Field(default=None)
+    variations: list[int | None] | None = Field(default=None)
+    grouped_products: list[int | None] | None = Field(default=None)
+    menu_order: int | None = Field(default=None)
+    meta_data: list[ProductMetaDataItem] | None = Field(default=None)
+    low_stock_amount: int | None = Field(default=None)
+    brands: list[dict[str, Any]] | None = Field(default=None)
+    has_options: bool | None = Field(default=None)
+    post_password: str | None = Field(default=None)
+    global_unique_id: str | None = Field(default=None)
 
 class CouponMetaDataItem(BaseModel):
     """Nested schema for Coupon.meta_data_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int | None, Any] = Field(default=None)
-    key: Union[str | None, Any] = Field(default=None)
-    value: Union[Any, Any] = Field(default=None)
+    id: int | None | None = Field(default=None)
+    key: str | None | None = Field(default=None)
+    value: Any | None = Field(default=None)
 
 class Coupon(BaseModel):
     """Coupon type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int | None, Any] = Field(default=None)
-    code: Union[str | None, Any] = Field(default=None)
-    amount: Union[str | None, Any] = Field(default=None)
-    date_created: Union[str | None, Any] = Field(default=None)
-    date_created_gmt: Union[str | None, Any] = Field(default=None)
-    date_modified: Union[str | None, Any] = Field(default=None)
-    date_modified_gmt: Union[str | None, Any] = Field(default=None)
-    discount_type: Union[str | None, Any] = Field(default=None)
-    description: Union[str | None, Any] = Field(default=None)
-    date_expires: Union[str | None, Any] = Field(default=None)
-    date_expires_gmt: Union[str | None, Any] = Field(default=None)
-    usage_count: Union[int | None, Any] = Field(default=None)
-    individual_use: Union[bool | None, Any] = Field(default=None)
-    product_ids: Union[list[int | None] | None, Any] = Field(default=None)
-    excluded_product_ids: Union[list[int | None] | None, Any] = Field(default=None)
-    usage_limit: Union[int | None, Any] = Field(default=None)
-    usage_limit_per_user: Union[int | None, Any] = Field(default=None)
-    limit_usage_to_x_items: Union[int | None, Any] = Field(default=None)
-    free_shipping: Union[bool | None, Any] = Field(default=None)
-    product_categories: Union[list[int | None] | None, Any] = Field(default=None)
-    excluded_product_categories: Union[list[int | None] | None, Any] = Field(default=None)
-    exclude_sale_items: Union[bool | None, Any] = Field(default=None)
-    minimum_amount: Union[str | None, Any] = Field(default=None)
-    maximum_amount: Union[str | None, Any] = Field(default=None)
-    email_restrictions: Union[list[str | None] | None, Any] = Field(default=None)
-    used_by: Union[list[str | None] | None, Any] = Field(default=None)
-    meta_data: Union[list[CouponMetaDataItem] | None, Any] = Field(default=None)
-    status: Union[str | None, Any] = Field(default=None)
+    id: int | None = Field(default=None)
+    code: str | None = Field(default=None)
+    amount: str | None = Field(default=None)
+    date_created: str | None = Field(default=None)
+    date_created_gmt: str | None = Field(default=None)
+    date_modified: str | None = Field(default=None)
+    date_modified_gmt: str | None = Field(default=None)
+    discount_type: str | None = Field(default=None)
+    description: str | None = Field(default=None)
+    date_expires: str | None = Field(default=None)
+    date_expires_gmt: str | None = Field(default=None)
+    usage_count: int | None = Field(default=None)
+    individual_use: bool | None = Field(default=None)
+    product_ids: list[int | None] | None = Field(default=None)
+    excluded_product_ids: list[int | None] | None = Field(default=None)
+    usage_limit: int | None = Field(default=None)
+    usage_limit_per_user: int | None = Field(default=None)
+    limit_usage_to_x_items: int | None = Field(default=None)
+    free_shipping: bool | None = Field(default=None)
+    product_categories: list[int | None] | None = Field(default=None)
+    excluded_product_categories: list[int | None] | None = Field(default=None)
+    exclude_sale_items: bool | None = Field(default=None)
+    minimum_amount: str | None = Field(default=None)
+    maximum_amount: str | None = Field(default=None)
+    email_restrictions: list[str | None] | None = Field(default=None)
+    used_by: list[str | None] | None = Field(default=None)
+    meta_data: list[CouponMetaDataItem] | None = Field(default=None)
+    status: str | None = Field(default=None)
 
 class ProductCategoryImage(BaseModel):
     """Image data"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int | None, Any] = Field(default=None)
-    date_created: Union[str | None, Any] = Field(default=None)
-    date_created_gmt: Union[str | None, Any] = Field(default=None)
-    date_modified: Union[str | None, Any] = Field(default=None)
-    date_modified_gmt: Union[str | None, Any] = Field(default=None)
-    src: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    alt: Union[str | None, Any] = Field(default=None)
+    id: int | None | None = Field(default=None)
+    date_created: str | None | None = Field(default=None)
+    date_created_gmt: str | None | None = Field(default=None)
+    date_modified: str | None | None = Field(default=None)
+    date_modified_gmt: str | None | None = Field(default=None)
+    src: str | None | None = Field(default=None)
+    name: str | None | None = Field(default=None)
+    alt: str | None | None = Field(default=None)
 
 class ProductCategory(BaseModel):
     """ProductCategory type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    slug: Union[str | None, Any] = Field(default=None)
-    parent: Union[int | None, Any] = Field(default=None)
-    description: Union[str | None, Any] = Field(default=None)
-    display: Union[str | None, Any] = Field(default=None)
-    image: Union[ProductCategoryImage | None, Any] = Field(default=None)
-    menu_order: Union[int | None, Any] = Field(default=None)
-    count: Union[int | None, Any] = Field(default=None)
+    id: int | None = Field(default=None)
+    name: str | None = Field(default=None)
+    slug: str | None = Field(default=None)
+    parent: int | None = Field(default=None)
+    description: str | None = Field(default=None)
+    display: str | None = Field(default=None)
+    image: ProductCategoryImage | None = Field(default=None)
+    menu_order: int | None = Field(default=None)
+    count: int | None = Field(default=None)
 
 class ProductTag(BaseModel):
     """ProductTag type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    slug: Union[str | None, Any] = Field(default=None)
-    description: Union[str | None, Any] = Field(default=None)
-    count: Union[int | None, Any] = Field(default=None)
+    id: int | None = Field(default=None)
+    name: str | None = Field(default=None)
+    slug: str | None = Field(default=None)
+    description: str | None = Field(default=None)
+    count: int | None = Field(default=None)
 
 class ProductReview(BaseModel):
     """ProductReview type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int | None, Any] = Field(default=None)
-    date_created: Union[str | None, Any] = Field(default=None)
-    date_created_gmt: Union[str | None, Any] = Field(default=None)
-    product_id: Union[int | None, Any] = Field(default=None)
-    product_name: Union[str | None, Any] = Field(default=None)
-    product_permalink: Union[str | None, Any] = Field(default=None)
-    status: Union[str | None, Any] = Field(default=None)
-    reviewer: Union[str | None, Any] = Field(default=None)
-    reviewer_email: Union[str | None, Any] = Field(default=None)
-    review: Union[str | None, Any] = Field(default=None)
-    rating: Union[int | None, Any] = Field(default=None)
-    verified: Union[bool | None, Any] = Field(default=None)
-    reviewer_avatar_urls: Union[dict[str, str | None] | None, Any] = Field(default=None)
+    id: int | None = Field(default=None)
+    date_created: str | None = Field(default=None)
+    date_created_gmt: str | None = Field(default=None)
+    product_id: int | None = Field(default=None)
+    product_name: str | None = Field(default=None)
+    product_permalink: str | None = Field(default=None)
+    status: str | None = Field(default=None)
+    reviewer: str | None = Field(default=None)
+    reviewer_email: str | None = Field(default=None)
+    review: str | None = Field(default=None)
+    rating: int | None = Field(default=None)
+    verified: bool | None = Field(default=None)
+    reviewer_avatar_urls: dict[str, str | None] | None = Field(default=None)
 
 class ProductAttribute(BaseModel):
     """ProductAttribute type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    slug: Union[str | None, Any] = Field(default=None)
-    type_: Union[str | None, Any] = Field(default=None, alias="type")
-    order_by: Union[str | None, Any] = Field(default=None)
-    has_archives: Union[bool | None, Any] = Field(default=None)
-
-class ProductVariationImage(BaseModel):
-    """Variation image data"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[int | None, Any] = Field(default=None)
-    date_created: Union[str | None, Any] = Field(default=None)
-    date_created_gmt: Union[str | None, Any] = Field(default=None)
-    date_modified: Union[str | None, Any] = Field(default=None)
-    date_modified_gmt: Union[str | None, Any] = Field(default=None)
-    src: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    alt: Union[str | None, Any] = Field(default=None)
-
-class ProductVariationAttributesItem(BaseModel):
-    """Nested schema for ProductVariation.attributes_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[int | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    option: Union[str | None, Any] = Field(default=None)
-
-class ProductVariationDimensions(BaseModel):
-    """Variation dimensions"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    length: Union[str | None, Any] = Field(default=None)
-    width: Union[str | None, Any] = Field(default=None)
-    height: Union[str | None, Any] = Field(default=None)
+    id: int | None = Field(default=None)
+    name: str | None = Field(default=None)
+    slug: str | None = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    order_by: str | None = Field(default=None)
+    has_archives: bool | None = Field(default=None)
 
 class ProductVariationMetaDataItem(BaseModel):
     """Nested schema for ProductVariation.meta_data_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int | None, Any] = Field(default=None)
-    key: Union[str | None, Any] = Field(default=None)
-    value: Union[Any, Any] = Field(default=None)
+    id: int | None | None = Field(default=None)
+    key: str | None | None = Field(default=None)
+    value: Any | None = Field(default=None)
+
+class ProductVariationDimensions(BaseModel):
+    """Variation dimensions"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    length: str | None | None = Field(default=None)
+    width: str | None | None = Field(default=None)
+    height: str | None | None = Field(default=None)
 
 class ProductVariationDownloadsItem(BaseModel):
     """Nested schema for ProductVariation.downloads_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    file: Union[str | None, Any] = Field(default=None)
+    id: str | None | None = Field(default=None)
+    name: str | None | None = Field(default=None)
+    file: str | None | None = Field(default=None)
+
+class ProductVariationAttributesItem(BaseModel):
+    """Nested schema for ProductVariation.attributes_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int | None | None = Field(default=None)
+    name: str | None | None = Field(default=None)
+    option: str | None | None = Field(default=None)
+
+class ProductVariationImage(BaseModel):
+    """Variation image data"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int | None | None = Field(default=None)
+    date_created: str | None | None = Field(default=None)
+    date_created_gmt: str | None | None = Field(default=None)
+    date_modified: str | None | None = Field(default=None)
+    date_modified_gmt: str | None | None = Field(default=None)
+    src: str | None | None = Field(default=None)
+    name: str | None | None = Field(default=None)
+    alt: str | None | None = Field(default=None)
 
 class ProductVariation(BaseModel):
     """ProductVariation type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int | None, Any] = Field(default=None)
-    date_created: Union[str | None, Any] = Field(default=None)
-    date_created_gmt: Union[str | None, Any] = Field(default=None)
-    date_modified: Union[str | None, Any] = Field(default=None)
-    date_modified_gmt: Union[str | None, Any] = Field(default=None)
-    description: Union[str | None, Any] = Field(default=None)
-    permalink: Union[str | None, Any] = Field(default=None)
-    sku: Union[str | None, Any] = Field(default=None)
-    price: Union[str | None, Any] = Field(default=None)
-    regular_price: Union[str | None, Any] = Field(default=None)
-    sale_price: Union[str | None, Any] = Field(default=None)
-    date_on_sale_from: Union[str | None, Any] = Field(default=None)
-    date_on_sale_from_gmt: Union[str | None, Any] = Field(default=None)
-    date_on_sale_to: Union[str | None, Any] = Field(default=None)
-    date_on_sale_to_gmt: Union[str | None, Any] = Field(default=None)
-    on_sale: Union[bool | None, Any] = Field(default=None)
-    status: Union[str | None, Any] = Field(default=None)
-    purchasable: Union[bool | None, Any] = Field(default=None)
-    virtual: Union[bool | None, Any] = Field(default=None)
-    downloadable: Union[bool | None, Any] = Field(default=None)
-    downloads: Union[list[ProductVariationDownloadsItem] | None, Any] = Field(default=None)
-    download_limit: Union[int | None, Any] = Field(default=None)
-    download_expiry: Union[int | None, Any] = Field(default=None)
-    tax_status: Union[str | None, Any] = Field(default=None)
-    tax_class: Union[str | None, Any] = Field(default=None)
-    manage_stock: Union[bool | None, Any] = Field(default=None)
-    stock_quantity: Union[int | None, Any] = Field(default=None)
-    stock_status: Union[str | None, Any] = Field(default=None)
-    backorders: Union[str | None, Any] = Field(default=None)
-    backorders_allowed: Union[bool | None, Any] = Field(default=None)
-    backordered: Union[bool | None, Any] = Field(default=None)
-    weight: Union[str | None, Any] = Field(default=None)
-    dimensions: Union[ProductVariationDimensions | None, Any] = Field(default=None)
-    shipping_class: Union[str | None, Any] = Field(default=None)
-    shipping_class_id: Union[int | None, Any] = Field(default=None)
-    image: Union[ProductVariationImage | None, Any] = Field(default=None)
-    attributes: Union[list[ProductVariationAttributesItem] | None, Any] = Field(default=None)
-    menu_order: Union[int | None, Any] = Field(default=None)
-    meta_data: Union[list[ProductVariationMetaDataItem] | None, Any] = Field(default=None)
-    type_: Union[str | None, Any] = Field(default=None, alias="type")
-    global_unique_id: Union[str | None, Any] = Field(default=None)
-    low_stock_amount: Union[int | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    parent_id: Union[int | None, Any] = Field(default=None)
+    id: int | None = Field(default=None)
+    date_created: str | None = Field(default=None)
+    date_created_gmt: str | None = Field(default=None)
+    date_modified: str | None = Field(default=None)
+    date_modified_gmt: str | None = Field(default=None)
+    description: str | None = Field(default=None)
+    permalink: str | None = Field(default=None)
+    sku: str | None = Field(default=None)
+    price: str | None = Field(default=None)
+    regular_price: str | None = Field(default=None)
+    sale_price: str | None = Field(default=None)
+    date_on_sale_from: str | None = Field(default=None)
+    date_on_sale_from_gmt: str | None = Field(default=None)
+    date_on_sale_to: str | None = Field(default=None)
+    date_on_sale_to_gmt: str | None = Field(default=None)
+    on_sale: bool | None = Field(default=None)
+    status: str | None = Field(default=None)
+    purchasable: bool | None = Field(default=None)
+    virtual: bool | None = Field(default=None)
+    downloadable: bool | None = Field(default=None)
+    downloads: list[ProductVariationDownloadsItem] | None = Field(default=None)
+    download_limit: int | None = Field(default=None)
+    download_expiry: int | None = Field(default=None)
+    tax_status: str | None = Field(default=None)
+    tax_class: str | None = Field(default=None)
+    manage_stock: bool | None = Field(default=None)
+    stock_quantity: int | None = Field(default=None)
+    stock_status: str | None = Field(default=None)
+    backorders: str | None = Field(default=None)
+    backorders_allowed: bool | None = Field(default=None)
+    backordered: bool | None = Field(default=None)
+    weight: str | None = Field(default=None)
+    dimensions: ProductVariationDimensions | None = Field(default=None)
+    shipping_class: str | None = Field(default=None)
+    shipping_class_id: int | None = Field(default=None)
+    image: ProductVariationImage | None = Field(default=None)
+    attributes: list[ProductVariationAttributesItem] | None = Field(default=None)
+    menu_order: int | None = Field(default=None)
+    meta_data: list[ProductVariationMetaDataItem] | None = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    global_unique_id: str | None = Field(default=None)
+    low_stock_amount: int | None = Field(default=None)
+    name: str | None = Field(default=None)
+    parent_id: int | None = Field(default=None)
 
 class OrderNote(BaseModel):
     """OrderNote type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int | None, Any] = Field(default=None)
-    author: Union[str | None, Any] = Field(default=None)
-    date_created: Union[str | None, Any] = Field(default=None)
-    date_created_gmt: Union[str | None, Any] = Field(default=None)
-    note: Union[str | None, Any] = Field(default=None)
-    customer_note: Union[bool | None, Any] = Field(default=None)
-
-class RefundMetaDataItem(BaseModel):
-    """Nested schema for Refund.meta_data_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[int | None, Any] = Field(default=None)
-    key: Union[str | None, Any] = Field(default=None)
-    value: Union[Any, Any] = Field(default=None)
-
-class RefundShippingLinesItem(BaseModel):
-    """Nested schema for Refund.shipping_lines_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[int | None, Any] = Field(default=None)
-    method_title: Union[str | None, Any] = Field(default=None)
-    method_id: Union[str | None, Any] = Field(default=None)
-    total: Union[str | None, Any] = Field(default=None)
-    total_tax: Union[str | None, Any] = Field(default=None)
-
-class RefundTaxLinesItem(BaseModel):
-    """Nested schema for Refund.tax_lines_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[int | None, Any] = Field(default=None)
-    rate_code: Union[str | None, Any] = Field(default=None)
-    rate_id: Union[int | None, Any] = Field(default=None)
-    label: Union[str | None, Any] = Field(default=None)
-    compound: Union[bool | None, Any] = Field(default=None)
-    tax_total: Union[str | None, Any] = Field(default=None)
-    shipping_tax_total: Union[str | None, Any] = Field(default=None)
-
-class RefundLineItemsItemMetaDataItem(BaseModel):
-    """Nested schema for RefundLineItemsItem.meta_data_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[int | None, Any] = Field(default=None)
-    key: Union[str | None, Any] = Field(default=None)
-    value: Union[Any, Any] = Field(default=None)
+    id: int | None = Field(default=None)
+    author: str | None = Field(default=None)
+    date_created: str | None = Field(default=None)
+    date_created_gmt: str | None = Field(default=None)
+    note: str | None = Field(default=None)
+    customer_note: bool | None = Field(default=None)
 
 class RefundLineItemsItemTaxesItem(BaseModel):
     """Nested schema for RefundLineItemsItem.taxes_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int | None, Any] = Field(default=None)
-    total: Union[str | None, Any] = Field(default=None)
-    subtotal: Union[str | None, Any] = Field(default=None)
+    id: int | None | None = Field(default=None)
+    total: str | None | None = Field(default=None)
+    subtotal: str | None | None = Field(default=None)
+
+class RefundLineItemsItemMetaDataItem(BaseModel):
+    """Nested schema for RefundLineItemsItem.meta_data_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int | None | None = Field(default=None)
+    key: str | None | None = Field(default=None)
+    value: Any | None = Field(default=None)
 
 class RefundLineItemsItem(BaseModel):
     """Nested schema for Refund.line_items_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    product_id: Union[int | None, Any] = Field(default=None)
-    variation_id: Union[int | None, Any] = Field(default=None)
-    quantity: Union[int | None, Any] = Field(default=None)
-    tax_class: Union[str | None, Any] = Field(default=None)
-    subtotal: Union[str | None, Any] = Field(default=None)
-    subtotal_tax: Union[str | None, Any] = Field(default=None)
-    total: Union[str | None, Any] = Field(default=None)
-    total_tax: Union[str | None, Any] = Field(default=None)
-    taxes: Union[list[RefundLineItemsItemTaxesItem] | None, Any] = Field(default=None)
-    meta_data: Union[list[RefundLineItemsItemMetaDataItem] | None, Any] = Field(default=None)
-    sku: Union[str | None, Any] = Field(default=None)
-    price: Union[float | None, Any] = Field(default=None)
+    id: int | None | None = Field(default=None)
+    name: str | None | None = Field(default=None)
+    product_id: int | None | None = Field(default=None)
+    variation_id: int | None | None = Field(default=None)
+    quantity: int | None | None = Field(default=None)
+    tax_class: str | None | None = Field(default=None)
+    subtotal: str | None | None = Field(default=None)
+    subtotal_tax: str | None | None = Field(default=None)
+    total: str | None | None = Field(default=None)
+    total_tax: str | None | None = Field(default=None)
+    taxes: list[RefundLineItemsItemTaxesItem] | None | None = Field(default=None)
+    meta_data: list[RefundLineItemsItemMetaDataItem] | None | None = Field(default=None)
+    sku: str | None | None = Field(default=None)
+    price: float | None | None = Field(default=None)
+
+class RefundMetaDataItem(BaseModel):
+    """Nested schema for Refund.meta_data_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int | None | None = Field(default=None)
+    key: str | None | None = Field(default=None)
+    value: Any | None = Field(default=None)
+
+class RefundTaxLinesItem(BaseModel):
+    """Nested schema for Refund.tax_lines_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int | None | None = Field(default=None)
+    rate_code: str | None | None = Field(default=None)
+    rate_id: int | None | None = Field(default=None)
+    label: str | None | None = Field(default=None)
+    compound: bool | None | None = Field(default=None)
+    tax_total: str | None | None = Field(default=None)
+    shipping_tax_total: str | None | None = Field(default=None)
 
 class RefundFeeLinesItem(BaseModel):
     """Nested schema for Refund.fee_lines_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    tax_class: Union[str | None, Any] = Field(default=None)
-    tax_status: Union[str | None, Any] = Field(default=None)
-    total: Union[str | None, Any] = Field(default=None)
-    total_tax: Union[str | None, Any] = Field(default=None)
+    id: int | None | None = Field(default=None)
+    name: str | None | None = Field(default=None)
+    tax_class: str | None | None = Field(default=None)
+    tax_status: str | None | None = Field(default=None)
+    total: str | None | None = Field(default=None)
+    total_tax: str | None | None = Field(default=None)
+
+class RefundShippingLinesItem(BaseModel):
+    """Nested schema for Refund.shipping_lines_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int | None | None = Field(default=None)
+    method_title: str | None | None = Field(default=None)
+    method_id: str | None | None = Field(default=None)
+    total: str | None | None = Field(default=None)
+    total_tax: str | None | None = Field(default=None)
 
 class Refund(BaseModel):
     """Refund type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int | None, Any] = Field(default=None)
-    date_created: Union[str | None, Any] = Field(default=None)
-    date_created_gmt: Union[str | None, Any] = Field(default=None)
-    amount: Union[str | None, Any] = Field(default=None)
-    reason: Union[str | None, Any] = Field(default=None)
-    refunded_by: Union[int | None, Any] = Field(default=None)
-    refunded_payment: Union[bool | None, Any] = Field(default=None)
-    meta_data: Union[list[RefundMetaDataItem] | None, Any] = Field(default=None)
-    line_items: Union[list[RefundLineItemsItem] | None, Any] = Field(default=None)
-    shipping_lines: Union[list[RefundShippingLinesItem] | None, Any] = Field(default=None)
-    tax_lines: Union[list[RefundTaxLinesItem] | None, Any] = Field(default=None)
-    fee_lines: Union[list[RefundFeeLinesItem] | None, Any] = Field(default=None)
+    id: int | None = Field(default=None)
+    date_created: str | None = Field(default=None)
+    date_created_gmt: str | None = Field(default=None)
+    amount: str | None = Field(default=None)
+    reason: str | None = Field(default=None)
+    refunded_by: int | None = Field(default=None)
+    refunded_payment: bool | None = Field(default=None)
+    meta_data: list[RefundMetaDataItem] | None = Field(default=None)
+    line_items: list[RefundLineItemsItem] | None = Field(default=None)
+    shipping_lines: list[RefundShippingLinesItem] | None = Field(default=None)
+    tax_lines: list[RefundTaxLinesItem] | None = Field(default=None)
+    fee_lines: list[RefundFeeLinesItem] | None = Field(default=None)
 
 class PaymentGateway(BaseModel):
     """PaymentGateway type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str | None, Any] = Field(default=None)
-    title: Union[str | None, Any] = Field(default=None)
-    description: Union[str | None, Any] = Field(default=None)
-    order: Union[int | None, Any] = Field(default=None)
-    enabled: Union[bool | None, Any] = Field(default=None)
-    method_title: Union[str | None, Any] = Field(default=None)
-    method_description: Union[str | None, Any] = Field(default=None)
-    method_supports: Union[list[str | None] | None, Any] = Field(default=None)
-    settings: Union[dict[str, Any] | None, Any] = Field(default=None)
-    needs_setup: Union[bool | None, Any] = Field(default=None)
-    post_install_scripts: Union[list[str | None] | None, Any] = Field(default=None)
-    settings_url: Union[str | None, Any] = Field(default=None)
-    connection_url: Union[str | None, Any] = Field(default=None)
-    setup_help_text: Union[str | None, Any] = Field(default=None)
-    required_settings_keys: Union[list[str | None] | None, Any] = Field(default=None)
+    id: str | None = Field(default=None)
+    title: str | None = Field(default=None)
+    description: str | None = Field(default=None)
+    order: int | None = Field(default=None)
+    enabled: bool | None = Field(default=None)
+    method_title: str | None = Field(default=None)
+    method_description: str | None = Field(default=None)
+    method_supports: list[str | None] | None = Field(default=None)
+    settings: dict[str, Any] | None = Field(default=None)
+    needs_setup: bool | None = Field(default=None)
+    post_install_scripts: list[str | None] | None = Field(default=None)
+    settings_url: str | None = Field(default=None)
+    connection_url: str | None = Field(default=None)
+    setup_help_text: str | None = Field(default=None)
+    required_settings_keys: list[str | None] | None = Field(default=None)
 
 class ShippingMethod(BaseModel):
     """ShippingMethod type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str | None, Any] = Field(default=None)
-    title: Union[str | None, Any] = Field(default=None)
-    description: Union[str | None, Any] = Field(default=None)
+    id: str | None = Field(default=None)
+    title: str | None = Field(default=None)
+    description: str | None = Field(default=None)
 
 class ShippingZone(BaseModel):
     """ShippingZone type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    order: Union[int | None, Any] = Field(default=None)
+    id: int | None = Field(default=None)
+    name: str | None = Field(default=None)
+    order: int | None = Field(default=None)
 
 class TaxRate(BaseModel):
     """TaxRate type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int | None, Any] = Field(default=None)
-    country: Union[str | None, Any] = Field(default=None)
-    state: Union[str | None, Any] = Field(default=None)
-    postcode: Union[str | None, Any] = Field(default=None)
-    city: Union[str | None, Any] = Field(default=None)
-    postcodes: Union[list[str | None] | None, Any] = Field(default=None)
-    cities: Union[list[str | None] | None, Any] = Field(default=None)
-    rate: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    priority: Union[int | None, Any] = Field(default=None)
-    compound: Union[bool | None, Any] = Field(default=None)
-    shipping: Union[bool | None, Any] = Field(default=None)
-    order: Union[int | None, Any] = Field(default=None)
-    class_: Union[str | None, Any] = Field(default=None, alias="class")
+    id: int | None = Field(default=None)
+    country: str | None = Field(default=None)
+    state: str | None = Field(default=None)
+    postcode: str | None = Field(default=None)
+    city: str | None = Field(default=None)
+    postcodes: list[str | None] | None = Field(default=None)
+    cities: list[str | None] | None = Field(default=None)
+    rate: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    priority: int | None = Field(default=None)
+    compound: bool | None = Field(default=None)
+    shipping: bool | None = Field(default=None)
+    order: int | None = Field(default=None)
+    class_: str | None = Field(default=None, alias="class")
 
 class TaxClass(BaseModel):
     """TaxClass type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    slug: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
+    slug: str | None = Field(default=None)
+    name: str | None = Field(default=None)
 
 # ===== METADATA TYPE DEFINITIONS (PYDANTIC) =====
 # Meta types for operations that extract metadata (e.g., pagination info)
@@ -852,97 +852,97 @@ class CustomersListResultMeta(BaseModel):
     """Metadata for customers.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next: Union[str | None, Any] = Field(default=None)
+    next: str | None = Field(default=None)
 
 class OrdersListResultMeta(BaseModel):
     """Metadata for orders.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next: Union[str | None, Any] = Field(default=None)
+    next: str | None = Field(default=None)
 
 class ProductsListResultMeta(BaseModel):
     """Metadata for products.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next: Union[str | None, Any] = Field(default=None)
+    next: str | None = Field(default=None)
 
 class CouponsListResultMeta(BaseModel):
     """Metadata for coupons.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next: Union[str | None, Any] = Field(default=None)
+    next: str | None = Field(default=None)
 
 class ProductCategoriesListResultMeta(BaseModel):
     """Metadata for product_categories.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next: Union[str | None, Any] = Field(default=None)
+    next: str | None = Field(default=None)
 
 class ProductTagsListResultMeta(BaseModel):
     """Metadata for product_tags.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next: Union[str | None, Any] = Field(default=None)
+    next: str | None = Field(default=None)
 
 class ProductReviewsListResultMeta(BaseModel):
     """Metadata for product_reviews.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next: Union[str | None, Any] = Field(default=None)
+    next: str | None = Field(default=None)
 
 class ProductAttributesListResultMeta(BaseModel):
     """Metadata for product_attributes.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next: Union[str | None, Any] = Field(default=None)
+    next: str | None = Field(default=None)
 
 class ProductVariationsListResultMeta(BaseModel):
     """Metadata for product_variations.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next: Union[str | None, Any] = Field(default=None)
+    next: str | None = Field(default=None)
 
 class OrderNotesListResultMeta(BaseModel):
     """Metadata for order_notes.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next: Union[str | None, Any] = Field(default=None)
+    next: str | None = Field(default=None)
 
 class RefundsListResultMeta(BaseModel):
     """Metadata for refunds.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next: Union[str | None, Any] = Field(default=None)
+    next: str | None = Field(default=None)
 
 class PaymentGatewaysListResultMeta(BaseModel):
     """Metadata for payment_gateways.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next: Union[str | None, Any] = Field(default=None)
+    next: str | None = Field(default=None)
 
 class ShippingMethodsListResultMeta(BaseModel):
     """Metadata for shipping_methods.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next: Union[str | None, Any] = Field(default=None)
+    next: str | None = Field(default=None)
 
 class ShippingZonesListResultMeta(BaseModel):
     """Metadata for shipping_zones.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next: Union[str | None, Any] = Field(default=None)
+    next: str | None = Field(default=None)
 
 class TaxRatesListResultMeta(BaseModel):
     """Metadata for tax_rates.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next: Union[str | None, Any] = Field(default=None)
+    next: str | None = Field(default=None)
 
 class TaxClassesListResultMeta(BaseModel):
     """Metadata for tax_classes.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next: Union[str | None, Any] = Field(default=None)
+    next: str | None = Field(default=None)
 
 # ===== CHECK RESULT MODEL =====
 

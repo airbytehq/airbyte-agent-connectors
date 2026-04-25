@@ -115,7 +115,7 @@ class GoogleDriveConnector:
 
     connector_name = "google-drive"
     connector_version = "0.2.4"
-    sdk_version = "0.1.71"
+    sdk_version = "0.1.72"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {

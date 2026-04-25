@@ -8,7 +8,7 @@ and response envelope types.
 from __future__ import annotations
 
 from pydantic import BaseModel, ConfigDict, Field
-from typing import TypeVar, Generic, Union, Any
+from typing import TypeVar, Generic, Any
 from typing import Optional
 
 # Authentication configuration - multiple options available
@@ -55,277 +55,277 @@ class ContactProperties(BaseModel):
     """Contact properties"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    createdate: Union[str | None, Any] = Field(default=None)
-    email: Union[str | None, Any] = Field(default=None)
-    firstname: Union[str | None, Any] = Field(default=None)
-    hs_object_id: Union[str | None, Any] = Field(default=None)
-    lastmodifieddate: Union[str | None, Any] = Field(default=None)
-    lastname: Union[str | None, Any] = Field(default=None)
+    createdate: str | None | None = Field(default=None)
+    email: str | None | None = Field(default=None)
+    firstname: str | None | None = Field(default=None)
+    hs_object_id: str | None | None = Field(default=None)
+    lastmodifieddate: str | None | None = Field(default=None)
+    lastname: str | None | None = Field(default=None)
 
 class Contact(BaseModel):
     """HubSpot contact object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    properties: Union[ContactProperties, Any] = Field(default=None)
-    created_at: Union[str, Any] = Field(default=None, alias="createdAt")
-    updated_at: Union[str, Any] = Field(default=None, alias="updatedAt")
-    archived: Union[bool, Any] = Field(default=None)
-    archived_at: Union[str | None, Any] = Field(default=None, alias="archivedAt")
-    properties_with_history: Union[dict[str, Any] | None, Any] = Field(default=None, alias="propertiesWithHistory")
-    associations: Union[dict[str, Any] | None, Any] = Field(default=None)
-    object_write_trace_id: Union[str | None, Any] = Field(default=None, alias="objectWriteTraceId")
-    url: Union[str | None, Any] = Field(default=None)
+    id: str | None = Field(default=None)
+    properties: ContactProperties | None = Field(default=None)
+    created_at: str | None = Field(default=None, alias="createdAt")
+    updated_at: str | None = Field(default=None, alias="updatedAt")
+    archived: bool | None = Field(default=None)
+    archived_at: str | None = Field(default=None, alias="archivedAt")
+    properties_with_history: dict[str, Any] | None = Field(default=None, alias="propertiesWithHistory")
+    associations: dict[str, Any] | None = Field(default=None)
+    object_write_trace_id: str | None = Field(default=None, alias="objectWriteTraceId")
+    url: str | None = Field(default=None)
 
 class PagingNext(BaseModel):
     """Nested schema for Paging.next"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    after: Union[str, Any] = Field(default=None, description="Cursor for next page")
+    after: str | None = Field(default=None, description="Cursor for next page")
     """Cursor for next page"""
-    link: Union[str, Any] = Field(default=None, description="URL for next page")
+    link: str | None = Field(default=None, description="URL for next page")
     """URL for next page"""
 
 class Paging(BaseModel):
     """Pagination information"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next: Union[PagingNext, Any] = Field(default=None)
+    next: PagingNext | None = Field(default=None)
 
 class ContactsList(BaseModel):
     """Paginated list of contacts"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    results: Union[list[Contact], Any] = Field(default=None)
-    paging: Union[Paging, Any] = Field(default=None)
-    total: Union[int, Any] = Field(default=None)
+    results: list[Contact] | None = Field(default=None)
+    paging: Paging | None = Field(default=None)
+    total: int | None = Field(default=None)
 
 class CompanyProperties(BaseModel):
     """Company properties"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    createdate: Union[str | None, Any] = Field(default=None)
-    domain: Union[str | None, Any] = Field(default=None)
-    hs_lastmodifieddate: Union[str | None, Any] = Field(default=None)
-    hs_object_id: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
+    createdate: str | None | None = Field(default=None)
+    domain: str | None | None = Field(default=None)
+    hs_lastmodifieddate: str | None | None = Field(default=None)
+    hs_object_id: str | None | None = Field(default=None)
+    name: str | None | None = Field(default=None)
 
 class Company(BaseModel):
     """HubSpot company object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    properties: Union[CompanyProperties, Any] = Field(default=None)
-    created_at: Union[str, Any] = Field(default=None, alias="createdAt")
-    updated_at: Union[str, Any] = Field(default=None, alias="updatedAt")
-    archived: Union[bool, Any] = Field(default=None)
-    archived_at: Union[str | None, Any] = Field(default=None, alias="archivedAt")
-    properties_with_history: Union[dict[str, Any] | None, Any] = Field(default=None, alias="propertiesWithHistory")
-    associations: Union[dict[str, Any] | None, Any] = Field(default=None)
-    object_write_trace_id: Union[str | None, Any] = Field(default=None, alias="objectWriteTraceId")
-    url: Union[str | None, Any] = Field(default=None)
+    id: str | None = Field(default=None)
+    properties: CompanyProperties | None = Field(default=None)
+    created_at: str | None = Field(default=None, alias="createdAt")
+    updated_at: str | None = Field(default=None, alias="updatedAt")
+    archived: bool | None = Field(default=None)
+    archived_at: str | None = Field(default=None, alias="archivedAt")
+    properties_with_history: dict[str, Any] | None = Field(default=None, alias="propertiesWithHistory")
+    associations: dict[str, Any] | None = Field(default=None)
+    object_write_trace_id: str | None = Field(default=None, alias="objectWriteTraceId")
+    url: str | None = Field(default=None)
 
 class CompaniesList(BaseModel):
     """Paginated list of companies"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    results: Union[list[Company], Any] = Field(default=None)
-    paging: Union[Paging, Any] = Field(default=None)
-    total: Union[int, Any] = Field(default=None)
+    results: list[Company] | None = Field(default=None)
+    paging: Paging | None = Field(default=None)
+    total: int | None = Field(default=None)
 
 class DealProperties(BaseModel):
     """Deal properties"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    amount: Union[str | None, Any] = Field(default=None)
-    closedate: Union[str | None, Any] = Field(default=None)
-    createdate: Union[str | None, Any] = Field(default=None)
-    dealname: Union[str | None, Any] = Field(default=None)
-    dealstage: Union[str | None, Any] = Field(default=None)
-    hs_lastmodifieddate: Union[str | None, Any] = Field(default=None)
-    hs_object_id: Union[str | None, Any] = Field(default=None)
-    pipeline: Union[str | None, Any] = Field(default=None)
+    amount: str | None | None = Field(default=None)
+    closedate: str | None | None = Field(default=None)
+    createdate: str | None | None = Field(default=None)
+    dealname: str | None | None = Field(default=None)
+    dealstage: str | None | None = Field(default=None)
+    hs_lastmodifieddate: str | None | None = Field(default=None)
+    hs_object_id: str | None | None = Field(default=None)
+    pipeline: str | None | None = Field(default=None)
 
 class Deal(BaseModel):
     """HubSpot deal object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    properties: Union[DealProperties, Any] = Field(default=None)
-    created_at: Union[str, Any] = Field(default=None, alias="createdAt")
-    updated_at: Union[str, Any] = Field(default=None, alias="updatedAt")
-    archived: Union[bool, Any] = Field(default=None)
-    archived_at: Union[str | None, Any] = Field(default=None, alias="archivedAt")
-    properties_with_history: Union[dict[str, Any] | None, Any] = Field(default=None, alias="propertiesWithHistory")
-    associations: Union[dict[str, Any] | None, Any] = Field(default=None)
-    object_write_trace_id: Union[str | None, Any] = Field(default=None, alias="objectWriteTraceId")
-    url: Union[str | None, Any] = Field(default=None)
+    id: str | None = Field(default=None)
+    properties: DealProperties | None = Field(default=None)
+    created_at: str | None = Field(default=None, alias="createdAt")
+    updated_at: str | None = Field(default=None, alias="updatedAt")
+    archived: bool | None = Field(default=None)
+    archived_at: str | None = Field(default=None, alias="archivedAt")
+    properties_with_history: dict[str, Any] | None = Field(default=None, alias="propertiesWithHistory")
+    associations: dict[str, Any] | None = Field(default=None)
+    object_write_trace_id: str | None = Field(default=None, alias="objectWriteTraceId")
+    url: str | None = Field(default=None)
 
 class DealsList(BaseModel):
     """Paginated list of deals"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    results: Union[list[Deal], Any] = Field(default=None)
-    paging: Union[Paging, Any] = Field(default=None)
-    total: Union[int, Any] = Field(default=None)
+    results: list[Deal] | None = Field(default=None)
+    paging: Paging | None = Field(default=None)
+    total: int | None = Field(default=None)
 
 class TicketProperties(BaseModel):
     """Ticket properties"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    content: Union[str | None, Any] = Field(default=None)
-    createdate: Union[str | None, Any] = Field(default=None)
-    hs_lastmodifieddate: Union[str | None, Any] = Field(default=None)
-    hs_object_id: Union[str | None, Any] = Field(default=None)
-    hs_pipeline: Union[str | None, Any] = Field(default=None)
-    hs_pipeline_stage: Union[str | None, Any] = Field(default=None)
-    hs_ticket_category: Union[str | None, Any] = Field(default=None)
-    hs_ticket_priority: Union[str | None, Any] = Field(default=None)
-    subject: Union[str | None, Any] = Field(default=None)
+    content: str | None | None = Field(default=None)
+    createdate: str | None | None = Field(default=None)
+    hs_lastmodifieddate: str | None | None = Field(default=None)
+    hs_object_id: str | None | None = Field(default=None)
+    hs_pipeline: str | None | None = Field(default=None)
+    hs_pipeline_stage: str | None | None = Field(default=None)
+    hs_ticket_category: str | None | None = Field(default=None)
+    hs_ticket_priority: str | None | None = Field(default=None)
+    subject: str | None | None = Field(default=None)
 
 class Ticket(BaseModel):
     """HubSpot ticket object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    properties: Union[TicketProperties, Any] = Field(default=None)
-    created_at: Union[str, Any] = Field(default=None, alias="createdAt")
-    updated_at: Union[str, Any] = Field(default=None, alias="updatedAt")
-    archived: Union[bool, Any] = Field(default=None)
-    archived_at: Union[str | None, Any] = Field(default=None, alias="archivedAt")
-    properties_with_history: Union[dict[str, Any] | None, Any] = Field(default=None, alias="propertiesWithHistory")
-    associations: Union[dict[str, Any] | None, Any] = Field(default=None)
-    object_write_trace_id: Union[str | None, Any] = Field(default=None, alias="objectWriteTraceId")
-    url: Union[str | None, Any] = Field(default=None)
+    id: str | None = Field(default=None)
+    properties: TicketProperties | None = Field(default=None)
+    created_at: str | None = Field(default=None, alias="createdAt")
+    updated_at: str | None = Field(default=None, alias="updatedAt")
+    archived: bool | None = Field(default=None)
+    archived_at: str | None = Field(default=None, alias="archivedAt")
+    properties_with_history: dict[str, Any] | None = Field(default=None, alias="propertiesWithHistory")
+    associations: dict[str, Any] | None = Field(default=None)
+    object_write_trace_id: str | None = Field(default=None, alias="objectWriteTraceId")
+    url: str | None = Field(default=None)
 
 class TicketsList(BaseModel):
     """Paginated list of tickets"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    results: Union[list[Ticket], Any] = Field(default=None)
-    paging: Union[Paging, Any] = Field(default=None)
-    total: Union[int, Any] = Field(default=None)
+    results: list[Ticket] | None = Field(default=None)
+    paging: Paging | None = Field(default=None)
+    total: int | None = Field(default=None)
 
 class SchemaLabels(BaseModel):
     """Display labels"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    singular: Union[str, Any] = Field(default=None)
-    plural: Union[str, Any] = Field(default=None)
+    singular: str | None = Field(default=None)
+    plural: str | None = Field(default=None)
 
 class SchemaPropertiesItemModificationmetadata(BaseModel):
     """Nested schema for SchemaPropertiesItem.modificationMetadata"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    archivable: Union[bool, Any] = Field(default=None)
-    read_only_definition: Union[bool, Any] = Field(default=None, alias="readOnlyDefinition")
-    read_only_value: Union[bool, Any] = Field(default=None, alias="readOnlyValue")
-    read_only_options: Union[bool, Any] = Field(default=None, alias="readOnlyOptions")
+    archivable: bool | None = Field(default=None)
+    read_only_definition: bool | None = Field(default=None, alias="readOnlyDefinition")
+    read_only_value: bool | None = Field(default=None, alias="readOnlyValue")
+    read_only_options: bool | None = Field(default=None, alias="readOnlyOptions")
 
 class SchemaPropertiesItem(BaseModel):
     """Nested schema for Schema.properties_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    name: Union[str, Any] = Field(default=None)
-    label: Union[str, Any] = Field(default=None)
-    type_: Union[str, Any] = Field(default=None, alias="type")
-    field_type: Union[str, Any] = Field(default=None, alias="fieldType")
-    description: Union[str, Any] = Field(default=None)
-    group_name: Union[str, Any] = Field(default=None, alias="groupName")
-    display_order: Union[int, Any] = Field(default=None, alias="displayOrder")
-    calculated: Union[bool, Any] = Field(default=None)
-    external_options: Union[bool, Any] = Field(default=None, alias="externalOptions")
-    archived: Union[bool, Any] = Field(default=None)
-    has_unique_value: Union[bool, Any] = Field(default=None, alias="hasUniqueValue")
-    hidden: Union[bool, Any] = Field(default=None)
-    form_field: Union[bool, Any] = Field(default=None, alias="formField")
-    data_sensitivity: Union[str, Any] = Field(default=None, alias="dataSensitivity")
-    hubspot_defined: Union[bool, Any] = Field(default=None, alias="hubspotDefined")
-    updated_at: Union[str, Any] = Field(default=None, alias="updatedAt")
-    created_at: Union[str, Any] = Field(default=None, alias="createdAt")
-    options: Union[list[Any], Any] = Field(default=None)
-    created_user_id: Union[str, Any] = Field(default=None, alias="createdUserId")
-    updated_user_id: Union[str, Any] = Field(default=None, alias="updatedUserId")
-    show_currency_symbol: Union[bool, Any] = Field(default=None, alias="showCurrencySymbol")
-    modification_metadata: Union[SchemaPropertiesItemModificationmetadata, Any] = Field(default=None, alias="modificationMetadata")
+    name: str | None = Field(default=None)
+    label: str | None = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    field_type: str | None = Field(default=None, alias="fieldType")
+    description: str | None = Field(default=None)
+    group_name: str | None = Field(default=None, alias="groupName")
+    display_order: int | None = Field(default=None, alias="displayOrder")
+    calculated: bool | None = Field(default=None)
+    external_options: bool | None = Field(default=None, alias="externalOptions")
+    archived: bool | None = Field(default=None)
+    has_unique_value: bool | None = Field(default=None, alias="hasUniqueValue")
+    hidden: bool | None = Field(default=None)
+    form_field: bool | None = Field(default=None, alias="formField")
+    data_sensitivity: str | None = Field(default=None, alias="dataSensitivity")
+    hubspot_defined: bool | None = Field(default=None, alias="hubspotDefined")
+    updated_at: str | None = Field(default=None, alias="updatedAt")
+    created_at: str | None = Field(default=None, alias="createdAt")
+    options: list[Any] | None = Field(default=None)
+    created_user_id: str | None = Field(default=None, alias="createdUserId")
+    updated_user_id: str | None = Field(default=None, alias="updatedUserId")
+    show_currency_symbol: bool | None = Field(default=None, alias="showCurrencySymbol")
+    modification_metadata: SchemaPropertiesItemModificationmetadata | None = Field(default=None, alias="modificationMetadata")
 
 class SchemaAssociationsItem(BaseModel):
     """Nested schema for Schema.associations_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    from_object_type_id: Union[str, Any] = Field(default=None, alias="fromObjectTypeId")
-    to_object_type_id: Union[str, Any] = Field(default=None, alias="toObjectTypeId")
-    name: Union[str, Any] = Field(default=None)
-    cardinality: Union[str, Any] = Field(default=None)
-    id: Union[str, Any] = Field(default=None)
-    inverse_cardinality: Union[str, Any] = Field(default=None, alias="inverseCardinality")
-    has_user_enforced_max_to_object_ids: Union[bool, Any] = Field(default=None, alias="hasUserEnforcedMaxToObjectIds")
-    has_user_enforced_max_from_object_ids: Union[bool, Any] = Field(default=None, alias="hasUserEnforcedMaxFromObjectIds")
-    max_to_object_ids: Union[int, Any] = Field(default=None, alias="maxToObjectIds")
-    max_from_object_ids: Union[int, Any] = Field(default=None, alias="maxFromObjectIds")
-    created_at: Union[str | None, Any] = Field(default=None, alias="createdAt")
-    updated_at: Union[str | None, Any] = Field(default=None, alias="updatedAt")
+    from_object_type_id: str | None = Field(default=None, alias="fromObjectTypeId")
+    to_object_type_id: str | None = Field(default=None, alias="toObjectTypeId")
+    name: str | None = Field(default=None)
+    cardinality: str | None = Field(default=None)
+    id: str | None = Field(default=None)
+    inverse_cardinality: str | None = Field(default=None, alias="inverseCardinality")
+    has_user_enforced_max_to_object_ids: bool | None = Field(default=None, alias="hasUserEnforcedMaxToObjectIds")
+    has_user_enforced_max_from_object_ids: bool | None = Field(default=None, alias="hasUserEnforcedMaxFromObjectIds")
+    max_to_object_ids: int | None = Field(default=None, alias="maxToObjectIds")
+    max_from_object_ids: int | None = Field(default=None, alias="maxFromObjectIds")
+    created_at: str | None | None = Field(default=None, alias="createdAt")
+    updated_at: str | None | None = Field(default=None, alias="updatedAt")
 
 class Schema(BaseModel):
     """Custom object schema definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    labels: Union[SchemaLabels, Any] = Field(default=None)
-    object_type_id: Union[str, Any] = Field(default=None, alias="objectTypeId")
-    fully_qualified_name: Union[str, Any] = Field(default=None, alias="fullyQualifiedName")
-    required_properties: Union[list[str], Any] = Field(default=None, alias="requiredProperties")
-    searchable_properties: Union[list[str], Any] = Field(default=None, alias="searchableProperties")
-    primary_display_property: Union[str, Any] = Field(default=None, alias="primaryDisplayProperty")
-    secondary_display_properties: Union[list[str], Any] = Field(default=None, alias="secondaryDisplayProperties")
-    description: Union[str | None, Any] = Field(default=None)
-    allows_sensitive_properties: Union[bool, Any] = Field(default=None, alias="allowsSensitiveProperties")
-    archived: Union[bool, Any] = Field(default=None)
-    restorable: Union[bool, Any] = Field(default=None)
-    meta_type: Union[str, Any] = Field(default=None, alias="metaType")
-    created_by_user_id: Union[int, Any] = Field(default=None, alias="createdByUserId")
-    updated_by_user_id: Union[int, Any] = Field(default=None, alias="updatedByUserId")
-    properties: Union[list[SchemaPropertiesItem], Any] = Field(default=None)
-    associations: Union[list[SchemaAssociationsItem], Any] = Field(default=None)
-    created_at: Union[str, Any] = Field(default=None, alias="createdAt")
-    updated_at: Union[str, Any] = Field(default=None, alias="updatedAt")
+    id: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    labels: SchemaLabels | None = Field(default=None)
+    object_type_id: str | None = Field(default=None, alias="objectTypeId")
+    fully_qualified_name: str | None = Field(default=None, alias="fullyQualifiedName")
+    required_properties: list[str] | None = Field(default=None, alias="requiredProperties")
+    searchable_properties: list[str] | None = Field(default=None, alias="searchableProperties")
+    primary_display_property: str | None = Field(default=None, alias="primaryDisplayProperty")
+    secondary_display_properties: list[str] | None = Field(default=None, alias="secondaryDisplayProperties")
+    description: str | None = Field(default=None)
+    allows_sensitive_properties: bool | None = Field(default=None, alias="allowsSensitiveProperties")
+    archived: bool | None = Field(default=None)
+    restorable: bool | None = Field(default=None)
+    meta_type: str | None = Field(default=None, alias="metaType")
+    created_by_user_id: int | None = Field(default=None, alias="createdByUserId")
+    updated_by_user_id: int | None = Field(default=None, alias="updatedByUserId")
+    properties: list[SchemaPropertiesItem] | None = Field(default=None)
+    associations: list[SchemaAssociationsItem] | None = Field(default=None)
+    created_at: str | None = Field(default=None, alias="createdAt")
+    updated_at: str | None = Field(default=None, alias="updatedAt")
 
 class SchemasList(BaseModel):
     """List of custom object schemas"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    results: Union[list[Schema], Any] = Field(default=None)
+    results: list[Schema] | None = Field(default=None)
 
 class CRMObjectProperties(BaseModel):
     """Object properties"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    hs_createdate: Union[str | None, Any] = Field(default=None)
-    hs_lastmodifieddate: Union[str | None, Any] = Field(default=None)
-    hs_object_id: Union[str | None, Any] = Field(default=None)
+    hs_createdate: str | None | None = Field(default=None)
+    hs_lastmodifieddate: str | None | None = Field(default=None)
+    hs_object_id: str | None | None = Field(default=None)
 
 class CRMObject(BaseModel):
     """Generic HubSpot CRM object (for custom objects)"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    properties: Union[CRMObjectProperties, Any] = Field(default=None)
-    created_at: Union[str, Any] = Field(default=None, alias="createdAt")
-    updated_at: Union[str, Any] = Field(default=None, alias="updatedAt")
-    archived: Union[bool, Any] = Field(default=None)
-    archived_at: Union[str | None, Any] = Field(default=None, alias="archivedAt")
-    properties_with_history: Union[dict[str, Any] | None, Any] = Field(default=None, alias="propertiesWithHistory")
-    associations: Union[dict[str, Any] | None, Any] = Field(default=None)
-    object_write_trace_id: Union[str | None, Any] = Field(default=None, alias="objectWriteTraceId")
-    url: Union[str | None, Any] = Field(default=None)
+    id: str | None = Field(default=None)
+    properties: CRMObjectProperties | None = Field(default=None)
+    created_at: str | None = Field(default=None, alias="createdAt")
+    updated_at: str | None = Field(default=None, alias="updatedAt")
+    archived: bool | None = Field(default=None)
+    archived_at: str | None = Field(default=None, alias="archivedAt")
+    properties_with_history: dict[str, Any] | None = Field(default=None, alias="propertiesWithHistory")
+    associations: dict[str, Any] | None = Field(default=None)
+    object_write_trace_id: str | None = Field(default=None, alias="objectWriteTraceId")
+    url: str | None = Field(default=None)
 
 class ObjectsList(BaseModel):
     """Paginated list of generic CRM objects"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    results: Union[list[CRMObject], Any] = Field(default=None)
-    paging: Union[Paging, Any] = Field(default=None)
+    results: list[CRMObject] | None = Field(default=None)
+    paging: Paging | None = Field(default=None)
 
 # ===== METADATA TYPE DEFINITIONS (PYDANTIC) =====
 # Meta types for operations that extract metadata (e.g., pagination info)
@@ -334,68 +334,68 @@ class ContactsListResultMeta(BaseModel):
     """Metadata for contacts.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_cursor: Union[str, Any] = Field(default=None)
-    next_link: Union[str, Any] = Field(default=None)
+    next_cursor: str | None = Field(default=None)
+    next_link: str | None = Field(default=None)
 
 class ContactsApiSearchResultMeta(BaseModel):
     """Metadata for contacts.Action.API_SEARCH operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    total: Union[int, Any] = Field(default=None)
-    next_cursor: Union[str, Any] = Field(default=None)
-    next_link: Union[str, Any] = Field(default=None)
+    total: int | None = Field(default=None)
+    next_cursor: str | None = Field(default=None)
+    next_link: str | None = Field(default=None)
 
 class CompaniesListResultMeta(BaseModel):
     """Metadata for companies.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_cursor: Union[str, Any] = Field(default=None)
-    next_link: Union[str, Any] = Field(default=None)
+    next_cursor: str | None = Field(default=None)
+    next_link: str | None = Field(default=None)
 
 class CompaniesApiSearchResultMeta(BaseModel):
     """Metadata for companies.Action.API_SEARCH operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    total: Union[int, Any] = Field(default=None)
-    next_cursor: Union[str, Any] = Field(default=None)
-    next_link: Union[str, Any] = Field(default=None)
+    total: int | None = Field(default=None)
+    next_cursor: str | None = Field(default=None)
+    next_link: str | None = Field(default=None)
 
 class DealsListResultMeta(BaseModel):
     """Metadata for deals.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_cursor: Union[str, Any] = Field(default=None)
-    next_link: Union[str, Any] = Field(default=None)
+    next_cursor: str | None = Field(default=None)
+    next_link: str | None = Field(default=None)
 
 class DealsApiSearchResultMeta(BaseModel):
     """Metadata for deals.Action.API_SEARCH operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    total: Union[int, Any] = Field(default=None)
-    next_cursor: Union[str, Any] = Field(default=None)
-    next_link: Union[str, Any] = Field(default=None)
+    total: int | None = Field(default=None)
+    next_cursor: str | None = Field(default=None)
+    next_link: str | None = Field(default=None)
 
 class TicketsListResultMeta(BaseModel):
     """Metadata for tickets.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_cursor: Union[str, Any] = Field(default=None)
-    next_link: Union[str, Any] = Field(default=None)
+    next_cursor: str | None = Field(default=None)
+    next_link: str | None = Field(default=None)
 
 class TicketsApiSearchResultMeta(BaseModel):
     """Metadata for tickets.Action.API_SEARCH operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    total: Union[int, Any] = Field(default=None)
-    next_cursor: Union[str, Any] = Field(default=None)
-    next_link: Union[str, Any] = Field(default=None)
+    total: int | None = Field(default=None)
+    next_cursor: str | None = Field(default=None)
+    next_link: str | None = Field(default=None)
 
 class ObjectsListResultMeta(BaseModel):
     """Metadata for objects.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_cursor: Union[str, Any] = Field(default=None)
-    next_link: Union[str, Any] = Field(default=None)
+    next_cursor: str | None = Field(default=None)
+    next_link: str | None = Field(default=None)
 
 # ===== CHECK RESULT MODEL =====
 

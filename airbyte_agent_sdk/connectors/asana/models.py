@@ -8,7 +8,7 @@ and response envelope types.
 from __future__ import annotations
 
 from pydantic import BaseModel, ConfigDict, Field
-from typing import TypeVar, Generic, Union, Any
+from typing import TypeVar, Generic, Any
 from typing import Optional
 
 # Authentication configuration - multiple options available
@@ -43,790 +43,790 @@ class TaskCompactCreatedBy(BaseModel):
     """User who created the task"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    gid: Union[str, Any] = Field(default=None)
-    resource_type: Union[str, Any] = Field(default=None)
+    gid: str | None = Field(default=None)
+    resource_type: str | None = Field(default=None)
 
 class TaskCompact(BaseModel):
     """Compact task object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    gid: Union[str, Any] = Field(default=None)
-    resource_type: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    resource_subtype: Union[str, Any] = Field(default=None)
-    created_by: Union[TaskCompactCreatedBy, Any] = Field(default=None)
+    gid: str | None = Field(default=None)
+    resource_type: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    resource_subtype: str | None = Field(default=None)
+    created_by: TaskCompactCreatedBy | None = Field(default=None)
 
 class Task(BaseModel):
     """Full task object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    gid: Union[str, Any] = Field(default=None)
+    gid: str | None = Field(default=None)
 
 class TaskResponse(BaseModel):
     """Task response wrapper"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[Task, Any] = Field(default=None)
+    data: Task | None = Field(default=None)
 
 class TasksListNextPage(BaseModel):
     """Nested schema for TasksList.next_page"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    offset: Union[str, Any] = Field(default=None)
-    path: Union[str, Any] = Field(default=None)
-    uri: Union[str, Any] = Field(default=None)
+    offset: str | None = Field(default=None)
+    path: str | None = Field(default=None)
+    uri: str | None = Field(default=None)
 
 class TasksList(BaseModel):
     """Paginated list of tasks containing compact task objects"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[list[TaskCompact], Any] = Field(default=None)
-    next_page: Union[TasksListNextPage | None, Any] = Field(default=None)
+    data: list[TaskCompact] | None = Field(default=None)
+    next_page: TasksListNextPage | None = Field(default=None)
 
 class ProjectCompact(BaseModel):
     """Compact project object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    gid: Union[str, Any] = Field(default=None)
-    resource_type: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-
-class ProjectCompletedBy(BaseModel):
-    """Nested schema for Project.completed_by"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    gid: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    resource_type: Union[str, Any] = Field(default=None)
-
-class ProjectOwner(BaseModel):
-    """Nested schema for Project.owner"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    gid: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    resource_type: Union[str, Any] = Field(default=None)
-
-class ProjectCurrentStatusUpdate(BaseModel):
-    """Nested schema for Project.current_status_update"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    gid: Union[str, Any] = Field(default=None)
-    resource_type: Union[str, Any] = Field(default=None)
-    resource_subtype: Union[str, Any] = Field(default=None)
-    title: Union[str, Any] = Field(default=None)
-
-class ProjectTeam(BaseModel):
-    """Nested schema for Project.team"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    gid: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    resource_type: Union[str, Any] = Field(default=None)
-
-class ProjectFollowersItem(BaseModel):
-    """Nested schema for Project.followers_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    gid: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    resource_type: Union[str, Any] = Field(default=None)
-
-class ProjectCurrentStatusAuthor(BaseModel):
-    """Nested schema for ProjectCurrentStatus.author"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    gid: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    resource_type: Union[str, Any] = Field(default=None)
+    gid: str | None = Field(default=None)
+    resource_type: str | None = Field(default=None)
+    name: str | None = Field(default=None)
 
 class ProjectCurrentStatusCreatedBy(BaseModel):
     """Nested schema for ProjectCurrentStatus.created_by"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    gid: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    resource_type: Union[str, Any] = Field(default=None)
+    gid: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    resource_type: str | None = Field(default=None)
+
+class ProjectCurrentStatusAuthor(BaseModel):
+    """Nested schema for ProjectCurrentStatus.author"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    gid: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    resource_type: str | None = Field(default=None)
 
 class ProjectCurrentStatus(BaseModel):
     """Nested schema for Project.current_status"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    gid: Union[str, Any] = Field(default=None)
-    author: Union[ProjectCurrentStatusAuthor, Any] = Field(default=None)
-    color: Union[str, Any] = Field(default=None)
-    created_at: Union[str, Any] = Field(default=None)
-    created_by: Union[ProjectCurrentStatusCreatedBy, Any] = Field(default=None)
-    modified_at: Union[str, Any] = Field(default=None)
-    resource_type: Union[str, Any] = Field(default=None)
-    text: Union[str, Any] = Field(default=None)
-    title: Union[str, Any] = Field(default=None)
+    gid: str | None = Field(default=None)
+    author: ProjectCurrentStatusAuthor | None = Field(default=None)
+    color: str | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    created_by: ProjectCurrentStatusCreatedBy | None = Field(default=None)
+    modified_at: str | None = Field(default=None)
+    resource_type: str | None = Field(default=None)
+    text: str | None = Field(default=None)
+    title: str | None = Field(default=None)
 
 class ProjectMembersItem(BaseModel):
     """Nested schema for Project.members_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    gid: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    resource_type: Union[str, Any] = Field(default=None)
+    gid: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    resource_type: str | None = Field(default=None)
+
+class ProjectCompletedBy(BaseModel):
+    """Nested schema for Project.completed_by"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    gid: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    resource_type: str | None = Field(default=None)
+
+class ProjectTeam(BaseModel):
+    """Nested schema for Project.team"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    gid: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    resource_type: str | None = Field(default=None)
+
+class ProjectOwner(BaseModel):
+    """Nested schema for Project.owner"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    gid: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    resource_type: str | None = Field(default=None)
+
+class ProjectFollowersItem(BaseModel):
+    """Nested schema for Project.followers_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    gid: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    resource_type: str | None = Field(default=None)
 
 class ProjectWorkspace(BaseModel):
     """Nested schema for Project.workspace"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    gid: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    resource_type: Union[str, Any] = Field(default=None)
+    gid: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    resource_type: str | None = Field(default=None)
+
+class ProjectCurrentStatusUpdate(BaseModel):
+    """Nested schema for Project.current_status_update"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    gid: str | None = Field(default=None)
+    resource_type: str | None = Field(default=None)
+    resource_subtype: str | None = Field(default=None)
+    title: str | None = Field(default=None)
 
 class Project(BaseModel):
     """Full project object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    gid: Union[str, Any] = Field(default=None)
-    archived: Union[bool, Any] = Field(default=None)
-    color: Union[str | None, Any] = Field(default=None)
-    completed: Union[bool, Any] = Field(default=None)
-    completed_at: Union[str | None, Any] = Field(default=None)
-    created_at: Union[str, Any] = Field(default=None)
-    current_status: Union[ProjectCurrentStatus | None, Any] = Field(default=None)
-    current_status_update: Union[ProjectCurrentStatusUpdate | None, Any] = Field(default=None)
-    custom_fields: Union[list[Any], Any] = Field(default=None)
-    default_access_level: Union[str, Any] = Field(default=None)
-    default_view: Union[str, Any] = Field(default=None)
-    due_on: Union[str | None, Any] = Field(default=None)
-    due_date: Union[str | None, Any] = Field(default=None)
-    followers: Union[list[ProjectFollowersItem], Any] = Field(default=None)
-    members: Union[list[ProjectMembersItem], Any] = Field(default=None)
-    minimum_access_level_for_customization: Union[str, Any] = Field(default=None)
-    minimum_access_level_for_sharing: Union[str, Any] = Field(default=None)
-    modified_at: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    notes: Union[str, Any] = Field(default=None)
-    owner: Union[ProjectOwner, Any] = Field(default=None)
-    permalink_url: Union[str, Any] = Field(default=None)
-    privacy_setting: Union[str, Any] = Field(default=None)
-    public: Union[bool, Any] = Field(default=None)
-    resource_type: Union[str, Any] = Field(default=None)
-    start_on: Union[str | None, Any] = Field(default=None)
-    team: Union[ProjectTeam | None, Any] = Field(default=None)
-    workspace: Union[ProjectWorkspace, Any] = Field(default=None)
-    icon: Union[str | None, Any] = Field(default=None)
-    completed_by: Union[ProjectCompletedBy | None, Any] = Field(default=None)
+    gid: str | None = Field(default=None)
+    archived: bool | None = Field(default=None)
+    color: str | None = Field(default=None)
+    completed: bool | None = Field(default=None)
+    completed_at: str | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    current_status: ProjectCurrentStatus | None = Field(default=None)
+    current_status_update: ProjectCurrentStatusUpdate | None = Field(default=None)
+    custom_fields: list[Any] | None = Field(default=None)
+    default_access_level: str | None = Field(default=None)
+    default_view: str | None = Field(default=None)
+    due_on: str | None = Field(default=None)
+    due_date: str | None = Field(default=None)
+    followers: list[ProjectFollowersItem] | None = Field(default=None)
+    members: list[ProjectMembersItem] | None = Field(default=None)
+    minimum_access_level_for_customization: str | None = Field(default=None)
+    minimum_access_level_for_sharing: str | None = Field(default=None)
+    modified_at: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    notes: str | None = Field(default=None)
+    owner: ProjectOwner | None = Field(default=None)
+    permalink_url: str | None = Field(default=None)
+    privacy_setting: str | None = Field(default=None)
+    public: bool | None = Field(default=None)
+    resource_type: str | None = Field(default=None)
+    start_on: str | None = Field(default=None)
+    team: ProjectTeam | None = Field(default=None)
+    workspace: ProjectWorkspace | None = Field(default=None)
+    icon: str | None = Field(default=None)
+    completed_by: ProjectCompletedBy | None = Field(default=None)
 
 class ProjectResponse(BaseModel):
     """Project response wrapper"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[Project, Any] = Field(default=None)
+    data: Project | None = Field(default=None)
 
 class ProjectsListNextPage(BaseModel):
     """Nested schema for ProjectsList.next_page"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    offset: Union[str, Any] = Field(default=None)
-    path: Union[str, Any] = Field(default=None)
-    uri: Union[str, Any] = Field(default=None)
+    offset: str | None = Field(default=None)
+    path: str | None = Field(default=None)
+    uri: str | None = Field(default=None)
 
 class ProjectsList(BaseModel):
     """Paginated list of projects containing compact project objects"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[list[ProjectCompact], Any] = Field(default=None)
-    next_page: Union[ProjectsListNextPage | None, Any] = Field(default=None)
+    data: list[ProjectCompact] | None = Field(default=None)
+    next_page: ProjectsListNextPage | None = Field(default=None)
 
 class WorkspaceCompact(BaseModel):
     """Compact workspace object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    gid: Union[str, Any] = Field(default=None)
-    resource_type: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
+    gid: str | None = Field(default=None)
+    resource_type: str | None = Field(default=None)
+    name: str | None = Field(default=None)
 
 class Workspace(BaseModel):
     """Full workspace object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    gid: Union[str, Any] = Field(default=None)
-    resource_type: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    email_domains: Union[list[str], Any] = Field(default=None)
-    is_organization: Union[bool, Any] = Field(default=None)
+    gid: str | None = Field(default=None)
+    resource_type: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    email_domains: list[str] | None = Field(default=None)
+    is_organization: bool | None = Field(default=None)
 
 class WorkspaceResponse(BaseModel):
     """Workspace response wrapper"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[Workspace, Any] = Field(default=None)
+    data: Workspace | None = Field(default=None)
 
 class WorkspacesListNextPage(BaseModel):
     """Nested schema for WorkspacesList.next_page"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    offset: Union[str, Any] = Field(default=None)
-    path: Union[str, Any] = Field(default=None)
-    uri: Union[str, Any] = Field(default=None)
+    offset: str | None = Field(default=None)
+    path: str | None = Field(default=None)
+    uri: str | None = Field(default=None)
 
 class WorkspacesList(BaseModel):
     """Paginated list of workspaces containing compact workspace objects"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[list[WorkspaceCompact], Any] = Field(default=None)
-    next_page: Union[WorkspacesListNextPage | None, Any] = Field(default=None)
+    data: list[WorkspaceCompact] | None = Field(default=None)
+    next_page: WorkspacesListNextPage | None = Field(default=None)
 
 class UserCompact(BaseModel):
     """Compact user object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    gid: Union[str, Any] = Field(default=None)
-    resource_type: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
+    gid: str | None = Field(default=None)
+    resource_type: str | None = Field(default=None)
+    name: str | None = Field(default=None)
 
 class UserWorkspacesItem(BaseModel):
     """Nested schema for User.workspaces_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    gid: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    resource_type: Union[str, Any] = Field(default=None)
+    gid: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    resource_type: str | None = Field(default=None)
 
 class User(BaseModel):
     """Full user object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    gid: Union[str, Any] = Field(default=None)
-    email: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    photo: Union[dict[str, Any] | None, Any] = Field(default=None)
-    resource_type: Union[str, Any] = Field(default=None)
-    workspaces: Union[list[UserWorkspacesItem], Any] = Field(default=None)
+    gid: str | None = Field(default=None)
+    email: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    photo: dict[str, Any] | None = Field(default=None)
+    resource_type: str | None = Field(default=None)
+    workspaces: list[UserWorkspacesItem] | None = Field(default=None)
 
 class UserResponse(BaseModel):
     """User response wrapper"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[User, Any] = Field(default=None)
+    data: User | None = Field(default=None)
 
 class UsersListNextPage(BaseModel):
     """Nested schema for UsersList.next_page"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    offset: Union[str, Any] = Field(default=None)
-    path: Union[str, Any] = Field(default=None)
-    uri: Union[str, Any] = Field(default=None)
+    offset: str | None = Field(default=None)
+    path: str | None = Field(default=None)
+    uri: str | None = Field(default=None)
 
 class UsersList(BaseModel):
     """Paginated list of users containing compact user objects"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[list[UserCompact], Any] = Field(default=None)
-    next_page: Union[UsersListNextPage | None, Any] = Field(default=None)
+    data: list[UserCompact] | None = Field(default=None)
+    next_page: UsersListNextPage | None = Field(default=None)
 
 class TeamCompact(BaseModel):
     """Compact team object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    gid: Union[str, Any] = Field(default=None)
-    resource_type: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
+    gid: str | None = Field(default=None)
+    resource_type: str | None = Field(default=None)
+    name: str | None = Field(default=None)
 
 class TeamOrganization(BaseModel):
     """Nested schema for Team.organization"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    gid: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    resource_type: Union[str, Any] = Field(default=None)
+    gid: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    resource_type: str | None = Field(default=None)
 
 class Team(BaseModel):
     """Full team object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    gid: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    organization: Union[TeamOrganization, Any] = Field(default=None)
-    permalink_url: Union[str, Any] = Field(default=None)
-    resource_type: Union[str, Any] = Field(default=None)
+    gid: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    organization: TeamOrganization | None = Field(default=None)
+    permalink_url: str | None = Field(default=None)
+    resource_type: str | None = Field(default=None)
 
 class TeamResponse(BaseModel):
     """Team response wrapper"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[Team, Any] = Field(default=None)
+    data: Team | None = Field(default=None)
 
 class TeamsListNextPage(BaseModel):
     """Nested schema for TeamsList.next_page"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    offset: Union[str, Any] = Field(default=None)
-    path: Union[str, Any] = Field(default=None)
-    uri: Union[str, Any] = Field(default=None)
+    offset: str | None = Field(default=None)
+    path: str | None = Field(default=None)
+    uri: str | None = Field(default=None)
 
 class TeamsList(BaseModel):
     """Paginated list of teams containing compact team objects"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[list[TeamCompact], Any] = Field(default=None)
-    next_page: Union[TeamsListNextPage | None, Any] = Field(default=None)
+    data: list[TeamCompact] | None = Field(default=None)
+    next_page: TeamsListNextPage | None = Field(default=None)
 
 class AttachmentCompact(BaseModel):
     """Compact attachment object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    gid: Union[str, Any] = Field(default=None)
-    resource_type: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    resource_subtype: Union[str, Any] = Field(default=None)
+    gid: str | None = Field(default=None)
+    resource_type: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    resource_subtype: str | None = Field(default=None)
 
 class AttachmentParent(BaseModel):
     """The parent object this attachment is attached to"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    gid: Union[str, Any] = Field(default=None)
-    resource_type: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    resource_subtype: Union[str, Any] = Field(default=None, description="The subtype of the parent resource")
+    gid: str | None = Field(default=None)
+    resource_type: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    resource_subtype: str | None = Field(default=None, description="The subtype of the parent resource")
     """The subtype of the parent resource"""
 
 class Attachment(BaseModel):
     """Full attachment object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    gid: Union[str, Any] = Field(default=None)
-    resource_type: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    resource_subtype: Union[str, Any] = Field(default=None)
-    created_at: Union[str, Any] = Field(default=None)
-    download_url: Union[str | None, Any] = Field(default=None)
-    permanent_url: Union[str | None, Any] = Field(default=None)
-    host: Union[str, Any] = Field(default=None)
-    parent: Union[AttachmentParent, Any] = Field(default=None)
-    view_url: Union[str | None, Any] = Field(default=None)
-    size: Union[int | None, Any] = Field(default=None)
+    gid: str | None = Field(default=None)
+    resource_type: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    resource_subtype: str | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    download_url: str | None = Field(default=None)
+    permanent_url: str | None = Field(default=None)
+    host: str | None = Field(default=None)
+    parent: AttachmentParent | None = Field(default=None)
+    view_url: str | None = Field(default=None)
+    size: int | None = Field(default=None)
 
 class AttachmentResponse(BaseModel):
     """Attachment response wrapper"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[Attachment, Any] = Field(default=None)
+    data: Attachment | None = Field(default=None)
 
 class AttachmentsListNextPage(BaseModel):
     """Nested schema for AttachmentsList.next_page"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    offset: Union[str, Any] = Field(default=None)
-    path: Union[str, Any] = Field(default=None)
-    uri: Union[str, Any] = Field(default=None)
+    offset: str | None = Field(default=None)
+    path: str | None = Field(default=None)
+    uri: str | None = Field(default=None)
 
 class AttachmentsList(BaseModel):
     """Paginated list of attachments containing compact attachment objects"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[list[AttachmentCompact], Any] = Field(default=None)
-    next_page: Union[AttachmentsListNextPage | None, Any] = Field(default=None)
+    data: list[AttachmentCompact] | None = Field(default=None)
+    next_page: AttachmentsListNextPage | None = Field(default=None)
 
 class TagCompact(BaseModel):
     """Compact tag object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    gid: Union[str, Any] = Field(default=None)
-    resource_type: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
+    gid: str | None = Field(default=None)
+    resource_type: str | None = Field(default=None)
+    name: str | None = Field(default=None)
 
 class TagWorkspace(BaseModel):
     """Nested schema for Tag.workspace"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    gid: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    resource_type: Union[str, Any] = Field(default=None)
+    gid: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    resource_type: str | None = Field(default=None)
 
 class Tag(BaseModel):
     """Full tag object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    gid: Union[str, Any] = Field(default=None)
-    resource_type: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    color: Union[str, Any] = Field(default=None)
-    created_at: Union[str, Any] = Field(default=None)
-    followers: Union[list[Any], Any] = Field(default=None)
-    notes: Union[str, Any] = Field(default=None)
-    permalink_url: Union[str, Any] = Field(default=None)
-    workspace: Union[TagWorkspace, Any] = Field(default=None)
+    gid: str | None = Field(default=None)
+    resource_type: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    color: str | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    followers: list[Any] | None = Field(default=None)
+    notes: str | None = Field(default=None)
+    permalink_url: str | None = Field(default=None)
+    workspace: TagWorkspace | None = Field(default=None)
 
 class TagResponse(BaseModel):
     """Tag response wrapper"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[Tag, Any] = Field(default=None)
+    data: Tag | None = Field(default=None)
 
 class TagsListNextPage(BaseModel):
     """Nested schema for TagsList.next_page"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    offset: Union[str, Any] = Field(default=None)
-    path: Union[str, Any] = Field(default=None)
-    uri: Union[str, Any] = Field(default=None)
+    offset: str | None = Field(default=None)
+    path: str | None = Field(default=None)
+    uri: str | None = Field(default=None)
 
 class TagsList(BaseModel):
     """Paginated list of tags containing compact tag objects"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[list[TagCompact], Any] = Field(default=None)
-    next_page: Union[TagsListNextPage | None, Any] = Field(default=None)
+    data: list[TagCompact] | None = Field(default=None)
+    next_page: TagsListNextPage | None = Field(default=None)
 
 class SectionCompact(BaseModel):
     """Compact section object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    gid: Union[str, Any] = Field(default=None)
-    resource_type: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
+    gid: str | None = Field(default=None)
+    resource_type: str | None = Field(default=None)
+    name: str | None = Field(default=None)
 
 class SectionProject(BaseModel):
     """Nested schema for Section.project"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    gid: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    resource_type: Union[str, Any] = Field(default=None)
+    gid: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    resource_type: str | None = Field(default=None)
 
 class Section(BaseModel):
     """Full section object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    gid: Union[str, Any] = Field(default=None)
-    resource_type: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    created_at: Union[str, Any] = Field(default=None)
-    project: Union[SectionProject, Any] = Field(default=None)
+    gid: str | None = Field(default=None)
+    resource_type: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    project: SectionProject | None = Field(default=None)
 
 class SectionResponse(BaseModel):
     """Section response wrapper"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[Section, Any] = Field(default=None)
+    data: Section | None = Field(default=None)
 
 class SectionsListNextPage(BaseModel):
     """Nested schema for SectionsList.next_page"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    offset: Union[str, Any] = Field(default=None)
-    path: Union[str, Any] = Field(default=None)
-    uri: Union[str, Any] = Field(default=None)
+    offset: str | None = Field(default=None)
+    path: str | None = Field(default=None)
+    uri: str | None = Field(default=None)
 
 class SectionsList(BaseModel):
     """Paginated list of sections containing compact section objects"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[list[SectionCompact], Any] = Field(default=None)
-    next_page: Union[SectionsListNextPage | None, Any] = Field(default=None)
+    data: list[SectionCompact] | None = Field(default=None)
+    next_page: SectionsListNextPage | None = Field(default=None)
 
 class SectionCreateParamsData(BaseModel):
     """Nested schema for SectionCreateParams.data"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    name: Union[str, Any] = Field(default=None, description="The name of the section (this is displayed as the column header in board view)")
+    name: str = Field(description="The name of the section (this is displayed as the column header in board view)")
     """The name of the section (this is displayed as the column header in board view)"""
-    insert_before: Union[str, Any] = Field(default=None, description="GID of a section in the same project before which the new section should be inserted. Cannot be provided together with insert_after.")
+    insert_before: str | None = Field(default=None, description="GID of a section in the same project before which the new section should be inserted. Cannot be provided together with insert_after.")
     """GID of a section in the same project before which the new section should be inserted. Cannot be provided together with insert_after."""
-    insert_after: Union[str, Any] = Field(default=None, description="GID of a section in the same project after which the new section should be inserted. Cannot be provided together with insert_before.")
+    insert_after: str | None = Field(default=None, description="GID of a section in the same project after which the new section should be inserted. Cannot be provided together with insert_before.")
     """GID of a section in the same project after which the new section should be inserted. Cannot be provided together with insert_before."""
 
 class SectionCreateParams(BaseModel):
     """Parameters for creating a new section in a project"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[SectionCreateParamsData, Any] = Field(default=None)
+    data: SectionCreateParamsData
 
 class SectionUpdateParamsData(BaseModel):
     """Nested schema for SectionUpdateParams.data"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    name: Union[str, Any] = Field(default=None, description="The new name of the section")
+    name: str | None = Field(default=None, description="The new name of the section")
     """The new name of the section"""
 
 class SectionUpdateParams(BaseModel):
     """Parameters for updating an existing section"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[SectionUpdateParamsData, Any] = Field(default=None)
+    data: SectionUpdateParamsData
 
 class SectionAddTaskParamsData(BaseModel):
     """Nested schema for SectionAddTaskParams.data"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    task: Union[str, Any] = Field(default=None, description="The GID of the task to add to this section")
+    task: str = Field(description="The GID of the task to add to this section")
     """The GID of the task to add to this section"""
-    insert_before: Union[str, Any] = Field(default=None, description="GID of a task in this section before which the added task should be inserted. Cannot be provided together with insert_after.")
+    insert_before: str | None = Field(default=None, description="GID of a task in this section before which the added task should be inserted. Cannot be provided together with insert_after.")
     """GID of a task in this section before which the added task should be inserted. Cannot be provided together with insert_after."""
-    insert_after: Union[str, Any] = Field(default=None, description="GID of a task in this section after which the added task should be inserted. Cannot be provided together with insert_before.")
+    insert_after: str | None = Field(default=None, description="GID of a task in this section after which the added task should be inserted. Cannot be provided together with insert_before.")
     """GID of a task in this section after which the added task should be inserted. Cannot be provided together with insert_before."""
 
 class SectionAddTaskParams(BaseModel):
     """Parameters for adding a task to a section"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[SectionAddTaskParamsData, Any] = Field(default=None)
+    data: SectionAddTaskParamsData
 
 class TagCreateParamsData(BaseModel):
     """Nested schema for TagCreateParams.data"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    name: Union[str, Any] = Field(default=None, description="Name of the tag")
+    name: str = Field(description="Name of the tag")
     """Name of the tag"""
-    color: Union[str, Any] = Field(default=None, description="Color of the tag. Must be one of: dark-pink, dark-green, dark-blue, dark-red, dark-teal, dark-brown, dark-orange, dark-purple, dark-warm-gray, light-pink, light-green, light-blue, light-red, light-teal, light-brown, light-orange, light-purple, light-warm-gray, none, null")
+    color: str | None = Field(default=None, description="Color of the tag. Must be one of: dark-pink, dark-green, dark-blue, dark-red, dark-teal, dark-brown, dark-orange, dark-purple, dark-warm-gray, light-pink, light-green, light-blue, light-red, light-teal, light-brown, light-orange, light-purple, light-warm-gray, none, null")
     """Color of the tag. Must be one of: dark-pink, dark-green, dark-blue, dark-red, dark-teal, dark-brown, dark-orange, dark-purple, dark-warm-gray, light-pink, light-green, light-blue, light-red, light-teal, light-brown, light-orange, light-purple, light-warm-gray, none, null"""
-    notes: Union[str, Any] = Field(default=None, description="Free-form textual description of the tag")
+    notes: str | None = Field(default=None, description="Free-form textual description of the tag")
     """Free-form textual description of the tag"""
 
 class TagCreateParams(BaseModel):
     """Parameters for creating a new tag in a workspace"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[TagCreateParamsData, Any] = Field(default=None)
+    data: TagCreateParamsData
 
 class TagUpdateParamsData(BaseModel):
     """Nested schema for TagUpdateParams.data"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    name: Union[str, Any] = Field(default=None, description="Name of the tag")
+    name: str | None = Field(default=None, description="Name of the tag")
     """Name of the tag"""
-    color: Union[str, Any] = Field(default=None, description="Color of the tag")
+    color: str | None = Field(default=None, description="Color of the tag")
     """Color of the tag"""
-    notes: Union[str, Any] = Field(default=None, description="Free-form textual description of the tag")
+    notes: str | None = Field(default=None, description="Free-form textual description of the tag")
     """Free-form textual description of the tag"""
 
 class TagUpdateParams(BaseModel):
     """Parameters for updating an existing tag"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[TagUpdateParamsData, Any] = Field(default=None)
+    data: TagUpdateParamsData
 
 class TaskAddTagParamsData(BaseModel):
     """Nested schema for TaskAddTagParams.data"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    tag: Union[str, Any] = Field(default=None, description="The GID of the tag to add to the task")
+    tag: str = Field(description="The GID of the tag to add to the task")
     """The GID of the tag to add to the task"""
 
 class TaskAddTagParams(BaseModel):
     """Parameters for adding a tag to a task"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[TaskAddTagParamsData, Any] = Field(default=None)
+    data: TaskAddTagParamsData
 
 class TaskRemoveTagParamsData(BaseModel):
     """Nested schema for TaskRemoveTagParams.data"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    tag: Union[str, Any] = Field(default=None, description="The GID of the tag to remove from the task")
+    tag: str = Field(description="The GID of the tag to remove from the task")
     """The GID of the tag to remove from the task"""
 
 class TaskRemoveTagParams(BaseModel):
     """Parameters for removing a tag from a task"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[TaskRemoveTagParamsData, Any] = Field(default=None)
+    data: TaskRemoveTagParamsData
 
 class TaskCreateParamsData(BaseModel):
     """Nested schema for TaskCreateParams.data"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    name: Union[str, Any] = Field(default=None, description="Name of the task")
+    name: str = Field(description="Name of the task")
     """Name of the task"""
-    workspace: Union[str, Any] = Field(default=None, description="GID of the workspace to create the task in")
+    workspace: str = Field(description="GID of the workspace to create the task in")
     """GID of the workspace to create the task in"""
-    projects: Union[list[str], Any] = Field(default=None, description="Array of project GIDs to add the task to")
+    projects: list[str] | None = Field(default=None, description="Array of project GIDs to add the task to")
     """Array of project GIDs to add the task to"""
-    assignee: Union[str, Any] = Field(default=None, description="GID of the user to assign the task to, or 'me' for the current user")
+    assignee: str | None = Field(default=None, description="GID of the user to assign the task to, or 'me' for the current user")
     """GID of the user to assign the task to, or 'me' for the current user"""
-    notes: Union[str, Any] = Field(default=None, description="Free-form textual description of the task (plain text, no formatting)")
+    notes: str | None = Field(default=None, description="Free-form textual description of the task (plain text, no formatting)")
     """Free-form textual description of the task (plain text, no formatting)"""
-    html_notes: Union[str, Any] = Field(default=None, description="HTML-formatted description of the task")
+    html_notes: str | None = Field(default=None, description="HTML-formatted description of the task")
     """HTML-formatted description of the task"""
-    due_on: Union[str, Any] = Field(default=None, description="Due date in YYYY-MM-DD format")
+    due_on: str | None = Field(default=None, description="Due date in YYYY-MM-DD format")
     """Due date in YYYY-MM-DD format"""
-    due_at: Union[str, Any] = Field(default=None, description="Due date and time in ISO 8601 format (e.g., 2025-03-20T12:00:00.000Z)")
+    due_at: str | None = Field(default=None, description="Due date and time in ISO 8601 format (e.g., 2025-03-20T12:00:00.000Z)")
     """Due date and time in ISO 8601 format (e.g., 2025-03-20T12:00:00.000Z)"""
-    start_on: Union[str, Any] = Field(default=None, description="Start date in YYYY-MM-DD format")
+    start_on: str | None = Field(default=None, description="Start date in YYYY-MM-DD format")
     """Start date in YYYY-MM-DD format"""
-    completed: Union[bool, Any] = Field(default=None, description="Whether the task is completed")
+    completed: bool | None = Field(default=None, description="Whether the task is completed")
     """Whether the task is completed"""
-    parent: Union[str, Any] = Field(default=None, description="GID of the parent task (to create a subtask)")
+    parent: str | None = Field(default=None, description="GID of the parent task (to create a subtask)")
     """GID of the parent task (to create a subtask)"""
-    tags: Union[list[str], Any] = Field(default=None, description="Array of tag GIDs to add to the task")
+    tags: list[str] | None = Field(default=None, description="Array of tag GIDs to add to the task")
     """Array of tag GIDs to add to the task"""
-    followers: Union[list[str], Any] = Field(default=None, description="Array of user GIDs to add as followers")
+    followers: list[str] | None = Field(default=None, description="Array of user GIDs to add as followers")
     """Array of user GIDs to add as followers"""
-    resource_subtype: Union[str, Any] = Field(default=None, description="The subtype of the task: default_task, milestone, section, or approval")
+    resource_subtype: str | None = Field(default=None, description="The subtype of the task: default_task, milestone, section, or approval")
     """The subtype of the task: default_task, milestone, section, or approval"""
 
 class TaskCreateParams(BaseModel):
     """Parameters for creating a new task"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[TaskCreateParamsData, Any] = Field(default=None)
+    data: TaskCreateParamsData
 
 class TaskUpdateParamsData(BaseModel):
     """Nested schema for TaskUpdateParams.data"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    name: Union[str, Any] = Field(default=None, description="Name of the task")
+    name: str | None = Field(default=None, description="Name of the task")
     """Name of the task"""
-    assignee: Union[str, Any] = Field(default=None, description="GID of the user to assign the task to, or 'me' for the current user")
+    assignee: str | None = Field(default=None, description="GID of the user to assign the task to, or 'me' for the current user")
     """GID of the user to assign the task to, or 'me' for the current user"""
-    notes: Union[str, Any] = Field(default=None, description="Free-form textual description of the task (plain text, no formatting)")
+    notes: str | None = Field(default=None, description="Free-form textual description of the task (plain text, no formatting)")
     """Free-form textual description of the task (plain text, no formatting)"""
-    html_notes: Union[str, Any] = Field(default=None, description="HTML-formatted description of the task")
+    html_notes: str | None = Field(default=None, description="HTML-formatted description of the task")
     """HTML-formatted description of the task"""
-    due_on: Union[str, Any] = Field(default=None, description="Due date in YYYY-MM-DD format")
+    due_on: str | None = Field(default=None, description="Due date in YYYY-MM-DD format")
     """Due date in YYYY-MM-DD format"""
-    due_at: Union[str, Any] = Field(default=None, description="Due date and time in ISO 8601 format (e.g., 2025-03-20T12:00:00.000Z)")
+    due_at: str | None = Field(default=None, description="Due date and time in ISO 8601 format (e.g., 2025-03-20T12:00:00.000Z)")
     """Due date and time in ISO 8601 format (e.g., 2025-03-20T12:00:00.000Z)"""
-    start_on: Union[str, Any] = Field(default=None, description="Start date in YYYY-MM-DD format")
+    start_on: str | None = Field(default=None, description="Start date in YYYY-MM-DD format")
     """Start date in YYYY-MM-DD format"""
-    completed: Union[bool, Any] = Field(default=None, description="Whether the task is completed")
+    completed: bool | None = Field(default=None, description="Whether the task is completed")
     """Whether the task is completed"""
 
 class TaskUpdateParams(BaseModel):
     """Parameters for updating an existing task"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[TaskUpdateParamsData, Any] = Field(default=None)
+    data: TaskUpdateParamsData
 
 class ProjectCreateParamsData(BaseModel):
     """Nested schema for ProjectCreateParams.data"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    name: Union[str, Any] = Field(default=None, description="Name of the project")
+    name: str = Field(description="Name of the project")
     """Name of the project"""
-    workspace: Union[str, Any] = Field(default=None, description="GID of the workspace to create the project in")
+    workspace: str = Field(description="GID of the workspace to create the project in")
     """GID of the workspace to create the project in"""
-    team: Union[str, Any] = Field(default=None, description="GID of the team to share the project with (required for organizations)")
+    team: str | None = Field(default=None, description="GID of the team to share the project with (required for organizations)")
     """GID of the team to share the project with (required for organizations)"""
-    notes: Union[str, Any] = Field(default=None, description="Free-form textual description of the project (plain text)")
+    notes: str | None = Field(default=None, description="Free-form textual description of the project (plain text)")
     """Free-form textual description of the project (plain text)"""
-    html_notes: Union[str, Any] = Field(default=None, description="HTML-formatted description of the project")
+    html_notes: str | None = Field(default=None, description="HTML-formatted description of the project")
     """HTML-formatted description of the project"""
-    color: Union[str, Any] = Field(default=None, description="Color of the project (e.g., dark-pink, dark-green, dark-blue, dark-red, dark-teal, dark-brown, dark-orange, dark-purple, dark-warm-gray, light-pink, light-green, light-blue, light-red, light-teal, light-brown, light-orange, light-purple, light-warm-gray, none)")
+    color: str | None = Field(default=None, description="Color of the project (e.g., dark-pink, dark-green, dark-blue, dark-red, dark-teal, dark-brown, dark-orange, dark-purple, dark-warm-gray, light-pink, light-green, light-blue, light-red, light-teal, light-brown, light-orange, light-purple, light-warm-gray, none)")
     """Color of the project (e.g., dark-pink, dark-green, dark-blue, dark-red, dark-teal, dark-brown, dark-orange, dark-purple, dark-warm-gray, light-pink, light-green, light-blue, light-red, light-teal, light-brown, light-orange, light-purple, light-warm-gray, none)"""
-    default_view: Union[str, Any] = Field(default=None, description="The default view of the project (list, board, calendar, timeline)")
+    default_view: str | None = Field(default=None, description="The default view of the project (list, board, calendar, timeline)")
     """The default view of the project (list, board, calendar, timeline)"""
-    due_on: Union[str, Any] = Field(default=None, description="Due date in YYYY-MM-DD format")
+    due_on: str | None = Field(default=None, description="Due date in YYYY-MM-DD format")
     """Due date in YYYY-MM-DD format"""
-    start_on: Union[str, Any] = Field(default=None, description="Start date in YYYY-MM-DD format")
+    start_on: str | None = Field(default=None, description="Start date in YYYY-MM-DD format")
     """Start date in YYYY-MM-DD format"""
-    privacy_setting: Union[str, Any] = Field(default=None, description="Privacy setting: public_to_workspace or private")
+    privacy_setting: str | None = Field(default=None, description="Privacy setting: public_to_workspace or private")
     """Privacy setting: public_to_workspace or private"""
-    archived: Union[bool, Any] = Field(default=None, description="Whether the project is archived")
+    archived: bool | None = Field(default=None, description="Whether the project is archived")
     """Whether the project is archived"""
 
 class ProjectCreateParams(BaseModel):
     """Parameters for creating a new project"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[ProjectCreateParamsData, Any] = Field(default=None)
+    data: ProjectCreateParamsData
 
 class ProjectUpdateParamsData(BaseModel):
     """Nested schema for ProjectUpdateParams.data"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    name: Union[str, Any] = Field(default=None, description="Name of the project")
+    name: str | None = Field(default=None, description="Name of the project")
     """Name of the project"""
-    notes: Union[str, Any] = Field(default=None, description="Free-form textual description of the project (plain text)")
+    notes: str | None = Field(default=None, description="Free-form textual description of the project (plain text)")
     """Free-form textual description of the project (plain text)"""
-    html_notes: Union[str, Any] = Field(default=None, description="HTML-formatted description of the project")
+    html_notes: str | None = Field(default=None, description="HTML-formatted description of the project")
     """HTML-formatted description of the project"""
-    color: Union[str, Any] = Field(default=None, description="Color of the project")
+    color: str | None = Field(default=None, description="Color of the project")
     """Color of the project"""
-    default_view: Union[str, Any] = Field(default=None, description="The default view of the project (list, board, calendar, timeline)")
+    default_view: str | None = Field(default=None, description="The default view of the project (list, board, calendar, timeline)")
     """The default view of the project (list, board, calendar, timeline)"""
-    due_on: Union[str, Any] = Field(default=None, description="Due date in YYYY-MM-DD format")
+    due_on: str | None = Field(default=None, description="Due date in YYYY-MM-DD format")
     """Due date in YYYY-MM-DD format"""
-    start_on: Union[str, Any] = Field(default=None, description="Start date in YYYY-MM-DD format")
+    start_on: str | None = Field(default=None, description="Start date in YYYY-MM-DD format")
     """Start date in YYYY-MM-DD format"""
-    archived: Union[bool, Any] = Field(default=None, description="Whether the project is archived")
+    archived: bool | None = Field(default=None, description="Whether the project is archived")
     """Whether the project is archived"""
 
 class ProjectUpdateParams(BaseModel):
     """Parameters for updating an existing project"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[ProjectUpdateParamsData, Any] = Field(default=None)
+    data: ProjectUpdateParamsData
 
 class StoryCreateParamsData(BaseModel):
     """Nested schema for StoryCreateParams.data"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    text: Union[str, Any] = Field(default=None, description="The plain text body of the comment")
+    text: str = Field(description="The plain text body of the comment")
     """The plain text body of the comment"""
-    html_text: Union[str, Any] = Field(default=None, description="HTML-formatted body of the comment")
+    html_text: str | None = Field(default=None, description="HTML-formatted body of the comment")
     """HTML-formatted body of the comment"""
-    is_pinned: Union[bool, Any] = Field(default=None, description="Whether the story should be pinned on the resource")
+    is_pinned: bool | None = Field(default=None, description="Whether the story should be pinned on the resource")
     """Whether the story should be pinned on the resource"""
 
 class StoryCreateParams(BaseModel):
     """Parameters for creating a comment (story) on a task"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[StoryCreateParamsData, Any] = Field(default=None)
-
-class StoryCreatedBy(BaseModel):
-    """Nested schema for Story.created_by"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    gid: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    resource_type: Union[str, Any] = Field(default=None)
+    data: StoryCreateParamsData
 
 class StoryTarget(BaseModel):
     """Nested schema for Story.target"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    gid: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    resource_type: Union[str, Any] = Field(default=None)
+    gid: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    resource_type: str | None = Field(default=None)
+
+class StoryCreatedBy(BaseModel):
+    """Nested schema for Story.created_by"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    gid: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    resource_type: str | None = Field(default=None)
 
 class Story(BaseModel):
     """A story represents an activity associated with an object in Asana"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    gid: Union[str, Any] = Field(default=None)
-    resource_type: Union[str, Any] = Field(default=None)
-    resource_subtype: Union[str, Any] = Field(default=None)
-    text: Union[str, Any] = Field(default=None)
-    html_text: Union[str, Any] = Field(default=None)
-    is_pinned: Union[bool, Any] = Field(default=None)
-    created_at: Union[str, Any] = Field(default=None)
-    created_by: Union[StoryCreatedBy, Any] = Field(default=None)
-    target: Union[StoryTarget, Any] = Field(default=None)
-    type_: Union[str, Any] = Field(default=None, alias="type")
+    gid: str | None = Field(default=None)
+    resource_type: str | None = Field(default=None)
+    resource_subtype: str | None = Field(default=None)
+    text: str | None = Field(default=None)
+    html_text: str | None = Field(default=None)
+    is_pinned: bool | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    created_by: StoryCreatedBy | None = Field(default=None)
+    target: StoryTarget | None = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
 
 class StoryResponse(BaseModel):
     """Story response wrapper"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[Story, Any] = Field(default=None)
+    data: Story | None = Field(default=None)
 
 class EmptyResponse(BaseModel):
     """Empty response returned by delete operations"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[dict[str, Any], Any] = Field(default=None)
+    data: dict[str, Any] | None = Field(default=None)
 
 class WorkspaceAddUserParamsData(BaseModel):
     """Nested schema for WorkspaceAddUserParams.data"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    user: Union[str, Any] = Field(default=None, description="A user GID or email address to add to the workspace")
+    user: str = Field(description="A user GID or email address to add to the workspace")
     """A user GID or email address to add to the workspace"""
 
 class WorkspaceAddUserParams(BaseModel):
     """Parameters for adding a user to a workspace or organization"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[WorkspaceAddUserParamsData, Any] = Field(default=None)
+    data: WorkspaceAddUserParamsData
 
 # ===== METADATA TYPE DEFINITIONS (PYDANTIC) =====
 # Meta types for operations that extract metadata (e.g., pagination info)
@@ -835,127 +835,127 @@ class TasksListResultMeta(BaseModel):
     """Metadata for tasks.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page: Union[dict[str, Any] | None, Any] = Field(default=None)
+    next_page: dict[str, Any] | None = Field(default=None)
 
 class ProjectTasksListResultMeta(BaseModel):
     """Metadata for project_tasks.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page: Union[dict[str, Any] | None, Any] = Field(default=None)
+    next_page: dict[str, Any] | None = Field(default=None)
 
 class WorkspaceTaskSearchListResultMeta(BaseModel):
     """Metadata for workspace_task_search.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page: Union[dict[str, Any] | None, Any] = Field(default=None)
+    next_page: dict[str, Any] | None = Field(default=None)
 
 class ProjectsListResultMeta(BaseModel):
     """Metadata for projects.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page: Union[dict[str, Any] | None, Any] = Field(default=None)
+    next_page: dict[str, Any] | None = Field(default=None)
 
 class TaskProjectsListResultMeta(BaseModel):
     """Metadata for task_projects.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page: Union[dict[str, Any] | None, Any] = Field(default=None)
+    next_page: dict[str, Any] | None = Field(default=None)
 
 class TeamProjectsListResultMeta(BaseModel):
     """Metadata for team_projects.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page: Union[dict[str, Any] | None, Any] = Field(default=None)
+    next_page: dict[str, Any] | None = Field(default=None)
 
 class WorkspaceProjectsListResultMeta(BaseModel):
     """Metadata for workspace_projects.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page: Union[dict[str, Any] | None, Any] = Field(default=None)
+    next_page: dict[str, Any] | None = Field(default=None)
 
 class WorkspacesListResultMeta(BaseModel):
     """Metadata for workspaces.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page: Union[dict[str, Any] | None, Any] = Field(default=None)
+    next_page: dict[str, Any] | None = Field(default=None)
 
 class UsersListResultMeta(BaseModel):
     """Metadata for users.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page: Union[dict[str, Any] | None, Any] = Field(default=None)
+    next_page: dict[str, Any] | None = Field(default=None)
 
 class WorkspaceUsersListResultMeta(BaseModel):
     """Metadata for workspace_users.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page: Union[dict[str, Any] | None, Any] = Field(default=None)
+    next_page: dict[str, Any] | None = Field(default=None)
 
 class TeamUsersListResultMeta(BaseModel):
     """Metadata for team_users.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page: Union[dict[str, Any] | None, Any] = Field(default=None)
+    next_page: dict[str, Any] | None = Field(default=None)
 
 class WorkspaceTeamsListResultMeta(BaseModel):
     """Metadata for workspace_teams.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page: Union[dict[str, Any] | None, Any] = Field(default=None)
+    next_page: dict[str, Any] | None = Field(default=None)
 
 class UserTeamsListResultMeta(BaseModel):
     """Metadata for user_teams.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page: Union[dict[str, Any] | None, Any] = Field(default=None)
+    next_page: dict[str, Any] | None = Field(default=None)
 
 class AttachmentsListResultMeta(BaseModel):
     """Metadata for attachments.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page: Union[dict[str, Any] | None, Any] = Field(default=None)
+    next_page: dict[str, Any] | None = Field(default=None)
 
 class WorkspaceTagsListResultMeta(BaseModel):
     """Metadata for workspace_tags.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page: Union[dict[str, Any] | None, Any] = Field(default=None)
+    next_page: dict[str, Any] | None = Field(default=None)
 
 class TagTasksListResultMeta(BaseModel):
     """Metadata for tag_tasks.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page: Union[dict[str, Any] | None, Any] = Field(default=None)
+    next_page: dict[str, Any] | None = Field(default=None)
 
 class ProjectSectionsListResultMeta(BaseModel):
     """Metadata for project_sections.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page: Union[dict[str, Any] | None, Any] = Field(default=None)
+    next_page: dict[str, Any] | None = Field(default=None)
 
 class SectionTasksListResultMeta(BaseModel):
     """Metadata for section_tasks.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page: Union[dict[str, Any] | None, Any] = Field(default=None)
+    next_page: dict[str, Any] | None = Field(default=None)
 
 class TaskSubtasksListResultMeta(BaseModel):
     """Metadata for task_subtasks.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page: Union[dict[str, Any] | None, Any] = Field(default=None)
+    next_page: dict[str, Any] | None = Field(default=None)
 
 class TaskDependenciesListResultMeta(BaseModel):
     """Metadata for task_dependencies.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page: Union[dict[str, Any] | None, Any] = Field(default=None)
+    next_page: dict[str, Any] | None = Field(default=None)
 
 class TaskDependentsListResultMeta(BaseModel):
     """Metadata for task_dependents.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page: Union[dict[str, Any] | None, Any] = Field(default=None)
+    next_page: dict[str, Any] | None = Field(default=None)
 
 # ===== CHECK RESULT MODEL =====
 

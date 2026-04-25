@@ -8,7 +8,7 @@ and response envelope types.
 from __future__ import annotations
 
 from pydantic import BaseModel, ConfigDict, Field
-from typing import TypeVar, Generic, Union, Any
+from typing import TypeVar, Generic, Any
 
 # Authentication configuration
 
@@ -22,400 +22,400 @@ class KlaviyoAuthConfig(BaseModel):
 
 # ===== RESPONSE TYPE DEFINITIONS (PYDANTIC) =====
 
-class ProfileLinks(BaseModel):
-    """Related links"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    self: Union[str | None, Any] = Field(default=None)
-
 class ProfileAttributesLocation(BaseModel):
     """Location information"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    address1: Union[str | None, Any] = Field(default=None)
-    address2: Union[str | None, Any] = Field(default=None)
-    city: Union[str | None, Any] = Field(default=None)
-    country: Union[str | None, Any] = Field(default=None)
-    region: Union[str | None, Any] = Field(default=None)
-    zip: Union[str | None, Any] = Field(default=None)
-    timezone: Union[str | None, Any] = Field(default=None)
-    latitude: Union[float | None, Any] = Field(default=None)
-    longitude: Union[float | None, Any] = Field(default=None)
+    address1: str | None | None = Field(default=None)
+    address2: str | None | None = Field(default=None)
+    city: str | None | None = Field(default=None)
+    country: str | None | None = Field(default=None)
+    region: str | None | None = Field(default=None)
+    zip: str | None | None = Field(default=None)
+    timezone: str | None | None = Field(default=None)
+    latitude: float | None | None = Field(default=None)
+    longitude: float | None | None = Field(default=None)
 
 class ProfileAttributes(BaseModel):
     """Profile attributes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    email: Union[str | None, Any] = Field(default=None, description="Email address")
+    email: str | None | None = Field(default=None, description="Email address")
     """Email address"""
-    phone_number: Union[str | None, Any] = Field(default=None, description="Phone number")
+    phone_number: str | None | None = Field(default=None, description="Phone number")
     """Phone number"""
-    external_id: Union[str | None, Any] = Field(default=None, description="External identifier")
+    external_id: str | None | None = Field(default=None, description="External identifier")
     """External identifier"""
-    first_name: Union[str | None, Any] = Field(default=None, description="First name")
+    first_name: str | None | None = Field(default=None, description="First name")
     """First name"""
-    last_name: Union[str | None, Any] = Field(default=None, description="Last name")
+    last_name: str | None | None = Field(default=None, description="Last name")
     """Last name"""
-    organization: Union[str | None, Any] = Field(default=None, description="Organization name")
+    organization: str | None | None = Field(default=None, description="Organization name")
     """Organization name"""
-    title: Union[str | None, Any] = Field(default=None, description="Job title")
+    title: str | None | None = Field(default=None, description="Job title")
     """Job title"""
-    image: Union[str | None, Any] = Field(default=None, description="Profile image URL")
+    image: str | None | None = Field(default=None, description="Profile image URL")
     """Profile image URL"""
-    created: Union[str | None, Any] = Field(default=None, description="Creation timestamp")
+    created: str | None | None = Field(default=None, description="Creation timestamp")
     """Creation timestamp"""
-    updated: Union[str | None, Any] = Field(default=None, description="Last update timestamp")
+    updated: str | None | None = Field(default=None, description="Last update timestamp")
     """Last update timestamp"""
-    location: Union[ProfileAttributesLocation | None, Any] = Field(default=None, description="Location information")
+    location: ProfileAttributesLocation | None | None = Field(default=None, description="Location information")
     """Location information"""
-    properties: Union[dict[str, Any] | None, Any] = Field(default=None, description="Custom properties")
+    properties: dict[str, Any] | None | None = Field(default=None, description="Custom properties")
     """Custom properties"""
+
+class ProfileLinks(BaseModel):
+    """Related links"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    self: str | None | None = Field(default=None)
 
 class Profile(BaseModel):
     """A Klaviyo profile representing a contact"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    type_: Union[str | None, Any] = Field(default=None, alias="type")
-    attributes: Union[ProfileAttributes | None, Any] = Field(default=None)
-    links: Union[ProfileLinks | None, Any] = Field(default=None)
+    id: str
+    type_: str | None = Field(default=None, alias="type")
+    attributes: ProfileAttributes | None = Field(default=None)
+    links: ProfileLinks | None = Field(default=None)
 
 class ProfilesListLinks(BaseModel):
     """Nested schema for ProfilesList.links"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    self: Union[str | None, Any] = Field(default=None)
-    next: Union[str | None, Any] = Field(default=None)
-    prev: Union[str | None, Any] = Field(default=None)
+    self: str | None | None = Field(default=None)
+    next: str | None | None = Field(default=None)
+    prev: str | None | None = Field(default=None)
 
 class ProfilesList(BaseModel):
     """Paginated list of profiles"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[list[Profile], Any] = Field(default=None)
-    links: Union[ProfilesListLinks | None, Any] = Field(default=None)
+    data: list[Profile] | None = Field(default=None)
+    links: ProfilesListLinks | None = Field(default=None)
 
 class ListAttributes(BaseModel):
     """List attributes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    name: Union[str | None, Any] = Field(default=None, description="List name")
+    name: str | None | None = Field(default=None, description="List name")
     """List name"""
-    created: Union[str | None, Any] = Field(default=None, description="Creation timestamp")
+    created: str | None | None = Field(default=None, description="Creation timestamp")
     """Creation timestamp"""
-    updated: Union[str | None, Any] = Field(default=None, description="Last update timestamp")
+    updated: str | None | None = Field(default=None, description="Last update timestamp")
     """Last update timestamp"""
-    opt_in_process: Union[str | None, Any] = Field(default=None, description="Opt-in process type")
+    opt_in_process: str | None | None = Field(default=None, description="Opt-in process type")
     """Opt-in process type"""
 
 class ListLinks(BaseModel):
     """Related links"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    self: Union[str | None, Any] = Field(default=None)
+    self: str | None | None = Field(default=None)
 
 class List(BaseModel):
     """A Klaviyo list for organizing profiles"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    type_: Union[str | None, Any] = Field(default=None, alias="type")
-    attributes: Union[ListAttributes | None, Any] = Field(default=None)
-    links: Union[ListLinks | None, Any] = Field(default=None)
+    id: str
+    type_: str | None = Field(default=None, alias="type")
+    attributes: ListAttributes | None = Field(default=None)
+    links: ListLinks | None = Field(default=None)
 
 class ListsListLinks(BaseModel):
     """Nested schema for ListsList.links"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    self: Union[str | None, Any] = Field(default=None)
-    next: Union[str | None, Any] = Field(default=None)
-    prev: Union[str | None, Any] = Field(default=None)
+    self: str | None | None = Field(default=None)
+    next: str | None | None = Field(default=None)
+    prev: str | None | None = Field(default=None)
 
 class ListsList(BaseModel):
     """Paginated list of lists"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[list[List], Any] = Field(default=None)
-    links: Union[ListsListLinks | None, Any] = Field(default=None)
-
-class CampaignAttributes(BaseModel):
-    """Campaign attributes"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: Union[str | None, Any] = Field(default=None, description="Campaign name")
-    """Campaign name"""
-    status: Union[str | None, Any] = Field(default=None, description="Campaign status")
-    """Campaign status"""
-    archived: Union[bool | None, Any] = Field(default=None, description="Whether campaign is archived")
-    """Whether campaign is archived"""
-    audiences: Union[dict[str, Any] | None, Any] = Field(default=None, description="Target audiences")
-    """Target audiences"""
-    send_options: Union[dict[str, Any] | None, Any] = Field(default=None, description="Send options")
-    """Send options"""
-    tracking_options: Union[dict[str, Any] | None, Any] = Field(default=None, description="Tracking options")
-    """Tracking options"""
-    send_strategy: Union[dict[str, Any] | None, Any] = Field(default=None, description="Send strategy")
-    """Send strategy"""
-    created_at: Union[str | None, Any] = Field(default=None, description="Creation timestamp")
-    """Creation timestamp"""
-    scheduled_at: Union[str | None, Any] = Field(default=None, description="Scheduled send time")
-    """Scheduled send time"""
-    updated_at: Union[str | None, Any] = Field(default=None, description="Last update timestamp")
-    """Last update timestamp"""
-    send_time: Union[str | None, Any] = Field(default=None, description="Actual send time")
-    """Actual send time"""
+    data: list[List] | None = Field(default=None)
+    links: ListsListLinks | None = Field(default=None)
 
 class CampaignLinks(BaseModel):
     """Related links"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    self: Union[str | None, Any] = Field(default=None)
+    self: str | None | None = Field(default=None)
+
+class CampaignAttributes(BaseModel):
+    """Campaign attributes"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: str | None | None = Field(default=None, description="Campaign name")
+    """Campaign name"""
+    status: str | None | None = Field(default=None, description="Campaign status")
+    """Campaign status"""
+    archived: bool | None | None = Field(default=None, description="Whether campaign is archived")
+    """Whether campaign is archived"""
+    audiences: dict[str, Any] | None | None = Field(default=None, description="Target audiences")
+    """Target audiences"""
+    send_options: dict[str, Any] | None | None = Field(default=None, description="Send options")
+    """Send options"""
+    tracking_options: dict[str, Any] | None | None = Field(default=None, description="Tracking options")
+    """Tracking options"""
+    send_strategy: dict[str, Any] | None | None = Field(default=None, description="Send strategy")
+    """Send strategy"""
+    created_at: str | None | None = Field(default=None, description="Creation timestamp")
+    """Creation timestamp"""
+    scheduled_at: str | None | None = Field(default=None, description="Scheduled send time")
+    """Scheduled send time"""
+    updated_at: str | None | None = Field(default=None, description="Last update timestamp")
+    """Last update timestamp"""
+    send_time: str | None | None = Field(default=None, description="Actual send time")
+    """Actual send time"""
 
 class Campaign(BaseModel):
     """A Klaviyo campaign"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    type_: Union[str | None, Any] = Field(default=None, alias="type")
-    attributes: Union[CampaignAttributes | None, Any] = Field(default=None)
-    links: Union[CampaignLinks | None, Any] = Field(default=None)
+    id: str
+    type_: str | None = Field(default=None, alias="type")
+    attributes: CampaignAttributes | None = Field(default=None)
+    links: CampaignLinks | None = Field(default=None)
 
 class CampaignsListLinks(BaseModel):
     """Nested schema for CampaignsList.links"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    self: Union[str | None, Any] = Field(default=None)
-    next: Union[str | None, Any] = Field(default=None)
-    prev: Union[str | None, Any] = Field(default=None)
+    self: str | None | None = Field(default=None)
+    next: str | None | None = Field(default=None)
+    prev: str | None | None = Field(default=None)
 
 class CampaignsList(BaseModel):
     """Paginated list of campaigns"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[list[Campaign], Any] = Field(default=None)
-    links: Union[CampaignsListLinks | None, Any] = Field(default=None)
-
-class EventAttributes(BaseModel):
-    """Event attributes"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    timestamp: Union[Any, Any] = Field(default=None, description="Event timestamp (can be ISO string or Unix timestamp)")
-    """Event timestamp (can be ISO string or Unix timestamp)"""
-    datetime: Union[str | None, Any] = Field(default=None, description="Event datetime")
-    """Event datetime"""
-    uuid: Union[str | None, Any] = Field(default=None, description="Event UUID")
-    """Event UUID"""
-    event_properties: Union[dict[str, Any] | None, Any] = Field(default=None, description="Custom event properties")
-    """Custom event properties"""
+    data: list[Campaign] | None = Field(default=None)
+    links: CampaignsListLinks | None = Field(default=None)
 
 class EventRelationshipsProfileData(BaseModel):
     """Nested schema for EventRelationshipsProfile.data"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type_: Union[str | None, Any] = Field(default=None, alias="type")
-    id: Union[str | None, Any] = Field(default=None)
+    type_: str | None | None = Field(default=None, alias="type")
+    id: str | None | None = Field(default=None)
 
 class EventRelationshipsProfile(BaseModel):
     """Nested schema for EventRelationships.profile"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[EventRelationshipsProfileData | None, Any] = Field(default=None)
+    data: EventRelationshipsProfileData | None | None = Field(default=None)
 
 class EventRelationshipsMetricData(BaseModel):
     """Nested schema for EventRelationshipsMetric.data"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type_: Union[str | None, Any] = Field(default=None, alias="type")
-    id: Union[str | None, Any] = Field(default=None)
+    type_: str | None | None = Field(default=None, alias="type")
+    id: str | None | None = Field(default=None)
 
 class EventRelationshipsMetric(BaseModel):
     """Nested schema for EventRelationships.metric"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[EventRelationshipsMetricData | None, Any] = Field(default=None)
+    data: EventRelationshipsMetricData | None | None = Field(default=None)
 
 class EventRelationships(BaseModel):
     """Related resources"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    profile: Union[EventRelationshipsProfile | None, Any] = Field(default=None)
-    metric: Union[EventRelationshipsMetric | None, Any] = Field(default=None)
+    profile: EventRelationshipsProfile | None | None = Field(default=None)
+    metric: EventRelationshipsMetric | None | None = Field(default=None)
 
 class EventLinks(BaseModel):
     """Related links"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    self: Union[str | None, Any] = Field(default=None)
+    self: str | None | None = Field(default=None)
+
+class EventAttributes(BaseModel):
+    """Event attributes"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    timestamp: Any | None = Field(default=None, description="Event timestamp (can be ISO string or Unix timestamp)")
+    """Event timestamp (can be ISO string or Unix timestamp)"""
+    datetime: str | None | None = Field(default=None, description="Event datetime")
+    """Event datetime"""
+    uuid: str | None | None = Field(default=None, description="Event UUID")
+    """Event UUID"""
+    event_properties: dict[str, Any] | None | None = Field(default=None, description="Custom event properties")
+    """Custom event properties"""
 
 class Event(BaseModel):
     """A Klaviyo event representing an action taken by a profile"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    type_: Union[str | None, Any] = Field(default=None, alias="type")
-    attributes: Union[EventAttributes | None, Any] = Field(default=None)
-    relationships: Union[EventRelationships | None, Any] = Field(default=None)
-    links: Union[EventLinks | None, Any] = Field(default=None)
+    id: str
+    type_: str | None = Field(default=None, alias="type")
+    attributes: EventAttributes | None = Field(default=None)
+    relationships: EventRelationships | None = Field(default=None)
+    links: EventLinks | None = Field(default=None)
 
 class EventsListLinks(BaseModel):
     """Nested schema for EventsList.links"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    self: Union[str | None, Any] = Field(default=None)
-    next: Union[str | None, Any] = Field(default=None)
-    prev: Union[str | None, Any] = Field(default=None)
+    self: str | None | None = Field(default=None)
+    next: str | None | None = Field(default=None)
+    prev: str | None | None = Field(default=None)
 
 class EventsList(BaseModel):
     """Paginated list of events"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[list[Event], Any] = Field(default=None)
-    links: Union[EventsListLinks | None, Any] = Field(default=None)
+    data: list[Event] | None = Field(default=None)
+    links: EventsListLinks | None = Field(default=None)
 
 class MetricAttributesIntegration(BaseModel):
     """Integration information"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    category: Union[str | None, Any] = Field(default=None)
+    id: str | None | None = Field(default=None)
+    name: str | None | None = Field(default=None)
+    category: str | None | None = Field(default=None)
 
 class MetricAttributes(BaseModel):
     """Metric attributes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    name: Union[str | None, Any] = Field(default=None, description="Metric name")
+    name: str | None | None = Field(default=None, description="Metric name")
     """Metric name"""
-    created: Union[str | None, Any] = Field(default=None, description="Creation timestamp")
+    created: str | None | None = Field(default=None, description="Creation timestamp")
     """Creation timestamp"""
-    updated: Union[str | None, Any] = Field(default=None, description="Last update timestamp")
+    updated: str | None | None = Field(default=None, description="Last update timestamp")
     """Last update timestamp"""
-    integration: Union[MetricAttributesIntegration | None, Any] = Field(default=None, description="Integration information")
+    integration: MetricAttributesIntegration | None | None = Field(default=None, description="Integration information")
     """Integration information"""
 
 class MetricLinks(BaseModel):
     """Related links"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    self: Union[str | None, Any] = Field(default=None)
+    self: str | None | None = Field(default=None)
 
 class Metric(BaseModel):
     """A Klaviyo metric (event type)"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    type_: Union[str | None, Any] = Field(default=None, alias="type")
-    attributes: Union[MetricAttributes | None, Any] = Field(default=None)
-    links: Union[MetricLinks | None, Any] = Field(default=None)
+    id: str
+    type_: str | None = Field(default=None, alias="type")
+    attributes: MetricAttributes | None = Field(default=None)
+    links: MetricLinks | None = Field(default=None)
 
 class MetricsListLinks(BaseModel):
     """Nested schema for MetricsList.links"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    self: Union[str | None, Any] = Field(default=None)
-    next: Union[str | None, Any] = Field(default=None)
-    prev: Union[str | None, Any] = Field(default=None)
+    self: str | None | None = Field(default=None)
+    next: str | None | None = Field(default=None)
+    prev: str | None | None = Field(default=None)
 
 class MetricsList(BaseModel):
     """Paginated list of metrics"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[list[Metric], Any] = Field(default=None)
-    links: Union[MetricsListLinks | None, Any] = Field(default=None)
+    data: list[Metric] | None = Field(default=None)
+    links: MetricsListLinks | None = Field(default=None)
 
 class FlowAttributes(BaseModel):
     """Flow attributes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    name: Union[str | None, Any] = Field(default=None, description="Flow name")
+    name: str | None | None = Field(default=None, description="Flow name")
     """Flow name"""
-    status: Union[str | None, Any] = Field(default=None, description="Flow status (draft, manual, live)")
+    status: str | None | None = Field(default=None, description="Flow status (draft, manual, live)")
     """Flow status (draft, manual, live)"""
-    archived: Union[bool | None, Any] = Field(default=None, description="Whether flow is archived")
+    archived: bool | None | None = Field(default=None, description="Whether flow is archived")
     """Whether flow is archived"""
-    created: Union[str | None, Any] = Field(default=None, description="Creation timestamp")
+    created: str | None | None = Field(default=None, description="Creation timestamp")
     """Creation timestamp"""
-    updated: Union[str | None, Any] = Field(default=None, description="Last update timestamp")
+    updated: str | None | None = Field(default=None, description="Last update timestamp")
     """Last update timestamp"""
-    trigger_type: Union[str | None, Any] = Field(default=None, description="Type of trigger for the flow")
+    trigger_type: str | None | None = Field(default=None, description="Type of trigger for the flow")
     """Type of trigger for the flow"""
 
 class FlowLinks(BaseModel):
     """Related links"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    self: Union[str | None, Any] = Field(default=None)
+    self: str | None | None = Field(default=None)
 
 class Flow(BaseModel):
     """A Klaviyo flow (automated sequence)"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    type_: Union[str | None, Any] = Field(default=None, alias="type")
-    attributes: Union[FlowAttributes | None, Any] = Field(default=None)
-    links: Union[FlowLinks | None, Any] = Field(default=None)
+    id: str
+    type_: str | None = Field(default=None, alias="type")
+    attributes: FlowAttributes | None = Field(default=None)
+    links: FlowLinks | None = Field(default=None)
 
 class FlowsListLinks(BaseModel):
     """Nested schema for FlowsList.links"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    self: Union[str | None, Any] = Field(default=None)
-    next: Union[str | None, Any] = Field(default=None)
-    prev: Union[str | None, Any] = Field(default=None)
+    self: str | None | None = Field(default=None)
+    next: str | None | None = Field(default=None)
+    prev: str | None | None = Field(default=None)
 
 class FlowsList(BaseModel):
     """Paginated list of flows"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[list[Flow], Any] = Field(default=None)
-    links: Union[FlowsListLinks | None, Any] = Field(default=None)
+    data: list[Flow] | None = Field(default=None)
+    links: FlowsListLinks | None = Field(default=None)
 
 class TemplateAttributes(BaseModel):
     """Template attributes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    name: Union[str | None, Any] = Field(default=None, description="Template name")
+    name: str | None | None = Field(default=None, description="Template name")
     """Template name"""
-    editor_type: Union[str | None, Any] = Field(default=None, description="Editor type used to create template")
+    editor_type: str | None | None = Field(default=None, description="Editor type used to create template")
     """Editor type used to create template"""
-    html: Union[str | None, Any] = Field(default=None, description="HTML content")
+    html: str | None | None = Field(default=None, description="HTML content")
     """HTML content"""
-    text: Union[str | None, Any] = Field(default=None, description="Plain text content")
+    text: str | None | None = Field(default=None, description="Plain text content")
     """Plain text content"""
-    created: Union[str | None, Any] = Field(default=None, description="Creation timestamp")
+    created: str | None | None = Field(default=None, description="Creation timestamp")
     """Creation timestamp"""
-    updated: Union[str | None, Any] = Field(default=None, description="Last update timestamp")
+    updated: str | None | None = Field(default=None, description="Last update timestamp")
     """Last update timestamp"""
 
 class TemplateLinks(BaseModel):
     """Related links"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    self: Union[str | None, Any] = Field(default=None)
+    self: str | None | None = Field(default=None)
 
 class Template(BaseModel):
     """A Klaviyo email template"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    type_: Union[str | None, Any] = Field(default=None, alias="type")
-    attributes: Union[TemplateAttributes | None, Any] = Field(default=None)
-    links: Union[TemplateLinks | None, Any] = Field(default=None)
+    id: str
+    type_: str | None = Field(default=None, alias="type")
+    attributes: TemplateAttributes | None = Field(default=None)
+    links: TemplateLinks | None = Field(default=None)
 
 class TemplatesListLinks(BaseModel):
     """Nested schema for TemplatesList.links"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    self: Union[str | None, Any] = Field(default=None)
-    next: Union[str | None, Any] = Field(default=None)
-    prev: Union[str | None, Any] = Field(default=None)
+    self: str | None | None = Field(default=None)
+    next: str | None | None = Field(default=None)
+    prev: str | None | None = Field(default=None)
 
 class TemplatesList(BaseModel):
     """Paginated list of templates"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[list[Template], Any] = Field(default=None)
-    links: Union[TemplatesListLinks | None, Any] = Field(default=None)
+    data: list[Template] | None = Field(default=None)
+    links: TemplatesListLinks | None = Field(default=None)
 
 # ===== METADATA TYPE DEFINITIONS (PYDANTIC) =====
 # Meta types for operations that extract metadata (e.g., pagination info)
@@ -424,43 +424,43 @@ class ProfilesListResultMeta(BaseModel):
     """Metadata for profiles.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next: Union[str | None, Any] = Field(default=None)
+    next: str | None = Field(default=None)
 
 class ListsListResultMeta(BaseModel):
     """Metadata for lists.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next: Union[str | None, Any] = Field(default=None)
+    next: str | None = Field(default=None)
 
 class CampaignsListResultMeta(BaseModel):
     """Metadata for campaigns.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next: Union[str | None, Any] = Field(default=None)
+    next: str | None = Field(default=None)
 
 class EventsListResultMeta(BaseModel):
     """Metadata for events.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next: Union[str | None, Any] = Field(default=None)
+    next: str | None = Field(default=None)
 
 class MetricsListResultMeta(BaseModel):
     """Metadata for metrics.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next: Union[str | None, Any] = Field(default=None)
+    next: str | None = Field(default=None)
 
 class FlowsListResultMeta(BaseModel):
     """Metadata for flows.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next: Union[str | None, Any] = Field(default=None)
+    next: str | None = Field(default=None)
 
 class EmailTemplatesListResultMeta(BaseModel):
     """Metadata for email_templates.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next: Union[str | None, Any] = Field(default=None)
+    next: str | None = Field(default=None)
 
 # ===== CHECK RESULT MODEL =====
 

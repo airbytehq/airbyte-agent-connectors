@@ -8,7 +8,7 @@ and response envelope types.
 from __future__ import annotations
 
 from pydantic import BaseModel, ConfigDict, Field
-from typing import TypeVar, Generic, Union, Any
+from typing import TypeVar, Generic, Any
 from typing import Optional
 
 # Authentication configuration
@@ -43,212 +43,212 @@ class Profile(BaseModel):
     """Gmail user profile information"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    email_address: Union[str | None, Any] = Field(default=None, alias="emailAddress")
-    messages_total: Union[int | None, Any] = Field(default=None, alias="messagesTotal")
-    threads_total: Union[int | None, Any] = Field(default=None, alias="threadsTotal")
-    history_id: Union[str | None, Any] = Field(default=None, alias="historyId")
+    email_address: str | None = Field(default=None, alias="emailAddress")
+    messages_total: int | None = Field(default=None, alias="messagesTotal")
+    threads_total: int | None = Field(default=None, alias="threadsTotal")
+    history_id: str | None = Field(default=None, alias="historyId")
 
 class MessageHeader(BaseModel):
     """A single email header key-value pair"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    name: Union[str | None, Any] = Field(default=None)
-    value: Union[str | None, Any] = Field(default=None)
+    name: str | None = Field(default=None)
+    value: str | None = Field(default=None)
 
 class MessagePartBody(BaseModel):
     """The body data of a MIME message part"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    attachment_id: Union[str | None, Any] = Field(default=None, alias="attachmentId")
-    size: Union[int | None, Any] = Field(default=None)
-    data: Union[str | None, Any] = Field(default=None)
+    attachment_id: str | None = Field(default=None, alias="attachmentId")
+    size: int | None = Field(default=None)
+    data: str | None = Field(default=None)
 
 class MessagePart(BaseModel):
     """A single MIME message part"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    part_id: Union[str | None, Any] = Field(default=None, alias="partId")
-    mime_type: Union[str | None, Any] = Field(default=None, alias="mimeType")
-    filename: Union[str | None, Any] = Field(default=None)
-    headers: Union[list[MessageHeader] | None, Any] = Field(default=None)
-    body: Union[Any, Any] = Field(default=None)
-    parts: Union[list[dict[str, Any]] | None, Any] = Field(default=None)
+    part_id: str | None = Field(default=None, alias="partId")
+    mime_type: str | None = Field(default=None, alias="mimeType")
+    filename: str | None = Field(default=None)
+    headers: list[MessageHeader] | None = Field(default=None)
+    body: Any | None = Field(default=None)
+    parts: list[dict[str, Any]] | None = Field(default=None)
 
 class Message(BaseModel):
     """A Gmail email message"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    thread_id: Union[str | None, Any] = Field(default=None, alias="threadId")
-    label_ids: Union[list[str] | None, Any] = Field(default=None, alias="labelIds")
-    snippet: Union[str | None, Any] = Field(default=None)
-    history_id: Union[str | None, Any] = Field(default=None, alias="historyId")
-    internal_date: Union[str | None, Any] = Field(default=None, alias="internalDate")
-    size_estimate: Union[int | None, Any] = Field(default=None, alias="sizeEstimate")
-    raw: Union[str | None, Any] = Field(default=None)
-    payload: Union[Any, Any] = Field(default=None)
+    id: str | None = Field(default=None)
+    thread_id: str | None = Field(default=None, alias="threadId")
+    label_ids: list[str] | None = Field(default=None, alias="labelIds")
+    snippet: str | None = Field(default=None)
+    history_id: str | None = Field(default=None, alias="historyId")
+    internal_date: str | None = Field(default=None, alias="internalDate")
+    size_estimate: int | None = Field(default=None, alias="sizeEstimate")
+    raw: str | None = Field(default=None)
+    payload: Any | None = Field(default=None)
 
 class MessageRef(BaseModel):
     """A lightweight reference to a message (used in list responses)"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    thread_id: Union[str | None, Any] = Field(default=None, alias="threadId")
+    id: str | None = Field(default=None)
+    thread_id: str | None = Field(default=None, alias="threadId")
 
 class MessagesListResponse(BaseModel):
     """Response from listing messages"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    messages: Union[list[MessageRef], Any] = Field(default=None)
-    next_page_token: Union[str | None, Any] = Field(default=None, alias="nextPageToken")
-    result_size_estimate: Union[int | None, Any] = Field(default=None, alias="resultSizeEstimate")
+    messages: list[MessageRef] | None = Field(default=None)
+    next_page_token: str | None = Field(default=None, alias="nextPageToken")
+    result_size_estimate: int | None = Field(default=None, alias="resultSizeEstimate")
 
 class LabelColor(BaseModel):
     """The color to assign to a label"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    text_color: Union[str | None, Any] = Field(default=None, alias="textColor")
-    background_color: Union[str | None, Any] = Field(default=None, alias="backgroundColor")
+    text_color: str | None = Field(default=None, alias="textColor")
+    background_color: str | None = Field(default=None, alias="backgroundColor")
 
 class Label(BaseModel):
     """A Gmail label used to organize messages and threads"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    type_: Union[str | None, Any] = Field(default=None, alias="type")
-    message_list_visibility: Union[str | None, Any] = Field(default=None, alias="messageListVisibility")
-    label_list_visibility: Union[str | None, Any] = Field(default=None, alias="labelListVisibility")
-    messages_total: Union[int | None, Any] = Field(default=None, alias="messagesTotal")
-    messages_unread: Union[int | None, Any] = Field(default=None, alias="messagesUnread")
-    threads_total: Union[int | None, Any] = Field(default=None, alias="threadsTotal")
-    threads_unread: Union[int | None, Any] = Field(default=None, alias="threadsUnread")
-    color: Union[Any, Any] = Field(default=None)
+    id: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    message_list_visibility: str | None = Field(default=None, alias="messageListVisibility")
+    label_list_visibility: str | None = Field(default=None, alias="labelListVisibility")
+    messages_total: int | None = Field(default=None, alias="messagesTotal")
+    messages_unread: int | None = Field(default=None, alias="messagesUnread")
+    threads_total: int | None = Field(default=None, alias="threadsTotal")
+    threads_unread: int | None = Field(default=None, alias="threadsUnread")
+    color: Any | None = Field(default=None)
 
 class LabelsListResponse(BaseModel):
     """Response from listing labels"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    labels: Union[list[Label], Any] = Field(default=None)
+    labels: list[Label] | None = Field(default=None)
 
 class DraftRef(BaseModel):
     """A lightweight reference to a draft (used in list responses)"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    message: Union[Any, Any] = Field(default=None)
+    id: str | None = Field(default=None)
+    message: Any | None = Field(default=None)
 
 class Draft(BaseModel):
     """A Gmail draft message"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    message: Union[Any, Any] = Field(default=None)
+    id: str | None = Field(default=None)
+    message: Any | None = Field(default=None)
 
 class DraftsListResponse(BaseModel):
     """Response from listing drafts"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    drafts: Union[list[DraftRef], Any] = Field(default=None)
-    next_page_token: Union[str | None, Any] = Field(default=None, alias="nextPageToken")
-    result_size_estimate: Union[int | None, Any] = Field(default=None, alias="resultSizeEstimate")
+    drafts: list[DraftRef] | None = Field(default=None)
+    next_page_token: str | None = Field(default=None, alias="nextPageToken")
+    result_size_estimate: int | None = Field(default=None, alias="resultSizeEstimate")
 
 class ThreadRef(BaseModel):
     """A lightweight reference to a thread (used in list responses)"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    snippet: Union[str | None, Any] = Field(default=None)
-    history_id: Union[str | None, Any] = Field(default=None, alias="historyId")
+    id: str | None = Field(default=None)
+    snippet: str | None = Field(default=None)
+    history_id: str | None = Field(default=None, alias="historyId")
 
 class Thread(BaseModel):
     """A Gmail thread (email conversation)"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    snippet: Union[str | None, Any] = Field(default=None)
-    history_id: Union[str | None, Any] = Field(default=None, alias="historyId")
-    messages: Union[list[Message] | None, Any] = Field(default=None)
+    id: str | None = Field(default=None)
+    snippet: str | None = Field(default=None)
+    history_id: str | None = Field(default=None, alias="historyId")
+    messages: list[Message] | None = Field(default=None)
 
 class ThreadsListResponse(BaseModel):
     """Response from listing threads"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    threads: Union[list[ThreadRef], Any] = Field(default=None)
-    next_page_token: Union[str | None, Any] = Field(default=None, alias="nextPageToken")
-    result_size_estimate: Union[int | None, Any] = Field(default=None, alias="resultSizeEstimate")
+    threads: list[ThreadRef] | None = Field(default=None)
+    next_page_token: str | None = Field(default=None, alias="nextPageToken")
+    result_size_estimate: int | None = Field(default=None, alias="resultSizeEstimate")
 
 class MessageSendParams(BaseModel):
     """Parameters for sending a message"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    raw: Union[str, Any] = Field(default=None)
-    thread_id: Union[str, Any] = Field(default=None, alias="threadId")
+    raw: str
+    thread_id: str | None = Field(default=None, alias="threadId")
 
 class MessageModifyParams(BaseModel):
     """Parameters for modifying message labels"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    add_label_ids: Union[list[str], Any] = Field(default=None, alias="addLabelIds")
-    remove_label_ids: Union[list[str], Any] = Field(default=None, alias="removeLabelIds")
+    add_label_ids: list[str] | None = Field(default=None, alias="addLabelIds")
+    remove_label_ids: list[str] | None = Field(default=None, alias="removeLabelIds")
 
 class LabelCreateParamsColor(BaseModel):
     """The color to assign to the label"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    text_color: Union[str, Any] = Field(default=None, alias="textColor", description="The text color of the label as a hex string (#RRGGBB)")
+    text_color: str | None = Field(default=None, alias="textColor", description="The text color of the label as a hex string (#RRGGBB)")
     """The text color of the label as a hex string (#RRGGBB)"""
-    background_color: Union[str, Any] = Field(default=None, alias="backgroundColor", description="The background color of the label as a hex string (#RRGGBB)")
+    background_color: str | None = Field(default=None, alias="backgroundColor", description="The background color of the label as a hex string (#RRGGBB)")
     """The background color of the label as a hex string (#RRGGBB)"""
 
 class LabelCreateParams(BaseModel):
     """Parameters for creating a label"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    name: Union[str, Any] = Field(default=None)
-    message_list_visibility: Union[str, Any] = Field(default=None, alias="messageListVisibility")
-    label_list_visibility: Union[str, Any] = Field(default=None, alias="labelListVisibility")
-    color: Union[LabelCreateParamsColor, Any] = Field(default=None)
+    name: str
+    message_list_visibility: str | None = Field(default=None, alias="messageListVisibility")
+    label_list_visibility: str | None = Field(default=None, alias="labelListVisibility")
+    color: LabelCreateParamsColor | None = Field(default=None)
 
 class LabelUpdateParamsColor(BaseModel):
     """The color to assign to the label"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    text_color: Union[str, Any] = Field(default=None, alias="textColor", description="The text color of the label as a hex string (#RRGGBB)")
+    text_color: str | None = Field(default=None, alias="textColor", description="The text color of the label as a hex string (#RRGGBB)")
     """The text color of the label as a hex string (#RRGGBB)"""
-    background_color: Union[str, Any] = Field(default=None, alias="backgroundColor", description="The background color of the label as a hex string (#RRGGBB)")
+    background_color: str | None = Field(default=None, alias="backgroundColor", description="The background color of the label as a hex string (#RRGGBB)")
     """The background color of the label as a hex string (#RRGGBB)"""
 
 class LabelUpdateParams(BaseModel):
     """Parameters for updating a label"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    message_list_visibility: Union[str, Any] = Field(default=None, alias="messageListVisibility")
-    label_list_visibility: Union[str, Any] = Field(default=None, alias="labelListVisibility")
-    color: Union[LabelUpdateParamsColor, Any] = Field(default=None)
+    id: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    message_list_visibility: str | None = Field(default=None, alias="messageListVisibility")
+    label_list_visibility: str | None = Field(default=None, alias="labelListVisibility")
+    color: LabelUpdateParamsColor | None = Field(default=None)
 
 class DraftCreateParamsMessage(BaseModel):
     """The draft message content"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    raw: Union[str, Any] = Field(default=None, description="The draft message in RFC 2822 format, base64url encoded")
+    raw: str = Field(description="The draft message in RFC 2822 format, base64url encoded")
     """The draft message in RFC 2822 format, base64url encoded"""
-    thread_id: Union[str, Any] = Field(default=None, alias="threadId", description="The thread ID for the draft (for threading in a conversation)")
+    thread_id: str | None = Field(default=None, alias="threadId", description="The thread ID for the draft (for threading in a conversation)")
     """The thread ID for the draft (for threading in a conversation)"""
 
 class DraftCreateParams(BaseModel):
     """Parameters for creating or updating a draft"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    message: Union[DraftCreateParamsMessage, Any] = Field(default=None)
+    message: DraftCreateParamsMessage
 
 class DraftSendParams(BaseModel):
     """Parameters for sending an existing draft"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
+    id: str
 
 # ===== METADATA TYPE DEFINITIONS (PYDANTIC) =====
 # Meta types for operations that extract metadata (e.g., pagination info)
@@ -257,22 +257,22 @@ class MessagesListResultMeta(BaseModel):
     """Metadata for messages.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page_token: Union[str | None, Any] = Field(default=None, alias="nextPageToken")
-    result_size_estimate: Union[int | None, Any] = Field(default=None, alias="resultSizeEstimate")
+    next_page_token: str | None = Field(default=None, alias="nextPageToken")
+    result_size_estimate: int | None = Field(default=None, alias="resultSizeEstimate")
 
 class DraftsListResultMeta(BaseModel):
     """Metadata for drafts.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page_token: Union[str | None, Any] = Field(default=None, alias="nextPageToken")
-    result_size_estimate: Union[int | None, Any] = Field(default=None, alias="resultSizeEstimate")
+    next_page_token: str | None = Field(default=None, alias="nextPageToken")
+    result_size_estimate: int | None = Field(default=None, alias="resultSizeEstimate")
 
 class ThreadsListResultMeta(BaseModel):
     """Metadata for threads.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_page_token: Union[str | None, Any] = Field(default=None, alias="nextPageToken")
-    result_size_estimate: Union[int | None, Any] = Field(default=None, alias="resultSizeEstimate")
+    next_page_token: str | None = Field(default=None, alias="nextPageToken")
+    result_size_estimate: int | None = Field(default=None, alias="resultSizeEstimate")
 
 # ===== CHECK RESULT MODEL =====
 

@@ -8,7 +8,7 @@ and response envelope types.
 from __future__ import annotations
 
 from pydantic import BaseModel, ConfigDict, Field
-from typing import TypeVar, Generic, Union, Any
+from typing import TypeVar, Generic, Any
 
 # Authentication configuration - multiple options available
 
@@ -40,318 +40,318 @@ class User(BaseModel):
     """Monday.com user object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    email: Union[str | None, Any] = Field(default=None)
-    enabled: Union[bool | None, Any] = Field(default=None)
-    birthday: Union[str | None, Any] = Field(default=None)
-    country_code: Union[str | None, Any] = Field(default=None)
-    created_at: Union[str | None, Any] = Field(default=None)
-    join_date: Union[str | None, Any] = Field(default=None)
-    is_admin: Union[bool | None, Any] = Field(default=None)
-    is_guest: Union[bool | None, Any] = Field(default=None)
-    is_pending: Union[bool | None, Any] = Field(default=None)
-    is_view_only: Union[bool | None, Any] = Field(default=None)
-    is_verified: Union[bool | None, Any] = Field(default=None)
-    location: Union[str | None, Any] = Field(default=None)
-    mobile_phone: Union[str | None, Any] = Field(default=None)
-    phone: Union[str | None, Any] = Field(default=None)
-    photo_original: Union[str | None, Any] = Field(default=None)
-    photo_small: Union[str | None, Any] = Field(default=None)
-    photo_thumb: Union[str | None, Any] = Field(default=None)
-    photo_thumb_small: Union[str | None, Any] = Field(default=None)
-    photo_tiny: Union[str | None, Any] = Field(default=None)
-    time_zone_identifier: Union[str | None, Any] = Field(default=None)
-    title: Union[str | None, Any] = Field(default=None)
-    url: Union[str | None, Any] = Field(default=None)
-    utc_hours_diff: Union[int | None, Any] = Field(default=None)
-
-class BoardCreator(BaseModel):
-    """Board creator"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str | None, Any] = Field(default=None)
-
-class BoardTagsItem(BaseModel):
-    """Nested schema for Board.tags_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str | None, Any] = Field(default=None)
+    id: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    email: str | None = Field(default=None)
+    enabled: bool | None = Field(default=None)
+    birthday: str | None = Field(default=None)
+    country_code: str | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    join_date: str | None = Field(default=None)
+    is_admin: bool | None = Field(default=None)
+    is_guest: bool | None = Field(default=None)
+    is_pending: bool | None = Field(default=None)
+    is_view_only: bool | None = Field(default=None)
+    is_verified: bool | None = Field(default=None)
+    location: str | None = Field(default=None)
+    mobile_phone: str | None = Field(default=None)
+    phone: str | None = Field(default=None)
+    photo_original: str | None = Field(default=None)
+    photo_small: str | None = Field(default=None)
+    photo_thumb: str | None = Field(default=None)
+    photo_thumb_small: str | None = Field(default=None)
+    photo_tiny: str | None = Field(default=None)
+    time_zone_identifier: str | None = Field(default=None)
+    title: str | None = Field(default=None)
+    url: str | None = Field(default=None)
+    utc_hours_diff: int | None = Field(default=None)
 
 class BoardGroupsItem(BaseModel):
     """Nested schema for Board.groups_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    archived: Union[bool | None, Any] = Field(default=None)
-    color: Union[str | None, Any] = Field(default=None)
-    deleted: Union[bool | None, Any] = Field(default=None)
-    id: Union[str | None, Any] = Field(default=None)
-    position: Union[str | None, Any] = Field(default=None)
-    title: Union[str | None, Any] = Field(default=None)
+    archived: bool | None | None = Field(default=None)
+    color: str | None | None = Field(default=None)
+    deleted: bool | None | None = Field(default=None)
+    id: str | None | None = Field(default=None)
+    position: str | None | None = Field(default=None)
+    title: str | None | None = Field(default=None)
+
+class BoardTagsItem(BaseModel):
+    """Nested schema for Board.tags_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None | None = Field(default=None)
+
+class BoardCreator(BaseModel):
+    """Board creator"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None | None = Field(default=None)
 
 class BoardOwnersItem(BaseModel):
     """Nested schema for Board.owners_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str | None, Any] = Field(default=None)
-
-class BoardViewsItem(BaseModel):
-    """Nested schema for Board.views_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    settings_str: Union[str | None, Any] = Field(default=None)
-    type_: Union[str | None, Any] = Field(default=None, alias="type")
-    view_specific_data_str: Union[str | None, Any] = Field(default=None)
-
-class BoardSubscribersItem(BaseModel):
-    """Nested schema for Board.subscribers_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str | None, Any] = Field(default=None)
+    id: str | None | None = Field(default=None)
 
 class BoardColumnsItem(BaseModel):
     """Nested schema for Board.columns_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    archived: Union[bool | None, Any] = Field(default=None)
-    description: Union[str | None, Any] = Field(default=None)
-    id: Union[str | None, Any] = Field(default=None)
-    settings_str: Union[str | None, Any] = Field(default=None)
-    title: Union[str | None, Any] = Field(default=None)
-    type_: Union[str | None, Any] = Field(default=None, alias="type")
-    width: Union[int | None, Any] = Field(default=None)
+    archived: bool | None | None = Field(default=None)
+    description: str | None | None = Field(default=None)
+    id: str | None | None = Field(default=None)
+    settings_str: str | None | None = Field(default=None)
+    title: str | None | None = Field(default=None)
+    type_: str | None | None = Field(default=None, alias="type")
+    width: int | None | None = Field(default=None)
 
 class BoardWorkspace(BaseModel):
     """Workspace the board belongs to"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    kind: Union[str | None, Any] = Field(default=None)
-    description: Union[str | None, Any] = Field(default=None)
+    id: str | None | None = Field(default=None)
+    name: str | None | None = Field(default=None)
+    kind: str | None | None = Field(default=None)
+    description: str | None | None = Field(default=None)
+
+class BoardViewsItem(BaseModel):
+    """Nested schema for Board.views_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None | None = Field(default=None)
+    name: str | None | None = Field(default=None)
+    settings_str: str | None | None = Field(default=None)
+    type_: str | None | None = Field(default=None, alias="type")
+    view_specific_data_str: str | None | None = Field(default=None)
+
+class BoardSubscribersItem(BaseModel):
+    """Nested schema for Board.subscribers_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None | None = Field(default=None)
 
 class BoardTopGroup(BaseModel):
     """Top group on the board"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str | None, Any] = Field(default=None)
+    id: str | None | None = Field(default=None)
 
 class Board(BaseModel):
     """Monday.com board object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    board_kind: Union[str | None, Any] = Field(default=None)
-    type_: Union[str | None, Any] = Field(default=None, alias="type")
-    description: Union[str | None, Any] = Field(default=None)
-    permissions: Union[str | None, Any] = Field(default=None)
-    state: Union[str | None, Any] = Field(default=None)
-    updated_at: Union[str | None, Any] = Field(default=None)
-    columns: Union[list[BoardColumnsItem | None] | None, Any] = Field(default=None)
-    groups: Union[list[BoardGroupsItem | None] | None, Any] = Field(default=None)
-    owners: Union[list[BoardOwnersItem | None] | None, Any] = Field(default=None)
-    creator: Union[BoardCreator | None, Any] = Field(default=None)
-    subscribers: Union[list[BoardSubscribersItem | None] | None, Any] = Field(default=None)
-    tags: Union[list[BoardTagsItem | None] | None, Any] = Field(default=None)
-    top_group: Union[BoardTopGroup | None, Any] = Field(default=None)
-    views: Union[list[BoardViewsItem | None] | None, Any] = Field(default=None)
-    workspace: Union[BoardWorkspace | None, Any] = Field(default=None)
-
-class ItemSubscribersItem(BaseModel):
-    """Nested schema for Item.subscribers_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str | None, Any] = Field(default=None)
-
-class ItemGroup(BaseModel):
-    """Group the item belongs to"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str | None, Any] = Field(default=None)
-
-class ItemParentItem(BaseModel):
-    """Parent item (for subitems)"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str | None, Any] = Field(default=None)
+    id: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    board_kind: str | None = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    description: str | None = Field(default=None)
+    permissions: str | None = Field(default=None)
+    state: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
+    columns: list[BoardColumnsItem | None] | None = Field(default=None)
+    groups: list[BoardGroupsItem | None] | None = Field(default=None)
+    owners: list[BoardOwnersItem | None] | None = Field(default=None)
+    creator: BoardCreator | None = Field(default=None)
+    subscribers: list[BoardSubscribersItem | None] | None = Field(default=None)
+    tags: list[BoardTagsItem | None] | None = Field(default=None)
+    top_group: BoardTopGroup | None = Field(default=None)
+    views: list[BoardViewsItem | None] | None = Field(default=None)
+    workspace: BoardWorkspace | None = Field(default=None)
 
 class ItemBoard(BaseModel):
     """Board the item belongs to"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
+    id: str | None | None = Field(default=None)
+    name: str | None | None = Field(default=None)
+
+class ItemSubscribersItem(BaseModel):
+    """Nested schema for Item.subscribers_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None | None = Field(default=None)
+
+class ItemParentItem(BaseModel):
+    """Parent item (for subitems)"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None | None = Field(default=None)
+
+class ItemGroup(BaseModel):
+    """Group the item belongs to"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None | None = Field(default=None)
 
 class ItemColumnValuesItem(BaseModel):
     """Nested schema for Item.column_values_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str | None, Any] = Field(default=None)
-    text: Union[str | None, Any] = Field(default=None)
-    type_: Union[str | None, Any] = Field(default=None, alias="type")
-    value: Union[str | None, Any] = Field(default=None)
+    id: str | None | None = Field(default=None)
+    text: str | None | None = Field(default=None)
+    type_: str | None | None = Field(default=None, alias="type")
+    value: str | None | None = Field(default=None)
 
 class Item(BaseModel):
     """Monday.com item object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    created_at: Union[str | None, Any] = Field(default=None)
-    creator_id: Union[str | None, Any] = Field(default=None)
-    state: Union[str | None, Any] = Field(default=None)
-    updated_at: Union[str | None, Any] = Field(default=None)
-    board: Union[ItemBoard | None, Any] = Field(default=None)
-    group: Union[ItemGroup | None, Any] = Field(default=None)
-    parent_item: Union[ItemParentItem | None, Any] = Field(default=None)
-    column_values: Union[list[ItemColumnValuesItem | None] | None, Any] = Field(default=None)
-    subscribers: Union[list[ItemSubscribersItem | None] | None, Any] = Field(default=None)
+    id: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    creator_id: str | None = Field(default=None)
+    state: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
+    board: ItemBoard | None = Field(default=None)
+    group: ItemGroup | None = Field(default=None)
+    parent_item: ItemParentItem | None = Field(default=None)
+    column_values: list[ItemColumnValuesItem | None] | None = Field(default=None)
+    subscribers: list[ItemSubscribersItem | None] | None = Field(default=None)
 
 class TeamUsersItem(BaseModel):
     """Nested schema for Team.users_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str | None, Any] = Field(default=None)
+    id: str | None | None = Field(default=None)
 
 class Team(BaseModel):
     """Monday.com team object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    picture_url: Union[str | None, Any] = Field(default=None)
-    users: Union[list[TeamUsersItem | None] | None, Any] = Field(default=None)
+    id: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    picture_url: str | None = Field(default=None)
+    users: list[TeamUsersItem | None] | None = Field(default=None)
 
 class Tag(BaseModel):
     """Monday.com tag object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    color: Union[str | None, Any] = Field(default=None)
-
-class UpdateAssetsItemUploadedBy(BaseModel):
-    """Nested schema for UpdateAssetsItem.uploaded_by"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str | None, Any] = Field(default=None)
-
-class UpdateAssetsItem(BaseModel):
-    """Nested schema for Update.assets_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    url: Union[str | None, Any] = Field(default=None)
-    url_thumbnail: Union[str | None, Any] = Field(default=None)
-    public_url: Union[str | None, Any] = Field(default=None)
-    file_extension: Union[str | None, Any] = Field(default=None)
-    file_size: Union[int | None, Any] = Field(default=None)
-    created_at: Union[str | None, Any] = Field(default=None)
-    original_geometry: Union[str | None, Any] = Field(default=None)
-    uploaded_by: Union[UpdateAssetsItemUploadedBy | None, Any] = Field(default=None)
+    id: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    color: str | None = Field(default=None)
 
 class UpdateRepliesItem(BaseModel):
     """Nested schema for Update.replies_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str | None, Any] = Field(default=None)
-    creator_id: Union[str | None, Any] = Field(default=None)
-    created_at: Union[str | None, Any] = Field(default=None)
-    text_body: Union[str | None, Any] = Field(default=None)
-    updated_at: Union[str | None, Any] = Field(default=None)
-    body: Union[str | None, Any] = Field(default=None)
+    id: str | None | None = Field(default=None)
+    creator_id: str | None | None = Field(default=None)
+    created_at: str | None | None = Field(default=None)
+    text_body: str | None | None = Field(default=None)
+    updated_at: str | None | None = Field(default=None)
+    body: str | None | None = Field(default=None)
+
+class UpdateAssetsItemUploadedBy(BaseModel):
+    """Nested schema for UpdateAssetsItem.uploaded_by"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None | None = Field(default=None)
+
+class UpdateAssetsItem(BaseModel):
+    """Nested schema for Update.assets_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None | None = Field(default=None)
+    name: str | None | None = Field(default=None)
+    url: str | None | None = Field(default=None)
+    url_thumbnail: str | None | None = Field(default=None)
+    public_url: str | None | None = Field(default=None)
+    file_extension: str | None | None = Field(default=None)
+    file_size: int | None | None = Field(default=None)
+    created_at: str | None | None = Field(default=None)
+    original_geometry: str | None | None = Field(default=None)
+    uploaded_by: UpdateAssetsItemUploadedBy | None | None = Field(default=None)
 
 class Update(BaseModel):
     """Monday.com update (comment/post) object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str | None, Any] = Field(default=None)
-    body: Union[str | None, Any] = Field(default=None)
-    text_body: Union[str | None, Any] = Field(default=None)
-    created_at: Union[str | None, Any] = Field(default=None)
-    creator_id: Union[str | None, Any] = Field(default=None)
-    item_id: Union[str | None, Any] = Field(default=None)
-    updated_at: Union[str | None, Any] = Field(default=None)
-    replies: Union[list[UpdateRepliesItem | None] | None, Any] = Field(default=None)
-    assets: Union[list[UpdateAssetsItem | None] | None, Any] = Field(default=None)
-
-class WorkspaceOwnersSubscribersItem(BaseModel):
-    """Nested schema for Workspace.owners_subscribers_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str | None, Any] = Field(default=None)
-
-class WorkspaceUsersSubscribersItem(BaseModel):
-    """Nested schema for Workspace.users_subscribers_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str | None, Any] = Field(default=None)
-
-class WorkspaceTeamsSubscribersItem(BaseModel):
-    """Nested schema for Workspace.teams_subscribers_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-
-class WorkspaceTeamOwnersSubscribersItem(BaseModel):
-    """Nested schema for Workspace.team_owners_subscribers_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-
-class WorkspaceAccountProduct(BaseModel):
-    """Account product info"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str | None, Any] = Field(default=None)
-    kind: Union[str | None, Any] = Field(default=None)
+    id: str | None = Field(default=None)
+    body: str | None = Field(default=None)
+    text_body: str | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    creator_id: str | None = Field(default=None)
+    item_id: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
+    replies: list[UpdateRepliesItem | None] | None = Field(default=None)
+    assets: list[UpdateAssetsItem | None] | None = Field(default=None)
 
 class WorkspaceSettingsIcon(BaseModel):
     """Nested schema for WorkspaceSettings.icon"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    color: Union[str | None, Any] = Field(default=None)
-    image: Union[str | None, Any] = Field(default=None)
+    color: str | None | None = Field(default=None)
+    image: str | None | None = Field(default=None)
 
 class WorkspaceSettings(BaseModel):
     """Workspace settings"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    icon: Union[WorkspaceSettingsIcon | None, Any] = Field(default=None)
+    icon: WorkspaceSettingsIcon | None | None = Field(default=None)
+
+class WorkspaceAccountProduct(BaseModel):
+    """Account product info"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None | None = Field(default=None)
+    kind: str | None | None = Field(default=None)
+
+class WorkspaceTeamsSubscribersItem(BaseModel):
+    """Nested schema for Workspace.teams_subscribers_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None | None = Field(default=None)
+    name: str | None | None = Field(default=None)
+
+class WorkspaceOwnersSubscribersItem(BaseModel):
+    """Nested schema for Workspace.owners_subscribers_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None | None = Field(default=None)
+
+class WorkspaceUsersSubscribersItem(BaseModel):
+    """Nested schema for Workspace.users_subscribers_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None | None = Field(default=None)
+
+class WorkspaceTeamOwnersSubscribersItem(BaseModel):
+    """Nested schema for Workspace.team_owners_subscribers_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None | None = Field(default=None)
+    name: str | None | None = Field(default=None)
 
 class Workspace(BaseModel):
     """Monday.com workspace object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    kind: Union[str | None, Any] = Field(default=None)
-    description: Union[str | None, Any] = Field(default=None)
-    state: Union[str | None, Any] = Field(default=None)
-    created_at: Union[str | None, Any] = Field(default=None)
-    account_product: Union[WorkspaceAccountProduct | None, Any] = Field(default=None)
-    owners_subscribers: Union[list[WorkspaceOwnersSubscribersItem | None] | None, Any] = Field(default=None)
-    settings: Union[WorkspaceSettings | None, Any] = Field(default=None)
-    team_owners_subscribers: Union[list[WorkspaceTeamOwnersSubscribersItem | None] | None, Any] = Field(default=None)
-    teams_subscribers: Union[list[WorkspaceTeamsSubscribersItem | None] | None, Any] = Field(default=None)
-    users_subscribers: Union[list[WorkspaceUsersSubscribersItem | None] | None, Any] = Field(default=None)
+    id: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    kind: str | None = Field(default=None)
+    description: str | None = Field(default=None)
+    state: str | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    account_product: WorkspaceAccountProduct | None = Field(default=None)
+    owners_subscribers: list[WorkspaceOwnersSubscribersItem | None] | None = Field(default=None)
+    settings: WorkspaceSettings | None = Field(default=None)
+    team_owners_subscribers: list[WorkspaceTeamOwnersSubscribersItem | None] | None = Field(default=None)
+    teams_subscribers: list[WorkspaceTeamsSubscribersItem | None] | None = Field(default=None)
+    users_subscribers: list[WorkspaceUsersSubscribersItem | None] | None = Field(default=None)
 
 class ActivityLog(BaseModel):
     """Monday.com activity log entry"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str | None, Any] = Field(default=None)
-    event: Union[str | None, Any] = Field(default=None)
-    data: Union[str | None, Any] = Field(default=None)
-    entity: Union[str | None, Any] = Field(default=None)
-    created_at: Union[str | None, Any] = Field(default=None)
-    user_id: Union[str | None, Any] = Field(default=None)
+    id: str | None = Field(default=None)
+    event: str | None = Field(default=None)
+    data: str | None = Field(default=None)
+    entity: str | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    user_id: str | None = Field(default=None)
 
 # ===== METADATA TYPE DEFINITIONS (PYDANTIC) =====
 # Meta types for operations that extract metadata (e.g., pagination info)

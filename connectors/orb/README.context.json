@@ -95,7 +95,7 @@
       {
         "name": "next_cursor",
         "python_name": "next_cursor",
-        "type": "str | None",
+        "type": "str",
         "schema": {
           "type": [
             "string",
@@ -155,7 +155,7 @@
           {
             "name": "next_cursor",
             "python_name": "next_cursor",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "string",
@@ -281,7 +281,7 @@
           {
             "name": "next_cursor",
             "python_name": "next_cursor",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "string",
@@ -369,7 +369,7 @@
           {
             "name": "next_cursor",
             "python_name": "next_cursor",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "string",
@@ -556,7 +556,7 @@
           {
             "name": "next_cursor",
             "python_name": "next_cursor",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "string",

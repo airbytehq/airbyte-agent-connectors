@@ -8,7 +8,7 @@ and response envelope types.
 from __future__ import annotations
 
 from pydantic import BaseModel, ConfigDict, Field
-from typing import TypeVar, Generic, Union, Any
+from typing import TypeVar, Generic, Any
 from typing import Optional
 
 # Authentication configuration - multiple options available
@@ -55,581 +55,581 @@ class User(BaseModel):
     """Slack user object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    team_id: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    deleted: Union[bool | None, Any] = Field(default=None)
-    color: Union[str | None, Any] = Field(default=None)
-    real_name: Union[str | None, Any] = Field(default=None)
-    tz: Union[str | None, Any] = Field(default=None)
-    tz_label: Union[str | None, Any] = Field(default=None)
-    tz_offset: Union[int | None, Any] = Field(default=None)
-    profile: Union[Any, Any] = Field(default=None)
-    is_admin: Union[bool | None, Any] = Field(default=None)
-    is_owner: Union[bool | None, Any] = Field(default=None)
-    is_primary_owner: Union[bool | None, Any] = Field(default=None)
-    is_restricted: Union[bool | None, Any] = Field(default=None)
-    is_ultra_restricted: Union[bool | None, Any] = Field(default=None)
-    is_bot: Union[bool | None, Any] = Field(default=None)
-    is_app_user: Union[bool | None, Any] = Field(default=None)
-    updated: Union[int | None, Any] = Field(default=None)
-    is_email_confirmed: Union[bool | None, Any] = Field(default=None)
-    who_can_share_contact_card: Union[str | None, Any] = Field(default=None)
+    id: str | None = Field(default=None)
+    team_id: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    deleted: bool | None = Field(default=None)
+    color: str | None = Field(default=None)
+    real_name: str | None = Field(default=None)
+    tz: str | None = Field(default=None)
+    tz_label: str | None = Field(default=None)
+    tz_offset: int | None = Field(default=None)
+    profile: Any | None = Field(default=None)
+    is_admin: bool | None = Field(default=None)
+    is_owner: bool | None = Field(default=None)
+    is_primary_owner: bool | None = Field(default=None)
+    is_restricted: bool | None = Field(default=None)
+    is_ultra_restricted: bool | None = Field(default=None)
+    is_bot: bool | None = Field(default=None)
+    is_app_user: bool | None = Field(default=None)
+    updated: int | None = Field(default=None)
+    is_email_confirmed: bool | None = Field(default=None)
+    who_can_share_contact_card: str | None = Field(default=None)
 
 class UserProfile(BaseModel):
     """User profile information"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    title: Union[str | None, Any] = Field(default=None)
-    phone: Union[str | None, Any] = Field(default=None)
-    skype: Union[str | None, Any] = Field(default=None)
-    real_name: Union[str | None, Any] = Field(default=None)
-    real_name_normalized: Union[str | None, Any] = Field(default=None)
-    display_name: Union[str | None, Any] = Field(default=None)
-    display_name_normalized: Union[str | None, Any] = Field(default=None)
-    status_text: Union[str | None, Any] = Field(default=None)
-    status_emoji: Union[str | None, Any] = Field(default=None)
-    status_expiration: Union[int | None, Any] = Field(default=None)
-    avatar_hash: Union[str | None, Any] = Field(default=None)
-    first_name: Union[str | None, Any] = Field(default=None)
-    last_name: Union[str | None, Any] = Field(default=None)
-    email: Union[str | None, Any] = Field(default=None)
-    image_24: Union[str | None, Any] = Field(default=None)
-    image_32: Union[str | None, Any] = Field(default=None)
-    image_48: Union[str | None, Any] = Field(default=None)
-    image_72: Union[str | None, Any] = Field(default=None)
-    image_192: Union[str | None, Any] = Field(default=None)
-    image_512: Union[str | None, Any] = Field(default=None)
-    team: Union[str | None, Any] = Field(default=None)
+    title: str | None = Field(default=None)
+    phone: str | None = Field(default=None)
+    skype: str | None = Field(default=None)
+    real_name: str | None = Field(default=None)
+    real_name_normalized: str | None = Field(default=None)
+    display_name: str | None = Field(default=None)
+    display_name_normalized: str | None = Field(default=None)
+    status_text: str | None = Field(default=None)
+    status_emoji: str | None = Field(default=None)
+    status_expiration: int | None = Field(default=None)
+    avatar_hash: str | None = Field(default=None)
+    first_name: str | None = Field(default=None)
+    last_name: str | None = Field(default=None)
+    email: str | None = Field(default=None)
+    image_24: str | None = Field(default=None)
+    image_32: str | None = Field(default=None)
+    image_48: str | None = Field(default=None)
+    image_72: str | None = Field(default=None)
+    image_192: str | None = Field(default=None)
+    image_512: str | None = Field(default=None)
+    team: str | None = Field(default=None)
 
 class ResponseMetadata(BaseModel):
     """Response metadata including pagination"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_cursor: Union[str | None, Any] = Field(default=None)
+    next_cursor: str | None = Field(default=None)
 
 class UsersListResponse(BaseModel):
     """Response containing list of users"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    ok: Union[bool, Any] = Field(default=None)
-    members: Union[list[User], Any] = Field(default=None)
-    cache_ts: Union[int | None, Any] = Field(default=None)
-    response_metadata: Union[ResponseMetadata, Any] = Field(default=None)
+    ok: bool | None = Field(default=None)
+    members: list[User] | None = Field(default=None)
+    cache_ts: int | None = Field(default=None)
+    response_metadata: ResponseMetadata | None = Field(default=None)
 
 class UserResponse(BaseModel):
     """Response containing single user"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    ok: Union[bool, Any] = Field(default=None)
-    user: Union[User, Any] = Field(default=None)
+    ok: bool | None = Field(default=None)
+    user: User | None = Field(default=None)
 
 class Channel(BaseModel):
     """Slack channel object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    is_channel: Union[bool | None, Any] = Field(default=None)
-    is_group: Union[bool | None, Any] = Field(default=None)
-    is_im: Union[bool | None, Any] = Field(default=None)
-    is_mpim: Union[bool | None, Any] = Field(default=None)
-    is_private: Union[bool | None, Any] = Field(default=None)
-    created: Union[int | None, Any] = Field(default=None)
-    is_archived: Union[bool | None, Any] = Field(default=None)
-    is_general: Union[bool | None, Any] = Field(default=None)
-    unlinked: Union[int | None, Any] = Field(default=None)
-    name_normalized: Union[str | None, Any] = Field(default=None)
-    is_shared: Union[bool | None, Any] = Field(default=None)
-    is_org_shared: Union[bool | None, Any] = Field(default=None)
-    is_pending_ext_shared: Union[bool | None, Any] = Field(default=None)
-    pending_shared: Union[list[str] | None, Any] = Field(default=None)
-    context_team_id: Union[str | None, Any] = Field(default=None)
-    updated: Union[int | None, Any] = Field(default=None)
-    creator: Union[str | None, Any] = Field(default=None)
-    is_ext_shared: Union[bool | None, Any] = Field(default=None)
-    shared_team_ids: Union[list[str] | None, Any] = Field(default=None)
-    pending_connected_team_ids: Union[list[str] | None, Any] = Field(default=None)
-    is_member: Union[bool | None, Any] = Field(default=None)
-    topic: Union[Any, Any] = Field(default=None)
-    purpose: Union[Any, Any] = Field(default=None)
-    previous_names: Union[list[str] | None, Any] = Field(default=None)
-    num_members: Union[int | None, Any] = Field(default=None)
-    parent_conversation: Union[str | None, Any] = Field(default=None)
-    properties: Union[dict[str, Any] | None, Any] = Field(default=None)
-    is_thread_only: Union[bool | None, Any] = Field(default=None)
-    is_read_only: Union[bool | None, Any] = Field(default=None)
+    id: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    is_channel: bool | None = Field(default=None)
+    is_group: bool | None = Field(default=None)
+    is_im: bool | None = Field(default=None)
+    is_mpim: bool | None = Field(default=None)
+    is_private: bool | None = Field(default=None)
+    created: int | None = Field(default=None)
+    is_archived: bool | None = Field(default=None)
+    is_general: bool | None = Field(default=None)
+    unlinked: int | None = Field(default=None)
+    name_normalized: str | None = Field(default=None)
+    is_shared: bool | None = Field(default=None)
+    is_org_shared: bool | None = Field(default=None)
+    is_pending_ext_shared: bool | None = Field(default=None)
+    pending_shared: list[str] | None = Field(default=None)
+    context_team_id: str | None = Field(default=None)
+    updated: int | None = Field(default=None)
+    creator: str | None = Field(default=None)
+    is_ext_shared: bool | None = Field(default=None)
+    shared_team_ids: list[str] | None = Field(default=None)
+    pending_connected_team_ids: list[str] | None = Field(default=None)
+    is_member: bool | None = Field(default=None)
+    topic: Any | None = Field(default=None)
+    purpose: Any | None = Field(default=None)
+    previous_names: list[str] | None = Field(default=None)
+    num_members: int | None = Field(default=None)
+    parent_conversation: str | None = Field(default=None)
+    properties: dict[str, Any] | None = Field(default=None)
+    is_thread_only: bool | None = Field(default=None)
+    is_read_only: bool | None = Field(default=None)
 
 class ChannelTopic(BaseModel):
     """Channel topic information"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    value: Union[str | None, Any] = Field(default=None)
-    creator: Union[str | None, Any] = Field(default=None)
-    last_set: Union[int | None, Any] = Field(default=None)
+    value: str | None = Field(default=None)
+    creator: str | None = Field(default=None)
+    last_set: int | None = Field(default=None)
 
 class ChannelPurpose(BaseModel):
     """Channel purpose information"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    value: Union[str | None, Any] = Field(default=None)
-    creator: Union[str | None, Any] = Field(default=None)
-    last_set: Union[int | None, Any] = Field(default=None)
+    value: str | None = Field(default=None)
+    creator: str | None = Field(default=None)
+    last_set: int | None = Field(default=None)
 
 class ChannelsListResponse(BaseModel):
     """Response containing list of channels"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    ok: Union[bool, Any] = Field(default=None)
-    channels: Union[list[Channel], Any] = Field(default=None)
-    response_metadata: Union[ResponseMetadata, Any] = Field(default=None)
+    ok: bool | None = Field(default=None)
+    channels: list[Channel] | None = Field(default=None)
+    response_metadata: ResponseMetadata | None = Field(default=None)
 
 class ChannelResponse(BaseModel):
     """Response containing single channel"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    ok: Union[bool, Any] = Field(default=None)
-    channel: Union[Channel, Any] = Field(default=None)
+    ok: bool | None = Field(default=None)
+    channel: Channel | None = Field(default=None)
 
 class Attachment(BaseModel):
     """Message attachment"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int | None, Any] = Field(default=None)
-    fallback: Union[str | None, Any] = Field(default=None)
-    color: Union[str | None, Any] = Field(default=None)
-    pretext: Union[str | None, Any] = Field(default=None)
-    author_name: Union[str | None, Any] = Field(default=None)
-    author_link: Union[str | None, Any] = Field(default=None)
-    author_icon: Union[str | None, Any] = Field(default=None)
-    title: Union[str | None, Any] = Field(default=None)
-    title_link: Union[str | None, Any] = Field(default=None)
-    text: Union[str | None, Any] = Field(default=None)
-    fields: Union[list[dict[str, Any]] | None, Any] = Field(default=None)
-    image_url: Union[str | None, Any] = Field(default=None)
-    thumb_url: Union[str | None, Any] = Field(default=None)
-    footer: Union[str | None, Any] = Field(default=None)
-    footer_icon: Union[str | None, Any] = Field(default=None)
-    ts: Union[Any, Any] = Field(default=None)
+    id: int | None = Field(default=None)
+    fallback: str | None = Field(default=None)
+    color: str | None = Field(default=None)
+    pretext: str | None = Field(default=None)
+    author_name: str | None = Field(default=None)
+    author_link: str | None = Field(default=None)
+    author_icon: str | None = Field(default=None)
+    title: str | None = Field(default=None)
+    title_link: str | None = Field(default=None)
+    text: str | None = Field(default=None)
+    fields: list[dict[str, Any]] | None = Field(default=None)
+    image_url: str | None = Field(default=None)
+    thumb_url: str | None = Field(default=None)
+    footer: str | None = Field(default=None)
+    footer_icon: str | None = Field(default=None)
+    ts: Any | None = Field(default=None)
 
 class Reaction(BaseModel):
     """Message reaction"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    name: Union[str | None, Any] = Field(default=None)
-    users: Union[list[str] | None, Any] = Field(default=None)
-    count: Union[int | None, Any] = Field(default=None)
+    name: str | None = Field(default=None)
+    users: list[str] | None = Field(default=None)
+    count: int | None = Field(default=None)
 
 class File(BaseModel):
     """File object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    title: Union[str | None, Any] = Field(default=None)
-    mimetype: Union[str | None, Any] = Field(default=None)
-    filetype: Union[str | None, Any] = Field(default=None)
-    pretty_type: Union[str | None, Any] = Field(default=None)
-    user: Union[str | None, Any] = Field(default=None)
-    size: Union[int | None, Any] = Field(default=None)
-    mode: Union[str | None, Any] = Field(default=None)
-    is_external: Union[bool | None, Any] = Field(default=None)
-    external_type: Union[str | None, Any] = Field(default=None)
-    is_public: Union[bool | None, Any] = Field(default=None)
-    public_url_shared: Union[bool | None, Any] = Field(default=None)
-    url_private: Union[str | None, Any] = Field(default=None)
-    url_private_download: Union[str | None, Any] = Field(default=None)
-    permalink: Union[str | None, Any] = Field(default=None)
-    permalink_public: Union[str | None, Any] = Field(default=None)
-    created: Union[int | None, Any] = Field(default=None)
-    timestamp: Union[int | None, Any] = Field(default=None)
+    id: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    title: str | None = Field(default=None)
+    mimetype: str | None = Field(default=None)
+    filetype: str | None = Field(default=None)
+    pretty_type: str | None = Field(default=None)
+    user: str | None = Field(default=None)
+    size: int | None = Field(default=None)
+    mode: str | None = Field(default=None)
+    is_external: bool | None = Field(default=None)
+    external_type: str | None = Field(default=None)
+    is_public: bool | None = Field(default=None)
+    public_url_shared: bool | None = Field(default=None)
+    url_private: str | None = Field(default=None)
+    url_private_download: str | None = Field(default=None)
+    permalink: str | None = Field(default=None)
+    permalink_public: str | None = Field(default=None)
+    created: int | None = Field(default=None)
+    timestamp: int | None = Field(default=None)
 
 class Message(BaseModel):
     """Slack message object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type_: Union[str | None, Any] = Field(default=None, alias="type")
-    subtype: Union[str | None, Any] = Field(default=None)
-    ts: Union[str, Any] = Field(default=None)
-    user: Union[str | None, Any] = Field(default=None)
-    text: Union[str | None, Any] = Field(default=None)
-    thread_ts: Union[str | None, Any] = Field(default=None)
-    reply_count: Union[int | None, Any] = Field(default=None)
-    reply_users_count: Union[int | None, Any] = Field(default=None)
-    latest_reply: Union[str | None, Any] = Field(default=None)
-    reply_users: Union[list[str] | None, Any] = Field(default=None)
-    is_locked: Union[bool | None, Any] = Field(default=None)
-    subscribed: Union[bool | None, Any] = Field(default=None)
-    reactions: Union[list[Reaction] | None, Any] = Field(default=None)
-    attachments: Union[list[Attachment] | None, Any] = Field(default=None)
-    blocks: Union[list[dict[str, Any]] | None, Any] = Field(default=None)
-    files: Union[list[File] | None, Any] = Field(default=None)
-    edited: Union[Any, Any] = Field(default=None)
-    bot_id: Union[str | None, Any] = Field(default=None)
-    bot_profile: Union[Any, Any] = Field(default=None)
-    app_id: Union[str | None, Any] = Field(default=None)
-    team: Union[str | None, Any] = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    subtype: str | None = Field(default=None)
+    ts: str | None = Field(default=None)
+    user: str | None = Field(default=None)
+    text: str | None = Field(default=None)
+    thread_ts: str | None = Field(default=None)
+    reply_count: int | None = Field(default=None)
+    reply_users_count: int | None = Field(default=None)
+    latest_reply: str | None = Field(default=None)
+    reply_users: list[str] | None = Field(default=None)
+    is_locked: bool | None = Field(default=None)
+    subscribed: bool | None = Field(default=None)
+    reactions: list[Reaction] | None = Field(default=None)
+    attachments: list[Attachment] | None = Field(default=None)
+    blocks: list[dict[str, Any]] | None = Field(default=None)
+    files: list[File] | None = Field(default=None)
+    edited: Any | None = Field(default=None)
+    bot_id: str | None = Field(default=None)
+    bot_profile: Any | None = Field(default=None)
+    app_id: str | None = Field(default=None)
+    team: str | None = Field(default=None)
 
 class Thread(BaseModel):
     """Slack thread reply message object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type_: Union[str | None, Any] = Field(default=None, alias="type")
-    subtype: Union[str | None, Any] = Field(default=None)
-    ts: Union[str, Any] = Field(default=None)
-    user: Union[str | None, Any] = Field(default=None)
-    text: Union[str | None, Any] = Field(default=None)
-    thread_ts: Union[str | None, Any] = Field(default=None)
-    parent_user_id: Union[str | None, Any] = Field(default=None)
-    reply_count: Union[int | None, Any] = Field(default=None)
-    reply_users_count: Union[int | None, Any] = Field(default=None)
-    latest_reply: Union[str | None, Any] = Field(default=None)
-    reply_users: Union[list[str] | None, Any] = Field(default=None)
-    is_locked: Union[bool | None, Any] = Field(default=None)
-    subscribed: Union[bool | None, Any] = Field(default=None)
-    reactions: Union[list[Reaction] | None, Any] = Field(default=None)
-    attachments: Union[list[Attachment] | None, Any] = Field(default=None)
-    blocks: Union[list[dict[str, Any]] | None, Any] = Field(default=None)
-    files: Union[list[File] | None, Any] = Field(default=None)
-    edited: Union[Any, Any] = Field(default=None)
-    bot_id: Union[str | None, Any] = Field(default=None)
-    bot_profile: Union[Any, Any] = Field(default=None)
-    app_id: Union[str | None, Any] = Field(default=None)
-    team: Union[str | None, Any] = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    subtype: str | None = Field(default=None)
+    ts: str | None = Field(default=None)
+    user: str | None = Field(default=None)
+    text: str | None = Field(default=None)
+    thread_ts: str | None = Field(default=None)
+    parent_user_id: str | None = Field(default=None)
+    reply_count: int | None = Field(default=None)
+    reply_users_count: int | None = Field(default=None)
+    latest_reply: str | None = Field(default=None)
+    reply_users: list[str] | None = Field(default=None)
+    is_locked: bool | None = Field(default=None)
+    subscribed: bool | None = Field(default=None)
+    reactions: list[Reaction] | None = Field(default=None)
+    attachments: list[Attachment] | None = Field(default=None)
+    blocks: list[dict[str, Any]] | None = Field(default=None)
+    files: list[File] | None = Field(default=None)
+    edited: Any | None = Field(default=None)
+    bot_id: str | None = Field(default=None)
+    bot_profile: Any | None = Field(default=None)
+    app_id: str | None = Field(default=None)
+    team: str | None = Field(default=None)
 
 class EditedInfo(BaseModel):
     """Message edit information"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    user: Union[str | None, Any] = Field(default=None)
-    ts: Union[str | None, Any] = Field(default=None)
+    user: str | None = Field(default=None)
+    ts: str | None = Field(default=None)
 
 class BotProfile(BaseModel):
     """Bot profile information"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str | None, Any] = Field(default=None)
-    deleted: Union[bool | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    updated: Union[int | None, Any] = Field(default=None)
-    app_id: Union[str | None, Any] = Field(default=None)
-    team_id: Union[str | None, Any] = Field(default=None)
+    id: str | None = Field(default=None)
+    deleted: bool | None = Field(default=None)
+    name: str | None = Field(default=None)
+    updated: int | None = Field(default=None)
+    app_id: str | None = Field(default=None)
+    team_id: str | None = Field(default=None)
 
 class MessagesListResponse(BaseModel):
     """Response containing list of messages"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    ok: Union[bool, Any] = Field(default=None)
-    messages: Union[list[Message], Any] = Field(default=None)
-    has_more: Union[bool | None, Any] = Field(default=None)
-    pin_count: Union[int | None, Any] = Field(default=None)
-    response_metadata: Union[ResponseMetadata, Any] = Field(default=None)
+    ok: bool | None = Field(default=None)
+    messages: list[Message] | None = Field(default=None)
+    has_more: bool | None = Field(default=None)
+    pin_count: int | None = Field(default=None)
+    response_metadata: ResponseMetadata | None = Field(default=None)
 
 class ThreadRepliesResponse(BaseModel):
     """Response containing thread replies"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    ok: Union[bool, Any] = Field(default=None)
-    messages: Union[list[Thread], Any] = Field(default=None)
-    has_more: Union[bool | None, Any] = Field(default=None)
-    response_metadata: Union[ResponseMetadata, Any] = Field(default=None)
+    ok: bool | None = Field(default=None)
+    messages: list[Thread] | None = Field(default=None)
+    has_more: bool | None = Field(default=None)
+    response_metadata: ResponseMetadata | None = Field(default=None)
 
 class MessageCreateParams(BaseModel):
     """Parameters for creating a message"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    channel: Union[str, Any] = Field(default=None)
-    text: Union[str, Any] = Field(default=None)
-    thread_ts: Union[str, Any] = Field(default=None)
-    reply_broadcast: Union[bool, Any] = Field(default=None)
-    unfurl_links: Union[bool, Any] = Field(default=None)
-    unfurl_media: Union[bool, Any] = Field(default=None)
+    channel: str
+    text: str
+    thread_ts: str | None = Field(default=None)
+    reply_broadcast: bool | None = Field(default=None)
+    unfurl_links: bool | None = Field(default=None)
+    unfurl_media: bool | None = Field(default=None)
 
 class CreatedMessage(BaseModel):
     """A message object returned from create/update operations"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type_: Union[str | None, Any] = Field(default=None, alias="type")
-    subtype: Union[str | None, Any] = Field(default=None)
-    text: Union[str | None, Any] = Field(default=None)
-    ts: Union[str, Any] = Field(default=None)
-    user: Union[str | None, Any] = Field(default=None)
-    bot_id: Union[str | None, Any] = Field(default=None)
-    app_id: Union[str | None, Any] = Field(default=None)
-    team: Union[str | None, Any] = Field(default=None)
-    bot_profile: Union[Any, Any] = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    subtype: str | None = Field(default=None)
+    text: str | None = Field(default=None)
+    ts: str | None = Field(default=None)
+    user: str | None = Field(default=None)
+    bot_id: str | None = Field(default=None)
+    app_id: str | None = Field(default=None)
+    team: str | None = Field(default=None)
+    bot_profile: Any | None = Field(default=None)
 
 class MessageCreateResponse(BaseModel):
     """Response from creating a message"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    ok: Union[bool, Any] = Field(default=None)
-    channel: Union[str | None, Any] = Field(default=None)
-    ts: Union[str | None, Any] = Field(default=None)
-    message: Union[CreatedMessage, Any] = Field(default=None)
+    ok: bool | None = Field(default=None)
+    channel: str | None = Field(default=None)
+    ts: str | None = Field(default=None)
+    message: CreatedMessage | None = Field(default=None)
 
 class MessageUpdateParams(BaseModel):
     """Parameters for updating a message"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    channel: Union[str, Any] = Field(default=None)
-    ts: Union[str, Any] = Field(default=None)
-    text: Union[str, Any] = Field(default=None)
+    channel: str
+    ts: str
+    text: str
 
 class MessageUpdateResponse(BaseModel):
     """Response from updating a message"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    ok: Union[bool, Any] = Field(default=None)
-    channel: Union[str | None, Any] = Field(default=None)
-    ts: Union[str | None, Any] = Field(default=None)
-    text: Union[str | None, Any] = Field(default=None)
-    message: Union[CreatedMessage, Any] = Field(default=None)
+    ok: bool | None = Field(default=None)
+    channel: str | None = Field(default=None)
+    ts: str | None = Field(default=None)
+    text: str | None = Field(default=None)
+    message: CreatedMessage | None = Field(default=None)
 
 class ChannelCreateParams(BaseModel):
     """Parameters for creating a channel"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    name: Union[str, Any] = Field(default=None)
-    is_private: Union[bool, Any] = Field(default=None)
+    name: str
+    is_private: bool | None = Field(default=None)
 
 class ChannelCreateResponse(BaseModel):
     """Response from creating a channel"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    ok: Union[bool, Any] = Field(default=None)
-    channel: Union[Channel, Any] = Field(default=None)
+    ok: bool | None = Field(default=None)
+    channel: Channel | None = Field(default=None)
 
 class ChannelRenameParams(BaseModel):
     """Parameters for renaming a channel"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    channel: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
+    channel: str
+    name: str
 
 class ChannelRenameResponse(BaseModel):
     """Response from renaming a channel"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    ok: Union[bool, Any] = Field(default=None)
-    channel: Union[Channel, Any] = Field(default=None)
+    ok: bool | None = Field(default=None)
+    channel: Channel | None = Field(default=None)
 
 class ChannelTopicParams(BaseModel):
     """Parameters for setting channel topic"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    channel: Union[str, Any] = Field(default=None)
-    topic: Union[str, Any] = Field(default=None)
+    channel: str
+    topic: str
 
 class ChannelTopicResponse(BaseModel):
     """Response from setting channel topic"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    ok: Union[bool, Any] = Field(default=None)
-    channel: Union[Channel, Any] = Field(default=None)
+    ok: bool | None = Field(default=None)
+    channel: Channel | None = Field(default=None)
 
 class ChannelPurposeParams(BaseModel):
     """Parameters for setting channel purpose"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    channel: Union[str, Any] = Field(default=None)
-    purpose: Union[str, Any] = Field(default=None)
+    channel: str
+    purpose: str
 
 class ChannelPurposeResponse(BaseModel):
     """Response from setting channel purpose"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    ok: Union[bool, Any] = Field(default=None)
-    channel: Union[Channel, Any] = Field(default=None)
+    ok: bool | None = Field(default=None)
+    channel: Channel | None = Field(default=None)
 
 class ChannelInviteParams(BaseModel):
     """Parameters for inviting users to a channel"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    channel: Union[str, Any] = Field(default=None)
-    users: Union[str, Any] = Field(default=None)
-    force: Union[bool, Any] = Field(default=None)
+    channel: str
+    users: str
+    force: bool | None = Field(default=None)
 
 class ChannelInviteResponse(BaseModel):
     """Response from inviting users to a channel"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    ok: Union[bool, Any] = Field(default=None)
-    channel: Union[Channel, Any] = Field(default=None)
+    ok: bool | None = Field(default=None)
+    channel: Channel | None = Field(default=None)
 
 class ReactionAddParams(BaseModel):
     """Parameters for adding a reaction"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    channel: Union[str, Any] = Field(default=None)
-    timestamp: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
+    channel: str
+    timestamp: str
+    name: str
 
 class ReactionAddResponse(BaseModel):
     """Response from adding a reaction"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    ok: Union[bool, Any] = Field(default=None)
+    ok: bool | None = Field(default=None)
 
 class ReactionRemoveParams(BaseModel):
     """Parameters for removing a reaction from a message"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    channel: Union[str, Any] = Field(default=None)
-    timestamp: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
+    channel: str
+    timestamp: str
+    name: str
 
 class ReactionRemoveResponse(BaseModel):
     """Response from removing a reaction"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    ok: Union[bool, Any] = Field(default=None)
+    ok: bool | None = Field(default=None)
 
 class EphemeralMessageCreateParams(BaseModel):
     """Parameters for sending an ephemeral message visible only to one user"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    channel: Union[str, Any] = Field(default=None)
-    user: Union[str, Any] = Field(default=None)
-    text: Union[str, Any] = Field(default=None)
-    thread_ts: Union[str, Any] = Field(default=None)
-    blocks: Union[str, Any] = Field(default=None)
+    channel: str
+    user: str
+    text: str
+    thread_ts: str | None = Field(default=None)
+    blocks: str | None = Field(default=None)
 
 class EphemeralMessageCreateResponse(BaseModel):
     """Response from sending an ephemeral message"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    ok: Union[bool, Any] = Field(default=None)
-    message_ts: Union[str | None, Any] = Field(default=None)
+    ok: bool | None = Field(default=None)
+    message_ts: str | None = Field(default=None)
 
 class ScheduledMessageCreateParams(BaseModel):
     """Parameters for scheduling a message for future delivery"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    channel: Union[str, Any] = Field(default=None)
-    text: Union[str, Any] = Field(default=None)
-    post_at: Union[int, Any] = Field(default=None)
-    thread_ts: Union[str, Any] = Field(default=None)
-    reply_broadcast: Union[bool, Any] = Field(default=None)
-    unfurl_links: Union[bool, Any] = Field(default=None)
-    unfurl_media: Union[bool, Any] = Field(default=None)
+    channel: str
+    text: str
+    post_at: int
+    thread_ts: str | None = Field(default=None)
+    reply_broadcast: bool | None = Field(default=None)
+    unfurl_links: bool | None = Field(default=None)
+    unfurl_media: bool | None = Field(default=None)
 
 class ScheduledMessageCreateResponse(BaseModel):
     """Response from scheduling a message"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    ok: Union[bool, Any] = Field(default=None)
-    channel: Union[str | None, Any] = Field(default=None)
-    scheduled_message_id: Union[str | None, Any] = Field(default=None)
-    post_at: Union[int | None, Any] = Field(default=None)
-    message: Union[Any, Any] = Field(default=None)
+    ok: bool | None = Field(default=None)
+    channel: str | None = Field(default=None)
+    scheduled_message_id: str | None = Field(default=None)
+    post_at: int | None = Field(default=None)
+    message: Any | None = Field(default=None)
 
 class ScheduledMessageContent(BaseModel):
     """Content of a scheduled message"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    text: Union[str | None, Any] = Field(default=None)
-    username: Union[str | None, Any] = Field(default=None)
-    bot_id: Union[str | None, Any] = Field(default=None)
-    type_: Union[str | None, Any] = Field(default=None, alias="type")
-    subtype: Union[str | None, Any] = Field(default=None)
-    user: Union[str | None, Any] = Field(default=None)
-    team: Union[str | None, Any] = Field(default=None)
-    app_id: Union[str | None, Any] = Field(default=None)
-    bot_profile: Union[dict[str, Any] | None, Any] = Field(default=None)
-    blocks: Union[list[dict[str, Any]] | None, Any] = Field(default=None)
-    attachments: Union[list[Attachment] | None, Any] = Field(default=None)
+    text: str | None = Field(default=None)
+    username: str | None = Field(default=None)
+    bot_id: str | None = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    subtype: str | None = Field(default=None)
+    user: str | None = Field(default=None)
+    team: str | None = Field(default=None)
+    app_id: str | None = Field(default=None)
+    bot_profile: dict[str, Any] | None = Field(default=None)
+    blocks: list[dict[str, Any]] | None = Field(default=None)
+    attachments: list[Attachment] | None = Field(default=None)
 
 class MessageDeleteParams(BaseModel):
     """Parameters for deleting a message. Bot tokens can only delete messages posted by the bot."""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    channel: Union[str, Any] = Field(default=None)
-    ts: Union[str, Any] = Field(default=None)
+    channel: str
+    ts: str
 
 class MessageDeleteResponse(BaseModel):
     """Response from deleting a message"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    ok: Union[bool, Any] = Field(default=None)
-    channel: Union[str | None, Any] = Field(default=None)
-    ts: Union[str | None, Any] = Field(default=None)
+    ok: bool | None = Field(default=None)
+    channel: str | None = Field(default=None)
+    ts: str | None = Field(default=None)
 
 class ChannelArchiveParams(BaseModel):
     """Parameters for archiving a channel"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    channel: Union[str, Any] = Field(default=None)
+    channel: str
 
 class ChannelArchiveResponse(BaseModel):
     """Response from archiving a channel"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    ok: Union[bool, Any] = Field(default=None)
+    ok: bool | None = Field(default=None)
 
 class ChannelKickParams(BaseModel):
     """Parameters for removing a user from a channel"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    channel: Union[str, Any] = Field(default=None)
-    user: Union[str, Any] = Field(default=None)
+    channel: str
+    user: str
 
 class ChannelKickResponse(BaseModel):
     """Response from removing a user from a channel"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    ok: Union[bool, Any] = Field(default=None)
-    errors: Union[dict[str, Any] | None, Any] = Field(default=None)
+    ok: bool | None = Field(default=None)
+    errors: dict[str, Any] | None = Field(default=None)
 
 class PinAddParams(BaseModel):
     """Parameters for pinning a message to a channel"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    channel: Union[str, Any] = Field(default=None)
-    timestamp: Union[str, Any] = Field(default=None)
+    channel: str
+    timestamp: str
 
 class PinAddResponse(BaseModel):
     """Response from pinning a message"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    ok: Union[bool, Any] = Field(default=None)
+    ok: bool | None = Field(default=None)
 
 class BookmarkAddParams(BaseModel):
     """Parameters for adding a bookmark to a channel"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    channel_id: Union[str, Any] = Field(default=None)
-    title: Union[str, Any] = Field(default=None)
-    type_: Union[str, Any] = Field(default=None, alias="type")
-    link: Union[str, Any] = Field(default=None)
-    emoji: Union[str, Any] = Field(default=None)
+    channel_id: str
+    title: str
+    type_: str = Field(alias="type")
+    link: str | None = Field(default=None)
+    emoji: str | None = Field(default=None)
 
 class Bookmark(BaseModel):
     """A channel bookmark"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str | None, Any] = Field(default=None)
-    channel_id: Union[str | None, Any] = Field(default=None)
-    title: Union[str | None, Any] = Field(default=None)
-    link: Union[str | None, Any] = Field(default=None)
-    emoji: Union[str | None, Any] = Field(default=None)
-    icon_url: Union[str | None, Any] = Field(default=None)
-    type_: Union[str | None, Any] = Field(default=None, alias="type")
-    entity_id: Union[str | None, Any] = Field(default=None)
-    date_created: Union[int | None, Any] = Field(default=None)
-    date_updated: Union[int | None, Any] = Field(default=None)
-    rank: Union[str | None, Any] = Field(default=None)
-    last_updated_by_user_id: Union[str | None, Any] = Field(default=None)
-    last_updated_by_team_id: Union[str | None, Any] = Field(default=None)
-    shortcut_id: Union[str | None, Any] = Field(default=None)
-    app_id: Union[str | None, Any] = Field(default=None)
+    id: str | None = Field(default=None)
+    channel_id: str | None = Field(default=None)
+    title: str | None = Field(default=None)
+    link: str | None = Field(default=None)
+    emoji: str | None = Field(default=None)
+    icon_url: str | None = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    entity_id: str | None = Field(default=None)
+    date_created: int | None = Field(default=None)
+    date_updated: int | None = Field(default=None)
+    rank: str | None = Field(default=None)
+    last_updated_by_user_id: str | None = Field(default=None)
+    last_updated_by_team_id: str | None = Field(default=None)
+    shortcut_id: str | None = Field(default=None)
+    app_id: str | None = Field(default=None)
 
 class BookmarkAddResponse(BaseModel):
     """Response from adding a bookmark"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    ok: Union[bool, Any] = Field(default=None)
-    bookmark: Union[Bookmark, Any] = Field(default=None)
+    ok: bool | None = Field(default=None)
+    bookmark: Bookmark | None = Field(default=None)
 
 # ===== METADATA TYPE DEFINITIONS (PYDANTIC) =====
 # Meta types for operations that extract metadata (e.g., pagination info)
@@ -638,27 +638,27 @@ class UsersListResultMeta(BaseModel):
     """Metadata for users.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_cursor: Union[str | None, Any] = Field(default=None)
+    next_cursor: str | None = Field(default=None)
 
 class ChannelsListResultMeta(BaseModel):
     """Metadata for channels.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_cursor: Union[str | None, Any] = Field(default=None)
+    next_cursor: str | None = Field(default=None)
 
 class ChannelMessagesListResultMeta(BaseModel):
     """Metadata for channel_messages.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_cursor: Union[str | None, Any] = Field(default=None)
-    has_more: Union[bool | None, Any] = Field(default=None)
+    next_cursor: str | None = Field(default=None)
+    has_more: bool | None = Field(default=None)
 
 class ThreadsListResultMeta(BaseModel):
     """Metadata for threads.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_cursor: Union[str | None, Any] = Field(default=None)
-    has_more: Union[bool | None, Any] = Field(default=None)
+    next_cursor: str | None = Field(default=None)
+    has_more: bool | None = Field(default=None)
 
 # ===== CHECK RESULT MODEL =====
 

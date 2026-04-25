@@ -121,7 +121,7 @@
       {
         "name": "cursor",
         "python_name": "cursor",
-        "type": "str | None",
+        "type": "str",
         "schema": {
           "type": [
             "null",
@@ -193,7 +193,7 @@
           {
             "name": "cursor",
             "python_name": "cursor",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",
@@ -297,7 +297,7 @@
           {
             "name": "cursor",
             "python_name": "cursor",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",
@@ -431,7 +431,7 @@
           {
             "name": "cursor",
             "python_name": "cursor",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",
@@ -537,7 +537,7 @@
           {
             "name": "cursor",
             "python_name": "cursor",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",
@@ -643,7 +643,7 @@
           {
             "name": "cursor",
             "python_name": "cursor",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",
@@ -713,7 +713,7 @@
           {
             "name": "cursor",
             "python_name": "cursor",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",
@@ -783,7 +783,7 @@
           {
             "name": "cursor",
             "python_name": "cursor",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",
@@ -843,7 +843,7 @@
           {
             "name": "cursor",
             "python_name": "cursor",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",
@@ -903,7 +903,7 @@
           {
             "name": "cursor",
             "python_name": "cursor",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",
@@ -963,7 +963,7 @@
           {
             "name": "cursor",
             "python_name": "cursor",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",
@@ -1033,7 +1033,7 @@
           {
             "name": "cursor",
             "python_name": "cursor",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",
@@ -1103,7 +1103,7 @@
           {
             "name": "cursor",
             "python_name": "cursor",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",
@@ -1173,7 +1173,7 @@
           {
             "name": "cursor",
             "python_name": "cursor",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",
@@ -1254,7 +1254,7 @@
           {
             "name": "cursor",
             "python_name": "cursor",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "null",

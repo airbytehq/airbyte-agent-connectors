@@ -217,7 +217,7 @@
           {
             "name": "next_page",
             "python_name": "next_page",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "string",
@@ -368,7 +368,7 @@
           {
             "name": "next_page",
             "python_name": "next_page",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "string",

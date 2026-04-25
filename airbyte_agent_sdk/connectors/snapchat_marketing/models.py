@@ -8,7 +8,7 @@ and response envelope types.
 from __future__ import annotations
 
 from pydantic import BaseModel, ConfigDict, Field
-from typing import TypeVar, Generic, Union, Any
+from typing import TypeVar, Generic, Any
 
 # Authentication configuration
 
@@ -40,271 +40,271 @@ class OrganizationConfigurationSettings(BaseModel):
     """Organization configuration settings"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    notifications_enabled: Union[bool, Any] = Field(default=None, description="Whether notifications are enabled")
+    notifications_enabled: bool | None = Field(default=None, description="Whether notifications are enabled")
     """Whether notifications are enabled"""
 
 class Organization(BaseModel):
     """Snapchat organization object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    type_: Union[str, Any] = Field(default=None, alias="type")
-    state: Union[str, Any] = Field(default=None)
-    address_line_1: Union[str, Any] = Field(default=None)
-    administrative_district_level_1: Union[str, Any] = Field(default=None)
-    locality: Union[str, Any] = Field(default=None)
-    postal_code: Union[str, Any] = Field(default=None)
-    country: Union[str, Any] = Field(default=None)
-    contact_name: Union[str, Any] = Field(default=None)
-    contact_email: Union[str, Any] = Field(default=None)
-    contact_phone: Union[str, Any] = Field(default=None)
-    contact_phone_optin: Union[bool, Any] = Field(default=None)
-    accepted_term_version: Union[str, Any] = Field(default=None)
-    configuration_settings: Union[OrganizationConfigurationSettings, Any] = Field(default=None)
-    my_display_name: Union[str, Any] = Field(default=None)
-    my_invited_email: Union[str, Any] = Field(default=None)
-    my_member_id: Union[str, Any] = Field(default=None)
-    roles: Union[list[str], Any] = Field(default=None)
-    created_by_caller: Union[bool, Any] = Field(default=None, alias="createdByCaller")
-    is_agency: Union[bool, Any] = Field(default=None)
-    verification_request_id: Union[str, Any] = Field(default=None)
-    demand_source: Union[str, Any] = Field(default=None)
-    created_at: Union[str, Any] = Field(default=None)
-    updated_at: Union[str, Any] = Field(default=None)
+    id: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    state: str | None = Field(default=None)
+    address_line_1: str | None = Field(default=None)
+    administrative_district_level_1: str | None = Field(default=None)
+    locality: str | None = Field(default=None)
+    postal_code: str | None = Field(default=None)
+    country: str | None = Field(default=None)
+    contact_name: str | None = Field(default=None)
+    contact_email: str | None = Field(default=None)
+    contact_phone: str | None = Field(default=None)
+    contact_phone_optin: bool | None = Field(default=None)
+    accepted_term_version: str | None = Field(default=None)
+    configuration_settings: OrganizationConfigurationSettings | None = Field(default=None)
+    my_display_name: str | None = Field(default=None)
+    my_invited_email: str | None = Field(default=None)
+    my_member_id: str | None = Field(default=None)
+    roles: list[str] | None = Field(default=None)
+    created_by_caller: bool | None = Field(default=None, alias="createdByCaller")
+    is_agency: bool | None = Field(default=None)
+    verification_request_id: str | None = Field(default=None)
+    demand_source: str | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
 
 class AdAccountRegulations(BaseModel):
     """Regulatory settings"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    restricted_delivery_signals: Union[bool, Any] = Field(default=None, description="Whether restricted delivery signals are enabled")
+    restricted_delivery_signals: bool | None = Field(default=None, description="Whether restricted delivery signals are enabled")
     """Whether restricted delivery signals are enabled"""
 
 class AdAccount(BaseModel):
     """Snapchat ad account object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    type_: Union[str, Any] = Field(default=None, alias="type")
-    status: Union[str, Any] = Field(default=None)
-    organization_id: Union[str, Any] = Field(default=None)
-    advertiser_organization_id: Union[str, Any] = Field(default=None)
-    currency: Union[str, Any] = Field(default=None)
-    timezone: Union[str, Any] = Field(default=None)
-    billing_type: Union[str, Any] = Field(default=None)
-    billing_center_id: Union[str, Any] = Field(default=None)
-    agency_representing_client: Union[bool, Any] = Field(default=None)
-    client_paying_invoices: Union[bool, Any] = Field(default=None)
-    funding_source_ids: Union[list[str], Any] = Field(default=None)
-    regulations: Union[AdAccountRegulations, Any] = Field(default=None)
-    created_at: Union[str, Any] = Field(default=None)
-    updated_at: Union[str, Any] = Field(default=None)
+    id: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    status: str | None = Field(default=None)
+    organization_id: str | None = Field(default=None)
+    advertiser_organization_id: str | None = Field(default=None)
+    currency: str | None = Field(default=None)
+    timezone: str | None = Field(default=None)
+    billing_type: str | None = Field(default=None)
+    billing_center_id: str | None = Field(default=None)
+    agency_representing_client: bool | None = Field(default=None)
+    client_paying_invoices: bool | None = Field(default=None)
+    funding_source_ids: list[str] | None = Field(default=None)
+    regulations: AdAccountRegulations | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
 
 class CampaignObjectiveV2Properties(BaseModel):
     """Objective V2 properties for the campaign"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    objective_v2_type: Union[str, Any] = Field(default=None)
-    is_auto_generated: Union[bool, Any] = Field(default=None)
+    objective_v2_type: str | None = Field(default=None)
+    is_auto_generated: bool | None = Field(default=None)
 
 class Campaign(BaseModel):
     """Snapchat campaign object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    ad_account_id: Union[str, Any] = Field(default=None)
-    status: Union[str, Any] = Field(default=None)
-    objective: Union[str, Any] = Field(default=None)
-    buy_model: Union[str, Any] = Field(default=None)
-    creation_state: Union[str, Any] = Field(default=None)
-    start_time: Union[str, Any] = Field(default=None)
-    delivery_status: Union[list[str], Any] = Field(default=None)
-    objective_v2_properties: Union[CampaignObjectiveV2Properties, Any] = Field(default=None)
-    pacing_properties_version: Union[int, Any] = Field(default=None)
-    created_at: Union[str, Any] = Field(default=None)
-    updated_at: Union[str, Any] = Field(default=None)
+    id: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    ad_account_id: str | None = Field(default=None)
+    status: str | None = Field(default=None)
+    objective: str | None = Field(default=None)
+    buy_model: str | None = Field(default=None)
+    creation_state: str | None = Field(default=None)
+    start_time: str | None = Field(default=None)
+    delivery_status: list[str] | None = Field(default=None)
+    objective_v2_properties: CampaignObjectiveV2Properties | None = Field(default=None)
+    pacing_properties_version: int | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
 
 class AdSquadTargetingAutoExpansionOptionsInterestExpansionOption(BaseModel):
     """Nested schema for AdSquadTargetingAutoExpansionOptions.interest_expansion_option"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    enabled: Union[bool, Any] = Field(default=None)
+    enabled: bool | None = Field(default=None)
 
 class AdSquadTargetingAutoExpansionOptions(BaseModel):
     """Nested schema for AdSquadTargeting.auto_expansion_options"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    interest_expansion_option: Union[AdSquadTargetingAutoExpansionOptionsInterestExpansionOption, Any] = Field(default=None)
+    interest_expansion_option: AdSquadTargetingAutoExpansionOptionsInterestExpansionOption | None = Field(default=None)
 
 class AdSquadTargetingGeosItem(BaseModel):
     """Nested schema for AdSquadTargeting.geos_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    country_code: Union[str, Any] = Field(default=None)
-    operation: Union[str, Any] = Field(default=None)
+    country_code: str | None = Field(default=None)
+    operation: str | None = Field(default=None)
 
 class AdSquadTargeting(BaseModel):
     """Targeting specification"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    regulated_content: Union[bool, Any] = Field(default=None)
-    geos: Union[list[AdSquadTargetingGeosItem], Any] = Field(default=None)
-    enable_targeting_expansion: Union[bool, Any] = Field(default=None)
-    auto_expansion_options: Union[AdSquadTargetingAutoExpansionOptions, Any] = Field(default=None)
-    demographics: Union[list[dict[str, Any]], Any] = Field(default=None)
-    interests: Union[list[dict[str, Any]], Any] = Field(default=None)
-    locations: Union[list[dict[str, Any]], Any] = Field(default=None)
+    regulated_content: bool | None = Field(default=None)
+    geos: list[AdSquadTargetingGeosItem] | None = Field(default=None)
+    enable_targeting_expansion: bool | None = Field(default=None)
+    auto_expansion_options: AdSquadTargetingAutoExpansionOptions | None = Field(default=None)
+    demographics: list[dict[str, Any]] | None = Field(default=None)
+    interests: list[dict[str, Any]] | None = Field(default=None)
+    locations: list[dict[str, Any]] | None = Field(default=None)
 
 class AdSquadSkadnetworkProperties(BaseModel):
     """SKAdNetwork properties"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    ecid_enrollment_status: Union[str, Any] = Field(default=None)
-    enable_skoverlay: Union[bool, Any] = Field(default=None)
-    status: Union[str, Any] = Field(default=None)
+    ecid_enrollment_status: str | None = Field(default=None)
+    enable_skoverlay: bool | None = Field(default=None)
+    status: str | None = Field(default=None)
 
 class AdSquad(BaseModel):
     """Snapchat ad squad object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    type_: Union[str, Any] = Field(default=None, alias="type")
-    campaign_id: Union[str, Any] = Field(default=None)
-    status: Union[str, Any] = Field(default=None)
-    auto_bid: Union[bool, Any] = Field(default=None)
-    bid_strategy: Union[str, Any] = Field(default=None)
-    billing_event: Union[str, Any] = Field(default=None)
-    child_ad_type: Union[str, Any] = Field(default=None)
-    creation_state: Union[str, Any] = Field(default=None)
-    daily_budget_micro: Union[int, Any] = Field(default=None)
-    lifetime_budget_micro: Union[int, Any] = Field(default=None)
-    delivery_constraint: Union[str, Any] = Field(default=None)
-    delivery_properties_version: Union[int, Any] = Field(default=None)
-    delivery_status: Union[list[str], Any] = Field(default=None)
-    end_time: Union[str, Any] = Field(default=None)
-    start_time: Union[str, Any] = Field(default=None)
-    forced_view_setting: Union[str, Any] = Field(default=None)
-    optimization_goal: Union[str, Any] = Field(default=None)
-    pacing_type: Union[str, Any] = Field(default=None)
-    placement: Union[str, Any] = Field(default=None)
-    target_bid: Union[bool, Any] = Field(default=None)
-    targeting: Union[AdSquadTargeting, Any] = Field(default=None)
-    targeting_reach_status: Union[str, Any] = Field(default=None)
-    skadnetwork_properties: Union[AdSquadSkadnetworkProperties, Any] = Field(default=None)
-    event_sources: Union[dict[str, Any], Any] = Field(default=None)
-    created_at: Union[str, Any] = Field(default=None)
-    updated_at: Union[str, Any] = Field(default=None)
+    id: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    campaign_id: str | None = Field(default=None)
+    status: str | None = Field(default=None)
+    auto_bid: bool | None = Field(default=None)
+    bid_strategy: str | None = Field(default=None)
+    billing_event: str | None = Field(default=None)
+    child_ad_type: str | None = Field(default=None)
+    creation_state: str | None = Field(default=None)
+    daily_budget_micro: int | None = Field(default=None)
+    lifetime_budget_micro: int | None = Field(default=None)
+    delivery_constraint: str | None = Field(default=None)
+    delivery_properties_version: int | None = Field(default=None)
+    delivery_status: list[str] | None = Field(default=None)
+    end_time: str | None = Field(default=None)
+    start_time: str | None = Field(default=None)
+    forced_view_setting: str | None = Field(default=None)
+    optimization_goal: str | None = Field(default=None)
+    pacing_type: str | None = Field(default=None)
+    placement: str | None = Field(default=None)
+    target_bid: bool | None = Field(default=None)
+    targeting: AdSquadTargeting | None = Field(default=None)
+    targeting_reach_status: str | None = Field(default=None)
+    skadnetwork_properties: AdSquadSkadnetworkProperties | None = Field(default=None)
+    event_sources: dict[str, Any] | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
 
 class Ad(BaseModel):
     """Snapchat ad object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    type_: Union[str, Any] = Field(default=None, alias="type")
-    ad_squad_id: Union[str, Any] = Field(default=None)
-    creative_id: Union[str, Any] = Field(default=None)
-    status: Union[str, Any] = Field(default=None)
-    render_type: Union[str, Any] = Field(default=None)
-    review_status: Union[str, Any] = Field(default=None)
-    review_status_reasons: Union[list[str], Any] = Field(default=None)
-    delivery_status: Union[list[str], Any] = Field(default=None)
-    created_at: Union[str, Any] = Field(default=None)
-    updated_at: Union[str, Any] = Field(default=None)
+    id: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    ad_squad_id: str | None = Field(default=None)
+    creative_id: str | None = Field(default=None)
+    status: str | None = Field(default=None)
+    render_type: str | None = Field(default=None)
+    review_status: str | None = Field(default=None)
+    review_status_reasons: list[str] | None = Field(default=None)
+    delivery_status: list[str] | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
 
 class CreativeWebViewProperties(BaseModel):
     """Web view properties"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    allow_snap_javascript_sdk: Union[bool, Any] = Field(default=None)
-    block_preload: Union[bool, Any] = Field(default=None)
-    deep_link_urls: Union[list[str], Any] = Field(default=None)
-    url: Union[str, Any] = Field(default=None)
-    use_immersive_mode: Union[bool, Any] = Field(default=None)
+    allow_snap_javascript_sdk: bool | None = Field(default=None)
+    block_preload: bool | None = Field(default=None)
+    deep_link_urls: list[str] | None = Field(default=None)
+    url: str | None = Field(default=None)
+    use_immersive_mode: bool | None = Field(default=None)
 
 class CreativeAdToPlaceProperties(BaseModel):
     """Ad-to-place properties"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    place_id: Union[str, Any] = Field(default=None)
+    place_id: str | None = Field(default=None)
 
 class Creative(BaseModel):
     """Snapchat creative object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    type_: Union[str, Any] = Field(default=None, alias="type")
-    ad_account_id: Union[str, Any] = Field(default=None)
-    ad_product: Union[str, Any] = Field(default=None)
-    brand_name: Union[str, Any] = Field(default=None)
-    call_to_action: Union[str, Any] = Field(default=None)
-    headline: Union[str, Any] = Field(default=None)
-    render_type: Union[str, Any] = Field(default=None)
-    review_status: Union[str, Any] = Field(default=None)
-    review_status_details: Union[str, Any] = Field(default=None)
-    shareable: Union[bool, Any] = Field(default=None)
-    forced_view_eligibility: Union[str, Any] = Field(default=None)
-    packaging_status: Union[str, Any] = Field(default=None)
-    top_snap_crop_position: Union[str, Any] = Field(default=None)
-    top_snap_media_id: Union[str, Any] = Field(default=None)
-    ad_to_place_properties: Union[CreativeAdToPlaceProperties, Any] = Field(default=None)
-    web_view_properties: Union[CreativeWebViewProperties, Any] = Field(default=None)
-    created_at: Union[str, Any] = Field(default=None)
-    updated_at: Union[str, Any] = Field(default=None)
+    id: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    ad_account_id: str | None = Field(default=None)
+    ad_product: str | None = Field(default=None)
+    brand_name: str | None = Field(default=None)
+    call_to_action: str | None = Field(default=None)
+    headline: str | None = Field(default=None)
+    render_type: str | None = Field(default=None)
+    review_status: str | None = Field(default=None)
+    review_status_details: str | None = Field(default=None)
+    shareable: bool | None = Field(default=None)
+    forced_view_eligibility: str | None = Field(default=None)
+    packaging_status: str | None = Field(default=None)
+    top_snap_crop_position: str | None = Field(default=None)
+    top_snap_media_id: str | None = Field(default=None)
+    ad_to_place_properties: CreativeAdToPlaceProperties | None = Field(default=None)
+    web_view_properties: CreativeWebViewProperties | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
 
 class MediaImageMetadata(BaseModel):
     """Image-specific metadata"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    height_px: Union[int, Any] = Field(default=None)
-    width_px: Union[int, Any] = Field(default=None)
-    image_format: Union[str, Any] = Field(default=None)
+    height_px: int | None = Field(default=None)
+    width_px: int | None = Field(default=None)
+    image_format: str | None = Field(default=None)
 
 class Media(BaseModel):
     """Snapchat media object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    type_: Union[str, Any] = Field(default=None, alias="type")
-    ad_account_id: Union[str, Any] = Field(default=None)
-    media_status: Union[str, Any] = Field(default=None)
-    file_name: Union[str, Any] = Field(default=None)
-    file_size_in_bytes: Union[int, Any] = Field(default=None)
-    duration_in_seconds: Union[float, Any] = Field(default=None)
-    hash: Union[str, Any] = Field(default=None)
-    download_link: Union[str, Any] = Field(default=None)
-    is_demo_media: Union[bool, Any] = Field(default=None)
-    visibility: Union[str, Any] = Field(default=None)
-    media_usages: Union[list[str], Any] = Field(default=None)
-    image_metadata: Union[MediaImageMetadata, Any] = Field(default=None)
-    video_metadata: Union[dict[str, Any], Any] = Field(default=None)
-    created_at: Union[str, Any] = Field(default=None)
-    updated_at: Union[str, Any] = Field(default=None)
+    id: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    ad_account_id: str | None = Field(default=None)
+    media_status: str | None = Field(default=None)
+    file_name: str | None = Field(default=None)
+    file_size_in_bytes: int | None = Field(default=None)
+    duration_in_seconds: float | None = Field(default=None)
+    hash: str | None = Field(default=None)
+    download_link: str | None = Field(default=None)
+    is_demo_media: bool | None = Field(default=None)
+    visibility: str | None = Field(default=None)
+    media_usages: list[str] | None = Field(default=None)
+    image_metadata: MediaImageMetadata | None = Field(default=None)
+    video_metadata: dict[str, Any] | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
 
 class Segment(BaseModel):
     """Snapchat audience segment object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    description: Union[str, Any] = Field(default=None)
-    ad_account_id: Union[str, Any] = Field(default=None)
-    source_ad_account_id: Union[str, Any] = Field(default=None)
-    organization_id: Union[str, Any] = Field(default=None)
-    status: Union[str, Any] = Field(default=None)
-    source_type: Union[str, Any] = Field(default=None)
-    targetable_status: Union[str, Any] = Field(default=None)
-    upload_status: Union[str, Any] = Field(default=None)
-    retention_in_days: Union[int, Any] = Field(default=None)
-    approximate_number_users: Union[int, Any] = Field(default=None)
-    visible_to: Union[list[str], Any] = Field(default=None)
-    created_at: Union[str, Any] = Field(default=None)
-    updated_at: Union[str, Any] = Field(default=None)
+    id: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    description: str | None = Field(default=None)
+    ad_account_id: str | None = Field(default=None)
+    source_ad_account_id: str | None = Field(default=None)
+    organization_id: str | None = Field(default=None)
+    status: str | None = Field(default=None)
+    source_type: str | None = Field(default=None)
+    targetable_status: str | None = Field(default=None)
+    upload_status: str | None = Field(default=None)
+    retention_in_days: int | None = Field(default=None)
+    approximate_number_users: int | None = Field(default=None)
+    visible_to: list[str] | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
 
 # ===== METADATA TYPE DEFINITIONS (PYDANTIC) =====
 # Meta types for operations that extract metadata (e.g., pagination info)
@@ -313,49 +313,49 @@ class OrganizationsListResultMeta(BaseModel):
     """Metadata for organizations.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_link: Union[str, Any] = Field(default=None)
+    next_link: str | None = Field(default=None)
 
 class AdaccountsListResultMeta(BaseModel):
     """Metadata for adaccounts.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_link: Union[str, Any] = Field(default=None)
+    next_link: str | None = Field(default=None)
 
 class CampaignsListResultMeta(BaseModel):
     """Metadata for campaigns.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_link: Union[str, Any] = Field(default=None)
+    next_link: str | None = Field(default=None)
 
 class AdsquadsListResultMeta(BaseModel):
     """Metadata for adsquads.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_link: Union[str, Any] = Field(default=None)
+    next_link: str | None = Field(default=None)
 
 class AdsListResultMeta(BaseModel):
     """Metadata for ads.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_link: Union[str, Any] = Field(default=None)
+    next_link: str | None = Field(default=None)
 
 class CreativesListResultMeta(BaseModel):
     """Metadata for creatives.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_link: Union[str, Any] = Field(default=None)
+    next_link: str | None = Field(default=None)
 
 class MediaListResultMeta(BaseModel):
     """Metadata for media.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_link: Union[str, Any] = Field(default=None)
+    next_link: str | None = Field(default=None)
 
 class SegmentsListResultMeta(BaseModel):
     """Metadata for segments.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_link: Union[str, Any] = Field(default=None)
+    next_link: str | None = Field(default=None)
 
 # ===== CHECK RESULT MODEL =====
 

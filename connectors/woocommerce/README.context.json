@@ -182,7 +182,7 @@
       {
         "name": "next",
         "python_name": "next",
-        "type": "str | None",
+        "type": "str",
         "schema": {
           "type": "string",
           "nullable": true
@@ -319,7 +319,7 @@
           {
             "name": "next",
             "python_name": "next",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": "string",
               "nullable": true
@@ -542,7 +542,7 @@
           {
             "name": "next",
             "python_name": "next",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": "string",
               "nullable": true
@@ -853,7 +853,7 @@
           {
             "name": "next",
             "python_name": "next",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": "string",
               "nullable": true
@@ -1042,7 +1042,7 @@
           {
             "name": "next",
             "python_name": "next",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": "string",
               "nullable": true
@@ -1222,7 +1222,7 @@
           {
             "name": "next",
             "python_name": "next",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": "string",
               "nullable": true
@@ -1391,7 +1391,7 @@
           {
             "name": "next",
             "python_name": "next",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": "string",
               "nullable": true
@@ -1544,7 +1544,7 @@
           {
             "name": "next",
             "python_name": "next",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": "string",
               "nullable": true
@@ -1631,7 +1631,7 @@
           {
             "name": "next",
             "python_name": "next",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": "string",
               "nullable": true
@@ -1855,7 +1855,7 @@
           {
             "name": "next",
             "python_name": "next",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": "string",
               "nullable": true
@@ -1952,7 +1952,7 @@
           {
             "name": "next",
             "python_name": "next",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": "string",
               "nullable": true
@@ -2059,7 +2059,7 @@
           {
             "name": "next",
             "python_name": "next",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": "string",
               "nullable": true
@@ -2128,7 +2128,7 @@
           {
             "name": "next",
             "python_name": "next",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": "string",
               "nullable": true
@@ -2187,7 +2187,7 @@
           {
             "name": "next",
             "python_name": "next",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": "string",
               "nullable": true
@@ -2246,7 +2246,7 @@
           {
             "name": "next",
             "python_name": "next",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": "string",
               "nullable": true
@@ -2377,7 +2377,7 @@
           {
             "name": "next",
             "python_name": "next",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": "string",
               "nullable": true
@@ -2436,7 +2436,7 @@
           {
             "name": "next",
             "python_name": "next",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": "string",
               "nullable": true

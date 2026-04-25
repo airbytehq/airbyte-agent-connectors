@@ -8,7 +8,7 @@ and response envelope types.
 from __future__ import annotations
 
 from pydantic import BaseModel, ConfigDict, Field
-from typing import TypeVar, Generic, Union, Any
+from typing import TypeVar, Generic, Any
 from typing import Optional
 
 # Authentication configuration - multiple options available
@@ -51,730 +51,730 @@ class CurrentUser(BaseModel):
     """Current Facebook user associated with the access token"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-
-class IssueInfo(BaseModel):
-    """IssueInfo type definition"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    error_code: Union[str | None, Any] = Field(default=None)
-    error_message: Union[str | None, Any] = Field(default=None)
-    error_summary: Union[str | None, Any] = Field(default=None)
-    error_type: Union[str | None, Any] = Field(default=None)
-    level: Union[str | None, Any] = Field(default=None)
+    id: str
+    name: str | None = Field(default=None)
 
 class AdLabel(BaseModel):
     """AdLabel type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    created_time: Union[str | None, Any] = Field(default=None)
-    updated_time: Union[str | None, Any] = Field(default=None)
+    id: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    created_time: str | None = Field(default=None)
+    updated_time: str | None = Field(default=None)
+
+class IssueInfo(BaseModel):
+    """IssueInfo type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    error_code: str | None = Field(default=None)
+    error_message: str | None = Field(default=None)
+    error_summary: str | None = Field(default=None)
+    error_type: str | None = Field(default=None)
+    level: str | None = Field(default=None)
 
 class Campaign(BaseModel):
     """Facebook Ad Campaign"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    account_id: Union[str | None, Any] = Field(default=None)
-    adlabels: Union[list[AdLabel] | None, Any] = Field(default=None)
-    bid_strategy: Union[str | None, Any] = Field(default=None)
-    boosted_object_id: Union[str | None, Any] = Field(default=None)
-    budget_rebalance_flag: Union[bool | None, Any] = Field(default=None)
-    budget_remaining: Union[float | None, Any] = Field(default=None)
-    buying_type: Union[str | None, Any] = Field(default=None)
-    daily_budget: Union[float | None, Any] = Field(default=None)
-    created_time: Union[str | None, Any] = Field(default=None)
-    configured_status: Union[str | None, Any] = Field(default=None)
-    effective_status: Union[str | None, Any] = Field(default=None)
-    issues_info: Union[list[IssueInfo] | None, Any] = Field(default=None)
-    lifetime_budget: Union[float | None, Any] = Field(default=None)
-    objective: Union[str | None, Any] = Field(default=None)
-    smart_promotion_type: Union[str | None, Any] = Field(default=None)
-    source_campaign_id: Union[str | None, Any] = Field(default=None)
-    special_ad_category: Union[str | None, Any] = Field(default=None)
-    special_ad_category_country: Union[list[str | None] | None, Any] = Field(default=None)
-    spend_cap: Union[float | None, Any] = Field(default=None)
-    start_time: Union[str | None, Any] = Field(default=None)
-    status: Union[str | None, Any] = Field(default=None)
-    stop_time: Union[str | None, Any] = Field(default=None)
-    updated_time: Union[str | None, Any] = Field(default=None)
+    id: str
+    name: str | None = Field(default=None)
+    account_id: str | None = Field(default=None)
+    adlabels: list[AdLabel] | None = Field(default=None)
+    bid_strategy: str | None = Field(default=None)
+    boosted_object_id: str | None = Field(default=None)
+    budget_rebalance_flag: bool | None = Field(default=None)
+    budget_remaining: float | None = Field(default=None)
+    buying_type: str | None = Field(default=None)
+    daily_budget: float | None = Field(default=None)
+    created_time: str | None = Field(default=None)
+    configured_status: str | None = Field(default=None)
+    effective_status: str | None = Field(default=None)
+    issues_info: list[IssueInfo] | None = Field(default=None)
+    lifetime_budget: float | None = Field(default=None)
+    objective: str | None = Field(default=None)
+    smart_promotion_type: str | None = Field(default=None)
+    source_campaign_id: str | None = Field(default=None)
+    special_ad_category: str | None = Field(default=None)
+    special_ad_category_country: list[str | None] | None = Field(default=None)
+    spend_cap: float | None = Field(default=None)
+    start_time: str | None = Field(default=None)
+    status: str | None = Field(default=None)
+    stop_time: str | None = Field(default=None)
+    updated_time: str | None = Field(default=None)
 
 class PagingCursors(BaseModel):
     """Nested schema for Paging.cursors"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    before: Union[str | None, Any] = Field(default=None, description="Cursor for previous page")
+    before: str | None | None = Field(default=None, description="Cursor for previous page")
     """Cursor for previous page"""
-    after: Union[str | None, Any] = Field(default=None, description="Cursor for next page")
+    after: str | None | None = Field(default=None, description="Cursor for next page")
     """Cursor for next page"""
 
 class Paging(BaseModel):
     """Paging type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    cursors: Union[PagingCursors, Any] = Field(default=None)
-    next: Union[str | None, Any] = Field(default=None)
-    previous: Union[str | None, Any] = Field(default=None)
+    cursors: PagingCursors | None = Field(default=None)
+    next: str | None = Field(default=None)
+    previous: str | None = Field(default=None)
 
 class CampaignsList(BaseModel):
     """CampaignsList type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[list[Campaign], Any] = Field(default=None)
-    paging: Union[Paging, Any] = Field(default=None)
+    data: list[Campaign] | None = Field(default=None)
+    paging: Paging | None = Field(default=None)
 
 class AdSet(BaseModel):
     """Facebook Ad Set"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    account_id: Union[str | None, Any] = Field(default=None)
-    adlabels: Union[list[AdLabel] | None, Any] = Field(default=None)
-    bid_amount: Union[float | None, Any] = Field(default=None)
-    bid_info: Union[Any, Any] = Field(default=None)
-    bid_strategy: Union[str | None, Any] = Field(default=None)
-    bid_constraints: Union[Any, Any] = Field(default=None)
-    budget_remaining: Union[float | None, Any] = Field(default=None)
-    campaign_id: Union[str | None, Any] = Field(default=None)
-    created_time: Union[str | None, Any] = Field(default=None)
-    daily_budget: Union[float | None, Any] = Field(default=None)
-    effective_status: Union[str | None, Any] = Field(default=None)
-    end_time: Union[str | None, Any] = Field(default=None)
-    learning_stage_info: Union[Any, Any] = Field(default=None)
-    lifetime_budget: Union[float | None, Any] = Field(default=None)
-    promoted_object: Union[Any, Any] = Field(default=None)
-    start_time: Union[str | None, Any] = Field(default=None)
-    targeting: Union[dict[str, Any] | None, Any] = Field(default=None)
-    updated_time: Union[str | None, Any] = Field(default=None)
+    id: str
+    name: str | None = Field(default=None)
+    account_id: str | None = Field(default=None)
+    adlabels: list[AdLabel] | None = Field(default=None)
+    bid_amount: float | None = Field(default=None)
+    bid_info: Any | None = Field(default=None)
+    bid_strategy: str | None = Field(default=None)
+    bid_constraints: Any | None = Field(default=None)
+    budget_remaining: float | None = Field(default=None)
+    campaign_id: str | None = Field(default=None)
+    created_time: str | None = Field(default=None)
+    daily_budget: float | None = Field(default=None)
+    effective_status: str | None = Field(default=None)
+    end_time: str | None = Field(default=None)
+    learning_stage_info: Any | None = Field(default=None)
+    lifetime_budget: float | None = Field(default=None)
+    promoted_object: Any | None = Field(default=None)
+    start_time: str | None = Field(default=None)
+    targeting: dict[str, Any] | None = Field(default=None)
+    updated_time: str | None = Field(default=None)
 
 class AdSetsList(BaseModel):
     """AdSetsList type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[list[AdSet], Any] = Field(default=None)
-    paging: Union[Paging, Any] = Field(default=None)
+    data: list[AdSet] | None = Field(default=None)
+    paging: Paging | None = Field(default=None)
 
 class Recommendation(BaseModel):
     """Recommendation type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    blame_field: Union[str | None, Any] = Field(default=None)
-    code: Union[int | None, Any] = Field(default=None)
-    confidence: Union[str | None, Any] = Field(default=None)
-    importance: Union[str | None, Any] = Field(default=None)
-    message: Union[str | None, Any] = Field(default=None)
-    title: Union[str | None, Any] = Field(default=None)
+    blame_field: str | None = Field(default=None)
+    code: int | None = Field(default=None)
+    confidence: str | None = Field(default=None)
+    importance: str | None = Field(default=None)
+    message: str | None = Field(default=None)
+    title: str | None = Field(default=None)
 
 class Ad(BaseModel):
     """Facebook Ad"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    account_id: Union[str | None, Any] = Field(default=None)
-    adset_id: Union[str | None, Any] = Field(default=None)
-    campaign_id: Union[str | None, Any] = Field(default=None)
-    adlabels: Union[list[AdLabel] | None, Any] = Field(default=None)
-    bid_amount: Union[int | None, Any] = Field(default=None)
-    bid_info: Union[Any, Any] = Field(default=None)
-    bid_type: Union[str | None, Any] = Field(default=None)
-    configured_status: Union[str | None, Any] = Field(default=None)
-    conversion_specs: Union[list[dict[str, Any]] | None, Any] = Field(default=None)
-    created_time: Union[str | None, Any] = Field(default=None)
-    creative: Union[Any, Any] = Field(default=None)
-    effective_status: Union[str | None, Any] = Field(default=None)
-    last_updated_by_app_id: Union[str | None, Any] = Field(default=None)
-    recommendations: Union[list[Recommendation] | None, Any] = Field(default=None)
-    source_ad_id: Union[str | None, Any] = Field(default=None)
-    status: Union[str | None, Any] = Field(default=None)
-    tracking_specs: Union[list[dict[str, Any]] | None, Any] = Field(default=None)
-    updated_time: Union[str | None, Any] = Field(default=None)
+    id: str
+    name: str | None = Field(default=None)
+    account_id: str | None = Field(default=None)
+    adset_id: str | None = Field(default=None)
+    campaign_id: str | None = Field(default=None)
+    adlabels: list[AdLabel] | None = Field(default=None)
+    bid_amount: int | None = Field(default=None)
+    bid_info: Any | None = Field(default=None)
+    bid_type: str | None = Field(default=None)
+    configured_status: str | None = Field(default=None)
+    conversion_specs: list[dict[str, Any]] | None = Field(default=None)
+    created_time: str | None = Field(default=None)
+    creative: Any | None = Field(default=None)
+    effective_status: str | None = Field(default=None)
+    last_updated_by_app_id: str | None = Field(default=None)
+    recommendations: list[Recommendation] | None = Field(default=None)
+    source_ad_id: str | None = Field(default=None)
+    status: str | None = Field(default=None)
+    tracking_specs: list[dict[str, Any]] | None = Field(default=None)
+    updated_time: str | None = Field(default=None)
 
 class AdsList(BaseModel):
     """AdsList type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[list[Ad], Any] = Field(default=None)
-    paging: Union[Paging, Any] = Field(default=None)
+    data: list[Ad] | None = Field(default=None)
+    paging: Paging | None = Field(default=None)
 
 class AdCreative(BaseModel):
     """Facebook Ad Creative"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    account_id: Union[str | None, Any] = Field(default=None)
-    actor_id: Union[str | None, Any] = Field(default=None)
-    body: Union[str | None, Any] = Field(default=None)
-    call_to_action_type: Union[str | None, Any] = Field(default=None)
-    effective_object_story_id: Union[str | None, Any] = Field(default=None)
-    image_hash: Union[str | None, Any] = Field(default=None)
-    image_url: Union[str | None, Any] = Field(default=None)
-    link_url: Union[str | None, Any] = Field(default=None)
-    object_story_id: Union[str | None, Any] = Field(default=None)
-    object_story_spec: Union[dict[str, Any] | None, Any] = Field(default=None)
-    object_type: Union[str | None, Any] = Field(default=None)
-    status: Union[str | None, Any] = Field(default=None)
-    thumbnail_url: Union[str | None, Any] = Field(default=None)
-    title: Union[str | None, Any] = Field(default=None)
-    url_tags: Union[str | None, Any] = Field(default=None)
+    id: str
+    name: str | None = Field(default=None)
+    account_id: str | None = Field(default=None)
+    actor_id: str | None = Field(default=None)
+    body: str | None = Field(default=None)
+    call_to_action_type: str | None = Field(default=None)
+    effective_object_story_id: str | None = Field(default=None)
+    image_hash: str | None = Field(default=None)
+    image_url: str | None = Field(default=None)
+    link_url: str | None = Field(default=None)
+    object_story_id: str | None = Field(default=None)
+    object_story_spec: dict[str, Any] | None = Field(default=None)
+    object_type: str | None = Field(default=None)
+    status: str | None = Field(default=None)
+    thumbnail_url: str | None = Field(default=None)
+    title: str | None = Field(default=None)
+    url_tags: str | None = Field(default=None)
 
 class AdCreativesList(BaseModel):
     """AdCreativesList type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[list[AdCreative], Any] = Field(default=None)
-    paging: Union[Paging, Any] = Field(default=None)
+    data: list[AdCreative] | None = Field(default=None)
+    paging: Paging | None = Field(default=None)
 
 class AdsActionStats(BaseModel):
     """Action statistics for Facebook ads"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    action_type: Union[str | None, Any] = Field(default=None)
-    action_destination: Union[str | None, Any] = Field(default=None)
-    action_target_id: Union[str | None, Any] = Field(default=None)
-    value: Union[float | None, Any] = Field(default=None)
-    field_1d_click: Union[float | None, Any] = Field(default=None, alias="1d_click")
-    field_7d_click: Union[float | None, Any] = Field(default=None, alias="7d_click")
-    field_28d_click: Union[float | None, Any] = Field(default=None, alias="28d_click")
-    field_1d_view: Union[float | None, Any] = Field(default=None, alias="1d_view")
-    field_7d_view: Union[float | None, Any] = Field(default=None, alias="7d_view")
-    field_28d_view: Union[float | None, Any] = Field(default=None, alias="28d_view")
+    action_type: str | None = Field(default=None)
+    action_destination: str | None = Field(default=None)
+    action_target_id: str | None = Field(default=None)
+    value: float | None = Field(default=None)
+    field_1d_click: float | None = Field(default=None, alias="1d_click")
+    field_7d_click: float | None = Field(default=None, alias="7d_click")
+    field_28d_click: float | None = Field(default=None, alias="28d_click")
+    field_1d_view: float | None = Field(default=None, alias="1d_view")
+    field_7d_view: float | None = Field(default=None, alias="7d_view")
+    field_28d_view: float | None = Field(default=None, alias="28d_view")
 
 class AdsInsight(BaseModel):
     """Facebook Ads Insight"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    account_id: Union[str | None, Any] = Field(default=None)
-    account_name: Union[str | None, Any] = Field(default=None)
-    campaign_id: Union[str | None, Any] = Field(default=None)
-    campaign_name: Union[str | None, Any] = Field(default=None)
-    adset_id: Union[str | None, Any] = Field(default=None)
-    adset_name: Union[str | None, Any] = Field(default=None)
-    ad_id: Union[str | None, Any] = Field(default=None)
-    ad_name: Union[str | None, Any] = Field(default=None)
-    clicks: Union[int | None, Any] = Field(default=None)
-    impressions: Union[int | None, Any] = Field(default=None)
-    reach: Union[int | None, Any] = Field(default=None)
-    spend: Union[float | None, Any] = Field(default=None)
-    cpc: Union[float | None, Any] = Field(default=None)
-    cpm: Union[float | None, Any] = Field(default=None)
-    ctr: Union[float | None, Any] = Field(default=None)
-    date_start: Union[str | None, Any] = Field(default=None)
-    date_stop: Union[str | None, Any] = Field(default=None)
-    actions: Union[list[AdsActionStats] | None, Any] = Field(default=None)
-    action_values: Union[list[AdsActionStats] | None, Any] = Field(default=None)
+    account_id: str | None = Field(default=None)
+    account_name: str | None = Field(default=None)
+    campaign_id: str | None = Field(default=None)
+    campaign_name: str | None = Field(default=None)
+    adset_id: str | None = Field(default=None)
+    adset_name: str | None = Field(default=None)
+    ad_id: str | None = Field(default=None)
+    ad_name: str | None = Field(default=None)
+    clicks: int | None = Field(default=None)
+    impressions: int | None = Field(default=None)
+    reach: int | None = Field(default=None)
+    spend: float | None = Field(default=None)
+    cpc: float | None = Field(default=None)
+    cpm: float | None = Field(default=None)
+    ctr: float | None = Field(default=None)
+    date_start: str | None = Field(default=None)
+    date_stop: str | None = Field(default=None)
+    actions: list[AdsActionStats] | None = Field(default=None)
+    action_values: list[AdsActionStats] | None = Field(default=None)
 
 class AdsInsightsList(BaseModel):
     """AdsInsightsList type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[list[AdsInsight], Any] = Field(default=None)
-    paging: Union[Paging, Any] = Field(default=None)
+    data: list[AdsInsight] | None = Field(default=None)
+    paging: Paging | None = Field(default=None)
 
 class AdAccount(BaseModel):
     """Facebook Ad Account"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    account_id: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    account_status: Union[int | None, Any] = Field(default=None)
-    age: Union[float | None, Any] = Field(default=None)
-    amount_spent: Union[str | None, Any] = Field(default=None)
-    balance: Union[str | None, Any] = Field(default=None)
-    business: Union[Any, Any] = Field(default=None)
-    business_city: Union[str | None, Any] = Field(default=None)
-    business_country_code: Union[str | None, Any] = Field(default=None)
-    business_name: Union[str | None, Any] = Field(default=None)
-    business_state: Union[str | None, Any] = Field(default=None)
-    business_street: Union[str | None, Any] = Field(default=None)
-    business_street2: Union[str | None, Any] = Field(default=None)
-    business_zip: Union[str | None, Any] = Field(default=None)
-    created_time: Union[str | None, Any] = Field(default=None)
-    currency: Union[str | None, Any] = Field(default=None)
-    disable_reason: Union[int | None, Any] = Field(default=None)
-    end_advertiser: Union[str | None, Any] = Field(default=None)
-    end_advertiser_name: Union[str | None, Any] = Field(default=None)
-    funding_source: Union[str | None, Any] = Field(default=None)
-    funding_source_details: Union[dict[str, Any] | None, Any] = Field(default=None)
-    has_migrated_permissions: Union[bool | None, Any] = Field(default=None)
-    is_personal: Union[int | None, Any] = Field(default=None)
-    is_prepay_account: Union[bool | None, Any] = Field(default=None)
-    is_tax_id_required: Union[bool | None, Any] = Field(default=None)
-    min_campaign_group_spend_cap: Union[str | None, Any] = Field(default=None)
-    min_daily_budget: Union[int | None, Any] = Field(default=None)
-    owner: Union[str | None, Any] = Field(default=None)
-    spend_cap: Union[str | None, Any] = Field(default=None)
-    timezone_id: Union[int | None, Any] = Field(default=None)
-    timezone_name: Union[str | None, Any] = Field(default=None)
-    timezone_offset_hours_utc: Union[float | None, Any] = Field(default=None)
+    id: str
+    account_id: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    account_status: int | None = Field(default=None)
+    age: float | None = Field(default=None)
+    amount_spent: str | None = Field(default=None)
+    balance: str | None = Field(default=None)
+    business: Any | None = Field(default=None)
+    business_city: str | None = Field(default=None)
+    business_country_code: str | None = Field(default=None)
+    business_name: str | None = Field(default=None)
+    business_state: str | None = Field(default=None)
+    business_street: str | None = Field(default=None)
+    business_street2: str | None = Field(default=None)
+    business_zip: str | None = Field(default=None)
+    created_time: str | None = Field(default=None)
+    currency: str | None = Field(default=None)
+    disable_reason: int | None = Field(default=None)
+    end_advertiser: str | None = Field(default=None)
+    end_advertiser_name: str | None = Field(default=None)
+    funding_source: str | None = Field(default=None)
+    funding_source_details: dict[str, Any] | None = Field(default=None)
+    has_migrated_permissions: bool | None = Field(default=None)
+    is_personal: int | None = Field(default=None)
+    is_prepay_account: bool | None = Field(default=None)
+    is_tax_id_required: bool | None = Field(default=None)
+    min_campaign_group_spend_cap: str | None = Field(default=None)
+    min_daily_budget: int | None = Field(default=None)
+    owner: str | None = Field(default=None)
+    spend_cap: str | None = Field(default=None)
+    timezone_id: int | None = Field(default=None)
+    timezone_name: str | None = Field(default=None)
+    timezone_offset_hours_utc: float | None = Field(default=None)
 
 class BusinessRef(BaseModel):
     """Reference to a Facebook Business"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
+    id: str | None = Field(default=None)
+    name: str | None = Field(default=None)
 
 class AdAccountListItem(BaseModel):
     """Facebook Ad Account in list response"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    account_id: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    account_status: Union[int | None, Any] = Field(default=None)
-    age: Union[float | None, Any] = Field(default=None)
-    amount_spent: Union[str | None, Any] = Field(default=None)
-    balance: Union[str | None, Any] = Field(default=None)
-    business: Union[Any, Any] = Field(default=None)
-    business_name: Union[str | None, Any] = Field(default=None)
-    created_time: Union[str | None, Any] = Field(default=None)
-    currency: Union[str | None, Any] = Field(default=None)
-    disable_reason: Union[int | None, Any] = Field(default=None)
-    spend_cap: Union[str | None, Any] = Field(default=None)
-    timezone_id: Union[int | None, Any] = Field(default=None)
-    timezone_name: Union[str | None, Any] = Field(default=None)
+    id: str
+    account_id: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    account_status: int | None = Field(default=None)
+    age: float | None = Field(default=None)
+    amount_spent: str | None = Field(default=None)
+    balance: str | None = Field(default=None)
+    business: Any | None = Field(default=None)
+    business_name: str | None = Field(default=None)
+    created_time: str | None = Field(default=None)
+    currency: str | None = Field(default=None)
+    disable_reason: int | None = Field(default=None)
+    spend_cap: str | None = Field(default=None)
+    timezone_id: int | None = Field(default=None)
+    timezone_name: str | None = Field(default=None)
 
 class AdAccountsList(BaseModel):
     """List of Facebook Ad Accounts"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[list[AdAccountListItem], Any] = Field(default=None)
-    paging: Union[Paging, Any] = Field(default=None)
+    data: list[AdAccountListItem] | None = Field(default=None)
+    paging: Paging | None = Field(default=None)
 
 class DataSource(BaseModel):
     """DataSource type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str | None, Any] = Field(default=None)
-    source_type: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
+    id: str | None = Field(default=None)
+    source_type: str | None = Field(default=None)
+    name: str | None = Field(default=None)
 
 class CustomConversion(BaseModel):
     """Facebook Custom Conversion"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    account_id: Union[str | None, Any] = Field(default=None)
-    business: Union[str | None, Any] = Field(default=None)
-    creation_time: Union[str | None, Any] = Field(default=None)
-    custom_event_type: Union[str | None, Any] = Field(default=None)
-    data_sources: Union[list[DataSource] | None, Any] = Field(default=None)
-    default_conversion_value: Union[float | None, Any] = Field(default=None)
-    description: Union[str | None, Any] = Field(default=None)
-    event_source_type: Union[str | None, Any] = Field(default=None)
-    first_fired_time: Union[str | None, Any] = Field(default=None)
-    is_archived: Union[bool | None, Any] = Field(default=None)
-    is_unavailable: Union[bool | None, Any] = Field(default=None)
-    last_fired_time: Union[str | None, Any] = Field(default=None)
-    offline_conversion_data_set: Union[str | None, Any] = Field(default=None)
-    retention_days: Union[float | None, Any] = Field(default=None)
-    rule: Union[str | None, Any] = Field(default=None)
+    id: str
+    name: str | None = Field(default=None)
+    account_id: str | None = Field(default=None)
+    business: str | None = Field(default=None)
+    creation_time: str | None = Field(default=None)
+    custom_event_type: str | None = Field(default=None)
+    data_sources: list[DataSource] | None = Field(default=None)
+    default_conversion_value: float | None = Field(default=None)
+    description: str | None = Field(default=None)
+    event_source_type: str | None = Field(default=None)
+    first_fired_time: str | None = Field(default=None)
+    is_archived: bool | None = Field(default=None)
+    is_unavailable: bool | None = Field(default=None)
+    last_fired_time: str | None = Field(default=None)
+    offline_conversion_data_set: str | None = Field(default=None)
+    retention_days: float | None = Field(default=None)
+    rule: str | None = Field(default=None)
 
 class CustomConversionsList(BaseModel):
     """CustomConversionsList type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[list[CustomConversion], Any] = Field(default=None)
-    paging: Union[Paging, Any] = Field(default=None)
+    data: list[CustomConversion] | None = Field(default=None)
+    paging: Paging | None = Field(default=None)
 
 class Image(BaseModel):
     """Image type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    account_id: Union[str | None, Any] = Field(default=None)
-    created_time: Union[str | None, Any] = Field(default=None)
-    creatives: Union[list[str | None] | None, Any] = Field(default=None)
-    filename: Union[str | None, Any] = Field(default=None)
-    hash: Union[str | None, Any] = Field(default=None)
-    height: Union[int | None, Any] = Field(default=None)
-    is_associated_creatives_in_adgroups: Union[bool | None, Any] = Field(default=None)
-    original_height: Union[int | None, Any] = Field(default=None)
-    original_width: Union[int | None, Any] = Field(default=None)
-    permalink_url: Union[str | None, Any] = Field(default=None)
-    status: Union[str | None, Any] = Field(default=None)
-    updated_time: Union[str | None, Any] = Field(default=None)
-    url: Union[str | None, Any] = Field(default=None)
-    url_128: Union[str | None, Any] = Field(default=None)
-    width: Union[int | None, Any] = Field(default=None)
+    id: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    account_id: str | None = Field(default=None)
+    created_time: str | None = Field(default=None)
+    creatives: list[str | None] | None = Field(default=None)
+    filename: str | None = Field(default=None)
+    hash: str | None = Field(default=None)
+    height: int | None = Field(default=None)
+    is_associated_creatives_in_adgroups: bool | None = Field(default=None)
+    original_height: int | None = Field(default=None)
+    original_width: int | None = Field(default=None)
+    permalink_url: str | None = Field(default=None)
+    status: str | None = Field(default=None)
+    updated_time: str | None = Field(default=None)
+    url: str | None = Field(default=None)
+    url_128: str | None = Field(default=None)
+    width: int | None = Field(default=None)
 
 class ImagesList(BaseModel):
     """ImagesList type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[list[Image], Any] = Field(default=None)
-    paging: Union[Paging, Any] = Field(default=None)
+    data: list[Image] | None = Field(default=None)
+    paging: Paging | None = Field(default=None)
 
 class VideoFormat(BaseModel):
     """VideoFormat type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    filter: Union[str | None, Any] = Field(default=None)
-    embed_html: Union[str | None, Any] = Field(default=None)
-    width: Union[int | None, Any] = Field(default=None)
-    height: Union[int | None, Any] = Field(default=None)
-    picture: Union[str | None, Any] = Field(default=None)
+    filter: str | None = Field(default=None)
+    embed_html: str | None = Field(default=None)
+    width: int | None = Field(default=None)
+    height: int | None = Field(default=None)
+    picture: str | None = Field(default=None)
 
 class Video(BaseModel):
     """Video type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    title: Union[str | None, Any] = Field(default=None)
-    account_id: Union[str | None, Any] = Field(default=None)
-    ad_breaks: Union[list[int] | None, Any] = Field(default=None)
-    backdated_time: Union[str | None, Any] = Field(default=None)
-    backdated_time_granularity: Union[str | None, Any] = Field(default=None)
-    content_category: Union[str | None, Any] = Field(default=None)
-    content_tags: Union[list[str] | None, Any] = Field(default=None)
-    created_time: Union[str | None, Any] = Field(default=None)
-    custom_labels: Union[list[str] | None, Any] = Field(default=None)
-    description: Union[str | None, Any] = Field(default=None)
-    embed_html: Union[str | None, Any] = Field(default=None)
-    embeddable: Union[bool | None, Any] = Field(default=None)
-    format: Union[list[VideoFormat] | None, Any] = Field(default=None)
-    icon: Union[str | None, Any] = Field(default=None)
-    is_crosspost_video: Union[bool | None, Any] = Field(default=None)
-    is_crossposting_eligible: Union[bool | None, Any] = Field(default=None)
-    is_episode: Union[bool | None, Any] = Field(default=None)
-    is_instagram_eligible: Union[bool | None, Any] = Field(default=None)
-    length: Union[float | None, Any] = Field(default=None)
-    live_status: Union[str | None, Any] = Field(default=None)
-    permalink_url: Union[str | None, Any] = Field(default=None)
-    post_views: Union[int | None, Any] = Field(default=None)
-    premiere_living_room_status: Union[bool | None, Any] = Field(default=None)
-    published: Union[bool | None, Any] = Field(default=None)
-    scheduled_publish_time: Union[str | None, Any] = Field(default=None)
-    source: Union[str | None, Any] = Field(default=None)
-    universal_video_id: Union[str | None, Any] = Field(default=None)
-    updated_time: Union[str | None, Any] = Field(default=None)
-    views: Union[int | None, Any] = Field(default=None)
+    id: str
+    title: str | None = Field(default=None)
+    account_id: str | None = Field(default=None)
+    ad_breaks: list[int] | None = Field(default=None)
+    backdated_time: str | None = Field(default=None)
+    backdated_time_granularity: str | None = Field(default=None)
+    content_category: str | None = Field(default=None)
+    content_tags: list[str] | None = Field(default=None)
+    created_time: str | None = Field(default=None)
+    custom_labels: list[str] | None = Field(default=None)
+    description: str | None = Field(default=None)
+    embed_html: str | None = Field(default=None)
+    embeddable: bool | None = Field(default=None)
+    format: list[VideoFormat] | None = Field(default=None)
+    icon: str | None = Field(default=None)
+    is_crosspost_video: bool | None = Field(default=None)
+    is_crossposting_eligible: bool | None = Field(default=None)
+    is_episode: bool | None = Field(default=None)
+    is_instagram_eligible: bool | None = Field(default=None)
+    length: float | None = Field(default=None)
+    live_status: str | None = Field(default=None)
+    permalink_url: str | None = Field(default=None)
+    post_views: int | None = Field(default=None)
+    premiere_living_room_status: bool | None = Field(default=None)
+    published: bool | None = Field(default=None)
+    scheduled_publish_time: str | None = Field(default=None)
+    source: str | None = Field(default=None)
+    universal_video_id: str | None = Field(default=None)
+    updated_time: str | None = Field(default=None)
+    views: int | None = Field(default=None)
 
 class VideosList(BaseModel):
     """VideosList type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[list[Video], Any] = Field(default=None)
-    paging: Union[Paging, Any] = Field(default=None)
-
-class PixelOwnerBusiness(BaseModel):
-    """Business that owns the pixel"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str | None, Any] = Field(default=None, description="Owner business ID")
-    """Owner business ID"""
-    name: Union[str | None, Any] = Field(default=None, description="Owner business name")
-    """Owner business name"""
-
-class PixelOwnerAdAccount(BaseModel):
-    """Ad account that owns the pixel"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    account_id: Union[str | None, Any] = Field(default=None, description="Owner ad account ID")
-    """Owner ad account ID"""
-    id: Union[str | None, Any] = Field(default=None, description="Owner ad account ID (with act_ prefix)")
-    """Owner ad account ID (with act_ prefix)"""
+    data: list[Video] | None = Field(default=None)
+    paging: Paging | None = Field(default=None)
 
 class PixelCreator(BaseModel):
     """User who created the pixel"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str | None, Any] = Field(default=None, description="Creator user ID")
+    id: str | None | None = Field(default=None, description="Creator user ID")
     """Creator user ID"""
-    name: Union[str | None, Any] = Field(default=None, description="Creator user name")
+    name: str | None | None = Field(default=None, description="Creator user name")
     """Creator user name"""
+
+class PixelOwnerAdAccount(BaseModel):
+    """Ad account that owns the pixel"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    account_id: str | None | None = Field(default=None, description="Owner ad account ID")
+    """Owner ad account ID"""
+    id: str | None | None = Field(default=None, description="Owner ad account ID (with act_ prefix)")
+    """Owner ad account ID (with act_ prefix)"""
+
+class PixelOwnerBusiness(BaseModel):
+    """Business that owns the pixel"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None | None = Field(default=None, description="Owner business ID")
+    """Owner business ID"""
+    name: str | None | None = Field(default=None, description="Owner business name")
+    """Owner business name"""
 
 class Pixel(BaseModel):
     """Facebook Ads Pixel"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    creation_time: Union[str | None, Any] = Field(default=None)
-    creator: Union[PixelCreator | None, Any] = Field(default=None)
-    data_use_setting: Union[str | None, Any] = Field(default=None)
-    enable_automatic_matching: Union[bool | None, Any] = Field(default=None)
-    first_party_cookie_status: Union[str | None, Any] = Field(default=None)
-    is_created_by_app: Union[bool | None, Any] = Field(default=None)
-    is_crm: Union[bool | None, Any] = Field(default=None)
-    is_unavailable: Union[bool | None, Any] = Field(default=None)
-    last_fired_time: Union[str | None, Any] = Field(default=None)
-    owner_ad_account: Union[PixelOwnerAdAccount | None, Any] = Field(default=None)
-    owner_business: Union[PixelOwnerBusiness | None, Any] = Field(default=None)
+    id: str
+    name: str | None = Field(default=None)
+    creation_time: str | None = Field(default=None)
+    creator: PixelCreator | None = Field(default=None)
+    data_use_setting: str | None = Field(default=None)
+    enable_automatic_matching: bool | None = Field(default=None)
+    first_party_cookie_status: str | None = Field(default=None)
+    is_created_by_app: bool | None = Field(default=None)
+    is_crm: bool | None = Field(default=None)
+    is_unavailable: bool | None = Field(default=None)
+    last_fired_time: str | None = Field(default=None)
+    owner_ad_account: PixelOwnerAdAccount | None = Field(default=None)
+    owner_business: PixelOwnerBusiness | None = Field(default=None)
 
 class PixelsList(BaseModel):
     """PixelsList type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[list[Pixel], Any] = Field(default=None)
-    paging: Union[Paging, Any] = Field(default=None)
+    data: list[Pixel] | None = Field(default=None)
+    paging: Paging | None = Field(default=None)
 
 class PixelStatDataItem(BaseModel):
     """Nested schema for PixelStat.data_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    timestamp: Union[str | None, Any] = Field(default=None, description="Timestamp for the data point")
+    timestamp: str | None | None = Field(default=None, description="Timestamp for the data point")
     """Timestamp for the data point"""
-    value: Union[int | None, Any] = Field(default=None, description="Event count at the timestamp")
+    value: int | None | None = Field(default=None, description="Event count at the timestamp")
     """Event count at the timestamp"""
 
 class PixelStat(BaseModel):
     """Facebook Pixel event stat entry showing event counts and quality metrics"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[list[PixelStatDataItem] | None, Any] = Field(default=None)
-    event: Union[str | None, Any] = Field(default=None)
-    event_source: Union[str | None, Any] = Field(default=None)
-    total_count: Union[int | None, Any] = Field(default=None)
-    total_matched_count: Union[int | None, Any] = Field(default=None)
-    total_deduped_count: Union[int | None, Any] = Field(default=None)
-    test_events_count: Union[int | None, Any] = Field(default=None)
+    data: list[PixelStatDataItem] | None = Field(default=None)
+    event: str | None = Field(default=None)
+    event_source: str | None = Field(default=None)
+    total_count: int | None = Field(default=None)
+    total_matched_count: int | None = Field(default=None)
+    total_deduped_count: int | None = Field(default=None)
+    test_events_count: int | None = Field(default=None)
 
 class PixelStatsList(BaseModel):
     """PixelStatsList type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[list[PixelStat], Any] = Field(default=None)
+    data: list[PixelStat] | None = Field(default=None)
 
 class BidInfo(BaseModel):
     """BidInfo type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    clicks: Union[int | None, Any] = Field(default=None, alias="CLICKS")
-    actions: Union[int | None, Any] = Field(default=None, alias="ACTIONS")
-    reach: Union[int | None, Any] = Field(default=None, alias="REACH")
-    impressions: Union[int | None, Any] = Field(default=None, alias="IMPRESSIONS")
-    social: Union[int | None, Any] = Field(default=None, alias="SOCIAL")
+    clicks: int | None = Field(default=None, alias="CLICKS")
+    actions: int | None = Field(default=None, alias="ACTIONS")
+    reach: int | None = Field(default=None, alias="REACH")
+    impressions: int | None = Field(default=None, alias="IMPRESSIONS")
+    social: int | None = Field(default=None, alias="SOCIAL")
 
 class BidConstraints(BaseModel):
     """BidConstraints type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    roas_average_floor: Union[int | None, Any] = Field(default=None)
+    roas_average_floor: int | None = Field(default=None)
 
 class LearningStageInfo(BaseModel):
     """LearningStageInfo type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    status: Union[str | None, Any] = Field(default=None)
-    conversions: Union[int | None, Any] = Field(default=None)
-    last_sig_edit_ts: Union[int | None, Any] = Field(default=None)
-    attribution_windows: Union[list[str | None] | None, Any] = Field(default=None)
+    status: str | None = Field(default=None)
+    conversions: int | None = Field(default=None)
+    last_sig_edit_ts: int | None = Field(default=None)
+    attribution_windows: list[str | None] | None = Field(default=None)
 
 class PromotedObject(BaseModel):
     """PromotedObject type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    custom_event_type: Union[str | None, Any] = Field(default=None)
-    pixel_id: Union[str | None, Any] = Field(default=None)
-    pixel_rule: Union[str | None, Any] = Field(default=None)
-    page_id: Union[str | None, Any] = Field(default=None)
-    object_store_url: Union[str | None, Any] = Field(default=None)
-    application_id: Union[str | None, Any] = Field(default=None)
-    product_set_id: Union[str | None, Any] = Field(default=None)
-    offer_id: Union[str | None, Any] = Field(default=None)
+    custom_event_type: str | None = Field(default=None)
+    pixel_id: str | None = Field(default=None)
+    pixel_rule: str | None = Field(default=None)
+    page_id: str | None = Field(default=None)
+    object_store_url: str | None = Field(default=None)
+    application_id: str | None = Field(default=None)
+    product_set_id: str | None = Field(default=None)
+    offer_id: str | None = Field(default=None)
 
 class AdCreativeRef(BaseModel):
     """AdCreativeRef type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str | None, Any] = Field(default=None)
-    creative_id: Union[str | None, Any] = Field(default=None)
+    id: str | None = Field(default=None)
+    creative_id: str | None = Field(default=None)
 
 class CampaignCreateParams(BaseModel):
     """Parameters for creating a new campaign"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    name: Union[str, Any] = Field(default=None)
-    objective: Union[str, Any] = Field(default=None)
-    status: Union[str, Any] = Field(default=None)
-    special_ad_categories: Union[str, Any] = Field(default=None)
-    daily_budget: Union[str | None, Any] = Field(default=None)
-    lifetime_budget: Union[str | None, Any] = Field(default=None)
-    bid_strategy: Union[str | None, Any] = Field(default=None)
-    is_adset_budget_sharing_enabled: Union[bool | None, Any] = Field(default=None)
+    name: str
+    objective: str
+    status: str
+    special_ad_categories: str
+    daily_budget: str | None = Field(default=None)
+    lifetime_budget: str | None = Field(default=None)
+    bid_strategy: str | None = Field(default=None)
+    is_adset_budget_sharing_enabled: bool | None = Field(default=None)
 
 class CampaignCreateResponse(BaseModel):
     """Response from creating a campaign"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
+    id: str | None = Field(default=None)
 
 class CampaignUpdateParams(BaseModel):
     """Parameters for updating a campaign"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    name: Union[str | None, Any] = Field(default=None)
-    status: Union[str | None, Any] = Field(default=None)
-    daily_budget: Union[str | None, Any] = Field(default=None)
-    lifetime_budget: Union[str | None, Any] = Field(default=None)
-    bid_strategy: Union[str | None, Any] = Field(default=None)
-    spend_cap: Union[str | None, Any] = Field(default=None)
+    name: str | None = Field(default=None)
+    status: str | None = Field(default=None)
+    daily_budget: str | None = Field(default=None)
+    lifetime_budget: str | None = Field(default=None)
+    bid_strategy: str | None = Field(default=None)
+    spend_cap: str | None = Field(default=None)
 
 class UpdateResponse(BaseModel):
     """Generic response from update operations"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    success: Union[bool, Any] = Field(default=None)
+    success: bool | None = Field(default=None)
 
 class AdSetCreateParams(BaseModel):
     """Parameters for creating a new ad set"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    name: Union[str, Any] = Field(default=None)
-    campaign_id: Union[str, Any] = Field(default=None)
-    daily_budget: Union[str | None, Any] = Field(default=None)
-    lifetime_budget: Union[str | None, Any] = Field(default=None)
-    billing_event: Union[str, Any] = Field(default=None)
-    optimization_goal: Union[str, Any] = Field(default=None)
-    targeting: Union[str, Any] = Field(default=None)
-    status: Union[str, Any] = Field(default=None)
-    start_time: Union[str | None, Any] = Field(default=None)
-    end_time: Union[str | None, Any] = Field(default=None)
-    bid_amount: Union[str | None, Any] = Field(default=None)
+    name: str
+    campaign_id: str
+    daily_budget: str | None = Field(default=None)
+    lifetime_budget: str | None = Field(default=None)
+    billing_event: str
+    optimization_goal: str
+    targeting: str
+    status: str
+    start_time: str | None = Field(default=None)
+    end_time: str | None = Field(default=None)
+    bid_amount: str | None = Field(default=None)
 
 class AdSetCreateResponse(BaseModel):
     """Response from creating an ad set"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
+    id: str | None = Field(default=None)
 
 class AdSetUpdateParams(BaseModel):
     """Parameters for updating an ad set"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    name: Union[str | None, Any] = Field(default=None)
-    status: Union[str | None, Any] = Field(default=None)
-    daily_budget: Union[str | None, Any] = Field(default=None)
-    lifetime_budget: Union[str | None, Any] = Field(default=None)
-    targeting: Union[str | None, Any] = Field(default=None)
-    bid_amount: Union[str | None, Any] = Field(default=None)
-    start_time: Union[str | None, Any] = Field(default=None)
-    end_time: Union[str | None, Any] = Field(default=None)
+    name: str | None = Field(default=None)
+    status: str | None = Field(default=None)
+    daily_budget: str | None = Field(default=None)
+    lifetime_budget: str | None = Field(default=None)
+    targeting: str | None = Field(default=None)
+    bid_amount: str | None = Field(default=None)
+    start_time: str | None = Field(default=None)
+    end_time: str | None = Field(default=None)
 
 class AdCreateParams(BaseModel):
     """Parameters for creating a new ad. Note - requires a Facebook Page to be connected to the ad account."""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    name: Union[str, Any] = Field(default=None)
-    adset_id: Union[str, Any] = Field(default=None)
-    creative: Union[str, Any] = Field(default=None)
-    status: Union[str, Any] = Field(default=None)
-    tracking_specs: Union[str | None, Any] = Field(default=None)
-    bid_amount: Union[str | None, Any] = Field(default=None)
+    name: str
+    adset_id: str
+    creative: str
+    status: str
+    tracking_specs: str | None = Field(default=None)
+    bid_amount: str | None = Field(default=None)
 
 class AdCreateResponse(BaseModel):
     """Response from creating an ad"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
+    id: str | None = Field(default=None)
 
 class AdUpdateParams(BaseModel):
     """Parameters for updating an ad"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    name: Union[str | None, Any] = Field(default=None)
-    status: Union[str | None, Any] = Field(default=None)
-    creative: Union[str | None, Any] = Field(default=None)
-    tracking_specs: Union[str | None, Any] = Field(default=None)
-    bid_amount: Union[str | None, Any] = Field(default=None)
-
-class AdLibraryAdDemographicDistributionItem(BaseModel):
-    """Nested schema for AdLibraryAd.demographic_distribution_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    age: Union[str | None, Any] = Field(default=None, description="Age range")
-    """Age range"""
-    gender: Union[str | None, Any] = Field(default=None, description="Gender category")
-    """Gender category"""
-    percentage: Union[str | None, Any] = Field(default=None, description="Percentage of audience in this demographic")
-    """Percentage of audience in this demographic"""
+    name: str | None = Field(default=None)
+    status: str | None = Field(default=None)
+    creative: str | None = Field(default=None)
+    tracking_specs: str | None = Field(default=None)
+    bid_amount: str | None = Field(default=None)
 
 class AdLibraryAdEstimatedAudienceSize(BaseModel):
     """Estimated audience size range"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    lower_bound: Union[int | None, Any] = Field(default=None, description="Lower bound of the estimated audience size")
+    lower_bound: int | None | None = Field(default=None, description="Lower bound of the estimated audience size")
     """Lower bound of the estimated audience size"""
-    upper_bound: Union[int | None, Any] = Field(default=None, description="Upper bound of the estimated audience size")
+    upper_bound: int | None | None = Field(default=None, description="Upper bound of the estimated audience size")
     """Upper bound of the estimated audience size"""
 
 class AdLibraryAdImpressions(BaseModel):
     """Number of impressions as a range"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    lower_bound: Union[int | None, Any] = Field(default=None, description="Lower bound of impressions")
+    lower_bound: int | None | None = Field(default=None, description="Lower bound of impressions")
     """Lower bound of impressions"""
-    upper_bound: Union[int | None, Any] = Field(default=None, description="Upper bound of impressions")
+    upper_bound: int | None | None = Field(default=None, description="Upper bound of impressions")
     """Upper bound of impressions"""
 
 class AdLibraryAdSpend(BaseModel):
     """Amount spent on the ad as a range"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    lower_bound: Union[int | None, Any] = Field(default=None, description="Lower bound of spend")
+    lower_bound: int | None | None = Field(default=None, description="Lower bound of spend")
     """Lower bound of spend"""
-    upper_bound: Union[int | None, Any] = Field(default=None, description="Upper bound of spend")
+    upper_bound: int | None | None = Field(default=None, description="Upper bound of spend")
     """Upper bound of spend"""
 
 class AdLibraryAdDeliveryByRegionItem(BaseModel):
     """Nested schema for AdLibraryAd.delivery_by_region_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    region: Union[str | None, Any] = Field(default=None, description="Region name")
+    region: str | None | None = Field(default=None, description="Region name")
     """Region name"""
-    percentage: Union[str | None, Any] = Field(default=None, description="Percentage of audience in this region")
+    percentage: str | None | None = Field(default=None, description="Percentage of audience in this region")
     """Percentage of audience in this region"""
+
+class AdLibraryAdDemographicDistributionItem(BaseModel):
+    """Nested schema for AdLibraryAd.demographic_distribution_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    age: str | None | None = Field(default=None, description="Age range")
+    """Age range"""
+    gender: str | None | None = Field(default=None, description="Gender category")
+    """Gender category"""
+    percentage: str | None | None = Field(default=None, description="Percentage of audience in this demographic")
+    """Percentage of audience in this demographic"""
 
 class AdLibraryAd(BaseModel):
     """An archived ad from the Facebook Ad Library, containing ad creative content, delivery information, spend data, and demographic reach breakdowns."""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    ad_creation_time: Union[str | None, Any] = Field(default=None)
-    ad_creative_bodies: Union[list[str] | None, Any] = Field(default=None)
-    ad_creative_link_captions: Union[list[str] | None, Any] = Field(default=None)
-    ad_creative_link_descriptions: Union[list[str] | None, Any] = Field(default=None)
-    ad_creative_link_titles: Union[list[str] | None, Any] = Field(default=None)
-    ad_delivery_start_time: Union[str | None, Any] = Field(default=None)
-    ad_delivery_stop_time: Union[str | None, Any] = Field(default=None)
-    ad_snapshot_url: Union[str | None, Any] = Field(default=None)
-    age_country_gender_reach_breakdown: Union[list[dict[str, Any]] | None, Any] = Field(default=None)
-    beneficiary_payers: Union[list[dict[str, Any]] | None, Any] = Field(default=None)
-    br_total_reach: Union[int | None, Any] = Field(default=None)
-    bylines: Union[str | None, Any] = Field(default=None)
-    currency: Union[str | None, Any] = Field(default=None)
-    delivery_by_region: Union[list[AdLibraryAdDeliveryByRegionItem] | None, Any] = Field(default=None)
-    demographic_distribution: Union[list[AdLibraryAdDemographicDistributionItem] | None, Any] = Field(default=None)
-    estimated_audience_size: Union[AdLibraryAdEstimatedAudienceSize | None, Any] = Field(default=None)
-    eu_total_reach: Union[int | None, Any] = Field(default=None)
-    impressions: Union[AdLibraryAdImpressions | None, Any] = Field(default=None)
-    languages: Union[list[str] | None, Any] = Field(default=None)
-    page_id: Union[str | None, Any] = Field(default=None)
-    page_name: Union[str | None, Any] = Field(default=None)
-    publisher_platforms: Union[list[str] | None, Any] = Field(default=None)
-    spend: Union[AdLibraryAdSpend | None, Any] = Field(default=None)
-    target_ages: Union[list[str] | None, Any] = Field(default=None)
-    target_gender: Union[str | None, Any] = Field(default=None)
-    target_locations: Union[list[dict[str, Any]] | None, Any] = Field(default=None)
-    total_reach_by_location: Union[list[dict[str, Any]] | None, Any] = Field(default=None)
+    id: str
+    ad_creation_time: str | None = Field(default=None)
+    ad_creative_bodies: list[str] | None = Field(default=None)
+    ad_creative_link_captions: list[str] | None = Field(default=None)
+    ad_creative_link_descriptions: list[str] | None = Field(default=None)
+    ad_creative_link_titles: list[str] | None = Field(default=None)
+    ad_delivery_start_time: str | None = Field(default=None)
+    ad_delivery_stop_time: str | None = Field(default=None)
+    ad_snapshot_url: str | None = Field(default=None)
+    age_country_gender_reach_breakdown: list[dict[str, Any]] | None = Field(default=None)
+    beneficiary_payers: list[dict[str, Any]] | None = Field(default=None)
+    br_total_reach: int | None = Field(default=None)
+    bylines: str | None = Field(default=None)
+    currency: str | None = Field(default=None)
+    delivery_by_region: list[AdLibraryAdDeliveryByRegionItem] | None = Field(default=None)
+    demographic_distribution: list[AdLibraryAdDemographicDistributionItem] | None = Field(default=None)
+    estimated_audience_size: AdLibraryAdEstimatedAudienceSize | None = Field(default=None)
+    eu_total_reach: int | None = Field(default=None)
+    impressions: AdLibraryAdImpressions | None = Field(default=None)
+    languages: list[str] | None = Field(default=None)
+    page_id: str | None = Field(default=None)
+    page_name: str | None = Field(default=None)
+    publisher_platforms: list[str] | None = Field(default=None)
+    spend: AdLibraryAdSpend | None = Field(default=None)
+    target_ages: list[str] | None = Field(default=None)
+    target_gender: str | None = Field(default=None)
+    target_locations: list[dict[str, Any]] | None = Field(default=None)
+    total_reach_by_location: list[dict[str, Any]] | None = Field(default=None)
 
 class AdLibraryList(BaseModel):
     """AdLibraryList type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    data: Union[list[AdLibraryAd], Any] = Field(default=None)
-    paging: Union[Paging, Any] = Field(default=None)
+    data: list[AdLibraryAd] | None = Field(default=None)
+    paging: Paging | None = Field(default=None)
 
 # ===== METADATA TYPE DEFINITIONS (PYDANTIC) =====
 # Meta types for operations that extract metadata (e.g., pagination info)
@@ -783,67 +783,67 @@ class AdAccountsListResultMeta(BaseModel):
     """Metadata for ad_accounts.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    after: Union[str | None, Any] = Field(default=None)
+    after: str | None = Field(default=None)
 
 class CampaignsListResultMeta(BaseModel):
     """Metadata for campaigns.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    after: Union[str | None, Any] = Field(default=None)
+    after: str | None = Field(default=None)
 
 class AdSetsListResultMeta(BaseModel):
     """Metadata for ad_sets.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    after: Union[str | None, Any] = Field(default=None)
+    after: str | None = Field(default=None)
 
 class AdsListResultMeta(BaseModel):
     """Metadata for ads.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    after: Union[str | None, Any] = Field(default=None)
+    after: str | None = Field(default=None)
 
 class AdCreativesListResultMeta(BaseModel):
     """Metadata for ad_creatives.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    after: Union[str | None, Any] = Field(default=None)
+    after: str | None = Field(default=None)
 
 class AdsInsightsListResultMeta(BaseModel):
     """Metadata for ads_insights.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    after: Union[str | None, Any] = Field(default=None)
+    after: str | None = Field(default=None)
 
 class CustomConversionsListResultMeta(BaseModel):
     """Metadata for custom_conversions.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    after: Union[str | None, Any] = Field(default=None)
+    after: str | None = Field(default=None)
 
 class ImagesListResultMeta(BaseModel):
     """Metadata for images.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    after: Union[str | None, Any] = Field(default=None)
+    after: str | None = Field(default=None)
 
 class VideosListResultMeta(BaseModel):
     """Metadata for videos.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    after: Union[str | None, Any] = Field(default=None)
+    after: str | None = Field(default=None)
 
 class PixelsListResultMeta(BaseModel):
     """Metadata for pixels.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    after: Union[str | None, Any] = Field(default=None)
+    after: str | None = Field(default=None)
 
 class AdLibraryListResultMeta(BaseModel):
     """Metadata for ad_library.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    after: Union[str | None, Any] = Field(default=None)
+    after: str | None = Field(default=None)
 
 # ===== CHECK RESULT MODEL =====
 

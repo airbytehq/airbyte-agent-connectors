@@ -174,7 +174,7 @@
           {
             "name": "next_token",
             "python_name": "next_token",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "string",
@@ -277,7 +277,7 @@
           {
             "name": "next_token",
             "python_name": "next_token",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "string",
@@ -380,7 +380,7 @@
           {
             "name": "next_token",
             "python_name": "next_token",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "string",
@@ -454,7 +454,7 @@
           {
             "name": "next_token",
             "python_name": "next_token",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "string",
@@ -528,7 +528,7 @@
           {
             "name": "next_token",
             "python_name": "next_token",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "string",
@@ -602,7 +602,7 @@
           {
             "name": "next_token",
             "python_name": "next_token",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "string",
@@ -676,7 +676,7 @@
           {
             "name": "next_token",
             "python_name": "next_token",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "string",
@@ -750,7 +750,7 @@
           {
             "name": "next_token",
             "python_name": "next_token",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "string",
@@ -824,7 +824,7 @@
           {
             "name": "next_token",
             "python_name": "next_token",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "string",
@@ -898,7 +898,7 @@
           {
             "name": "next_token",
             "python_name": "next_token",
-            "type": "str | None",
+            "type": "str",
             "schema": {
               "type": [
                 "string",

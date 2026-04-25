@@ -8,7 +8,7 @@ and response envelope types.
 from __future__ import annotations
 
 from pydantic import BaseModel, ConfigDict, Field
-from typing import TypeVar, Generic, Union, Any
+from typing import TypeVar, Generic, Any
 from typing import Optional
 
 # Authentication configuration
@@ -31,350 +31,350 @@ class SObject(BaseModel):
     """Salesforce sObject metadata"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    name: Union[str, Any] = Field(default=None)
-    label: Union[str | None, Any] = Field(default=None)
-    label_plural: Union[str | None, Any] = Field(default=None, alias="labelPlural")
-    key_prefix: Union[str | None, Any] = Field(default=None, alias="keyPrefix")
-    custom: Union[bool | None, Any] = Field(default=None)
-    queryable: Union[bool | None, Any] = Field(default=None)
-    searchable: Union[bool | None, Any] = Field(default=None)
-    createable: Union[bool | None, Any] = Field(default=None)
-    updateable: Union[bool | None, Any] = Field(default=None)
-    deletable: Union[bool | None, Any] = Field(default=None)
-    urls: Union[dict[str, Any] | None, Any] = Field(default=None)
+    name: str | None = Field(default=None)
+    label: str | None = Field(default=None)
+    label_plural: str | None = Field(default=None, alias="labelPlural")
+    key_prefix: str | None = Field(default=None, alias="keyPrefix")
+    custom: bool | None = Field(default=None)
+    queryable: bool | None = Field(default=None)
+    searchable: bool | None = Field(default=None)
+    createable: bool | None = Field(default=None)
+    updateable: bool | None = Field(default=None)
+    deletable: bool | None = Field(default=None)
+    urls: dict[str, Any] | None = Field(default=None)
 
 class SObjectsResponse(BaseModel):
     """Response from the sobjects endpoint listing all available Salesforce objects"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    encoding: Union[str | None, Any] = Field(default=None)
-    max_batch_size: Union[int | None, Any] = Field(default=None, alias="maxBatchSize")
-    sobjects: Union[list[SObject], Any] = Field(default=None)
+    encoding: str | None = Field(default=None)
+    max_batch_size: int | None = Field(default=None, alias="maxBatchSize")
+    sobjects: list[SObject] | None = Field(default=None)
 
 class AccountAttributes(BaseModel):
     """Nested schema for Account.attributes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type_: Union[str, Any] = Field(default=None, alias="type")
-    url: Union[str, Any] = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    url: str | None = Field(default=None)
 
 class Account(BaseModel):
     """Salesforce Account object - uses FIELDS(STANDARD) so all standard fields are returned"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None, alias="Id")
-    name: Union[str, Any] = Field(default=None, alias="Name")
-    attributes: Union[AccountAttributes, Any] = Field(default=None)
+    id: str | None = Field(default=None, alias="Id")
+    name: str | None = Field(default=None, alias="Name")
+    attributes: AccountAttributes | None = Field(default=None)
 
 class AccountQueryResult(BaseModel):
     """SOQL query result for accounts"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    total_size: Union[int, Any] = Field(default=None, alias="totalSize")
-    done: Union[bool, Any] = Field(default=None)
-    next_records_url: Union[str, Any] = Field(default=None, alias="nextRecordsUrl")
-    records: Union[list[Account], Any] = Field(default=None)
+    total_size: int | None = Field(default=None, alias="totalSize")
+    done: bool | None = Field(default=None)
+    next_records_url: str | None = Field(default=None, alias="nextRecordsUrl")
+    records: list[Account] | None = Field(default=None)
 
 class ContactAttributes(BaseModel):
     """Nested schema for Contact.attributes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type_: Union[str, Any] = Field(default=None, alias="type")
-    url: Union[str, Any] = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    url: str | None = Field(default=None)
 
 class Contact(BaseModel):
     """Salesforce Contact object - uses FIELDS(STANDARD) so all standard fields are returned"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None, alias="Id")
-    name: Union[str, Any] = Field(default=None, alias="Name")
-    attributes: Union[ContactAttributes, Any] = Field(default=None)
+    id: str | None = Field(default=None, alias="Id")
+    name: str | None = Field(default=None, alias="Name")
+    attributes: ContactAttributes | None = Field(default=None)
 
 class ContactQueryResult(BaseModel):
     """SOQL query result for contacts"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    total_size: Union[int, Any] = Field(default=None, alias="totalSize")
-    done: Union[bool, Any] = Field(default=None)
-    next_records_url: Union[str, Any] = Field(default=None, alias="nextRecordsUrl")
-    records: Union[list[Contact], Any] = Field(default=None)
+    total_size: int | None = Field(default=None, alias="totalSize")
+    done: bool | None = Field(default=None)
+    next_records_url: str | None = Field(default=None, alias="nextRecordsUrl")
+    records: list[Contact] | None = Field(default=None)
 
 class LeadAttributes(BaseModel):
     """Nested schema for Lead.attributes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type_: Union[str, Any] = Field(default=None, alias="type")
-    url: Union[str, Any] = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    url: str | None = Field(default=None)
 
 class Lead(BaseModel):
     """Salesforce Lead object - uses FIELDS(STANDARD) so all standard fields are returned"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None, alias="Id")
-    name: Union[str, Any] = Field(default=None, alias="Name")
-    attributes: Union[LeadAttributes, Any] = Field(default=None)
+    id: str | None = Field(default=None, alias="Id")
+    name: str | None = Field(default=None, alias="Name")
+    attributes: LeadAttributes | None = Field(default=None)
 
 class LeadQueryResult(BaseModel):
     """SOQL query result for leads"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    total_size: Union[int, Any] = Field(default=None, alias="totalSize")
-    done: Union[bool, Any] = Field(default=None)
-    next_records_url: Union[str, Any] = Field(default=None, alias="nextRecordsUrl")
-    records: Union[list[Lead], Any] = Field(default=None)
+    total_size: int | None = Field(default=None, alias="totalSize")
+    done: bool | None = Field(default=None)
+    next_records_url: str | None = Field(default=None, alias="nextRecordsUrl")
+    records: list[Lead] | None = Field(default=None)
 
 class OpportunityAttributes(BaseModel):
     """Nested schema for Opportunity.attributes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type_: Union[str, Any] = Field(default=None, alias="type")
-    url: Union[str, Any] = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    url: str | None = Field(default=None)
 
 class Opportunity(BaseModel):
     """Salesforce Opportunity object - uses FIELDS(STANDARD) so all standard fields are returned"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None, alias="Id")
-    name: Union[str, Any] = Field(default=None, alias="Name")
-    attributes: Union[OpportunityAttributes, Any] = Field(default=None)
+    id: str | None = Field(default=None, alias="Id")
+    name: str | None = Field(default=None, alias="Name")
+    attributes: OpportunityAttributes | None = Field(default=None)
 
 class OpportunityQueryResult(BaseModel):
     """SOQL query result for opportunities"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    total_size: Union[int, Any] = Field(default=None, alias="totalSize")
-    done: Union[bool, Any] = Field(default=None)
-    next_records_url: Union[str, Any] = Field(default=None, alias="nextRecordsUrl")
-    records: Union[list[Opportunity], Any] = Field(default=None)
+    total_size: int | None = Field(default=None, alias="totalSize")
+    done: bool | None = Field(default=None)
+    next_records_url: str | None = Field(default=None, alias="nextRecordsUrl")
+    records: list[Opportunity] | None = Field(default=None)
 
 class TaskAttributes(BaseModel):
     """Nested schema for Task.attributes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type_: Union[str, Any] = Field(default=None, alias="type")
-    url: Union[str, Any] = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    url: str | None = Field(default=None)
 
 class Task(BaseModel):
     """Salesforce Task object - uses FIELDS(STANDARD) so all standard fields are returned"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None, alias="Id")
-    subject: Union[str, Any] = Field(default=None, alias="Subject")
-    attributes: Union[TaskAttributes, Any] = Field(default=None)
+    id: str | None = Field(default=None, alias="Id")
+    subject: str | None = Field(default=None, alias="Subject")
+    attributes: TaskAttributes | None = Field(default=None)
 
 class TaskQueryResult(BaseModel):
     """SOQL query result for tasks"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    total_size: Union[int, Any] = Field(default=None, alias="totalSize")
-    done: Union[bool, Any] = Field(default=None)
-    next_records_url: Union[str, Any] = Field(default=None, alias="nextRecordsUrl")
-    records: Union[list[Task], Any] = Field(default=None)
+    total_size: int | None = Field(default=None, alias="totalSize")
+    done: bool | None = Field(default=None)
+    next_records_url: str | None = Field(default=None, alias="nextRecordsUrl")
+    records: list[Task] | None = Field(default=None)
 
 class EventAttributes(BaseModel):
     """Nested schema for Event.attributes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type_: Union[str, Any] = Field(default=None, alias="type")
-    url: Union[str, Any] = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    url: str | None = Field(default=None)
 
 class Event(BaseModel):
     """Salesforce Event object - uses FIELDS(STANDARD) so all standard fields are returned"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None, alias="Id")
-    subject: Union[str, Any] = Field(default=None, alias="Subject")
-    attributes: Union[EventAttributes, Any] = Field(default=None)
+    id: str | None = Field(default=None, alias="Id")
+    subject: str | None = Field(default=None, alias="Subject")
+    attributes: EventAttributes | None = Field(default=None)
 
 class EventQueryResult(BaseModel):
     """SOQL query result for events"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    total_size: Union[int, Any] = Field(default=None, alias="totalSize")
-    done: Union[bool, Any] = Field(default=None)
-    next_records_url: Union[str, Any] = Field(default=None, alias="nextRecordsUrl")
-    records: Union[list[Event], Any] = Field(default=None)
+    total_size: int | None = Field(default=None, alias="totalSize")
+    done: bool | None = Field(default=None)
+    next_records_url: str | None = Field(default=None, alias="nextRecordsUrl")
+    records: list[Event] | None = Field(default=None)
 
 class CampaignAttributes(BaseModel):
     """Nested schema for Campaign.attributes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type_: Union[str, Any] = Field(default=None, alias="type")
-    url: Union[str, Any] = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    url: str | None = Field(default=None)
 
 class Campaign(BaseModel):
     """Salesforce Campaign object - uses FIELDS(STANDARD) so all standard fields are returned"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None, alias="Id")
-    name: Union[str, Any] = Field(default=None, alias="Name")
-    attributes: Union[CampaignAttributes, Any] = Field(default=None)
+    id: str | None = Field(default=None, alias="Id")
+    name: str | None = Field(default=None, alias="Name")
+    attributes: CampaignAttributes | None = Field(default=None)
 
 class CampaignQueryResult(BaseModel):
     """SOQL query result for campaigns"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    total_size: Union[int, Any] = Field(default=None, alias="totalSize")
-    done: Union[bool, Any] = Field(default=None)
-    next_records_url: Union[str, Any] = Field(default=None, alias="nextRecordsUrl")
-    records: Union[list[Campaign], Any] = Field(default=None)
+    total_size: int | None = Field(default=None, alias="totalSize")
+    done: bool | None = Field(default=None)
+    next_records_url: str | None = Field(default=None, alias="nextRecordsUrl")
+    records: list[Campaign] | None = Field(default=None)
 
 class CaseAttributes(BaseModel):
     """Nested schema for Case.attributes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type_: Union[str, Any] = Field(default=None, alias="type")
-    url: Union[str, Any] = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    url: str | None = Field(default=None)
 
 class Case(BaseModel):
     """Salesforce Case object - uses FIELDS(STANDARD) so all standard fields are returned"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None, alias="Id")
-    case_number: Union[str, Any] = Field(default=None, alias="CaseNumber")
-    subject: Union[str, Any] = Field(default=None, alias="Subject")
-    attributes: Union[CaseAttributes, Any] = Field(default=None)
+    id: str | None = Field(default=None, alias="Id")
+    case_number: str | None = Field(default=None, alias="CaseNumber")
+    subject: str | None = Field(default=None, alias="Subject")
+    attributes: CaseAttributes | None = Field(default=None)
 
 class CaseQueryResult(BaseModel):
     """SOQL query result for cases"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    total_size: Union[int, Any] = Field(default=None, alias="totalSize")
-    done: Union[bool, Any] = Field(default=None)
-    next_records_url: Union[str, Any] = Field(default=None, alias="nextRecordsUrl")
-    records: Union[list[Case], Any] = Field(default=None)
+    total_size: int | None = Field(default=None, alias="totalSize")
+    done: bool | None = Field(default=None)
+    next_records_url: str | None = Field(default=None, alias="nextRecordsUrl")
+    records: list[Case] | None = Field(default=None)
 
 class NoteAttributes(BaseModel):
     """Nested schema for Note.attributes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type_: Union[str, Any] = Field(default=None, alias="type")
-    url: Union[str, Any] = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    url: str | None = Field(default=None)
 
 class Note(BaseModel):
     """Salesforce Note object - uses FIELDS(STANDARD) so all standard fields are returned"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None, alias="Id")
-    title: Union[str, Any] = Field(default=None, alias="Title")
-    attributes: Union[NoteAttributes, Any] = Field(default=None)
+    id: str | None = Field(default=None, alias="Id")
+    title: str | None = Field(default=None, alias="Title")
+    attributes: NoteAttributes | None = Field(default=None)
 
 class NoteQueryResult(BaseModel):
     """SOQL query result for notes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    total_size: Union[int, Any] = Field(default=None, alias="totalSize")
-    done: Union[bool, Any] = Field(default=None)
-    next_records_url: Union[str, Any] = Field(default=None, alias="nextRecordsUrl")
-    records: Union[list[Note], Any] = Field(default=None)
+    total_size: int | None = Field(default=None, alias="totalSize")
+    done: bool | None = Field(default=None)
+    next_records_url: str | None = Field(default=None, alias="nextRecordsUrl")
+    records: list[Note] | None = Field(default=None)
 
 class ContentVersionAttributes(BaseModel):
     """Nested schema for ContentVersion.attributes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type_: Union[str, Any] = Field(default=None, alias="type")
-    url: Union[str, Any] = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    url: str | None = Field(default=None)
 
 class ContentVersion(BaseModel):
     """Salesforce ContentVersion object - represents a file version in Salesforce Files"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None, alias="Id")
-    title: Union[str, Any] = Field(default=None, alias="Title")
-    file_extension: Union[str, Any] = Field(default=None, alias="FileExtension")
-    content_size: Union[int, Any] = Field(default=None, alias="ContentSize")
-    content_document_id: Union[str, Any] = Field(default=None, alias="ContentDocumentId")
-    version_number: Union[str, Any] = Field(default=None, alias="VersionNumber")
-    is_latest: Union[bool, Any] = Field(default=None, alias="IsLatest")
-    attributes: Union[ContentVersionAttributes, Any] = Field(default=None)
+    id: str | None = Field(default=None, alias="Id")
+    title: str | None = Field(default=None, alias="Title")
+    file_extension: str | None = Field(default=None, alias="FileExtension")
+    content_size: int | None = Field(default=None, alias="ContentSize")
+    content_document_id: str | None = Field(default=None, alias="ContentDocumentId")
+    version_number: str | None = Field(default=None, alias="VersionNumber")
+    is_latest: bool | None = Field(default=None, alias="IsLatest")
+    attributes: ContentVersionAttributes | None = Field(default=None)
 
 class ContentVersionQueryResult(BaseModel):
     """SOQL query result for content versions"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    total_size: Union[int, Any] = Field(default=None, alias="totalSize")
-    done: Union[bool, Any] = Field(default=None)
-    next_records_url: Union[str, Any] = Field(default=None, alias="nextRecordsUrl")
-    records: Union[list[ContentVersion], Any] = Field(default=None)
+    total_size: int | None = Field(default=None, alias="totalSize")
+    done: bool | None = Field(default=None)
+    next_records_url: str | None = Field(default=None, alias="nextRecordsUrl")
+    records: list[ContentVersion] | None = Field(default=None)
 
 class AttachmentAttributes(BaseModel):
     """Nested schema for Attachment.attributes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type_: Union[str, Any] = Field(default=None, alias="type")
-    url: Union[str, Any] = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    url: str | None = Field(default=None)
 
 class Attachment(BaseModel):
     """Salesforce Attachment object - legacy file attachment on a record"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None, alias="Id")
-    name: Union[str, Any] = Field(default=None, alias="Name")
-    content_type: Union[str, Any] = Field(default=None, alias="ContentType")
-    body_length: Union[int, Any] = Field(default=None, alias="BodyLength")
-    parent_id: Union[str, Any] = Field(default=None, alias="ParentId")
-    attributes: Union[AttachmentAttributes, Any] = Field(default=None)
+    id: str | None = Field(default=None, alias="Id")
+    name: str | None = Field(default=None, alias="Name")
+    content_type: str | None = Field(default=None, alias="ContentType")
+    body_length: int | None = Field(default=None, alias="BodyLength")
+    parent_id: str | None = Field(default=None, alias="ParentId")
+    attributes: AttachmentAttributes | None = Field(default=None)
 
 class AttachmentQueryResult(BaseModel):
     """SOQL query result for attachments"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    total_size: Union[int, Any] = Field(default=None, alias="totalSize")
-    done: Union[bool, Any] = Field(default=None)
-    next_records_url: Union[str, Any] = Field(default=None, alias="nextRecordsUrl")
-    records: Union[list[Attachment], Any] = Field(default=None)
+    total_size: int | None = Field(default=None, alias="totalSize")
+    done: bool | None = Field(default=None)
+    next_records_url: str | None = Field(default=None, alias="nextRecordsUrl")
+    records: list[Attachment] | None = Field(default=None)
 
 class Report(BaseModel):
     """Salesforce Report metadata from the Analytics API"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    url: Union[str | None, Any] = Field(default=None)
-    describe_url: Union[str | None, Any] = Field(default=None, alias="describeUrl")
-    instances_url: Union[str | None, Any] = Field(default=None, alias="instancesUrl")
+    id: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    url: str | None = Field(default=None)
+    describe_url: str | None = Field(default=None, alias="describeUrl")
+    instances_url: str | None = Field(default=None, alias="instancesUrl")
 
 class ReportResults(BaseModel):
     """Executed report results including data rows, aggregates, and metadata"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    attributes: Union[dict[str, Any] | None, Any] = Field(default=None)
-    report_metadata: Union[dict[str, Any] | None, Any] = Field(default=None, alias="reportMetadata")
-    report_extended_metadata: Union[dict[str, Any] | None, Any] = Field(default=None, alias="reportExtendedMetadata")
-    fact_map: Union[dict[str, Any] | None, Any] = Field(default=None, alias="factMap")
-    groupings_down: Union[dict[str, Any] | None, Any] = Field(default=None, alias="groupingsDown")
-    groupings_across: Union[dict[str, Any] | None, Any] = Field(default=None, alias="groupingsAcross")
-    has_detail_rows: Union[bool | None, Any] = Field(default=None, alias="hasDetailRows")
-    all_data: Union[bool | None, Any] = Field(default=None, alias="allData")
+    attributes: dict[str, Any] | None = Field(default=None)
+    report_metadata: dict[str, Any] | None = Field(default=None, alias="reportMetadata")
+    report_extended_metadata: dict[str, Any] | None = Field(default=None, alias="reportExtendedMetadata")
+    fact_map: dict[str, Any] | None = Field(default=None, alias="factMap")
+    groupings_down: dict[str, Any] | None = Field(default=None, alias="groupingsDown")
+    groupings_across: dict[str, Any] | None = Field(default=None, alias="groupingsAcross")
+    has_detail_rows: bool | None = Field(default=None, alias="hasDetailRows")
+    all_data: bool | None = Field(default=None, alias="allData")
 
 class QueryResult(BaseModel):
     """Generic SOQL query result"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    total_size: Union[int, Any] = Field(default=None, alias="totalSize")
-    done: Union[bool, Any] = Field(default=None)
-    next_records_url: Union[str, Any] = Field(default=None, alias="nextRecordsUrl")
-    records: Union[list[dict[str, Any]], Any] = Field(default=None)
+    total_size: int | None = Field(default=None, alias="totalSize")
+    done: bool | None = Field(default=None)
+    next_records_url: str | None = Field(default=None, alias="nextRecordsUrl")
+    records: list[dict[str, Any]] | None = Field(default=None)
 
 class SearchResultSearchrecordsItemAttributes(BaseModel):
     """Nested schema for SearchResultSearchrecordsItem.attributes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type_: Union[str, Any] = Field(default=None, alias="type")
-    url: Union[str, Any] = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    url: str | None = Field(default=None)
 
 class SearchResultSearchrecordsItem(BaseModel):
     """Nested schema for SearchResult.searchRecords_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None, alias="Id")
-    attributes: Union[SearchResultSearchrecordsItemAttributes, Any] = Field(default=None)
+    id: str | None = Field(default=None, alias="Id")
+    attributes: SearchResultSearchrecordsItemAttributes | None = Field(default=None)
 
 class SearchResult(BaseModel):
     """SOSL search result"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    search_records: Union[list[SearchResultSearchrecordsItem], Any] = Field(default=None, alias="searchRecords")
+    search_records: list[SearchResultSearchrecordsItem] | None = Field(default=None, alias="searchRecords")
 
 # ===== METADATA TYPE DEFINITIONS (PYDANTIC) =====
 # Meta types for operations that extract metadata (e.g., pagination info)
@@ -383,85 +383,85 @@ class AccountsListResultMeta(BaseModel):
     """Metadata for accounts.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    done: Union[bool, Any] = Field(default=None)
-    next_records_url: Union[str, Any] = Field(default=None, alias="nextRecordsUrl")
+    done: bool | None = Field(default=None)
+    next_records_url: str | None = Field(default=None, alias="nextRecordsUrl")
 
 class ContactsListResultMeta(BaseModel):
     """Metadata for contacts.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    done: Union[bool, Any] = Field(default=None)
-    next_records_url: Union[str, Any] = Field(default=None, alias="nextRecordsUrl")
+    done: bool | None = Field(default=None)
+    next_records_url: str | None = Field(default=None, alias="nextRecordsUrl")
 
 class LeadsListResultMeta(BaseModel):
     """Metadata for leads.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    done: Union[bool, Any] = Field(default=None)
-    next_records_url: Union[str, Any] = Field(default=None, alias="nextRecordsUrl")
+    done: bool | None = Field(default=None)
+    next_records_url: str | None = Field(default=None, alias="nextRecordsUrl")
 
 class OpportunitiesListResultMeta(BaseModel):
     """Metadata for opportunities.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    done: Union[bool, Any] = Field(default=None)
-    next_records_url: Union[str, Any] = Field(default=None, alias="nextRecordsUrl")
+    done: bool | None = Field(default=None)
+    next_records_url: str | None = Field(default=None, alias="nextRecordsUrl")
 
 class TasksListResultMeta(BaseModel):
     """Metadata for tasks.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    done: Union[bool, Any] = Field(default=None)
-    next_records_url: Union[str, Any] = Field(default=None, alias="nextRecordsUrl")
+    done: bool | None = Field(default=None)
+    next_records_url: str | None = Field(default=None, alias="nextRecordsUrl")
 
 class EventsListResultMeta(BaseModel):
     """Metadata for events.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    done: Union[bool, Any] = Field(default=None)
-    next_records_url: Union[str, Any] = Field(default=None, alias="nextRecordsUrl")
+    done: bool | None = Field(default=None)
+    next_records_url: str | None = Field(default=None, alias="nextRecordsUrl")
 
 class CampaignsListResultMeta(BaseModel):
     """Metadata for campaigns.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    done: Union[bool, Any] = Field(default=None)
-    next_records_url: Union[str, Any] = Field(default=None, alias="nextRecordsUrl")
+    done: bool | None = Field(default=None)
+    next_records_url: str | None = Field(default=None, alias="nextRecordsUrl")
 
 class CasesListResultMeta(BaseModel):
     """Metadata for cases.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    done: Union[bool, Any] = Field(default=None)
-    next_records_url: Union[str, Any] = Field(default=None, alias="nextRecordsUrl")
+    done: bool | None = Field(default=None)
+    next_records_url: str | None = Field(default=None, alias="nextRecordsUrl")
 
 class NotesListResultMeta(BaseModel):
     """Metadata for notes.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    done: Union[bool, Any] = Field(default=None)
-    next_records_url: Union[str, Any] = Field(default=None, alias="nextRecordsUrl")
+    done: bool | None = Field(default=None)
+    next_records_url: str | None = Field(default=None, alias="nextRecordsUrl")
 
 class ContentVersionsListResultMeta(BaseModel):
     """Metadata for content_versions.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    done: Union[bool, Any] = Field(default=None)
-    next_records_url: Union[str, Any] = Field(default=None, alias="nextRecordsUrl")
+    done: bool | None = Field(default=None)
+    next_records_url: str | None = Field(default=None, alias="nextRecordsUrl")
 
 class AttachmentsListResultMeta(BaseModel):
     """Metadata for attachments.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    done: Union[bool, Any] = Field(default=None)
-    next_records_url: Union[str, Any] = Field(default=None, alias="nextRecordsUrl")
+    done: bool | None = Field(default=None)
+    next_records_url: str | None = Field(default=None, alias="nextRecordsUrl")
 
 class QueryListResultMeta(BaseModel):
     """Metadata for query.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    done: Union[bool, Any] = Field(default=None)
-    next_records_url: Union[str, Any] = Field(default=None, alias="nextRecordsUrl")
+    done: bool | None = Field(default=None)
+    next_records_url: str | None = Field(default=None, alias="nextRecordsUrl")
 
 # ===== CHECK RESULT MODEL =====
 
