@@ -167,7 +167,7 @@ class ClickupApiConnector:
 
     connector_name = "clickup-api"
     connector_version = "0.1.5"
-    sdk_version = "0.1.67"
+    sdk_version = "0.1.68"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {

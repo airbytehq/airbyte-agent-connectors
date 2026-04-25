@@ -43,16 +43,24 @@ def _extract_manifest_streams(manifest: dict[str, Any]) -> dict[str, set[str]]:
     """
     result: dict[str, set[str]] = {}
 
+    def _process_stream(stream: dict[str, Any]) -> None:
+        name = stream.get("name") or stream.get("$parameters", {}).get("name")
+        if not name:
+            return
+        schema = _extract_stream_schema(stream)
+        result[name] = set(schema.get("properties", {}).keys())
+
     for stream in manifest.get("streams", []):
         if not isinstance(stream, dict):
             continue
 
-        name = stream.get("name") or stream.get("$parameters", {}).get("name")
-        if not name:
+        if stream.get("type") == "ConditionalStreams":
+            for nested in stream.get("streams", []):
+                if isinstance(nested, dict):
+                    _process_stream(nested)
             continue
 
-        schema = _extract_stream_schema(stream)
-        result[name] = set(schema.get("properties", {}).keys())
+        _process_stream(stream)
 
     return result
 

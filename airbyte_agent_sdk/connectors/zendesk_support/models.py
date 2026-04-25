@@ -503,13 +503,6 @@ class JobStatus(BaseModel):
     status: Union[str, Any] = Field(default=None)
     message: Union[str | None, Any] = Field(default=None)
 
-class TicketCreateParamsTicketCustomFieldsItem(BaseModel):
-    """Nested schema for TicketCreateParamsTicket.custom_fields_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[int, Any] = Field(default=None)
-    value: Union[str, Any] = Field(default=None)
-
 class TicketCreateParamsTicketComment(BaseModel):
     """An object that defines the initial comment on the ticket"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -520,6 +513,13 @@ class TicketCreateParamsTicketComment(BaseModel):
     """The HTML body of the comment"""
     public: Union[bool, Any] = Field(default=None, description="Whether the comment is public (default true)")
     """Whether the comment is public (default true)"""
+
+class TicketCreateParamsTicketCustomFieldsItem(BaseModel):
+    """Nested schema for TicketCreateParamsTicket.custom_fields_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[int, Any] = Field(default=None)
+    value: Union[str, Any] = Field(default=None)
 
 class TicketCreateParamsTicket(BaseModel):
     """The ticket object to create"""
@@ -562,13 +562,6 @@ class TicketCreateParams(BaseModel):
 
     ticket: Union[TicketCreateParamsTicket, Any] = Field(default=None)
 
-class TicketUpdateParamsTicketCustomFieldsItem(BaseModel):
-    """Nested schema for TicketUpdateParamsTicket.custom_fields_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[int, Any] = Field(default=None)
-    value: Union[str, Any] = Field(default=None)
-
 class TicketUpdateParamsTicketComment(BaseModel):
     """A comment to add to the ticket"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -581,6 +574,13 @@ class TicketUpdateParamsTicketComment(BaseModel):
     """Whether the comment is public (true) or an internal note (false)"""
     author_id: Union[int, Any] = Field(default=None, description="The author of the comment")
     """The author of the comment"""
+
+class TicketUpdateParamsTicketCustomFieldsItem(BaseModel):
+    """Nested schema for TicketUpdateParamsTicket.custom_fields_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[int, Any] = Field(default=None)
+    value: Union[str, Any] = Field(default=None)
 
 class TicketUpdateParamsTicket(BaseModel):
     """The ticket fields to update"""

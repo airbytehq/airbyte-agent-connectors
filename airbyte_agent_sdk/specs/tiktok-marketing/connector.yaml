@@ -370,7 +370,7 @@ info:
             type: ["null", "integer"]
             description: Width of the video in pixels.
       - entity: advertisers_reports_daily
-        x-airbyte-name: ads_reports_daily
+        x-airbyte-name: advertisers_reports_daily
         fields:
           - name: advertiser_id
             type: ["null", "integer"]

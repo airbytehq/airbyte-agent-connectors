@@ -71,7 +71,7 @@ info:
     disable_compaction: true
     entities:
       - entity: leads
-        x-airbyte-name: Leads
+        x-airbyte-name: incremental_leads_zoho_crm_stream
         fields:
           - name: id
             type: ["string"]
@@ -140,7 +140,7 @@ info:
             type: ["null", "string"]
             description: Time the record was last modified
       - entity: contacts
-        x-airbyte-name: Contacts
+        x-airbyte-name: incremental_contacts_zoho_crm_stream
         fields:
           - name: id
             type: ["string"]
@@ -194,7 +194,7 @@ info:
             type: ["null", "string"]
             description: Time the record was last modified
       - entity: accounts
-        x-airbyte-name: Accounts
+        x-airbyte-name: incremental_accounts_zoho_crm_stream
         fields:
           - name: id
             type: ["string"]
@@ -248,7 +248,7 @@ info:
             type: ["null", "string"]
             description: Time the record was last modified
       - entity: deals
-        x-airbyte-name: Deals
+        x-airbyte-name: incremental_deals_zoho_crm_stream
         fields:
           - name: id
             type: ["string"]
@@ -287,7 +287,7 @@ info:
             type: ["null", "string"]
             description: Time the record was last modified
       - entity: campaigns
-        x-airbyte-name: Campaigns
+        x-airbyte-name: incremental_campaigns_zoho_crm_stream
         fields:
           - name: id
             type: ["string"]
@@ -332,7 +332,7 @@ info:
             type: ["null", "string"]
             description: Time the record was last modified
       - entity: tasks
-        x-airbyte-name: Tasks
+        x-airbyte-name: incremental_tasks_zoho_crm_stream
         fields:
           - name: id
             type: ["string"]
@@ -365,7 +365,7 @@ info:
             type: ["null", "string"]
             description: Time the task was closed
       - entity: events
-        x-airbyte-name: Events
+        x-airbyte-name: incremental_events_zoho_crm_stream
         fields:
           - name: id
             type: ["string"]
@@ -395,7 +395,7 @@ info:
             type: ["null", "string"]
             description: Time the record was last modified
       - entity: calls
-        x-airbyte-name: Calls
+        x-airbyte-name: incremental_calls_zoho_crm_stream
         fields:
           - name: id
             type: ["string"]
@@ -437,7 +437,7 @@ info:
             type: ["null", "string"]
             description: Time the record was last modified
       - entity: products
-        x-airbyte-name: Products
+        x-airbyte-name: incremental_products_zoho_crm_stream
         fields:
           - name: id
             type: ["string"]
@@ -488,7 +488,7 @@ info:
             type: ["null", "string"]
             description: Time the record was last modified
       - entity: quotes
-        x-airbyte-name: Quotes
+        x-airbyte-name: incremental_quotes_zoho_crm_stream
         fields:
           - name: id
             type: ["string"]
@@ -533,7 +533,7 @@ info:
             type: ["null", "string"]
             description: Time the record was last modified
       - entity: invoices
-        x-airbyte-name: Invoices
+        x-airbyte-name: incremental_invoices_zoho_crm_stream
         fields:
           - name: id
             type: ["string"]

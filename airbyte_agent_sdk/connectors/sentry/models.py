@@ -209,6 +209,14 @@ class ProjectDetail(BaseModel):
     highlight_preset: Union[dict[str, Any] | None, Any] = Field(default=None, alias="highlightPreset")
     debug_files_role: Union[str | None, Any] = Field(default=None, alias="debugFilesRole")
 
+class IssueProject(BaseModel):
+    """Project this issue belongs to."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[str | None, Any] = Field(default=None)
+    name: Union[str | None, Any] = Field(default=None)
+    slug: Union[str | None, Any] = Field(default=None)
+
 class IssueMetadata(BaseModel):
     """Issue metadata."""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -217,14 +225,6 @@ class IssueMetadata(BaseModel):
     type_: Union[str | None, Any] = Field(default=None, alias="type")
     value: Union[str | None, Any] = Field(default=None)
     filename: Union[str | None, Any] = Field(default=None)
-
-class IssueProject(BaseModel):
-    """Project this issue belongs to."""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    slug: Union[str | None, Any] = Field(default=None)
 
 class Issue(BaseModel):
     """A Sentry issue (group of similar events)."""
@@ -262,12 +262,15 @@ class Issue(BaseModel):
     annotations: Union[list[str | None] | None, Any] = Field(default=None)
     subscription_details: Union[dict[str, Any] | None, Any] = Field(default=None, alias="subscriptionDetails")
 
-class EventTagsItem(BaseModel):
-    """Nested schema for Event.tags_item"""
+class EventUser(BaseModel):
+    """User associated with the event."""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    key: Union[str | None, Any] = Field(default=None)
-    value: Union[str | None, Any] = Field(default=None)
+    id: Union[str | None, Any] = Field(default=None)
+    email: Union[str | None, Any] = Field(default=None)
+    username: Union[str | None, Any] = Field(default=None)
+    name: Union[str | None, Any] = Field(default=None)
+    ip_address: Union[str | None, Any] = Field(default=None)
 
 class EventMetadata(BaseModel):
     """Event metadata."""
@@ -282,15 +285,12 @@ class EventGroupingconfig(BaseModel):
     id: Union[str | None, Any] = Field(default=None)
     enhancements: Union[str | None, Any] = Field(default=None)
 
-class EventUser(BaseModel):
-    """User associated with the event."""
+class EventTagsItem(BaseModel):
+    """Nested schema for Event.tags_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str | None, Any] = Field(default=None)
-    email: Union[str | None, Any] = Field(default=None)
-    username: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    ip_address: Union[str | None, Any] = Field(default=None)
+    key: Union[str | None, Any] = Field(default=None)
+    value: Union[str | None, Any] = Field(default=None)
 
 class Event(BaseModel):
     """A Sentry event (individual error occurrence)."""
@@ -325,6 +325,13 @@ class Event(BaseModel):
     grouping_config: Union[EventGroupingconfig | None, Any] = Field(default=None, alias="groupingConfig")
     meta: Union[dict[str, Any] | None, Any] = Field(default=None, alias="_meta")
 
+class ReleaseAuthorsItem(BaseModel):
+    """Nested schema for Release.authors_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: Union[str | None, Any] = Field(default=None)
+    email: Union[str | None, Any] = Field(default=None)
+
 class ReleaseProjectsItem(BaseModel):
     """Nested schema for Release.projects_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -356,13 +363,6 @@ class ReleaseVersioninfo(BaseModel):
     description: Union[str | None, Any] = Field(default=None)
     package: Union[str | None, Any] = Field(default=None)
     build_hash: Union[str | None, Any] = Field(default=None, alias="buildHash")
-
-class ReleaseAuthorsItem(BaseModel):
-    """Nested schema for Release.authors_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: Union[str | None, Any] = Field(default=None)
-    email: Union[str | None, Any] = Field(default=None)
 
 class Release(BaseModel):
     """A Sentry release."""

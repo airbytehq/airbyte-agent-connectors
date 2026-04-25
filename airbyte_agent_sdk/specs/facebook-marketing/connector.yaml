@@ -381,6 +381,7 @@ info:
         type: ["null", "string"]
         description: Timezone name
     - entity: ad_accounts
+      x-airbyte-name: ad_account
       fields:
       - name: id
         type: ["null", "string"]
