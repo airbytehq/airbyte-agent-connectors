@@ -91,7 +91,10 @@ class ObservabilitySession:
         self.started_at = datetime.now(UTC)
         self.operation_count = 0
         self.metadata: Dict[str, Any] = {}
-        self.public_ip = get_public_ip()
+        # Avoid circular import: telemetry/__init__ imports tracker which imports ObservabilitySession
+        from airbyte_agent_sdk.telemetry.config import TelemetryConfig
+
+        self.public_ip = get_public_ip() if TelemetryConfig.is_enabled() else None
         self.is_internal_user = get_is_internal_user()
 
     def increment_operations(self):
