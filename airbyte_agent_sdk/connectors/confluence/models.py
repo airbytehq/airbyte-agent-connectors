@@ -152,21 +152,6 @@ class BlogPostBody(BaseModel):
     atlas_doc_format: dict[str, Any] | None = Field(default=None, description="Atlas doc format body")
     """Atlas doc format body"""
 
-class BlogPostLinks(BaseModel):
-    """Links related to the blog post"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    webui: str | None = Field(default=None, description="Web UI link")
-    """Web UI link"""
-    editui: str | None = Field(default=None, description="Edit UI link")
-    """Edit UI link"""
-    edituiv2: str | None = Field(default=None, description="Edit UI v2 link")
-    """Edit UI v2 link"""
-    tinyui: str | None = Field(default=None, description="Tiny UI link")
-    """Tiny UI link"""
-    base: str | None = Field(default=None, description="Base URL")
-    """Base URL"""
-
 class BlogPostVersion(BaseModel):
     """Version information"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -183,6 +168,21 @@ class BlogPostVersion(BaseModel):
     """ID of the version author"""
     ncs_step_version: Any | None = Field(default=None, alias="ncsStepVersion", description="NCS step version")
     """NCS step version"""
+
+class BlogPostLinks(BaseModel):
+    """Links related to the blog post"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    webui: str | None = Field(default=None, description="Web UI link")
+    """Web UI link"""
+    editui: str | None = Field(default=None, description="Edit UI link")
+    """Edit UI link"""
+    edituiv2: str | None = Field(default=None, description="Edit UI v2 link")
+    """Edit UI v2 link"""
+    tinyui: str | None = Field(default=None, description="Tiny UI link")
+    """Tiny UI link"""
+    base: str | None = Field(default=None, description="Base URL")
+    """Base URL"""
 
 class BlogPost(BaseModel):
     """Confluence blog post object"""
@@ -271,15 +271,6 @@ class AuditRecordAuthor(BaseModel):
     operations: Any | None = Field(default=None, description="Operations available for the author")
     """Operations available for the author"""
 
-class AuditRecordAffectedobject(BaseModel):
-    """Object affected by the audit event"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: str | None = Field(default=None, description="Name of the affected object")
-    """Name of the affected object"""
-    object_type: str | None = Field(default=None, alias="objectType", description="Type of the affected object")
-    """Type of the affected object"""
-
 class AuditRecordAssociatedobjectsItem(BaseModel):
     """Nested schema for AuditRecord.associatedObjects_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -288,6 +279,15 @@ class AuditRecordAssociatedobjectsItem(BaseModel):
     """Name of the associated object"""
     object_type: str | None = Field(default=None, alias="objectType", description="Type of the associated object")
     """Type of the associated object"""
+
+class AuditRecordAffectedobject(BaseModel):
+    """Object affected by the audit event"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: str | None = Field(default=None, description="Name of the affected object")
+    """Name of the affected object"""
+    object_type: str | None = Field(default=None, alias="objectType", description="Type of the affected object")
+    """Type of the affected object"""
 
 class AuditRecord(BaseModel):
     """Confluence audit record"""

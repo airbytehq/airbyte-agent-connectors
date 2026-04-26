@@ -91,12 +91,9 @@ def connect(
         from airbyte_agent_sdk import connect
 
         async def main():
-            async with connect(
-                "stripe",
-                client_id="your_client_id",
-                client_secret="your_client_secret",
-                connector_id="src_123",
-            ) as stripe:
+            # AIRBYTE_CLIENT_ID and AIRBYTE_CLIENT_SECRET are read from the
+            # environment; the connector is resolved by slug within the workspace.
+            async with connect("stripe") as stripe:
                 result = await stripe.execute("customers", "list", params={"limit": 10})
                 print(result.data)
 
@@ -114,7 +111,10 @@ def connect(
         client_id: Airbyte OAuth client ID (falls back to `AIRBYTE_CLIENT_ID`).
         client_secret: Airbyte OAuth client secret (falls back to `AIRBYTE_CLIENT_SECRET`).
         workspace_name: Workspace name for connector lookup. Defaults to `"default"`.
-        connector_id: Direct connector/source ID — skips lookup.
+        connector_id: Optional direct connector/source ID. The SDK normally
+            resolves the connector by `connector_name` within the workspace;
+            pass an explicit ID only when the workspace has multiple connectors
+            of the same type and slug resolution is ambiguous.
         organization_id: Airbyte organization ID for multi-org routing.
         auth_config: [`AirbyteAuthConfig`](#AirbyteAuthConfig) with hosted credentials.
 

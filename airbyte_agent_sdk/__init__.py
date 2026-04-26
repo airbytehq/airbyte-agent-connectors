@@ -22,23 +22,25 @@ Supply your Airbyte Cloud credentials in one of three ways:
 
 ## Quickstart
 
+With `AIRBYTE_CLIENT_ID` and `AIRBYTE_CLIENT_SECRET` set in the
+environment, [`connect()`](#connect) resolves the connector by its slug
+within your workspace — no connector ID needed:
+
 ```python
 import asyncio
 from airbyte_agent_sdk import connect
 
 async def main():
-    async with connect(
-        "stripe",
-        client_id="your_client_id",
-        client_secret="your_client_secret",
-        connector_id="src_123",
-    ) as stripe:
+    async with connect("stripe") as stripe:
         result = await stripe.execute("customers", "list", params={"limit": 10})
         for row in result.data:
             print(row)
 
 asyncio.run(main())
 ```
+
+Pass an explicit `connector_id` only when a workspace has multiple
+connectors of the same type and slug resolution is ambiguous.
 
 The returned connector is also an async context manager — `async with`
 releases the underlying HTTP client automatically. If you need to manage
@@ -95,7 +97,7 @@ Catch both SDK-defined and hosted-path errors in one `except`:
 import httpx
 from airbyte_agent_sdk import AirbyteError, connect
 
-async with connect("stripe", connector_id="src_123") as stripe:
+async with connect("stripe") as stripe:
     try:
         result = await stripe.execute("customers", "list")
     except (AirbyteError, httpx.HTTPError) as err:
