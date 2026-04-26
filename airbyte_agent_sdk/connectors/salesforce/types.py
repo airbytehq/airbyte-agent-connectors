@@ -177,6 +177,24 @@ class ReportsGetParams(TypedDict):
     id: str
     include_details: NotRequired[bool]
 
+class UsersListParams(TypedDict):
+    """Parameters for users.list operation"""
+    q: str
+
+class UsersGetParams(TypedDict):
+    """Parameters for users.get operation"""
+    id: str
+    fields: NotRequired[str]
+
+class OpportunityStagesListParams(TypedDict):
+    """Parameters for opportunity_stages.list operation"""
+    q: str
+
+class OpportunityStagesGetParams(TypedDict):
+    """Parameters for opportunity_stages.get operation"""
+    id: str
+    fields: NotRequired[str]
+
 class QueryListParams(TypedDict):
     """Parameters for query.list operation"""
     q: str
@@ -2159,6 +2177,716 @@ class TasksSearchQuery(TypedDict, total=False):
     """Search query for tasks entity."""
     filter: TasksCondition
     sort: list[TasksSortFilter]
+
+
+# ===== USERS SEARCH TYPES =====
+
+class UsersSearchFilter(TypedDict, total=False):
+    """Available fields for filtering users search queries."""
+    id: str
+    """Unique identifier for the user record"""
+    account_id: str | None
+    """ID of the account associated with this user (for portal users)"""
+    alias: str | None
+    """Short name used to identify the user in list views and reports"""
+    city: str | None
+    """City portion of the user's address"""
+    company_name: str | None
+    """Name of the user's company"""
+    contact_id: str | None
+    """ID of the contact associated with this user (for portal users)"""
+    country: str | None
+    """Country portion of the user's address"""
+    created_by_id: str | None
+    """ID of the user who created this user record"""
+    created_date: str | None
+    """Date and time when the user was created"""
+    department: str | None
+    """Department within the organization"""
+    division: str | None
+    """Division within the organization"""
+    email: str | None
+    """Email address of the user"""
+    employee_number: str | None
+    """Employee number or ID assigned by the organization"""
+    first_name: str | None
+    """First name of the user"""
+    is_active: bool | None
+    """Whether the user is active and can log in"""
+    last_login_date: str | None
+    """Date and time of the user's most recent login"""
+    last_modified_by_id: str | None
+    """ID of the user who last modified this user record"""
+    last_modified_date: str | None
+    """Date and time when the user was last modified"""
+    last_name: str | None
+    """Last name of the user"""
+    manager_id: str | None
+    """ID of the user's manager"""
+    mobile_phone: str | None
+    """Mobile phone number of the user"""
+    name: str | None
+    """Full name of the user"""
+    phone: str | None
+    """Business phone number of the user"""
+    postal_code: str | None
+    """Postal code portion of the user's address"""
+    profile_id: str | None
+    """ID of the user's profile"""
+    state: str | None
+    """State or province portion of the user's address"""
+    street: str | None
+    """Street address of the user"""
+    title: str | None
+    """Job title of the user"""
+    user_role_id: str | None
+    """ID of the user's role in the organization"""
+    user_type: str | None
+    """Type of user license (e.g., Standard, PowerPartner)"""
+    username: str | None
+    """Username for logging into Salesforce (unique across all orgs)"""
+    system_modstamp: str | None
+    """System timestamp when the record was last modified"""
+
+
+class UsersInFilter(TypedDict, total=False):
+    """Available fields for 'in' condition (values are lists)."""
+    id: list[str]
+    """Unique identifier for the user record"""
+    account_id: list[str]
+    """ID of the account associated with this user (for portal users)"""
+    alias: list[str]
+    """Short name used to identify the user in list views and reports"""
+    city: list[str]
+    """City portion of the user's address"""
+    company_name: list[str]
+    """Name of the user's company"""
+    contact_id: list[str]
+    """ID of the contact associated with this user (for portal users)"""
+    country: list[str]
+    """Country portion of the user's address"""
+    created_by_id: list[str]
+    """ID of the user who created this user record"""
+    created_date: list[str]
+    """Date and time when the user was created"""
+    department: list[str]
+    """Department within the organization"""
+    division: list[str]
+    """Division within the organization"""
+    email: list[str]
+    """Email address of the user"""
+    employee_number: list[str]
+    """Employee number or ID assigned by the organization"""
+    first_name: list[str]
+    """First name of the user"""
+    is_active: list[bool]
+    """Whether the user is active and can log in"""
+    last_login_date: list[str]
+    """Date and time of the user's most recent login"""
+    last_modified_by_id: list[str]
+    """ID of the user who last modified this user record"""
+    last_modified_date: list[str]
+    """Date and time when the user was last modified"""
+    last_name: list[str]
+    """Last name of the user"""
+    manager_id: list[str]
+    """ID of the user's manager"""
+    mobile_phone: list[str]
+    """Mobile phone number of the user"""
+    name: list[str]
+    """Full name of the user"""
+    phone: list[str]
+    """Business phone number of the user"""
+    postal_code: list[str]
+    """Postal code portion of the user's address"""
+    profile_id: list[str]
+    """ID of the user's profile"""
+    state: list[str]
+    """State or province portion of the user's address"""
+    street: list[str]
+    """Street address of the user"""
+    title: list[str]
+    """Job title of the user"""
+    user_role_id: list[str]
+    """ID of the user's role in the organization"""
+    user_type: list[str]
+    """Type of user license (e.g., Standard, PowerPartner)"""
+    username: list[str]
+    """Username for logging into Salesforce (unique across all orgs)"""
+    system_modstamp: list[str]
+    """System timestamp when the record was last modified"""
+
+
+class UsersAnyValueFilter(TypedDict, total=False):
+    """Available fields with Any value type. Used for 'contains' and 'any' conditions."""
+    id: Any
+    """Unique identifier for the user record"""
+    account_id: Any
+    """ID of the account associated with this user (for portal users)"""
+    alias: Any
+    """Short name used to identify the user in list views and reports"""
+    city: Any
+    """City portion of the user's address"""
+    company_name: Any
+    """Name of the user's company"""
+    contact_id: Any
+    """ID of the contact associated with this user (for portal users)"""
+    country: Any
+    """Country portion of the user's address"""
+    created_by_id: Any
+    """ID of the user who created this user record"""
+    created_date: Any
+    """Date and time when the user was created"""
+    department: Any
+    """Department within the organization"""
+    division: Any
+    """Division within the organization"""
+    email: Any
+    """Email address of the user"""
+    employee_number: Any
+    """Employee number or ID assigned by the organization"""
+    first_name: Any
+    """First name of the user"""
+    is_active: Any
+    """Whether the user is active and can log in"""
+    last_login_date: Any
+    """Date and time of the user's most recent login"""
+    last_modified_by_id: Any
+    """ID of the user who last modified this user record"""
+    last_modified_date: Any
+    """Date and time when the user was last modified"""
+    last_name: Any
+    """Last name of the user"""
+    manager_id: Any
+    """ID of the user's manager"""
+    mobile_phone: Any
+    """Mobile phone number of the user"""
+    name: Any
+    """Full name of the user"""
+    phone: Any
+    """Business phone number of the user"""
+    postal_code: Any
+    """Postal code portion of the user's address"""
+    profile_id: Any
+    """ID of the user's profile"""
+    state: Any
+    """State or province portion of the user's address"""
+    street: Any
+    """Street address of the user"""
+    title: Any
+    """Job title of the user"""
+    user_role_id: Any
+    """ID of the user's role in the organization"""
+    user_type: Any
+    """Type of user license (e.g., Standard, PowerPartner)"""
+    username: Any
+    """Username for logging into Salesforce (unique across all orgs)"""
+    system_modstamp: Any
+    """System timestamp when the record was last modified"""
+
+
+class UsersStringFilter(TypedDict, total=False):
+    """String fields for text search conditions (like, fuzzy, keyword)."""
+    id: str
+    """Unique identifier for the user record"""
+    account_id: str
+    """ID of the account associated with this user (for portal users)"""
+    alias: str
+    """Short name used to identify the user in list views and reports"""
+    city: str
+    """City portion of the user's address"""
+    company_name: str
+    """Name of the user's company"""
+    contact_id: str
+    """ID of the contact associated with this user (for portal users)"""
+    country: str
+    """Country portion of the user's address"""
+    created_by_id: str
+    """ID of the user who created this user record"""
+    created_date: str
+    """Date and time when the user was created"""
+    department: str
+    """Department within the organization"""
+    division: str
+    """Division within the organization"""
+    email: str
+    """Email address of the user"""
+    employee_number: str
+    """Employee number or ID assigned by the organization"""
+    first_name: str
+    """First name of the user"""
+    is_active: str
+    """Whether the user is active and can log in"""
+    last_login_date: str
+    """Date and time of the user's most recent login"""
+    last_modified_by_id: str
+    """ID of the user who last modified this user record"""
+    last_modified_date: str
+    """Date and time when the user was last modified"""
+    last_name: str
+    """Last name of the user"""
+    manager_id: str
+    """ID of the user's manager"""
+    mobile_phone: str
+    """Mobile phone number of the user"""
+    name: str
+    """Full name of the user"""
+    phone: str
+    """Business phone number of the user"""
+    postal_code: str
+    """Postal code portion of the user's address"""
+    profile_id: str
+    """ID of the user's profile"""
+    state: str
+    """State or province portion of the user's address"""
+    street: str
+    """Street address of the user"""
+    title: str
+    """Job title of the user"""
+    user_role_id: str
+    """ID of the user's role in the organization"""
+    user_type: str
+    """Type of user license (e.g., Standard, PowerPartner)"""
+    username: str
+    """Username for logging into Salesforce (unique across all orgs)"""
+    system_modstamp: str
+    """System timestamp when the record was last modified"""
+
+
+class UsersSortFilter(TypedDict, total=False):
+    """Available fields for sorting users search results."""
+    id: AirbyteSortOrder
+    """Unique identifier for the user record"""
+    account_id: AirbyteSortOrder
+    """ID of the account associated with this user (for portal users)"""
+    alias: AirbyteSortOrder
+    """Short name used to identify the user in list views and reports"""
+    city: AirbyteSortOrder
+    """City portion of the user's address"""
+    company_name: AirbyteSortOrder
+    """Name of the user's company"""
+    contact_id: AirbyteSortOrder
+    """ID of the contact associated with this user (for portal users)"""
+    country: AirbyteSortOrder
+    """Country portion of the user's address"""
+    created_by_id: AirbyteSortOrder
+    """ID of the user who created this user record"""
+    created_date: AirbyteSortOrder
+    """Date and time when the user was created"""
+    department: AirbyteSortOrder
+    """Department within the organization"""
+    division: AirbyteSortOrder
+    """Division within the organization"""
+    email: AirbyteSortOrder
+    """Email address of the user"""
+    employee_number: AirbyteSortOrder
+    """Employee number or ID assigned by the organization"""
+    first_name: AirbyteSortOrder
+    """First name of the user"""
+    is_active: AirbyteSortOrder
+    """Whether the user is active and can log in"""
+    last_login_date: AirbyteSortOrder
+    """Date and time of the user's most recent login"""
+    last_modified_by_id: AirbyteSortOrder
+    """ID of the user who last modified this user record"""
+    last_modified_date: AirbyteSortOrder
+    """Date and time when the user was last modified"""
+    last_name: AirbyteSortOrder
+    """Last name of the user"""
+    manager_id: AirbyteSortOrder
+    """ID of the user's manager"""
+    mobile_phone: AirbyteSortOrder
+    """Mobile phone number of the user"""
+    name: AirbyteSortOrder
+    """Full name of the user"""
+    phone: AirbyteSortOrder
+    """Business phone number of the user"""
+    postal_code: AirbyteSortOrder
+    """Postal code portion of the user's address"""
+    profile_id: AirbyteSortOrder
+    """ID of the user's profile"""
+    state: AirbyteSortOrder
+    """State or province portion of the user's address"""
+    street: AirbyteSortOrder
+    """Street address of the user"""
+    title: AirbyteSortOrder
+    """Job title of the user"""
+    user_role_id: AirbyteSortOrder
+    """ID of the user's role in the organization"""
+    user_type: AirbyteSortOrder
+    """Type of user license (e.g., Standard, PowerPartner)"""
+    username: AirbyteSortOrder
+    """Username for logging into Salesforce (unique across all orgs)"""
+    system_modstamp: AirbyteSortOrder
+    """System timestamp when the record was last modified"""
+
+
+# Entity-specific condition types for users
+class UsersEqCondition(TypedDict, total=False):
+    """Equal to: field equals value."""
+    eq: UsersSearchFilter
+
+
+class UsersNeqCondition(TypedDict, total=False):
+    """Not equal to: field does not equal value."""
+    neq: UsersSearchFilter
+
+
+class UsersGtCondition(TypedDict, total=False):
+    """Greater than: field > value."""
+    gt: UsersSearchFilter
+
+
+class UsersGteCondition(TypedDict, total=False):
+    """Greater than or equal: field >= value."""
+    gte: UsersSearchFilter
+
+
+class UsersLtCondition(TypedDict, total=False):
+    """Less than: field < value."""
+    lt: UsersSearchFilter
+
+
+class UsersLteCondition(TypedDict, total=False):
+    """Less than or equal: field <= value."""
+    lte: UsersSearchFilter
+
+
+class UsersLikeCondition(TypedDict, total=False):
+    """Partial string match with % wildcards."""
+    like: UsersStringFilter
+
+
+class UsersFuzzyCondition(TypedDict, total=False):
+    """Ordered word text match (case-insensitive)."""
+    fuzzy: UsersStringFilter
+
+
+class UsersKeywordCondition(TypedDict, total=False):
+    """Keyword text match (any word present)."""
+    keyword: UsersStringFilter
+
+
+class UsersContainsCondition(TypedDict, total=False):
+    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    contains: UsersAnyValueFilter
+
+
+# Reserved keyword conditions using functional TypedDict syntax
+UsersInCondition = TypedDict("UsersInCondition", {"in": UsersInFilter}, total=False)
+"""In list: field value is in list. Example: {"in": {"status": ["active", "pending"]}}"""
+
+UsersNotCondition = TypedDict("UsersNotCondition", {"not": "UsersCondition"}, total=False)
+"""Negates the nested condition."""
+
+UsersAndCondition = TypedDict("UsersAndCondition", {"and": "list[UsersCondition]"}, total=False)
+"""True if all nested conditions are true."""
+
+UsersOrCondition = TypedDict("UsersOrCondition", {"or": "list[UsersCondition]"}, total=False)
+"""True if any nested condition is true."""
+
+UsersAnyCondition = TypedDict("UsersAnyCondition", {"any": UsersAnyValueFilter}, total=False)
+"""Match if ANY element in array field matches nested condition. Example: {"any": {"addresses": {"eq": {"state": "CA"}}}}"""
+
+# Union of all users condition types
+UsersCondition = (
+    UsersEqCondition
+    | UsersNeqCondition
+    | UsersGtCondition
+    | UsersGteCondition
+    | UsersLtCondition
+    | UsersLteCondition
+    | UsersInCondition
+    | UsersLikeCondition
+    | UsersFuzzyCondition
+    | UsersKeywordCondition
+    | UsersContainsCondition
+    | UsersNotCondition
+    | UsersAndCondition
+    | UsersOrCondition
+    | UsersAnyCondition
+)
+
+
+class UsersSearchQuery(TypedDict, total=False):
+    """Search query for users entity."""
+    filter: UsersCondition
+    sort: list[UsersSortFilter]
+
+
+# ===== OPPORTUNITY_STAGES SEARCH TYPES =====
+
+class OpportunityStagesSearchFilter(TypedDict, total=False):
+    """Available fields for filtering opportunity_stages search queries."""
+    id: str
+    """Unique identifier for the opportunity stage record"""
+    api_name: str | None
+    """API name of the stage used in code and integrations"""
+    created_by_id: str | None
+    """ID of the user who created this stage"""
+    created_date: str | None
+    """Date and time when the stage was created"""
+    default_probability: float | None
+    """Default probability percentage for opportunities at this stage"""
+    description: str | None
+    """Description of the stage"""
+    forecast_category: str | None
+    """Forecast category for opportunities at this stage"""
+    forecast_category_name: str | None
+    """Display name of the forecast category"""
+    is_active: bool | None
+    """Whether the stage is currently active and can be used"""
+    is_closed: bool | None
+    """Whether opportunities at this stage are considered closed"""
+    is_won: bool | None
+    """Whether opportunities at this stage are considered won"""
+    last_modified_by_id: str | None
+    """ID of the user who last modified this stage"""
+    last_modified_date: str | None
+    """Date and time when the stage was last modified"""
+    master_label: str | None
+    """Display label for the stage"""
+    sort_order: int | None
+    """Order in which the stage appears in the sales process"""
+    system_modstamp: str | None
+    """System timestamp when the record was last modified"""
+
+
+class OpportunityStagesInFilter(TypedDict, total=False):
+    """Available fields for 'in' condition (values are lists)."""
+    id: list[str]
+    """Unique identifier for the opportunity stage record"""
+    api_name: list[str]
+    """API name of the stage used in code and integrations"""
+    created_by_id: list[str]
+    """ID of the user who created this stage"""
+    created_date: list[str]
+    """Date and time when the stage was created"""
+    default_probability: list[float]
+    """Default probability percentage for opportunities at this stage"""
+    description: list[str]
+    """Description of the stage"""
+    forecast_category: list[str]
+    """Forecast category for opportunities at this stage"""
+    forecast_category_name: list[str]
+    """Display name of the forecast category"""
+    is_active: list[bool]
+    """Whether the stage is currently active and can be used"""
+    is_closed: list[bool]
+    """Whether opportunities at this stage are considered closed"""
+    is_won: list[bool]
+    """Whether opportunities at this stage are considered won"""
+    last_modified_by_id: list[str]
+    """ID of the user who last modified this stage"""
+    last_modified_date: list[str]
+    """Date and time when the stage was last modified"""
+    master_label: list[str]
+    """Display label for the stage"""
+    sort_order: list[int]
+    """Order in which the stage appears in the sales process"""
+    system_modstamp: list[str]
+    """System timestamp when the record was last modified"""
+
+
+class OpportunityStagesAnyValueFilter(TypedDict, total=False):
+    """Available fields with Any value type. Used for 'contains' and 'any' conditions."""
+    id: Any
+    """Unique identifier for the opportunity stage record"""
+    api_name: Any
+    """API name of the stage used in code and integrations"""
+    created_by_id: Any
+    """ID of the user who created this stage"""
+    created_date: Any
+    """Date and time when the stage was created"""
+    default_probability: Any
+    """Default probability percentage for opportunities at this stage"""
+    description: Any
+    """Description of the stage"""
+    forecast_category: Any
+    """Forecast category for opportunities at this stage"""
+    forecast_category_name: Any
+    """Display name of the forecast category"""
+    is_active: Any
+    """Whether the stage is currently active and can be used"""
+    is_closed: Any
+    """Whether opportunities at this stage are considered closed"""
+    is_won: Any
+    """Whether opportunities at this stage are considered won"""
+    last_modified_by_id: Any
+    """ID of the user who last modified this stage"""
+    last_modified_date: Any
+    """Date and time when the stage was last modified"""
+    master_label: Any
+    """Display label for the stage"""
+    sort_order: Any
+    """Order in which the stage appears in the sales process"""
+    system_modstamp: Any
+    """System timestamp when the record was last modified"""
+
+
+class OpportunityStagesStringFilter(TypedDict, total=False):
+    """String fields for text search conditions (like, fuzzy, keyword)."""
+    id: str
+    """Unique identifier for the opportunity stage record"""
+    api_name: str
+    """API name of the stage used in code and integrations"""
+    created_by_id: str
+    """ID of the user who created this stage"""
+    created_date: str
+    """Date and time when the stage was created"""
+    default_probability: str
+    """Default probability percentage for opportunities at this stage"""
+    description: str
+    """Description of the stage"""
+    forecast_category: str
+    """Forecast category for opportunities at this stage"""
+    forecast_category_name: str
+    """Display name of the forecast category"""
+    is_active: str
+    """Whether the stage is currently active and can be used"""
+    is_closed: str
+    """Whether opportunities at this stage are considered closed"""
+    is_won: str
+    """Whether opportunities at this stage are considered won"""
+    last_modified_by_id: str
+    """ID of the user who last modified this stage"""
+    last_modified_date: str
+    """Date and time when the stage was last modified"""
+    master_label: str
+    """Display label for the stage"""
+    sort_order: str
+    """Order in which the stage appears in the sales process"""
+    system_modstamp: str
+    """System timestamp when the record was last modified"""
+
+
+class OpportunityStagesSortFilter(TypedDict, total=False):
+    """Available fields for sorting opportunity_stages search results."""
+    id: AirbyteSortOrder
+    """Unique identifier for the opportunity stage record"""
+    api_name: AirbyteSortOrder
+    """API name of the stage used in code and integrations"""
+    created_by_id: AirbyteSortOrder
+    """ID of the user who created this stage"""
+    created_date: AirbyteSortOrder
+    """Date and time when the stage was created"""
+    default_probability: AirbyteSortOrder
+    """Default probability percentage for opportunities at this stage"""
+    description: AirbyteSortOrder
+    """Description of the stage"""
+    forecast_category: AirbyteSortOrder
+    """Forecast category for opportunities at this stage"""
+    forecast_category_name: AirbyteSortOrder
+    """Display name of the forecast category"""
+    is_active: AirbyteSortOrder
+    """Whether the stage is currently active and can be used"""
+    is_closed: AirbyteSortOrder
+    """Whether opportunities at this stage are considered closed"""
+    is_won: AirbyteSortOrder
+    """Whether opportunities at this stage are considered won"""
+    last_modified_by_id: AirbyteSortOrder
+    """ID of the user who last modified this stage"""
+    last_modified_date: AirbyteSortOrder
+    """Date and time when the stage was last modified"""
+    master_label: AirbyteSortOrder
+    """Display label for the stage"""
+    sort_order: AirbyteSortOrder
+    """Order in which the stage appears in the sales process"""
+    system_modstamp: AirbyteSortOrder
+    """System timestamp when the record was last modified"""
+
+
+# Entity-specific condition types for opportunity_stages
+class OpportunityStagesEqCondition(TypedDict, total=False):
+    """Equal to: field equals value."""
+    eq: OpportunityStagesSearchFilter
+
+
+class OpportunityStagesNeqCondition(TypedDict, total=False):
+    """Not equal to: field does not equal value."""
+    neq: OpportunityStagesSearchFilter
+
+
+class OpportunityStagesGtCondition(TypedDict, total=False):
+    """Greater than: field > value."""
+    gt: OpportunityStagesSearchFilter
+
+
+class OpportunityStagesGteCondition(TypedDict, total=False):
+    """Greater than or equal: field >= value."""
+    gte: OpportunityStagesSearchFilter
+
+
+class OpportunityStagesLtCondition(TypedDict, total=False):
+    """Less than: field < value."""
+    lt: OpportunityStagesSearchFilter
+
+
+class OpportunityStagesLteCondition(TypedDict, total=False):
+    """Less than or equal: field <= value."""
+    lte: OpportunityStagesSearchFilter
+
+
+class OpportunityStagesLikeCondition(TypedDict, total=False):
+    """Partial string match with % wildcards."""
+    like: OpportunityStagesStringFilter
+
+
+class OpportunityStagesFuzzyCondition(TypedDict, total=False):
+    """Ordered word text match (case-insensitive)."""
+    fuzzy: OpportunityStagesStringFilter
+
+
+class OpportunityStagesKeywordCondition(TypedDict, total=False):
+    """Keyword text match (any word present)."""
+    keyword: OpportunityStagesStringFilter
+
+
+class OpportunityStagesContainsCondition(TypedDict, total=False):
+    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    contains: OpportunityStagesAnyValueFilter
+
+
+# Reserved keyword conditions using functional TypedDict syntax
+OpportunityStagesInCondition = TypedDict("OpportunityStagesInCondition", {"in": OpportunityStagesInFilter}, total=False)
+"""In list: field value is in list. Example: {"in": {"status": ["active", "pending"]}}"""
+
+OpportunityStagesNotCondition = TypedDict("OpportunityStagesNotCondition", {"not": "OpportunityStagesCondition"}, total=False)
+"""Negates the nested condition."""
+
+OpportunityStagesAndCondition = TypedDict("OpportunityStagesAndCondition", {"and": "list[OpportunityStagesCondition]"}, total=False)
+"""True if all nested conditions are true."""
+
+OpportunityStagesOrCondition = TypedDict("OpportunityStagesOrCondition", {"or": "list[OpportunityStagesCondition]"}, total=False)
+"""True if any nested condition is true."""
+
+OpportunityStagesAnyCondition = TypedDict("OpportunityStagesAnyCondition", {"any": OpportunityStagesAnyValueFilter}, total=False)
+"""Match if ANY element in array field matches nested condition. Example: {"any": {"addresses": {"eq": {"state": "CA"}}}}"""
+
+# Union of all opportunity_stages condition types
+OpportunityStagesCondition = (
+    OpportunityStagesEqCondition
+    | OpportunityStagesNeqCondition
+    | OpportunityStagesGtCondition
+    | OpportunityStagesGteCondition
+    | OpportunityStagesLtCondition
+    | OpportunityStagesLteCondition
+    | OpportunityStagesInCondition
+    | OpportunityStagesLikeCondition
+    | OpportunityStagesFuzzyCondition
+    | OpportunityStagesKeywordCondition
+    | OpportunityStagesContainsCondition
+    | OpportunityStagesNotCondition
+    | OpportunityStagesAndCondition
+    | OpportunityStagesOrCondition
+    | OpportunityStagesAnyCondition
+)
+
+
+class OpportunityStagesSearchQuery(TypedDict, total=False):
+    """Search query for opportunity_stages entity."""
+    filter: OpportunityStagesCondition
+    sort: list[OpportunityStagesSortFilter]
 
 
 

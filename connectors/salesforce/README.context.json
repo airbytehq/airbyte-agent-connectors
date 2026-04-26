@@ -1484,6 +1484,192 @@
         "is_download": false
       }
     ],
+    "users": [
+      {
+        "method_name": "list_users",
+        "http_method": "get",
+        "path": "/query:users",
+        "entity": "users",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "q",
+            "python_name": "q",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "SELECT FIELDS(STANDARD) FROM User WHERE IsActive = true ORDER BY LastModifiedDate DESC LIMIT 200"
+            },
+            "required": true,
+            "description": "SOQL query for users. Default returns up to 200 records.\nTo change the limit, provide your own query with a LIMIT clause.\n\nExamples:\n  SELECT FIELDS(STANDARD) FROM User WHERE IsActive = true ORDER BY LastModifiedDate DESC LIMIT 50\n  SELECT Id, Name, Email, Manager.Name, Profile.Name FROM User WHERE IsActive = true LIMIT 50\n  SELECT Id, Name, Email, Department, UserRole.Name FROM User LIMIT 50\n\nUse dot-path traversal (Manager.Name, Profile.Name, UserRole.Name) to resolve\nrelationship fields inline instead of returning raw IDs.\n",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "UsersListParams",
+        "response_type": "UsersListResult",
+        "description": "Returns a list of users via SOQL query. Default returns up to 200 records.\nFor pagination, check the response: if `done` is false, use `nextRecordsUrl` to fetch the next page.\n",
+        "record_extractor": "$.records",
+        "meta_extractor": {
+          "done": "$.done",
+          "nextRecordsUrl": "$.nextRecordsUrl"
+        },
+        "needs_envelope": true,
+        "record_type": "list[User]",
+        "meta_fields": [
+          {
+            "name": "done",
+            "python_name": "done",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Whether all records have been returned"
+            }
+          },
+          {
+            "name": "nextRecordsUrl",
+            "python_name": "next_records_url",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "URL to fetch next page of results"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_user",
+        "http_method": "get",
+        "path": "/sobjects/User/{id}",
+        "entity": "users",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Salesforce User ID (18-character ID starting with '005')"
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Comma-separated list of fields to retrieve. If omitted, returns all accessible fields.\nExample: \"Id,Name,Email,Username,IsActive,ProfileId,UserRoleId\"\n",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "UsersGetParams",
+        "response_type": "User",
+        "description": "Get a single user by ID. Returns all accessible fields by default.\nUse the `fields` parameter to retrieve only specific fields for better performance.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "User",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "opportunity_stages": [
+      {
+        "method_name": "list_opportunity_stages",
+        "http_method": "get",
+        "path": "/query:opportunity_stages",
+        "entity": "opportunity_stages",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "q",
+            "python_name": "q",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "SELECT FIELDS(STANDARD) FROM OpportunityStage ORDER BY SortOrder ASC"
+            },
+            "required": true,
+            "description": "SOQL query for opportunity stages. Default returns all stages.\n\nExamples:\n  SELECT FIELDS(STANDARD) FROM OpportunityStage ORDER BY SortOrder ASC\n  SELECT Id, MasterLabel, ApiName, DefaultProbability, IsClosed, IsWon, IsActive, ForecastCategoryName FROM OpportunityStage WHERE IsActive = true ORDER BY SortOrder ASC\n  SELECT Id, MasterLabel, DefaultProbability, CreatedBy.Name FROM OpportunityStage ORDER BY SortOrder ASC\n\nUse dot-path traversal (CreatedBy.Name, LastModifiedBy.Name) to resolve\nrelationship fields inline instead of returning raw IDs.\n",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "OpportunityStagesListParams",
+        "response_type": "OpportunityStagesListResult",
+        "description": "Returns a list of opportunity stages via SOQL query. Default returns all stages.\nOpportunityStage defines the sales process stages that opportunities move through.\n",
+        "record_extractor": "$.records",
+        "meta_extractor": {
+          "done": "$.done",
+          "nextRecordsUrl": "$.nextRecordsUrl"
+        },
+        "needs_envelope": true,
+        "record_type": "list[OpportunityStage]",
+        "meta_fields": [
+          {
+            "name": "done",
+            "python_name": "done",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Whether all records have been returned"
+            }
+          },
+          {
+            "name": "nextRecordsUrl",
+            "python_name": "next_records_url",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "URL to fetch next page of results"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_opportunity_stage",
+        "http_method": "get",
+        "path": "/sobjects/OpportunityStage/{id}",
+        "entity": "opportunity_stages",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Salesforce OpportunityStage ID"
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Comma-separated list of fields to retrieve. If omitted, returns all accessible fields.\nExample: \"Id,MasterLabel,ApiName,DefaultProbability,IsClosed,IsWon,IsActive\"\n",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "OpportunityStagesGetParams",
+        "response_type": "OpportunityStage",
+        "description": "Get a single opportunity stage by ID. Returns all accessible fields by default.\nUse the `fields` parameter to retrieve only specific fields for better performance.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "OpportunityStage",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
     "query": [
       {
         "method_name": "execute_query",
@@ -2724,6 +2910,420 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "description": "ID of the related person (Contact or Lead)"
+        },
+        {
+          "name": "SystemModstamp",
+          "python_name": "system_modstamp",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "System timestamp when the record was last modified"
+        }
+      ]
+    },
+    "users": {
+      "entity": "users",
+      "data_type_name": "UsersSearchData",
+      "filter_type_name": "UsersSearchFilter",
+      "in_filter_type_name": "UsersInFilter",
+      "any_value_filter_type_name": "UsersAnyValueFilter",
+      "string_filter_type_name": "UsersStringFilter",
+      "sort_filter_type_name": "UsersSortFilter",
+      "result_type_name": "UsersSearchResult",
+      "query_type_name": "UsersSearchQuery",
+      "condition_prefix": "Users",
+      "condition_type_name": "UsersCondition",
+      "fields": [
+        {
+          "name": "Id",
+          "python_name": "id",
+          "type": "str",
+          "json_type": "string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier for the user record"
+        },
+        {
+          "name": "AccountId",
+          "python_name": "account_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the account associated with this user (for portal users)"
+        },
+        {
+          "name": "Alias",
+          "python_name": "alias",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Short name used to identify the user in list views and reports"
+        },
+        {
+          "name": "City",
+          "python_name": "city",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "City portion of the user's address"
+        },
+        {
+          "name": "CompanyName",
+          "python_name": "company_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Name of the user's company"
+        },
+        {
+          "name": "ContactId",
+          "python_name": "contact_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the contact associated with this user (for portal users)"
+        },
+        {
+          "name": "Country",
+          "python_name": "country",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Country portion of the user's address"
+        },
+        {
+          "name": "CreatedById",
+          "python_name": "created_by_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the user who created this user record"
+        },
+        {
+          "name": "CreatedDate",
+          "python_name": "created_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date and time when the user was created"
+        },
+        {
+          "name": "Department",
+          "python_name": "department",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Department within the organization"
+        },
+        {
+          "name": "Division",
+          "python_name": "division",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Division within the organization"
+        },
+        {
+          "name": "Email",
+          "python_name": "email",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Email address of the user"
+        },
+        {
+          "name": "EmployeeNumber",
+          "python_name": "employee_number",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Employee number or ID assigned by the organization"
+        },
+        {
+          "name": "FirstName",
+          "python_name": "first_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "First name of the user"
+        },
+        {
+          "name": "IsActive",
+          "python_name": "is_active",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the user is active and can log in"
+        },
+        {
+          "name": "LastLoginDate",
+          "python_name": "last_login_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date and time of the user's most recent login"
+        },
+        {
+          "name": "LastModifiedById",
+          "python_name": "last_modified_by_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the user who last modified this user record"
+        },
+        {
+          "name": "LastModifiedDate",
+          "python_name": "last_modified_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date and time when the user was last modified"
+        },
+        {
+          "name": "LastName",
+          "python_name": "last_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Last name of the user"
+        },
+        {
+          "name": "ManagerId",
+          "python_name": "manager_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the user's manager"
+        },
+        {
+          "name": "MobilePhone",
+          "python_name": "mobile_phone",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Mobile phone number of the user"
+        },
+        {
+          "name": "Name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Full name of the user"
+        },
+        {
+          "name": "Phone",
+          "python_name": "phone",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Business phone number of the user"
+        },
+        {
+          "name": "PostalCode",
+          "python_name": "postal_code",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Postal code portion of the user's address"
+        },
+        {
+          "name": "ProfileId",
+          "python_name": "profile_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the user's profile"
+        },
+        {
+          "name": "State",
+          "python_name": "state",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "State or province portion of the user's address"
+        },
+        {
+          "name": "Street",
+          "python_name": "street",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Street address of the user"
+        },
+        {
+          "name": "Title",
+          "python_name": "title",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Job title of the user"
+        },
+        {
+          "name": "UserRoleId",
+          "python_name": "user_role_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the user's role in the organization"
+        },
+        {
+          "name": "UserType",
+          "python_name": "user_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Type of user license (e.g., Standard, PowerPartner)"
+        },
+        {
+          "name": "Username",
+          "python_name": "username",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Username for logging into Salesforce (unique across all orgs)"
+        },
+        {
+          "name": "SystemModstamp",
+          "python_name": "system_modstamp",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "System timestamp when the record was last modified"
+        }
+      ]
+    },
+    "opportunity_stages": {
+      "entity": "opportunity_stages",
+      "data_type_name": "OpportunityStagesSearchData",
+      "filter_type_name": "OpportunityStagesSearchFilter",
+      "in_filter_type_name": "OpportunityStagesInFilter",
+      "any_value_filter_type_name": "OpportunityStagesAnyValueFilter",
+      "string_filter_type_name": "OpportunityStagesStringFilter",
+      "sort_filter_type_name": "OpportunityStagesSortFilter",
+      "result_type_name": "OpportunityStagesSearchResult",
+      "query_type_name": "OpportunityStagesSearchQuery",
+      "condition_prefix": "OpportunityStages",
+      "condition_type_name": "OpportunityStagesCondition",
+      "fields": [
+        {
+          "name": "Id",
+          "python_name": "id",
+          "type": "str",
+          "json_type": "string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier for the opportunity stage record"
+        },
+        {
+          "name": "ApiName",
+          "python_name": "api_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "API name of the stage used in code and integrations"
+        },
+        {
+          "name": "CreatedById",
+          "python_name": "created_by_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the user who created this stage"
+        },
+        {
+          "name": "CreatedDate",
+          "python_name": "created_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date and time when the stage was created"
+        },
+        {
+          "name": "DefaultProbability",
+          "python_name": "default_probability",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Default probability percentage for opportunities at this stage"
+        },
+        {
+          "name": "Description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Description of the stage"
+        },
+        {
+          "name": "ForecastCategory",
+          "python_name": "forecast_category",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Forecast category for opportunities at this stage"
+        },
+        {
+          "name": "ForecastCategoryName",
+          "python_name": "forecast_category_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Display name of the forecast category"
+        },
+        {
+          "name": "IsActive",
+          "python_name": "is_active",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the stage is currently active and can be used"
+        },
+        {
+          "name": "IsClosed",
+          "python_name": "is_closed",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether opportunities at this stage are considered closed"
+        },
+        {
+          "name": "IsWon",
+          "python_name": "is_won",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether opportunities at this stage are considered won"
+        },
+        {
+          "name": "LastModifiedById",
+          "python_name": "last_modified_by_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the user who last modified this stage"
+        },
+        {
+          "name": "LastModifiedDate",
+          "python_name": "last_modified_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date and time when the stage was last modified"
+        },
+        {
+          "name": "MasterLabel",
+          "python_name": "master_label",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Display label for the stage"
+        },
+        {
+          "name": "SortOrder",
+          "python_name": "sort_order",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Order in which the stage appears in the sales process"
         },
         {
           "name": "SystemModstamp",

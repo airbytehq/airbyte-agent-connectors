@@ -19,6 +19,10 @@ from .models import (
     OpportunitiesSearchResult,
     TasksSearchData,
     TasksSearchResult,
+    UsersSearchData,
+    UsersSearchResult,
+    OpportunityStagesSearchData,
+    OpportunityStagesSearchResult,
 )
 from airbyte_agent_sdk.types import AirbyteAuthConfig
 
@@ -38,4 +42,8 @@ __all__ = [
     "OpportunitiesSearchResult",
     "TasksSearchData",
     "TasksSearchResult",
+    "UsersSearchData",
+    "UsersSearchResult",
+    "OpportunityStagesSearchData",
+    "OpportunityStagesSearchResult",
 ]

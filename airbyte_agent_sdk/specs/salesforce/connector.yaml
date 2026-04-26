@@ -135,8 +135,6 @@ info:
       cardinality: many_to_one
   x-airbyte-skip-suggested-streams:
     - Stage
-    - OpportunityStage
-    - User
   x-airbyte-context-store:
     disable_compaction: false
     entities:
@@ -2509,6 +2507,175 @@ paths:
           description: Unauthorized
 
   # ============================================
+  # USERS Resource
+  # ============================================
+  /query:users:
+    get:
+      summary: List users
+      description: |
+        Returns a list of users via SOQL query. Default returns up to 200 records.
+        For pagination, check the response: if `done` is false, use `nextRecordsUrl` to fetch the next page.
+      operationId: listUsers
+      x-airbyte-entity: users
+      x-airbyte-action: list
+      x-airbyte-record-extractor: $.records
+      x-airbyte-meta-extractor:
+        done: $.done
+        nextRecordsUrl: $.nextRecordsUrl
+      x-airbyte-path-override:
+        path: /query
+      tags:
+        - Users
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: |
+            SOQL query for users. Default returns up to 200 records.
+            To change the limit, provide your own query with a LIMIT clause.
+
+            Examples:
+              SELECT FIELDS(STANDARD) FROM User WHERE IsActive = true ORDER BY LastModifiedDate DESC LIMIT 50
+              SELECT Id, Name, Email, Manager.Name, Profile.Name FROM User WHERE IsActive = true LIMIT 50
+              SELECT Id, Name, Email, Department, UserRole.Name FROM User LIMIT 50
+
+            Use dot-path traversal (Manager.Name, Profile.Name, UserRole.Name) to resolve
+            relationship fields inline instead of returning raw IDs.
+          schema:
+            type: string
+            default: "SELECT FIELDS(STANDARD) FROM User WHERE IsActive = true ORDER BY LastModifiedDate DESC LIMIT 200"
+      responses:
+        "200":
+          description: Query results containing users
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserQueryResult"
+        "401":
+          description: Unauthorized
+
+  /sobjects/User/{id}:
+    get:
+      summary: Get a user
+      description: |
+        Get a single user by ID. Returns all accessible fields by default.
+        Use the `fields` parameter to retrieve only specific fields for better performance.
+      operationId: getUser
+      x-airbyte-entity: users
+      x-airbyte-action: get
+      tags:
+        - Users
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Salesforce User ID (18-character ID starting with '005')
+          schema:
+            type: string
+        - name: fields
+          in: query
+          description: |
+            Comma-separated list of fields to retrieve. If omitted, returns all accessible fields.
+            Example: "Id,Name,Email,Username,IsActive,ProfileId,UserRoleId"
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "404":
+          description: User not found
+        "401":
+          description: Unauthorized
+
+  # ============================================
+  # OPPORTUNITY STAGES Resource
+  # ============================================
+  /query:opportunity_stages:
+    get:
+      summary: List opportunity stages
+      description: |
+        Returns a list of opportunity stages via SOQL query. Default returns all stages.
+        OpportunityStage defines the sales process stages that opportunities move through.
+      operationId: listOpportunityStages
+      x-airbyte-entity: opportunity_stages
+      x-airbyte-action: list
+      x-airbyte-record-extractor: $.records
+      x-airbyte-meta-extractor:
+        done: $.done
+        nextRecordsUrl: $.nextRecordsUrl
+      x-airbyte-path-override:
+        path: /query
+      tags:
+        - Opportunity Stages
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: |
+            SOQL query for opportunity stages. Default returns all stages.
+
+            Examples:
+              SELECT FIELDS(STANDARD) FROM OpportunityStage ORDER BY SortOrder ASC
+              SELECT Id, MasterLabel, ApiName, DefaultProbability, IsClosed, IsWon, IsActive, ForecastCategoryName FROM OpportunityStage WHERE IsActive = true ORDER BY SortOrder ASC
+              SELECT Id, MasterLabel, DefaultProbability, CreatedBy.Name FROM OpportunityStage ORDER BY SortOrder ASC
+
+            Use dot-path traversal (CreatedBy.Name, LastModifiedBy.Name) to resolve
+            relationship fields inline instead of returning raw IDs.
+          schema:
+            type: string
+            default: "SELECT FIELDS(STANDARD) FROM OpportunityStage ORDER BY SortOrder ASC"
+      responses:
+        "200":
+          description: Query results containing opportunity stages
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OpportunityStageQueryResult"
+        "401":
+          description: Unauthorized
+
+  /sobjects/OpportunityStage/{id}:
+    get:
+      summary: Get an opportunity stage
+      description: |
+        Get a single opportunity stage by ID. Returns all accessible fields by default.
+        Use the `fields` parameter to retrieve only specific fields for better performance.
+      operationId: getOpportunityStage
+      x-airbyte-entity: opportunity_stages
+      x-airbyte-action: get
+      tags:
+        - Opportunity Stages
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Salesforce OpportunityStage ID
+          schema:
+            type: string
+        - name: fields
+          in: query
+          description: |
+            Comma-separated list of fields to retrieve. If omitted, returns all accessible fields.
+            Example: "Id,MasterLabel,ApiName,DefaultProbability,IsClosed,IsWon,IsActive"
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OpportunityStage object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OpportunityStage"
+        "404":
+          description: OpportunityStage not found
+        "401":
+          description: Unauthorized
+
+  # ============================================
   # GENERIC QUERY Resource
   # ============================================
   /query:
@@ -3319,6 +3486,108 @@ components:
             - "null"
             - boolean
           description: Whether all data is included (false if report was truncated)
+
+    # ============================================
+    # User Schemas
+    # ============================================
+    User:
+      type: object
+      x-airbyte-entity-name: users
+      x-airbyte-stream-name: User
+      x-airbyte-ai-hints:
+        summary: "Salesforce users with profile, role, and activity information"
+        when_to_use: "Looking up user details, owners, or assignees in Salesforce"
+        trigger_phrases: ["salesforce user", "owner", "assignee", "who owns"]
+        freshness: live
+        search_strategy: "Search by name, email, or filter by active status"
+        example_questions:
+          - "Who are the active users in Salesforce?"
+          - "Show me details for the owner of this record"
+      description: Salesforce User object - uses FIELDS(STANDARD) so all standard fields are returned
+      additionalProperties: true
+      properties:
+        Id:
+          type: string
+          description: Unique identifier
+        Name:
+          type: string
+          description: Full name of the user
+        attributes:
+          type: object
+          properties:
+            type:
+              type: string
+            url:
+              type: string
+
+    UserQueryResult:
+      type: object
+      description: SOQL query result for users
+      properties:
+        totalSize:
+          type: integer
+          description: Total number of records
+        done:
+          type: boolean
+          description: Whether all records have been returned
+        nextRecordsUrl:
+          type: string
+          description: URL to fetch next page of results
+        records:
+          type: array
+          items:
+            $ref: "#/components/schemas/User"
+
+    # ============================================
+    # OpportunityStage Schemas
+    # ============================================
+    OpportunityStage:
+      type: object
+      x-airbyte-entity-name: opportunity_stages
+      x-airbyte-stream-name: OpportunityStage
+      x-airbyte-ai-hints:
+        summary: "Sales process stages that opportunities move through"
+        when_to_use: "Looking up opportunity stage definitions, probabilities, or sales process configuration"
+        trigger_phrases: ["opportunity stage", "sales stage", "pipeline stage", "stage definition"]
+        freshness: live
+        search_strategy: "List all stages or filter by active status"
+        example_questions:
+          - "What are the opportunity stages in our sales process?"
+          - "Show me the default probabilities for each stage"
+      description: Salesforce OpportunityStage object - uses FIELDS(STANDARD) so all standard fields are returned
+      additionalProperties: true
+      properties:
+        Id:
+          type: string
+          description: Unique identifier
+        MasterLabel:
+          type: string
+          description: Display label for the stage
+        attributes:
+          type: object
+          properties:
+            type:
+              type: string
+            url:
+              type: string
+
+    OpportunityStageQueryResult:
+      type: object
+      description: SOQL query result for opportunity stages
+      properties:
+        totalSize:
+          type: integer
+          description: Total number of records
+        done:
+          type: boolean
+          description: Whether all records have been returned
+        nextRecordsUrl:
+          type: string
+          description: URL to fetch next page of results
+        records:
+          type: array
+          items:
+            $ref: "#/components/schemas/OpportunityStage"
 
     # ============================================
     # Generic Query Result

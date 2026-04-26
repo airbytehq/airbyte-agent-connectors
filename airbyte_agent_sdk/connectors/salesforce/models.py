@@ -347,6 +347,54 @@ class ReportResults(BaseModel):
     has_detail_rows: bool | None = Field(default=None, alias="hasDetailRows")
     all_data: bool | None = Field(default=None, alias="allData")
 
+class UserAttributes(BaseModel):
+    """Nested schema for User.attributes"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    type_: str | None = Field(default=None, alias="type")
+    url: str | None = Field(default=None)
+
+class User(BaseModel):
+    """Salesforce User object - uses FIELDS(STANDARD) so all standard fields are returned"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None, alias="Id")
+    name: str | None = Field(default=None, alias="Name")
+    attributes: UserAttributes | None = Field(default=None)
+
+class UserQueryResult(BaseModel):
+    """SOQL query result for users"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    total_size: int | None = Field(default=None, alias="totalSize")
+    done: bool | None = Field(default=None)
+    next_records_url: str | None = Field(default=None, alias="nextRecordsUrl")
+    records: list[User] | None = Field(default=None)
+
+class OpportunityStageAttributes(BaseModel):
+    """Nested schema for OpportunityStage.attributes"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    type_: str | None = Field(default=None, alias="type")
+    url: str | None = Field(default=None)
+
+class OpportunityStage(BaseModel):
+    """Salesforce OpportunityStage object - uses FIELDS(STANDARD) so all standard fields are returned"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None, alias="Id")
+    master_label: str | None = Field(default=None, alias="MasterLabel")
+    attributes: OpportunityStageAttributes | None = Field(default=None)
+
+class OpportunityStageQueryResult(BaseModel):
+    """SOQL query result for opportunity stages"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    total_size: int | None = Field(default=None, alias="totalSize")
+    done: bool | None = Field(default=None)
+    next_records_url: str | None = Field(default=None, alias="nextRecordsUrl")
+    records: list[OpportunityStage] | None = Field(default=None)
+
 class QueryResult(BaseModel):
     """Generic SOQL query result"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -451,6 +499,20 @@ class ContentVersionsListResultMeta(BaseModel):
 
 class AttachmentsListResultMeta(BaseModel):
     """Metadata for attachments.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    done: bool | None = Field(default=None)
+    next_records_url: str | None = Field(default=None, alias="nextRecordsUrl")
+
+class UsersListResultMeta(BaseModel):
+    """Metadata for users.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    done: bool | None = Field(default=None)
+    next_records_url: str | None = Field(default=None, alias="nextRecordsUrl")
+
+class OpportunityStagesListResultMeta(BaseModel):
+    """Metadata for opportunity_stages.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     done: bool | None = Field(default=None)
@@ -824,6 +886,114 @@ class TasksSearchData(BaseModel):
     """System timestamp when the record was last modified"""
 
 
+class UsersSearchData(BaseModel):
+    """Search result data for users entity."""
+    model_config = ConfigDict(extra="allow")
+
+    id: str = None
+    """Unique identifier for the user record"""
+    account_id: str | None = None
+    """ID of the account associated with this user (for portal users)"""
+    alias: str | None = None
+    """Short name used to identify the user in list views and reports"""
+    city: str | None = None
+    """City portion of the user's address"""
+    company_name: str | None = None
+    """Name of the user's company"""
+    contact_id: str | None = None
+    """ID of the contact associated with this user (for portal users)"""
+    country: str | None = None
+    """Country portion of the user's address"""
+    created_by_id: str | None = None
+    """ID of the user who created this user record"""
+    created_date: str | None = None
+    """Date and time when the user was created"""
+    department: str | None = None
+    """Department within the organization"""
+    division: str | None = None
+    """Division within the organization"""
+    email: str | None = None
+    """Email address of the user"""
+    employee_number: str | None = None
+    """Employee number or ID assigned by the organization"""
+    first_name: str | None = None
+    """First name of the user"""
+    is_active: bool | None = None
+    """Whether the user is active and can log in"""
+    last_login_date: str | None = None
+    """Date and time of the user's most recent login"""
+    last_modified_by_id: str | None = None
+    """ID of the user who last modified this user record"""
+    last_modified_date: str | None = None
+    """Date and time when the user was last modified"""
+    last_name: str | None = None
+    """Last name of the user"""
+    manager_id: str | None = None
+    """ID of the user's manager"""
+    mobile_phone: str | None = None
+    """Mobile phone number of the user"""
+    name: str | None = None
+    """Full name of the user"""
+    phone: str | None = None
+    """Business phone number of the user"""
+    postal_code: str | None = None
+    """Postal code portion of the user's address"""
+    profile_id: str | None = None
+    """ID of the user's profile"""
+    state: str | None = None
+    """State or province portion of the user's address"""
+    street: str | None = None
+    """Street address of the user"""
+    title: str | None = None
+    """Job title of the user"""
+    user_role_id: str | None = None
+    """ID of the user's role in the organization"""
+    user_type: str | None = None
+    """Type of user license (e.g., Standard, PowerPartner)"""
+    username: str | None = None
+    """Username for logging into Salesforce (unique across all orgs)"""
+    system_modstamp: str | None = None
+    """System timestamp when the record was last modified"""
+
+
+class OpportunityStagesSearchData(BaseModel):
+    """Search result data for opportunity_stages entity."""
+    model_config = ConfigDict(extra="allow")
+
+    id: str = None
+    """Unique identifier for the opportunity stage record"""
+    api_name: str | None = None
+    """API name of the stage used in code and integrations"""
+    created_by_id: str | None = None
+    """ID of the user who created this stage"""
+    created_date: str | None = None
+    """Date and time when the stage was created"""
+    default_probability: float | None = None
+    """Default probability percentage for opportunities at this stage"""
+    description: str | None = None
+    """Description of the stage"""
+    forecast_category: str | None = None
+    """Forecast category for opportunities at this stage"""
+    forecast_category_name: str | None = None
+    """Display name of the forecast category"""
+    is_active: bool | None = None
+    """Whether the stage is currently active and can be used"""
+    is_closed: bool | None = None
+    """Whether opportunities at this stage are considered closed"""
+    is_won: bool | None = None
+    """Whether opportunities at this stage are considered won"""
+    last_modified_by_id: str | None = None
+    """ID of the user who last modified this stage"""
+    last_modified_date: str | None = None
+    """Date and time when the stage was last modified"""
+    master_label: str | None = None
+    """Display label for the stage"""
+    sort_order: int | None = None
+    """Order in which the stage appears in the sales process"""
+    system_modstamp: str | None = None
+    """System timestamp when the record was last modified"""
+
+
 # ===== GENERIC SEARCH RESULT TYPES =====
 
 class AirbyteSearchMeta(BaseModel):
@@ -864,6 +1034,12 @@ OpportunitiesSearchResult = AirbyteSearchResult[OpportunitiesSearchData]
 
 TasksSearchResult = AirbyteSearchResult[TasksSearchData]
 """Search result type for tasks entity."""
+
+UsersSearchResult = AirbyteSearchResult[UsersSearchData]
+"""Search result type for users entity."""
+
+OpportunityStagesSearchResult = AirbyteSearchResult[OpportunityStagesSearchData]
+"""Search result type for opportunity_stages entity."""
 
 
 
@@ -937,6 +1113,12 @@ AttachmentsListResult = SalesforceExecuteResultWithMeta[list[Attachment], Attach
 
 ReportsListResult = SalesforceExecuteResult[list[Report]]
 """Result type for reports.list operation."""
+
+UsersListResult = SalesforceExecuteResultWithMeta[list[User], UsersListResultMeta]
+"""Result type for users.list operation with data and metadata."""
+
+OpportunityStagesListResult = SalesforceExecuteResultWithMeta[list[OpportunityStage], OpportunityStagesListResultMeta]
+"""Result type for opportunity_stages.list operation with data and metadata."""
 
 QueryListResult = SalesforceExecuteResultWithMeta[list[dict[str, Any]], QueryListResultMeta]
 """Result type for query.list operation with data and metadata."""

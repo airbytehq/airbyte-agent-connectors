@@ -82,65 +82,113 @@ class CustomerSources(BaseModel):
     url: str | None = Field(default=None, description="The URL where this list can be accessed")
     """The URL where this list can be accessed"""
 
-class SubscriptionPauseCollection(BaseModel):
-    """If specified, payment collection for this subscription will be paused"""
+class CustomerDiscountSource(BaseModel):
+    """The source of the discount"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    behavior: str | None = Field(default=None, description="The payment collection behavior for this subscription while paused")
-    """The payment collection behavior for this subscription while paused"""
-    resumes_at: int | None | None = Field(default=None, description="The time after which the subscription will resume collecting payments")
-    """The time after which the subscription will resume collecting payments"""
+    coupon: str | None | None = Field(default=None, description="The coupon that was redeemed to create this discount")
+    """The coupon that was redeemed to create this discount"""
+    type_: str | None = Field(default=None, alias="type", description="The source type of the discount")
+    """The source type of the discount"""
 
-class SubscriptionBillingThresholds(BaseModel):
-    """Define thresholds at which an invoice will be sent, and the subscription advanced to a new billing period"""
+class CustomerDiscount(BaseModel):
+    """Describes the current discount active on the customer, if there is one"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    amount_gte: int | None | None = Field(default=None, description="Monetary threshold that triggers the subscription to create an invoice")
-    """Monetary threshold that triggers the subscription to create an invoice"""
-    reset_billing_cycle_anchor: bool | None | None = Field(default=None, description="Indicates if the billing_cycle_anchor should be reset when a threshold is reached")
-    """Indicates if the billing_cycle_anchor should be reset when a threshold is reached"""
+    id: str | None = Field(default=None, description="The ID of the discount object")
+    """The ID of the discount object"""
+    object_: str | None = Field(default=None, alias="object", description="String representing the object's type")
+    """String representing the object's type"""
+    checkout_session: str | None | None = Field(default=None, description="The Checkout session that this coupon is applied to, if applicable")
+    """The Checkout session that this coupon is applied to, if applicable"""
+    customer: str | None | None = Field(default=None, description="The ID of the customer associated with this discount")
+    """The ID of the customer associated with this discount"""
+    customer_account: str | None | None = Field(default=None, description="The ID of the account associated with this discount")
+    """The ID of the account associated with this discount"""
+    end: int | None | None = Field(default=None, description="If the coupon has a duration of repeating, the date that this discount will end")
+    """If the coupon has a duration of repeating, the date that this discount will end"""
+    invoice: str | None | None = Field(default=None, description="The invoice that the discount's coupon was applied to")
+    """The invoice that the discount's coupon was applied to"""
+    invoice_item: str | None | None = Field(default=None, description="The invoice item that the discount's coupon was applied to")
+    """The invoice item that the discount's coupon was applied to"""
+    promotion_code: str | None | None = Field(default=None, description="The promotion code applied to create this discount")
+    """The promotion code applied to create this discount"""
+    source: CustomerDiscountSource | None = Field(default=None, description="The source of the discount")
+    """The source of the discount"""
+    start: int | None = Field(default=None, description="Date that the coupon was applied")
+    """Date that the coupon was applied"""
+    subscription: str | None | None = Field(default=None, description="The subscription that this coupon is applied to")
+    """The subscription that this coupon is applied to"""
+    subscription_item: str | None | None = Field(default=None, description="The subscription item that this coupon is applied to")
+    """The subscription item that this coupon is applied to"""
 
-class SubscriptionBillingModeFlexible(BaseModel):
-    """Configure behavior for flexible billing mode"""
+class CustomerShippingAddress(BaseModel):
+    """Customer shipping address"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    proration_discounts: str | None = Field(default=None, description="Controls how invoices and invoice items display proration amounts and discount amounts")
-    """Controls how invoices and invoice items display proration amounts and discount amounts"""
+    city: str | None | None = Field(default=None, description="City, district, suburb, town, or village")
+    """City, district, suburb, town, or village"""
+    country: str | None | None = Field(default=None, description="Two-letter country code (ISO 3166-1 alpha-2)")
+    """Two-letter country code (ISO 3166-1 alpha-2)"""
+    line1: str | None | None = Field(default=None, description="Address line 1, such as the street, PO Box, or company name")
+    """Address line 1, such as the street, PO Box, or company name"""
+    line2: str | None | None = Field(default=None, description="Address line 2, such as the apartment, suite, unit, or building")
+    """Address line 2, such as the apartment, suite, unit, or building"""
+    postal_code: str | None | None = Field(default=None, description="ZIP or postal code")
+    """ZIP or postal code"""
+    state: str | None | None = Field(default=None, description="State, county, province, or region")
+    """State, county, province, or region"""
 
-class SubscriptionBillingMode(BaseModel):
-    """Controls how prorations and invoices for subscriptions are calculated and orchestrated"""
+class CustomerShipping(BaseModel):
+    """Mailing and shipping address for the customer"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    flexible: SubscriptionBillingModeFlexible | None | None = Field(default=None, description="Configure behavior for flexible billing mode")
-    """Configure behavior for flexible billing mode"""
-    type_: str | None = Field(default=None, alias="type", description="Controls how prorations and invoices for subscriptions are calculated and orchestrated")
-    """Controls how prorations and invoices for subscriptions are calculated and orchestrated"""
-    updated_at: int | None | None = Field(default=None, description="Details on when the current billing_mode was adopted")
-    """Details on when the current billing_mode was adopted"""
+    address: CustomerShippingAddress | None = Field(default=None, description="Customer shipping address")
+    """Customer shipping address"""
+    name: str | None = Field(default=None, description="Customer name")
+    """Customer name"""
+    phone: str | None | None = Field(default=None, description="Customer phone (including extension)")
+    """Customer phone (including extension)"""
 
-class SubscriptionTrialSettingsEndBehavior(BaseModel):
-    """Nested schema for SubscriptionTrialSettings.end_behavior"""
+class CustomerInvoiceSettingsRenderingOptions(BaseModel):
+    """Default options for invoice PDF rendering for this customer"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    missing_payment_method: str | None = Field(default=None, description="Behavior when the trial ends and payment method is missing")
-    """Behavior when the trial ends and payment method is missing"""
+    amount_tax_display: str | None | None = Field(default=None, description="How line-item prices and amounts will be displayed with respect to tax on invoice PDFs")
+    """How line-item prices and amounts will be displayed with respect to tax on invoice PDFs"""
+    template: str | None | None = Field(default=None, description="ID of the invoice rendering template to be used for this customer's invoices")
+    """ID of the invoice rendering template to be used for this customer's invoices"""
 
-class SubscriptionTrialSettings(BaseModel):
-    """Settings related to subscription trials"""
+class CustomerInvoiceSettingsCustomFieldsItem(BaseModel):
+    """Nested schema for CustomerInvoiceSettings.custom_fields_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    end_behavior: SubscriptionTrialSettingsEndBehavior | None = Field(default=None)
+    name: str | None = Field(default=None, description="The name of the custom field")
+    """The name of the custom field"""
+    value: str | None = Field(default=None, description="The value of the custom field")
+    """The value of the custom field"""
 
-class SubscriptionCancellationDetails(BaseModel):
-    """Details about why this subscription was cancelled"""
+class CustomerInvoiceSettings(BaseModel):
+    """The customer's default invoice settings"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    comment: str | None | None = Field(default=None, description="Additional comments about why the user canceled the subscription")
-    """Additional comments about why the user canceled the subscription"""
-    feedback: str | None | None = Field(default=None, description="The customer submitted reason for why they canceled")
-    """The customer submitted reason for why they canceled"""
-    reason: str | None | None = Field(default=None, description="Why this subscription was canceled")
-    """Why this subscription was canceled"""
+    custom_fields: list[CustomerInvoiceSettingsCustomFieldsItem] | None | None = Field(default=None, description="Default custom fields to be displayed on invoices for this customer")
+    """Default custom fields to be displayed on invoices for this customer"""
+    default_payment_method: str | None | None = Field(default=None, description="ID of a payment method that's attached to the customer")
+    """ID of a payment method that's attached to the customer"""
+    footer: str | None | None = Field(default=None, description="Default footer to be displayed on invoices for this customer")
+    """Default footer to be displayed on invoices for this customer"""
+    rendering_options: CustomerInvoiceSettingsRenderingOptions | None | None = Field(default=None, description="Default options for invoice PDF rendering for this customer")
+    """Default options for invoice PDF rendering for this customer"""
+
+class SubscriptionPaymentSettings(BaseModel):
+    """Payment settings passed on to invoices created by the subscription"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    payment_method_options: dict[str, Any] | None | None = Field(default=None, description="Payment-method-specific configuration to provide to invoices")
+    """Payment-method-specific configuration to provide to invoices"""
+    payment_method_types: list[str] | None | None = Field(default=None, description="The list of payment method types to provide to every invoice")
+    """The list of payment method types to provide to every invoice"""
 
 class SubscriptionAutomaticTaxLiability(BaseModel):
     """The account that's liable for tax"""
@@ -161,24 +209,6 @@ class SubscriptionAutomaticTax(BaseModel):
     """Whether Stripe automatically computes tax on this subscription"""
     liability: SubscriptionAutomaticTaxLiability | None | None = Field(default=None, description="The account that's liable for tax")
     """The account that's liable for tax"""
-
-class SubscriptionInvoiceSettingsIssuer(BaseModel):
-    """The connected account that issues the invoice"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    account: str | None | None = Field(default=None, description="The connected account being referenced when type is account")
-    """The connected account being referenced when type is account"""
-    type_: str | None = Field(default=None, alias="type", description="Type of the account referenced")
-    """Type of the account referenced"""
-
-class SubscriptionInvoiceSettings(BaseModel):
-    """All invoices will be billed using the specified settings"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    account_tax_ids: list[str] | None | None = Field(default=None, description="The account tax IDs associated with the subscription")
-    """The account tax IDs associated with the subscription"""
-    issuer: SubscriptionInvoiceSettingsIssuer | None = Field(default=None, description="The connected account that issues the invoice")
-    """The connected account that issues the invoice"""
 
 class SubscriptionDefaultTaxRatesItemFlatAmount(BaseModel):
     """The amount of the tax rate when the rate_type is flat_amount"""
@@ -230,20 +260,63 @@ class SubscriptionDefaultTaxRatesItem(BaseModel):
     tax_type: str | None | None = Field(default=None, description="The high-level tax type")
     """The high-level tax type"""
 
-class SubscriptionBillingCycleAnchorConfig(BaseModel):
-    """The fixed values used to calculate the billing_cycle_anchor"""
+class SubscriptionInvoiceSettingsIssuer(BaseModel):
+    """The connected account that issues the invoice"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    day_of_month: int | None = Field(default=None, description="The day of the month of the billing_cycle_anchor")
-    """The day of the month of the billing_cycle_anchor"""
-    hour: int | None | None = Field(default=None, description="The hour of the day of the billing_cycle_anchor")
-    """The hour of the day of the billing_cycle_anchor"""
-    minute: int | None | None = Field(default=None, description="The minute of the hour of the billing_cycle_anchor")
-    """The minute of the hour of the billing_cycle_anchor"""
-    month: int | None | None = Field(default=None, description="The month to start full cycle billing periods")
-    """The month to start full cycle billing periods"""
-    second: int | None | None = Field(default=None, description="The second of the minute of the billing_cycle_anchor")
-    """The second of the minute of the billing_cycle_anchor"""
+    account: str | None | None = Field(default=None, description="The connected account being referenced when type is account")
+    """The connected account being referenced when type is account"""
+    type_: str | None = Field(default=None, alias="type", description="Type of the account referenced")
+    """Type of the account referenced"""
+
+class SubscriptionInvoiceSettings(BaseModel):
+    """All invoices will be billed using the specified settings"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    account_tax_ids: list[str] | None | None = Field(default=None, description="The account tax IDs associated with the subscription")
+    """The account tax IDs associated with the subscription"""
+    issuer: SubscriptionInvoiceSettingsIssuer | None = Field(default=None, description="The connected account that issues the invoice")
+    """The connected account that issues the invoice"""
+
+class SubscriptionBillingModeFlexible(BaseModel):
+    """Configure behavior for flexible billing mode"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    proration_discounts: str | None = Field(default=None, description="Controls how invoices and invoice items display proration amounts and discount amounts")
+    """Controls how invoices and invoice items display proration amounts and discount amounts"""
+
+class SubscriptionBillingMode(BaseModel):
+    """Controls how prorations and invoices for subscriptions are calculated and orchestrated"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    flexible: SubscriptionBillingModeFlexible | None | None = Field(default=None, description="Configure behavior for flexible billing mode")
+    """Configure behavior for flexible billing mode"""
+    type_: str | None = Field(default=None, alias="type", description="Controls how prorations and invoices for subscriptions are calculated and orchestrated")
+    """Controls how prorations and invoices for subscriptions are calculated and orchestrated"""
+    updated_at: int | None | None = Field(default=None, description="Details on when the current billing_mode was adopted")
+    """Details on when the current billing_mode was adopted"""
+
+class SubscriptionBillingThresholds(BaseModel):
+    """Define thresholds at which an invoice will be sent, and the subscription advanced to a new billing period"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    amount_gte: int | None | None = Field(default=None, description="Monetary threshold that triggers the subscription to create an invoice")
+    """Monetary threshold that triggers the subscription to create an invoice"""
+    reset_billing_cycle_anchor: bool | None | None = Field(default=None, description="Indicates if the billing_cycle_anchor should be reset when a threshold is reached")
+    """Indicates if the billing_cycle_anchor should be reset when a threshold is reached"""
+
+class SubscriptionTrialSettingsEndBehavior(BaseModel):
+    """Nested schema for SubscriptionTrialSettings.end_behavior"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    missing_payment_method: str | None = Field(default=None, description="Behavior when the trial ends and payment method is missing")
+    """Behavior when the trial ends and payment method is missing"""
+
+class SubscriptionTrialSettings(BaseModel):
+    """Settings related to subscription trials"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    end_behavior: SubscriptionTrialSettingsEndBehavior | None = Field(default=None)
 
 class SubscriptionItemsDataItemBillingThresholds(BaseModel):
     """Define thresholds at which an invoice will be sent"""
@@ -298,14 +371,40 @@ class SubscriptionItems(BaseModel):
     total_count: int | None = Field(default=None, description="The total count of items in the list")
     """The total count of items in the list"""
 
-class SubscriptionPaymentSettings(BaseModel):
-    """Payment settings passed on to invoices created by the subscription"""
+class SubscriptionPauseCollection(BaseModel):
+    """If specified, payment collection for this subscription will be paused"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    payment_method_options: dict[str, Any] | None | None = Field(default=None, description="Payment-method-specific configuration to provide to invoices")
-    """Payment-method-specific configuration to provide to invoices"""
-    payment_method_types: list[str] | None | None = Field(default=None, description="The list of payment method types to provide to every invoice")
-    """The list of payment method types to provide to every invoice"""
+    behavior: str | None = Field(default=None, description="The payment collection behavior for this subscription while paused")
+    """The payment collection behavior for this subscription while paused"""
+    resumes_at: int | None | None = Field(default=None, description="The time after which the subscription will resume collecting payments")
+    """The time after which the subscription will resume collecting payments"""
+
+class SubscriptionCancellationDetails(BaseModel):
+    """Details about why this subscription was cancelled"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    comment: str | None | None = Field(default=None, description="Additional comments about why the user canceled the subscription")
+    """Additional comments about why the user canceled the subscription"""
+    feedback: str | None | None = Field(default=None, description="The customer submitted reason for why they canceled")
+    """The customer submitted reason for why they canceled"""
+    reason: str | None | None = Field(default=None, description="Why this subscription was canceled")
+    """Why this subscription was canceled"""
+
+class SubscriptionBillingCycleAnchorConfig(BaseModel):
+    """The fixed values used to calculate the billing_cycle_anchor"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    day_of_month: int | None = Field(default=None, description="The day of the month of the billing_cycle_anchor")
+    """The day of the month of the billing_cycle_anchor"""
+    hour: int | None | None = Field(default=None, description="The hour of the day of the billing_cycle_anchor")
+    """The hour of the day of the billing_cycle_anchor"""
+    minute: int | None | None = Field(default=None, description="The minute of the hour of the billing_cycle_anchor")
+    """The minute of the hour of the billing_cycle_anchor"""
+    month: int | None | None = Field(default=None, description="The month to start full cycle billing periods")
+    """The month to start full cycle billing periods"""
+    second: int | None | None = Field(default=None, description="The second of the minute of the billing_cycle_anchor")
+    """The second of the minute of the billing_cycle_anchor"""
 
 class Subscription(BaseModel):
     """Subscription type definition"""
@@ -375,37 +474,6 @@ class CustomerSubscriptions(BaseModel):
     url: str | None = Field(default=None, description="The URL where this list can be accessed")
     """The URL where this list can be accessed"""
 
-class CustomerInvoiceSettingsCustomFieldsItem(BaseModel):
-    """Nested schema for CustomerInvoiceSettings.custom_fields_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: str | None = Field(default=None, description="The name of the custom field")
-    """The name of the custom field"""
-    value: str | None = Field(default=None, description="The value of the custom field")
-    """The value of the custom field"""
-
-class CustomerInvoiceSettingsRenderingOptions(BaseModel):
-    """Default options for invoice PDF rendering for this customer"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    amount_tax_display: str | None | None = Field(default=None, description="How line-item prices and amounts will be displayed with respect to tax on invoice PDFs")
-    """How line-item prices and amounts will be displayed with respect to tax on invoice PDFs"""
-    template: str | None | None = Field(default=None, description="ID of the invoice rendering template to be used for this customer's invoices")
-    """ID of the invoice rendering template to be used for this customer's invoices"""
-
-class CustomerInvoiceSettings(BaseModel):
-    """The customer's default invoice settings"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    custom_fields: list[CustomerInvoiceSettingsCustomFieldsItem] | None | None = Field(default=None, description="Default custom fields to be displayed on invoices for this customer")
-    """Default custom fields to be displayed on invoices for this customer"""
-    default_payment_method: str | None | None = Field(default=None, description="ID of a payment method that's attached to the customer")
-    """ID of a payment method that's attached to the customer"""
-    footer: str | None | None = Field(default=None, description="Default footer to be displayed on invoices for this customer")
-    """Default footer to be displayed on invoices for this customer"""
-    rendering_options: CustomerInvoiceSettingsRenderingOptions | None | None = Field(default=None, description="Default options for invoice PDF rendering for this customer")
-    """Default options for invoice PDF rendering for this customer"""
-
 class CustomerAddress(BaseModel):
     """The customer's address"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -422,46 +490,6 @@ class CustomerAddress(BaseModel):
     """ZIP or postal code"""
     state: str | None | None = Field(default=None, description="State, county, province, or region")
     """State, county, province, or region"""
-
-class CustomerDiscountSource(BaseModel):
-    """The source of the discount"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    coupon: str | None | None = Field(default=None, description="The coupon that was redeemed to create this discount")
-    """The coupon that was redeemed to create this discount"""
-    type_: str | None = Field(default=None, alias="type", description="The source type of the discount")
-    """The source type of the discount"""
-
-class CustomerDiscount(BaseModel):
-    """Describes the current discount active on the customer, if there is one"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: str | None = Field(default=None, description="The ID of the discount object")
-    """The ID of the discount object"""
-    object_: str | None = Field(default=None, alias="object", description="String representing the object's type")
-    """String representing the object's type"""
-    checkout_session: str | None | None = Field(default=None, description="The Checkout session that this coupon is applied to, if applicable")
-    """The Checkout session that this coupon is applied to, if applicable"""
-    customer: str | None | None = Field(default=None, description="The ID of the customer associated with this discount")
-    """The ID of the customer associated with this discount"""
-    customer_account: str | None | None = Field(default=None, description="The ID of the account associated with this discount")
-    """The ID of the account associated with this discount"""
-    end: int | None | None = Field(default=None, description="If the coupon has a duration of repeating, the date that this discount will end")
-    """If the coupon has a duration of repeating, the date that this discount will end"""
-    invoice: str | None | None = Field(default=None, description="The invoice that the discount's coupon was applied to")
-    """The invoice that the discount's coupon was applied to"""
-    invoice_item: str | None | None = Field(default=None, description="The invoice item that the discount's coupon was applied to")
-    """The invoice item that the discount's coupon was applied to"""
-    promotion_code: str | None | None = Field(default=None, description="The promotion code applied to create this discount")
-    """The promotion code applied to create this discount"""
-    source: CustomerDiscountSource | None = Field(default=None, description="The source of the discount")
-    """The source of the discount"""
-    start: int | None = Field(default=None, description="Date that the coupon was applied")
-    """Date that the coupon was applied"""
-    subscription: str | None | None = Field(default=None, description="The subscription that this coupon is applied to")
-    """The subscription that this coupon is applied to"""
-    subscription_item: str | None | None = Field(default=None, description="The subscription item that this coupon is applied to")
-    """The subscription item that this coupon is applied to"""
 
 class CustomerCashBalanceSettings(BaseModel):
     """A hash of settings for this cash balance"""
@@ -488,34 +516,6 @@ class CustomerCashBalance(BaseModel):
     """Has the value true if the object exists in live mode or false if in test mode"""
     settings: CustomerCashBalanceSettings | None = Field(default=None, description="A hash of settings for this cash balance")
     """A hash of settings for this cash balance"""
-
-class CustomerShippingAddress(BaseModel):
-    """Customer shipping address"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    city: str | None | None = Field(default=None, description="City, district, suburb, town, or village")
-    """City, district, suburb, town, or village"""
-    country: str | None | None = Field(default=None, description="Two-letter country code (ISO 3166-1 alpha-2)")
-    """Two-letter country code (ISO 3166-1 alpha-2)"""
-    line1: str | None | None = Field(default=None, description="Address line 1, such as the street, PO Box, or company name")
-    """Address line 1, such as the street, PO Box, or company name"""
-    line2: str | None | None = Field(default=None, description="Address line 2, such as the apartment, suite, unit, or building")
-    """Address line 2, such as the apartment, suite, unit, or building"""
-    postal_code: str | None | None = Field(default=None, description="ZIP or postal code")
-    """ZIP or postal code"""
-    state: str | None | None = Field(default=None, description="State, county, province, or region")
-    """State, county, province, or region"""
-
-class CustomerShipping(BaseModel):
-    """Mailing and shipping address for the customer"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    address: CustomerShippingAddress | None = Field(default=None, description="Customer shipping address")
-    """Customer shipping address"""
-    name: str | None = Field(default=None, description="Customer name")
-    """Customer name"""
-    phone: str | None | None = Field(default=None, description="Customer phone (including extension)")
-    """Customer phone (including extension)"""
 
 class Customer(BaseModel):
     """Customer type definition"""
@@ -625,175 +625,14 @@ class CustomerDeletedResponse(BaseModel):
     object_: str | None = Field(default=None, alias="object")
     deleted: bool | None = Field(default=None)
 
-class InvoiceConfirmationSecret(BaseModel):
-    """The confirmation secret associated with this invoice"""
+class InvoiceTotalDiscountAmountsItem(BaseModel):
+    """Nested schema for Invoice.total_discount_amounts_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    client_secret: str | None = Field(default=None, description="The client_secret of the payment that Stripe creates for the invoice after finalization")
-    """The client_secret of the payment that Stripe creates for the invoice after finalization"""
-    type_: str | None = Field(default=None, alias="type", description="The type of client_secret")
-    """The type of client_secret"""
-
-class InvoiceLastFinalizationError(BaseModel):
-    """The error encountered during the last finalization attempt"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    advice_code: str | None | None = Field(default=None, description="For card errors resulting from a card issuer decline")
-    """For card errors resulting from a card issuer decline"""
-    code: str | None | None = Field(default=None, description="For some errors that could be handled programmatically, a short string indicating the error code")
-    """For some errors that could be handled programmatically, a short string indicating the error code"""
-    doc_url: str | None | None = Field(default=None, description="A URL to more information about the error code reported")
-    """A URL to more information about the error code reported"""
-    message: str | None | None = Field(default=None, description="A human-readable message providing more details about the error")
-    """A human-readable message providing more details about the error"""
-    network_advice_code: str | None | None = Field(default=None, description="For card errors resulting from a card issuer decline")
-    """For card errors resulting from a card issuer decline"""
-    network_decline_code: str | None | None = Field(default=None, description="For payments declined by the network")
-    """For payments declined by the network"""
-    param: str | None | None = Field(default=None, description="If the error is parameter-specific, the parameter related to the error")
-    """If the error is parameter-specific, the parameter related to the error"""
-    payment_method_type: str | None | None = Field(default=None, description="If the error is specific to the type of payment method")
-    """If the error is specific to the type of payment method"""
-    type_: str | None = Field(default=None, alias="type", description="The type of error returned")
-    """The type of error returned"""
-
-class InvoiceRenderingPdf(BaseModel):
-    """Invoice pdf rendering options"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    page_size: str | None | None = Field(default=None, description="Page size of invoice pdf")
-    """Page size of invoice pdf"""
-
-class InvoiceRendering(BaseModel):
-    """The rendering-related settings that control how the invoice is displayed"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    amount_tax_display: str | None | None = Field(default=None, description="How line-item prices and amounts will be displayed with respect to tax")
-    """How line-item prices and amounts will be displayed with respect to tax"""
-    pdf: InvoiceRenderingPdf | None | None = Field(default=None, description="Invoice pdf rendering options")
-    """Invoice pdf rendering options"""
-    template: str | None | None = Field(default=None, description="ID of the rendering template that the invoice is formatted by")
-    """ID of the rendering template that the invoice is formatted by"""
-    template_version: int | None | None = Field(default=None, description="Version of the rendering template that the invoice is using")
-    """Version of the rendering template that the invoice is using"""
-
-class InvoiceTotalTaxesItem(BaseModel):
-    """Nested schema for Invoice.total_taxes_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    amount: int | None = Field(default=None, description="The amount of the tax")
-    """The amount of the tax"""
-    tax_behavior: str | None = Field(default=None, description="Whether this tax is inclusive or exclusive")
-    """Whether this tax is inclusive or exclusive"""
-    tax_rate_details: dict[str, Any] | None | None = Field(default=None, description="Additional details about the tax rate")
-    """Additional details about the tax rate"""
-    taxability_reason: str | None = Field(default=None, description="The reasoning behind this tax")
-    """The reasoning behind this tax"""
-    taxable_amount: int | None | None = Field(default=None, description="The amount on which tax is calculated")
-    """The amount on which tax is calculated"""
-    type_: str | None = Field(default=None, alias="type", description="The type of tax information")
-    """The type of tax information"""
-
-class InvoicePaymentsDataItem(BaseModel):
-    """Nested schema for InvoicePayments.data_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: str | None = Field(default=None, description="Unique identifier for the object")
-    """Unique identifier for the object"""
-    object_: str | None = Field(default=None, alias="object", description="String representing the object's type")
-    """String representing the object's type"""
-    amount_paid: int | None | None = Field(default=None, description="Amount that was actually paid for this invoice")
-    """Amount that was actually paid for this invoice"""
-    amount_requested: int | None = Field(default=None, description="Amount intended to be paid toward this invoice")
-    """Amount intended to be paid toward this invoice"""
-    created: int | None = Field(default=None, description="Time at which the object was created")
-    """Time at which the object was created"""
-    currency: str | None = Field(default=None, description="Three-letter ISO currency code")
-    """Three-letter ISO currency code"""
-    invoice: str | None = Field(default=None, description="The invoice that was paid")
-    """The invoice that was paid"""
-    is_default: bool | None = Field(default=None, description="Whether this is the default payment created when the invoice was finalized")
-    """Whether this is the default payment created when the invoice was finalized"""
-    livemode: bool | None = Field(default=None, description="Has the value true if the object exists in live mode")
-    """Has the value true if the object exists in live mode"""
-    status: str | None = Field(default=None, description="The status of the payment")
-    """The status of the payment"""
-
-class InvoicePayments(BaseModel):
-    """Payments for this invoice"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    object_: str | None = Field(default=None, alias="object", description="String representing the object's type")
-    """String representing the object's type"""
-    data: list[InvoicePaymentsDataItem] | None = Field(default=None, description="Details about each payment")
-    """Details about each payment"""
-    has_more: bool | None = Field(default=None, description="True if this list has another page of items")
-    """True if this list has another page of items"""
-    url: str | None = Field(default=None, description="The URL where this list can be accessed")
-    """The URL where this list can be accessed"""
-
-class InvoiceCustomerShippingAddress(BaseModel):
-    """Customer shipping address"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    city: str | None | None = Field(default=None, description="City, district, suburb, town, or village")
-    """City, district, suburb, town, or village"""
-    country: str | None | None = Field(default=None, description="Two-letter country code (ISO 3166-1 alpha-2)")
-    """Two-letter country code (ISO 3166-1 alpha-2)"""
-    line1: str | None | None = Field(default=None, description="Address line 1")
-    """Address line 1"""
-    line2: str | None | None = Field(default=None, description="Address line 2")
-    """Address line 2"""
-    postal_code: str | None | None = Field(default=None, description="ZIP or postal code")
-    """ZIP or postal code"""
-    state: str | None | None = Field(default=None, description="State, county, province, or region")
-    """State, county, province, or region"""
-
-class InvoiceCustomerShipping(BaseModel):
-    """The customer's shipping information"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    address: InvoiceCustomerShippingAddress | None = Field(default=None, description="Customer shipping address")
-    """Customer shipping address"""
-    name: str | None = Field(default=None, description="Customer name")
-    """Customer name"""
-    phone: str | None | None = Field(default=None, description="Customer phone (including extension)")
-    """Customer phone (including extension)"""
-
-class InvoiceCustomerAddress(BaseModel):
-    """The customer's address"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    city: str | None | None = Field(default=None, description="City, district, suburb, town, or village")
-    """City, district, suburb, town, or village"""
-    country: str | None | None = Field(default=None, description="Two-letter country code (ISO 3166-1 alpha-2)")
-    """Two-letter country code (ISO 3166-1 alpha-2)"""
-    line1: str | None | None = Field(default=None, description="Address line 1")
-    """Address line 1"""
-    line2: str | None | None = Field(default=None, description="Address line 2")
-    """Address line 2"""
-    postal_code: str | None | None = Field(default=None, description="ZIP or postal code")
-    """ZIP or postal code"""
-    state: str | None | None = Field(default=None, description="State, county, province, or region")
-    """State, county, province, or region"""
-
-class InvoiceThresholdReasonItemReasonsItem(BaseModel):
-    """Nested schema for InvoiceThresholdReason.item_reasons_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    line_item_ids: list[str] | None = Field(default=None, description="The IDs of the line items that triggered the threshold invoice")
-    """The IDs of the line items that triggered the threshold invoice"""
-    usage_gte: int | None = Field(default=None, description="The quantity threshold boundary that applied to the given line item")
-    """The quantity threshold boundary that applied to the given line item"""
-
-class InvoiceThresholdReason(BaseModel):
-    """If billing_reason is set to subscription_threshold this returns more information"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    amount_gte: int | None | None = Field(default=None, description="The total invoice amount threshold boundary if it triggered the threshold invoice")
-    """The total invoice amount threshold boundary if it triggered the threshold invoice"""
-    item_reasons: list[InvoiceThresholdReasonItemReasonsItem] | None = Field(default=None, description="Indicates which line items triggered a threshold invoice")
-    """Indicates which line items triggered a threshold invoice"""
+    amount: int | None = Field(default=None, description="The amount of the discount")
+    """The amount of the discount"""
+    discount: str | None = Field(default=None, description="The discount that was applied")
+    """The discount that was applied"""
 
 class InvoicePaymentSettings(BaseModel):
     """Configuration settings for the PaymentIntent that is generated when the invoice is finalized"""
@@ -805,151 +644,6 @@ class InvoicePaymentSettings(BaseModel):
     """Payment-method-specific configuration to provide to the invoice's PaymentIntent"""
     payment_method_types: list[str] | None | None = Field(default=None, description="The list of payment method types to provide to the invoice's PaymentIntent")
     """The list of payment method types to provide to the invoice's PaymentIntent"""
-
-class InvoiceTotalTaxAmountsItem(BaseModel):
-    """Nested schema for Invoice.total_tax_amounts_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    amount: int | None = Field(default=None, description="The amount of the tax")
-    """The amount of the tax"""
-    inclusive: bool | None = Field(default=None, description="Whether the tax amount is included in the line item amount")
-    """Whether the tax amount is included in the line item amount"""
-    tax_rate: str | None = Field(default=None, description="The tax rate applied")
-    """The tax rate applied"""
-    taxability_reason: str | None | None = Field(default=None, description="The reasoning behind the tax")
-    """The reasoning behind the tax"""
-    taxable_amount: int | None = Field(default=None, description="The amount on which tax is calculated")
-    """The amount on which tax is calculated"""
-
-class InvoiceParentQuoteDetails(BaseModel):
-    """Details about the quote that generated this invoice"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    quote: str | None = Field(default=None, description="The quote that generated this invoice")
-    """The quote that generated this invoice"""
-
-class InvoiceParentSubscriptionDetails(BaseModel):
-    """Details about the subscription that generated this invoice"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    metadata: dict[str, str] | None | None = Field(default=None, description="Set of key-value pairs defined as subscription metadata")
-    """Set of key-value pairs defined as subscription metadata"""
-    subscription: str | None = Field(default=None, description="The subscription that generated this invoice")
-    """The subscription that generated this invoice"""
-    subscription_proration_date: int | None | None = Field(default=None, description="Only set for upcoming invoices that preview prorations")
-    """Only set for upcoming invoices that preview prorations"""
-
-class InvoiceParent(BaseModel):
-    """The parent that generated this invoice"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    quote_details: InvoiceParentQuoteDetails | None | None = Field(default=None, description="Details about the quote that generated this invoice")
-    """Details about the quote that generated this invoice"""
-    subscription_details: InvoiceParentSubscriptionDetails | None | None = Field(default=None, description="Details about the subscription that generated this invoice")
-    """Details about the subscription that generated this invoice"""
-    type_: str | None = Field(default=None, alias="type", description="The type of parent that generated this invoice")
-    """The type of parent that generated this invoice"""
-
-class InvoiceIssuer(BaseModel):
-    """The connected account that issues the invoice"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    account: str | None | None = Field(default=None, description="The connected account being referenced when type is account")
-    """The connected account being referenced when type is account"""
-    type_: str | None = Field(default=None, alias="type", description="Type of the account referenced")
-    """Type of the account referenced"""
-
-class InvoiceCustomFieldsItem(BaseModel):
-    """Nested schema for Invoice.custom_fields_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: str | None = Field(default=None, description="The name of the custom field")
-    """The name of the custom field"""
-    value: str | None = Field(default=None, description="The value of the custom field")
-    """The value of the custom field"""
-
-class InvoiceShippingDetailsAddress(BaseModel):
-    """Shipping address"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    city: str | None | None = Field(default=None, description="City, district, suburb, town, or village")
-    """City, district, suburb, town, or village"""
-    country: str | None | None = Field(default=None, description="Two-letter country code (ISO 3166-1 alpha-2)")
-    """Two-letter country code (ISO 3166-1 alpha-2)"""
-    line1: str | None | None = Field(default=None, description="Address line 1")
-    """Address line 1"""
-    line2: str | None | None = Field(default=None, description="Address line 2")
-    """Address line 2"""
-    postal_code: str | None | None = Field(default=None, description="ZIP or postal code")
-    """ZIP or postal code"""
-    state: str | None | None = Field(default=None, description="State, county, province, or region")
-    """State, county, province, or region"""
-
-class InvoiceShippingDetails(BaseModel):
-    """Shipping details for the invoice"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    address: InvoiceShippingDetailsAddress | None = Field(default=None, description="Shipping address")
-    """Shipping address"""
-    name: str | None = Field(default=None, description="Recipient name")
-    """Recipient name"""
-    phone: str | None | None = Field(default=None, description="Recipient phone")
-    """Recipient phone"""
-
-class InvoiceTotalDiscountAmountsItem(BaseModel):
-    """Nested schema for Invoice.total_discount_amounts_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    amount: int | None = Field(default=None, description="The amount of the discount")
-    """The amount of the discount"""
-    discount: str | None = Field(default=None, description="The discount that was applied")
-    """The discount that was applied"""
-
-class InvoiceShippingCostTaxesItem(BaseModel):
-    """Nested schema for InvoiceShippingCost.taxes_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    amount: int | None = Field(default=None, description="Amount of tax applied for this rate")
-    """Amount of tax applied for this rate"""
-    taxability_reason: str | None | None = Field(default=None, description="The reasoning behind this tax")
-    """The reasoning behind this tax"""
-    taxable_amount: int | None | None = Field(default=None, description="The amount on which tax is calculated")
-    """The amount on which tax is calculated"""
-
-class InvoiceShippingCost(BaseModel):
-    """The details of the cost of shipping"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    amount_subtotal: int | None = Field(default=None, description="Total shipping cost before any taxes are applied")
-    """Total shipping cost before any taxes are applied"""
-    amount_tax: int | None = Field(default=None, description="Total tax amount applied due to shipping costs")
-    """Total tax amount applied due to shipping costs"""
-    amount_total: int | None = Field(default=None, description="Total shipping cost after taxes are applied")
-    """Total shipping cost after taxes are applied"""
-    shipping_rate: str | None | None = Field(default=None, description="The ID of the ShippingRate for this invoice")
-    """The ID of the ShippingRate for this invoice"""
-    taxes: list[InvoiceShippingCostTaxesItem] | None | None = Field(default=None, description="The taxes applied to the shipping rate")
-    """The taxes applied to the shipping rate"""
-
-class InvoiceSubscriptionDetails(BaseModel):
-    """Details about the subscription that this invoice was prepared for, if any"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    metadata: dict[str, str] | None | None = Field(default=None, description="Set of key-value pairs defined as subscription metadata when the invoice is created")
-    """Set of key-value pairs defined as subscription metadata when the invoice is created"""
-
-class InvoiceStatusTransitions(BaseModel):
-    """Status transition timestamps"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    finalized_at: int | None | None = Field(default=None, description="The time that the invoice draft was finalized")
-    """The time that the invoice draft was finalized"""
-    marked_uncollectible_at: int | None | None = Field(default=None, description="The time that the invoice was marked uncollectible")
-    """The time that the invoice was marked uncollectible"""
-    paid_at: int | None | None = Field(default=None, description="The time that the invoice was paid")
-    """The time that the invoice was paid"""
-    voided_at: int | None | None = Field(default=None, description="The time that the invoice was voided")
-    """The time that the invoice was voided"""
 
 class InvoiceDefaultTaxRatesItemFlatAmount(BaseModel):
     """The amount of the tax rate when the rate_type is flat_amount"""
@@ -1001,18 +695,208 @@ class InvoiceDefaultTaxRatesItem(BaseModel):
     tax_type: str | None | None = Field(default=None, description="The high-level tax type")
     """The high-level tax type"""
 
-class InvoiceTotalPretaxCreditAmountsItem(BaseModel):
-    """Nested schema for Invoice.total_pretax_credit_amounts_item"""
+class InvoiceFromInvoice(BaseModel):
+    """Details of the invoice that was cloned"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    amount: int | None = Field(default=None, description="The amount of the pretax credit amount")
-    """The amount of the pretax credit amount"""
-    credit_balance_transaction: str | None | None = Field(default=None, description="The credit balance transaction that was applied")
-    """The credit balance transaction that was applied"""
-    discount: str | None | None = Field(default=None, description="The discount that was applied")
-    """The discount that was applied"""
-    type_: str | None = Field(default=None, alias="type", description="Type of the pretax credit amount referenced")
-    """Type of the pretax credit amount referenced"""
+    action: str | None = Field(default=None)
+    invoice: str | None = Field(default=None)
+
+class InvoiceShippingDetailsAddress(BaseModel):
+    """Shipping address"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    city: str | None | None = Field(default=None, description="City, district, suburb, town, or village")
+    """City, district, suburb, town, or village"""
+    country: str | None | None = Field(default=None, description="Two-letter country code (ISO 3166-1 alpha-2)")
+    """Two-letter country code (ISO 3166-1 alpha-2)"""
+    line1: str | None | None = Field(default=None, description="Address line 1")
+    """Address line 1"""
+    line2: str | None | None = Field(default=None, description="Address line 2")
+    """Address line 2"""
+    postal_code: str | None | None = Field(default=None, description="ZIP or postal code")
+    """ZIP or postal code"""
+    state: str | None | None = Field(default=None, description="State, county, province, or region")
+    """State, county, province, or region"""
+
+class InvoiceShippingDetails(BaseModel):
+    """Shipping details for the invoice"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    address: InvoiceShippingDetailsAddress | None = Field(default=None, description="Shipping address")
+    """Shipping address"""
+    name: str | None = Field(default=None, description="Recipient name")
+    """Recipient name"""
+    phone: str | None | None = Field(default=None, description="Recipient phone")
+    """Recipient phone"""
+
+class InvoiceSubscriptionDetails(BaseModel):
+    """Details about the subscription that this invoice was prepared for, if any"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    metadata: dict[str, str] | None | None = Field(default=None, description="Set of key-value pairs defined as subscription metadata when the invoice is created")
+    """Set of key-value pairs defined as subscription metadata when the invoice is created"""
+
+class InvoiceCustomerShippingAddress(BaseModel):
+    """Customer shipping address"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    city: str | None | None = Field(default=None, description="City, district, suburb, town, or village")
+    """City, district, suburb, town, or village"""
+    country: str | None | None = Field(default=None, description="Two-letter country code (ISO 3166-1 alpha-2)")
+    """Two-letter country code (ISO 3166-1 alpha-2)"""
+    line1: str | None | None = Field(default=None, description="Address line 1")
+    """Address line 1"""
+    line2: str | None | None = Field(default=None, description="Address line 2")
+    """Address line 2"""
+    postal_code: str | None | None = Field(default=None, description="ZIP or postal code")
+    """ZIP or postal code"""
+    state: str | None | None = Field(default=None, description="State, county, province, or region")
+    """State, county, province, or region"""
+
+class InvoiceCustomerShipping(BaseModel):
+    """The customer's shipping information"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    address: InvoiceCustomerShippingAddress | None = Field(default=None, description="Customer shipping address")
+    """Customer shipping address"""
+    name: str | None = Field(default=None, description="Customer name")
+    """Customer name"""
+    phone: str | None | None = Field(default=None, description="Customer phone (including extension)")
+    """Customer phone (including extension)"""
+
+class InvoiceParentSubscriptionDetails(BaseModel):
+    """Details about the subscription that generated this invoice"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    metadata: dict[str, str] | None | None = Field(default=None, description="Set of key-value pairs defined as subscription metadata")
+    """Set of key-value pairs defined as subscription metadata"""
+    subscription: str | None = Field(default=None, description="The subscription that generated this invoice")
+    """The subscription that generated this invoice"""
+    subscription_proration_date: int | None | None = Field(default=None, description="Only set for upcoming invoices that preview prorations")
+    """Only set for upcoming invoices that preview prorations"""
+
+class InvoiceParentQuoteDetails(BaseModel):
+    """Details about the quote that generated this invoice"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    quote: str | None = Field(default=None, description="The quote that generated this invoice")
+    """The quote that generated this invoice"""
+
+class InvoiceParent(BaseModel):
+    """The parent that generated this invoice"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    quote_details: InvoiceParentQuoteDetails | None | None = Field(default=None, description="Details about the quote that generated this invoice")
+    """Details about the quote that generated this invoice"""
+    subscription_details: InvoiceParentSubscriptionDetails | None | None = Field(default=None, description="Details about the subscription that generated this invoice")
+    """Details about the subscription that generated this invoice"""
+    type_: str | None = Field(default=None, alias="type", description="The type of parent that generated this invoice")
+    """The type of parent that generated this invoice"""
+
+class InvoiceRenderingPdf(BaseModel):
+    """Invoice pdf rendering options"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    page_size: str | None | None = Field(default=None, description="Page size of invoice pdf")
+    """Page size of invoice pdf"""
+
+class InvoiceRendering(BaseModel):
+    """The rendering-related settings that control how the invoice is displayed"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    amount_tax_display: str | None | None = Field(default=None, description="How line-item prices and amounts will be displayed with respect to tax")
+    """How line-item prices and amounts will be displayed with respect to tax"""
+    pdf: InvoiceRenderingPdf | None | None = Field(default=None, description="Invoice pdf rendering options")
+    """Invoice pdf rendering options"""
+    template: str | None | None = Field(default=None, description="ID of the rendering template that the invoice is formatted by")
+    """ID of the rendering template that the invoice is formatted by"""
+    template_version: int | None | None = Field(default=None, description="Version of the rendering template that the invoice is using")
+    """Version of the rendering template that the invoice is using"""
+
+class InvoiceCustomerTaxIdsItem(BaseModel):
+    """Nested schema for Invoice.customer_tax_ids_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    type_: str | None = Field(default=None, alias="type", description="The type of the tax ID")
+    """The type of the tax ID"""
+    value: str | None | None = Field(default=None, description="The value of the tax ID")
+    """The value of the tax ID"""
+
+class InvoiceStatusTransitions(BaseModel):
+    """Status transition timestamps"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    finalized_at: int | None | None = Field(default=None, description="The time that the invoice draft was finalized")
+    """The time that the invoice draft was finalized"""
+    marked_uncollectible_at: int | None | None = Field(default=None, description="The time that the invoice was marked uncollectible")
+    """The time that the invoice was marked uncollectible"""
+    paid_at: int | None | None = Field(default=None, description="The time that the invoice was paid")
+    """The time that the invoice was paid"""
+    voided_at: int | None | None = Field(default=None, description="The time that the invoice was voided")
+    """The time that the invoice was voided"""
+
+class InvoiceDiscountCoupon(BaseModel):
+    """Nested schema for InvoiceDiscount.coupon"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None)
+    object_: str | None = Field(default=None, alias="object")
+    amount_off: int | None | None = Field(default=None)
+    created: int | None = Field(default=None)
+    currency: str | None | None = Field(default=None)
+    duration: str | None = Field(default=None)
+    duration_in_months: int | None | None = Field(default=None)
+    livemode: bool | None = Field(default=None)
+    max_redemptions: int | None | None = Field(default=None)
+    metadata: dict[str, str] | None = Field(default=None)
+    name: str | None = Field(default=None)
+    percent_off: float | None | None = Field(default=None)
+    redeem_by: int | None | None = Field(default=None)
+    times_redeemed: int | None = Field(default=None)
+    valid: bool | None = Field(default=None)
+
+class InvoiceDiscount(BaseModel):
+    """The discount applied to the invoice"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None)
+    object_: str | None = Field(default=None, alias="object")
+    checkout_session: str | None | None = Field(default=None)
+    coupon: InvoiceDiscountCoupon | None | None = Field(default=None)
+    customer: str | None = Field(default=None)
+    customer_account: str | None | None = Field(default=None)
+    end: int | None | None = Field(default=None)
+    invoice: str | None | None = Field(default=None)
+    invoice_item: str | None | None = Field(default=None)
+    promotion_code: str | None | None = Field(default=None)
+    start: int | None = Field(default=None)
+    subscription: str | None | None = Field(default=None)
+    subscription_item: str | None | None = Field(default=None)
+
+class InvoiceConfirmationSecret(BaseModel):
+    """The confirmation secret associated with this invoice"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    client_secret: str | None = Field(default=None, description="The client_secret of the payment that Stripe creates for the invoice after finalization")
+    """The client_secret of the payment that Stripe creates for the invoice after finalization"""
+    type_: str | None = Field(default=None, alias="type", description="The type of client_secret")
+    """The type of client_secret"""
+
+class InvoiceTotalTaxAmountsItem(BaseModel):
+    """Nested schema for Invoice.total_tax_amounts_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    amount: int | None = Field(default=None, description="The amount of the tax")
+    """The amount of the tax"""
+    inclusive: bool | None = Field(default=None, description="Whether the tax amount is included in the line item amount")
+    """Whether the tax amount is included in the line item amount"""
+    tax_rate: str | None = Field(default=None, description="The tax rate applied")
+    """The tax rate applied"""
+    taxability_reason: str | None | None = Field(default=None, description="The reasoning behind the tax")
+    """The reasoning behind the tax"""
+    taxable_amount: int | None = Field(default=None, description="The amount on which tax is calculated")
+    """The amount on which tax is calculated"""
 
 class InvoiceLinesDataItemDiscountAmountsItem(BaseModel):
     """Nested schema for InvoiceLinesDataItem.discount_amounts_item"""
@@ -1075,59 +959,49 @@ class InvoiceLines(BaseModel):
     total_count: int | None | None = Field(default=None)
     url: str | None | None = Field(default=None)
 
-class InvoiceDiscountCoupon(BaseModel):
-    """Nested schema for InvoiceDiscount.coupon"""
+class InvoiceCustomerAddress(BaseModel):
+    """The customer's address"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: str | None = Field(default=None)
-    object_: str | None = Field(default=None, alias="object")
-    amount_off: int | None | None = Field(default=None)
-    created: int | None = Field(default=None)
-    currency: str | None | None = Field(default=None)
-    duration: str | None = Field(default=None)
-    duration_in_months: int | None | None = Field(default=None)
-    livemode: bool | None = Field(default=None)
-    max_redemptions: int | None | None = Field(default=None)
-    metadata: dict[str, str] | None = Field(default=None)
-    name: str | None = Field(default=None)
-    percent_off: float | None | None = Field(default=None)
-    redeem_by: int | None | None = Field(default=None)
-    times_redeemed: int | None = Field(default=None)
-    valid: bool | None = Field(default=None)
+    city: str | None | None = Field(default=None, description="City, district, suburb, town, or village")
+    """City, district, suburb, town, or village"""
+    country: str | None | None = Field(default=None, description="Two-letter country code (ISO 3166-1 alpha-2)")
+    """Two-letter country code (ISO 3166-1 alpha-2)"""
+    line1: str | None | None = Field(default=None, description="Address line 1")
+    """Address line 1"""
+    line2: str | None | None = Field(default=None, description="Address line 2")
+    """Address line 2"""
+    postal_code: str | None | None = Field(default=None, description="ZIP or postal code")
+    """ZIP or postal code"""
+    state: str | None | None = Field(default=None, description="State, county, province, or region")
+    """State, county, province, or region"""
 
-class InvoiceDiscount(BaseModel):
-    """The discount applied to the invoice"""
+class InvoiceIssuer(BaseModel):
+    """The connected account that issues the invoice"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: str | None = Field(default=None)
-    object_: str | None = Field(default=None, alias="object")
-    checkout_session: str | None | None = Field(default=None)
-    coupon: InvoiceDiscountCoupon | None | None = Field(default=None)
-    customer: str | None = Field(default=None)
-    customer_account: str | None | None = Field(default=None)
-    end: int | None | None = Field(default=None)
-    invoice: str | None | None = Field(default=None)
-    invoice_item: str | None | None = Field(default=None)
-    promotion_code: str | None | None = Field(default=None)
-    start: int | None = Field(default=None)
-    subscription: str | None | None = Field(default=None)
-    subscription_item: str | None | None = Field(default=None)
+    account: str | None | None = Field(default=None, description="The connected account being referenced when type is account")
+    """The connected account being referenced when type is account"""
+    type_: str | None = Field(default=None, alias="type", description="Type of the account referenced")
+    """Type of the account referenced"""
 
-class InvoiceCustomerTaxIdsItem(BaseModel):
-    """Nested schema for Invoice.customer_tax_ids_item"""
+class InvoiceThresholdReasonItemReasonsItem(BaseModel):
+    """Nested schema for InvoiceThresholdReason.item_reasons_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type_: str | None = Field(default=None, alias="type", description="The type of the tax ID")
-    """The type of the tax ID"""
-    value: str | None | None = Field(default=None, description="The value of the tax ID")
-    """The value of the tax ID"""
+    line_item_ids: list[str] | None = Field(default=None, description="The IDs of the line items that triggered the threshold invoice")
+    """The IDs of the line items that triggered the threshold invoice"""
+    usage_gte: int | None = Field(default=None, description="The quantity threshold boundary that applied to the given line item")
+    """The quantity threshold boundary that applied to the given line item"""
 
-class InvoiceFromInvoice(BaseModel):
-    """Details of the invoice that was cloned"""
+class InvoiceThresholdReason(BaseModel):
+    """If billing_reason is set to subscription_threshold this returns more information"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    action: str | None = Field(default=None)
-    invoice: str | None = Field(default=None)
+    amount_gte: int | None | None = Field(default=None, description="The total invoice amount threshold boundary if it triggered the threshold invoice")
+    """The total invoice amount threshold boundary if it triggered the threshold invoice"""
+    item_reasons: list[InvoiceThresholdReasonItemReasonsItem] | None = Field(default=None, description="Indicates which line items triggered a threshold invoice")
+    """Indicates which line items triggered a threshold invoice"""
 
 class InvoiceAutomaticTaxLiability(BaseModel):
     """The account that's liable for tax"""
@@ -1152,6 +1026,132 @@ class InvoiceAutomaticTax(BaseModel):
     """The tax provider powering automatic tax"""
     status: str | None | None = Field(default=None, description="The status of the most recent automated tax calculation for this invoice")
     """The status of the most recent automated tax calculation for this invoice"""
+
+class InvoiceTotalTaxesItem(BaseModel):
+    """Nested schema for Invoice.total_taxes_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    amount: int | None = Field(default=None, description="The amount of the tax")
+    """The amount of the tax"""
+    tax_behavior: str | None = Field(default=None, description="Whether this tax is inclusive or exclusive")
+    """Whether this tax is inclusive or exclusive"""
+    tax_rate_details: dict[str, Any] | None | None = Field(default=None, description="Additional details about the tax rate")
+    """Additional details about the tax rate"""
+    taxability_reason: str | None = Field(default=None, description="The reasoning behind this tax")
+    """The reasoning behind this tax"""
+    taxable_amount: int | None | None = Field(default=None, description="The amount on which tax is calculated")
+    """The amount on which tax is calculated"""
+    type_: str | None = Field(default=None, alias="type", description="The type of tax information")
+    """The type of tax information"""
+
+class InvoiceShippingCostTaxesItem(BaseModel):
+    """Nested schema for InvoiceShippingCost.taxes_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    amount: int | None = Field(default=None, description="Amount of tax applied for this rate")
+    """Amount of tax applied for this rate"""
+    taxability_reason: str | None | None = Field(default=None, description="The reasoning behind this tax")
+    """The reasoning behind this tax"""
+    taxable_amount: int | None | None = Field(default=None, description="The amount on which tax is calculated")
+    """The amount on which tax is calculated"""
+
+class InvoiceShippingCost(BaseModel):
+    """The details of the cost of shipping"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    amount_subtotal: int | None = Field(default=None, description="Total shipping cost before any taxes are applied")
+    """Total shipping cost before any taxes are applied"""
+    amount_tax: int | None = Field(default=None, description="Total tax amount applied due to shipping costs")
+    """Total tax amount applied due to shipping costs"""
+    amount_total: int | None = Field(default=None, description="Total shipping cost after taxes are applied")
+    """Total shipping cost after taxes are applied"""
+    shipping_rate: str | None | None = Field(default=None, description="The ID of the ShippingRate for this invoice")
+    """The ID of the ShippingRate for this invoice"""
+    taxes: list[InvoiceShippingCostTaxesItem] | None | None = Field(default=None, description="The taxes applied to the shipping rate")
+    """The taxes applied to the shipping rate"""
+
+class InvoiceCustomFieldsItem(BaseModel):
+    """Nested schema for Invoice.custom_fields_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: str | None = Field(default=None, description="The name of the custom field")
+    """The name of the custom field"""
+    value: str | None = Field(default=None, description="The value of the custom field")
+    """The value of the custom field"""
+
+class InvoiceLastFinalizationError(BaseModel):
+    """The error encountered during the last finalization attempt"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    advice_code: str | None | None = Field(default=None, description="For card errors resulting from a card issuer decline")
+    """For card errors resulting from a card issuer decline"""
+    code: str | None | None = Field(default=None, description="For some errors that could be handled programmatically, a short string indicating the error code")
+    """For some errors that could be handled programmatically, a short string indicating the error code"""
+    doc_url: str | None | None = Field(default=None, description="A URL to more information about the error code reported")
+    """A URL to more information about the error code reported"""
+    message: str | None | None = Field(default=None, description="A human-readable message providing more details about the error")
+    """A human-readable message providing more details about the error"""
+    network_advice_code: str | None | None = Field(default=None, description="For card errors resulting from a card issuer decline")
+    """For card errors resulting from a card issuer decline"""
+    network_decline_code: str | None | None = Field(default=None, description="For payments declined by the network")
+    """For payments declined by the network"""
+    param: str | None | None = Field(default=None, description="If the error is parameter-specific, the parameter related to the error")
+    """If the error is parameter-specific, the parameter related to the error"""
+    payment_method_type: str | None | None = Field(default=None, description="If the error is specific to the type of payment method")
+    """If the error is specific to the type of payment method"""
+    type_: str | None = Field(default=None, alias="type", description="The type of error returned")
+    """The type of error returned"""
+
+class InvoiceTotalPretaxCreditAmountsItem(BaseModel):
+    """Nested schema for Invoice.total_pretax_credit_amounts_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    amount: int | None = Field(default=None, description="The amount of the pretax credit amount")
+    """The amount of the pretax credit amount"""
+    credit_balance_transaction: str | None | None = Field(default=None, description="The credit balance transaction that was applied")
+    """The credit balance transaction that was applied"""
+    discount: str | None | None = Field(default=None, description="The discount that was applied")
+    """The discount that was applied"""
+    type_: str | None = Field(default=None, alias="type", description="Type of the pretax credit amount referenced")
+    """Type of the pretax credit amount referenced"""
+
+class InvoicePaymentsDataItem(BaseModel):
+    """Nested schema for InvoicePayments.data_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None, description="Unique identifier for the object")
+    """Unique identifier for the object"""
+    object_: str | None = Field(default=None, alias="object", description="String representing the object's type")
+    """String representing the object's type"""
+    amount_paid: int | None | None = Field(default=None, description="Amount that was actually paid for this invoice")
+    """Amount that was actually paid for this invoice"""
+    amount_requested: int | None = Field(default=None, description="Amount intended to be paid toward this invoice")
+    """Amount intended to be paid toward this invoice"""
+    created: int | None = Field(default=None, description="Time at which the object was created")
+    """Time at which the object was created"""
+    currency: str | None = Field(default=None, description="Three-letter ISO currency code")
+    """Three-letter ISO currency code"""
+    invoice: str | None = Field(default=None, description="The invoice that was paid")
+    """The invoice that was paid"""
+    is_default: bool | None = Field(default=None, description="Whether this is the default payment created when the invoice was finalized")
+    """Whether this is the default payment created when the invoice was finalized"""
+    livemode: bool | None = Field(default=None, description="Has the value true if the object exists in live mode")
+    """Has the value true if the object exists in live mode"""
+    status: str | None = Field(default=None, description="The status of the payment")
+    """The status of the payment"""
+
+class InvoicePayments(BaseModel):
+    """Payments for this invoice"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    object_: str | None = Field(default=None, alias="object", description="String representing the object's type")
+    """String representing the object's type"""
+    data: list[InvoicePaymentsDataItem] | None = Field(default=None, description="Details about each payment")
+    """Details about each payment"""
+    has_more: bool | None = Field(default=None, description="True if this list has another page of items")
+    """True if this list has another page of items"""
+    url: str | None = Field(default=None, description="The URL where this list can be accessed")
+    """The URL where this list can be accessed"""
 
 class Invoice(BaseModel):
     """Invoice type definition"""
@@ -1257,14 +1257,19 @@ class InvoiceList(BaseModel):
     has_more: bool | None = Field(default=None)
     url: str | None = Field(default=None)
 
-class ChargeFraudDetails(BaseModel):
-    """Information on fraud assessments for the charge"""
+class ChargeOutcome(BaseModel):
+    """Details about whether the payment was accepted, and why"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    stripe_report: str | None | None = Field(default=None, description="Assessments from Stripe. If set, the value is `fraudulent`.")
-    """Assessments from Stripe. If set, the value is `fraudulent`."""
-    user_report: str | None | None = Field(default=None, description="Assessments from you or your users. Possible values are `fraudulent` and `safe`")
-    """Assessments from you or your users. Possible values are `fraudulent` and `safe`"""
+    advice_code: str | None | None = Field(default=None)
+    network_advice_code: str | None | None = Field(default=None)
+    network_decline_code: str | None | None = Field(default=None)
+    network_status: str | None = Field(default=None)
+    reason: str | None | None = Field(default=None)
+    risk_level: str | None = Field(default=None)
+    risk_score: int | None = Field(default=None)
+    seller_message: str | None = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
 
 class ChargePresentmentDetails(BaseModel):
     """Currency presentation information for multi-currency charges"""
@@ -1277,22 +1282,47 @@ class ChargePresentmentDetails(BaseModel):
     currency: str | None | None = Field(default=None, description="Three-letter ISO currency code for presentment")
     """Three-letter ISO currency code for presentment"""
 
-class ChargePaymentMethodDetailsCardExtendedAuthorization(BaseModel):
-    """Extended authorization details"""
+class ChargeRefunds(BaseModel):
+    """A list of refunds that have been applied to the charge"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    object_: str | None = Field(default=None, alias="object")
+    data: list[dict[str, Any]] | None = Field(default=None)
+    has_more: bool | None = Field(default=None)
+    total_count: int | None = Field(default=None, description="Total number of refunds")
+    """Total number of refunds"""
+    url: str | None = Field(default=None, description="URL to access the refunds list")
+    """URL to access the refunds list"""
+
+class ChargeBillingDetailsAddress(BaseModel):
+    """Nested schema for ChargeBillingDetails.address"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    city: str | None | None = Field(default=None)
+    country: str | None | None = Field(default=None)
+    line1: str | None | None = Field(default=None)
+    line2: str | None | None = Field(default=None)
+    postal_code: str | None | None = Field(default=None)
+    state: str | None | None = Field(default=None)
+
+class ChargeBillingDetails(BaseModel):
+    """Billing information associated with the payment method"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    address: ChargeBillingDetailsAddress | None | None = Field(default=None)
+    email: str | None | None = Field(default=None)
+    name: str | None | None = Field(default=None)
+    phone: str | None | None = Field(default=None)
+    tax_id: str | None | None = Field(default=None)
+
+class ChargePaymentMethodDetailsCardIncrementalAuthorization(BaseModel):
+    """Incremental authorization details"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     status: str | None = Field(default=None)
 
-class ChargePaymentMethodDetailsCardChecks(BaseModel):
-    """Check results by Card networks on Card address and CVC"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    address_line1_check: str | None | None = Field(default=None)
-    address_postal_code_check: str | None | None = Field(default=None)
-    cvc_check: str | None | None = Field(default=None)
-
-class ChargePaymentMethodDetailsCardIncrementalAuthorization(BaseModel):
-    """Incremental authorization details"""
+class ChargePaymentMethodDetailsCardExtendedAuthorization(BaseModel):
+    """Extended authorization details"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     status: str | None = Field(default=None)
@@ -1303,6 +1333,12 @@ class ChargePaymentMethodDetailsCardNetworkToken(BaseModel):
 
     used: bool | None = Field(default=None)
 
+class ChargePaymentMethodDetailsCardMulticapture(BaseModel):
+    """Multicapture details"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    status: str | None = Field(default=None)
+
 class ChargePaymentMethodDetailsCardOvercapture(BaseModel):
     """Overcapture details"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -1310,11 +1346,13 @@ class ChargePaymentMethodDetailsCardOvercapture(BaseModel):
     maximum_amount_capturable: int | None = Field(default=None)
     status: str | None = Field(default=None)
 
-class ChargePaymentMethodDetailsCardMulticapture(BaseModel):
-    """Multicapture details"""
+class ChargePaymentMethodDetailsCardChecks(BaseModel):
+    """Check results by Card networks on Card address and CVC"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    status: str | None = Field(default=None)
+    address_line1_check: str | None | None = Field(default=None)
+    address_postal_code_check: str | None | None = Field(default=None)
+    cvc_check: str | None | None = Field(default=None)
 
 class ChargePaymentMethodDetailsCard(BaseModel):
     """Nested schema for ChargePaymentMethodDetails.card"""
@@ -1372,52 +1410,14 @@ class ChargePaymentMethodDetails(BaseModel):
     type_: str | None = Field(default=None, alias="type")
     card: ChargePaymentMethodDetailsCard | None | None = Field(default=None)
 
-class ChargeBillingDetailsAddress(BaseModel):
-    """Nested schema for ChargeBillingDetails.address"""
+class ChargeFraudDetails(BaseModel):
+    """Information on fraud assessments for the charge"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    city: str | None | None = Field(default=None)
-    country: str | None | None = Field(default=None)
-    line1: str | None | None = Field(default=None)
-    line2: str | None | None = Field(default=None)
-    postal_code: str | None | None = Field(default=None)
-    state: str | None | None = Field(default=None)
-
-class ChargeBillingDetails(BaseModel):
-    """Billing information associated with the payment method"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    address: ChargeBillingDetailsAddress | None | None = Field(default=None)
-    email: str | None | None = Field(default=None)
-    name: str | None | None = Field(default=None)
-    phone: str | None | None = Field(default=None)
-    tax_id: str | None | None = Field(default=None)
-
-class ChargeOutcome(BaseModel):
-    """Details about whether the payment was accepted, and why"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    advice_code: str | None | None = Field(default=None)
-    network_advice_code: str | None | None = Field(default=None)
-    network_decline_code: str | None | None = Field(default=None)
-    network_status: str | None = Field(default=None)
-    reason: str | None | None = Field(default=None)
-    risk_level: str | None = Field(default=None)
-    risk_score: int | None = Field(default=None)
-    seller_message: str | None = Field(default=None)
-    type_: str | None = Field(default=None, alias="type")
-
-class ChargeRefunds(BaseModel):
-    """A list of refunds that have been applied to the charge"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    object_: str | None = Field(default=None, alias="object")
-    data: list[dict[str, Any]] | None = Field(default=None)
-    has_more: bool | None = Field(default=None)
-    total_count: int | None = Field(default=None, description="Total number of refunds")
-    """Total number of refunds"""
-    url: str | None = Field(default=None, description="URL to access the refunds list")
-    """URL to access the refunds list"""
+    stripe_report: str | None | None = Field(default=None, description="Assessments from Stripe. If set, the value is `fraudulent`.")
+    """Assessments from Stripe. If set, the value is `fraudulent`."""
+    user_report: str | None | None = Field(default=None, description="Assessments from you or your users. Possible values are `fraudulent` and `safe`")
+    """Assessments from you or your users. Possible values are `fraudulent` and `safe`"""
 
 class Charge(BaseModel):
     """Charge type definition"""
@@ -1492,61 +1492,10 @@ class SubscriptionList(BaseModel):
     has_more: bool | None = Field(default=None)
     url: str | None = Field(default=None)
 
-class RefundNextActionDisplayDetailsEmailSent(BaseModel):
-    """Contains information about the email sent to the customer"""
+class RefundDestinationDetailsMbWay(BaseModel):
+    """If this is a mb_way refund, this hash contains the transaction specific details"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    email_sent_at: int | None = Field(default=None, description="The timestamp when the email was sent")
-    """The timestamp when the email was sent"""
-    email_sent_to: str | None = Field(default=None, description="The recipient's email address")
-    """The recipient's email address"""
-
-class RefundNextActionDisplayDetails(BaseModel):
-    """Contains the refund details"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    email_sent: RefundNextActionDisplayDetailsEmailSent | None = Field(default=None, description="Contains information about the email sent to the customer")
-    """Contains information about the email sent to the customer"""
-    expires_at: int | None = Field(default=None, description="The expiry timestamp")
-    """The expiry timestamp"""
-
-class RefundNextAction(BaseModel):
-    """If the refund has a status of requires_action, this property describes what the refund needs to continue processing"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    display_details: RefundNextActionDisplayDetails | None | None = Field(default=None, description="Contains the refund details")
-    """Contains the refund details"""
-    type_: str | None = Field(default=None, alias="type", description="Type of the next action to perform")
-    """Type of the next action to perform"""
-
-class RefundDestinationDetailsCard(BaseModel):
-    """If this is a card refund, this hash contains the transaction specific details"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    reference: str | None | None = Field(default=None, description="Value of the reference number assigned to the refund")
-    """Value of the reference number assigned to the refund"""
-    reference_status: str | None | None = Field(default=None, description="Status of the reference number on the refund")
-    """Status of the reference number on the refund"""
-    reference_type: str | None | None = Field(default=None, description="Type of the reference number assigned to the refund")
-    """Type of the reference number assigned to the refund"""
-    type_: str | None = Field(default=None, alias="type", description="The type of refund")
-    """The type of refund"""
-
-class RefundDestinationDetailsEuBankTransfer(BaseModel):
-    """If this is a eu_bank_transfer refund, this hash contains the transaction specific details"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    reference: str | None | None = Field(default=None, description="The reference assigned to the refund")
-    """The reference assigned to the refund"""
-    reference_status: str | None | None = Field(default=None, description="Status of the reference on the refund")
-    """Status of the reference on the refund"""
-
-class RefundDestinationDetailsBlik(BaseModel):
-    """If this is a blik refund, this hash contains the transaction specific details"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    network_decline_code: str | None | None = Field(default=None, description="For refunds declined by the network, a decline code provided by the network")
-    """For refunds declined by the network, a decline code provided by the network"""
     reference: str | None | None = Field(default=None, description="The reference assigned to the refund")
     """The reference assigned to the refund"""
     reference_status: str | None | None = Field(default=None, description="Status of the reference on the refund")
@@ -1561,10 +1510,59 @@ class RefundDestinationDetailsBrBankTransfer(BaseModel):
     reference_status: str | None | None = Field(default=None, description="Status of the reference on the refund")
     """Status of the reference on the refund"""
 
-class RefundDestinationDetailsMultibanco(BaseModel):
-    """If this is a multibanco refund, this hash contains the transaction specific details"""
+class RefundDestinationDetailsGbBankTransfer(BaseModel):
+    """If this is a gb_bank_transfer refund, this hash contains the transaction specific details"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
+    reference: str | None | None = Field(default=None, description="The reference assigned to the refund")
+    """The reference assigned to the refund"""
+    reference_status: str | None | None = Field(default=None, description="Status of the reference on the refund")
+    """Status of the reference on the refund"""
+
+class RefundDestinationDetailsEuBankTransfer(BaseModel):
+    """If this is a eu_bank_transfer refund, this hash contains the transaction specific details"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    reference: str | None | None = Field(default=None, description="The reference assigned to the refund")
+    """The reference assigned to the refund"""
+    reference_status: str | None | None = Field(default=None, description="Status of the reference on the refund")
+    """Status of the reference on the refund"""
+
+class RefundDestinationDetailsThBankTransfer(BaseModel):
+    """If this is a th_bank_transfer refund, this hash contains the transaction specific details"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    reference: str | None | None = Field(default=None, description="The reference assigned to the refund")
+    """The reference assigned to the refund"""
+    reference_status: str | None | None = Field(default=None, description="Status of the reference on the refund")
+    """Status of the reference on the refund"""
+
+class RefundDestinationDetailsCrypto(BaseModel):
+    """If this is a crypto refund, this hash contains the transaction specific details"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    reference: str | None | None = Field(default=None, description="The transaction hash of the refund")
+    """The transaction hash of the refund"""
+
+class RefundDestinationDetailsCard(BaseModel):
+    """If this is a card refund, this hash contains the transaction specific details"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    reference: str | None | None = Field(default=None, description="Value of the reference number assigned to the refund")
+    """Value of the reference number assigned to the refund"""
+    reference_status: str | None | None = Field(default=None, description="Status of the reference number on the refund")
+    """Status of the reference number on the refund"""
+    reference_type: str | None | None = Field(default=None, description="Type of the reference number assigned to the refund")
+    """Type of the reference number assigned to the refund"""
+    type_: str | None = Field(default=None, alias="type", description="The type of refund")
+    """The type of refund"""
+
+class RefundDestinationDetailsBlik(BaseModel):
+    """If this is a blik refund, this hash contains the transaction specific details"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    network_decline_code: str | None | None = Field(default=None, description="For refunds declined by the network, a decline code provided by the network")
+    """For refunds declined by the network, a decline code provided by the network"""
     reference: str | None | None = Field(default=None, description="The reference assigned to the refund")
     """The reference assigned to the refund"""
     reference_status: str | None | None = Field(default=None, description="Status of the reference on the refund")
@@ -1577,8 +1575,8 @@ class RefundDestinationDetailsPaypal(BaseModel):
     network_decline_code: str | None | None = Field(default=None, description="For refunds declined by the network, a decline code provided by the network")
     """For refunds declined by the network, a decline code provided by the network"""
 
-class RefundDestinationDetailsUsBankTransfer(BaseModel):
-    """If this is a us_bank_transfer refund, this hash contains the transaction specific details"""
+class RefundDestinationDetailsMultibanco(BaseModel):
+    """If this is a multibanco refund, this hash contains the transaction specific details"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     reference: str | None | None = Field(default=None, description="The reference assigned to the refund")
@@ -1586,10 +1584,12 @@ class RefundDestinationDetailsUsBankTransfer(BaseModel):
     reference_status: str | None | None = Field(default=None, description="Status of the reference on the refund")
     """Status of the reference on the refund"""
 
-class RefundDestinationDetailsMbWay(BaseModel):
-    """If this is a mb_way refund, this hash contains the transaction specific details"""
+class RefundDestinationDetailsSwish(BaseModel):
+    """If this is a swish refund, this hash contains the transaction specific details"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
+    network_decline_code: str | None | None = Field(default=None, description="For refunds declined by the network, a decline code provided by the network")
+    """For refunds declined by the network, a decline code provided by the network"""
     reference: str | None | None = Field(default=None, description="The reference assigned to the refund")
     """The reference assigned to the refund"""
     reference_status: str | None | None = Field(default=None, description="Status of the reference on the refund")
@@ -1597,6 +1597,15 @@ class RefundDestinationDetailsMbWay(BaseModel):
 
 class RefundDestinationDetailsMxBankTransfer(BaseModel):
     """If this is a mx_bank_transfer refund, this hash contains the transaction specific details"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    reference: str | None | None = Field(default=None, description="The reference assigned to the refund")
+    """The reference assigned to the refund"""
+    reference_status: str | None | None = Field(default=None, description="Status of the reference on the refund")
+    """Status of the reference on the refund"""
+
+class RefundDestinationDetailsUsBankTransfer(BaseModel):
+    """If this is a us_bank_transfer refund, this hash contains the transaction specific details"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     reference: str | None | None = Field(default=None, description="The reference assigned to the refund")
@@ -1613,44 +1622,8 @@ class RefundDestinationDetailsP24(BaseModel):
     reference_status: str | None | None = Field(default=None, description="Status of the reference on the refund")
     """Status of the reference on the refund"""
 
-class RefundDestinationDetailsCrypto(BaseModel):
-    """If this is a crypto refund, this hash contains the transaction specific details"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    reference: str | None | None = Field(default=None, description="The transaction hash of the refund")
-    """The transaction hash of the refund"""
-
-class RefundDestinationDetailsSwish(BaseModel):
-    """If this is a swish refund, this hash contains the transaction specific details"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    network_decline_code: str | None | None = Field(default=None, description="For refunds declined by the network, a decline code provided by the network")
-    """For refunds declined by the network, a decline code provided by the network"""
-    reference: str | None | None = Field(default=None, description="The reference assigned to the refund")
-    """The reference assigned to the refund"""
-    reference_status: str | None | None = Field(default=None, description="Status of the reference on the refund")
-    """Status of the reference on the refund"""
-
-class RefundDestinationDetailsThBankTransfer(BaseModel):
-    """If this is a th_bank_transfer refund, this hash contains the transaction specific details"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    reference: str | None | None = Field(default=None, description="The reference assigned to the refund")
-    """The reference assigned to the refund"""
-    reference_status: str | None | None = Field(default=None, description="Status of the reference on the refund")
-    """Status of the reference on the refund"""
-
 class RefundDestinationDetailsJpBankTransfer(BaseModel):
     """If this is a jp_bank_transfer refund, this hash contains the transaction specific details"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    reference: str | None | None = Field(default=None, description="The reference assigned to the refund")
-    """The reference assigned to the refund"""
-    reference_status: str | None | None = Field(default=None, description="Status of the reference on the refund")
-    """Status of the reference on the refund"""
-
-class RefundDestinationDetailsGbBankTransfer(BaseModel):
-    """If this is a gb_bank_transfer refund, this hash contains the transaction specific details"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     reference: str | None | None = Field(default=None, description="The reference assigned to the refund")
@@ -1735,6 +1708,33 @@ class RefundDestinationDetails(BaseModel):
     zip: dict[str, Any] | None | None = Field(default=None, description="If this is a zip refund, this hash contains the transaction specific details")
     """If this is a zip refund, this hash contains the transaction specific details"""
 
+class RefundNextActionDisplayDetailsEmailSent(BaseModel):
+    """Contains information about the email sent to the customer"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    email_sent_at: int | None = Field(default=None, description="The timestamp when the email was sent")
+    """The timestamp when the email was sent"""
+    email_sent_to: str | None = Field(default=None, description="The recipient's email address")
+    """The recipient's email address"""
+
+class RefundNextActionDisplayDetails(BaseModel):
+    """Contains the refund details"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    email_sent: RefundNextActionDisplayDetailsEmailSent | None = Field(default=None, description="Contains information about the email sent to the customer")
+    """Contains information about the email sent to the customer"""
+    expires_at: int | None = Field(default=None, description="The expiry timestamp")
+    """The expiry timestamp"""
+
+class RefundNextAction(BaseModel):
+    """If the refund has a status of requires_action, this property describes what the refund needs to continue processing"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    display_details: RefundNextActionDisplayDetails | None | None = Field(default=None, description="Contains the refund details")
+    """Contains the refund details"""
+    type_: str | None = Field(default=None, alias="type", description="Type of the next action to perform")
+    """Type of the next action to perform"""
+
 class Refund(BaseModel):
     """Refund type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -1783,19 +1783,19 @@ class RefundCreateParams(BaseModel):
     refund_application_fee: bool | None = Field(default=None)
     reverse_transfer: bool | None = Field(default=None)
 
-class ProductFeaturesItem(BaseModel):
-    """Nested schema for Product.features_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: str | None = Field(default=None, description="The feature name")
-    """The feature name"""
-
 class ProductMarketingFeaturesItem(BaseModel):
     """Nested schema for Product.marketing_features_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     name: str | None | None = Field(default=None, description="The marketing feature name. Up to 80 characters long")
     """The marketing feature name. Up to 80 characters long"""
+
+class ProductFeaturesItem(BaseModel):
+    """Nested schema for Product.features_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: str | None = Field(default=None, description="The feature name")
+    """The feature name"""
 
 class ProductPackageDimensions(BaseModel):
     """The dimensions of this product for shipping purposes"""
@@ -1855,13 +1855,6 @@ class ProductSearchResult(BaseModel):
     next_page: str | None = Field(default=None)
     url: str | None = Field(default=None)
 
-class ProductCreateParamsMarketingFeaturesItem(BaseModel):
-    """Nested schema for ProductCreateParams.marketing_features_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: str | None = Field(default=None, description="The marketing feature name. Up to 80 characters long")
-    """The marketing feature name. Up to 80 characters long"""
-
 class ProductCreateParamsPackageDimensions(BaseModel):
     """The dimensions of this product for shipping purposes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -1874,6 +1867,13 @@ class ProductCreateParamsPackageDimensions(BaseModel):
     """Weight, in ounces"""
     width: float | None = Field(default=None, description="Width, in inches")
     """Width, in inches"""
+
+class ProductCreateParamsMarketingFeaturesItem(BaseModel):
+    """Nested schema for ProductCreateParams.marketing_features_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: str | None = Field(default=None, description="The marketing feature name. Up to 80 characters long")
+    """The marketing feature name. Up to 80 characters long"""
 
 class ProductCreateParams(BaseModel):
     """ProductCreateParams type definition"""
@@ -1939,7 +1939,7 @@ class ProductDeletedResponse(BaseModel):
     object_: str | None = Field(default=None, alias="object")
     deleted: bool | None = Field(default=None)
 
-class BalanceInstantAvailableItemSourceTypes(BaseModel):
+class BalanceAvailableItemSourceTypes(BaseModel):
     """Breakdown of balance by source types"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
@@ -1949,6 +1949,46 @@ class BalanceInstantAvailableItemSourceTypes(BaseModel):
     """Amount for card"""
     fpx: int | None | None = Field(default=None, description="Amount for fpx")
     """Amount for fpx"""
+
+class BalanceAvailableItem(BaseModel):
+    """Nested schema for Balance.available_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    amount: int | None = Field(default=None, description="Balance amount in the smallest currency unit (e.g., cents)")
+    """Balance amount in the smallest currency unit (e.g., cents)"""
+    currency: str | None = Field(default=None, description="Three-letter ISO currency code, in lowercase")
+    """Three-letter ISO currency code, in lowercase"""
+    source_types: BalanceAvailableItemSourceTypes | None | None = Field(default=None, description="Breakdown of balance by source types")
+    """Breakdown of balance by source types"""
+
+class BalanceIssuingAvailableItemSourceTypes(BaseModel):
+    """Breakdown of balance by source types"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    bank_account: int | None | None = Field(default=None, description="Amount for bank_account")
+    """Amount for bank_account"""
+    card: int | None | None = Field(default=None, description="Amount for card")
+    """Amount for card"""
+    fpx: int | None | None = Field(default=None, description="Amount for fpx")
+    """Amount for fpx"""
+
+class BalanceIssuingAvailableItem(BaseModel):
+    """Nested schema for BalanceIssuing.available_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    amount: int | None = Field(default=None, description="Balance amount")
+    """Balance amount"""
+    currency: str | None = Field(default=None, description="Three-letter ISO currency code")
+    """Three-letter ISO currency code"""
+    source_types: BalanceIssuingAvailableItemSourceTypes | None | None = Field(default=None, description="Breakdown of balance by source types")
+    """Breakdown of balance by source types"""
+
+class BalanceIssuing(BaseModel):
+    """Funds that are available for use with Issuing cards"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    available: list[BalanceIssuingAvailableItem] | None = Field(default=None, description="Funds available for issuing")
+    """Funds available for issuing"""
 
 class BalanceInstantAvailableItemNetAvailableItemSourceTypes(BaseModel):
     """Breakdown of balance by source types"""
@@ -1971,6 +2011,17 @@ class BalanceInstantAvailableItemNetAvailableItem(BaseModel):
     """ID of the external account"""
     source_types: BalanceInstantAvailableItemNetAvailableItemSourceTypes | None | None = Field(default=None, description="Breakdown of balance by source types")
     """Breakdown of balance by source types"""
+
+class BalanceInstantAvailableItemSourceTypes(BaseModel):
+    """Breakdown of balance by source types"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    bank_account: int | None | None = Field(default=None, description="Amount for bank_account")
+    """Amount for bank_account"""
+    card: int | None | None = Field(default=None, description="Amount for card")
+    """Amount for card"""
+    fpx: int | None | None = Field(default=None, description="Amount for fpx")
+    """Amount for fpx"""
 
 class BalanceInstantAvailableItem(BaseModel):
     """Nested schema for Balance.instant_available_item"""
@@ -2007,28 +2058,6 @@ class BalancePendingItem(BaseModel):
     source_types: BalancePendingItemSourceTypes | None | None = Field(default=None, description="Breakdown of balance by source types")
     """Breakdown of balance by source types"""
 
-class BalanceAvailableItemSourceTypes(BaseModel):
-    """Breakdown of balance by source types"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    bank_account: int | None | None = Field(default=None, description="Amount for bank_account")
-    """Amount for bank_account"""
-    card: int | None | None = Field(default=None, description="Amount for card")
-    """Amount for card"""
-    fpx: int | None | None = Field(default=None, description="Amount for fpx")
-    """Amount for fpx"""
-
-class BalanceAvailableItem(BaseModel):
-    """Nested schema for Balance.available_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    amount: int | None = Field(default=None, description="Balance amount in the smallest currency unit (e.g., cents)")
-    """Balance amount in the smallest currency unit (e.g., cents)"""
-    currency: str | None = Field(default=None, description="Three-letter ISO currency code, in lowercase")
-    """Three-letter ISO currency code, in lowercase"""
-    source_types: BalanceAvailableItemSourceTypes | None | None = Field(default=None, description="Breakdown of balance by source types")
-    """Breakdown of balance by source types"""
-
 class BalanceConnectReservedItemSourceTypes(BaseModel):
     """Breakdown of balance by source types"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -2049,28 +2078,6 @@ class BalanceConnectReservedItem(BaseModel):
     currency: str | None = Field(default=None, description="Three-letter ISO currency code, in lowercase")
     """Three-letter ISO currency code, in lowercase"""
     source_types: BalanceConnectReservedItemSourceTypes | None | None = Field(default=None, description="Breakdown of balance by source types")
-    """Breakdown of balance by source types"""
-
-class BalanceRefundAndDisputePrefundingPendingItemSourceTypes(BaseModel):
-    """Breakdown of balance by source types"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    bank_account: int | None | None = Field(default=None, description="Amount for bank_account")
-    """Amount for bank_account"""
-    card: int | None | None = Field(default=None, description="Amount for card")
-    """Amount for card"""
-    fpx: int | None | None = Field(default=None, description="Amount for fpx")
-    """Amount for fpx"""
-
-class BalanceRefundAndDisputePrefundingPendingItem(BaseModel):
-    """Nested schema for BalanceRefundAndDisputePrefunding.pending_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    amount: int | None = Field(default=None, description="Balance amount")
-    """Balance amount"""
-    currency: str | None = Field(default=None, description="Three-letter ISO currency code")
-    """Three-letter ISO currency code"""
-    source_types: BalanceRefundAndDisputePrefundingPendingItemSourceTypes | None | None = Field(default=None, description="Breakdown of balance by source types")
     """Breakdown of balance by source types"""
 
 class BalanceRefundAndDisputePrefundingAvailableItemSourceTypes(BaseModel):
@@ -2095,16 +2102,7 @@ class BalanceRefundAndDisputePrefundingAvailableItem(BaseModel):
     source_types: BalanceRefundAndDisputePrefundingAvailableItemSourceTypes | None | None = Field(default=None, description="Breakdown of balance by source types")
     """Breakdown of balance by source types"""
 
-class BalanceRefundAndDisputePrefunding(BaseModel):
-    """Funds reserved for covering future refunds or disputes"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    available: list[BalanceRefundAndDisputePrefundingAvailableItem] | None = Field(default=None, description="Available funds for refunds and disputes")
-    """Available funds for refunds and disputes"""
-    pending: list[BalanceRefundAndDisputePrefundingPendingItem] | None = Field(default=None, description="Pending funds for refunds and disputes")
-    """Pending funds for refunds and disputes"""
-
-class BalanceIssuingAvailableItemSourceTypes(BaseModel):
+class BalanceRefundAndDisputePrefundingPendingItemSourceTypes(BaseModel):
     """Breakdown of balance by source types"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
@@ -2115,23 +2113,25 @@ class BalanceIssuingAvailableItemSourceTypes(BaseModel):
     fpx: int | None | None = Field(default=None, description="Amount for fpx")
     """Amount for fpx"""
 
-class BalanceIssuingAvailableItem(BaseModel):
-    """Nested schema for BalanceIssuing.available_item"""
+class BalanceRefundAndDisputePrefundingPendingItem(BaseModel):
+    """Nested schema for BalanceRefundAndDisputePrefunding.pending_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     amount: int | None = Field(default=None, description="Balance amount")
     """Balance amount"""
     currency: str | None = Field(default=None, description="Three-letter ISO currency code")
     """Three-letter ISO currency code"""
-    source_types: BalanceIssuingAvailableItemSourceTypes | None | None = Field(default=None, description="Breakdown of balance by source types")
+    source_types: BalanceRefundAndDisputePrefundingPendingItemSourceTypes | None | None = Field(default=None, description="Breakdown of balance by source types")
     """Breakdown of balance by source types"""
 
-class BalanceIssuing(BaseModel):
-    """Funds that are available for use with Issuing cards"""
+class BalanceRefundAndDisputePrefunding(BaseModel):
+    """Funds reserved for covering future refunds or disputes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    available: list[BalanceIssuingAvailableItem] | None = Field(default=None, description="Funds available for issuing")
-    """Funds available for issuing"""
+    available: list[BalanceRefundAndDisputePrefundingAvailableItem] | None = Field(default=None, description="Available funds for refunds and disputes")
+    """Available funds for refunds and disputes"""
+    pending: list[BalanceRefundAndDisputePrefundingPendingItem] | None = Field(default=None, description="Pending funds for refunds and disputes")
+    """Pending funds for refunds and disputes"""
 
 class Balance(BaseModel):
     """Balance type definition"""
@@ -2492,15 +2492,6 @@ class SubscriptionUpdateParams(BaseModel):
     metadata: dict[str, str] | None = Field(default=None)
     proration_behavior: str | None = Field(default=None)
 
-class PriceTransformQuantity(BaseModel):
-    """Apply a transformation to the reported usage or set quantity before computing the amount billed"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    divide_by: int | None = Field(default=None, description="Divide usage by this number")
-    """Divide usage by this number"""
-    round: str | None = Field(default=None, description="After division, either round the result up or down")
-    """After division, either round the result up or down"""
-
 class PriceRecurring(BaseModel):
     """The recurring components of a price such as interval and usage_type"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -2511,6 +2502,15 @@ class PriceRecurring(BaseModel):
     """The number of intervals between subscription billings"""
     usage_type: str | None | None = Field(default=None, description="Configures how the quantity per period should be determined")
     """Configures how the quantity per period should be determined"""
+
+class PriceTransformQuantity(BaseModel):
+    """Apply a transformation to the reported usage or set quantity before computing the amount billed"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    divide_by: int | None = Field(default=None, description="Divide usage by this number")
+    """Divide usage by this number"""
+    round: str | None = Field(default=None, description="After division, either round the result up or down")
+    """After division, either round the result up or down"""
 
 class Price(BaseModel):
     """Price type definition"""

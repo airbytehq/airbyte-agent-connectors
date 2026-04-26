@@ -2482,6 +2482,340 @@ SalesforceConnectorModel: ConnectorModel = ConnectorModel(
             },
         ),
         EntityDefinition(
+            name='users',
+            stream_name='User',
+            actions=[Action.LIST, Action.GET],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/query:users',
+                    path_override=PathOverrideConfig(
+                        path='/query',
+                    ),
+                    action=Action.LIST,
+                    description='Returns a list of users via SOQL query. Default returns up to 200 records.\nFor pagination, check the response: if `done` is false, use `nextRecordsUrl` to fetch the next page.\n',
+                    query_params=['q'],
+                    query_params_schema={
+                        'q': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'SELECT FIELDS(STANDARD) FROM User WHERE IsActive = true ORDER BY LastModifiedDate DESC LIMIT 200',
+                        },
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'SOQL query result for users',
+                        'properties': {
+                            'totalSize': {'type': 'integer', 'description': 'Total number of records'},
+                            'done': {'type': 'boolean', 'description': 'Whether all records have been returned'},
+                            'nextRecordsUrl': {'type': 'string', 'description': 'URL to fetch next page of results'},
+                            'records': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'Salesforce User object - uses FIELDS(STANDARD) so all standard fields are returned',
+                                    'properties': {
+                                        'Id': {'type': 'string', 'description': 'Unique identifier'},
+                                        'Name': {'type': 'string', 'description': 'Full name of the user'},
+                                        'attributes': {
+                                            'type': 'object',
+                                            'properties': {
+                                                'type': {'type': 'string'},
+                                                'url': {'type': 'string'},
+                                            },
+                                        },
+                                    },
+                                    'additionalProperties': True,
+                                    'x-airbyte-entity-name': 'users',
+                                    'x-airbyte-stream-name': 'User',
+                                    'x-airbyte-ai-hints': {
+                                        'summary': 'Salesforce users with profile, role, and activity information',
+                                        'when_to_use': 'Looking up user details, owners, or assignees in Salesforce',
+                                        'trigger_phrases': [
+                                            'salesforce user',
+                                            'owner',
+                                            'assignee',
+                                            'who owns',
+                                        ],
+                                        'freshness': 'live',
+                                        'example_questions': ['Who are the active users in Salesforce?', 'Show me details for the owner of this record'],
+                                        'search_strategy': 'Search by name, email, or filter by active status',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    record_extractor='$.records',
+                    meta_extractor={'done': '$.done', 'nextRecordsUrl': '$.nextRecordsUrl'},
+                ),
+                Action.GET: EndpointDefinition(
+                    method='GET',
+                    path='/sobjects/User/{id}',
+                    action=Action.GET,
+                    description='Get a single user by ID. Returns all accessible fields by default.\nUse the `fields` parameter to retrieve only specific fields for better performance.\n',
+                    query_params=['fields'],
+                    query_params_schema={
+                        'fields': {'type': 'string', 'required': False},
+                    },
+                    path_params=['id'],
+                    path_params_schema={
+                        'id': {'type': 'string', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Salesforce User object - uses FIELDS(STANDARD) so all standard fields are returned',
+                        'properties': {
+                            'Id': {'type': 'string', 'description': 'Unique identifier'},
+                            'Name': {'type': 'string', 'description': 'Full name of the user'},
+                            'attributes': {
+                                'type': 'object',
+                                'properties': {
+                                    'type': {'type': 'string'},
+                                    'url': {'type': 'string'},
+                                },
+                            },
+                        },
+                        'additionalProperties': True,
+                        'x-airbyte-entity-name': 'users',
+                        'x-airbyte-stream-name': 'User',
+                        'x-airbyte-ai-hints': {
+                            'summary': 'Salesforce users with profile, role, and activity information',
+                            'when_to_use': 'Looking up user details, owners, or assignees in Salesforce',
+                            'trigger_phrases': [
+                                'salesforce user',
+                                'owner',
+                                'assignee',
+                                'who owns',
+                            ],
+                            'freshness': 'live',
+                            'example_questions': ['Who are the active users in Salesforce?', 'Show me details for the owner of this record'],
+                            'search_strategy': 'Search by name, email, or filter by active status',
+                        },
+                    },
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'Salesforce User object - uses FIELDS(STANDARD) so all standard fields are returned',
+                'properties': {
+                    'Id': {'type': 'string', 'description': 'Unique identifier'},
+                    'Name': {'type': 'string', 'description': 'Full name of the user'},
+                    'attributes': {
+                        'type': 'object',
+                        'properties': {
+                            'type': {'type': 'string'},
+                            'url': {'type': 'string'},
+                        },
+                    },
+                },
+                'additionalProperties': True,
+                'x-airbyte-entity-name': 'users',
+                'x-airbyte-stream-name': 'User',
+                'x-airbyte-ai-hints': {
+                    'summary': 'Salesforce users with profile, role, and activity information',
+                    'when_to_use': 'Looking up user details, owners, or assignees in Salesforce',
+                    'trigger_phrases': [
+                        'salesforce user',
+                        'owner',
+                        'assignee',
+                        'who owns',
+                    ],
+                    'freshness': 'live',
+                    'example_questions': ['Who are the active users in Salesforce?', 'Show me details for the owner of this record'],
+                    'search_strategy': 'Search by name, email, or filter by active status',
+                },
+            },
+            ai_hints={
+                'summary': 'Salesforce users with profile, role, and activity information',
+                'when_to_use': 'Looking up user details, owners, or assignees in Salesforce',
+                'trigger_phrases': [
+                    'salesforce user',
+                    'owner',
+                    'assignee',
+                    'who owns',
+                ],
+                'freshness': 'live',
+                'example_questions': ['Who are the active users in Salesforce?', 'Show me details for the owner of this record'],
+                'search_strategy': 'Search by name, email, or filter by active status',
+            },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='users',
+                    target_entity='users',
+                    foreign_key='ManagerId',
+                    target_key='Id',
+                    cardinality='many_to_one',
+                ),
+            ],
+        ),
+        EntityDefinition(
+            name='opportunity_stages',
+            stream_name='OpportunityStage',
+            actions=[Action.LIST, Action.GET],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/query:opportunity_stages',
+                    path_override=PathOverrideConfig(
+                        path='/query',
+                    ),
+                    action=Action.LIST,
+                    description='Returns a list of opportunity stages via SOQL query. Default returns all stages.\nOpportunityStage defines the sales process stages that opportunities move through.\n',
+                    query_params=['q'],
+                    query_params_schema={
+                        'q': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'SELECT FIELDS(STANDARD) FROM OpportunityStage ORDER BY SortOrder ASC',
+                        },
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'SOQL query result for opportunity stages',
+                        'properties': {
+                            'totalSize': {'type': 'integer', 'description': 'Total number of records'},
+                            'done': {'type': 'boolean', 'description': 'Whether all records have been returned'},
+                            'nextRecordsUrl': {'type': 'string', 'description': 'URL to fetch next page of results'},
+                            'records': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'Salesforce OpportunityStage object - uses FIELDS(STANDARD) so all standard fields are returned',
+                                    'properties': {
+                                        'Id': {'type': 'string', 'description': 'Unique identifier'},
+                                        'MasterLabel': {'type': 'string', 'description': 'Display label for the stage'},
+                                        'attributes': {
+                                            'type': 'object',
+                                            'properties': {
+                                                'type': {'type': 'string'},
+                                                'url': {'type': 'string'},
+                                            },
+                                        },
+                                    },
+                                    'additionalProperties': True,
+                                    'x-airbyte-entity-name': 'opportunity_stages',
+                                    'x-airbyte-stream-name': 'OpportunityStage',
+                                    'x-airbyte-ai-hints': {
+                                        'summary': 'Sales process stages that opportunities move through',
+                                        'when_to_use': 'Looking up opportunity stage definitions, probabilities, or sales process configuration',
+                                        'trigger_phrases': [
+                                            'opportunity stage',
+                                            'sales stage',
+                                            'pipeline stage',
+                                            'stage definition',
+                                        ],
+                                        'freshness': 'live',
+                                        'example_questions': ['What are the opportunity stages in our sales process?', 'Show me the default probabilities for each stage'],
+                                        'search_strategy': 'List all stages or filter by active status',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    record_extractor='$.records',
+                    meta_extractor={'done': '$.done', 'nextRecordsUrl': '$.nextRecordsUrl'},
+                ),
+                Action.GET: EndpointDefinition(
+                    method='GET',
+                    path='/sobjects/OpportunityStage/{id}',
+                    action=Action.GET,
+                    description='Get a single opportunity stage by ID. Returns all accessible fields by default.\nUse the `fields` parameter to retrieve only specific fields for better performance.\n',
+                    query_params=['fields'],
+                    query_params_schema={
+                        'fields': {'type': 'string', 'required': False},
+                    },
+                    path_params=['id'],
+                    path_params_schema={
+                        'id': {'type': 'string', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Salesforce OpportunityStage object - uses FIELDS(STANDARD) so all standard fields are returned',
+                        'properties': {
+                            'Id': {'type': 'string', 'description': 'Unique identifier'},
+                            'MasterLabel': {'type': 'string', 'description': 'Display label for the stage'},
+                            'attributes': {
+                                'type': 'object',
+                                'properties': {
+                                    'type': {'type': 'string'},
+                                    'url': {'type': 'string'},
+                                },
+                            },
+                        },
+                        'additionalProperties': True,
+                        'x-airbyte-entity-name': 'opportunity_stages',
+                        'x-airbyte-stream-name': 'OpportunityStage',
+                        'x-airbyte-ai-hints': {
+                            'summary': 'Sales process stages that opportunities move through',
+                            'when_to_use': 'Looking up opportunity stage definitions, probabilities, or sales process configuration',
+                            'trigger_phrases': [
+                                'opportunity stage',
+                                'sales stage',
+                                'pipeline stage',
+                                'stage definition',
+                            ],
+                            'freshness': 'live',
+                            'example_questions': ['What are the opportunity stages in our sales process?', 'Show me the default probabilities for each stage'],
+                            'search_strategy': 'List all stages or filter by active status',
+                        },
+                    },
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'Salesforce OpportunityStage object - uses FIELDS(STANDARD) so all standard fields are returned',
+                'properties': {
+                    'Id': {'type': 'string', 'description': 'Unique identifier'},
+                    'MasterLabel': {'type': 'string', 'description': 'Display label for the stage'},
+                    'attributes': {
+                        'type': 'object',
+                        'properties': {
+                            'type': {'type': 'string'},
+                            'url': {'type': 'string'},
+                        },
+                    },
+                },
+                'additionalProperties': True,
+                'x-airbyte-entity-name': 'opportunity_stages',
+                'x-airbyte-stream-name': 'OpportunityStage',
+                'x-airbyte-ai-hints': {
+                    'summary': 'Sales process stages that opportunities move through',
+                    'when_to_use': 'Looking up opportunity stage definitions, probabilities, or sales process configuration',
+                    'trigger_phrases': [
+                        'opportunity stage',
+                        'sales stage',
+                        'pipeline stage',
+                        'stage definition',
+                    ],
+                    'freshness': 'live',
+                    'example_questions': ['What are the opportunity stages in our sales process?', 'Show me the default probabilities for each stage'],
+                    'search_strategy': 'List all stages or filter by active status',
+                },
+            },
+            ai_hints={
+                'summary': 'Sales process stages that opportunities move through',
+                'when_to_use': 'Looking up opportunity stage definitions, probabilities, or sales process configuration',
+                'trigger_phrases': [
+                    'opportunity stage',
+                    'sales stage',
+                    'pipeline stage',
+                    'stage definition',
+                ],
+                'freshness': 'live',
+                'example_questions': ['What are the opportunity stages in our sales process?', 'Show me the default probabilities for each stage'],
+                'search_strategy': 'List all stages or filter by active status',
+            },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='opportunity_stages',
+                    target_entity='users',
+                    foreign_key='CreatedById',
+                    target_key='Id',
+                    cardinality='many_to_one',
+                ),
+            ],
+        ),
+        EntityDefinition(
             name='query',
             actions=[Action.LIST],
             endpoints={

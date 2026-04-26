@@ -50,6 +50,8 @@ from .types import (
     OpportunitiesApiSearchParams,
     OpportunitiesGetParams,
     OpportunitiesListParams,
+    OpportunityStagesGetParams,
+    OpportunityStagesListParams,
     QueryListParams,
     ReportsGetParams,
     ReportsListParams,
@@ -57,6 +59,8 @@ from .types import (
     TasksApiSearchParams,
     TasksGetParams,
     TasksListParams,
+    UsersGetParams,
+    UsersListParams,
     AirbyteSearchParams,
     AccountsSearchFilter,
     AccountsSearchQuery,
@@ -68,6 +72,10 @@ from .types import (
     OpportunitiesSearchQuery,
     TasksSearchFilter,
     TasksSearchQuery,
+    UsersSearchFilter,
+    UsersSearchQuery,
+    OpportunityStagesSearchFilter,
+    OpportunityStagesSearchQuery,
 )
 from .models import SalesforceAuthConfig
 
@@ -98,6 +106,8 @@ from .models import (
     ContentVersionsListResult,
     AttachmentsListResult,
     ReportsListResult,
+    UsersListResult,
+    OpportunityStagesListResult,
     QueryListResult,
     Account,
     Attachment,
@@ -109,11 +119,13 @@ from .models import (
     Lead,
     Note,
     Opportunity,
+    OpportunityStage,
     Report,
     ReportResults,
     SObject,
     SearchResult,
     Task,
+    User,
     AirbyteSearchMeta,
     AirbyteSearchResult,
     AccountsSearchData,
@@ -126,6 +138,10 @@ from .models import (
     OpportunitiesSearchResult,
     TasksSearchData,
     TasksSearchResult,
+    UsersSearchData,
+    UsersSearchResult,
+    OpportunityStagesSearchData,
+    OpportunityStagesSearchResult,
 )
 
 # TypeVar for decorator type preservation
@@ -174,7 +190,7 @@ class SalesforceConnector:
 
     connector_name = "salesforce"
     connector_version = "1.0.17"
-    sdk_version = "0.1.81"
+    sdk_version = "0.1.82"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -214,6 +230,10 @@ class SalesforceConnector:
         ("attachments", "download"): None,
         ("reports", "list"): True,
         ("reports", "get"): None,
+        ("users", "list"): True,
+        ("users", "get"): None,
+        ("opportunity_stages", "list"): True,
+        ("opportunity_stages", "get"): None,
         ("query", "list"): True,
     }
 
@@ -254,6 +274,10 @@ class SalesforceConnector:
         ('attachments', 'get'): {'id': 'id', 'fields': 'fields'},
         ('attachments', 'download'): {'id': 'id', 'range_header': 'range_header'},
         ('reports', 'get'): {'id': 'id', 'include_details': 'includeDetails'},
+        ('users', 'list'): {'q': 'q'},
+        ('users', 'get'): {'id': 'id', 'fields': 'fields'},
+        ('opportunity_stages', 'list'): {'q': 'q'},
+        ('opportunity_stages', 'get'): {'id': 'id', 'fields': 'fields'},
         ('query', 'list'): {'q': 'q'},
     }
 
@@ -370,6 +394,8 @@ class SalesforceConnector:
         self.content_versions = ContentVersionsQuery(self)
         self.attachments = AttachmentsQuery(self)
         self.reports = ReportsQuery(self)
+        self.users = UsersQuery(self)
+        self.opportunity_stages = OpportunityStagesQuery(self)
         self.query = QueryQuery(self)
 
     # ===== TYPED EXECUTE METHOD (Recommended Interface) =====
@@ -661,6 +687,38 @@ class SalesforceConnector:
         action: Literal["get"],
         params: "ReportsGetParams"
     ) -> "ReportResults": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["users"],
+        action: Literal["list"],
+        params: "UsersListParams"
+    ) -> "UsersListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["users"],
+        action: Literal["get"],
+        params: "UsersGetParams"
+    ) -> "User": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["opportunity_stages"],
+        action: Literal["list"],
+        params: "OpportunityStagesListParams"
+    ) -> "OpportunityStagesListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["opportunity_stages"],
+        action: Literal["get"],
+        params: "OpportunityStagesGetParams"
+    ) -> "OpportunityStage": ...
 
     @overload
     async def execute(
@@ -2964,6 +3022,325 @@ Set to false to get only summary/aggregate data.
         return result
 
 
+
+class UsersQuery:
+    """
+    Query class for Users entity operations.
+    """
+
+    def __init__(self, connector: SalesforceConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        q: str,
+        **kwargs
+    ) -> UsersListResult:
+        """
+        Returns a list of users via SOQL query. Default returns up to 200 records.
+For pagination, check the response: if `done` is false, use `nextRecordsUrl` to fetch the next page.
+
+
+        Args:
+            q: SOQL query for users. Default returns up to 200 records.
+To change the limit, provide your own query with a LIMIT clause.
+
+Examples:
+  SELECT FIELDS(STANDARD) FROM User WHERE IsActive = true ORDER BY LastModifiedDate DESC LIMIT 50
+  SELECT Id, Name, Email, Manager.Name, Profile.Name FROM User WHERE IsActive = true LIMIT 50
+  SELECT Id, Name, Email, Department, UserRole.Name FROM User LIMIT 50
+
+Use dot-path traversal (Manager.Name, Profile.Name, UserRole.Name) to resolve
+relationship fields inline instead of returning raw IDs.
+
+            **kwargs: Additional parameters
+
+        Returns:
+            UsersListResult
+        """
+        params = {k: v for k, v in {
+            "q": q,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("users", "list", params)
+        # Cast generic envelope to concrete typed result
+        return UsersListResult(
+            data=result.data,
+            meta=result.meta
+        )
+
+
+
+    async def get(
+        self,
+        id: str | None = None,
+        fields: str | None = None,
+        **kwargs
+    ) -> User:
+        """
+        Get a single user by ID. Returns all accessible fields by default.
+Use the `fields` parameter to retrieve only specific fields for better performance.
+
+
+        Args:
+            id: Salesforce User ID (18-character ID starting with '005')
+            fields: Comma-separated list of fields to retrieve. If omitted, returns all accessible fields.
+Example: "Id,Name,Email,Username,IsActive,ProfileId,UserRoleId"
+
+            **kwargs: Additional parameters
+
+        Returns:
+            User
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            "fields": fields,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("users", "get", params)
+        return result
+
+
+
+    async def context_store_search(
+        self,
+        query: UsersSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> UsersSearchResult:
+        """
+        Search users records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (UsersSearchFilter):
+        - id: Unique identifier for the user record
+        - account_id: ID of the account associated with this user (for portal users)
+        - alias: Short name used to identify the user in list views and reports
+        - city: City portion of the user's address
+        - company_name: Name of the user's company
+        - contact_id: ID of the contact associated with this user (for portal users)
+        - country: Country portion of the user's address
+        - created_by_id: ID of the user who created this user record
+        - created_date: Date and time when the user was created
+        - department: Department within the organization
+        - division: Division within the organization
+        - email: Email address of the user
+        - employee_number: Employee number or ID assigned by the organization
+        - first_name: First name of the user
+        - is_active: Whether the user is active and can log in
+        - last_login_date: Date and time of the user's most recent login
+        - last_modified_by_id: ID of the user who last modified this user record
+        - last_modified_date: Date and time when the user was last modified
+        - last_name: Last name of the user
+        - manager_id: ID of the user's manager
+        - mobile_phone: Mobile phone number of the user
+        - name: Full name of the user
+        - phone: Business phone number of the user
+        - postal_code: Postal code portion of the user's address
+        - profile_id: ID of the user's profile
+        - state: State or province portion of the user's address
+        - street: Street address of the user
+        - title: Job title of the user
+        - user_role_id: ID of the user's role in the organization
+        - user_type: Type of user license (e.g., Standard, PowerPartner)
+        - username: Username for logging into Salesforce (unique across all orgs)
+        - system_modstamp: System timestamp when the record was last modified
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's meta.cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            UsersSearchResult with typed records, pagination metadata, and optional search metadata
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("users", "context_store_search", params)
+
+        # Parse response into typed result
+        meta_data = result.get("meta")
+        return UsersSearchResult(
+            data=[
+                UsersSearchData(**row)
+                for row in result.get("data", [])
+                if isinstance(row, dict)
+            ],
+            meta=AirbyteSearchMeta(
+                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
+                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
+                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
+            ),
+        )
+
+class OpportunityStagesQuery:
+    """
+    Query class for OpportunityStages entity operations.
+    """
+
+    def __init__(self, connector: SalesforceConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        q: str,
+        **kwargs
+    ) -> OpportunityStagesListResult:
+        """
+        Returns a list of opportunity stages via SOQL query. Default returns all stages.
+OpportunityStage defines the sales process stages that opportunities move through.
+
+
+        Args:
+            q: SOQL query for opportunity stages. Default returns all stages.
+
+Examples:
+  SELECT FIELDS(STANDARD) FROM OpportunityStage ORDER BY SortOrder ASC
+  SELECT Id, MasterLabel, ApiName, DefaultProbability, IsClosed, IsWon, IsActive, ForecastCategoryName FROM OpportunityStage WHERE IsActive = true ORDER BY SortOrder ASC
+  SELECT Id, MasterLabel, DefaultProbability, CreatedBy.Name FROM OpportunityStage ORDER BY SortOrder ASC
+
+Use dot-path traversal (CreatedBy.Name, LastModifiedBy.Name) to resolve
+relationship fields inline instead of returning raw IDs.
+
+            **kwargs: Additional parameters
+
+        Returns:
+            OpportunityStagesListResult
+        """
+        params = {k: v for k, v in {
+            "q": q,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("opportunity_stages", "list", params)
+        # Cast generic envelope to concrete typed result
+        return OpportunityStagesListResult(
+            data=result.data,
+            meta=result.meta
+        )
+
+
+
+    async def get(
+        self,
+        id: str | None = None,
+        fields: str | None = None,
+        **kwargs
+    ) -> OpportunityStage:
+        """
+        Get a single opportunity stage by ID. Returns all accessible fields by default.
+Use the `fields` parameter to retrieve only specific fields for better performance.
+
+
+        Args:
+            id: Salesforce OpportunityStage ID
+            fields: Comma-separated list of fields to retrieve. If omitted, returns all accessible fields.
+Example: "Id,MasterLabel,ApiName,DefaultProbability,IsClosed,IsWon,IsActive"
+
+            **kwargs: Additional parameters
+
+        Returns:
+            OpportunityStage
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            "fields": fields,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("opportunity_stages", "get", params)
+        return result
+
+
+
+    async def context_store_search(
+        self,
+        query: OpportunityStagesSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> OpportunityStagesSearchResult:
+        """
+        Search opportunity_stages records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (OpportunityStagesSearchFilter):
+        - id: Unique identifier for the opportunity stage record
+        - api_name: API name of the stage used in code and integrations
+        - created_by_id: ID of the user who created this stage
+        - created_date: Date and time when the stage was created
+        - default_probability: Default probability percentage for opportunities at this stage
+        - description: Description of the stage
+        - forecast_category: Forecast category for opportunities at this stage
+        - forecast_category_name: Display name of the forecast category
+        - is_active: Whether the stage is currently active and can be used
+        - is_closed: Whether opportunities at this stage are considered closed
+        - is_won: Whether opportunities at this stage are considered won
+        - last_modified_by_id: ID of the user who last modified this stage
+        - last_modified_date: Date and time when the stage was last modified
+        - master_label: Display label for the stage
+        - sort_order: Order in which the stage appears in the sales process
+        - system_modstamp: System timestamp when the record was last modified
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's meta.cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            OpportunityStagesSearchResult with typed records, pagination metadata, and optional search metadata
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("opportunity_stages", "context_store_search", params)
+
+        # Parse response into typed result
+        meta_data = result.get("meta")
+        return OpportunityStagesSearchResult(
+            data=[
+                OpportunityStagesSearchData(**row)
+                for row in result.get("data", [])
+                if isinstance(row, dict)
+            ],
+            meta=AirbyteSearchMeta(
+                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
+                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
+                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
+            ),
+        )
 
 class QueryQuery:
     """
