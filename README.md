@@ -12,6 +12,42 @@ The Airbyte Agent SDK gives AI agents access to 50+ third-party APIs through str
 uv pip install airbyte-agent-sdk
 ```
 
+## CLI Quickstart
+
+The `airbyte-agent-sdk` console script ships seven subcommands:
+
+```bash
+uv run airbyte-agent-sdk --help
+```
+
+```bash
+uv run airbyte-agent-sdk annotate --help
+```
+
+```bash
+uv run airbyte-agent-sdk cassette --help
+```
+
+```bash
+uv run airbyte-agent-sdk connector --help
+```
+
+```bash
+uv run airbyte-agent-sdk generate-docs --help
+```
+
+```bash
+uv run airbyte-agent-sdk generate-sdk --help
+```
+
+```bash
+uv run airbyte-agent-sdk test --help
+```
+
+```bash
+uv run airbyte-agent-sdk validate --help
+```
+
 ## Documentation
 
 Full documentation is available at [docs.airbyte.com/ai-agents/about/](https://docs.airbyte.com/ai-agents/about/).
