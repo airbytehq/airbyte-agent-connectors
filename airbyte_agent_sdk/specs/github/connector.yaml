@@ -610,6 +610,89 @@ components:
           credentials.option_title: "PAT Credentials"
 
   schemas:
+    # GitHub's direct operations are GraphQL and use inline response shapes, but
+    # backend stream filtering reads entity-to-replication-stream mappings from
+    # component schemas.
+    GitHubBranchesStreamMapping:
+      type: object
+      x-airbyte-entity-name: branches
+      x-airbyte-stream-name: branches
+
+    GitHubCommentsStreamMapping:
+      type: object
+      x-airbyte-entity-name: comments
+      x-airbyte-stream-name: comments
+
+    GitHubCommitsStreamMapping:
+      type: object
+      x-airbyte-entity-name: commits
+      x-airbyte-stream-name: commits
+
+    GitHubIssuesStreamMapping:
+      type: object
+      x-airbyte-entity-name: issues
+      x-airbyte-stream-name: issues
+
+    GitHubLabelsStreamMapping:
+      type: object
+      x-airbyte-entity-name: labels
+      x-airbyte-stream-name: issue_labels
+
+    GitHubMilestonesStreamMapping:
+      type: object
+      x-airbyte-entity-name: milestones
+      x-airbyte-stream-name: issue_milestones
+
+    GitHubOrganizationsStreamMapping:
+      type: object
+      x-airbyte-entity-name: organizations
+      x-airbyte-stream-name: organizations
+
+    GitHubProjectsStreamMapping:
+      type: object
+      x-airbyte-entity-name: projects
+      x-airbyte-stream-name: projects_v2
+
+    GitHubPullRequestsStreamMapping:
+      type: object
+      x-airbyte-entity-name: pull_requests
+      x-airbyte-stream-name: pull_requests
+
+    GitHubReleasesStreamMapping:
+      type: object
+      x-airbyte-entity-name: releases
+      x-airbyte-stream-name: releases
+
+    GitHubRepositoriesStreamMapping:
+      type: object
+      x-airbyte-entity-name: repositories
+      x-airbyte-stream-name: repositories
+
+    GitHubReviewsStreamMapping:
+      type: object
+      x-airbyte-entity-name: reviews
+      x-airbyte-stream-name: reviews
+
+    GitHubStargazersStreamMapping:
+      type: object
+      x-airbyte-entity-name: stargazers
+      x-airbyte-stream-name: stargazers
+
+    GitHubTagsStreamMapping:
+      type: object
+      x-airbyte-entity-name: tags
+      x-airbyte-stream-name: tags
+
+    GitHubTeamsStreamMapping:
+      type: object
+      x-airbyte-entity-name: teams
+      x-airbyte-stream-name: teams
+
+    GitHubUsersStreamMapping:
+      type: object
+      x-airbyte-entity-name: users
+      x-airbyte-stream-name: users
+
     IssueCreateParams:
       type: object
       required:

@@ -80,6 +80,7 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
     entities=[
         EntityDefinition(
             name='repositories',
+            stream_name='repositories',
             actions=[Action.GET, Action.LIST, Action.API_SEARCH],
             endpoints={
                 Action.GET: EndpointDefinition(
@@ -275,6 +276,11 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                     },
                 ),
             },
+            entity_schema={
+                'type': 'object',
+                'x-airbyte-entity-name': 'repositories',
+                'x-airbyte-stream-name': 'repositories',
+            },
         ),
         EntityDefinition(
             name='org_repositories',
@@ -360,6 +366,7 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
         ),
         EntityDefinition(
             name='branches',
+            stream_name='branches',
             actions=[Action.LIST, Action.GET],
             endpoints={
                 Action.LIST: EndpointDefinition(
@@ -494,9 +501,15 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                     record_extractor='$.data.repository.ref',
                 ),
             },
+            entity_schema={
+                'type': 'object',
+                'x-airbyte-entity-name': 'branches',
+                'x-airbyte-stream-name': 'branches',
+            },
         ),
         EntityDefinition(
             name='commits',
+            stream_name='commits',
             actions=[Action.LIST, Action.GET],
             endpoints={
                 Action.LIST: EndpointDefinition(
@@ -644,9 +657,15 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                     record_extractor='$.data.repository.object',
                 ),
             },
+            entity_schema={
+                'type': 'object',
+                'x-airbyte-entity-name': 'commits',
+                'x-airbyte-stream-name': 'commits',
+            },
         ),
         EntityDefinition(
             name='releases',
+            stream_name='releases',
             actions=[Action.LIST, Action.GET],
             endpoints={
                 Action.LIST: EndpointDefinition(
@@ -781,9 +800,15 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                     record_extractor='$.data.repository.release',
                 ),
             },
+            entity_schema={
+                'type': 'object',
+                'x-airbyte-entity-name': 'releases',
+                'x-airbyte-stream-name': 'releases',
+            },
         ),
         EntityDefinition(
             name='issues',
+            stream_name='issues',
             actions=[
                 Action.LIST,
                 Action.GET,
@@ -1429,9 +1454,15 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                     },
                 ),
             },
+            entity_schema={
+                'type': 'object',
+                'x-airbyte-entity-name': 'issues',
+                'x-airbyte-stream-name': 'issues',
+            },
         ),
         EntityDefinition(
             name='comments',
+            stream_name='comments',
             actions=[Action.CREATE, Action.LIST, Action.GET],
             endpoints={
                 Action.CREATE: EndpointDefinition(
@@ -1626,9 +1657,15 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                     record_extractor='$.data.node',
                 ),
             },
+            entity_schema={
+                'type': 'object',
+                'x-airbyte-entity-name': 'comments',
+                'x-airbyte-stream-name': 'comments',
+            },
         ),
         EntityDefinition(
             name='pull_requests',
+            stream_name='pull_requests',
             actions=[
                 Action.CREATE,
                 Action.LIST,
@@ -2002,9 +2039,15 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                     },
                 ),
             },
+            entity_schema={
+                'type': 'object',
+                'x-airbyte-entity-name': 'pull_requests',
+                'x-airbyte-stream-name': 'pull_requests',
+            },
         ),
         EntityDefinition(
             name='reviews',
+            stream_name='reviews',
             actions=[Action.LIST],
             endpoints={
                 Action.LIST: EndpointDefinition(
@@ -2094,6 +2137,11 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                     record_extractor='$.data.repository.pullRequest.reviews.nodes',
                     meta_extractor={'has_next_page': '$.data.repository.pullRequest.reviews.pageInfo.hasNextPage', 'end_cursor': '$.data.repository.pullRequest.reviews.pageInfo.endCursor'},
                 ),
+            },
+            entity_schema={
+                'type': 'object',
+                'x-airbyte-entity-name': 'reviews',
+                'x-airbyte-stream-name': 'reviews',
             },
         ),
         EntityDefinition(
@@ -2227,6 +2275,7 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
         ),
         EntityDefinition(
             name='labels',
+            stream_name='issue_labels',
             actions=[Action.LIST, Action.GET],
             endpoints={
                 Action.LIST: EndpointDefinition(
@@ -2361,9 +2410,15 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                     record_extractor='$.data.repository.label',
                 ),
             },
+            entity_schema={
+                'type': 'object',
+                'x-airbyte-entity-name': 'labels',
+                'x-airbyte-stream-name': 'issue_labels',
+            },
         ),
         EntityDefinition(
             name='milestones',
+            stream_name='issue_milestones',
             actions=[Action.LIST, Action.GET],
             endpoints={
                 Action.LIST: EndpointDefinition(
@@ -2508,9 +2563,15 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                     record_extractor='$.data.repository.milestone',
                 ),
             },
+            entity_schema={
+                'type': 'object',
+                'x-airbyte-entity-name': 'milestones',
+                'x-airbyte-stream-name': 'issue_milestones',
+            },
         ),
         EntityDefinition(
             name='organizations',
+            stream_name='organizations',
             actions=[Action.GET, Action.LIST],
             endpoints={
                 Action.GET: EndpointDefinition(
@@ -2626,9 +2687,15 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                     meta_extractor={'has_next_page': '$.data.user.organizations.pageInfo.hasNextPage', 'end_cursor': '$.data.user.organizations.pageInfo.endCursor'},
                 ),
             },
+            entity_schema={
+                'type': 'object',
+                'x-airbyte-entity-name': 'organizations',
+                'x-airbyte-stream-name': 'organizations',
+            },
         ),
         EntityDefinition(
             name='users',
+            stream_name='users',
             actions=[Action.GET, Action.LIST, Action.API_SEARCH],
             endpoints={
                 Action.GET: EndpointDefinition(
@@ -2820,9 +2887,15 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                     },
                 ),
             },
+            entity_schema={
+                'type': 'object',
+                'x-airbyte-entity-name': 'users',
+                'x-airbyte-stream-name': 'users',
+            },
         ),
         EntityDefinition(
             name='teams',
+            stream_name='teams',
             actions=[Action.LIST, Action.GET],
             endpoints={
                 Action.LIST: EndpointDefinition(
@@ -2944,9 +3017,15 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                     record_extractor='$.data.organization.team',
                 ),
             },
+            entity_schema={
+                'type': 'object',
+                'x-airbyte-entity-name': 'teams',
+                'x-airbyte-stream-name': 'teams',
+            },
         ),
         EntityDefinition(
             name='tags',
+            stream_name='tags',
             actions=[Action.LIST, Action.GET],
             endpoints={
                 Action.LIST: EndpointDefinition(
@@ -3081,9 +3160,15 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                     record_extractor='$.data.repository.ref',
                 ),
             },
+            entity_schema={
+                'type': 'object',
+                'x-airbyte-entity-name': 'tags',
+                'x-airbyte-stream-name': 'tags',
+            },
         ),
         EntityDefinition(
             name='stargazers',
+            stream_name='stargazers',
             actions=[Action.LIST],
             endpoints={
                 Action.LIST: EndpointDefinition(
@@ -3163,6 +3248,11 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                     record_extractor='$.data.repository.stargazers.edges',
                     meta_extractor={'has_next_page': '$.data.repository.stargazers.pageInfo.hasNextPage', 'end_cursor': '$.data.repository.stargazers.pageInfo.endCursor'},
                 ),
+            },
+            entity_schema={
+                'type': 'object',
+                'x-airbyte-entity-name': 'stargazers',
+                'x-airbyte-stream-name': 'stargazers',
             },
         ),
         EntityDefinition(
@@ -3279,6 +3369,7 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
         ),
         EntityDefinition(
             name='projects',
+            stream_name='projects_v2',
             actions=[Action.LIST, Action.GET],
             endpoints={
                 Action.LIST: EndpointDefinition(
@@ -3399,6 +3490,11 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data.organization.projectV2',
                 ),
+            },
+            entity_schema={
+                'type': 'object',
+                'x-airbyte-entity-name': 'projects',
+                'x-airbyte-stream-name': 'projects_v2',
             },
         ),
         EntityDefinition(

@@ -1773,6 +1773,8 @@ class ConnectorGenerator:
         component_nested_schemas = {}
 
         for name, schema in self.spec.components.schemas.items():
+            if self._is_stream_mapping_only_schema(schema):
+                continue
             schemas[name] = {
                 "name": name,
                 "fields": self._extract_fields(schema, parent_name=name),
@@ -1831,6 +1833,8 @@ class ConnectorGenerator:
             self._nested_schemas = {}
 
         for name, schema in self.spec.components.schemas.items():
+            if self._is_stream_mapping_only_schema(schema):
+                continue
             schemas[name] = {
                 "name": name,
                 "fields": self._extract_fields(schema, parent_name=name),
@@ -1843,6 +1847,22 @@ class ConnectorGenerator:
 
         # Topologically sort schemas so dependencies come before dependents
         return self._topological_sort_schemas(schemas)
+
+    @staticmethod
+    def _is_stream_mapping_only_schema(schema: Any) -> bool:
+        if not getattr(schema, "x_airbyte_entity_name", None) or not getattr(schema, "x_airbyte_stream_name", None):
+            return False
+
+        return not any(
+            (
+                getattr(schema, "properties", None),
+                getattr(schema, "items", None),
+                getattr(schema, "all_of", None),
+                getattr(schema, "any_of", None),
+                getattr(schema, "one_of", None),
+                getattr(schema, "enum", None),
+            )
+        )
 
     def _topological_sort_schemas(self, schemas: dict[str, dict]) -> dict[str, dict]:
         """Topologically sort schemas so dependencies are defined before dependents.
