@@ -97,6 +97,24 @@ async def test_{{ test.test_name }}():
             expected_data = [m.value for m in record_matches]
         else:
             expected_data = record_matches[0].value
+{% if test.record_transform %}
+
+        # Apply x-airbyte-record-transform to expected records.
+        # Mirrors SDK runtime order: extract -> transform -> filter.
+        # Primitive records are wrapped as {value: ...} matching LocalExecutor._apply_record_transform.
+        from jinja2 import Environment as _TEnv, StrictUndefined as _TStrictUndefined
+        _transform_env = _TEnv(undefined=_TStrictUndefined, autoescape=False)
+        _transform_map = {{ test.record_transform | tojson }}
+
+        def _apply_transform(rec):
+            ctx = rec if isinstance(rec, dict) else {"value": rec}
+            return {k: _transform_env.from_string(v).render(record=ctx, config={}) for k, v in _transform_map.items()}
+
+        if isinstance(expected_data, list):
+            expected_data = [_apply_transform(r) for r in expected_data]
+        else:
+            expected_data = _apply_transform(expected_data)
+{% endif %}
 {% if test.record_filter %}
 
         # Apply x-airbyte-record-filter (Jinja expression) to expected records.
@@ -170,6 +188,23 @@ async def test_{{ test.test_name }}():
             expected_data = [m.value for m in record_matches]
         else:
             expected_data = record_matches[0].value
+{% if test.record_transform %}
+
+        # Apply x-airbyte-record-transform to expected records (non-envelope path).
+        # Runtime applies transform unconditionally — mirrors extract -> transform order.
+        from jinja2 import Environment as _TEnv2, StrictUndefined as _TStrict2
+        _ne_transform_env = _TEnv2(undefined=_TStrict2, autoescape=False)
+        _ne_transform_map = {{ test.record_transform | tojson }}
+
+        def _ne_apply_transform(rec):
+            ctx = rec if isinstance(rec, dict) else {"value": rec}
+            return {k: _ne_transform_env.from_string(v).render(record=ctx, config={}) for k, v in _ne_transform_map.items()}
+
+        if isinstance(expected_data, list):
+            expected_data = [_ne_apply_transform(r) for r in expected_data]
+        else:
+            expected_data = _ne_apply_transform(expected_data)
+{% endif %}
 
         # Convert Pydantic models to dict for comparison
         if hasattr(result, 'model_dump'):

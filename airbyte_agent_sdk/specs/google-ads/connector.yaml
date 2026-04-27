@@ -92,6 +92,39 @@ info:
   x-airbyte-scoping:
     - param: customer_id
       config_key: customer_id
+  x-airbyte-entity-relationships:
+    - source_entity: accounts
+      target_entity: accessible_customers
+      foreign_key: customer_id
+      target_key: customer_id
+    - source_entity: campaigns
+      target_entity: accessible_customers
+      foreign_key: customer_id
+      target_key: customer_id
+    - source_entity: ad_groups
+      target_entity: accessible_customers
+      foreign_key: customer_id
+      target_key: customer_id
+    - source_entity: ad_group_ads
+      target_entity: accessible_customers
+      foreign_key: customer_id
+      target_key: customer_id
+    - source_entity: campaign_labels
+      target_entity: accessible_customers
+      foreign_key: customer_id
+      target_key: customer_id
+    - source_entity: ad_group_labels
+      target_entity: accessible_customers
+      foreign_key: customer_id
+      target_key: customer_id
+    - source_entity: ad_group_ad_labels
+      target_entity: accessible_customers
+      foreign_key: customer_id
+      target_key: customer_id
+    - source_entity: labels
+      target_entity: accessible_customers
+      foreign_key: customer_id
+      target_key: customer_id
   x-airbyte-context-store:
     disable_compaction: false
     entities:
@@ -460,6 +493,10 @@ paths:
       x-airbyte-entity: accessible_customers
       x-airbyte-action: list
       x-airbyte-preferred-for-check: true
+      x-airbyte-record-extractor: $.resourceNames
+      x-airbyte-record-transform:
+        customer_id: "{{ record.value | replace('customers/', '') }}"
+        resource_name: "{{ record.value }}"
       x-airbyte-no-pagination: "Google Ads GET /v20/customers:listAccessibleCustomers returns the full list of customer resource names directly accessible to the authenticated user in a single response; the endpoint exposes no pagination cursor, offset, or next-page token."
       parameters: []
       responses:
@@ -1171,6 +1208,17 @@ components:
         replication_auth_key_constants: {}
 
   schemas:
+    AccessibleCustomer:
+      type: object
+      description: An accessible customer derived from a resource name via x-airbyte-record-transform
+      properties:
+        customer_id:
+          type: string
+          description: The customer ID extracted from the resource name
+        resource_name:
+          type: string
+          description: Full resource name (e.g., customers/1234567890)
+
     AccessibleCustomersList:
       type: object
       description: List of accessible customer resource names
@@ -1178,8 +1226,7 @@ components:
         resourceNames:
           type: array
           items:
-            type: string
-            description: Resource name of an accessible customer (e.g., customers/1234567890)
+            $ref: "#/components/schemas/AccessibleCustomer"
           description: Resource names of accessible customers
 
     AccountSearchResponse:

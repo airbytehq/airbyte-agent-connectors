@@ -257,7 +257,7 @@ class GithubConnector:
 
     connector_name = "github"
     connector_version = "0.1.18"
-    sdk_version = "0.1.94"
+    sdk_version = "0.1.95"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {

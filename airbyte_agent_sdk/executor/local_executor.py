@@ -790,6 +790,12 @@ class LocalExecutor:
                         params_to_resolve=params_needing_resolution,
                     )
                     params.update(resolved)
+                    if resolved:
+                        _logger.info(
+                            "Entity '%s' probe proceeding with resolved params: %s",
+                            entity_name,
+                            sorted(resolved.keys()),
+                        )
                 except ParamResolutionError as exc:
                     return {
                         "entity": entity_name,
@@ -871,6 +877,12 @@ class LocalExecutor:
                 raise ParamResolutionError(f"Self-referential param '{param_name}' on entity '{entity_name}'")
 
             if parent_entity_name not in parent_cache:
+                _logger.info(
+                    "Resolving param '%s' for entity '%s' via parent entity '%s'",
+                    param_name,
+                    entity_name,
+                    parent_entity_name,
+                )
                 parent_endpoint = self._operation_index.get((parent_entity_name, Action.LIST))
                 if parent_endpoint is None:
                     raise ParamResolutionError(f"Parent entity '{parent_entity_name}' has no LIST operation")
@@ -896,11 +908,7 @@ class LocalExecutor:
                     )
                     parent_params.update(parent_resolved)
                 try:
-                    result = await standard_handler.execute_operation(
-                        parent_entity_name,
-                        Action.LIST,
-                        parent_params,
-                    )
+                    result = await standard_handler.execute_operation(parent_entity_name, Action.LIST, parent_params)
                 except Exception as exc:
                     raise ParentProbeError(
                         f"Parent entity '{parent_entity_name}' probe failed: {exc}",
@@ -916,6 +924,12 @@ class LocalExecutor:
             if value is None:
                 raise ParamResolutionError(f"Parent key '{parent_key}' not found in '{parent_entity_name}' response")
             resolved[param_name] = value
+            _logger.info(
+                "Resolved param '%s' for entity '%s' via parent entity '%s'",
+                param_name,
+                entity_name,
+                parent_entity_name,
+            )
 
         return resolved
 
@@ -1728,7 +1742,7 @@ class LocalExecutor:
         endpoint: EndpointDefinition,
         config: dict[str, Any] | None = None,
     ) -> dict[str, Any] | list[dict[str, Any]] | None:
-        """Extract records from response using record extractor and record filter.
+        """Extract records from response using record extractor, transform, and filter.
 
         Type inference based on action:
         - list, search: Returns array ([] if not found)
@@ -1736,6 +1750,11 @@ class LocalExecutor:
 
         Automatically wraps primitive values (int, str, float, bool) in {"value": primitive}
         format to ensure consistent dict-based responses for downstream code.
+
+        If the endpoint defines `record_transform`, it is evaluated per extracted
+        record after JSONPath extraction and before record_filter. This allows
+        connectors to reshape primitive or nested records into object records
+        that downstream code can reference by field name.
 
         If the endpoint defines `record_filter` (Jinja expression), it is evaluated
         per record after JSONPath extraction; records for which the expression is
@@ -1784,7 +1803,14 @@ class LocalExecutor:
             result = self._wrap_primitives(result)
 
         except Exception as e:
+            record_transform = getattr(endpoint, "record_transform", None)
             record_filter = getattr(endpoint, "record_filter", None)
+            if isinstance(record_transform, dict) and record_transform:
+                logging.error(
+                    f"Record extractor '{extractor}' failed on an endpoint with a record_transform; "
+                    f"propagating rather than returning untransformed data: {e}"
+                )
+                raise
             if is_array_action and isinstance(record_filter, str) and record_filter:
                 # Extractor failed on an endpoint that declares a record_filter.
                 # Silently returning the unfiltered response would bypass a
@@ -1797,6 +1823,10 @@ class LocalExecutor:
                 raise
             logging.warning(f"Failed to apply record extractor '{extractor}': {e}. Returning original response.")
             return self._wrap_primitives(response_data)
+
+        record_transform = getattr(endpoint, "record_transform", None)
+        if isinstance(record_transform, dict) and record_transform and result is not None:
+            result = self._apply_record_transform(result, record_transform, config or {})
 
         # Apply record_filter (Jinja expression) on list/api_search actions.
         # Intentionally outside the try/except above: a failing record_filter is
@@ -1816,6 +1846,7 @@ class LocalExecutor:
     # thread-safe for rendering, so a single module-level instance avoids the
     # per-record allocation cost of spinning up a new one each call.
     _RECORD_FILTER_ENV = Environment(undefined=StrictUndefined, autoescape=False)
+    _RECORD_TRANSFORM_ENV = Environment(undefined=StrictUndefined, autoescape=False)
 
     @classmethod
     def _evaluate_compiled_record_filter(
@@ -1883,6 +1914,25 @@ class LocalExecutor:
             return []
 
         # Unknown shape — return unchanged.
+        return records
+
+    def _apply_record_transform(
+        self,
+        records: dict[str, Any] | list[dict[str, Any]],
+        transform: dict[str, str],
+        config: dict[str, Any],
+    ) -> dict[str, Any] | list[dict[str, Any]]:
+        """Reshape extracted records via a per-field Jinja mapping."""
+        compiled = {field_name: self._RECORD_TRANSFORM_ENV.from_string(template) for field_name, template in transform.items()}
+
+        def transform_record(record: Any) -> dict[str, Any]:
+            record_context = record if isinstance(record, dict) else {"value": record}
+            return {field_name: template.render(record=record_context, config=config) for field_name, template in compiled.items()}
+
+        if isinstance(records, list):
+            return [transform_record(record) for record in records]
+        if isinstance(records, dict):
+            return transform_record(records)
         return records
 
     def _extract_metadata(

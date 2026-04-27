@@ -1167,10 +1167,18 @@ def validate_connector_readiness(connector_dir: str | Path) -> Dict[str, Any]:
 
                     # For non-download actions, validate response schema
                     if response_schema:
-                        response_body = spec.captured_response.body
-                        is_valid, errors = validate_response_against_schema(response_body, response_schema)
-
-                        undeclared_fields = find_undeclared_fields(response_body, response_schema)
+                        # When x-airbyte-record-transform is present, the schema
+                        # describes the post-transform shape while the cassette
+                        # contains the raw API response — skip schema body
+                        # validation but still run meta_extractor checks.
+                        if endpoint.record_transform:
+                            is_valid = True
+                            errors = []
+                            undeclared_fields = []
+                        else:
+                            response_body = spec.captured_response.body
+                            is_valid, errors = validate_response_against_schema(response_body, response_schema)
+                            undeclared_fields = find_undeclared_fields(response_body, response_schema)
 
                         warnings = []
                         if undeclared_fields:

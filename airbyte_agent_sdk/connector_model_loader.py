@@ -438,6 +438,7 @@ def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel
             path_override = operation.x_airbyte_path_override
             record_extractor = operation.x_airbyte_record_extractor
             record_filter = operation.x_airbyte_record_filter
+            record_transform = operation.x_airbyte_record_transform
             meta_extractor = operation.x_airbyte_meta_extractor
 
             if not entity_name:
@@ -547,6 +548,7 @@ def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel
                 path_override=path_override,
                 record_extractor=record_extractor,
                 record_filter=record_filter,
+                record_transform=record_transform,
                 meta_extractor=meta_extractor,
                 description=operation.description or operation.summary,
                 body_fields=body_fields,

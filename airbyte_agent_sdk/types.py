@@ -291,6 +291,14 @@ class EndpointDefinition(BaseModel):
             "Runs after `record_extractor`. Example: `{{ not record.isPrivate }}`."
         ),
     )
+    record_transform: dict[str, str] | None = Field(
+        None,
+        description=(
+            "Jinja field mapping evaluated per extracted record to reshape the output. "
+            "Runs after `record_extractor` and before `record_filter`. Primitive "
+            "extracted records are wrapped as `{value: ...}` before evaluation."
+        ),
+    )
 
     # Metadata extractor support (Airbyte extension)
     meta_extractor: dict[str, str] | None = Field(

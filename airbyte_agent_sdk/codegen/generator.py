@@ -1017,6 +1017,7 @@ class ConnectorGenerator:
             # Default record_extractor to "$" (root) if not specified, same as _extract_operations
             record_extractor = (operation.x_airbyte_record_extractor if operation else None) or "$"
             record_filter = operation.x_airbyte_record_filter if operation else None
+            record_transform = operation.x_airbyte_record_transform if operation else None
             meta_extractor = operation.x_airbyte_meta_extractor if operation else None
 
             # Determine if this operation needs envelope (same logic as _extract_operations)
@@ -1034,6 +1035,7 @@ class ConnectorGenerator:
                 "is_download": False,
                 "record_extractor": record_extractor,
                 "record_filter": record_filter,
+                "record_transform": record_transform or {},
                 "meta_extractor": meta_extractor or {},
                 "needs_envelope": needs_envelope,
                 "auth_config_class_name": auth_config_class_name,

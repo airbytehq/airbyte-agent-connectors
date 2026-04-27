@@ -214,15 +214,6 @@ ads from showing for specific search terms.
     state: str | None = Field(default=None)
     extended_data: dict[str, Any] | None = Field(default=None, alias="extendedData")
 
-class SponsoredProductNegativeTargetResolvedexpressionItem(BaseModel):
-    """Nested schema for SponsoredProductNegativeTarget.resolvedExpression_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    type_: str | None | None = Field(default=None, alias="type", description="The resolved expression type")
-    """The resolved expression type"""
-    value: str | None | None = Field(default=None, description="The resolved expression value")
-    """The resolved expression value"""
-
 class SponsoredProductNegativeTargetExpressionItem(BaseModel):
     """Nested schema for SponsoredProductNegativeTarget.expression_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -231,6 +222,15 @@ class SponsoredProductNegativeTargetExpressionItem(BaseModel):
     """The expression type"""
     value: str | None | None = Field(default=None, description="The expression value")
     """The expression value"""
+
+class SponsoredProductNegativeTargetResolvedexpressionItem(BaseModel):
+    """Nested schema for SponsoredProductNegativeTarget.resolvedExpression_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    type_: str | None | None = Field(default=None, alias="type", description="The resolved expression type")
+    """The resolved expression type"""
+    value: str | None | None = Field(default=None, description="The resolved expression value")
+    """The resolved expression value"""
 
 class SponsoredProductNegativeTarget(BaseModel):
     """A negative targeting clause within a Sponsored Products ad group. Negative targeting

@@ -160,7 +160,7 @@ class JiraConnector:
 
     connector_name = "jira"
     connector_version = "1.1.9"
-    sdk_version = "0.1.94"
+    sdk_version = "0.1.95"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {

@@ -19,14 +19,15 @@ from airbyte_agent_sdk.schema.security import (
     AuthConfigFieldSpec,
     AuthConfigSpec,
 )
+from airbyte_agent_sdk.schema.extensions import (
+    EntityRelationshipConfig,
+    ScopingParamConfig,
+)
 from airbyte_agent_sdk.schema.base import (
     ExampleQuestions,
 )
 from airbyte_agent_sdk.schema.components import (
     PathOverrideConfig,
-)
-from airbyte_agent_sdk.schema.extensions import (
-    ScopingParamConfig,
 )
 from uuid import (
     UUID,
@@ -104,11 +105,20 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
                         'properties': {
                             'resourceNames': {
                                 'type': 'array',
-                                'items': {'type': 'string', 'description': 'Resource name of an accessible customer (e.g., customers/1234567890)'},
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'An accessible customer derived from a resource name via x-airbyte-record-transform',
+                                    'properties': {
+                                        'customer_id': {'type': 'string', 'description': 'The customer ID extracted from the resource name'},
+                                        'resource_name': {'type': 'string', 'description': 'Full resource name (e.g., customers/1234567890)'},
+                                    },
+                                },
                                 'description': 'Resource names of accessible customers',
                             },
                         },
                     },
+                    record_extractor='$.resourceNames',
+                    record_transform={'customer_id': "{{ record.value | replace('customers/', '') }}", 'resource_name': '{{ record.value }}'},
                     no_pagination='Google Ads GET /v20/customers:listAccessibleCustomers returns the full list of customer resource names directly accessible to the authenticated user in a single response; the endpoint exposes no pagination cursor, offset, or next-page token.',
                     preferred_for_check=True,
                 ),
@@ -284,6 +294,14 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
                 'example_questions': ['What Google Ads accounts do I have?'],
                 'search_strategy': 'List accessible accounts',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='accounts',
+                    target_entity='accessible_customers',
+                    foreign_key='customer_id',
+                    target_key='customer_id',
+                ),
+            ],
         ),
         EntityDefinition(
             name='campaigns',
@@ -564,6 +582,14 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
                 'example_questions': ['List active Google Ads campaigns', 'What is the budget for a campaign?'],
                 'search_strategy': 'Search by name or filter by status',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='campaigns',
+                    target_entity='accessible_customers',
+                    foreign_key='customer_id',
+                    target_key='customer_id',
+                ),
+            ],
         ),
         EntityDefinition(
             name='ad_groups',
@@ -821,6 +847,14 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
                 'example_questions': ['What ad groups are in this campaign?'],
                 'search_strategy': 'Filter by campaign',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='ad_groups',
+                    target_entity='accessible_customers',
+                    foreign_key='customer_id',
+                    target_key='customer_id',
+                ),
+            ],
         ),
         EntityDefinition(
             name='ad_group_ads',
@@ -1033,6 +1067,14 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
                 'example_questions': ['Show ads in this ad group'],
                 'search_strategy': 'Filter by ad group or campaign',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='ad_group_ads',
+                    target_entity='accessible_customers',
+                    foreign_key='customer_id',
+                    target_key='customer_id',
+                ),
+            ],
         ),
         EntityDefinition(
             name='campaign_labels',
@@ -1217,6 +1259,14 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
                 'example_questions': ['What labels are on this campaign?'],
                 'search_strategy': 'Filter by campaign',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='campaign_labels',
+                    target_entity='accessible_customers',
+                    foreign_key='customer_id',
+                    target_key='customer_id',
+                ),
+            ],
         ),
         EntityDefinition(
             name='ad_group_labels',
@@ -1401,6 +1451,14 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
                 'example_questions': ['What labels are on this ad group?'],
                 'search_strategy': 'Filter by ad group',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='ad_group_labels',
+                    target_entity='accessible_customers',
+                    foreign_key='customer_id',
+                    target_key='customer_id',
+                ),
+            ],
         ),
         EntityDefinition(
             name='ad_group_ad_labels',
@@ -1543,6 +1601,14 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
                 'example_questions': ['What labels are on this ad?'],
                 'search_strategy': 'Filter by ad',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='ad_group_ad_labels',
+                    target_entity='accessible_customers',
+                    foreign_key='customer_id',
+                    target_key='customer_id',
+                ),
+            ],
         ),
         EntityDefinition(
             name='labels',
@@ -1625,6 +1691,14 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
                 },
                 'x-airbyte-entity-name': 'labels',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='labels',
+                    target_entity='accessible_customers',
+                    foreign_key='customer_id',
+                    target_key='customer_id',
+                ),
+            ],
         ),
     ],
     search_field_paths={

@@ -328,6 +328,40 @@ Example:
     Executor Returns: [{"id": "1"}, {"id": "2"}]
 """
 
+AIRBYTE_RECORD_TRANSFORM = "x-airbyte-record-transform"
+"""
+Extension: x-airbyte-record-transform
+Location: Operation object (on individual HTTP operations)
+Type: dict[str, str] (field name -> Jinja expression)
+Required: No
+
+Description:
+    Reshapes extracted records into object records by evaluating a Jinja
+    expression for each output field. Runs after `x-airbyte-record-extractor`
+    and before `x-airbyte-record-filter`.
+
+    This is useful when an API returns primitive list items or awkward envelope
+    shapes that need to become field-addressable records for downstream entity
+    relationship resolution.
+
+    The template receives the current record as `record` and the connector
+    config as `config`. Primitive extracted records are wrapped as
+    `{value: ...}` before evaluation.
+
+Example:
+    ```yaml
+    paths:
+      /v20/customers:listAccessibleCustomers:
+        get:
+          x-airbyte-entity: accessible_customers
+          x-airbyte-action: list
+          x-airbyte-record-extractor: $.resourceNames
+          x-airbyte-record-transform:
+            customer_id: "{{ record.value | replace('customers/', '') }}"
+            resource_name: "{{ record.value }}"
+    ```
+"""
+
 AIRBYTE_META_EXTRACTOR = "x-airbyte-meta-extractor"
 """
 Extension: x-airbyte-meta-extractor
@@ -669,6 +703,7 @@ def get_all_extension_names() -> list[str]:
         AIRBYTE_BODY_TYPE,
         AIRBYTE_PATH_OVERRIDE,
         AIRBYTE_RECORD_EXTRACTOR,
+        AIRBYTE_RECORD_TRANSFORM,
         AIRBYTE_META_EXTRACTOR,
         AIRBYTE_FILE_URL,
         AIRBYTE_TOKEN_EXTRACT,
@@ -746,6 +781,12 @@ EXTENSION_REGISTRY = {
         "type": "string",
         "required": False,
         "description": "JSONPath expression to extract records from response envelopes",
+    },
+    AIRBYTE_RECORD_TRANSFORM: {
+        "location": "operation",
+        "type": "dict[str, str]",
+        "required": False,
+        "description": "Jinja field mapping used to reshape extracted records before filtering or downstream resolution",
     },
     AIRBYTE_META_EXTRACTOR: {
         "location": "operation",

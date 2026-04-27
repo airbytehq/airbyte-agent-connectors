@@ -67,15 +67,6 @@ class SpacesList(BaseModel):
     results: list[Space] | None = Field(default=None)
     links: SpacesListLinks | None = Field(default=None, alias="_links")
 
-class PageBody(BaseModel):
-    """Page body content"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    storage: dict[str, Any] | None = Field(default=None, description="Storage format body")
-    """Storage format body"""
-    atlas_doc_format: dict[str, Any] | None = Field(default=None, description="Atlas doc format body")
-    """Atlas doc format body"""
-
 class PageVersion(BaseModel):
     """Version information"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -107,6 +98,15 @@ class PageLinks(BaseModel):
     """Tiny UI link"""
     base: str | None = Field(default=None, description="Base URL")
     """Base URL"""
+
+class PageBody(BaseModel):
+    """Page body content"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    storage: dict[str, Any] | None = Field(default=None, description="Storage format body")
+    """Storage format body"""
+    atlas_doc_format: dict[str, Any] | None = Field(default=None, description="Atlas doc format body")
+    """Atlas doc format body"""
 
 class Page(BaseModel):
     """Confluence page object"""
@@ -143,6 +143,15 @@ class PagesList(BaseModel):
     results: list[Page] | None = Field(default=None)
     links: PagesListLinks | None = Field(default=None, alias="_links")
 
+class BlogPostBody(BaseModel):
+    """Blog post body content"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    storage: dict[str, Any] | None = Field(default=None, description="Storage format body")
+    """Storage format body"""
+    atlas_doc_format: dict[str, Any] | None = Field(default=None, description="Atlas doc format body")
+    """Atlas doc format body"""
+
 class BlogPostLinks(BaseModel):
     """Links related to the blog post"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -174,15 +183,6 @@ class BlogPostVersion(BaseModel):
     """ID of the version author"""
     ncs_step_version: Any | None = Field(default=None, alias="ncsStepVersion", description="NCS step version")
     """NCS step version"""
-
-class BlogPostBody(BaseModel):
-    """Blog post body content"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    storage: dict[str, Any] | None = Field(default=None, description="Storage format body")
-    """Storage format body"""
-    atlas_doc_format: dict[str, Any] | None = Field(default=None, description="Atlas doc format body")
-    """Atlas doc format body"""
 
 class BlogPost(BaseModel):
     """Confluence blog post object"""
@@ -252,15 +252,6 @@ class GroupsList(BaseModel):
     size: int | None = Field(default=None)
     links: GroupsListLinks | None = Field(default=None, alias="_links")
 
-class AuditRecordAssociatedobjectsItem(BaseModel):
-    """Nested schema for AuditRecord.associatedObjects_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: str | None = Field(default=None, description="Name of the associated object")
-    """Name of the associated object"""
-    object_type: str | None = Field(default=None, alias="objectType", description="Type of the associated object")
-    """Type of the associated object"""
-
 class AuditRecordAffectedobject(BaseModel):
     """Object affected by the audit event"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -269,6 +260,15 @@ class AuditRecordAffectedobject(BaseModel):
     """Name of the affected object"""
     object_type: str | None = Field(default=None, alias="objectType", description="Type of the affected object")
     """Type of the affected object"""
+
+class AuditRecordAssociatedobjectsItem(BaseModel):
+    """Nested schema for AuditRecord.associatedObjects_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: str | None = Field(default=None, description="Name of the associated object")
+    """Name of the associated object"""
+    object_type: str | None = Field(default=None, alias="objectType", description="Type of the associated object")
+    """Type of the associated object"""
 
 class AuditRecordAuthor(BaseModel):
     """User who triggered the audit event"""

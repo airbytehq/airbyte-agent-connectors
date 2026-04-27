@@ -1189,6 +1189,19 @@ $defs:
           full response. Returns array for list/api_search actions, single record
           for get/create/update/delete actions.
         title: X-Airbyte-Record-Extractor
+      x-airbyte-record-transform:
+        anyOf:
+        - additionalProperties:
+            type: string
+          type: object
+        - type: 'null'
+        default: null
+        description: 'Dictionary mapping output field names to Jinja expressions
+          evaluated per extracted record. Runs after `x-airbyte-record-extractor`
+          and before `x-airbyte-record-filter`. The template receives the current
+          record as `record` and the connector config as `config`. Primitive extracted
+          records are wrapped as `{value: ...}` before evaluation.'
+        title: X-Airbyte-Record-Transform
       x-airbyte-record-filter:
         anyOf:
         - type: string

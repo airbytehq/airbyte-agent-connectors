@@ -78,6 +78,18 @@ class Operation(BaseModel):
             "operations."
         ),
     )
+    x_airbyte_record_transform: Dict[str, str] | None = Field(
+        None,
+        alias="x-airbyte-record-transform",
+        description=(
+            "Dictionary mapping output field names to Jinja expressions evaluated "
+            "per extracted record. Runs after `x-airbyte-record-extractor` and before "
+            "`x-airbyte-record-filter`. The template receives the current record as "
+            "`record` and the connector config as `config`. Primitive extracted records "
+            "are wrapped as `{value: ...}` before evaluation. Example: "
+            "{'customer_id': \"{{ record.value | replace('customers/', '') }}\"}."
+        ),
+    )
     x_airbyte_meta_extractor: Dict[str, str] | None = Field(
         None,
         alias="x-airbyte-meta-extractor",

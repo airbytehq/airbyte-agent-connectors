@@ -98,10 +98,10 @@
     "params_type_name": "AccessibleCustomersListParams",
     "response_type": "AccessibleCustomersListResult",
     "description": "Returns resource names of customers directly accessible by the user authenticating the call. No customer_id is required for this endpoint.",
-    "record_extractor": "$",
+    "record_extractor": "$.resourceNames",
     "meta_extractor": null,
     "needs_envelope": true,
-    "record_type": "AccessibleCustomersList",
+    "record_type": "list[AccessibleCustomer]",
     "meta_fields": null,
     "is_download": false
   },
@@ -117,10 +117,10 @@
         "params_type_name": "AccessibleCustomersListParams",
         "response_type": "AccessibleCustomersListResult",
         "description": "Returns resource names of customers directly accessible by the user authenticating the call. No customer_id is required for this endpoint.",
-        "record_extractor": "$",
+        "record_extractor": "$.resourceNames",
         "meta_extractor": null,
         "needs_envelope": true,
-        "record_type": "AccessibleCustomersList",
+        "record_type": "list[AccessibleCustomer]",
         "meta_fields": null,
         "is_download": false
       }
