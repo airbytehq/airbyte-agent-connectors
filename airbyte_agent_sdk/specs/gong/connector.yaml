@@ -726,6 +726,7 @@ paths:
               properties:
                 filter:
                   type: object
+                  default: {}
                   properties:
                     fromDateTime:
                       type: string
@@ -975,6 +976,7 @@ paths:
               properties:
                 filter:
                   type: object
+                  default: {}
                   properties:
                     fromDateTime:
                       type: string
@@ -1025,15 +1027,21 @@ paths:
               properties:
                 filter:
                   type: object
+                  default:
+                    fromDate: "2024-01-01"
+                    toDate: "2025-01-01"
+                  required:
+                    - fromDate
+                    - toDate
                   properties:
                     fromDate:
                       type: string
                       format: date
-                      description: Start date (YYYY-MM-DD). Recommended for scoping results to a manageable date range.
+                      description: Start date (YYYY-MM-DD). Required by the Gong API for activity stats.
                     toDate:
                       type: string
                       format: date
-                      description: End date (YYYY-MM-DD). Recommended for scoping results to a manageable date range.
+                      description: End date (YYYY-MM-DD). Required by the Gong API for activity stats.
                     userIds:
                       type: array
                       items:
@@ -1072,15 +1080,21 @@ paths:
               properties:
                 filter:
                   type: object
+                  default:
+                    fromDate: "2024-01-01"
+                    toDate: "2025-01-01"
+                  required:
+                    - fromDate
+                    - toDate
                   properties:
                     fromDate:
                       type: string
                       format: date
-                      description: Start date (YYYY-MM-DD). Recommended for scoping results to a manageable date range.
+                      description: Start date (YYYY-MM-DD). Required by the Gong API for activity stats.
                     toDate:
                       type: string
                       format: date
-                      description: End date (YYYY-MM-DD). Recommended for scoping results to a manageable date range.
+                      description: End date (YYYY-MM-DD). Required by the Gong API for activity stats.
                     userIds:
                       type: array
                       items:
@@ -1119,15 +1133,21 @@ paths:
               properties:
                 filter:
                   type: object
+                  default:
+                    fromDate: "2024-01-01"
+                    toDate: "2025-01-01"
+                  required:
+                    - fromDate
+                    - toDate
                   properties:
                     fromDate:
                       type: string
                       format: date
-                      description: Start date (YYYY-MM-DD). Recommended for scoping results to a manageable date range.
+                      description: Start date (YYYY-MM-DD). Required by the Gong API for interaction stats.
                     toDate:
                       type: string
                       format: date
-                      description: End date (YYYY-MM-DD). Recommended for scoping results to a manageable date range.
+                      description: End date (YYYY-MM-DD). Required by the Gong API for interaction stats.
                     userIds:
                       type: array
                       items:
@@ -1288,6 +1308,7 @@ paths:
           schema:
             type: string
             format: date-time
+            default: "2024-01-01T00:00:00Z"
         - name: to
           in: query
           description: End date in ISO 8601 format
@@ -1295,6 +1316,7 @@ paths:
           schema:
             type: string
             format: date-time
+            default: "2025-01-01T00:00:00Z"
       responses:
         "200":
           description: Coaching metrics
@@ -1330,15 +1352,21 @@ paths:
               properties:
                 filter:
                   type: object
+                  default:
+                    fromDateTime: "2024-01-01T00:00:00Z"
+                    toDateTime: "2025-01-01T00:00:00Z"
+                  required:
+                    - fromDateTime
+                    - toDateTime
                   properties:
                     fromDateTime:
                       type: string
                       format: date-time
-                      description: Start date in ISO 8601 format. Recommended for scoping results to a manageable date range.
+                      description: Start date in ISO 8601 format. Required by the Gong API for scorecard stats.
                     toDateTime:
                       type: string
                       format: date-time
-                      description: End date in ISO 8601 format. Recommended for scoping results to a manageable date range.
+                      description: End date in ISO 8601 format. Required by the Gong API for scorecard stats.
                     scorecardIds:
                       type: array
                       items:

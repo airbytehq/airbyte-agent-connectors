@@ -94,26 +94,26 @@ class CallTranscriptsListParamsFilter(TypedDict):
 
 class StatsActivityAggregateListParamsFilter(TypedDict):
     """Nested schema for StatsActivityAggregateListParams.filter"""
-    fromDate: NotRequired[str]
-    toDate: NotRequired[str]
+    fromDate: str
+    toDate: str
     userIds: NotRequired[list[str]]
 
 class StatsActivityDayByDayListParamsFilter(TypedDict):
     """Nested schema for StatsActivityDayByDayListParams.filter"""
-    fromDate: NotRequired[str]
-    toDate: NotRequired[str]
+    fromDate: str
+    toDate: str
     userIds: NotRequired[list[str]]
 
 class StatsInteractionListParamsFilter(TypedDict):
     """Nested schema for StatsInteractionListParams.filter"""
-    fromDate: NotRequired[str]
-    toDate: NotRequired[str]
+    fromDate: str
+    toDate: str
     userIds: NotRequired[list[str]]
 
 class StatsActivityScorecardsListParamsFilter(TypedDict):
     """Nested schema for StatsActivityScorecardsListParams.filter"""
-    fromDateTime: NotRequired[str]
-    toDateTime: NotRequired[str]
+    fromDateTime: str
+    toDateTime: str
     scorecardIds: NotRequired[list[str]]
     reviewedUserIds: NotRequired[list[str]]
     reviewerUserIds: NotRequired[list[str]]

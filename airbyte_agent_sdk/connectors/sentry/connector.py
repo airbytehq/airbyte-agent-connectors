@@ -115,7 +115,7 @@ class SentryConnector:
 
     connector_name = "sentry"
     connector_version = "1.0.4"
-    sdk_version = "0.1.90"
+    sdk_version = "0.1.91"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {

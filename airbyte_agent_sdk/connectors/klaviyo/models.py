@@ -22,6 +22,12 @@ class KlaviyoAuthConfig(BaseModel):
 
 # ===== RESPONSE TYPE DEFINITIONS (PYDANTIC) =====
 
+class ProfileLinks(BaseModel):
+    """Related links"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    self: str | None | None = Field(default=None)
+
 class ProfileAttributesLocation(BaseModel):
     """Location information"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -64,12 +70,6 @@ class ProfileAttributes(BaseModel):
     """Location information"""
     properties: dict[str, Any] | None | None = Field(default=None, description="Custom properties")
     """Custom properties"""
-
-class ProfileLinks(BaseModel):
-    """Related links"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    self: str | None | None = Field(default=None)
 
 class Profile(BaseModel):
     """A Klaviyo profile representing a contact"""
@@ -138,6 +138,12 @@ class ListsList(BaseModel):
     data: list[List] | None = Field(default=None)
     links: ListsListLinks | None = Field(default=None)
 
+class CampaignLinks(BaseModel):
+    """Related links"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    self: str | None | None = Field(default=None)
+
 class CampaignAttributes(BaseModel):
     """Campaign attributes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -164,12 +170,6 @@ class CampaignAttributes(BaseModel):
     """Last update timestamp"""
     send_time: str | None | None = Field(default=None, description="Actual send time")
     """Actual send time"""
-
-class CampaignLinks(BaseModel):
-    """Related links"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    self: str | None | None = Field(default=None)
 
 class Campaign(BaseModel):
     """A Klaviyo campaign"""
@@ -370,12 +370,6 @@ class FlowsList(BaseModel):
     data: list[Flow] | None = Field(default=None)
     links: FlowsListLinks | None = Field(default=None)
 
-class TemplateLinks(BaseModel):
-    """Related links"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    self: str | None | None = Field(default=None)
-
 class TemplateAttributes(BaseModel):
     """Template attributes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -392,6 +386,12 @@ class TemplateAttributes(BaseModel):
     """Creation timestamp"""
     updated: str | None | None = Field(default=None, description="Last update timestamp")
     """Last update timestamp"""
+
+class TemplateLinks(BaseModel):
+    """Related links"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    self: str | None | None = Field(default=None)
 
 class Template(BaseModel):
     """A Klaviyo email template"""

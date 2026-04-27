@@ -879,13 +879,20 @@ class LocalExecutor:
                 for pname, pschema in parent_endpoint.query_params_schema.items():
                     if pname not in parent_params and pschema.get("default") is not None:
                         parent_params[pname] = pschema["default"]
-                if parent_endpoint.path_params:
+                parent_resolve_list = list(parent_endpoint.path_params)
+                parent_entity_def = self._entity_index.get(parent_entity_name)
+                if parent_entity_def:
+                    for prel in parent_entity_def.relationships:
+                        if prel.foreign_key not in parent_resolve_list and prel.foreign_key not in parent_params:
+                            parent_resolve_list.append(prel.foreign_key)
+                if parent_resolve_list:
                     parent_resolved = await self._resolve_path_params(
                         parent_entity_name,
                         parent_endpoint,
                         standard_handler,
                         parent_cache,
                         depth + 1,
+                        params_to_resolve=parent_resolve_list,
                     )
                     parent_params.update(parent_resolved)
                 try:

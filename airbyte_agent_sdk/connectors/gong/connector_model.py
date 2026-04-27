@@ -716,6 +716,7 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                     action=Action.LIST,
                     description='Retrieve detailed call data including participants, interaction stats, and content',
                     body_fields=['filter', 'contentSelector', 'cursor'],
+                    request_body_defaults={},
                     request_schema={
                         'type': 'object',
                         'required': ['filter'],
@@ -1874,6 +1875,7 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                     action=Action.LIST,
                     description='Returns transcripts for calls in a specified date range or specific call IDs',
                     body_fields=['filter', 'cursor'],
+                    request_body_defaults={},
                     request_schema={
                         'type': 'object',
                         'required': ['filter'],
@@ -2042,22 +2044,27 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                     action=Action.LIST,
                     description='Provides aggregated user activity metrics across a specified period',
                     body_fields=['filter'],
+                    request_body_defaults={
+                        'filter': {'fromDate': '2024-01-01', 'toDate': '2025-01-01'},
+                    },
                     request_schema={
                         'type': 'object',
                         'required': ['filter'],
                         'properties': {
                             'filter': {
                                 'type': 'object',
+                                'default': {'fromDate': '2024-01-01', 'toDate': '2025-01-01'},
+                                'required': ['fromDate', 'toDate'],
                                 'properties': {
                                     'fromDate': {
                                         'type': 'string',
                                         'format': 'date',
-                                        'description': 'Start date (YYYY-MM-DD). Recommended for scoping results to a manageable date range.',
+                                        'description': 'Start date (YYYY-MM-DD). Required by the Gong API for activity stats.',
                                     },
                                     'toDate': {
                                         'type': 'string',
                                         'format': 'date',
-                                        'description': 'End date (YYYY-MM-DD). Recommended for scoping results to a manageable date range.',
+                                        'description': 'End date (YYYY-MM-DD). Required by the Gong API for activity stats.',
                                     },
                                     'userIds': {
                                         'type': 'array',
@@ -2186,22 +2193,27 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                     action=Action.LIST,
                     description='Delivers daily user activity metrics across a specified date range',
                     body_fields=['filter'],
+                    request_body_defaults={
+                        'filter': {'fromDate': '2024-01-01', 'toDate': '2025-01-01'},
+                    },
                     request_schema={
                         'type': 'object',
                         'required': ['filter'],
                         'properties': {
                             'filter': {
                                 'type': 'object',
+                                'default': {'fromDate': '2024-01-01', 'toDate': '2025-01-01'},
+                                'required': ['fromDate', 'toDate'],
                                 'properties': {
                                     'fromDate': {
                                         'type': 'string',
                                         'format': 'date',
-                                        'description': 'Start date (YYYY-MM-DD). Recommended for scoping results to a manageable date range.',
+                                        'description': 'Start date (YYYY-MM-DD). Required by the Gong API for activity stats.',
                                     },
                                     'toDate': {
                                         'type': 'string',
                                         'format': 'date',
-                                        'description': 'End date (YYYY-MM-DD). Recommended for scoping results to a manageable date range.',
+                                        'description': 'End date (YYYY-MM-DD). Required by the Gong API for activity stats.',
                                     },
                                     'userIds': {
                                         'type': 'array',
@@ -2380,22 +2392,27 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                     action=Action.LIST,
                     description='Returns interaction stats for users based on calls that have Whisper turned on',
                     body_fields=['filter'],
+                    request_body_defaults={
+                        'filter': {'fromDate': '2024-01-01', 'toDate': '2025-01-01'},
+                    },
                     request_schema={
                         'type': 'object',
                         'required': ['filter'],
                         'properties': {
                             'filter': {
                                 'type': 'object',
+                                'default': {'fromDate': '2024-01-01', 'toDate': '2025-01-01'},
+                                'required': ['fromDate', 'toDate'],
                                 'properties': {
                                     'fromDate': {
                                         'type': 'string',
                                         'format': 'date',
-                                        'description': 'Start date (YYYY-MM-DD). Recommended for scoping results to a manageable date range.',
+                                        'description': 'Start date (YYYY-MM-DD). Required by the Gong API for interaction stats.',
                                     },
                                     'toDate': {
                                         'type': 'string',
                                         'format': 'date',
-                                        'description': 'End date (YYYY-MM-DD). Recommended for scoping results to a manageable date range.',
+                                        'description': 'End date (YYYY-MM-DD). Required by the Gong API for interaction stats.',
                                     },
                                     'userIds': {
                                         'type': 'array',
@@ -3072,11 +3089,13 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                         'from': {
                             'type': 'string',
                             'required': True,
+                            'default': '2024-01-01T00:00:00Z',
                             'format': 'date-time',
                         },
                         'to': {
                             'type': 'string',
                             'required': True,
+                            'default': '2025-01-01T00:00:00Z',
                             'format': 'date-time',
                         },
                     },
@@ -3191,22 +3210,27 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                     action=Action.LIST,
                     description='Retrieve answered scorecards for applicable reviewed users or scorecards for a date range',
                     body_fields=['filter', 'cursor'],
+                    request_body_defaults={
+                        'filter': {'fromDateTime': '2024-01-01T00:00:00Z', 'toDateTime': '2025-01-01T00:00:00Z'},
+                    },
                     request_schema={
                         'type': 'object',
                         'required': ['filter'],
                         'properties': {
                             'filter': {
                                 'type': 'object',
+                                'default': {'fromDateTime': '2024-01-01T00:00:00Z', 'toDateTime': '2025-01-01T00:00:00Z'},
+                                'required': ['fromDateTime', 'toDateTime'],
                                 'properties': {
                                     'fromDateTime': {
                                         'type': 'string',
                                         'format': 'date-time',
-                                        'description': 'Start date in ISO 8601 format. Recommended for scoping results to a manageable date range.',
+                                        'description': 'Start date in ISO 8601 format. Required by the Gong API for scorecard stats.',
                                     },
                                     'toDateTime': {
                                         'type': 'string',
                                         'format': 'date-time',
-                                        'description': 'End date in ISO 8601 format. Recommended for scoping results to a manageable date range.',
+                                        'description': 'End date in ISO 8601 format. Required by the Gong API for scorecard stats.',
                                     },
                                     'scorecardIds': {
                                         'type': 'array',

@@ -369,6 +369,7 @@
             "type": "CallsExtensiveListParamsFilter",
             "schema": {
               "type": "object",
+              "default": {},
               "properties": {
                 "fromDateTime": {
                   "type": "string",
@@ -749,6 +750,7 @@
             "type": "CallTranscriptsListParamsFilter",
             "schema": {
               "type": "object",
+              "default": {},
               "properties": {
                 "fromDateTime": {
                   "type": "string",
@@ -844,16 +846,24 @@
             "type": "StatsActivityAggregateListParamsFilter",
             "schema": {
               "type": "object",
+              "default": {
+                "fromDate": "2024-01-01",
+                "toDate": "2025-01-01"
+              },
+              "required": [
+                "fromDate",
+                "toDate"
+              ],
               "properties": {
                 "fromDate": {
                   "type": "string",
                   "format": "date",
-                  "description": "Start date (YYYY-MM-DD). Recommended for scoping results to a manageable date range."
+                  "description": "Start date (YYYY-MM-DD). Required by the Gong API for activity stats."
                 },
                 "toDate": {
                   "type": "string",
                   "format": "date",
-                  "description": "End date (YYYY-MM-DD). Recommended for scoping results to a manageable date range."
+                  "description": "End date (YYYY-MM-DD). Required by the Gong API for activity stats."
                 },
                 "userIds": {
                   "type": "array",
@@ -928,16 +938,24 @@
             "type": "StatsActivityDayByDayListParamsFilter",
             "schema": {
               "type": "object",
+              "default": {
+                "fromDate": "2024-01-01",
+                "toDate": "2025-01-01"
+              },
+              "required": [
+                "fromDate",
+                "toDate"
+              ],
               "properties": {
                 "fromDate": {
                   "type": "string",
                   "format": "date",
-                  "description": "Start date (YYYY-MM-DD). Recommended for scoping results to a manageable date range."
+                  "description": "Start date (YYYY-MM-DD). Required by the Gong API for activity stats."
                 },
                 "toDate": {
                   "type": "string",
                   "format": "date",
-                  "description": "End date (YYYY-MM-DD). Recommended for scoping results to a manageable date range."
+                  "description": "End date (YYYY-MM-DD). Required by the Gong API for activity stats."
                 },
                 "userIds": {
                   "type": "array",
@@ -1012,16 +1030,24 @@
             "type": "StatsInteractionListParamsFilter",
             "schema": {
               "type": "object",
+              "default": {
+                "fromDate": "2024-01-01",
+                "toDate": "2025-01-01"
+              },
+              "required": [
+                "fromDate",
+                "toDate"
+              ],
               "properties": {
                 "fromDate": {
                   "type": "string",
                   "format": "date",
-                  "description": "Start date (YYYY-MM-DD). Recommended for scoping results to a manageable date range."
+                  "description": "Start date (YYYY-MM-DD). Required by the Gong API for interaction stats."
                 },
                 "toDate": {
                   "type": "string",
                   "format": "date",
-                  "description": "End date (YYYY-MM-DD). Recommended for scoping results to a manageable date range."
+                  "description": "End date (YYYY-MM-DD). Required by the Gong API for interaction stats."
                 },
                 "userIds": {
                   "type": "array",
@@ -1288,7 +1314,8 @@
             "type": "str",
             "schema": {
               "type": "string",
-              "format": "date-time"
+              "format": "date-time",
+              "default": "2024-01-01T00:00:00Z"
             },
             "required": true,
             "description": "Start date in ISO 8601 format",
@@ -1300,7 +1327,8 @@
             "type": "str",
             "schema": {
               "type": "string",
-              "format": "date-time"
+              "format": "date-time",
+              "default": "2025-01-01T00:00:00Z"
             },
             "required": true,
             "description": "End date in ISO 8601 format",
@@ -1332,16 +1360,24 @@
             "type": "StatsActivityScorecardsListParamsFilter",
             "schema": {
               "type": "object",
+              "default": {
+                "fromDateTime": "2024-01-01T00:00:00Z",
+                "toDateTime": "2025-01-01T00:00:00Z"
+              },
+              "required": [
+                "fromDateTime",
+                "toDateTime"
+              ],
               "properties": {
                 "fromDateTime": {
                   "type": "string",
                   "format": "date-time",
-                  "description": "Start date in ISO 8601 format. Recommended for scoping results to a manageable date range."
+                  "description": "Start date in ISO 8601 format. Required by the Gong API for scorecard stats."
                 },
                 "toDateTime": {
                   "type": "string",
                   "format": "date-time",
-                  "description": "End date in ISO 8601 format. Recommended for scoping results to a manageable date range."
+                  "description": "End date in ISO 8601 format. Required by the Gong API for scorecard stats."
                 },
                 "scorecardIds": {
                   "type": "array",

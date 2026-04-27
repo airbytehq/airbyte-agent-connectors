@@ -206,6 +206,30 @@ class TicketsList(BaseModel):
     paging: Paging | None = Field(default=None)
     total: int | None = Field(default=None)
 
+class SchemaLabels(BaseModel):
+    """Display labels"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    singular: str | None = Field(default=None)
+    plural: str | None = Field(default=None)
+
+class SchemaAssociationsItem(BaseModel):
+    """Nested schema for Schema.associations_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    from_object_type_id: str | None = Field(default=None, alias="fromObjectTypeId")
+    to_object_type_id: str | None = Field(default=None, alias="toObjectTypeId")
+    name: str | None = Field(default=None)
+    cardinality: str | None = Field(default=None)
+    id: str | None = Field(default=None)
+    inverse_cardinality: str | None = Field(default=None, alias="inverseCardinality")
+    has_user_enforced_max_to_object_ids: bool | None = Field(default=None, alias="hasUserEnforcedMaxToObjectIds")
+    has_user_enforced_max_from_object_ids: bool | None = Field(default=None, alias="hasUserEnforcedMaxFromObjectIds")
+    max_to_object_ids: int | None = Field(default=None, alias="maxToObjectIds")
+    max_from_object_ids: int | None = Field(default=None, alias="maxFromObjectIds")
+    created_at: str | None | None = Field(default=None, alias="createdAt")
+    updated_at: str | None | None = Field(default=None, alias="updatedAt")
+
 class SchemaPropertiesItemModificationmetadata(BaseModel):
     """Nested schema for SchemaPropertiesItem.modificationMetadata"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -241,30 +265,6 @@ class SchemaPropertiesItem(BaseModel):
     updated_user_id: str | None = Field(default=None, alias="updatedUserId")
     show_currency_symbol: bool | None = Field(default=None, alias="showCurrencySymbol")
     modification_metadata: SchemaPropertiesItemModificationmetadata | None = Field(default=None, alias="modificationMetadata")
-
-class SchemaAssociationsItem(BaseModel):
-    """Nested schema for Schema.associations_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    from_object_type_id: str | None = Field(default=None, alias="fromObjectTypeId")
-    to_object_type_id: str | None = Field(default=None, alias="toObjectTypeId")
-    name: str | None = Field(default=None)
-    cardinality: str | None = Field(default=None)
-    id: str | None = Field(default=None)
-    inverse_cardinality: str | None = Field(default=None, alias="inverseCardinality")
-    has_user_enforced_max_to_object_ids: bool | None = Field(default=None, alias="hasUserEnforcedMaxToObjectIds")
-    has_user_enforced_max_from_object_ids: bool | None = Field(default=None, alias="hasUserEnforcedMaxFromObjectIds")
-    max_to_object_ids: int | None = Field(default=None, alias="maxToObjectIds")
-    max_from_object_ids: int | None = Field(default=None, alias="maxFromObjectIds")
-    created_at: str | None | None = Field(default=None, alias="createdAt")
-    updated_at: str | None | None = Field(default=None, alias="updatedAt")
-
-class SchemaLabels(BaseModel):
-    """Display labels"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    singular: str | None = Field(default=None)
-    plural: str | None = Field(default=None)
 
 class Schema(BaseModel):
     """Custom object schema definition"""
