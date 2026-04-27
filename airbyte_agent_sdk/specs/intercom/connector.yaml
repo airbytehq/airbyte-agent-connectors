@@ -67,6 +67,8 @@ info:
       - start_date
     replication_config_key_mapping:
       start_date: start_date
+    replication_config_constants:
+      start_date: "2024-01-01T00:00:00Z"
 
   x-airbyte-context-store:
     disable_compaction: true
