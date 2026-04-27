@@ -4,10 +4,7 @@ Intercom connector.
 
 from __future__ import annotations
 
-import inspect
-import json
 import logging
-from functools import wraps
 from typing import TYPE_CHECKING, Any, Callable, Mapping, TypeVar, overload
 try:
     from typing import Literal
@@ -18,6 +15,7 @@ from pydantic import BaseModel
 
 from .connector_model import IntercomConnectorModel
 from airbyte_agent_sdk.introspection import describe_entities, generate_tool_description
+from airbyte_agent_sdk.translation import DEFAULT_MAX_OUTPUT_CHARS, FrameworkName, translate_exceptions
 from airbyte_agent_sdk.types import AirbyteAuthConfig
 from .types import (
     AdminsGetParams,
@@ -91,37 +89,6 @@ from .models import (
 # TypeVar for decorator type preservation
 _F = TypeVar("_F", bound=Callable[..., Any])
 
-DEFAULT_MAX_OUTPUT_CHARS = 100_000  # ~100KB default, configurable per-tool
-
-
-def _raise_output_too_large(message: str) -> None:
-    try:
-        from pydantic_ai import ModelRetry  # type: ignore[import-not-found]
-    except Exception as exc:
-        raise RuntimeError(message) from exc
-    raise ModelRetry(message)
-
-
-def _check_output_size(result: Any, max_chars: int | None, tool_name: str) -> Any:
-    if max_chars is None or max_chars <= 0:
-        return result
-
-    try:
-        serialized = json.dumps(result, default=str)
-    except (TypeError, ValueError):
-        return result
-
-    if len(serialized) > max_chars:
-        truncated_preview = serialized[:500] + "..." if len(serialized) > 500 else serialized
-        _raise_output_too_large(
-            f"Tool '{tool_name}' output too large ({len(serialized):,} chars, limit {max_chars:,}). "
-            "Please narrow your query by: using the 'fields' parameter to select only needed fields, "
-            "adding filters, or reducing the 'limit'. "
-            f"Preview: {truncated_preview}"
-        )
-
-    return result
-
 
 
 
@@ -134,7 +101,7 @@ class IntercomConnector:
 
     connector_name = "intercom"
     connector_version = "0.1.10"
-    sdk_version = "0.1.95"
+    sdk_version = "0.1.96"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -575,9 +542,18 @@ class IntercomConnector:
         *,
         update_docstring: bool = True,
         max_output_chars: int | None = DEFAULT_MAX_OUTPUT_CHARS,
+        framework: FrameworkName | None = None,
+        internal_retries: int = 0,
+        should_internal_retry: Callable[[Exception, tuple[Any, ...], dict[str, Any]], bool] | None = None,
+        exhausted_runtime_failure_message: Callable[[Exception, tuple[Any, ...], dict[str, Any]], str | None] | None = None,
     ) -> _F | Callable[[_F], _F]:
         """
         Decorator that adds tool utilities like docstring augmentation and output limits.
+
+        Composes :func:`airbyte_agent_sdk.translation.translate_exceptions` for
+        runtime wrapping (sync/async branch + output-size check + framework
+        signal translation + optional internal retry loop), and adds
+        connector-specific docstring augmentation on top of it.
 
         Usage:
             @mcp.tool()
@@ -590,9 +566,29 @@ class IntercomConnector:
             async def execute(entity: str, action: str, params: dict):
                 ...
 
+            @mcp.tool()
+            @IntercomConnector.tool_utils(framework="pydantic_ai", internal_retries=2)
+            async def execute(entity: str, action: str, params: dict):
+                ...
+
         Args:
             update_docstring: When True, append connector capabilities to __doc__.
             max_output_chars: Max serialized output size before raising. Use None to disable.
+            framework: One of ``"pydantic_ai" | "langchain" | "openai_agents" | "mcp"``.
+                Defaults to None → auto-detect by attempting each framework's canonical
+                import in order. Explicit always wins.
+            internal_retries: How many transient runtime failures (429/5xx, network,
+                timeout) to retry silently before surfacing. Default 0. Forwarded to
+                :func:`airbyte_agent_sdk.translation.translate_exceptions`.
+            should_internal_retry: Optional predicate ``(error, args, kwargs) -> bool``
+                further restricting which retryable errors are safe for this specific
+                tool. Forwarded to
+                :func:`airbyte_agent_sdk.translation.translate_exceptions`.
+            exhausted_runtime_failure_message: Optional callback
+                ``(error, args, kwargs) -> str | None``. Invoked after internal retries
+                are exhausted OR were skipped via ``should_internal_retry`` returning
+                False. Forwarded to
+                :func:`airbyte_agent_sdk.translation.translate_exceptions`.
         """
 
         def decorate(inner: _F) -> _F:
@@ -608,22 +604,14 @@ class IntercomConnector:
             else:
                 full_doc = ""
 
-            if inspect.iscoroutinefunction(inner):
-
-                @wraps(inner)
-                async def aw(*args: Any, **kwargs: Any) -> Any:
-                    result = await inner(*args, **kwargs)
-                    return _check_output_size(result, max_output_chars, inner.__name__)
-
-                wrapped = aw
-            else:
-
-                @wraps(inner)
-                def sw(*args: Any, **kwargs: Any) -> Any:
-                    result = inner(*args, **kwargs)
-                    return _check_output_size(result, max_output_chars, inner.__name__)
-
-                wrapped = sw
+            wrapped = translate_exceptions(
+                inner,
+                framework=framework,
+                max_output_chars=max_output_chars,
+                internal_retries=internal_retries,
+                should_internal_retry=should_internal_retry,
+                exhausted_runtime_failure_message=exhausted_runtime_failure_message,
+            )
 
             if update_docstring:
                 wrapped.__doc__ = full_doc

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "airbyte-agent-sdk"
-version = "0.1.95"
+version = "0.1.96"
 description = "Airbyte Agent SDK: typed connectors that give AI agents access to 50+ third-party APIs"
 authors = [{ name = "Airbyte", email = "contact@airbyte.io" }]
 readme = "README.md"
@@ -48,7 +48,14 @@ include = ["airbyte_agent_sdk*"]
 airbyte_agent_sdk = ["py.typed", "*.pyi", "codegen/templates/*.jinja2", "specs/*/connector.yaml"]
 
 [dependency-groups]
-dev = ["pytest-cov>=7.0.0"]
+dev = [
+    "fastmcp>=3.2.4",
+    "langchain-core>=1.3.2",
+    "langchain-openai>=0.3.0",
+    "langgraph>=0.6.0",
+    "openai-agents>=0.14.6",
+    "pytest-cov>=7.0.0",
+]
 
 [tool.poe.tasks]
 docs-generate = { env = { PDOC_ALLOW_EXEC = "1" }, cmd = "python docs/generate.py", help = "Generate API documentation with pdoc." }

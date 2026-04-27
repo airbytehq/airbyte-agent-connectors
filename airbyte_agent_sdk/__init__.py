@@ -147,6 +147,7 @@ from .http.exceptions import (
     TimeoutError,
 )
 from .registry import list_connectors
+from .translation import DEFAULT_MAX_OUTPUT_CHARS, translate_exceptions
 from .types import AirbyteAuthConfig
 from .utils import save_download
 from .workspace import Workspace
@@ -193,6 +194,9 @@ __all__ = [
     # Utilities
     "save_download",
     "configure",
+    # Tool exception translation
+    "translate_exceptions",
+    "DEFAULT_MAX_OUTPUT_CHARS",
     # Version
     "SDK_VERSION",
 ]
@@ -225,4 +229,11 @@ __pdoc__ = {
     "performance": False,
     "logging": False,
     "cloud_utils": False,
+    # Translation subpackage: keep the package page (it carries the public
+    # `translate_exceptions` docstring), but hide the underscore-private
+    # implementation modules.
+    "translation._predicates": False,
+    "translation._output": False,
+    "translation._strategies": False,
+    "translation._decorator": False,
 }
