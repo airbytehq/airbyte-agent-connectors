@@ -49,6 +49,8 @@ from .types import (
     ContactsSearchQuery,
     DealsSearchFilter,
     DealsSearchQuery,
+    TicketsSearchFilter,
+    TicketsSearchQuery,
 )
 from .models import HubspotOauth2AuthConfig, HubspotPrivateAppAuthConfig
 from .models import HubspotAuthConfig
@@ -83,6 +85,8 @@ from .models import (
     ContactsSearchResult,
     DealsSearchData,
     DealsSearchResult,
+    TicketsSearchData,
+    TicketsSearchResult,
 )
 
 # TypeVar for decorator type preservation
@@ -1628,6 +1632,68 @@ class TicketsQuery:
             meta=result.meta
         )
 
+
+
+    async def context_store_search(
+        self,
+        query: TicketsSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> TicketsSearchResult:
+        """
+        Search tickets records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (TicketsSearchFilter):
+        - archived: Indicates whether the ticket has been archived or deleted
+        - contacts: Collection of contact records associated with the ticket
+        - companies: Collection of company records associated with the ticket
+        - created_at: Timestamp when the ticket record was originally created
+        - id: Unique identifier for the ticket record
+        - properties: Key-value object containing all ticket properties and custom fields
+        - updated_at: Timestamp when the ticket record was last modified
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's meta.cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            TicketsSearchResult with typed records, pagination metadata, and optional search metadata
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("tickets", "context_store_search", params)
+
+        # Parse response into typed result
+        meta_data = result.get("meta")
+        return TicketsSearchResult(
+            data=[
+                TicketsSearchData(**row)
+                for row in result.get("data", [])
+                if isinstance(row, dict)
+            ],
+            meta=AirbyteSearchMeta(
+                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
+                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
+                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
+            ),
+        )
 
 
 class SchemasQuery:

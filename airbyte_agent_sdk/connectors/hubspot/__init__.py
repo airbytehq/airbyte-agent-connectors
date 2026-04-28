@@ -16,6 +16,8 @@ from .models import (
     ContactsSearchResult,
     DealsSearchData,
     DealsSearchResult,
+    TicketsSearchData,
+    TicketsSearchResult,
 )
 from airbyte_agent_sdk.types import AirbyteAuthConfig
 
@@ -32,4 +34,6 @@ __all__ = [
     "ContactsSearchResult",
     "DealsSearchData",
     "DealsSearchResult",
+    "TicketsSearchData",
+    "TicketsSearchResult",
 ]

@@ -506,6 +506,26 @@ class DealsSearchData(BaseModel):
     """Timestamp when the deal record was last modified"""
 
 
+class TicketsSearchData(BaseModel):
+    """Search result data for tickets entity."""
+    model_config = ConfigDict(extra="allow")
+
+    archived: bool | None = None
+    """Indicates whether the ticket has been archived or deleted"""
+    contacts: list[Any] | None = None
+    """Collection of contact records associated with the ticket"""
+    companies: list[Any] | None = None
+    """Collection of company records associated with the ticket"""
+    created_at: str | None = None
+    """Timestamp when the ticket record was originally created"""
+    id: str | None = None
+    """Unique identifier for the ticket record"""
+    properties: dict[str, Any] = None
+    """Key-value object containing all ticket properties and custom fields"""
+    updated_at: str | None = None
+    """Timestamp when the ticket record was last modified"""
+
+
 # ===== GENERIC SEARCH RESULT TYPES =====
 
 class AirbyteSearchMeta(BaseModel):
@@ -540,6 +560,9 @@ ContactsSearchResult = AirbyteSearchResult[ContactsSearchData]
 
 DealsSearchResult = AirbyteSearchResult[DealsSearchData]
 """Search result type for deals entity."""
+
+TicketsSearchResult = AirbyteSearchResult[TicketsSearchData]
+"""Search result type for tickets entity."""
 
 
 

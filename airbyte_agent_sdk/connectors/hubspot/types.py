@@ -769,6 +769,191 @@ class DealsSearchQuery(TypedDict, total=False):
     sort: list[DealsSortFilter]
 
 
+# ===== TICKETS SEARCH TYPES =====
+
+class TicketsSearchFilter(TypedDict, total=False):
+    """Available fields for filtering tickets search queries."""
+    archived: bool | None
+    """Indicates whether the ticket has been archived or deleted"""
+    contacts: list[Any] | None
+    """Collection of contact records associated with the ticket"""
+    companies: list[Any] | None
+    """Collection of company records associated with the ticket"""
+    created_at: str | None
+    """Timestamp when the ticket record was originally created"""
+    id: str | None
+    """Unique identifier for the ticket record"""
+    properties: dict[str, Any]
+    """Key-value object containing all ticket properties and custom fields"""
+    updated_at: str | None
+    """Timestamp when the ticket record was last modified"""
+
+
+class TicketsInFilter(TypedDict, total=False):
+    """Available fields for 'in' condition (values are lists)."""
+    archived: list[bool]
+    """Indicates whether the ticket has been archived or deleted"""
+    contacts: list[list[Any]]
+    """Collection of contact records associated with the ticket"""
+    companies: list[list[Any]]
+    """Collection of company records associated with the ticket"""
+    created_at: list[str]
+    """Timestamp when the ticket record was originally created"""
+    id: list[str]
+    """Unique identifier for the ticket record"""
+    properties: list[dict[str, Any]]
+    """Key-value object containing all ticket properties and custom fields"""
+    updated_at: list[str]
+    """Timestamp when the ticket record was last modified"""
+
+
+class TicketsAnyValueFilter(TypedDict, total=False):
+    """Available fields with Any value type. Used for 'contains' and 'any' conditions."""
+    archived: Any
+    """Indicates whether the ticket has been archived or deleted"""
+    contacts: Any
+    """Collection of contact records associated with the ticket"""
+    companies: Any
+    """Collection of company records associated with the ticket"""
+    created_at: Any
+    """Timestamp when the ticket record was originally created"""
+    id: Any
+    """Unique identifier for the ticket record"""
+    properties: Any
+    """Key-value object containing all ticket properties and custom fields"""
+    updated_at: Any
+    """Timestamp when the ticket record was last modified"""
+
+
+class TicketsStringFilter(TypedDict, total=False):
+    """String fields for text search conditions (like, fuzzy, keyword)."""
+    archived: str
+    """Indicates whether the ticket has been archived or deleted"""
+    contacts: str
+    """Collection of contact records associated with the ticket"""
+    companies: str
+    """Collection of company records associated with the ticket"""
+    created_at: str
+    """Timestamp when the ticket record was originally created"""
+    id: str
+    """Unique identifier for the ticket record"""
+    properties: str
+    """Key-value object containing all ticket properties and custom fields"""
+    updated_at: str
+    """Timestamp when the ticket record was last modified"""
+
+
+class TicketsSortFilter(TypedDict, total=False):
+    """Available fields for sorting tickets search results."""
+    archived: AirbyteSortOrder
+    """Indicates whether the ticket has been archived or deleted"""
+    contacts: AirbyteSortOrder
+    """Collection of contact records associated with the ticket"""
+    companies: AirbyteSortOrder
+    """Collection of company records associated with the ticket"""
+    created_at: AirbyteSortOrder
+    """Timestamp when the ticket record was originally created"""
+    id: AirbyteSortOrder
+    """Unique identifier for the ticket record"""
+    properties: AirbyteSortOrder
+    """Key-value object containing all ticket properties and custom fields"""
+    updated_at: AirbyteSortOrder
+    """Timestamp when the ticket record was last modified"""
+
+
+# Entity-specific condition types for tickets
+class TicketsEqCondition(TypedDict, total=False):
+    """Equal to: field equals value."""
+    eq: TicketsSearchFilter
+
+
+class TicketsNeqCondition(TypedDict, total=False):
+    """Not equal to: field does not equal value."""
+    neq: TicketsSearchFilter
+
+
+class TicketsGtCondition(TypedDict, total=False):
+    """Greater than: field > value."""
+    gt: TicketsSearchFilter
+
+
+class TicketsGteCondition(TypedDict, total=False):
+    """Greater than or equal: field >= value."""
+    gte: TicketsSearchFilter
+
+
+class TicketsLtCondition(TypedDict, total=False):
+    """Less than: field < value."""
+    lt: TicketsSearchFilter
+
+
+class TicketsLteCondition(TypedDict, total=False):
+    """Less than or equal: field <= value."""
+    lte: TicketsSearchFilter
+
+
+class TicketsLikeCondition(TypedDict, total=False):
+    """Partial string match with % wildcards."""
+    like: TicketsStringFilter
+
+
+class TicketsFuzzyCondition(TypedDict, total=False):
+    """Ordered word text match (case-insensitive)."""
+    fuzzy: TicketsStringFilter
+
+
+class TicketsKeywordCondition(TypedDict, total=False):
+    """Keyword text match (any word present)."""
+    keyword: TicketsStringFilter
+
+
+class TicketsContainsCondition(TypedDict, total=False):
+    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    contains: TicketsAnyValueFilter
+
+
+# Reserved keyword conditions using functional TypedDict syntax
+TicketsInCondition = TypedDict("TicketsInCondition", {"in": TicketsInFilter}, total=False)
+"""In list: field value is in list. Example: {"in": {"status": ["active", "pending"]}}"""
+
+TicketsNotCondition = TypedDict("TicketsNotCondition", {"not": "TicketsCondition"}, total=False)
+"""Negates the nested condition."""
+
+TicketsAndCondition = TypedDict("TicketsAndCondition", {"and": "list[TicketsCondition]"}, total=False)
+"""True if all nested conditions are true."""
+
+TicketsOrCondition = TypedDict("TicketsOrCondition", {"or": "list[TicketsCondition]"}, total=False)
+"""True if any nested condition is true."""
+
+TicketsAnyCondition = TypedDict("TicketsAnyCondition", {"any": TicketsAnyValueFilter}, total=False)
+"""Match if ANY element in array field matches nested condition. Example: {"any": {"addresses": {"eq": {"state": "CA"}}}}"""
+
+# Union of all tickets condition types
+TicketsCondition = (
+    TicketsEqCondition
+    | TicketsNeqCondition
+    | TicketsGtCondition
+    | TicketsGteCondition
+    | TicketsLtCondition
+    | TicketsLteCondition
+    | TicketsInCondition
+    | TicketsLikeCondition
+    | TicketsFuzzyCondition
+    | TicketsKeywordCondition
+    | TicketsContainsCondition
+    | TicketsNotCondition
+    | TicketsAndCondition
+    | TicketsOrCondition
+    | TicketsAnyCondition
+)
+
+
+class TicketsSearchQuery(TypedDict, total=False):
+    """Search query for tickets entity."""
+    filter: TicketsCondition
+    sort: list[TicketsSortFilter]
+
+
 
 # ===== SEARCH PARAMS =====
 
