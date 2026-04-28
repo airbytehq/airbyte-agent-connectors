@@ -91,16 +91,41 @@ class ProjectCompact(BaseModel):
     resource_type: str | None = Field(default=None)
     name: str | None = Field(default=None)
 
-class ProjectMembersItem(BaseModel):
-    """Nested schema for Project.members_item"""
+class ProjectWorkspace(BaseModel):
+    """Nested schema for Project.workspace"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     gid: str | None = Field(default=None)
     name: str | None = Field(default=None)
     resource_type: str | None = Field(default=None)
 
-class ProjectCurrentStatusCreatedBy(BaseModel):
-    """Nested schema for ProjectCurrentStatus.created_by"""
+class ProjectFollowersItem(BaseModel):
+    """Nested schema for Project.followers_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    gid: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    resource_type: str | None = Field(default=None)
+
+class ProjectCurrentStatusUpdate(BaseModel):
+    """Nested schema for Project.current_status_update"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    gid: str | None = Field(default=None)
+    resource_type: str | None = Field(default=None)
+    resource_subtype: str | None = Field(default=None)
+    title: str | None = Field(default=None)
+
+class ProjectTeam(BaseModel):
+    """Nested schema for Project.team"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    gid: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    resource_type: str | None = Field(default=None)
+
+class ProjectOwner(BaseModel):
+    """Nested schema for Project.owner"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     gid: str | None = Field(default=None)
@@ -109,6 +134,14 @@ class ProjectCurrentStatusCreatedBy(BaseModel):
 
 class ProjectCurrentStatusAuthor(BaseModel):
     """Nested schema for ProjectCurrentStatus.author"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    gid: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    resource_type: str | None = Field(default=None)
+
+class ProjectCurrentStatusCreatedBy(BaseModel):
+    """Nested schema for ProjectCurrentStatus.created_by"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     gid: str | None = Field(default=None)
@@ -129,49 +162,16 @@ class ProjectCurrentStatus(BaseModel):
     text: str | None = Field(default=None)
     title: str | None = Field(default=None)
 
+class ProjectMembersItem(BaseModel):
+    """Nested schema for Project.members_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    gid: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    resource_type: str | None = Field(default=None)
+
 class ProjectCompletedBy(BaseModel):
     """Nested schema for Project.completed_by"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    gid: str | None = Field(default=None)
-    name: str | None = Field(default=None)
-    resource_type: str | None = Field(default=None)
-
-class ProjectCurrentStatusUpdate(BaseModel):
-    """Nested schema for Project.current_status_update"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    gid: str | None = Field(default=None)
-    resource_type: str | None = Field(default=None)
-    resource_subtype: str | None = Field(default=None)
-    title: str | None = Field(default=None)
-
-class ProjectFollowersItem(BaseModel):
-    """Nested schema for Project.followers_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    gid: str | None = Field(default=None)
-    name: str | None = Field(default=None)
-    resource_type: str | None = Field(default=None)
-
-class ProjectOwner(BaseModel):
-    """Nested schema for Project.owner"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    gid: str | None = Field(default=None)
-    name: str | None = Field(default=None)
-    resource_type: str | None = Field(default=None)
-
-class ProjectTeam(BaseModel):
-    """Nested schema for Project.team"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    gid: str | None = Field(default=None)
-    name: str | None = Field(default=None)
-    resource_type: str | None = Field(default=None)
-
-class ProjectWorkspace(BaseModel):
-    """Nested schema for Project.workspace"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     gid: str | None = Field(default=None)

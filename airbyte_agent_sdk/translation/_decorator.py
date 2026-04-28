@@ -192,8 +192,8 @@ def translate_exceptions(
             kwargs) -> str | None`. Invoked after internal retries are
             exhausted OR were skipped via `should_internal_retry` returning
             False. Return a non-None string to translate the failure
-            through the strategy with that message; return None to re-raise
-            the original exception unwrapped.
+            through the strategy with that custom message; return None to
+            translate using the default exception representation.
 
     Returns:
         The wrapped callable. Sync or async is preserved via
@@ -277,7 +277,10 @@ def translate_exceptions(
                             if exhausted_message is not None:
                                 signal = strategy(e, exhausted_message)
                                 return _apply_signal(signal, e)
-                            raise
+                            # No custom message — still translate through the
+                            # strategy so the framework contract is preserved.
+                            signal = strategy(e)
+                            return _apply_signal(signal, e)
                         signal = strategy(e)
                         return _apply_signal(signal, e)
 
@@ -330,7 +333,10 @@ def translate_exceptions(
                         if exhausted_message is not None:
                             signal = strategy(e, exhausted_message)
                             return _apply_signal(signal, e)
-                        raise
+                        # No custom message — still translate through the
+                        # strategy so the framework contract is preserved.
+                        signal = strategy(e)
+                        return _apply_signal(signal, e)
                     signal = strategy(e)
                     return _apply_signal(signal, e)
 
