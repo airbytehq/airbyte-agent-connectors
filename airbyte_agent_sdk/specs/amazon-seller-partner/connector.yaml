@@ -633,6 +633,7 @@ paths:
           schema:
             type: string
             format: date-time
+            default: "{{ (now_utc() - duration('P730D')).strftime('%Y-%m-%dT%H:%M:%SZ') }}"
         - name: CreatedBefore
           in: query
           description: >-
@@ -811,6 +812,7 @@ paths:
           schema:
             type: string
             format: date-time
+            default: "{{ (now_utc() - duration('P730D')).strftime('%Y-%m-%dT%H:%M:%SZ') }}"
         - name: FinancialEventGroupStartedBefore
           in: query
           description: >-
@@ -878,6 +880,7 @@ paths:
           schema:
             type: string
             format: date-time
+            default: "{{ (now_utc() - duration('P730D')).strftime('%Y-%m-%dT%H:%M:%SZ') }}"
         - name: PostedBefore
           in: query
           description: >-
@@ -983,6 +986,7 @@ paths:
             search. Cannot be used together with identifiers — provide one or the other.
           schema:
             type: string
+            default: "test"
         - name: identifiers
           in: query
           description: >-
@@ -1161,6 +1165,7 @@ paths:
             GET_MERCHANT_LISTINGS_ALL_DATA (listings). See SP-API docs for full list.
           schema:
             type: string
+            default: "GET_MERCHANT_LISTINGS_ALL_DATA"
         - name: processingStatuses
           in: query
           description: >-

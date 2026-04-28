@@ -562,13 +562,6 @@ class TicketCreateParams(BaseModel):
 
     ticket: TicketCreateParamsTicket
 
-class TicketUpdateParamsTicketCustomFieldsItem(BaseModel):
-    """Nested schema for TicketUpdateParamsTicket.custom_fields_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: int | None = Field(default=None)
-    value: str | None = Field(default=None)
-
 class TicketUpdateParamsTicketComment(BaseModel):
     """A comment to add to the ticket"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -581,6 +574,13 @@ class TicketUpdateParamsTicketComment(BaseModel):
     """Whether the comment is public (true) or an internal note (false)"""
     author_id: int | None = Field(default=None, description="The author of the comment")
     """The author of the comment"""
+
+class TicketUpdateParamsTicketCustomFieldsItem(BaseModel):
+    """Nested schema for TicketUpdateParamsTicket.custom_fields_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int | None = Field(default=None)
+    value: str | None = Field(default=None)
 
 class TicketUpdateParamsTicket(BaseModel):
     """The ticket fields to update"""

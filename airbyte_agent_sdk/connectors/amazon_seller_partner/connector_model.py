@@ -141,6 +141,7 @@ AmazonSellerPartnerConnectorModel: ConnectorModel = ConnectorModel(
                         'CreatedAfter': {
                             'type': 'string',
                             'required': False,
+                            'default': "{{ (now_utc() - duration('P730D')).strftime('%Y-%m-%dT%H:%M:%SZ') }}",
                             'format': 'date-time',
                         },
                         'CreatedBefore': {
@@ -1107,6 +1108,7 @@ AmazonSellerPartnerConnectorModel: ConnectorModel = ConnectorModel(
                         'FinancialEventGroupStartedAfter': {
                             'type': 'string',
                             'required': False,
+                            'default': "{{ (now_utc() - duration('P730D')).strftime('%Y-%m-%dT%H:%M:%SZ') }}",
                             'format': 'date-time',
                         },
                         'FinancialEventGroupStartedBefore': {
@@ -1325,6 +1327,7 @@ AmazonSellerPartnerConnectorModel: ConnectorModel = ConnectorModel(
                         'PostedAfter': {
                             'type': 'string',
                             'required': False,
+                            'default': "{{ (now_utc() - duration('P730D')).strftime('%Y-%m-%dT%H:%M:%SZ') }}",
                             'format': 'date-time',
                         },
                         'PostedBefore': {
@@ -1987,7 +1990,11 @@ AmazonSellerPartnerConnectorModel: ConnectorModel = ConnectorModel(
                                 },
                             },
                         },
-                        'keywords': {'type': 'string', 'required': False},
+                        'keywords': {
+                            'type': 'string',
+                            'required': False,
+                            'default': 'test',
+                        },
                         'identifiers': {'type': 'string', 'required': False},
                         'identifiersType': {
                             'type': 'string',
@@ -2482,7 +2489,11 @@ AmazonSellerPartnerConnectorModel: ConnectorModel = ConnectorModel(
                         'nextToken',
                     ],
                     query_params_schema={
-                        'reportTypes': {'type': 'string', 'required': False},
+                        'reportTypes': {
+                            'type': 'string',
+                            'required': False,
+                            'default': 'GET_MERCHANT_LISTINGS_ALL_DATA',
+                        },
                         'processingStatuses': {'type': 'string', 'required': False},
                         'marketplaceIds': {
                             'type': 'string',

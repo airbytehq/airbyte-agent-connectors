@@ -94,7 +94,8 @@
         "type": "str",
         "schema": {
           "type": "string",
-          "format": "date-time"
+          "format": "date-time",
+          "default": "{{ (now_utc() - duration('P730D')).strftime('%Y-%m-%dT%H:%M:%SZ') }}"
         },
         "required": null,
         "description": "A date used for selecting orders created after the specified date. Must be in ISO 8601 date-time format (e.g. 2024-01-15T00:00:00Z). Required if LastUpdatedAfter is not specified \u2014 the API requires at least one of CreatedAfter or LastUpdatedAfter. Use this to scope orders by creation date. For example, to get orders from the last 30 days, set this to a date 30 days ago.",
@@ -221,7 +222,8 @@
             "type": "str",
             "schema": {
               "type": "string",
-              "format": "date-time"
+              "format": "date-time",
+              "default": "{{ (now_utc() - duration('P730D')).strftime('%Y-%m-%dT%H:%M:%SZ') }}"
             },
             "required": null,
             "description": "A date used for selecting orders created after the specified date. Must be in ISO 8601 date-time format (e.g. 2024-01-15T00:00:00Z). Required if LastUpdatedAfter is not specified \u2014 the API requires at least one of CreatedAfter or LastUpdatedAfter. Use this to scope orders by creation date. For example, to get orders from the last 30 days, set this to a date 30 days ago.",
@@ -417,7 +419,8 @@
             "type": "str",
             "schema": {
               "type": "string",
-              "format": "date-time"
+              "format": "date-time",
+              "default": "{{ (now_utc() - duration('P730D')).strftime('%Y-%m-%dT%H:%M:%SZ') }}"
             },
             "required": null,
             "description": "Return groups that started after this date. Must be in ISO 8601 date-time format (e.g. 2024-01-01T00:00:00Z). Use this to scope results to a specific time period. For example, to see settlements from the last 90 days, set this to 90 days ago.",
@@ -497,7 +500,8 @@
             "type": "str",
             "schema": {
               "type": "string",
-              "format": "date-time"
+              "format": "date-time",
+              "default": "{{ (now_utc() - duration('P730D')).strftime('%Y-%m-%dT%H:%M:%SZ') }}"
             },
             "required": null,
             "description": "Return events posted after this date. Must be in ISO 8601 date-time format (e.g. 2024-01-01T00:00:00Z). Recommended for scoping results to a manageable date range. For recent activity, set this to 30 days ago.",
@@ -587,7 +591,8 @@
             "python_name": "keywords",
             "type": "str",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "default": "test"
             },
             "required": null,
             "description": "Keywords to search for in the Amazon catalog. Use this for text-based product search. Cannot be used together with identifiers \u2014 provide one or the other.",
@@ -759,7 +764,8 @@
             "python_name": "report_types",
             "type": "str",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "default": "GET_MERCHANT_LISTINGS_ALL_DATA"
             },
             "required": null,
             "description": "A comma-separated list of report types to filter by. Common report types include GET_FLAT_FILE_ALL_ORDERS_DATA_BY_ORDER_DATE_GENERAL (orders), GET_FBA_FULFILLMENT_REMOVAL_ORDER_DETAIL_DATA (FBA removals), GET_MERCHANT_LISTINGS_ALL_DATA (listings). See SP-API docs for full list.",

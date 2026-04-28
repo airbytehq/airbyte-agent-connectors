@@ -12,6 +12,7 @@ import re
 import time
 import uuid
 from collections.abc import AsyncIterator
+from datetime import datetime, timedelta, timezone
 from typing import Any, Protocol, overload
 from urllib.parse import quote
 
@@ -96,6 +97,43 @@ class ParentProbeError(Exception):
     def __init__(self, message: str, status_code: int | None = None) -> None:
         super().__init__(message)
         self.status_code = status_code
+
+
+def _parse_iso_duration(iso_str: str) -> timedelta:
+    """Parse an ISO 8601 duration string into a `timedelta`.
+
+    Supports the `P[n]D`, `P[n]DT[n]H[n]M[n]S` patterns used by connector
+    probe defaults (e.g. `'P730D'`, `'P90D'`, `'PT2M'`).
+    """
+    m = re.match(r"^P(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?)?$", iso_str)
+    if not m:
+        raise ValueError(f"Unsupported ISO 8601 duration: {iso_str}")
+    days = int(m.group(1) or 0)
+    hours = int(m.group(2) or 0)
+    minutes = int(m.group(3) or 0)
+    seconds = int(m.group(4) or 0)
+    return timedelta(days=days, hours=hours, minutes=minutes, seconds=seconds)
+
+
+def _evaluate_probe_default(default_value: str, replication_constants: dict[str, Any]) -> str:
+    """Evaluate a Jinja expression in a schema default value for probe requests.
+
+    If `default_value` contains `{{`, it is rendered as a Jinja2 template with
+    `now_utc`, `duration`, `max`, `min`, and a `config` dict derived from
+    `replication_config_constants`. Plain strings are returned unchanged.
+    """
+    if "{{" not in str(default_value):
+        return default_value
+
+    env = Environment(undefined=StrictUndefined, autoescape=False)
+    template = env.from_string(str(default_value))
+    return template.render(
+        now_utc=lambda: datetime.now(timezone.utc),
+        duration=_parse_iso_duration,
+        config=replication_constants,
+        max=max,
+        min=min,
+    )
 
 
 class _OperationContext:
@@ -326,6 +364,19 @@ class LocalExecutor:
             _DownloadOperationHandler(op_context),
             _StandardOperationHandler(op_context),
         ]
+
+    def _get_replication_constants(self) -> dict[str, Any]:
+        """Extract `replication_config_constants` from the OpenAPI spec, if available."""
+        spec = getattr(self.model, "openapi_spec", None)
+        if spec is None:
+            return {}
+        info = getattr(spec, "info", None)
+        if info is None:
+            return {}
+        repl_config = getattr(info, "x_airbyte_replication_config", None)
+        if repl_config is None:
+            return {}
+        return dict(getattr(repl_config, "replication_config_constants", {}) or {})
 
     @staticmethod
     def _get_additional_headers_only_fields(
@@ -763,9 +814,12 @@ class LocalExecutor:
             # Inject query param defaults from schema so that required params
             # with defaults (e.g. Salesforce SOQL `q` parameter) are included
             # in the probe request without needing explicit configuration.
+            # Defaults may contain Jinja `{{ }}` expressions (e.g. dynamic
+            # dates) which are evaluated at probe time.
+            replication_constants = self._get_replication_constants()
             for param_name, schema in endpoint.query_params_schema.items():
                 if param_name not in params and schema.get("default") is not None:
-                    params[param_name] = schema["default"]
+                    params[param_name] = _evaluate_probe_default(schema["default"], replication_constants)
             # Collect all params that need resolution: path params, entity-
             # relationship foreign_keys, and query params with matching config
             # keys (so config values can override schema defaults).
@@ -888,9 +942,10 @@ class LocalExecutor:
                     raise ParamResolutionError(f"Parent entity '{parent_entity_name}' has no LIST operation")
                 parent_params: dict[str, Any] = {"limit": 1}
                 # Inject query param defaults for parent entity (mirrors _probe_entity logic).
+                parent_repl_constants = self._get_replication_constants()
                 for pname, pschema in parent_endpoint.query_params_schema.items():
                     if pname not in parent_params and pschema.get("default") is not None:
-                        parent_params[pname] = pschema["default"]
+                        parent_params[pname] = _evaluate_probe_default(pschema["default"], parent_repl_constants)
                 parent_resolve_list = list(parent_endpoint.path_params)
                 parent_entity_def = self._entity_index.get(parent_entity_name)
                 if parent_entity_def:

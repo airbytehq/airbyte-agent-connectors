@@ -429,54 +429,6 @@ class InvoiceSearchParams(BaseModel):
 
     creation_date_range: InvoiceSearchParamsCreationDateRange | None = Field(default=None)
 
-class InvoicePrimaryRecipientsItemBillingInfoName(BaseModel):
-    """Nested schema for InvoicePrimaryRecipientsItemBillingInfo.name"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    given_name: str | None = Field(default=None)
-    surname: str | None = Field(default=None)
-    full_name: str | None = Field(default=None)
-
-class InvoicePrimaryRecipientsItemBillingInfo(BaseModel):
-    """Nested schema for InvoicePrimaryRecipientsItem.billing_info"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: InvoicePrimaryRecipientsItemBillingInfoName | None = Field(default=None)
-    email_address: str | None = Field(default=None)
-    additional_info_value: str | None = Field(default=None)
-
-class InvoicePrimaryRecipientsItem(BaseModel):
-    """Nested schema for Invoice.primary_recipients_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    billing_info: InvoicePrimaryRecipientsItemBillingInfo | None = Field(default=None)
-
-class InvoiceLinksItem(BaseModel):
-    """Nested schema for Invoice.links_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    href: str | None = Field(default=None)
-    rel: str | None = Field(default=None)
-    method: str | None = Field(default=None)
-
-class InvoiceAmountBreakdown(BaseModel):
-    """Nested schema for InvoiceAmount.breakdown"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    item_total: Money | None = Field(default=None)
-    discount: dict[str, Any] | None = Field(default=None)
-    tax_total: Money | None = Field(default=None)
-    shipping: Money | None = Field(default=None)
-    custom: dict[str, Any] | None = Field(default=None)
-
-class InvoiceAmount(BaseModel):
-    """Total invoice amount."""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    currency_code: str | None = Field(default=None)
-    value: str | None = Field(default=None)
-    breakdown: InvoiceAmountBreakdown | None = Field(default=None)
-
 class InvoiceDetailPaymentTerm(BaseModel):
     """Nested schema for InvoiceDetail.payment_term"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -534,54 +486,6 @@ class InvoiceDetail(BaseModel):
     payment_term: InvoiceDetailPaymentTerm | None = Field(default=None)
     metadata: InvoiceDetailMetadata | None = Field(default=None)
 
-class InvoicePayments(BaseModel):
-    """Payment records for this invoice."""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    paid_amount: Money | None = Field(default=None)
-    transactions: list[dict[str, Any]] | None = Field(default=None)
-
-class InvoiceInvoicerName(BaseModel):
-    """Nested schema for InvoiceInvoicer.name"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    given_name: str | None = Field(default=None)
-    surname: str | None = Field(default=None)
-    full_name: str | None = Field(default=None)
-
-class InvoiceInvoicer(BaseModel):
-    """Invoicer details."""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: InvoiceInvoicerName | None = Field(default=None)
-    address: dict[str, Any] | None = Field(default=None)
-    email_address: str | None = Field(default=None, description="Invoicer email.")
-    """Invoicer email."""
-
-class InvoiceRefunds(BaseModel):
-    """Refund records for this invoice."""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    refund_amount: Money | None = Field(default=None)
-    transactions: list[dict[str, Any]] | None = Field(default=None)
-
-class InvoiceConfigurationPartialPayment(BaseModel):
-    """Nested schema for InvoiceConfiguration.partial_payment"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    allow_partial_payment: str | None = Field(default=None)
-    minimum_amount_due: Money | None = Field(default=None)
-
-class InvoiceConfiguration(BaseModel):
-    """Invoice configuration."""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    tax_calculated_after_discount: str | None = Field(default=None)
-    tax_inclusive: str | None = Field(default=None)
-    allow_tip: str | None = Field(default=None)
-    template_id: str | None = Field(default=None)
-    partial_payment: InvoiceConfigurationPartialPayment | None = Field(default=None)
-
 class InvoiceItemsItemTax(BaseModel):
     """Nested schema for InvoiceItemsItem.tax"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -600,6 +504,102 @@ class InvoiceItemsItem(BaseModel):
     unit_amount: Money | None = Field(default=None)
     tax: InvoiceItemsItemTax | None = Field(default=None)
     unit_of_measure: str | None = Field(default=None)
+
+class InvoiceInvoicerName(BaseModel):
+    """Nested schema for InvoiceInvoicer.name"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    given_name: str | None = Field(default=None)
+    surname: str | None = Field(default=None)
+    full_name: str | None = Field(default=None)
+
+class InvoiceInvoicer(BaseModel):
+    """Invoicer details."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: InvoiceInvoicerName | None = Field(default=None)
+    address: dict[str, Any] | None = Field(default=None)
+    email_address: str | None = Field(default=None, description="Invoicer email.")
+    """Invoicer email."""
+
+class InvoiceAmountBreakdown(BaseModel):
+    """Nested schema for InvoiceAmount.breakdown"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    item_total: Money | None = Field(default=None)
+    discount: dict[str, Any] | None = Field(default=None)
+    tax_total: Money | None = Field(default=None)
+    shipping: Money | None = Field(default=None)
+    custom: dict[str, Any] | None = Field(default=None)
+
+class InvoiceAmount(BaseModel):
+    """Total invoice amount."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    currency_code: str | None = Field(default=None)
+    value: str | None = Field(default=None)
+    breakdown: InvoiceAmountBreakdown | None = Field(default=None)
+
+class InvoicePayments(BaseModel):
+    """Payment records for this invoice."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    paid_amount: Money | None = Field(default=None)
+    transactions: list[dict[str, Any]] | None = Field(default=None)
+
+class InvoiceLinksItem(BaseModel):
+    """Nested schema for Invoice.links_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    href: str | None = Field(default=None)
+    rel: str | None = Field(default=None)
+    method: str | None = Field(default=None)
+
+class InvoiceRefunds(BaseModel):
+    """Refund records for this invoice."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    refund_amount: Money | None = Field(default=None)
+    transactions: list[dict[str, Any]] | None = Field(default=None)
+
+class InvoicePrimaryRecipientsItemBillingInfoName(BaseModel):
+    """Nested schema for InvoicePrimaryRecipientsItemBillingInfo.name"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    given_name: str | None = Field(default=None)
+    surname: str | None = Field(default=None)
+    full_name: str | None = Field(default=None)
+
+class InvoicePrimaryRecipientsItemBillingInfo(BaseModel):
+    """Nested schema for InvoicePrimaryRecipientsItem.billing_info"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: InvoicePrimaryRecipientsItemBillingInfoName | None = Field(default=None)
+    email_address: str | None = Field(default=None)
+    additional_info_value: str | None = Field(default=None)
+
+class InvoicePrimaryRecipientsItem(BaseModel):
+    """Nested schema for Invoice.primary_recipients_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    billing_info: InvoicePrimaryRecipientsItemBillingInfo | None = Field(default=None)
+
+class InvoiceConfigurationPartialPayment(BaseModel):
+    """Nested schema for InvoiceConfiguration.partial_payment"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    allow_partial_payment: str | None = Field(default=None)
+    minimum_amount_due: Money | None = Field(default=None)
+
+class InvoiceConfiguration(BaseModel):
+    """Invoice configuration."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    tax_calculated_after_discount: str | None = Field(default=None)
+    tax_inclusive: str | None = Field(default=None)
+    allow_tip: str | None = Field(default=None)
+    template_id: str | None = Field(default=None)
+    partial_payment: InvoiceConfigurationPartialPayment | None = Field(default=None)
 
 class Invoice(BaseModel):
     """A PayPal invoice object."""
