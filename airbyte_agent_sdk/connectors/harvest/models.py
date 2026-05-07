@@ -280,15 +280,6 @@ class TimeEntryInvoice(BaseModel):
     number: str | None | None = Field(default=None, description="Invoice number")
     """Invoice number"""
 
-class TimeEntryTask(BaseModel):
-    """The task associated with the time entry"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: int | None | None = Field(default=None, description="Task ID")
-    """Task ID"""
-    name: str | None | None = Field(default=None, description="Task name")
-    """Task name"""
-
 class TimeEntryClient(BaseModel):
     """The client associated with the time entry"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -315,6 +306,15 @@ class TimeEntryProject(BaseModel):
     """Project ID"""
     name: str | None | None = Field(default=None, description="Project name")
     """Project name"""
+
+class TimeEntryTask(BaseModel):
+    """The task associated with the time entry"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int | None | None = Field(default=None, description="Task ID")
+    """Task ID"""
+    name: str | None | None = Field(default=None, description="Task name")
+    """Task name"""
 
 class TimeEntry(BaseModel):
     """A Harvest time entry"""

@@ -52,6 +52,13 @@ class User(BaseModel):
     permission_id: str | None = Field(default=None, alias="permissionId")
     email_address: str | None = Field(default=None, alias="emailAddress")
 
+class FileLinksharemetadata(BaseModel):
+    """Contains details about the link URLs"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    security_update_eligible: bool | None | None = Field(default=None, alias="securityUpdateEligible")
+    security_update_enabled: bool | None | None = Field(default=None, alias="securityUpdateEnabled")
+
 class FileImagemediametadataLocation(BaseModel):
     """Nested schema for FileImagemediametadata.location"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -86,22 +93,13 @@ class FileImagemediametadata(BaseModel):
     lens: str | None | None = Field(default=None)
     location: FileImagemediametadataLocation | None | None = Field(default=None)
 
-class FileContentrestrictionsItem(BaseModel):
-    """Nested schema for File.contentRestrictions_item"""
+class FileVideomediametadata(BaseModel):
+    """Additional metadata about video media"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    read_only: bool | None | None = Field(default=None, alias="readOnly")
-    reason: str | None | None = Field(default=None)
-    restricting_user: Any | None = Field(default=None, alias="restrictingUser")
-    restriction_time: str | None | None = Field(default=None, alias="restrictionTime")
-    type_: str | None | None = Field(default=None, alias="type")
-
-class FileLinksharemetadata(BaseModel):
-    """Contains details about the link URLs"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    security_update_eligible: bool | None | None = Field(default=None, alias="securityUpdateEligible")
-    security_update_enabled: bool | None | None = Field(default=None, alias="securityUpdateEnabled")
+    width: int | None | None = Field(default=None)
+    height: int | None | None = Field(default=None)
+    duration_millis: str | None | None = Field(default=None, alias="durationMillis")
 
 class FileShortcutdetails(BaseModel):
     """Shortcut file details"""
@@ -110,12 +108,6 @@ class FileShortcutdetails(BaseModel):
     target_id: str | None | None = Field(default=None, alias="targetId")
     target_mime_type: str | None | None = Field(default=None, alias="targetMimeType")
     target_resource_key: str | None | None = Field(default=None, alias="targetResourceKey")
-
-class FileLabelinfo(BaseModel):
-    """An overview of the labels on the file"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    labels: list[dict[str, Any]] | None | None = Field(default=None)
 
 class FileCapabilities(BaseModel):
     """Capabilities the current user has on this file"""
@@ -134,13 +126,21 @@ class FileCapabilities(BaseModel):
     can_list_children: bool | None | None = Field(default=None, alias="canListChildren")
     can_remove_children: bool | None | None = Field(default=None, alias="canRemoveChildren")
 
-class FileVideomediametadata(BaseModel):
-    """Additional metadata about video media"""
+class FileLabelinfo(BaseModel):
+    """An overview of the labels on the file"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    width: int | None | None = Field(default=None)
-    height: int | None | None = Field(default=None)
-    duration_millis: str | None | None = Field(default=None, alias="durationMillis")
+    labels: list[dict[str, Any]] | None | None = Field(default=None)
+
+class FileContentrestrictionsItem(BaseModel):
+    """Nested schema for File.contentRestrictions_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    read_only: bool | None | None = Field(default=None, alias="readOnly")
+    reason: str | None | None = Field(default=None)
+    restricting_user: Any | None = Field(default=None, alias="restrictingUser")
+    restriction_time: str | None | None = Field(default=None, alias="restrictionTime")
+    type_: str | None | None = Field(default=None, alias="type")
 
 class File(BaseModel):
     """The metadata for a file"""
@@ -267,15 +267,6 @@ class DriveCapabilities(BaseModel):
     can_delete_children: bool | None | None = Field(default=None, alias="canDeleteChildren")
     can_trash_children: bool | None | None = Field(default=None, alias="canTrashChildren")
 
-class DriveBackgroundimagefile(BaseModel):
-    """An image file and cropping parameters for the background image"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: str | None | None = Field(default=None)
-    x_coordinate: float | None | None = Field(default=None, alias="xCoordinate")
-    y_coordinate: float | None | None = Field(default=None, alias="yCoordinate")
-    width: float | None | None = Field(default=None)
-
 class DriveRestrictions(BaseModel):
     """A set of restrictions that apply to this shared drive"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -285,6 +276,15 @@ class DriveRestrictions(BaseModel):
     drive_members_only: bool | None | None = Field(default=None, alias="driveMembersOnly")
     admin_managed_restrictions: bool | None | None = Field(default=None, alias="adminManagedRestrictions")
     sharing_folders_requires_organizer_permission: bool | None | None = Field(default=None, alias="sharingFoldersRequiresOrganizerPermission")
+
+class DriveBackgroundimagefile(BaseModel):
+    """An image file and cropping parameters for the background image"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None | None = Field(default=None)
+    x_coordinate: float | None | None = Field(default=None, alias="xCoordinate")
+    y_coordinate: float | None | None = Field(default=None, alias="yCoordinate")
+    width: float | None | None = Field(default=None)
 
 class Drive(BaseModel):
     """Representation of a shared drive"""
@@ -470,6 +470,19 @@ class StartPageToken(BaseModel):
     kind: str | None = Field(default=None)
     start_page_token: str | None = Field(default=None, alias="startPageToken")
 
+class AboutStoragequota(BaseModel):
+    """The user's storage quota limits and usage"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    limit: str | None | None = Field(default=None, description="The usage limit, if applicable")
+    """The usage limit, if applicable"""
+    usage: str | None | None = Field(default=None, description="The total usage across all services")
+    """The total usage across all services"""
+    usage_in_drive: str | None | None = Field(default=None, alias="usageInDrive", description="The usage by all files in Google Drive")
+    """The usage by all files in Google Drive"""
+    usage_in_drive_trash: str | None | None = Field(default=None, alias="usageInDriveTrash", description="The usage by trashed files in Google Drive")
+    """The usage by trashed files in Google Drive"""
+
 class AboutTeamdrivethemesItem(BaseModel):
     """Nested schema for About.teamDriveThemes_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -485,19 +498,6 @@ class AboutDrivethemesItem(BaseModel):
     id: str | None | None = Field(default=None)
     background_image_link: str | None | None = Field(default=None, alias="backgroundImageLink")
     color_rgb: str | None | None = Field(default=None, alias="colorRgb")
-
-class AboutStoragequota(BaseModel):
-    """The user's storage quota limits and usage"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    limit: str | None | None = Field(default=None, description="The usage limit, if applicable")
-    """The usage limit, if applicable"""
-    usage: str | None | None = Field(default=None, description="The total usage across all services")
-    """The total usage across all services"""
-    usage_in_drive: str | None | None = Field(default=None, alias="usageInDrive", description="The usage by all files in Google Drive")
-    """The usage by all files in Google Drive"""
-    usage_in_drive_trash: str | None | None = Field(default=None, alias="usageInDriveTrash", description="The usage by trashed files in Google Drive")
-    """The usage by trashed files in Google Drive"""
 
 class About(BaseModel):
     """Information about the user, the user's Drive, and system capabilities"""
