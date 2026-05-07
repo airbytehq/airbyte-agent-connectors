@@ -60,11 +60,6 @@ info:
       - "Schedule a team review for this code"
       - "Merge a pull request"
       - "Delete an issue or comment"
-  x-airbyte-auth-tooltip:
-    "OAuth Credentials": |
-      [Install the Airbyte GitHub App](https://github.com/apps/airbyte-agent-engine)
-      and grant it access to the repositories you want to sync before this
-      connection will work.
   x-airbyte-skip-auth-methods:
     - oauth2
   x-airbyte-replication-config:
@@ -615,11 +610,53 @@ components:
           authorizationUrl: https://github.com/login/oauth/authorize
           tokenUrl: https://github.com/login/oauth/access_token
           scopes:
-            repo: Full control of private repositories
+            repo: Full control of public and private repositories (read & write to code, issues, pull requests, releases, discussions)
+            read:org: Read organization and team membership
             read:user: Read user profile data
-            user:email: Access user email addresses
-            read:org: Read organization membership
-            read:discussion: Read team discussions
+            read:project: Read GitHub Projects (V2)
+      x-airbyte-oauth-scopes:
+        - scope: "repo"
+          mode: read_write
+          description: Full control of public and private repositories (read & write to code, issues, pull requests, releases, and repository discussions)
+          entities:
+            - branches
+            - comments
+            - commits
+            - directory_content
+            - discussions
+            - file_content
+            - issues
+            - labels
+            - milestones
+            - org_repositories
+            - pr_comments
+            - pull_requests
+            - releases
+            - repositories
+            - reviews
+            - stargazers
+            - tags
+            - viewer_repositories
+        - scope: "read:org"
+          mode: read
+          description: Read organization and team membership
+          entities:
+            - organizations
+            - org_repositories
+            - teams
+            - users
+        - scope: "read:user"
+          mode: read
+          description: Read the authenticated user's profile and other public user profiles
+          entities:
+            - users
+            - viewer
+        - scope: "read:project"
+          mode: read
+          description: Read GitHub Projects (V2)
+          entities:
+            - projects
+            - project_items
       x-airbyte-auth-config:
         title: "OAuth 2"
         type: object
