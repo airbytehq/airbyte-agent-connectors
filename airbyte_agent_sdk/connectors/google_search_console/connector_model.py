@@ -474,12 +474,21 @@ GoogleSearchConsoleConnectorModel: ConnectorModel = ConnectorModel(
                         'aggregationType': 'auto',
                         'dataState': 'final',
                     },
+                    request_body_probe_defaults={'startDate': "{{ (now_utc() - duration('P7D')).strftime('%Y-%m-%d') }}", 'endDate': "{{ now_utc().strftime('%Y-%m-%d') }}"},
                     request_schema={
                         'type': 'object',
                         'description': 'Request body for search analytics query grouped by date.',
                         'properties': {
-                            'startDate': {'type': 'string', 'description': 'Start date of the requested date range, in YYYY-MM-DD format.'},
-                            'endDate': {'type': 'string', 'description': 'End date of the requested date range, in YYYY-MM-DD format.'},
+                            'startDate': {
+                                'type': 'string',
+                                'description': 'Start date of the requested date range, in YYYY-MM-DD format.',
+                                'x-airbyte-probe-default': "{{ (now_utc() - duration('P7D')).strftime('%Y-%m-%d') }}",
+                            },
+                            'endDate': {
+                                'type': 'string',
+                                'description': 'End date of the requested date range, in YYYY-MM-DD format.',
+                                'x-airbyte-probe-default': "{{ now_utc().strftime('%Y-%m-%d') }}",
+                            },
                             'dimensions': {
                                 'type': 'array',
                                 'items': {'type': 'string'},
@@ -607,12 +616,21 @@ GoogleSearchConsoleConnectorModel: ConnectorModel = ConnectorModel(
                         'aggregationType': 'auto',
                         'dataState': 'final',
                     },
+                    request_body_probe_defaults={'startDate': "{{ (now_utc() - duration('P7D')).strftime('%Y-%m-%d') }}", 'endDate': "{{ now_utc().strftime('%Y-%m-%d') }}"},
                     request_schema={
                         'type': 'object',
                         'description': 'Request body for search analytics query grouped by date and country.',
                         'properties': {
-                            'startDate': {'type': 'string', 'description': 'Start date of the requested date range, in YYYY-MM-DD format.'},
-                            'endDate': {'type': 'string', 'description': 'End date of the requested date range, in YYYY-MM-DD format.'},
+                            'startDate': {
+                                'type': 'string',
+                                'description': 'Start date of the requested date range, in YYYY-MM-DD format.',
+                                'x-airbyte-probe-default': "{{ (now_utc() - duration('P7D')).strftime('%Y-%m-%d') }}",
+                            },
+                            'endDate': {
+                                'type': 'string',
+                                'description': 'End date of the requested date range, in YYYY-MM-DD format.',
+                                'x-airbyte-probe-default': "{{ now_utc().strftime('%Y-%m-%d') }}",
+                            },
                             'dimensions': {
                                 'type': 'array',
                                 'items': {'type': 'string'},
@@ -740,12 +758,21 @@ GoogleSearchConsoleConnectorModel: ConnectorModel = ConnectorModel(
                         'aggregationType': 'auto',
                         'dataState': 'final',
                     },
+                    request_body_probe_defaults={'startDate': "{{ (now_utc() - duration('P7D')).strftime('%Y-%m-%d') }}", 'endDate': "{{ now_utc().strftime('%Y-%m-%d') }}"},
                     request_schema={
                         'type': 'object',
                         'description': 'Request body for search analytics query grouped by date and device.',
                         'properties': {
-                            'startDate': {'type': 'string', 'description': 'Start date of the requested date range, in YYYY-MM-DD format.'},
-                            'endDate': {'type': 'string', 'description': 'End date of the requested date range, in YYYY-MM-DD format.'},
+                            'startDate': {
+                                'type': 'string',
+                                'description': 'Start date of the requested date range, in YYYY-MM-DD format.',
+                                'x-airbyte-probe-default': "{{ (now_utc() - duration('P7D')).strftime('%Y-%m-%d') }}",
+                            },
+                            'endDate': {
+                                'type': 'string',
+                                'description': 'End date of the requested date range, in YYYY-MM-DD format.',
+                                'x-airbyte-probe-default': "{{ now_utc().strftime('%Y-%m-%d') }}",
+                            },
                             'dimensions': {
                                 'type': 'array',
                                 'items': {'type': 'string'},
@@ -873,12 +900,21 @@ GoogleSearchConsoleConnectorModel: ConnectorModel = ConnectorModel(
                         'aggregationType': 'auto',
                         'dataState': 'final',
                     },
+                    request_body_probe_defaults={'startDate': "{{ (now_utc() - duration('P7D')).strftime('%Y-%m-%d') }}", 'endDate': "{{ now_utc().strftime('%Y-%m-%d') }}"},
                     request_schema={
                         'type': 'object',
                         'description': 'Request body for search analytics query grouped by date and page.',
                         'properties': {
-                            'startDate': {'type': 'string', 'description': 'Start date of the requested date range, in YYYY-MM-DD format.'},
-                            'endDate': {'type': 'string', 'description': 'End date of the requested date range, in YYYY-MM-DD format.'},
+                            'startDate': {
+                                'type': 'string',
+                                'description': 'Start date of the requested date range, in YYYY-MM-DD format.',
+                                'x-airbyte-probe-default': "{{ (now_utc() - duration('P7D')).strftime('%Y-%m-%d') }}",
+                            },
+                            'endDate': {
+                                'type': 'string',
+                                'description': 'End date of the requested date range, in YYYY-MM-DD format.',
+                                'x-airbyte-probe-default': "{{ now_utc().strftime('%Y-%m-%d') }}",
+                            },
                             'dimensions': {
                                 'type': 'array',
                                 'items': {'type': 'string'},
@@ -1006,12 +1042,21 @@ GoogleSearchConsoleConnectorModel: ConnectorModel = ConnectorModel(
                         'aggregationType': 'auto',
                         'dataState': 'final',
                     },
+                    request_body_probe_defaults={'startDate': "{{ (now_utc() - duration('P7D')).strftime('%Y-%m-%d') }}", 'endDate': "{{ now_utc().strftime('%Y-%m-%d') }}"},
                     request_schema={
                         'type': 'object',
                         'description': 'Request body for search analytics query grouped by date and query.',
                         'properties': {
-                            'startDate': {'type': 'string', 'description': 'Start date of the requested date range, in YYYY-MM-DD format.'},
-                            'endDate': {'type': 'string', 'description': 'End date of the requested date range, in YYYY-MM-DD format.'},
+                            'startDate': {
+                                'type': 'string',
+                                'description': 'Start date of the requested date range, in YYYY-MM-DD format.',
+                                'x-airbyte-probe-default': "{{ (now_utc() - duration('P7D')).strftime('%Y-%m-%d') }}",
+                            },
+                            'endDate': {
+                                'type': 'string',
+                                'description': 'End date of the requested date range, in YYYY-MM-DD format.',
+                                'x-airbyte-probe-default': "{{ now_utc().strftime('%Y-%m-%d') }}",
+                            },
                             'dimensions': {
                                 'type': 'array',
                                 'items': {'type': 'string'},
@@ -1145,12 +1190,21 @@ GoogleSearchConsoleConnectorModel: ConnectorModel = ConnectorModel(
                         'aggregationType': 'auto',
                         'dataState': 'final',
                     },
+                    request_body_probe_defaults={'startDate': "{{ (now_utc() - duration('P7D')).strftime('%Y-%m-%d') }}", 'endDate': "{{ now_utc().strftime('%Y-%m-%d') }}"},
                     request_schema={
                         'type': 'object',
                         'description': 'Request body for search analytics query grouped by all dimensions.',
                         'properties': {
-                            'startDate': {'type': 'string', 'description': 'Start date of the requested date range, in YYYY-MM-DD format.'},
-                            'endDate': {'type': 'string', 'description': 'End date of the requested date range, in YYYY-MM-DD format.'},
+                            'startDate': {
+                                'type': 'string',
+                                'description': 'Start date of the requested date range, in YYYY-MM-DD format.',
+                                'x-airbyte-probe-default': "{{ (now_utc() - duration('P7D')).strftime('%Y-%m-%d') }}",
+                            },
+                            'endDate': {
+                                'type': 'string',
+                                'description': 'End date of the requested date range, in YYYY-MM-DD format.',
+                                'x-airbyte-probe-default': "{{ now_utc().strftime('%Y-%m-%d') }}",
+                            },
                             'dimensions': {
                                 'type': 'array',
                                 'items': {'type': 'string'},

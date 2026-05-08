@@ -13,6 +13,7 @@ from pydantic import ValidationError
 from airbyte_agent_sdk.constants import (
     OPENAPI_VERSION_PREFIX,
 )
+from airbyte_agent_sdk.extensions import AIRBYTE_PROBE_DEFAULT
 
 from .schema import OpenAPIConnector
 from .schema.components import GraphQLBodyConfig, RequestBody
@@ -327,7 +328,7 @@ def _extract_schema_metadata(param_schema: dict[str, Any]) -> dict[str, Any]:
 
 def _extract_request_body_config(
     request_body: RequestBody | None, spec_dict: dict[str, Any]
-) -> tuple[list[str], dict[str, Any] | None, dict[str, Any] | None, dict[str, Any]]:
+) -> tuple[list[str], dict[str, Any] | None, dict[str, Any] | None, dict[str, Any], dict[str, Any]]:
     """Extract request body configuration (GraphQL or standard).
 
     Args:
@@ -335,19 +336,25 @@ def _extract_request_body_config(
         spec_dict: Full OpenAPI spec dict for $ref resolution
 
     Returns:
-        Tuple of (body_fields, request_schema, graphql_body, request_body_defaults)
+        Tuple of (body_fields, request_schema, graphql_body, request_body_defaults,
+        request_body_probe_defaults)
         - body_fields: List of field names for standard JSON/form bodies
         - request_schema: Resolved request schema dict (for standard bodies)
         - graphql_body: GraphQL body configuration dict (for GraphQL bodies)
-        - request_body_defaults: Default values for request body fields
+        - request_body_defaults: Runtime default values for request body fields
+          (consumed by `_build_request_body`)
+        - request_body_probe_defaults: Probe-only defaults from
+          `x-airbyte-probe-default` (consumed by `_probe_entity` only; never
+          flows through `_build_request_body`)
     """
     body_fields: list[str] = []
     request_schema: dict[str, Any] | None = None
     graphql_body: dict[str, Any] | None = None
     request_body_defaults: dict[str, Any] = {}
+    request_body_probe_defaults: dict[str, Any] = {}
 
     if not request_body:
-        return body_fields, request_schema, graphql_body, request_body_defaults
+        return body_fields, request_schema, graphql_body, request_body_defaults, request_body_probe_defaults
 
     # Check for GraphQL extension and extract GraphQL body configuration
     if request_body.x_airbyte_body_type:
@@ -357,7 +364,7 @@ def _extract_request_body_config(
         if isinstance(body_type_config, GraphQLBodyConfig):
             # Convert Pydantic model to dict, excluding None values
             graphql_body = body_type_config.model_dump(exclude_none=True, by_alias=False)
-            return body_fields, request_schema, graphql_body, request_body_defaults
+            return body_fields, request_schema, graphql_body, request_body_defaults, request_body_probe_defaults
 
     # Parse standard request body
     for content_type_key, media_type in request_body.content.items():
@@ -374,12 +381,19 @@ def _extract_request_body_config(
         # Extract body field names and defaults from resolved schema
         if isinstance(request_schema, dict) and "properties" in request_schema:
             body_fields = list(request_schema["properties"].keys())
-            # Extract default values for each property
+            # Extract default values and probe-only defaults for each property.
+            # `default` flows through `_build_request_body` at runtime; the
+            # probe-only `x-airbyte-probe-default` is kept on a separate field
+            # on `EndpointDefinition` so it can never leak into runtime calls.
             for field_name, field_schema in request_schema["properties"].items():
-                if isinstance(field_schema, dict) and "default" in field_schema:
+                if not isinstance(field_schema, dict):
+                    continue
+                if "default" in field_schema:
                     request_body_defaults[field_name] = field_schema["default"]
+                if AIRBYTE_PROBE_DEFAULT in field_schema:
+                    request_body_probe_defaults[field_name] = field_schema[AIRBYTE_PROBE_DEFAULT]
 
-    return body_fields, request_schema, graphql_body, request_body_defaults
+    return body_fields, request_schema, graphql_body, request_body_defaults, request_body_probe_defaults
 
 
 def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel:
@@ -483,12 +497,14 @@ def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel
             if operation.parameters:
                 for param in operation.parameters:
                     param_schema = param.schema_ or {}
-                    schema_info = {
+                    schema_info: dict[str, Any] = {
                         "type": param_schema.get("type", "string"),
                         "required": param.required or False,
                         "default": param_schema.get("default"),
                         **_extract_schema_metadata(param_schema),
                     }
+                    if AIRBYTE_PROBE_DEFAULT in param_schema:
+                        schema_info[AIRBYTE_PROBE_DEFAULT] = param_schema[AIRBYTE_PROBE_DEFAULT]
 
                     if param.in_ == "path":
                         path_params.append(param.name)
@@ -508,8 +524,29 @@ def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel
                         header_params.append(param.name)
                         header_params_schema[param.name] = schema_info
 
-            # Extract body fields and defaults from request schema
-            body_fields, request_schema, graphql_body, request_body_defaults = _extract_request_body_config(operation.request_body, spec_dict)
+            # Extract body fields, runtime defaults, and probe-only defaults from request schema
+            (
+                body_fields,
+                request_schema,
+                graphql_body,
+                request_body_defaults,
+                request_body_probe_defaults,
+            ) = _extract_request_body_config(operation.request_body, spec_dict)
+
+            # Guard against name collisions between body-field probe defaults and
+            # query/header param names on the same endpoint. `_probe_entity` writes
+            # body-field probe defaults into the shared `params` dict, which is then
+            # split across `_extract_body`, `_extract_query_params`, and
+            # `_extract_header_params`. A collision would cause the probe default to
+            # also be injected into the URL/headers — never the intent of
+            # `x-airbyte-probe-default` on a body field.
+            colliding = set(request_body_probe_defaults).intersection(query_params + header_params)
+            if colliding:
+                raise InvalidOpenAPIError(
+                    f"`x-airbyte-probe-default` body fields {sorted(colliding)} on "
+                    f"`{method_name.upper()} {path}` collide with query/header parameter names. "
+                    "Rename the body field or remove `x-airbyte-probe-default`."
+                )
 
             # Extract response schema
             response_schema = None
@@ -560,6 +597,7 @@ def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel
                 header_params=header_params,
                 header_params_schema=header_params_schema,
                 request_body_defaults=request_body_defaults,
+                request_body_probe_defaults=request_body_probe_defaults,
                 content_type=content_type,
                 request_schema=request_schema,
                 response_schema=response_schema,

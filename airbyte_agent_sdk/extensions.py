@@ -508,6 +508,56 @@ Example:
     ```
 """
 
+AIRBYTE_PROBE_DEFAULT = "x-airbyte-probe-default"
+"""
+Extension: x-airbyte-probe-default
+Location: Field schema (body-field property, query-param schema, or header-param schema)
+Type: any JSON-serializable value (string values are Jinja-rendered at probe time)
+Required: No
+
+Description:
+    Probe-only default consulted by the SDK's post-auth entity probe (`_probe_entity`)
+    and the parent-probe path. Lets a connector author declare a synthetic value used
+    only by the SDK probe — typically to satisfy required date-range fields whose
+    "real" value would normally come from the agent or end user at call time.
+
+    Probe-vs-runtime contract:
+    - **Body fields**: `x-airbyte-probe-default` is consumed by `_probe_entity` only.
+      `_build_request_body` is intentionally unaware of this extension, so probe
+      defaults can never leak into agent runtime calls. An agent that calls a
+      `list` action without the required field still sees the API's native
+      "missing required field" error (as opposed to silently getting a synthetic
+      window of data).
+    - **Query/header params**: at probe time, `x-airbyte-probe-default` takes
+      precedence over `default` if both are set. `default` is still honoured at
+      runtime (for backwards compatibility with existing connectors like
+      Salesforce SOQL `q`).
+
+    Precedence at probe time:
+        explicit `params` value > `x-airbyte-probe-default` > `default`
+
+    String values may contain Jinja2 expressions evaluated against the standard
+    probe-default context (`now_utc()`, `duration()`, `config`, `max`, `min`).
+    Non-string values pass through unchanged.
+
+Example (body-field, GSC `searchAnalytics/query`):
+    ```yaml
+    components:
+      schemas:
+        SearchAnalyticsByDateRequest:
+          type: object
+          properties:
+            startDate:
+              type: string
+              description: Start date of the requested date range, in YYYY-MM-DD format.
+              x-airbyte-probe-default: "{{ (now_utc() - duration('P7D')).strftime('%Y-%m-%d') }}"
+            endDate:
+              type: string
+              description: End date of the requested date range, in YYYY-MM-DD format.
+              x-airbyte-probe-default: "{{ now_utc().strftime('%Y-%m-%d') }}"
+    ```
+"""
+
 AIRBYTE_TOKEN_EXTRACT = "x-airbyte-token-extract"
 """
 Extension: x-airbyte-token-extract

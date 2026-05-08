@@ -266,6 +266,16 @@ class EndpointDefinition(BaseModel):
         default_factory=dict,
         description="Default values for request body fields from OpenAPI schema",
     )
+    request_body_probe_defaults: dict[str, Any] = Field(
+        default_factory=dict,
+        description=(
+            "Per-field probe-only defaults from `x-airbyte-probe-default` on body-field schemas. "
+            "Read by `_probe_entity` (and the parent-probe path) and injected into the call as if "
+            "user-supplied; never consulted by `_build_request_body`. String values are "
+            "Jinja-evaluated at probe time via `_evaluate_probe_default`. Keeps probe-time "
+            "defaults from leaking into agent runtime calls."
+        ),
+    )
     content_type: ContentType = ContentType.JSON
     request_schema: dict[str, Any] | None = None
     response_schema: dict[str, Any] | None = None

@@ -217,7 +217,8 @@
             "type": "str",
             "schema": {
               "type": "string",
-              "description": "Start date of the requested date range, in YYYY-MM-DD format."
+              "description": "Start date of the requested date range, in YYYY-MM-DD format.",
+              "x-airbyte-probe-default": "{{ (now_utc() - duration('P7D')).strftime('%Y-%m-%d') }}"
             },
             "required": true,
             "description": "Start date of the requested date range, in YYYY-MM-DD format."
@@ -228,7 +229,8 @@
             "type": "str",
             "schema": {
               "type": "string",
-              "description": "End date of the requested date range, in YYYY-MM-DD format."
+              "description": "End date of the requested date range, in YYYY-MM-DD format.",
+              "x-airbyte-probe-default": "{{ now_utc().strftime('%Y-%m-%d') }}"
             },
             "required": true,
             "description": "End date of the requested date range, in YYYY-MM-DD format."
@@ -364,7 +366,8 @@
             "type": "str",
             "schema": {
               "type": "string",
-              "description": "Start date of the requested date range, in YYYY-MM-DD format."
+              "description": "Start date of the requested date range, in YYYY-MM-DD format.",
+              "x-airbyte-probe-default": "{{ (now_utc() - duration('P7D')).strftime('%Y-%m-%d') }}"
             },
             "required": true,
             "description": "Start date of the requested date range, in YYYY-MM-DD format."
@@ -375,7 +378,8 @@
             "type": "str",
             "schema": {
               "type": "string",
-              "description": "End date of the requested date range, in YYYY-MM-DD format."
+              "description": "End date of the requested date range, in YYYY-MM-DD format.",
+              "x-airbyte-probe-default": "{{ now_utc().strftime('%Y-%m-%d') }}"
             },
             "required": true,
             "description": "End date of the requested date range, in YYYY-MM-DD format."
@@ -512,7 +516,8 @@
             "type": "str",
             "schema": {
               "type": "string",
-              "description": "Start date of the requested date range, in YYYY-MM-DD format."
+              "description": "Start date of the requested date range, in YYYY-MM-DD format.",
+              "x-airbyte-probe-default": "{{ (now_utc() - duration('P7D')).strftime('%Y-%m-%d') }}"
             },
             "required": true,
             "description": "Start date of the requested date range, in YYYY-MM-DD format."
@@ -523,7 +528,8 @@
             "type": "str",
             "schema": {
               "type": "string",
-              "description": "End date of the requested date range, in YYYY-MM-DD format."
+              "description": "End date of the requested date range, in YYYY-MM-DD format.",
+              "x-airbyte-probe-default": "{{ now_utc().strftime('%Y-%m-%d') }}"
             },
             "required": true,
             "description": "End date of the requested date range, in YYYY-MM-DD format."
@@ -660,7 +666,8 @@
             "type": "str",
             "schema": {
               "type": "string",
-              "description": "Start date of the requested date range, in YYYY-MM-DD format."
+              "description": "Start date of the requested date range, in YYYY-MM-DD format.",
+              "x-airbyte-probe-default": "{{ (now_utc() - duration('P7D')).strftime('%Y-%m-%d') }}"
             },
             "required": true,
             "description": "Start date of the requested date range, in YYYY-MM-DD format."
@@ -671,7 +678,8 @@
             "type": "str",
             "schema": {
               "type": "string",
-              "description": "End date of the requested date range, in YYYY-MM-DD format."
+              "description": "End date of the requested date range, in YYYY-MM-DD format.",
+              "x-airbyte-probe-default": "{{ now_utc().strftime('%Y-%m-%d') }}"
             },
             "required": true,
             "description": "End date of the requested date range, in YYYY-MM-DD format."
@@ -808,7 +816,8 @@
             "type": "str",
             "schema": {
               "type": "string",
-              "description": "Start date of the requested date range, in YYYY-MM-DD format."
+              "description": "Start date of the requested date range, in YYYY-MM-DD format.",
+              "x-airbyte-probe-default": "{{ (now_utc() - duration('P7D')).strftime('%Y-%m-%d') }}"
             },
             "required": true,
             "description": "Start date of the requested date range, in YYYY-MM-DD format."
@@ -819,7 +828,8 @@
             "type": "str",
             "schema": {
               "type": "string",
-              "description": "End date of the requested date range, in YYYY-MM-DD format."
+              "description": "End date of the requested date range, in YYYY-MM-DD format.",
+              "x-airbyte-probe-default": "{{ now_utc().strftime('%Y-%m-%d') }}"
             },
             "required": true,
             "description": "End date of the requested date range, in YYYY-MM-DD format."
@@ -956,7 +966,8 @@
             "type": "str",
             "schema": {
               "type": "string",
-              "description": "Start date of the requested date range, in YYYY-MM-DD format."
+              "description": "Start date of the requested date range, in YYYY-MM-DD format.",
+              "x-airbyte-probe-default": "{{ (now_utc() - duration('P7D')).strftime('%Y-%m-%d') }}"
             },
             "required": true,
             "description": "Start date of the requested date range, in YYYY-MM-DD format."
@@ -967,7 +978,8 @@
             "type": "str",
             "schema": {
               "type": "string",
-              "description": "End date of the requested date range, in YYYY-MM-DD format."
+              "description": "End date of the requested date range, in YYYY-MM-DD format.",
+              "x-airbyte-probe-default": "{{ now_utc().strftime('%Y-%m-%d') }}"
             },
             "required": true,
             "description": "End date of the requested date range, in YYYY-MM-DD format."

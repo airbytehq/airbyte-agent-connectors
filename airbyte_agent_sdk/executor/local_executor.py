@@ -811,15 +811,52 @@ class LocalExecutor:
             }
         try:
             params = {"limit": 1} if action == Action.LIST else {}
-            # Inject query param defaults from schema so that required params
-            # with defaults (e.g. Salesforce SOQL `q` parameter) are included
-            # in the probe request without needing explicit configuration.
-            # Defaults may contain Jinja `{{ }}` expressions (e.g. dynamic
-            # dates) which are evaluated at probe time.
+            # Inject query-param probe defaults from schema so that required
+            # params (e.g. Salesforce SOQL `q`) are included in the probe
+            # request without needing explicit configuration.
+            #
+            # Precedence: explicit `params` > `x-airbyte-probe-default` > `default`.
+            # `x-airbyte-probe-default` is consulted first so a connector author
+            # can declare a synthetic probe-time value distinct from the
+            # runtime `default`. Defaults may contain Jinja `{{ }}` expressions
+            # (e.g. dynamic dates) which are evaluated at probe time.
             replication_constants = self._get_replication_constants()
             for param_name, schema in endpoint.query_params_schema.items():
-                if param_name not in params and schema.get("default") is not None:
-                    params[param_name] = _evaluate_probe_default(schema["default"], replication_constants)
+                if param_name in params:
+                    continue
+                probe_default = schema.get("x-airbyte-probe-default")
+                if probe_default is None:
+                    probe_default = schema.get("default")
+                if probe_default is not None:
+                    params[param_name] = (
+                        _evaluate_probe_default(probe_default, replication_constants) if isinstance(probe_default, str) else probe_default
+                    )
+            # Mirror for header params. `default` is already applied at runtime by
+            # `_extract_header_params`, so the probe loop only needs to handle
+            # `x-airbyte-probe-default`. Writing it into `params` lets
+            # `_extract_header_params` pick it up as if user-supplied.
+            for header_name, header_schema in endpoint.header_params_schema.items():
+                if header_name in params:
+                    continue
+                probe_default = header_schema.get("x-airbyte-probe-default")
+                if probe_default is not None:
+                    params[header_name] = (
+                        _evaluate_probe_default(probe_default, replication_constants) if isinstance(probe_default, str) else probe_default
+                    )
+            # Inject body-field probe defaults from `x-airbyte-probe-default`.
+            # Note the asymmetry vs query params: there is no fallback to the
+            # body field's `default` here, because `default` on body fields is
+            # owned by `_build_request_body` for runtime use and must not gain
+            # probe-time semantics. Probe defaults are written into `params`,
+            # not a body dict, so the downstream `_extract_body(...)` picks
+            # them up as if user-supplied. This is the structural guarantee
+            # that keeps probe defaults out of agent runtime calls.
+            for field_name, probe_default in endpoint.request_body_probe_defaults.items():
+                if field_name in params:
+                    continue
+                params[field_name] = (
+                    _evaluate_probe_default(probe_default, replication_constants) if isinstance(probe_default, str) else probe_default
+                )
             # Collect all params that need resolution: path params, entity-
             # relationship foreign_keys, and query params with matching config
             # keys (so config values can override schema defaults).
@@ -959,11 +996,43 @@ class LocalExecutor:
                 if parent_endpoint is None:
                     raise ParamResolutionError(f"Parent entity '{parent_entity_name}' has no LIST operation")
                 parent_params: dict[str, Any] = {} if record_filter else {"limit": 1}
-                # Inject query param defaults for parent entity (mirrors _probe_entity logic).
+                # Inject probe defaults for parent entity (mirrors _probe_entity logic):
+                # - Query params: `x-airbyte-probe-default` > `default`.
+                # - Header params: `x-airbyte-probe-default` only (`default` is
+                #   already applied at runtime by `_extract_header_params`).
+                # - Body fields: `x-airbyte-probe-default` only (written into
+                #   `parent_params` so `_extract_body` picks them up downstream).
                 parent_repl_constants = self._get_replication_constants()
                 for pname, pschema in parent_endpoint.query_params_schema.items():
-                    if pname not in parent_params and pschema.get("default") is not None:
-                        parent_params[pname] = _evaluate_probe_default(pschema["default"], parent_repl_constants)
+                    if pname in parent_params:
+                        continue
+                    parent_probe_default = pschema.get("x-airbyte-probe-default")
+                    if parent_probe_default is None:
+                        parent_probe_default = pschema.get("default")
+                    if parent_probe_default is not None:
+                        parent_params[pname] = (
+                            _evaluate_probe_default(parent_probe_default, parent_repl_constants)
+                            if isinstance(parent_probe_default, str)
+                            else parent_probe_default
+                        )
+                for hname, hschema in parent_endpoint.header_params_schema.items():
+                    if hname in parent_params:
+                        continue
+                    parent_probe_default = hschema.get("x-airbyte-probe-default")
+                    if parent_probe_default is not None:
+                        parent_params[hname] = (
+                            _evaluate_probe_default(parent_probe_default, parent_repl_constants)
+                            if isinstance(parent_probe_default, str)
+                            else parent_probe_default
+                        )
+                for parent_field_name, parent_probe_default in parent_endpoint.request_body_probe_defaults.items():
+                    if parent_field_name in parent_params:
+                        continue
+                    parent_params[parent_field_name] = (
+                        _evaluate_probe_default(parent_probe_default, parent_repl_constants)
+                        if isinstance(parent_probe_default, str)
+                        else parent_probe_default
+                    )
                 parent_resolve_list = list(parent_endpoint.path_params)
                 parent_entity_def = self._entity_index.get(parent_entity_name)
                 if parent_entity_def:
