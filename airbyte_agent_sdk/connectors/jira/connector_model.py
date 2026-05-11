@@ -53,7 +53,8 @@ JiraConnectorModel: ConnectorModel = ConnectorModel(
                 ),
             },
             auth_mapping={'username': '${username}', 'password': '${password}'},
-            replication_auth_key_mapping={'email': 'username', 'api_token': 'password'},
+            replication_auth_key_mapping={'credentials.email': 'username', 'credentials.api_token': 'password'},
+            replication_auth_key_constants={'credentials.auth_type': 'API Token'},
         ),
     ),
     entities=[

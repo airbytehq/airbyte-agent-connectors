@@ -13,8 +13,8 @@ info:
     for sprint planning, backlog management, and development workflow analysis.
   x-airbyte-connector-name: linear
   x-airbyte-connector-definition-id: 1c5d8316-ed42-4473-8fbc-2626f03f070c
-  x-airbyte-replication-version: "0.1.2"
-  x-airbyte-replication-compatibility: ">=0.1.2, <1.0.0"
+  x-airbyte-replication-version: "0.2.0"
+  x-airbyte-replication-compatibility: ">=0.2.0, <1.0.0"
   x-airbyte-external-documentation-urls:
     - type: api_reference
       title: Linear API Getting Started Guide
@@ -79,6 +79,8 @@ info:
       - "Schedule a sprint planning meeting"
       - "Delete this issue"
       - "Remove a comment from an issue"
+  x-airbyte-skip-auth-methods:
+    - oauth2
 
   x-airbyte-entity-relationships:
   - source_entity: comments
@@ -1884,7 +1886,9 @@ components:
         auth_mapping:
           api_key: "${api_key}"
         replication_auth_key_mapping:
-          api_key: "api_key"
+          credentials.api_key: "api_key"
+        replication_auth_key_constants:
+          credentials.auth_type: "API Key"
 
   schemas:
     # Issue Schemas

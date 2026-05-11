@@ -52,7 +52,8 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
                 ),
             },
             auth_mapping={'api_key': '${api_key}'},
-            replication_auth_key_mapping={'api_key': 'api_key'},
+            replication_auth_key_mapping={'credentials.api_key': 'api_key'},
+            replication_auth_key_constants={'credentials.auth_type': 'API Key'},
         ),
     ),
     entities=[

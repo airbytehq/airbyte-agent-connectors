@@ -6,8 +6,8 @@ info:
   description: Connector for Jira API
   x-airbyte-connector-name: jira
   x-airbyte-connector-definition-id: 68e63de2-bb83-4c7e-93fa-a8a9051e3993
-  x-airbyte-replication-version: "4.3.21"
-  x-airbyte-replication-compatibility: ">=4.3.21, <5.0.0"
+  x-airbyte-replication-version: "4.4.0"
+  x-airbyte-replication-compatibility: ">=4.4.0, <5.0.0"
   x-airbyte-external-documentation-urls:
     - type: api_reference
       title: Jira API Documentation
@@ -81,6 +81,8 @@ info:
       foreign_key: issueIdOrKey
       target_key: id
       cardinality: many_to_one
+  x-airbyte-skip-auth-methods:
+    - customauthenticator
 
   x-airbyte-context-store:
     entities:
@@ -1781,8 +1783,10 @@ components:
           username: "${username}"
           password: "${password}"
         replication_auth_key_mapping:
-          email: "username"
-          api_token: "password"
+          credentials.email: "username"
+          credentials.api_token: "password"
+        replication_auth_key_constants:
+          credentials.auth_type: "API Token"
   schemas:
     Project:
       type: object
@@ -3574,4 +3578,3 @@ components:
                               type: string
                             text:
                               type: string
-

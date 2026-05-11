@@ -48,6 +48,13 @@ class NotionOAuthCredentials(BaseModel):
 
 # ===== RESPONSE TYPE DEFINITIONS (PYDANTIC) =====
 
+class UserPerson(BaseModel):
+    """Person-specific data"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    email: str | None | None = Field(default=None, description="Person's email address")
+    """Person's email address"""
+
 class UserBot(BaseModel):
     """Bot-specific data"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -56,13 +63,6 @@ class UserBot(BaseModel):
     """Bot owner information"""
     workspace_name: str | None | None = Field(default=None, description="Name of the workspace the bot belongs to")
     """Name of the workspace the bot belongs to"""
-
-class UserPerson(BaseModel):
-    """Person-specific data"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    email: str | None | None = Field(default=None, description="Person's email address")
-    """Person's email address"""
 
 class User(BaseModel):
     """A Notion user object"""
@@ -178,15 +178,15 @@ class PagesListResponse(BaseModel):
     page_or_data_source: dict[str, Any] | None = Field(default=None)
     request_id: str | None = Field(default=None)
 
-class DataSourceLastEditedBy(BaseModel):
-    """User who last edited the data source"""
+class DataSourceCreatedBy(BaseModel):
+    """User who created the data source"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     object_: str | None | None = Field(default=None, alias="object")
     id: str | None | None = Field(default=None)
 
-class DataSourceCreatedBy(BaseModel):
-    """User who created the data source"""
+class DataSourceLastEditedBy(BaseModel):
+    """User who last edited the data source"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     object_: str | None | None = Field(default=None, alias="object")
@@ -230,8 +230,95 @@ class DataSourcesListResponse(BaseModel):
     page_or_data_source: dict[str, Any] | None = Field(default=None)
     request_id: str | None = Field(default=None)
 
+class BlockToggle(BaseModel):
+    """Toggle block content"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    rich_text: list[RichText] | None | None = Field(default=None)
+    color: str | None | None = Field(default=None)
+
+class BlockToDo(BaseModel):
+    """To-do block content"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    rich_text: list[RichText] | None | None = Field(default=None)
+    checked: bool | None | None = Field(default=None)
+    color: str | None | None = Field(default=None)
+
+class BlockParagraph(BaseModel):
+    """Paragraph block content"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    rich_text: list[RichText] | None | None = Field(default=None)
+    color: str | None | None = Field(default=None)
+
+class BlockCreatedBy(BaseModel):
+    """User who created the block"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    object_: str | None | None = Field(default=None, alias="object")
+    id: str | None | None = Field(default=None)
+
+class BlockColumn(BaseModel):
+    """Column block"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    width_ratio: float | None | None = Field(default=None)
+
+class BlockBulletedListItem(BaseModel):
+    """Bulleted list item content"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    rich_text: list[RichText] | None | None = Field(default=None)
+    color: str | None | None = Field(default=None)
+
+class BlockLinkPreview(BaseModel):
+    """Link preview block"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    url: str | None | None = Field(default=None)
+
+class BlockEquation(BaseModel):
+    """Equation block"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    expression: str | None | None = Field(default=None)
+
+class BlockEmbed(BaseModel):
+    """Embed block"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    url: str | None | None = Field(default=None)
+
+class BlockChildDatabase(BaseModel):
+    """Child database block"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    title: str | None | None = Field(default=None)
+
 class BlockNumberedListItem(BaseModel):
     """Numbered list item content"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    rich_text: list[RichText] | None | None = Field(default=None)
+    color: str | None | None = Field(default=None)
+
+class BlockCallout(BaseModel):
+    """Callout block content"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    rich_text: list[RichText] | None | None = Field(default=None)
+    icon: dict[str, Any] | None | None = Field(default=None)
+    color: str | None | None = Field(default=None)
+
+class BlockChildPage(BaseModel):
+    """Child page block"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    title: str | None | None = Field(default=None)
+
+class BlockQuote(BaseModel):
+    """Quote block content"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     rich_text: list[RichText] | None | None = Field(default=None)
@@ -245,62 +332,11 @@ class BlockCode(BaseModel):
     caption: list[RichText] | None | None = Field(default=None)
     language: str | None | None = Field(default=None)
 
-class BlockToDo(BaseModel):
-    """To-do block content"""
+class BlockTableRow(BaseModel):
+    """Table row block"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    rich_text: list[RichText] | None | None = Field(default=None)
-    checked: bool | None | None = Field(default=None)
-    color: str | None | None = Field(default=None)
-
-class BlockCreatedBy(BaseModel):
-    """User who created the block"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    object_: str | None | None = Field(default=None, alias="object")
-    id: str | None | None = Field(default=None)
-
-class BlockQuote(BaseModel):
-    """Quote block content"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    rich_text: list[RichText] | None | None = Field(default=None)
-    color: str | None | None = Field(default=None)
-
-class BlockColumn(BaseModel):
-    """Column block"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    width_ratio: float | None | None = Field(default=None)
-
-class BlockLinkPreview(BaseModel):
-    """Link preview block"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    url: str | None | None = Field(default=None)
-
-class BlockTable(BaseModel):
-    """Table block"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    table_width: int | None | None = Field(default=None)
-    has_column_header: bool | None | None = Field(default=None)
-    has_row_header: bool | None | None = Field(default=None)
-
-class BlockParagraph(BaseModel):
-    """Paragraph block content"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    rich_text: list[RichText] | None | None = Field(default=None)
-    color: str | None | None = Field(default=None)
-
-class BlockHeading1(BaseModel):
-    """Heading 1 block content"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    rich_text: list[RichText] | None | None = Field(default=None)
-    color: str | None | None = Field(default=None)
-    is_toggleable: bool | None | None = Field(default=None)
+    cells: list[Any] | None | None = Field(default=None)
 
 class BlockHeading3(BaseModel):
     """Heading 3 block content"""
@@ -317,11 +353,20 @@ class BlockBookmark(BaseModel):
     caption: list[RichText] | None | None = Field(default=None)
     url: str | None | None = Field(default=None)
 
-class BlockTableRow(BaseModel):
-    """Table row block"""
+class BlockLastEditedBy(BaseModel):
+    """User who last edited the block"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    cells: list[Any] | None | None = Field(default=None)
+    object_: str | None | None = Field(default=None, alias="object")
+    id: str | None | None = Field(default=None)
+
+class BlockTable(BaseModel):
+    """Table block"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    table_width: int | None | None = Field(default=None)
+    has_column_header: bool | None | None = Field(default=None)
+    has_row_header: bool | None | None = Field(default=None)
 
 class BlockTableOfContents(BaseModel):
     """Table of contents block"""
@@ -337,58 +382,13 @@ class BlockHeading2(BaseModel):
     color: str | None | None = Field(default=None)
     is_toggleable: bool | None | None = Field(default=None)
 
-class BlockLastEditedBy(BaseModel):
-    """User who last edited the block"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    object_: str | None | None = Field(default=None, alias="object")
-    id: str | None | None = Field(default=None)
-
-class BlockToggle(BaseModel):
-    """Toggle block content"""
+class BlockHeading1(BaseModel):
+    """Heading 1 block content"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     rich_text: list[RichText] | None | None = Field(default=None)
     color: str | None | None = Field(default=None)
-
-class BlockEmbed(BaseModel):
-    """Embed block"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    url: str | None | None = Field(default=None)
-
-class BlockChildDatabase(BaseModel):
-    """Child database block"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    title: str | None | None = Field(default=None)
-
-class BlockCallout(BaseModel):
-    """Callout block content"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    rich_text: list[RichText] | None | None = Field(default=None)
-    icon: dict[str, Any] | None | None = Field(default=None)
-    color: str | None | None = Field(default=None)
-
-class BlockBulletedListItem(BaseModel):
-    """Bulleted list item content"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    rich_text: list[RichText] | None | None = Field(default=None)
-    color: str | None | None = Field(default=None)
-
-class BlockEquation(BaseModel):
-    """Equation block"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    expression: str | None | None = Field(default=None)
-
-class BlockChildPage(BaseModel):
-    """Child page block"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    title: str | None | None = Field(default=None)
+    is_toggleable: bool | None | None = Field(default=None)
 
 class Block(BaseModel):
     """A Notion block object"""
