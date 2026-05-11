@@ -88,8 +88,11 @@ EXECUTE_INSTRUCTIONS = (
     "\n\n"
     "HOW TO USE CONTEXT_STORE_SEARCH:\n"
     "action='context_store_search' uses params.query with filter, sort, and limit.\n"
-    '- Basic:   params={"limit": 20, "query": {"filter": {...}}}\n'
-    '- Sort:    params={"limit": 20, "query": {"filter": {...}, "sort": [{"created": "desc"}]}}\n'
+    '- No filter: params={"limit": 20, "query": {}}\n'
+    '- Basic:     params={"limit": 20, "query": {"filter": {...}}}\n'
+    '- Sort:      params={"limit": 20, "query": {"filter": {...}, "sort": [{"created": "desc"}]}}\n'
+    '- Sort only: params={"limit": 20, "query": {"sort": [{"created": "desc"}]}}\n'
+    "- Never send an empty filter object; omit filter instead.\n"
     "- When searching for text, ALWAYS prefer `fuzzy` over `like`. "
     "`fuzzy` matches words in any order, ignores punctuation/casing, and handles partial names. "
     "`like` requires exact substring match and fails on typos or word reordering.\n"
@@ -730,6 +733,7 @@ def generate_tool_description(
         lines.append('    "query": {"filter": <condition>, "sort": [{"field": "asc|desc"}, ...]},')
         lines.append('    "limit": <int>, "cursor": <str>, "fields": ["field", "nested.field", ...]')
         lines.append("  })")
+        lines.append('  No filter: use "query": {} or "query": {"sort": [{"field": "desc"}]}; never send "filter": {}.')
         lines.append('  Example: {"query": {"filter": {"eq": {"title": "Intro to Airbyte | Miinto"}}}, "limit": 1,')
         lines.append('            "fields": ["id", "title", "started", "primaryUserId"]}')
         lines.append("  Conditions are composable:")

@@ -195,35 +195,6 @@ class ChannelResponse(BaseModel):
     ok: bool | None = Field(default=None)
     channel: Channel | None = Field(default=None)
 
-class Attachment(BaseModel):
-    """Message attachment"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: int | None = Field(default=None)
-    fallback: str | None = Field(default=None)
-    color: str | None = Field(default=None)
-    pretext: str | None = Field(default=None)
-    author_name: str | None = Field(default=None)
-    author_link: str | None = Field(default=None)
-    author_icon: str | None = Field(default=None)
-    title: str | None = Field(default=None)
-    title_link: str | None = Field(default=None)
-    text: str | None = Field(default=None)
-    fields: list[dict[str, Any]] | None = Field(default=None)
-    image_url: str | None = Field(default=None)
-    thumb_url: str | None = Field(default=None)
-    footer: str | None = Field(default=None)
-    footer_icon: str | None = Field(default=None)
-    ts: Any | None = Field(default=None)
-
-class Reaction(BaseModel):
-    """Message reaction"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: str | None = Field(default=None)
-    users: list[str] | None = Field(default=None)
-    count: int | None = Field(default=None)
-
 class File(BaseModel):
     """File object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -247,6 +218,35 @@ class File(BaseModel):
     permalink_public: str | None = Field(default=None)
     created: int | None = Field(default=None)
     timestamp: int | None = Field(default=None)
+
+class Reaction(BaseModel):
+    """Message reaction"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: str | None = Field(default=None)
+    users: list[str] | None = Field(default=None)
+    count: int | None = Field(default=None)
+
+class Attachment(BaseModel):
+    """Message attachment"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int | None = Field(default=None)
+    fallback: str | None = Field(default=None)
+    color: str | None = Field(default=None)
+    pretext: str | None = Field(default=None)
+    author_name: str | None = Field(default=None)
+    author_link: str | None = Field(default=None)
+    author_icon: str | None = Field(default=None)
+    title: str | None = Field(default=None)
+    title_link: str | None = Field(default=None)
+    text: str | None = Field(default=None)
+    fields: list[dict[str, Any]] | None = Field(default=None)
+    image_url: str | None = Field(default=None)
+    thumb_url: str | None = Field(default=None)
+    footer: str | None = Field(default=None)
+    footer_icon: str | None = Field(default=None)
+    ts: Any | None = Field(default=None)
 
 class Message(BaseModel):
     """Slack message object"""
