@@ -14,7 +14,7 @@ uv pip install airbyte-agent-sdk
 
 ## Documentation
 
-Full documentation is available at [docs.airbyte.com/ai-agents/about/](https://docs.airbyte.com/ai-agents/about/).
+Full documentation is available at [https://docs.airbyte.com/ai-agents/interfaces/sdk/](https://docs.airbyte.com/ai-agents/interfaces/sdk/).
 
 ## Tool integration
 
