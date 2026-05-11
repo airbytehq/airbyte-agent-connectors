@@ -1,0 +1,2524 @@
+{
+  "connector_name": "customer-io",
+  "class_name": "CustomerIoConnector",
+  "package_name": "airbyte_agent_sdk.connectors.customer_io",
+  "install_package": "airbyte-agent-sdk",
+  "yaml_version": "1.0.0",
+  "api_reference_url": "https://customer.io/docs/api/app/",
+  "auth_example": "CustomerIoAuthConfig(app_api_key=\"...\")",
+  "auth_import": ", CustomerIoAuthConfig",
+  "auth_config": {
+    "type_name": "CustomerIoAuthConfig",
+    "base_name": "CustomerIo",
+    "options": [
+      {
+        "title": "App API Key Authentication",
+        "description": "",
+        "fields": [
+          {
+            "name": "app_api_key",
+            "type": "str",
+            "required": true,
+            "title": "App API Key",
+            "description": "Your Customer.io App API key. Generate one in your workspace settings at Settings > API Credentials > App API Key.\n"
+          }
+        ],
+        "type_suffix": "AppApiKeyAuthentication"
+      }
+    ],
+    "is_multi_auth": false
+  },
+  "replication_config": {
+    "type_name": "CustomerIoReplicationConfig",
+    "title": "Replication Configuration",
+    "description": "Settings for data replication from Customer.io.",
+    "fields": [
+      {
+        "name": "start_date",
+        "type": "str",
+        "required": true,
+        "title": "Start Date",
+        "description": "UTC date and time in the format YYYY-MM-DDTHH:mm:ssZ from which to start replicating data.",
+        "format": "date-time",
+        "default": null
+      }
+    ]
+  },
+  "custom_description": "Connector for the Customer.io App API, providing read access to campaigns, newsletters, segments, messages, activities, sender identities, snippets, collections, reporting webhooks, and exports. Customer.io is a messaging platform that lets you send automated emails, push notifications, SMS, and in-app messages based on customer behavior. This connector retrieves data from the App API (not the Track API) and requires a Bearer-type App API key generated in your Customer.io workspace settings.\n",
+  "supported_questions": "- List all campaigns in Customer.io\n- Show me all newsletters\n- What segments are defined in my workspace?\n- Get the details of campaign 42\n- List all sender identities\n- Show me all reporting webhooks\n- What snippets do we have?\n- List all collections\n- Show recent activities\n- Create a snippet called 'footer' with content '<p>Thanks!</p>'\n- Update the snippet 'header' to say 'Welcome back!'\n- Create a new collection called 'products'\n- Create a reporting webhook for email events\n- Create a manual segment called 'VIP Customers'\n- Export all customers matching a segment\n- Send a transactional email to user@example.com\n- Send an SMS notification to +15551234567\n- Send a push notification to user 123\n- Trigger broadcast campaign 42\n- Which campaigns are currently active?\n- Find newsletters sent in the last month\n- What are the most recent email deliveries?\n- Which exports have completed?",
+  "unsupported_questions": "- Create a new campaign\n- Delete a segment\n- Delete a snippet\n- Delete a collection\n- Delete a reporting webhook\n- Delete a newsletter\n- Send a newsletter via API\n- Schedule a newsletter via API",
+  "first_operation": {
+    "method_name": "list_campaigns",
+    "http_method": "get",
+    "path": "/v1/campaigns",
+    "entity": "campaigns",
+    "action": "list",
+    "parameters": [],
+    "params_type_name": "CampaignsListParams",
+    "response_type": "CampaignsListResult",
+    "description": "Returns a list of all campaigns in the workspace.",
+    "record_extractor": "$.campaigns",
+    "meta_extractor": null,
+    "needs_envelope": true,
+    "record_type": "list[Campaign]",
+    "meta_fields": null,
+    "is_download": false
+  },
+  "entities_grouped": {
+    "campaigns": [
+      {
+        "method_name": "list_campaigns",
+        "http_method": "get",
+        "path": "/v1/campaigns",
+        "entity": "campaigns",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "CampaignsListParams",
+        "response_type": "CampaignsListResult",
+        "description": "Returns a list of all campaigns in the workspace.",
+        "record_extractor": "$.campaigns",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Campaign]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_campaign",
+        "http_method": "get",
+        "path": "/v1/campaigns/{campaign_id}",
+        "entity": "campaigns",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "campaign_id",
+            "python_name": "campaign_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The campaign identifier"
+          }
+        ],
+        "params_type_name": "CampaignsGetParams",
+        "response_type": "Campaign",
+        "description": "Returns a single campaign by ID.",
+        "record_extractor": "$.campaign",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Campaign",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "campaign_actions": [
+      {
+        "method_name": "list_campaign_actions",
+        "http_method": "get",
+        "path": "/v1/campaigns/{campaign_id}/actions",
+        "entity": "campaign_actions",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "campaign_id",
+            "python_name": "campaign_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The campaign identifier"
+          },
+          {
+            "name": "start",
+            "python_name": "start",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Pagination cursor for the next page",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CampaignActionsListParams",
+        "response_type": "CampaignActionsListResult",
+        "description": "Returns a paginated list of actions for a campaign.",
+        "record_extractor": "$.actions",
+        "meta_extractor": {
+          "next": "$.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[CampaignAction]",
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Cursor for the next page"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_campaign_action",
+        "http_method": "get",
+        "path": "/v1/campaigns/{campaign_id}/actions/{action_id}",
+        "entity": "campaign_actions",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "campaign_id",
+            "python_name": "campaign_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The campaign identifier"
+          },
+          {
+            "name": "action_id",
+            "python_name": "action_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The action identifier"
+          }
+        ],
+        "params_type_name": "CampaignActionsGetParams",
+        "response_type": "CampaignAction",
+        "description": "Returns a single campaign action by ID.",
+        "record_extractor": "$.action",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "CampaignAction",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "newsletters": [
+      {
+        "method_name": "list_newsletters",
+        "http_method": "get",
+        "path": "/v1/newsletters",
+        "entity": "newsletters",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "start",
+            "python_name": "start",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Pagination cursor for the next page",
+            "is_deep_object": false
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 100
+            },
+            "required": false,
+            "description": "Maximum number of newsletters to return",
+            "is_deep_object": false
+          },
+          {
+            "name": "sort",
+            "python_name": "sort",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            },
+            "required": false,
+            "description": "Sort order",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "NewslettersListParams",
+        "response_type": "NewslettersListResult",
+        "description": "Returns a paginated list of newsletters.",
+        "record_extractor": "$.newsletters",
+        "meta_extractor": {
+          "next": "$.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Newsletter]",
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Cursor for the next page"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_newsletter",
+        "http_method": "get",
+        "path": "/v1/newsletters/{newsletter_id}",
+        "entity": "newsletters",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "newsletter_id",
+            "python_name": "newsletter_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The newsletter identifier"
+          }
+        ],
+        "params_type_name": "NewslettersGetParams",
+        "response_type": "Newsletter",
+        "description": "Returns a single newsletter by ID.",
+        "record_extractor": "$.newsletter",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Newsletter",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "segments": [
+      {
+        "method_name": "list_segments",
+        "http_method": "get",
+        "path": "/v1/segments",
+        "entity": "segments",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "SegmentsListParams",
+        "response_type": "SegmentsListResult",
+        "description": "Returns all segments in the workspace.",
+        "record_extractor": "$.segments",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Segment]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "create_segment",
+        "http_method": "post",
+        "path": "/v1/segments",
+        "entity": "segments",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "segment",
+            "python_name": "segment",
+            "type": "SegmentsCreateParamsSegment",
+            "schema": {
+              "type": "object",
+              "required": [
+                "name"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Name of the manual segment"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Optional description of the segment"
+                }
+              }
+            },
+            "required": true,
+            "description": ""
+          }
+        ],
+        "params_type_name": "SegmentsCreateParams",
+        "response_type": "dict[str, Any]",
+        "description": "Creates a new empty manual segment. People can be added to it separately.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_segment",
+        "http_method": "get",
+        "path": "/v1/segments/{segment_id}",
+        "entity": "segments",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "segment_id",
+            "python_name": "segment_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The segment identifier"
+          }
+        ],
+        "params_type_name": "SegmentsGetParams",
+        "response_type": "Segment",
+        "description": "Returns a single segment by ID.",
+        "record_extractor": "$.segment",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Segment",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "messages": [
+      {
+        "method_name": "list_messages",
+        "http_method": "get",
+        "path": "/v1/messages",
+        "entity": "messages",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "start",
+            "python_name": "start",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Pagination cursor for the next page",
+            "is_deep_object": false
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50
+            },
+            "required": false,
+            "description": "Maximum number of messages to return",
+            "is_deep_object": false
+          },
+          {
+            "name": "type",
+            "python_name": "type",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "email",
+                "webhook",
+                "twilio",
+                "whatsapp",
+                "slack",
+                "push",
+                "in_app"
+              ]
+            },
+            "required": false,
+            "description": "Filter messages by channel type",
+            "is_deep_object": false
+          },
+          {
+            "name": "metric",
+            "python_name": "metric",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "attempted",
+                "sent",
+                "delivered",
+                "opened",
+                "clicked",
+                "converted",
+                "bounced",
+                "spammed",
+                "unsubscribed",
+                "dropped",
+                "failed",
+                "undeliverable"
+              ]
+            },
+            "required": false,
+            "description": "Filter messages by delivery metric",
+            "is_deep_object": false
+          },
+          {
+            "name": "campaign_id",
+            "python_name": "campaign_id",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": false,
+            "description": "Filter by campaign ID",
+            "is_deep_object": false
+          },
+          {
+            "name": "newsletter_id",
+            "python_name": "newsletter_id",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": false,
+            "description": "Filter by newsletter ID",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "MessagesListParams",
+        "response_type": "MessagesListResult",
+        "description": "Returns a paginated list of message deliveries.",
+        "record_extractor": "$.messages",
+        "meta_extractor": {
+          "next": "$.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Message]",
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Cursor for the next page"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_message",
+        "http_method": "get",
+        "path": "/v1/messages/{message_id}",
+        "entity": "messages",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "message_id",
+            "python_name": "message_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The message delivery identifier"
+          }
+        ],
+        "params_type_name": "MessagesGetParams",
+        "response_type": "Message",
+        "description": "Returns a single message delivery by ID. Untested because the test workspace has no message deliveries to retrieve.\n",
+        "record_extractor": "$.message",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Message",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "activities": [
+      {
+        "method_name": "list_activities",
+        "http_method": "get",
+        "path": "/v1/activities",
+        "entity": "activities",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "start",
+            "python_name": "start",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Pagination cursor for the next page",
+            "is_deep_object": false
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10
+            },
+            "required": false,
+            "description": "Maximum number of activities to return",
+            "is_deep_object": false
+          },
+          {
+            "name": "type",
+            "python_name": "type",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Filter by activity type",
+            "is_deep_object": false
+          },
+          {
+            "name": "name",
+            "python_name": "name",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Filter by event name",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ActivitiesListParams",
+        "response_type": "ActivitiesListResult",
+        "description": "Returns a paginated list of activities in the workspace.",
+        "record_extractor": "$.activities",
+        "meta_extractor": {
+          "next": "$.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Activity]",
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Cursor for the next page"
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "sender_identities": [
+      {
+        "method_name": "list_sender_identities",
+        "http_method": "get",
+        "path": "/v1/sender_identities",
+        "entity": "sender_identities",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "start",
+            "python_name": "start",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Pagination cursor for the next page",
+            "is_deep_object": false
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            },
+            "required": false,
+            "description": "Maximum number of sender identities to return",
+            "is_deep_object": false
+          },
+          {
+            "name": "sort",
+            "python_name": "sort",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            },
+            "required": false,
+            "description": "Sort order",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "SenderIdentitiesListParams",
+        "response_type": "SenderIdentitiesListResult",
+        "description": "Returns a paginated list of sender identities.",
+        "record_extractor": "$.sender_identities",
+        "meta_extractor": {
+          "next": "$.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[SenderIdentity]",
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Cursor for the next page"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_sender_identity",
+        "http_method": "get",
+        "path": "/v1/sender_identities/{sender_id}",
+        "entity": "sender_identities",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "sender_id",
+            "python_name": "sender_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The sender identity identifier"
+          }
+        ],
+        "params_type_name": "SenderIdentitiesGetParams",
+        "response_type": "SenderIdentity",
+        "description": "Returns a single sender identity by ID.",
+        "record_extractor": "$.sender_identity",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "SenderIdentity",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "snippets": [
+      {
+        "method_name": "list_snippets",
+        "http_method": "get",
+        "path": "/v1/snippets",
+        "entity": "snippets",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "SnippetsListParams",
+        "response_type": "SnippetsListResult",
+        "description": "Returns all snippets in the workspace.",
+        "record_extractor": "$.snippets",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Snippet]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "create_snippet",
+        "http_method": "post",
+        "path": "/v1/snippets",
+        "entity": "snippets",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "name",
+            "python_name": "name",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Unique snippet name (used as the liquid tag identifier)"
+            },
+            "required": true,
+            "description": "Unique snippet name (used as the liquid tag identifier)"
+          },
+          {
+            "name": "value",
+            "python_name": "value",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Snippet content (plain text, HTML, or Liquid)"
+            },
+            "required": true,
+            "description": "Snippet content (plain text, HTML, or Liquid)"
+          }
+        ],
+        "params_type_name": "SnippetsCreateParams",
+        "response_type": "dict[str, Any]",
+        "description": "Creates a new reusable content snippet. Returns 422 if a snippet with the same name already exists.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "update_snippet",
+        "http_method": "put",
+        "path": "/v1/snippets",
+        "entity": "snippets",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "name",
+            "python_name": "name",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Snippet name to update (or create if it does not exist)"
+            },
+            "required": true,
+            "description": "Snippet name to update (or create if it does not exist)"
+          },
+          {
+            "name": "value",
+            "python_name": "value",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "New snippet content (plain text, HTML, or Liquid)"
+            },
+            "required": true,
+            "description": "New snippet content (plain text, HTML, or Liquid)"
+          }
+        ],
+        "params_type_name": "SnippetsUpdateParams",
+        "response_type": "dict[str, Any]",
+        "description": "Updates an existing snippet by name, or creates it if it does not exist (upsert behavior).",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "collections": [
+      {
+        "method_name": "list_collections",
+        "http_method": "get",
+        "path": "/v1/collections",
+        "entity": "collections",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "CollectionsListParams",
+        "response_type": "CollectionsListResult",
+        "description": "Returns all collections in the workspace.",
+        "record_extractor": "$.collections",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Collection]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "create_collection",
+        "http_method": "post",
+        "path": "/v1/collections",
+        "entity": "collections",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "name",
+            "python_name": "name",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Collection name, referenced in Liquid as collection_name.property"
+            },
+            "required": true,
+            "description": "Collection name, referenced in Liquid as collection_name.property"
+          },
+          {
+            "name": "data",
+            "python_name": "data",
+            "type": "list[dict[str, Any]]",
+            "schema": {
+              "type": "array",
+              "description": "Inline collection data (array of objects). Provide either data or url, not both.",
+              "items": {
+                "type": "object"
+              }
+            },
+            "required": false,
+            "description": "Inline collection data (array of objects). Provide either data or url, not both."
+          },
+          {
+            "name": "url",
+            "python_name": "url",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "URL to a CSV or JSON file containing collection data. Provide either data or url, not both."
+            },
+            "required": false,
+            "description": "URL to a CSV or JSON file containing collection data. Provide either data or url, not both."
+          }
+        ],
+        "params_type_name": "CollectionsCreateParams",
+        "response_type": "dict[str, Any]",
+        "description": "Creates a new data collection with inline data or a URL source.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_collection",
+        "http_method": "get",
+        "path": "/v1/collections/{collection_id}",
+        "entity": "collections",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "collection_id",
+            "python_name": "collection_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The collection identifier"
+          }
+        ],
+        "params_type_name": "CollectionsGetParams",
+        "response_type": "Collection",
+        "description": "Returns a single collection by ID.",
+        "record_extractor": "$.collection",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Collection",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "update_collection",
+        "http_method": "put",
+        "path": "/v1/collections/{collection_id}",
+        "entity": "collections",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "name",
+            "python_name": "name",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Rename the collection"
+            },
+            "required": false,
+            "description": "Rename the collection"
+          },
+          {
+            "name": "data",
+            "python_name": "data",
+            "type": "list[dict[str, Any]]",
+            "schema": {
+              "type": "array",
+              "description": "Replace collection data entirely (array of objects). Provide either data or url, not both.",
+              "items": {
+                "type": "object"
+              }
+            },
+            "required": false,
+            "description": "Replace collection data entirely (array of objects). Provide either data or url, not both."
+          },
+          {
+            "name": "url",
+            "python_name": "url",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Replace the URL source for collection data. Provide either data or url, not both."
+            },
+            "required": false,
+            "description": "Replace the URL source for collection data. Provide either data or url, not both."
+          },
+          {
+            "name": "collection_id",
+            "python_name": "collection_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The collection identifier"
+          }
+        ],
+        "params_type_name": "CollectionsUpdateParams",
+        "response_type": "dict[str, Any]",
+        "description": "Updates an existing collection's name, data, or URL source.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "reporting_webhooks": [
+      {
+        "method_name": "list_reporting_webhooks",
+        "http_method": "get",
+        "path": "/v1/reporting_webhooks",
+        "entity": "reporting_webhooks",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "ReportingWebhooksListParams",
+        "response_type": "ReportingWebhooksListResult",
+        "description": "Returns all reporting webhooks in the workspace.",
+        "record_extractor": "$.reporting_webhooks",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[ReportingWebhook]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "create_reporting_webhook",
+        "http_method": "post",
+        "path": "/v1/reporting_webhooks",
+        "entity": "reporting_webhooks",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "name",
+            "python_name": "name",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Webhook display name"
+            },
+            "required": true,
+            "description": "Webhook display name"
+          },
+          {
+            "name": "endpoint",
+            "python_name": "endpoint",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The URL to receive webhook notifications"
+            },
+            "required": true,
+            "description": "The URL to receive webhook notifications"
+          },
+          {
+            "name": "events",
+            "python_name": "events",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "description": "Event types to report (e.g. customer_subscribed, email_sent, email_opened, email_clicked, email_bounced, email_converted, email_unsubscribed, sms_sent, sms_delivered, push_sent)\n",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": true,
+            "description": "Event types to report (e.g. customer_subscribed, email_sent, email_opened, email_clicked, email_bounced, email_converted, email_unsubscribed, sms_sent, sms_delivered, push_sent)\n"
+          },
+          {
+            "name": "disabled",
+            "python_name": "disabled",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Whether the webhook should be disabled initially"
+            },
+            "required": false,
+            "description": "Whether the webhook should be disabled initially"
+          },
+          {
+            "name": "full_resolution",
+            "python_name": "full_resolution",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Send all events instead of only unique events"
+            },
+            "required": false,
+            "description": "Send all events instead of only unique events"
+          },
+          {
+            "name": "with_content",
+            "python_name": "with_content",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Include the message body in sent events"
+            },
+            "required": false,
+            "description": "Include the message body in sent events"
+          }
+        ],
+        "params_type_name": "ReportingWebhooksCreateParams",
+        "response_type": "ReportingWebhook",
+        "description": "Creates a new reporting webhook to receive event notifications at the specified endpoint.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "ReportingWebhook",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_reporting_webhook",
+        "http_method": "get",
+        "path": "/v1/reporting_webhooks/{webhook_id}",
+        "entity": "reporting_webhooks",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "webhook_id",
+            "python_name": "webhook_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The reporting webhook identifier"
+          }
+        ],
+        "params_type_name": "ReportingWebhooksGetParams",
+        "response_type": "ReportingWebhook",
+        "description": "Returns a single reporting webhook by ID.",
+        "record_extractor": "$.reporting_webhook",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "ReportingWebhook",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "update_reporting_webhook",
+        "http_method": "put",
+        "path": "/v1/reporting_webhooks/{webhook_id}",
+        "entity": "reporting_webhooks",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "name",
+            "python_name": "name",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Webhook display name"
+            },
+            "required": true,
+            "description": "Webhook display name"
+          },
+          {
+            "name": "endpoint",
+            "python_name": "endpoint",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The URL to receive webhook notifications"
+            },
+            "required": true,
+            "description": "The URL to receive webhook notifications"
+          },
+          {
+            "name": "events",
+            "python_name": "events",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "description": "Event types to report",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": true,
+            "description": "Event types to report"
+          },
+          {
+            "name": "disabled",
+            "python_name": "disabled",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Whether the webhook is disabled"
+            },
+            "required": false,
+            "description": "Whether the webhook is disabled"
+          },
+          {
+            "name": "full_resolution",
+            "python_name": "full_resolution",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Send all events instead of only unique events"
+            },
+            "required": false,
+            "description": "Send all events instead of only unique events"
+          },
+          {
+            "name": "with_content",
+            "python_name": "with_content",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Include the message body in sent events"
+            },
+            "required": false,
+            "description": "Include the message body in sent events"
+          },
+          {
+            "name": "webhook_id",
+            "python_name": "webhook_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The reporting webhook identifier"
+          }
+        ],
+        "params_type_name": "ReportingWebhooksUpdateParams",
+        "response_type": "ReportingWebhook",
+        "description": "Updates an existing reporting webhook's configuration.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "ReportingWebhook",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "exports": [
+      {
+        "method_name": "list_exports",
+        "http_method": "get",
+        "path": "/v1/exports",
+        "entity": "exports",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "ExportsListParams",
+        "response_type": "ExportsListResult",
+        "description": "Returns all exports in the workspace.",
+        "record_extractor": "$.exports",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Export]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "create_customer_export",
+        "http_method": "post",
+        "path": "/v1/exports/customers",
+        "entity": "exports",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "filters",
+            "python_name": "filters",
+            "type": "dict[str, Any]",
+            "schema": {
+              "type": "object",
+              "description": "Audience filter conditions to select which customers to export. Uses boolean logic with \"and\", \"or\", \"not\" arrays of conditions, \"segment\" objects with an \"id\" field, and \"attribute\" objects with \"field\", \"operator\", and \"value\" fields. Example: {\"and\": [{\"segment\": {\"id\": 3}}, {\"attribute\": {\"field\": \"plan\", \"operator\": \"eq\", \"value\": \"premium\"}}]}\n"
+            },
+            "required": true,
+            "description": "Audience filter conditions to select which customers to export. Uses boolean logic with \"and\", \"or\", \"not\" arrays of conditions, \"segment\" objects with an \"id\" field, and \"attribute\" objects with \"field\", \"operator\", and \"value\" fields. Example: {\"and\": [{\"segment\": {\"id\": 3}}, {\"attribute\": {\"field\": \"plan\", \"operator\": \"eq\", \"value\": \"premium\"}}]}\n"
+          }
+        ],
+        "params_type_name": "ExportsCreateParams",
+        "response_type": "dict[str, Any]",
+        "description": "Triggers a new export of customer data. Use filters to select which customers to export.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_export",
+        "http_method": "get",
+        "path": "/v1/exports/{export_id}",
+        "entity": "exports",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "export_id",
+            "python_name": "export_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The export identifier"
+          }
+        ],
+        "params_type_name": "ExportsGetParams",
+        "response_type": "Export",
+        "description": "Returns a single export by ID.",
+        "record_extractor": "$.export",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Export",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "transactional_email": [
+      {
+        "method_name": "send_transactional_email",
+        "http_method": "post",
+        "path": "/v1/send/email",
+        "entity": "transactional_email",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "transactional_message_id",
+            "python_name": "transactional_message_id",
+            "type": "Any",
+            "schema": {
+              "type": [
+                "integer",
+                "string"
+              ],
+              "description": "Template ID (number) or trigger name (string). Required if not providing inline body/subject/from."
+            },
+            "required": false,
+            "description": "Template ID (number) or trigger name (string). Required if not providing inline body/subject/from."
+          },
+          {
+            "name": "to",
+            "python_name": "to",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Recipient email address. Supports display name format: \"Name <email>\""
+            },
+            "required": true,
+            "description": "Recipient email address. Supports display name format: \"Name <email>\""
+          },
+          {
+            "name": "identifiers",
+            "python_name": "identifiers",
+            "type": "dict[str, Any]",
+            "schema": {
+              "type": "object",
+              "description": "Recipient identity. One of: {\"id\": \"...\"}, {\"email\": \"...\"}, or {\"cio_id\": \"...\"}"
+            },
+            "required": true,
+            "description": "Recipient identity. One of: {\"id\": \"...\"}, {\"email\": \"...\"}, or {\"cio_id\": \"...\"}"
+          },
+          {
+            "name": "message_data",
+            "python_name": "message_data",
+            "type": "dict[str, Any]",
+            "schema": {
+              "type": "object",
+              "description": "Key-value pairs available as {{trigger.<key>}} in templates"
+            },
+            "required": false,
+            "description": "Key-value pairs available as {{trigger.<key>}} in templates"
+          },
+          {
+            "name": "from",
+            "python_name": "from_",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Sender address (must be verified domain). Overrides template if provided."
+            },
+            "required": false,
+            "description": "Sender address (must be verified domain). Overrides template if provided."
+          },
+          {
+            "name": "subject",
+            "python_name": "subject",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Email subject line. Overrides template if provided."
+            },
+            "required": false,
+            "description": "Email subject line. Overrides template if provided."
+          },
+          {
+            "name": "body",
+            "python_name": "body",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "HTML email body. Overrides template if provided."
+            },
+            "required": false,
+            "description": "HTML email body. Overrides template if provided."
+          },
+          {
+            "name": "body_plain",
+            "python_name": "body_plain",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Plaintext email body"
+            },
+            "required": false,
+            "description": "Plaintext email body"
+          },
+          {
+            "name": "reply_to",
+            "python_name": "reply_to",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Reply-to email address"
+            },
+            "required": false,
+            "description": "Reply-to email address"
+          },
+          {
+            "name": "bcc",
+            "python_name": "bcc",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "BCC address(es), comma-separated. Max 15 total recipients."
+            },
+            "required": false,
+            "description": "BCC address(es), comma-separated. Max 15 total recipients."
+          },
+          {
+            "name": "headers",
+            "python_name": "headers",
+            "type": "dict[str, Any]",
+            "schema": {
+              "type": "object",
+              "description": "Custom email headers (ASCII only)"
+            },
+            "required": false,
+            "description": "Custom email headers (ASCII only)"
+          },
+          {
+            "name": "preheader_text",
+            "python_name": "preheader_text",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Email preview text"
+            },
+            "required": false,
+            "description": "Email preview text"
+          },
+          {
+            "name": "attachments",
+            "python_name": "attachments",
+            "type": "dict[str, Any]",
+            "schema": {
+              "type": "object",
+              "description": "Map of filename to base64 content: {\"file.pdf\": \"<base64>\"}. Max 2MB total."
+            },
+            "required": false,
+            "description": "Map of filename to base64 content: {\"file.pdf\": \"<base64>\"}. Max 2MB total."
+          },
+          {
+            "name": "disable_message_retention",
+            "python_name": "disable_message_retention",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Do not store message body (for sensitive data)"
+            },
+            "required": false,
+            "description": "Do not store message body (for sensitive data)"
+          },
+          {
+            "name": "send_to_unsubscribed",
+            "python_name": "send_to_unsubscribed",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Send even if person is unsubscribed"
+            },
+            "required": false,
+            "description": "Send even if person is unsubscribed"
+          },
+          {
+            "name": "tracked",
+            "python_name": "tracked",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Enable open and click tracking"
+            },
+            "required": false,
+            "description": "Enable open and click tracking"
+          },
+          {
+            "name": "queue_draft",
+            "python_name": "queue_draft",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Queue as draft instead of sending immediately"
+            },
+            "required": false,
+            "description": "Queue as draft instead of sending immediately"
+          },
+          {
+            "name": "send_at",
+            "python_name": "send_at",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Unix timestamp for scheduled delivery (up to 90 days in the future)"
+            },
+            "required": false,
+            "description": "Unix timestamp for scheduled delivery (up to 90 days in the future)"
+          }
+        ],
+        "params_type_name": "TransactionalEmailCreateParams",
+        "response_type": "TransactionalSendResponse",
+        "description": "Sends a transactional email to a single recipient. Can use a pre-built template (via transactional_message_id) or provide inline content (subject, body, from). Creates the recipient profile if it does not already exist.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "TransactionalSendResponse",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "transactional_sms": [
+      {
+        "method_name": "send_transactional_sms",
+        "http_method": "post",
+        "path": "/v1/send/sms",
+        "entity": "transactional_sms",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "transactional_message_id",
+            "python_name": "transactional_message_id",
+            "type": "Any",
+            "schema": {
+              "type": [
+                "integer",
+                "string"
+              ],
+              "description": "Template ID (number) or trigger name (string). Always required for SMS."
+            },
+            "required": true,
+            "description": "Template ID (number) or trigger name (string). Always required for SMS."
+          },
+          {
+            "name": "to",
+            "python_name": "to",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Phone number in E.164 format (e.g. +15551234567)"
+            },
+            "required": true,
+            "description": "Phone number in E.164 format (e.g. +15551234567)"
+          },
+          {
+            "name": "identifiers",
+            "python_name": "identifiers",
+            "type": "dict[str, Any]",
+            "schema": {
+              "type": "object",
+              "description": "Recipient identity. One of: {\"id\": \"...\"}, {\"email\": \"...\"}, or {\"cio_id\": \"...\"}"
+            },
+            "required": true,
+            "description": "Recipient identity. One of: {\"id\": \"...\"}, {\"email\": \"...\"}, or {\"cio_id\": \"...\"}"
+          },
+          {
+            "name": "message_data",
+            "python_name": "message_data",
+            "type": "dict[str, Any]",
+            "schema": {
+              "type": "object",
+              "description": "Key-value pairs available as {{trigger.<key>}} in templates"
+            },
+            "required": false,
+            "description": "Key-value pairs available as {{trigger.<key>}} in templates"
+          },
+          {
+            "name": "from",
+            "python_name": "from_",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Override sender phone number (must be verified in Twilio)"
+            },
+            "required": false,
+            "description": "Override sender phone number (must be verified in Twilio)"
+          },
+          {
+            "name": "send_to_unsubscribed",
+            "python_name": "send_to_unsubscribed",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Send even if person is unsubscribed"
+            },
+            "required": false,
+            "description": "Send even if person is unsubscribed"
+          },
+          {
+            "name": "tracked",
+            "python_name": "tracked",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Enable link tracking"
+            },
+            "required": false,
+            "description": "Enable link tracking"
+          },
+          {
+            "name": "queue_draft",
+            "python_name": "queue_draft",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Queue as draft instead of sending immediately"
+            },
+            "required": false,
+            "description": "Queue as draft instead of sending immediately"
+          },
+          {
+            "name": "disable_message_retention",
+            "python_name": "disable_message_retention",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Do not store message content"
+            },
+            "required": false,
+            "description": "Do not store message content"
+          }
+        ],
+        "params_type_name": "TransactionalSmsCreateParams",
+        "response_type": "TransactionalSendResponse",
+        "description": "Sends a transactional SMS to a single recipient. Always requires a pre-built template (transactional_message_id). Requires Twilio integration to be configured in the workspace.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "TransactionalSendResponse",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "transactional_push": [
+      {
+        "method_name": "send_transactional_push",
+        "http_method": "post",
+        "path": "/v1/send/push",
+        "entity": "transactional_push",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "transactional_message_id",
+            "python_name": "transactional_message_id",
+            "type": "Any",
+            "schema": {
+              "type": [
+                "integer",
+                "string"
+              ],
+              "description": "Template ID or trigger name. Required if not providing inline title/message."
+            },
+            "required": false,
+            "description": "Template ID or trigger name. Required if not providing inline title/message."
+          },
+          {
+            "name": "to",
+            "python_name": "to",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Device target: \"last_used\" for most recent device, or a specific device token. Defaults to all devices."
+            },
+            "required": false,
+            "description": "Device target: \"last_used\" for most recent device, or a specific device token. Defaults to all devices."
+          },
+          {
+            "name": "identifiers",
+            "python_name": "identifiers",
+            "type": "dict[str, Any]",
+            "schema": {
+              "type": "object",
+              "description": "Recipient identity. One of: {\"id\": \"...\"}, {\"email\": \"...\"}, or {\"cio_id\": \"...\"}"
+            },
+            "required": true,
+            "description": "Recipient identity. One of: {\"id\": \"...\"}, {\"email\": \"...\"}, or {\"cio_id\": \"...\"}"
+          },
+          {
+            "name": "message_data",
+            "python_name": "message_data",
+            "type": "dict[str, Any]",
+            "schema": {
+              "type": "object",
+              "description": "Key-value pairs available as {{trigger.<key>}} in templates"
+            },
+            "required": false,
+            "description": "Key-value pairs available as {{trigger.<key>}} in templates"
+          },
+          {
+            "name": "title",
+            "python_name": "title",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Push notification title (overrides template)"
+            },
+            "required": false,
+            "description": "Push notification title (overrides template)"
+          },
+          {
+            "name": "message",
+            "python_name": "message",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Push notification body (overrides template)"
+            },
+            "required": false,
+            "description": "Push notification body (overrides template)"
+          },
+          {
+            "name": "link",
+            "python_name": "link",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Deep link URL"
+            },
+            "required": false,
+            "description": "Deep link URL"
+          },
+          {
+            "name": "image_url",
+            "python_name": "image_url",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Image URL to display in the notification"
+            },
+            "required": false,
+            "description": "Image URL to display in the notification"
+          },
+          {
+            "name": "custom_data",
+            "python_name": "custom_data",
+            "type": "dict[str, Any]",
+            "schema": {
+              "type": "object",
+              "description": "Custom key-value data included in the push payload"
+            },
+            "required": false,
+            "description": "Custom key-value data included in the push payload"
+          },
+          {
+            "name": "custom_payload",
+            "python_name": "custom_payload",
+            "type": "dict[str, Any]",
+            "schema": {
+              "type": "object",
+              "description": "Platform-specific payload overrides (iOS/Android)"
+            },
+            "required": false,
+            "description": "Platform-specific payload overrides (iOS/Android)"
+          },
+          {
+            "name": "sound",
+            "python_name": "sound",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Notification sound name"
+            },
+            "required": false,
+            "description": "Notification sound name"
+          },
+          {
+            "name": "send_to_unsubscribed",
+            "python_name": "send_to_unsubscribed",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Send even if person is unsubscribed"
+            },
+            "required": false,
+            "description": "Send even if person is unsubscribed"
+          },
+          {
+            "name": "queue_draft",
+            "python_name": "queue_draft",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Queue as draft instead of sending immediately"
+            },
+            "required": false,
+            "description": "Queue as draft instead of sending immediately"
+          },
+          {
+            "name": "disable_message_retention",
+            "python_name": "disable_message_retention",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Do not store message content"
+            },
+            "required": false,
+            "description": "Do not store message content"
+          },
+          {
+            "name": "send_at",
+            "python_name": "send_at",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Unix timestamp for scheduled delivery"
+            },
+            "required": false,
+            "description": "Unix timestamp for scheduled delivery"
+          }
+        ],
+        "params_type_name": "TransactionalPushCreateParams",
+        "response_type": "TransactionalSendResponse",
+        "description": "Sends a transactional push notification to a single recipient. Can use a template or provide inline title and message. Requires push notifications to be configured in the workspace.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "TransactionalSendResponse",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "transactional_inbox_message": [
+      {
+        "method_name": "send_transactional_inbox_message",
+        "http_method": "post",
+        "path": "/v1/send/inbox_message",
+        "entity": "transactional_inbox_message",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "transactional_message_id",
+            "python_name": "transactional_message_id",
+            "type": "Any",
+            "schema": {
+              "type": [
+                "integer",
+                "string"
+              ],
+              "description": "Template ID or trigger name. Must reference an Inbox-type transactional message."
+            },
+            "required": true,
+            "description": "Template ID or trigger name. Must reference an Inbox-type transactional message."
+          },
+          {
+            "name": "identifiers",
+            "python_name": "identifiers",
+            "type": "dict[str, Any]",
+            "schema": {
+              "type": "object",
+              "description": "Recipient identity. One of: {\"id\": \"...\"}, {\"email\": \"...\"}, or {\"cio_id\": \"...\"}"
+            },
+            "required": true,
+            "description": "Recipient identity. One of: {\"id\": \"...\"}, {\"email\": \"...\"}, or {\"cio_id\": \"...\"}"
+          },
+          {
+            "name": "message_data",
+            "python_name": "message_data",
+            "type": "dict[str, Any]",
+            "schema": {
+              "type": "object",
+              "description": "Key-value pairs available as {{trigger.<key>}} in the inbox message template"
+            },
+            "required": false,
+            "description": "Key-value pairs available as {{trigger.<key>}} in the inbox message template"
+          }
+        ],
+        "params_type_name": "TransactionalInboxMessageCreateParams",
+        "response_type": "TransactionalSendResponse",
+        "description": "Sends a transactional in-app inbox message to a single recipient. Always requires a pre-built Inbox-type transactional message template (transactional_message_id). Messages appear in the recipient's notification inbox via the Customer.io SDK.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "TransactionalSendResponse",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "broadcast_trigger": [
+      {
+        "method_name": "trigger_broadcast",
+        "http_method": "post",
+        "path": "/v1/campaigns/{campaign_id}/triggers",
+        "entity": "broadcast_trigger",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "data",
+            "python_name": "data",
+            "type": "dict[str, Any]",
+            "schema": {
+              "type": "object",
+              "description": "Global data available as {{trigger.<key>}} in broadcast messages"
+            },
+            "required": false,
+            "description": "Global data available as {{trigger.<key>}} in broadcast messages"
+          },
+          {
+            "name": "recipients",
+            "python_name": "recipients",
+            "type": "dict[str, Any]",
+            "schema": {
+              "type": "object",
+              "description": "Filter object to define audience (overrides UI-defined recipients). Supports and/or/not/segment/attribute conditions."
+            },
+            "required": false,
+            "description": "Filter object to define audience (overrides UI-defined recipients). Supports and/or/not/segment/attribute conditions."
+          },
+          {
+            "name": "ids",
+            "python_name": "ids",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "description": "List of profile IDs to target (max 10,000)",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "List of profile IDs to target (max 10,000)"
+          },
+          {
+            "name": "emails",
+            "python_name": "emails",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "description": "List of email addresses to target (max 10,000)",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "List of email addresses to target (max 10,000)"
+          },
+          {
+            "name": "per_user_data",
+            "python_name": "per_user_data",
+            "type": "list[dict[str, Any]]",
+            "schema": {
+              "type": "array",
+              "description": "Per-recipient custom data: [{\"id\": \"user1\", \"data\": {...}}, ...]",
+              "items": {
+                "type": "object"
+              }
+            },
+            "required": false,
+            "description": "Per-recipient custom data: [{\"id\": \"user1\", \"data\": {...}}, ...]"
+          },
+          {
+            "name": "data_file_url",
+            "python_name": "data_file_url",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "URL to a JSON Lines file with per-user data"
+            },
+            "required": false,
+            "description": "URL to a JSON Lines file with per-user data"
+          },
+          {
+            "name": "id_ignore_missing",
+            "python_name": "id_ignore_missing",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Ignore IDs that do not match existing profiles (default false)"
+            },
+            "required": false,
+            "description": "Ignore IDs that do not match existing profiles (default false)"
+          },
+          {
+            "name": "email_ignore_missing",
+            "python_name": "email_ignore_missing",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Ignore emails that do not match existing profiles"
+            },
+            "required": false,
+            "description": "Ignore emails that do not match existing profiles"
+          },
+          {
+            "name": "email_add_duplicates",
+            "python_name": "email_add_duplicates",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Send to all profiles sharing an email address"
+            },
+            "required": false,
+            "description": "Send to all profiles sharing an email address"
+          },
+          {
+            "name": "campaign_id",
+            "python_name": "campaign_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The broadcast campaign identifier (found in Triggering Details)"
+          }
+        ],
+        "params_type_name": "BroadcastTriggerCreateParams",
+        "response_type": "BroadcastTriggerResponse",
+        "description": "Triggers an API-triggered broadcast campaign. The broadcast must be configured as API-triggered in the Customer.io UI. Cannot be triggered more than once every 10 seconds, with a maximum of 5 queued broadcasts per campaign. Recipients must already exist in the workspace.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "BroadcastTriggerResponse",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ]
+  },
+  "search_schemas": {
+    "campaigns": {
+      "entity": "campaigns",
+      "data_type_name": "CampaignsSearchData",
+      "filter_type_name": "CampaignsSearchFilter",
+      "in_filter_type_name": "CampaignsInFilter",
+      "any_value_filter_type_name": "CampaignsAnyValueFilter",
+      "string_filter_type_name": "CampaignsStringFilter",
+      "sort_filter_type_name": "CampaignsSortFilter",
+      "result_type_name": "CampaignsSearchResult",
+      "query_type_name": "CampaignsSearchQuery",
+      "condition_prefix": "Campaigns",
+      "condition_type_name": "CampaignsCondition",
+      "fields": [
+        {
+          "name": "actions",
+          "python_name": "actions",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Actions defined in this campaign"
+        },
+        {
+          "name": "active",
+          "python_name": "active",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the campaign is active"
+        },
+        {
+          "name": "created",
+          "python_name": "created",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Creation timestamp (Unix)"
+        },
+        {
+          "name": "created_by",
+          "python_name": "created_by",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Who created the campaign"
+        },
+        {
+          "name": "date_attribute",
+          "python_name": "date_attribute",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date attribute used for date-triggered campaigns"
+        },
+        {
+          "name": "deduplicate_id",
+          "python_name": "deduplicate_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Deduplication identifier"
+        },
+        {
+          "name": "event_name",
+          "python_name": "event_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Event name that triggers the campaign"
+        },
+        {
+          "name": "first_started",
+          "python_name": "first_started",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "When the campaign was first started (Unix)"
+        },
+        {
+          "name": "frequency",
+          "python_name": "frequency",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "How frequently a person can receive this campaign"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unique campaign identifier"
+        },
+        {
+          "name": "msg_templates",
+          "python_name": "msg_templates",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Message templates used in the campaign"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Campaign name"
+        },
+        {
+          "name": "start_hour",
+          "python_name": "start_hour",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Hour of the day to trigger"
+        },
+        {
+          "name": "start_minutes",
+          "python_name": "start_minutes",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Minute of the hour to trigger"
+        },
+        {
+          "name": "state",
+          "python_name": "state",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Campaign status (draft, active, stopped)"
+        },
+        {
+          "name": "tags",
+          "python_name": "tags",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Tags associated with the campaign"
+        },
+        {
+          "name": "timezone",
+          "python_name": "timezone",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timezone for trigger scheduling"
+        },
+        {
+          "name": "trigger_segment_ids",
+          "python_name": "trigger_segment_ids",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Segment IDs that trigger this campaign"
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Campaign trigger type"
+        },
+        {
+          "name": "updated",
+          "python_name": "updated",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Last update timestamp (Unix)"
+        },
+        {
+          "name": "use_customer_timezone",
+          "python_name": "use_customer_timezone",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether to use the customer's timezone"
+        }
+      ]
+    },
+    "campaign_actions": {
+      "entity": "campaign_actions",
+      "data_type_name": "CampaignActionsSearchData",
+      "filter_type_name": "CampaignActionsSearchFilter",
+      "in_filter_type_name": "CampaignActionsInFilter",
+      "any_value_filter_type_name": "CampaignActionsAnyValueFilter",
+      "string_filter_type_name": "CampaignActionsStringFilter",
+      "sort_filter_type_name": "CampaignActionsSortFilter",
+      "result_type_name": "CampaignActionsSearchResult",
+      "query_type_name": "CampaignActionsSearchQuery",
+      "condition_prefix": "CampaignActions",
+      "condition_type_name": "CampaignActionsCondition",
+      "fields": [
+        {
+          "name": "bcc",
+          "python_name": "bcc",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "BCC addresses"
+        },
+        {
+          "name": "body",
+          "python_name": "body",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Action body content (HTML for emails)"
+        },
+        {
+          "name": "campaign_id",
+          "python_name": "campaign_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Parent campaign ID"
+        },
+        {
+          "name": "created",
+          "python_name": "created",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Creation timestamp (Unix)"
+        },
+        {
+          "name": "deduplicate_id",
+          "python_name": "deduplicate_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Deduplication identifier"
+        },
+        {
+          "name": "editor",
+          "python_name": "editor",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Editor used to create the action"
+        },
+        {
+          "name": "fake_bcc",
+          "python_name": "fake_bcc",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether to use fake BCC"
+        },
+        {
+          "name": "from",
+          "python_name": "from_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "From address"
+        },
+        {
+          "name": "from_id",
+          "python_name": "from_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Sender identity ID"
+        },
+        {
+          "name": "headers",
+          "python_name": "headers",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Custom email headers as JSON"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique action identifier"
+        },
+        {
+          "name": "language",
+          "python_name": "language",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Language variant"
+        },
+        {
+          "name": "layout",
+          "python_name": "layout",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Layout template used"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Action name"
+        },
+        {
+          "name": "parent_action_id",
+          "python_name": "parent_action_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Parent action ID for language variants"
+        },
+        {
+          "name": "preheader_text",
+          "python_name": "preheader_text",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Email preheader/preview text"
+        },
+        {
+          "name": "preprocessor",
+          "python_name": "preprocessor",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "CSS preprocessor setting"
+        },
+        {
+          "name": "recipient",
+          "python_name": "recipient",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Recipient address"
+        },
+        {
+          "name": "recipient_environment_id",
+          "python_name": "recipient_environment_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Recipient environment ID"
+        },
+        {
+          "name": "reply_to",
+          "python_name": "reply_to",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Reply-to address"
+        },
+        {
+          "name": "reply_to_id",
+          "python_name": "reply_to_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Reply-to sender identity ID"
+        },
+        {
+          "name": "request_method",
+          "python_name": "request_method",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "HTTP request method for webhook actions"
+        },
+        {
+          "name": "sending_state",
+          "python_name": "sending_state",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Sending behavior (automatic or draft)"
+        },
+        {
+          "name": "subject",
+          "python_name": "subject",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Email subject line"
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Action type (email, webhook, twilio, push, slack, in_app, whatsapp)"
+        },
+        {
+          "name": "updated",
+          "python_name": "updated",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Last update timestamp (Unix)"
+        },
+        {
+          "name": "url",
+          "python_name": "url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Webhook URL (for webhook actions)"
+        }
+      ]
+    },
+    "newsletters": {
+      "entity": "newsletters",
+      "data_type_name": "NewslettersSearchData",
+      "filter_type_name": "NewslettersSearchFilter",
+      "in_filter_type_name": "NewslettersInFilter",
+      "any_value_filter_type_name": "NewslettersAnyValueFilter",
+      "string_filter_type_name": "NewslettersStringFilter",
+      "sort_filter_type_name": "NewslettersSortFilter",
+      "result_type_name": "NewslettersSearchResult",
+      "query_type_name": "NewslettersSearchQuery",
+      "condition_prefix": "Newsletters",
+      "condition_type_name": "NewslettersCondition",
+      "fields": [
+        {
+          "name": "content_ids",
+          "python_name": "content_ids",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Content variant IDs for this newsletter"
+        },
+        {
+          "name": "created",
+          "python_name": "created",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Creation timestamp (Unix)"
+        },
+        {
+          "name": "deduplicate_id",
+          "python_name": "deduplicate_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Deduplication identifier"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unique newsletter identifier"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Newsletter name"
+        },
+        {
+          "name": "sent_at",
+          "python_name": "sent_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "When the newsletter was last sent (Unix)"
+        },
+        {
+          "name": "tags",
+          "python_name": "tags",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Tags associated with the newsletter"
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Channel type (email, webhook, twilio, push, in_app, inbox)"
+        },
+        {
+          "name": "updated",
+          "python_name": "updated",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Last update timestamp (Unix)"
+        }
+      ]
+    }
+  }
+}

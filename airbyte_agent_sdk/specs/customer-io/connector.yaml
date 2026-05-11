@@ -1,0 +1,2838 @@
+openapi: 3.1.0
+
+info:
+  title: Customer.io App API Connector
+  version: 1.0.0
+  description: >
+    Connector for the Customer.io App API, providing read access to campaigns,
+    newsletters, segments, messages, activities, sender identities, snippets,
+    collections, reporting webhooks, and exports. Customer.io is a messaging
+    platform that lets you send automated emails, push notifications, SMS, and
+    in-app messages based on customer behavior. This connector retrieves data
+    from the App API (not the Track API) and requires a Bearer-type App API key
+    generated in your Customer.io workspace settings.
+  x-airbyte-connector-name: customer-io
+  x-airbyte-connector-definition-id: 34f697bc-b989-4eda-b06f-d0f39b88825b
+  x-airbyte-replication-version: "0.4.1"
+  x-airbyte-replication-compatibility: ">=0.4.1, <1.0.0"
+  x-airbyte-external-documentation-urls:
+    - type: api_reference
+      title: Customer.io App API Documentation
+      url: https://customer.io/docs/api/app/
+  x-airbyte-example-questions:
+    direct:
+      - "List all campaigns in Customer.io"
+      - "Show me all newsletters"
+      - "What segments are defined in my workspace?"
+      - "Get the details of campaign 42"
+      - "List all sender identities"
+      - "Show me all reporting webhooks"
+      - "What snippets do we have?"
+      - "List all collections"
+      - "Show recent activities"
+      - "Create a snippet called 'footer' with content '<p>Thanks!</p>'"
+      - "Update the snippet 'header' to say 'Welcome back!'"
+      - "Create a new collection called 'products'"
+      - "Create a reporting webhook for email events"
+      - "Create a manual segment called 'VIP Customers'"
+      - "Export all customers matching a segment"
+      - "Send a transactional email to user@example.com"
+      - "Send an SMS notification to +15551234567"
+      - "Send a push notification to user 123"
+      - "Trigger broadcast campaign 42"
+    search:
+      - "Which campaigns are currently active?"
+      - "Find newsletters sent in the last month"
+      - "What are the most recent email deliveries?"
+      - "Which exports have completed?"
+    unsupported:
+      - "Create a new campaign"
+      - "Delete a segment"
+      - "Delete a snippet"
+      - "Delete a collection"
+      - "Delete a reporting webhook"
+      - "Delete a newsletter"
+      - "Send a newsletter via API"
+      - "Schedule a newsletter via API"
+  x-airbyte-replication-config:
+    title: Replication Configuration
+    description: Settings for data replication from Customer.io.
+    properties:
+      start_date:
+        type: string
+        title: Start Date
+        description: UTC date and time in the format YYYY-MM-DDTHH:mm:ssZ from which to start replicating data.
+        format: date-time
+    required:
+      - start_date
+    replication_config_key_mapping:
+      start_date: start_date
+    replication_config_constants:
+      start_date: "{{ day_delta(-180, '%Y-%m-%dT%H:%M:%SZ') }}"
+  x-airbyte-context-store:
+    entities:
+      - entity: campaigns
+        x-airbyte-name: campaigns
+        suggested: true
+        fields:
+          - name: actions
+            type: ["null", "array"]
+            description: Actions defined in this campaign
+          - name: active
+            type: ["null", "boolean"]
+            description: Whether the campaign is active
+          - name: created
+            type: ["null", "integer"]
+            description: Creation timestamp (Unix)
+          - name: created_by
+            type: ["null", "string"]
+            description: Who created the campaign
+          - name: date_attribute
+            type: ["null", "string"]
+            description: Date attribute used for date-triggered campaigns
+          - name: deduplicate_id
+            type: ["null", "string"]
+            description: Deduplication identifier
+          - name: event_name
+            type: ["null", "string"]
+            description: Event name that triggers the campaign
+          - name: first_started
+            type: ["null", "integer"]
+            description: When the campaign was first started (Unix)
+          - name: frequency
+            type: ["null", "string"]
+            description: How frequently a person can receive this campaign
+          - name: id
+            type: ["null", "integer"]
+            description: Unique campaign identifier
+          - name: msg_templates
+            type: ["null", "array"]
+            description: Message templates used in the campaign
+          - name: name
+            type: ["null", "string"]
+            description: Campaign name
+          - name: start_hour
+            type: ["null", "integer"]
+            description: Hour of the day to trigger
+          - name: start_minutes
+            type: ["null", "integer"]
+            description: Minute of the hour to trigger
+          - name: state
+            type: ["null", "string"]
+            description: Campaign status (draft, active, stopped)
+          - name: tags
+            type: ["null", "array"]
+            description: Tags associated with the campaign
+          - name: timezone
+            type: ["null", "string"]
+            description: Timezone for trigger scheduling
+          - name: trigger_segment_ids
+            type: ["null", "array"]
+            description: Segment IDs that trigger this campaign
+          - name: type
+            type: ["null", "string"]
+            description: Campaign trigger type
+          - name: updated
+            type: ["null", "integer"]
+            description: Last update timestamp (Unix)
+          - name: use_customer_timezone
+            type: ["null", "boolean"]
+            description: Whether to use the customer's timezone
+      - entity: campaign_actions
+        x-airbyte-name: campaigns_actions
+        suggested: true
+        fields:
+          - name: bcc
+            type: ["null", "string"]
+            description: BCC addresses
+          - name: body
+            type: ["null", "string"]
+            description: Action body content (HTML for emails)
+          - name: campaign_id
+            type: ["null", "integer"]
+            description: Parent campaign ID
+          - name: created
+            type: ["null", "integer"]
+            description: Creation timestamp (Unix)
+          - name: deduplicate_id
+            type: ["null", "string"]
+            description: Deduplication identifier
+          - name: editor
+            type: ["null", "string"]
+            description: Editor used to create the action
+          - name: fake_bcc
+            type: ["null", "boolean"]
+            description: Whether to use fake BCC
+          - name: from
+            type: ["null", "string"]
+            description: From address
+          - name: from_id
+            type: ["null", "string"]
+            description: Sender identity ID
+          - name: headers
+            type: ["null", "string"]
+            description: Custom email headers as JSON
+          - name: id
+            type: ["null", "string"]
+            description: Unique action identifier
+          - name: language
+            type: ["null", "string"]
+            description: Language variant
+          - name: layout
+            type: ["null", "string"]
+            description: Layout template used
+          - name: name
+            type: ["null", "string"]
+            description: Action name
+          - name: parent_action_id
+            type: ["null", "integer"]
+            description: Parent action ID for language variants
+          - name: preheader_text
+            type: ["null", "string"]
+            description: Email preheader/preview text
+          - name: preprocessor
+            type: ["null", "string"]
+            description: CSS preprocessor setting
+          - name: recipient
+            type: ["null", "string"]
+            description: Recipient address
+          - name: recipient_environment_id
+            type: ["null", "integer"]
+            description: Recipient environment ID
+          - name: reply_to
+            type: ["null", "string"]
+            description: Reply-to address
+          - name: reply_to_id
+            type: ["null", "string"]
+            description: Reply-to sender identity ID
+          - name: request_method
+            type: ["null", "string"]
+            description: HTTP request method for webhook actions
+          - name: sending_state
+            type: ["null", "string"]
+            description: Sending behavior (automatic or draft)
+          - name: subject
+            type: ["null", "string"]
+            description: Email subject line
+          - name: type
+            type: ["null", "string"]
+            description: Action type (email, webhook, twilio, push, slack, in_app, whatsapp)
+          - name: updated
+            type: ["null", "integer"]
+            description: Last update timestamp (Unix)
+          - name: url
+            type: ["null", "string"]
+            description: Webhook URL (for webhook actions)
+      - entity: newsletters
+        x-airbyte-name: newsletters
+        suggested: true
+        fields:
+          - name: content_ids
+            type: ["null", "array"]
+            description: Content variant IDs for this newsletter
+          - name: created
+            type: ["null", "integer"]
+            description: Creation timestamp (Unix)
+          - name: deduplicate_id
+            type: ["null", "string"]
+            description: Deduplication identifier
+          - name: id
+            type: ["null", "integer"]
+            description: Unique newsletter identifier
+          - name: name
+            type: ["null", "string"]
+            description: Newsletter name
+          - name: sent_at
+            type: ["null", "integer"]
+            description: When the newsletter was last sent (Unix)
+          - name: tags
+            type: ["null", "array"]
+            description: Tags associated with the newsletter
+          - name: type
+            type: ["null", "string"]
+            description: Channel type (email, webhook, twilio, push, in_app, inbox)
+          - name: updated
+            type: ["null", "integer"]
+            description: Last update timestamp (Unix)
+  x-airbyte-entity-relationships:
+    - source_entity: campaign_actions
+      target_entity: campaigns
+      foreign_key: campaign_id
+      target_key: id
+      cardinality: many_to_one
+      description: Campaign actions belong to a campaign
+
+
+servers:
+  - url: https://api.customer.io
+    description: Customer.io App API server (US region)
+
+security:
+  - bearerAuth: []
+
+paths:
+  # ── Campaigns ──────────────────────────────────────────
+  /v1/campaigns:
+    get:
+      summary: List campaigns
+      description: Returns a list of all campaigns in the workspace.
+      operationId: listCampaigns
+      x-airbyte-entity: campaigns
+      x-airbyte-action: list
+      x-airbyte-preferred-for-check: true
+      x-airbyte-record-extractor: $.campaigns
+      x-airbyte-no-pagination: "Returns all campaigns in a single response without pagination"
+      responses:
+        "200":
+          description: List of campaigns
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  campaigns:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Campaign"
+        "401":
+          description: Unauthorized
+
+  /v1/campaigns/{campaign_id}:
+    get:
+      summary: Get a campaign
+      description: Returns a single campaign by ID.
+      operationId: getCampaign
+      x-airbyte-entity: campaigns
+      x-airbyte-action: get
+      x-airbyte-record-extractor: $.campaign
+      parameters:
+        - name: campaign_id
+          in: path
+          required: true
+          description: The campaign identifier
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Campaign object
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  campaign:
+                    $ref: "#/components/schemas/Campaign"
+        "401":
+          description: Unauthorized
+        "404":
+          description: Campaign not found
+
+  # ── Campaign Actions ───────────────────────────────────
+  /v1/campaigns/{campaign_id}/actions:
+    get:
+      summary: List campaign actions
+      description: Returns a paginated list of actions for a campaign.
+      operationId: listCampaignActions
+      x-airbyte-entity: campaign_actions
+      x-airbyte-action: list
+      x-airbyte-record-extractor: $.actions
+      x-airbyte-meta-extractor:
+        next: $.next
+      parameters:
+        - name: campaign_id
+          in: path
+          required: true
+          description: The campaign identifier
+          schema:
+            type: integer
+        - name: start
+          in: query
+          required: false
+          description: Pagination cursor for the next page
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of campaign actions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  actions:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/CampaignAction"
+                  next:
+                    type: string
+                    description: Cursor for the next page
+        "401":
+          description: Unauthorized
+        "404":
+          description: Campaign not found
+
+  /v1/campaigns/{campaign_id}/actions/{action_id}:
+    get:
+      summary: Get a campaign action
+      description: Returns a single campaign action by ID.
+      operationId: getCampaignAction
+      x-airbyte-entity: campaign_actions
+      x-airbyte-action: get
+      x-airbyte-record-extractor: $.action
+      parameters:
+        - name: campaign_id
+          in: path
+          required: true
+          description: The campaign identifier
+          schema:
+            type: integer
+        - name: action_id
+          in: path
+          required: true
+          description: The action identifier
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Campaign action object
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  action:
+                    $ref: "#/components/schemas/CampaignAction"
+        "401":
+          description: Unauthorized
+        "404":
+          description: Action not found
+
+  # ── Newsletters ────────────────────────────────────────
+  /v1/newsletters:
+    get:
+      summary: List newsletters
+      description: Returns a paginated list of newsletters.
+      operationId: listNewsletters
+      x-airbyte-entity: newsletters
+      x-airbyte-action: list
+      x-airbyte-record-extractor: $.newsletters
+      x-airbyte-meta-extractor:
+        next: $.next
+      parameters:
+        - name: start
+          in: query
+          required: false
+          description: Pagination cursor for the next page
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: false
+          description: Maximum number of newsletters to return
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 100
+        - name: sort
+          in: query
+          required: false
+          description: Sort order
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+      responses:
+        "200":
+          description: List of newsletters
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  newsletters:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Newsletter"
+                  next:
+                    type: string
+                    description: Cursor for the next page
+        "401":
+          description: Unauthorized
+
+  /v1/newsletters/{newsletter_id}:
+    get:
+      summary: Get a newsletter
+      description: Returns a single newsletter by ID.
+      operationId: getNewsletter
+      x-airbyte-entity: newsletters
+      x-airbyte-action: get
+      x-airbyte-record-extractor: $.newsletter
+      parameters:
+        - name: newsletter_id
+          in: path
+          required: true
+          description: The newsletter identifier
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Newsletter object
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  newsletter:
+                    $ref: "#/components/schemas/Newsletter"
+        "401":
+          description: Unauthorized
+        "404":
+          description: Newsletter not found
+
+  # ── Segments ───────────────────────────────────────────
+  /v1/segments:
+    get:
+      summary: List segments
+      description: Returns all segments in the workspace.
+      operationId: listSegments
+      x-airbyte-entity: segments
+      x-airbyte-action: list
+      x-airbyte-record-extractor: $.segments
+      x-airbyte-no-pagination: "Returns all segments in a single response without pagination"
+      responses:
+        "200":
+          description: List of segments
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  segments:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Segment"
+        "401":
+          description: Unauthorized
+    post:
+      summary: Create a manual segment
+      description: Creates a new empty manual segment. People can be added to it separately.
+      operationId: createSegment
+      x-airbyte-entity: segments
+      x-airbyte-action: create
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SegmentCreateParams"
+      responses:
+        "200":
+          description: Segment created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  segment:
+                    $ref: "#/components/schemas/Segment"
+        "401":
+          description: Unauthorized
+
+  /v1/segments/{segment_id}:
+    get:
+      summary: Get a segment
+      description: Returns a single segment by ID.
+      operationId: getSegment
+      x-airbyte-entity: segments
+      x-airbyte-action: get
+      x-airbyte-record-extractor: $.segment
+      parameters:
+        - name: segment_id
+          in: path
+          required: true
+          description: The segment identifier
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Segment object
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  segment:
+                    $ref: "#/components/schemas/Segment"
+        "401":
+          description: Unauthorized
+        "404":
+          description: Segment not found
+
+  # ── Messages ───────────────────────────────────────────
+  /v1/messages:
+    get:
+      summary: List messages
+      description: Returns a paginated list of message deliveries.
+      operationId: listMessages
+      x-airbyte-entity: messages
+      x-airbyte-action: list
+      x-airbyte-record-extractor: $.messages
+      x-airbyte-meta-extractor:
+        next: $.next
+      parameters:
+        - name: start
+          in: query
+          required: false
+          description: Pagination cursor for the next page
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: false
+          description: Maximum number of messages to return
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 50
+        - name: type
+          in: query
+          required: false
+          description: Filter messages by channel type
+          schema:
+            type: string
+            enum:
+              - email
+              - webhook
+              - twilio
+              - whatsapp
+              - slack
+              - push
+              - in_app
+        - name: metric
+          in: query
+          required: false
+          description: Filter messages by delivery metric
+          schema:
+            type: string
+            enum:
+              - attempted
+              - sent
+              - delivered
+              - opened
+              - clicked
+              - converted
+              - bounced
+              - spammed
+              - unsubscribed
+              - dropped
+              - failed
+              - undeliverable
+        - name: campaign_id
+          in: query
+          required: false
+          description: Filter by campaign ID
+          schema:
+            type: integer
+        - name: newsletter_id
+          in: query
+          required: false
+          description: Filter by newsletter ID
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of messages
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Message"
+                  next:
+                    type: string
+                    description: Cursor for the next page
+        "401":
+          description: Unauthorized
+
+  /v1/messages/{message_id}:
+    get:
+      summary: Get a message
+      description: >
+        Returns a single message delivery by ID. Untested because the
+        test workspace has no message deliveries to retrieve.
+      operationId: getMessage
+      x-airbyte-entity: messages
+      x-airbyte-action: get
+      x-airbyte-untested: true
+      x-airbyte-record-extractor: $.message
+      parameters:
+        - name: message_id
+          in: path
+          required: true
+          description: The message delivery identifier
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Message object
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    $ref: "#/components/schemas/Message"
+        "401":
+          description: Unauthorized
+        "404":
+          description: Message not found
+
+  # ── Activities ─────────────────────────────────────────
+  /v1/activities:
+    get:
+      summary: List activities
+      description: Returns a paginated list of activities in the workspace.
+      operationId: listActivities
+      x-airbyte-entity: activities
+      x-airbyte-action: list
+      x-airbyte-record-extractor: $.activities
+      x-airbyte-meta-extractor:
+        next: $.next
+      parameters:
+        - name: start
+          in: query
+          required: false
+          description: Pagination cursor for the next page
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: false
+          description: Maximum number of activities to return
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+        - name: type
+          in: query
+          required: false
+          description: Filter by activity type
+          schema:
+            type: string
+        - name: name
+          in: query
+          required: false
+          description: Filter by event name
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of activities
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  activities:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Activity"
+                  next:
+                    type: string
+                    description: Cursor for the next page
+        "401":
+          description: Unauthorized
+
+  # ── Sender Identities ──────────────────────────────────
+  /v1/sender_identities:
+    get:
+      summary: List sender identities
+      description: Returns a paginated list of sender identities.
+      operationId: listSenderIdentities
+      x-airbyte-entity: sender_identities
+      x-airbyte-action: list
+      x-airbyte-record-extractor: $.sender_identities
+      x-airbyte-meta-extractor:
+        next: $.next
+      parameters:
+        - name: start
+          in: query
+          required: false
+          description: Pagination cursor for the next page
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: false
+          description: Maximum number of sender identities to return
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+        - name: sort
+          in: query
+          required: false
+          description: Sort order
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+      responses:
+        "200":
+          description: List of sender identities
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  sender_identities:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/SenderIdentity"
+                  next:
+                    type: string
+                    description: Cursor for the next page
+        "401":
+          description: Unauthorized
+
+  /v1/sender_identities/{sender_id}:
+    get:
+      summary: Get a sender identity
+      description: Returns a single sender identity by ID.
+      operationId: getSenderIdentity
+      x-airbyte-entity: sender_identities
+      x-airbyte-action: get
+      x-airbyte-record-extractor: $.sender_identity
+      parameters:
+        - name: sender_id
+          in: path
+          required: true
+          description: The sender identity identifier
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Sender identity object
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  sender_identity:
+                    $ref: "#/components/schemas/SenderIdentity"
+        "401":
+          description: Unauthorized
+        "404":
+          description: Sender identity not found
+
+  # ── Snippets ───────────────────────────────────────────
+  /v1/snippets:
+    get:
+      summary: List snippets
+      description: Returns all snippets in the workspace.
+      operationId: listSnippets
+      x-airbyte-entity: snippets
+      x-airbyte-action: list
+      x-airbyte-record-extractor: $.snippets
+      x-airbyte-no-pagination: "Returns all snippets in a single response without pagination"
+      responses:
+        "200":
+          description: List of snippets
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  snippets:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Snippet"
+        "401":
+          description: Unauthorized
+    post:
+      summary: Create a snippet
+      description: Creates a new reusable content snippet. Returns 422 if a snippet with the same name already exists.
+      operationId: createSnippet
+      x-airbyte-entity: snippets
+      x-airbyte-action: create
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SnippetCreateParams"
+      responses:
+        "200":
+          description: Snippet created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  snippet:
+                    $ref: "#/components/schemas/Snippet"
+        "401":
+          description: Unauthorized
+        "422":
+          description: Snippet with this name already exists
+    put:
+      summary: Update a snippet
+      description: Updates an existing snippet by name, or creates it if it does not exist (upsert behavior).
+      operationId: updateSnippet
+      x-airbyte-entity: snippets
+      x-airbyte-action: update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SnippetUpdateParams"
+      responses:
+        "200":
+          description: Snippet updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  snippet:
+                    $ref: "#/components/schemas/Snippet"
+        "401":
+          description: Unauthorized
+
+  # ── Collections ────────────────────────────────────────
+  /v1/collections:
+    get:
+      summary: List collections
+      description: Returns all collections in the workspace.
+      operationId: listCollections
+      x-airbyte-entity: collections
+      x-airbyte-action: list
+      x-airbyte-untested: true
+      x-airbyte-record-extractor: $.collections
+      x-airbyte-no-pagination: "Returns all collections in a single response without pagination"
+      responses:
+        "200":
+          description: List of collections
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  collections:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Collection"
+        "401":
+          description: Unauthorized
+    post:
+      summary: Create a collection
+      description: Creates a new data collection with inline data or a URL source.
+      operationId: createCollection
+      x-airbyte-entity: collections
+      x-airbyte-action: create
+      x-airbyte-untested: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CollectionCreateParams"
+      responses:
+        "200":
+          description: Collection created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  collection:
+                    $ref: "#/components/schemas/Collection"
+        "401":
+          description: Unauthorized
+
+  /v1/collections/{collection_id}:
+    get:
+      summary: Get a collection
+      description: Returns a single collection by ID.
+      operationId: getCollection
+      x-airbyte-entity: collections
+      x-airbyte-action: get
+      x-airbyte-untested: true
+      x-airbyte-record-extractor: $.collection
+      parameters:
+        - name: collection_id
+          in: path
+          required: true
+          description: The collection identifier
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Collection object
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  collection:
+                    $ref: "#/components/schemas/Collection"
+        "401":
+          description: Unauthorized
+        "404":
+          description: Collection not found
+    put:
+      summary: Update a collection
+      description: Updates an existing collection's name, data, or URL source.
+      operationId: updateCollection
+      x-airbyte-entity: collections
+      x-airbyte-action: update
+      x-airbyte-untested: true
+      parameters:
+        - name: collection_id
+          in: path
+          required: true
+          description: The collection identifier
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CollectionUpdateParams"
+      responses:
+        "200":
+          description: Collection updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  collection:
+                    $ref: "#/components/schemas/Collection"
+        "401":
+          description: Unauthorized
+        "404":
+          description: Collection not found
+
+  # ── Reporting Webhooks ─────────────────────────────────
+  /v1/reporting_webhooks:
+    get:
+      summary: List reporting webhooks
+      description: Returns all reporting webhooks in the workspace.
+      operationId: listReportingWebhooks
+      x-airbyte-entity: reporting_webhooks
+      x-airbyte-action: list
+      x-airbyte-untested: true
+      x-airbyte-record-extractor: $.reporting_webhooks
+      x-airbyte-no-pagination: "Returns all reporting webhooks in a single response without pagination"
+      responses:
+        "200":
+          description: List of reporting webhooks
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reporting_webhooks:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ReportingWebhook"
+        "401":
+          description: Unauthorized
+    post:
+      summary: Create a reporting webhook
+      description: Creates a new reporting webhook to receive event notifications at the specified endpoint.
+      operationId: createReportingWebhook
+      x-airbyte-entity: reporting_webhooks
+      x-airbyte-action: create
+      x-airbyte-untested: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReportingWebhookCreateParams"
+      responses:
+        "200":
+          description: Reporting webhook created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReportingWebhook"
+        "401":
+          description: Unauthorized
+
+  /v1/reporting_webhooks/{webhook_id}:
+    get:
+      summary: Get a reporting webhook
+      description: Returns a single reporting webhook by ID.
+      operationId: getReportingWebhook
+      x-airbyte-entity: reporting_webhooks
+      x-airbyte-action: get
+      x-airbyte-untested: true
+      x-airbyte-record-extractor: $.reporting_webhook
+      parameters:
+        - name: webhook_id
+          in: path
+          required: true
+          description: The reporting webhook identifier
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Reporting webhook object
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reporting_webhook:
+                    $ref: "#/components/schemas/ReportingWebhook"
+        "401":
+          description: Unauthorized
+        "404":
+          description: Reporting webhook not found
+    put:
+      summary: Update a reporting webhook
+      description: Updates an existing reporting webhook's configuration.
+      operationId: updateReportingWebhook
+      x-airbyte-entity: reporting_webhooks
+      x-airbyte-action: update
+      x-airbyte-untested: true
+      parameters:
+        - name: webhook_id
+          in: path
+          required: true
+          description: The reporting webhook identifier
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReportingWebhookUpdateParams"
+      responses:
+        "200":
+          description: Reporting webhook updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReportingWebhook"
+        "401":
+          description: Unauthorized
+        "404":
+          description: Reporting webhook not found
+
+  # ── Exports ────────────────────────────────────────────
+  /v1/exports:
+    get:
+      summary: List exports
+      description: Returns all exports in the workspace.
+      operationId: listExports
+      x-airbyte-entity: exports
+      x-airbyte-action: list
+      x-airbyte-untested: true
+      x-airbyte-record-extractor: $.exports
+      x-airbyte-no-pagination: "Returns all exports in a single response without pagination"
+      responses:
+        "200":
+          description: List of exports
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  exports:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Export"
+        "401":
+          description: Unauthorized
+
+  /v1/exports/customers:
+    post:
+      summary: Create a customer export
+      description: Triggers a new export of customer data. Use filters to select which customers to export.
+      operationId: createCustomerExport
+      x-airbyte-entity: exports
+      x-airbyte-action: create
+      x-airbyte-untested: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ExportCreateParams"
+      responses:
+        "200":
+          description: Export job created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  export:
+                    $ref: "#/components/schemas/Export"
+        "401":
+          description: Unauthorized
+
+  /v1/exports/{export_id}:
+    get:
+      summary: Get an export
+      description: Returns a single export by ID.
+      operationId: getExport
+      x-airbyte-entity: exports
+      x-airbyte-action: get
+      x-airbyte-untested: true
+      x-airbyte-record-extractor: $.export
+      parameters:
+        - name: export_id
+          in: path
+          required: true
+          description: The export identifier
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Export object
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  export:
+                    $ref: "#/components/schemas/Export"
+        "401":
+          description: Unauthorized
+        "404":
+          description: Export not found
+
+  # ── Transactional Email ────────────────────────────────
+  /v1/send/email:
+    post:
+      summary: Send a transactional email
+      description: >
+        Sends a transactional email to a single recipient. Can use a
+        pre-built template (via transactional_message_id) or provide
+        inline content (subject, body, from). Creates the recipient
+        profile if it does not already exist.
+      operationId: sendTransactionalEmail
+      x-airbyte-entity: transactional_email
+      x-airbyte-action: create
+      x-airbyte-untested: true
+      x-airbyte-ai-hints:
+        summary: "Send a one-to-one transactional email (order confirmations, password resets, etc.)"
+        when_to_use: "When the user wants to send a single transactional email to a specific person"
+        trigger_phrases:
+          - "send email"
+          - "transactional email"
+          - "send notification email"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TransactionalEmailParams"
+      responses:
+        "200":
+          description: Email queued for delivery
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TransactionalSendResponse"
+        "400":
+          description: Bad request (missing fields, invalid email, payload too large)
+        "401":
+          description: Unauthorized
+
+  # ── Transactional SMS ──────────────────────────────────
+  /v1/send/sms:
+    post:
+      summary: Send a transactional SMS
+      description: >
+        Sends a transactional SMS to a single recipient. Always requires
+        a pre-built template (transactional_message_id). Requires Twilio
+        integration to be configured in the workspace.
+      operationId: sendTransactionalSms
+      x-airbyte-entity: transactional_sms
+      x-airbyte-action: create
+      x-airbyte-untested: true
+      x-airbyte-ai-hints:
+        summary: "Send a one-to-one transactional SMS via Twilio"
+        when_to_use: "When the user wants to send a single SMS to a specific person"
+        trigger_phrases:
+          - "send sms"
+          - "send text message"
+          - "transactional sms"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TransactionalSmsParams"
+      responses:
+        "200":
+          description: SMS queued for delivery
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TransactionalSendResponse"
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+
+  # ── Transactional Push ─────────────────────────────────
+  /v1/send/push:
+    post:
+      summary: Send a transactional push notification
+      description: >
+        Sends a transactional push notification to a single recipient.
+        Can use a template or provide inline title and message. Requires
+        push notifications to be configured in the workspace.
+      operationId: sendTransactionalPush
+      x-airbyte-entity: transactional_push
+      x-airbyte-action: create
+      x-airbyte-untested: true
+      x-airbyte-ai-hints:
+        summary: "Send a one-to-one transactional push notification to mobile or web"
+        when_to_use: "When the user wants to send a push notification to a specific person"
+        trigger_phrases:
+          - "send push"
+          - "push notification"
+          - "send mobile notification"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TransactionalPushParams"
+      responses:
+        "200":
+          description: Push notification queued for delivery
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TransactionalSendResponse"
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+
+  # ── Transactional Inbox Message ────────────────────────
+  /v1/send/inbox_message:
+    post:
+      summary: Send an in-app inbox message
+      description: >
+        Sends a transactional in-app inbox message to a single recipient.
+        Always requires a pre-built Inbox-type transactional message
+        template (transactional_message_id). Messages appear in the
+        recipient's notification inbox via the Customer.io SDK.
+      operationId: sendTransactionalInboxMessage
+      x-airbyte-entity: transactional_inbox_message
+      x-airbyte-action: create
+      x-airbyte-untested: true
+      x-airbyte-ai-hints:
+        summary: "Send an in-app inbox message to a user's notification center"
+        when_to_use: "When the user wants to send an in-app notification via the Customer.io SDK inbox"
+        trigger_phrases:
+          - "send inbox message"
+          - "in-app message"
+          - "inbox notification"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TransactionalInboxMessageParams"
+      responses:
+        "200":
+          description: Inbox message queued for delivery
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TransactionalSendResponse"
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+
+  # ── Broadcast Trigger ──────────────────────────────────
+  /v1/campaigns/{campaign_id}/triggers:
+    post:
+      summary: Trigger an API-triggered broadcast
+      description: >
+        Triggers an API-triggered broadcast campaign. The broadcast must
+        be configured as API-triggered in the Customer.io UI. Cannot be
+        triggered more than once every 10 seconds, with a maximum of 5
+        queued broadcasts per campaign. Recipients must already exist in
+        the workspace.
+      operationId: triggerBroadcast
+      x-airbyte-entity: broadcast_trigger
+      x-airbyte-action: create
+      x-airbyte-untested: true
+      x-airbyte-ai-hints:
+        summary: "Trigger an API-triggered broadcast campaign to send messages to a group of people"
+        when_to_use: "When the user wants to trigger or fire a broadcast campaign via the API"
+        trigger_phrases:
+          - "trigger broadcast"
+          - "fire broadcast"
+          - "send broadcast"
+      parameters:
+        - name: campaign_id
+          in: path
+          required: true
+          description: The broadcast campaign identifier (found in Triggering Details)
+          schema:
+            type: integer
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BroadcastTriggerParams"
+      responses:
+        "200":
+          description: Broadcast triggered
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BroadcastTriggerResponse"
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "429":
+          description: Rate limited (max once per 10 seconds)
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: >
+        App API Key authentication. Generate an App API key in your
+        Customer.io workspace settings under API Credentials.
+      x-airbyte-auth-config:
+        title: App API Key Authentication
+        type: object
+        required:
+          - app_api_key
+        properties:
+          app_api_key:
+            type: string
+            title: App API Key
+            description: >
+              Your Customer.io App API key. Generate one in your workspace
+              settings at Settings > API Credentials > App API Key.
+        auth_mapping:
+          token: "${app_api_key}"
+        replication_auth_key_mapping:
+          app_api_key: app_api_key
+
+  schemas:
+    # ── Campaign ─────────────────────────────────────────
+    Campaign:
+      type: object
+      x-airbyte-entity-name: campaigns
+      x-airbyte-ai-hints:
+        summary: "Marketing campaigns including event-triggered, segment-triggered, and date-triggered workflows"
+        when_to_use: "Questions about campaign configuration, state, triggers, or campaign listing"
+        trigger_phrases:
+          - "list campaigns"
+          - "campaign status"
+          - "active campaigns"
+          - "marketing automation"
+          - "campaign details"
+        freshness: live
+        search_strategy: "Search by campaign name; filter by state (active/draft/stopped) or type"
+        example_questions:
+          - "What campaigns are currently active?"
+          - "Show me all campaigns tagged 'onboarding'"
+          - "Get the details of campaign 42"
+      properties:
+        id:
+          type:
+            - "null"
+            - integer
+          description: Unique campaign identifier
+        name:
+          type:
+            - "null"
+            - string
+          description: Campaign name
+        type:
+          type:
+            - "null"
+            - string
+          description: Campaign trigger type (e.g., segment, event, date, api)
+        state:
+          type:
+            - "null"
+            - string
+          description: Campaign status (draft, active, stopped)
+        active:
+          type:
+            - "null"
+            - boolean
+          description: Whether the campaign is active
+        created:
+          type:
+            - "null"
+            - integer
+          description: Creation timestamp (Unix)
+        updated:
+          type:
+            - "null"
+            - integer
+          description: Last update timestamp (Unix)
+        first_started:
+          type:
+            - "null"
+            - integer
+          description: When the campaign was first started (Unix)
+        deduplicate_id:
+          type:
+            - "null"
+            - string
+          description: Deduplication identifier (format id:timestamp)
+        tags:
+          type:
+            - "null"
+            - array
+          description: Tags associated with the campaign
+          items:
+            type: string
+        actions:
+          type:
+            - "null"
+            - array
+          description: Actions defined in this campaign
+          items:
+            type: object
+        msg_templates:
+          type:
+            - "null"
+            - array
+          description: Message templates used in the campaign
+          items:
+            type: object
+        trigger_segment_ids:
+          type:
+            - "null"
+            - array
+          description: Segment IDs that trigger this campaign
+          items:
+            type: integer
+        filter_segment_ids:
+          type:
+            - "null"
+            - array
+          description: Segment IDs used for filtering
+          items:
+            type: integer
+        frequency:
+          type:
+            - "null"
+            - string
+          description: How frequently a person can receive this campaign
+        event_name:
+          type:
+            - "null"
+            - string
+          description: Event name that triggers the campaign
+        date_attribute:
+          type:
+            - "null"
+            - string
+          description: Date attribute used for date-triggered campaigns
+        start_hour:
+          type:
+            - "null"
+            - integer
+          description: Hour of the day to trigger (24h format)
+        start_minutes:
+          type:
+            - "null"
+            - integer
+          description: Minute of the hour to trigger
+        timezone:
+          type:
+            - "null"
+            - string
+          description: Timezone for trigger scheduling
+        use_customer_timezone:
+          type:
+            - "null"
+            - boolean
+          description: Whether to use the customer's timezone
+        created_by:
+          type:
+            - "null"
+            - string
+          description: Who created the campaign
+        scheduled_start:
+          type:
+            - "null"
+            - integer
+          description: Scheduled start time (Unix)
+        scheduled_start_should_backfill:
+          type:
+            - "null"
+            - boolean
+          description: Whether to backfill on scheduled start
+        scheduled_stop:
+          type:
+            - "null"
+            - integer
+          description: Scheduled stop time (Unix)
+        scheduled_stop_should_sunset:
+          type:
+            - "null"
+            - boolean
+          description: Whether to sunset on scheduled stop
+
+    # ── Campaign Action ──────────────────────────────────
+    CampaignAction:
+      type: object
+      x-airbyte-entity-name: campaign_actions
+      x-airbyte-stream-name: campaigns_actions
+      x-airbyte-ai-hints:
+        summary: "Individual actions (emails, webhooks, push notifications) within a campaign workflow"
+        when_to_use: "Questions about specific campaign steps, email content, or action configuration"
+        trigger_phrases:
+          - "campaign actions"
+          - "email content"
+          - "campaign steps"
+          - "action details"
+          - "workflow actions"
+        freshness: live
+        search_strategy: "Filter by campaign_id and action type"
+        example_questions:
+          - "What actions are in campaign 42?"
+          - "Show me all email actions for a campaign"
+          - "Get the subject line of action 5 in campaign 10"
+      properties:
+        id:
+          type:
+            - "null"
+            - integer
+            - string
+          description: Unique action identifier
+        name:
+          type:
+            - "null"
+            - string
+          description: Action name
+        type:
+          type:
+            - "null"
+            - string
+          description: Action type (email, webhook, twilio, push, slack, in_app, whatsapp)
+        campaign_id:
+          type:
+            - "null"
+            - integer
+          description: Parent campaign ID
+        created:
+          type:
+            - "null"
+            - integer
+          description: Creation timestamp (Unix)
+        updated:
+          type:
+            - "null"
+            - integer
+          description: Last update timestamp (Unix)
+        deduplicate_id:
+          type:
+            - "null"
+            - string
+          description: Deduplication identifier
+        body:
+          type:
+            - "null"
+            - string
+          description: Action body content (HTML for emails)
+        layout:
+          type:
+            - "null"
+            - string
+          description: Layout template used
+        from:
+          type:
+            - "null"
+            - string
+          description: From address
+        from_id:
+          type:
+            - "null"
+            - integer
+          description: Sender identity ID
+        subject:
+          type:
+            - "null"
+            - string
+          description: Email subject line
+        preheader_text:
+          type:
+            - "null"
+            - string
+          description: Email preheader/preview text
+        recipient:
+          type:
+            - "null"
+            - string
+          description: Recipient address
+        reply_to:
+          type:
+            - "null"
+            - string
+          description: Reply-to address
+        reply_to_id:
+          type:
+            - "null"
+            - integer
+          description: Reply-to sender identity ID
+        bcc:
+          type:
+            - "null"
+            - string
+          description: BCC addresses
+        fake_bcc:
+          type:
+            - "null"
+            - boolean
+          description: Whether to use fake BCC
+        headers:
+          type:
+            - "null"
+            - string
+          description: Custom email headers as JSON
+        sending_state:
+          type:
+            - "null"
+            - string
+          description: Sending behavior (automatic or draft)
+        language:
+          type:
+            - "null"
+            - string
+          description: Language variant
+        parent_action_id:
+          type:
+            - "null"
+            - integer
+          description: Parent action ID for language variants
+        preprocessor:
+          type:
+            - "null"
+            - string
+          description: CSS preprocessor setting
+        body_amp:
+          type:
+            - "null"
+            - string
+          description: AMP HTML body content
+        broadcast_id:
+          type:
+            - "null"
+            - integer
+          description: Parent broadcast ID
+        editor:
+          type:
+            - "null"
+            - string
+          description: Editor used to create the action
+        url:
+          type:
+            - "null"
+            - string
+          description: Webhook URL (for webhook actions)
+        body_plain:
+          type:
+            - "null"
+            - string
+          description: Plain text version of the action body
+
+    # ── Newsletter ───────────────────────────────────────
+    Newsletter:
+      type: object
+      x-airbyte-entity-name: newsletters
+      x-airbyte-ai-hints:
+        summary: "Broadcast-style newsletters and one-time sends to segments"
+        when_to_use: "Questions about newsletters, broadcasts, one-time email sends, or newsletter scheduling"
+        trigger_phrases:
+          - "newsletters"
+          - "broadcast"
+          - "newsletter list"
+          - "email sends"
+          - "one-time send"
+        freshness: live
+        search_strategy: "Search by name; filter by type or sent_at timestamp"
+        example_questions:
+          - "Show me all newsletters"
+          - "Which newsletters were sent recently?"
+          - "Get the details of newsletter 128"
+      properties:
+        id:
+          type:
+            - "null"
+            - integer
+          description: Unique newsletter identifier
+        name:
+          type:
+            - "null"
+            - string
+          description: Newsletter name
+        type:
+          type:
+            - "null"
+            - string
+          description: Channel type (email, webhook, twilio, push, in_app, inbox)
+        created:
+          type:
+            - "null"
+            - integer
+          description: Creation timestamp (Unix)
+        updated:
+          type:
+            - "null"
+            - integer
+          description: Last update timestamp (Unix)
+        sent_at:
+          type:
+            - "null"
+            - integer
+          description: When the newsletter was last sent (Unix)
+        deduplicate_id:
+          type:
+            - "null"
+            - string
+          description: Deduplication identifier
+        tags:
+          type:
+            - "null"
+            - array
+          description: Tags associated with the newsletter
+          items:
+            type: string
+        content_ids:
+          type:
+            - "null"
+            - array
+          description: Content variant IDs for this newsletter
+          items:
+            type: integer
+        recipient_segment_ids:
+          type:
+            - "null"
+            - array
+          description: Segment IDs that define the newsletter audience
+          items:
+            type: integer
+        subscription_topic_id:
+          type:
+            - "null"
+            - integer
+          description: Subscription topic ID
+
+    # ── Segment ──────────────────────────────────────────
+    Segment:
+      type: object
+      x-airbyte-entity-name: segments
+      x-airbyte-ai-hints:
+        summary: "Customer segments used for targeting campaigns and broadcasts"
+        when_to_use: "Questions about listing or retrieving segment definitions via the API (not for search)"
+        trigger_phrases:
+          - "segments"
+          - "audience"
+          - "customer group"
+          - "targeting"
+          - "segment list"
+        example_questions:
+          - "What segments are defined?"
+          - "Show me the details of segment 15"
+          - "List all segments"
+      properties:
+        id:
+          type:
+            - "null"
+            - integer
+          description: Unique segment identifier
+        name:
+          type:
+            - "null"
+            - string
+          description: Segment name
+        description:
+          type:
+            - "null"
+            - string
+          description: Segment description
+        type:
+          type:
+            - "null"
+            - string
+          description: Segment type
+        state:
+          type:
+            - "null"
+            - string
+          description: Segment processing state
+        created_at:
+          type:
+            - "null"
+            - integer
+          description: Creation timestamp (Unix)
+        updated_at:
+          type:
+            - "null"
+            - integer
+          description: Last update timestamp (Unix)
+        deduplicate_id:
+          type:
+            - "null"
+            - string
+          description: Deduplication identifier
+        tags:
+          type:
+            - "null"
+            - array
+          description: Tags associated with the segment
+          items:
+            type: string
+        progress:
+          type:
+            - "null"
+            - integer
+          description: Processing progress percentage
+        conditions:
+          type:
+            - "null"
+            - object
+          description: Segment filter conditions
+
+    # ── Message ──────────────────────────────────────────
+    Message:
+      type: object
+      x-airbyte-entity-name: messages
+      x-airbyte-ai-hints:
+        summary: "Individual message deliveries including emails, push notifications, SMS, and in-app messages"
+        when_to_use: "Questions about message delivery status, delivery metrics, or individual message details"
+        trigger_phrases:
+          - "messages"
+          - "deliveries"
+          - "sent messages"
+          - "delivery status"
+          - "email metrics"
+        freshness: live
+        search_strategy: "Filter by type (email/push/sms), metric (sent/delivered/opened), campaign_id, or newsletter_id"
+        example_questions:
+          - "Show me recent message deliveries"
+          - "What is the delivery status of message abc123?"
+          - "List all bounced email deliveries"
+      properties:
+        id:
+          type:
+            - "null"
+            - string
+          description: Unique message delivery identifier
+        type:
+          type:
+            - "null"
+            - string
+          description: Message channel type
+        created:
+          type:
+            - "null"
+            - integer
+          description: Creation timestamp (Unix)
+        deduplicate_id:
+          type:
+            - "null"
+            - string
+          description: Deduplication identifier
+        customer_id:
+          type:
+            - "null"
+            - string
+          description: Customer profile ID
+        customer_identifiers:
+          type:
+            - "null"
+            - object
+          description: Customer identification details
+          properties:
+            id:
+              type:
+                - "null"
+                - string
+              description: Person's ID
+            cio_id:
+              type:
+                - "null"
+                - string
+              description: Customer.io internal ID
+            email:
+              type:
+                - "null"
+                - string
+              description: Person's email address
+        campaign_id:
+          type:
+            - "null"
+            - integer
+          description: Parent campaign ID
+        newsletter_id:
+          type:
+            - "null"
+            - integer
+          description: Parent newsletter ID
+        broadcast_id:
+          type:
+            - "null"
+            - integer
+          description: Parent broadcast ID
+        content_id:
+          type:
+            - "null"
+            - integer
+          description: Newsletter content variant ID
+        action_id:
+          type:
+            - "null"
+            - integer
+          description: Action ID that sent the message
+        parent_action_id:
+          type:
+            - "null"
+            - integer
+          description: Parent action ID
+        message_template_id:
+          type:
+            - "null"
+            - integer
+          description: Message template ID
+        recipient:
+          type:
+            - "null"
+            - string
+          description: Recipient address
+        subject:
+          type:
+            - "null"
+            - string
+          description: Message subject line
+        forgotten:
+          type:
+            - "null"
+            - boolean
+          description: Whether message contents were not retained
+        failure_message:
+          type:
+            - "null"
+            - string
+          description: Failure reason if delivery failed
+        trigger_event_id:
+          type:
+            - "null"
+            - string
+          description: Event that triggered the campaign
+        metrics:
+          type:
+            - "null"
+            - object
+          description: Delivery metrics timestamps
+          properties:
+            created:
+              type:
+                - "null"
+                - integer
+            drafted:
+              type:
+                - "null"
+                - integer
+            sent:
+              type:
+                - "null"
+                - integer
+            delivered:
+              type:
+                - "null"
+                - integer
+            opened:
+              type:
+                - "null"
+                - integer
+            clicked:
+              type:
+                - "null"
+                - integer
+            converted:
+              type:
+                - "null"
+                - integer
+            bounced:
+              type:
+                - "null"
+                - integer
+            failed:
+              type:
+                - "null"
+                - integer
+            undeliverable:
+              type:
+                - "null"
+                - integer
+
+    # ── Activity ─────────────────────────────────────────
+    Activity:
+      type: object
+      x-airbyte-entity-name: activities
+      x-airbyte-ai-hints:
+        summary: "Global activity log tracking all events, deliveries, and interactions in the workspace"
+        when_to_use: "Questions about recent events, customer interactions, or delivery activity"
+        trigger_phrases:
+          - "activities"
+          - "activity log"
+          - "recent events"
+          - "what happened"
+          - "event history"
+        freshness: live
+        search_strategy: "Filter by activity type or name; use cursor pagination for recent events"
+        example_questions:
+          - "Show me recent activities"
+          - "What happened in the last hour?"
+          - "List all email_opened activities"
+      properties:
+        id:
+          type:
+            - "null"
+            - string
+          description: Activity identifier
+        type:
+          type:
+            - "null"
+            - string
+          description: Activity type (e.g., email_sent, email_opened)
+        timestamp:
+          type:
+            - "null"
+            - integer
+          description: When the activity occurred (Unix)
+        customer_id:
+          type:
+            - "null"
+            - string
+          description: Customer profile ID
+        customer_identifiers:
+          type:
+            - "null"
+            - object
+          description: Customer identification details
+          properties:
+            id:
+              type:
+                - "null"
+                - string
+            cio_id:
+              type:
+                - "null"
+                - string
+            email:
+              type:
+                - "null"
+                - string
+        delivery_id:
+          type:
+            - "null"
+            - string
+          description: Message delivery ID
+        delivery_type:
+          type:
+            - "null"
+            - string
+          description: Delivery channel type
+        data:
+          type:
+            - "null"
+            - object
+          description: Activity-specific data payload
+
+    # ── Sender Identity ──────────────────────────────────
+    SenderIdentity:
+      type: object
+      x-airbyte-entity-name: sender_identities
+      x-airbyte-ai-hints:
+        summary: "Sender email addresses and identities used for sending messages"
+        when_to_use: "Questions about from addresses, sender configuration, or who messages are sent from"
+        trigger_phrases:
+          - "sender identities"
+          - "from address"
+          - "sender email"
+          - "who sends"
+        freshness: static
+        search_strategy: "Search by sender name or email address"
+        example_questions:
+          - "What sender identities are configured?"
+          - "Show me all email senders"
+      properties:
+        id:
+          type:
+            - "null"
+            - integer
+          description: Unique sender identity identifier
+        name:
+          type:
+            - "null"
+            - string
+          description: Sender display name
+        email:
+          type:
+            - "null"
+            - string
+          description: Sender email address
+        address:
+          type:
+            - "null"
+            - string
+          description: Full address in "Name <email>" format
+        template_type:
+          type:
+            - "null"
+            - string
+          description: Sender type (email or phone)
+        auto_generated:
+          type:
+            - "null"
+            - boolean
+          description: Whether the identity was auto-generated by Customer.io
+        deduplicate_id:
+          type:
+            - "null"
+            - string
+          description: Deduplication identifier
+        phone:
+          type:
+            - "null"
+            - string
+          description: Sender phone number
+
+    # ── Snippet ──────────────────────────────────────────
+    Snippet:
+      type: object
+      x-airbyte-entity-name: snippets
+      x-airbyte-ai-hints:
+        summary: "Reusable liquid content blocks that can be embedded in messages"
+        when_to_use: "Questions about listing or managing reusable content snippets via the API (not for search)"
+        trigger_phrases:
+          - "snippets"
+          - "reusable content"
+          - "liquid blocks"
+          - "content blocks"
+        example_questions:
+          - "What snippets are available?"
+          - "Show me all content snippets"
+      properties:
+        name:
+          type:
+            - "null"
+            - string
+          description: Unique snippet name
+        value:
+          type:
+            - "null"
+            - string
+          description: Snippet content (liquid/HTML)
+        updated_at:
+          type:
+            - "null"
+            - integer
+          description: Last update timestamp (Unix)
+
+    # ── Collection ───────────────────────────────────────
+    Collection:
+      type: object
+      x-airbyte-entity-name: collections
+      x-airbyte-ai-hints:
+        summary: "Data collections used for personalization and liquid templating"
+        when_to_use: "Questions about data collections, lookup tables, or personalization data"
+        trigger_phrases:
+          - "collections"
+          - "data tables"
+          - "lookup data"
+          - "personalization data"
+        freshness: static
+        search_strategy: "Search by collection name"
+        example_questions:
+          - "What collections are defined?"
+          - "How large is the products collection?"
+      properties:
+        id:
+          type:
+            - "null"
+            - integer
+          description: Unique collection identifier
+        name:
+          type:
+            - "null"
+            - string
+          description: Collection name (used in liquid)
+        bytes:
+          type:
+            - "null"
+            - integer
+          description: Size of the collection in bytes
+        rows:
+          type:
+            - "null"
+            - integer
+          description: Number of rows/objects in the collection
+        schema:
+          type:
+            - "null"
+            - array
+          description: Top-level keys in the collection
+          items:
+            type: string
+        created_at:
+          type:
+            - "null"
+            - integer
+          description: Creation timestamp (Unix)
+        updated_at:
+          type:
+            - "null"
+            - integer
+          description: Last update timestamp (Unix)
+
+    # ── Reporting Webhook ────────────────────────────────
+    ReportingWebhook:
+      type: object
+      x-airbyte-entity-name: reporting_webhooks
+      x-airbyte-ai-hints:
+        summary: "Webhook endpoints configured to receive message event notifications"
+        when_to_use: "Questions about webhook configuration, event reporting endpoints, or notification URLs"
+        trigger_phrases:
+          - "reporting webhooks"
+          - "webhook config"
+          - "event notifications"
+          - "webhook endpoints"
+        freshness: static
+        search_strategy: "Search by webhook name or endpoint URL"
+        example_questions:
+          - "What reporting webhooks are configured?"
+          - "Is there a webhook for email events?"
+      properties:
+        id:
+          type:
+            - "null"
+            - integer
+          description: Unique webhook identifier
+        name:
+          type:
+            - "null"
+            - string
+          description: Webhook display name
+        endpoint:
+          type:
+            - "null"
+            - string
+          description: Webhook URL
+        disabled:
+          type:
+            - "null"
+            - boolean
+          description: Whether the webhook is disabled
+        full_resolution:
+          type:
+            - "null"
+            - boolean
+          description: Send all events, not just unique
+        with_content:
+          type:
+            - "null"
+            - boolean
+          description: Include message body in sent events
+        events:
+          type:
+            - "null"
+            - array
+          description: Event types to report
+          items:
+            type: string
+
+    # ── Export ────────────────────────────────────────────
+    Export:
+      type: object
+      x-airbyte-entity-name: exports
+      x-airbyte-ai-hints:
+        summary: "Data export jobs for bulk downloading customer, delivery, or activity data"
+        when_to_use: "Questions about data exports, bulk downloads, or export job status"
+        trigger_phrases:
+          - "exports"
+          - "data export"
+          - "bulk download"
+          - "export status"
+        freshness: live
+        search_strategy: "Filter by export type or status (done/pending/in_progress)"
+        example_questions:
+          - "What exports have been created?"
+          - "Are there any pending exports?"
+          - "Show me the status of export 99"
+      properties:
+        id:
+          type:
+            - "null"
+            - integer
+          description: Unique export identifier
+        type:
+          type:
+            - "null"
+            - string
+          description: Export type
+        status:
+          type:
+            - "null"
+            - string
+          description: Export state (done, pending, in_progress)
+        description:
+          type:
+            - "null"
+            - string
+          description: Export description
+        total:
+          type:
+            - "null"
+            - integer
+          description: Number of entries (0 until complete)
+        downloads:
+          type:
+            - "null"
+            - integer
+          description: Total download count
+        failed:
+          type:
+            - "null"
+            - boolean
+          description: Whether the export failed
+        created_at:
+          type:
+            - "null"
+            - integer
+          description: Creation timestamp (Unix)
+        updated_at:
+          type:
+            - "null"
+            - integer
+          description: Last update timestamp (Unix)
+        deduplicate_id:
+          type:
+            - "null"
+            - string
+          description: Deduplication identifier
+        user_id:
+          type:
+            - "null"
+            - integer
+          description: User who created the export
+        user_email:
+          type:
+            - "null"
+            - string
+          description: Email of the user who created the export
+
+    # ── Write Operation Request Schemas ──────────────────
+
+    SnippetCreateParams:
+      type: object
+      required:
+        - name
+        - value
+      properties:
+        name:
+          type: string
+          description: Unique snippet name (used as the liquid tag identifier)
+        value:
+          type: string
+          description: Snippet content (plain text, HTML, or Liquid)
+
+    SnippetUpdateParams:
+      type: object
+      required:
+        - name
+        - value
+      properties:
+        name:
+          type: string
+          description: Snippet name to update (or create if it does not exist)
+        value:
+          type: string
+          description: New snippet content (plain text, HTML, or Liquid)
+
+    CollectionCreateParams:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          description: Collection name, referenced in Liquid as collection_name.property
+        data:
+          type: array
+          description: Inline collection data (array of objects). Provide either data or url, not both.
+          items:
+            type: object
+        url:
+          type: string
+          description: URL to a CSV or JSON file containing collection data. Provide either data or url, not both.
+
+    CollectionUpdateParams:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Rename the collection
+        data:
+          type: array
+          description: Replace collection data entirely (array of objects). Provide either data or url, not both.
+          items:
+            type: object
+        url:
+          type: string
+          description: Replace the URL source for collection data. Provide either data or url, not both.
+
+    ReportingWebhookCreateParams:
+      type: object
+      required:
+        - name
+        - endpoint
+        - events
+      properties:
+        name:
+          type: string
+          description: Webhook display name
+        endpoint:
+          type: string
+          description: The URL to receive webhook notifications
+        events:
+          type: array
+          description: >
+            Event types to report (e.g. customer_subscribed, email_sent,
+            email_opened, email_clicked, email_bounced, email_converted,
+            email_unsubscribed, sms_sent, sms_delivered, push_sent)
+          items:
+            type: string
+        disabled:
+          type: boolean
+          description: Whether the webhook should be disabled initially
+        full_resolution:
+          type: boolean
+          description: Send all events instead of only unique events
+        with_content:
+          type: boolean
+          description: Include the message body in sent events
+
+    ReportingWebhookUpdateParams:
+      type: object
+      required:
+        - name
+        - endpoint
+        - events
+      properties:
+        name:
+          type: string
+          description: Webhook display name
+        endpoint:
+          type: string
+          description: The URL to receive webhook notifications
+        events:
+          type: array
+          description: Event types to report
+          items:
+            type: string
+        disabled:
+          type: boolean
+          description: Whether the webhook is disabled
+        full_resolution:
+          type: boolean
+          description: Send all events instead of only unique events
+        with_content:
+          type: boolean
+          description: Include the message body in sent events
+
+    SegmentCreateParams:
+      type: object
+      required:
+        - segment
+      properties:
+        segment:
+          type: object
+          required:
+            - name
+          properties:
+            name:
+              type: string
+              description: Name of the manual segment
+            description:
+              type: string
+              description: Optional description of the segment
+
+    ExportCreateParams:
+      type: object
+      required:
+        - filters
+      properties:
+        filters:
+          type: object
+          description: >
+            Audience filter conditions to select which customers to export.
+            Uses boolean logic with "and", "or", "not" arrays of conditions,
+            "segment" objects with an "id" field, and "attribute" objects with
+            "field", "operator", and "value" fields. Example:
+            {"and": [{"segment": {"id": 3}}, {"attribute": {"field": "plan", "operator": "eq", "value": "premium"}}]}
+
+    # ── Transactional & Broadcast Schemas ────────────────
+
+    TransactionalSendResponse:
+      type: object
+      properties:
+        delivery_id:
+          type:
+            - "null"
+            - string
+          description: Unique delivery identifier for tracking the message
+        queued_at:
+          type:
+            - "null"
+            - integer
+          description: Unix timestamp when the message was queued
+
+    TransactionalEmailParams:
+      type: object
+      required:
+        - to
+        - identifiers
+      properties:
+        transactional_message_id:
+          type:
+            - integer
+            - string
+          description: Template ID (number) or trigger name (string). Required if not providing inline body/subject/from.
+        to:
+          type: string
+          description: 'Recipient email address. Supports display name format: "Name <email>"'
+        identifiers:
+          type: object
+          description: 'Recipient identity. One of: {"id": "..."}, {"email": "..."}, or {"cio_id": "..."}'
+        message_data:
+          type: object
+          description: Key-value pairs available as {{trigger.<key>}} in templates
+        from:
+          type: string
+          description: Sender address (must be verified domain). Overrides template if provided.
+        subject:
+          type: string
+          description: Email subject line. Overrides template if provided.
+        body:
+          type: string
+          description: HTML email body. Overrides template if provided.
+        body_plain:
+          type: string
+          description: Plaintext email body
+        reply_to:
+          type: string
+          description: Reply-to email address
+        bcc:
+          type: string
+          description: BCC address(es), comma-separated. Max 15 total recipients.
+        headers:
+          type: object
+          description: Custom email headers (ASCII only)
+        preheader_text:
+          type: string
+          description: Email preview text
+        attachments:
+          type: object
+          description: 'Map of filename to base64 content: {"file.pdf": "<base64>"}. Max 2MB total.'
+        disable_message_retention:
+          type: boolean
+          description: Do not store message body (for sensitive data)
+        send_to_unsubscribed:
+          type: boolean
+          description: Send even if person is unsubscribed
+        tracked:
+          type: boolean
+          description: Enable open and click tracking
+        queue_draft:
+          type: boolean
+          description: Queue as draft instead of sending immediately
+        send_at:
+          type: integer
+          description: Unix timestamp for scheduled delivery (up to 90 days in the future)
+
+    TransactionalSmsParams:
+      type: object
+      required:
+        - transactional_message_id
+        - to
+        - identifiers
+      properties:
+        transactional_message_id:
+          type:
+            - integer
+            - string
+          description: Template ID (number) or trigger name (string). Always required for SMS.
+        to:
+          type: string
+          description: Phone number in E.164 format (e.g. +15551234567)
+        identifiers:
+          type: object
+          description: 'Recipient identity. One of: {"id": "..."}, {"email": "..."}, or {"cio_id": "..."}'
+        message_data:
+          type: object
+          description: Key-value pairs available as {{trigger.<key>}} in templates
+        from:
+          type: string
+          description: Override sender phone number (must be verified in Twilio)
+        send_to_unsubscribed:
+          type: boolean
+          description: Send even if person is unsubscribed
+        tracked:
+          type: boolean
+          description: Enable link tracking
+        queue_draft:
+          type: boolean
+          description: Queue as draft instead of sending immediately
+        disable_message_retention:
+          type: boolean
+          description: Do not store message content
+
+    TransactionalPushParams:
+      type: object
+      required:
+        - identifiers
+      properties:
+        transactional_message_id:
+          type:
+            - integer
+            - string
+          description: Template ID or trigger name. Required if not providing inline title/message.
+        to:
+          type: string
+          description: 'Device target: "last_used" for most recent device, or a specific device token. Defaults to all devices.'
+        identifiers:
+          type: object
+          description: 'Recipient identity. One of: {"id": "..."}, {"email": "..."}, or {"cio_id": "..."}'
+        message_data:
+          type: object
+          description: Key-value pairs available as {{trigger.<key>}} in templates
+        title:
+          type: string
+          description: Push notification title (overrides template)
+        message:
+          type: string
+          description: Push notification body (overrides template)
+        link:
+          type: string
+          description: Deep link URL
+        image_url:
+          type: string
+          description: Image URL to display in the notification
+        custom_data:
+          type: object
+          description: Custom key-value data included in the push payload
+        custom_payload:
+          type: object
+          description: Platform-specific payload overrides (iOS/Android)
+        sound:
+          type: string
+          description: Notification sound name
+        send_to_unsubscribed:
+          type: boolean
+          description: Send even if person is unsubscribed
+        queue_draft:
+          type: boolean
+          description: Queue as draft instead of sending immediately
+        disable_message_retention:
+          type: boolean
+          description: Do not store message content
+        send_at:
+          type: integer
+          description: Unix timestamp for scheduled delivery
+
+    TransactionalInboxMessageParams:
+      type: object
+      required:
+        - transactional_message_id
+        - identifiers
+      properties:
+        transactional_message_id:
+          type:
+            - integer
+            - string
+          description: Template ID or trigger name. Must reference an Inbox-type transactional message.
+        identifiers:
+          type: object
+          description: 'Recipient identity. One of: {"id": "..."}, {"email": "..."}, or {"cio_id": "..."}'
+        message_data:
+          type: object
+          description: Key-value pairs available as {{trigger.<key>}} in the inbox message template
+
+    BroadcastTriggerParams:
+      type: object
+      properties:
+        data:
+          type: object
+          description: Global data available as {{trigger.<key>}} in broadcast messages
+        recipients:
+          type: object
+          description: Filter object to define audience (overrides UI-defined recipients). Supports and/or/not/segment/attribute conditions.
+        ids:
+          type: array
+          description: List of profile IDs to target (max 10,000)
+          items:
+            type: string
+        emails:
+          type: array
+          description: List of email addresses to target (max 10,000)
+          items:
+            type: string
+        per_user_data:
+          type: array
+          description: 'Per-recipient custom data: [{"id": "user1", "data": {...}}, ...]'
+          items:
+            type: object
+        data_file_url:
+          type: string
+          description: URL to a JSON Lines file with per-user data
+        id_ignore_missing:
+          type: boolean
+          description: Ignore IDs that do not match existing profiles (default false)
+        email_ignore_missing:
+          type: boolean
+          description: Ignore emails that do not match existing profiles
+        email_add_duplicates:
+          type: boolean
+          description: Send to all profiles sharing an email address
+
+    BroadcastTriggerResponse:
+      type: object
+      properties:
+        id:
+          type:
+            - "null"
+            - integer
+          description: Trigger ID for checking broadcast status

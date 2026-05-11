@@ -16,6 +16,7 @@ from airbyte_agent_sdk.connectors.ashby import AshbyConnector
 from airbyte_agent_sdk.connectors.chargebee import ChargebeeConnector
 from airbyte_agent_sdk.connectors.clickup_api import ClickupApiConnector
 from airbyte_agent_sdk.connectors.confluence import ConfluenceConnector
+from airbyte_agent_sdk.connectors.customer_io import CustomerIoConnector
 from airbyte_agent_sdk.connectors.facebook_marketing import FacebookMarketingConnector
 from airbyte_agent_sdk.connectors.freshdesk import FreshdeskConnector
 from airbyte_agent_sdk.connectors.github import GithubConnector
@@ -174,6 +175,19 @@ def connect(
     organization_id: str | None = ...,
     auth_config: AirbyteAuthConfig | None = ...,
 ) -> ConfluenceConnector: ...
+
+
+@overload
+def connect(
+    connector_name: Literal["customer-io"],
+    *,
+    client_id: str | None = ...,
+    client_secret: str | None = ...,
+    workspace_name: str | None = ...,
+    connector_id: str | None = ...,
+    organization_id: str | None = ...,
+    auth_config: AirbyteAuthConfig | None = ...,
+) -> CustomerIoConnector: ...
 
 
 @overload
