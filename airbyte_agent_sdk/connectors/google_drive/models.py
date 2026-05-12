@@ -52,22 +52,15 @@ class User(BaseModel):
     permission_id: str | None = Field(default=None, alias="permissionId")
     email_address: str | None = Field(default=None, alias="emailAddress")
 
-class FileCapabilities(BaseModel):
-    """Capabilities the current user has on this file"""
+class FileContentrestrictionsItem(BaseModel):
+    """Nested schema for File.contentRestrictions_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    can_edit: bool | None | None = Field(default=None, alias="canEdit")
-    can_comment: bool | None | None = Field(default=None, alias="canComment")
-    can_share: bool | None | None = Field(default=None, alias="canShare")
-    can_copy: bool | None | None = Field(default=None, alias="canCopy")
-    can_download: bool | None | None = Field(default=None, alias="canDownload")
-    can_delete: bool | None | None = Field(default=None, alias="canDelete")
-    can_rename: bool | None | None = Field(default=None, alias="canRename")
-    can_trash: bool | None | None = Field(default=None, alias="canTrash")
-    can_read_revisions: bool | None | None = Field(default=None, alias="canReadRevisions")
-    can_add_children: bool | None | None = Field(default=None, alias="canAddChildren")
-    can_list_children: bool | None | None = Field(default=None, alias="canListChildren")
-    can_remove_children: bool | None | None = Field(default=None, alias="canRemoveChildren")
+    read_only: bool | None | None = Field(default=None, alias="readOnly")
+    reason: str | None | None = Field(default=None)
+    restricting_user: Any | None = Field(default=None, alias="restrictingUser")
+    restriction_time: str | None | None = Field(default=None, alias="restrictionTime")
+    type_: str | None | None = Field(default=None, alias="type")
 
 class FileLabelinfo(BaseModel):
     """An overview of the labels on the file"""
@@ -75,13 +68,12 @@ class FileLabelinfo(BaseModel):
 
     labels: list[dict[str, Any]] | None | None = Field(default=None)
 
-class FileVideomediametadata(BaseModel):
-    """Additional metadata about video media"""
+class FileLinksharemetadata(BaseModel):
+    """Contains details about the link URLs"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    width: int | None | None = Field(default=None)
-    height: int | None | None = Field(default=None)
-    duration_millis: str | None | None = Field(default=None, alias="durationMillis")
+    security_update_eligible: bool | None | None = Field(default=None, alias="securityUpdateEligible")
+    security_update_enabled: bool | None | None = Field(default=None, alias="securityUpdateEnabled")
 
 class FileImagemediametadataLocation(BaseModel):
     """Nested schema for FileImagemediametadata.location"""
@@ -117,22 +109,30 @@ class FileImagemediametadata(BaseModel):
     lens: str | None | None = Field(default=None)
     location: FileImagemediametadataLocation | None | None = Field(default=None)
 
-class FileContentrestrictionsItem(BaseModel):
-    """Nested schema for File.contentRestrictions_item"""
+class FileCapabilities(BaseModel):
+    """Capabilities the current user has on this file"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    read_only: bool | None | None = Field(default=None, alias="readOnly")
-    reason: str | None | None = Field(default=None)
-    restricting_user: Any | None = Field(default=None, alias="restrictingUser")
-    restriction_time: str | None | None = Field(default=None, alias="restrictionTime")
-    type_: str | None | None = Field(default=None, alias="type")
+    can_edit: bool | None | None = Field(default=None, alias="canEdit")
+    can_comment: bool | None | None = Field(default=None, alias="canComment")
+    can_share: bool | None | None = Field(default=None, alias="canShare")
+    can_copy: bool | None | None = Field(default=None, alias="canCopy")
+    can_download: bool | None | None = Field(default=None, alias="canDownload")
+    can_delete: bool | None | None = Field(default=None, alias="canDelete")
+    can_rename: bool | None | None = Field(default=None, alias="canRename")
+    can_trash: bool | None | None = Field(default=None, alias="canTrash")
+    can_read_revisions: bool | None | None = Field(default=None, alias="canReadRevisions")
+    can_add_children: bool | None | None = Field(default=None, alias="canAddChildren")
+    can_list_children: bool | None | None = Field(default=None, alias="canListChildren")
+    can_remove_children: bool | None | None = Field(default=None, alias="canRemoveChildren")
 
-class FileLinksharemetadata(BaseModel):
-    """Contains details about the link URLs"""
+class FileVideomediametadata(BaseModel):
+    """Additional metadata about video media"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    security_update_eligible: bool | None | None = Field(default=None, alias="securityUpdateEligible")
-    security_update_enabled: bool | None | None = Field(default=None, alias="securityUpdateEnabled")
+    width: int | None | None = Field(default=None)
+    height: int | None | None = Field(default=None)
+    duration_millis: str | None | None = Field(default=None, alias="durationMillis")
 
 class FileShortcutdetails(BaseModel):
     """Shortcut file details"""
@@ -470,16 +470,16 @@ class StartPageToken(BaseModel):
     kind: str | None = Field(default=None)
     start_page_token: str | None = Field(default=None, alias="startPageToken")
 
-class AboutTeamdrivethemesItem(BaseModel):
-    """Nested schema for About.teamDriveThemes_item"""
+class AboutDrivethemesItem(BaseModel):
+    """Nested schema for About.driveThemes_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     id: str | None | None = Field(default=None)
     background_image_link: str | None | None = Field(default=None, alias="backgroundImageLink")
     color_rgb: str | None | None = Field(default=None, alias="colorRgb")
 
-class AboutDrivethemesItem(BaseModel):
-    """Nested schema for About.driveThemes_item"""
+class AboutTeamdrivethemesItem(BaseModel):
+    """Nested schema for About.teamDriveThemes_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     id: str | None | None = Field(default=None)

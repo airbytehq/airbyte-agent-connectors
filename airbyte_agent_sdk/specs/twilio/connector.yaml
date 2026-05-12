@@ -12,8 +12,8 @@ info:
     Uses HTTP Basic authentication with Account SID and Auth Token.
   x-airbyte-connector-name: twilio
   x-airbyte-connector-definition-id: b9dc6155-672e-42ea-b10d-9f1f1fb95ab1
-  x-airbyte-replication-version: "0.17.9"
-  x-airbyte-replication-compatibility: ">=0.17.9, <1.0.0"
+  x-airbyte-replication-version: "0.17.10"
+  x-airbyte-replication-compatibility: ">=0.17.10, <1.0.0"
   x-airbyte-replication-config:
     title: Replication Configuration
     description: Settings for data replication from Twilio.
