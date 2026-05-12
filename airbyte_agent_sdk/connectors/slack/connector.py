@@ -105,7 +105,7 @@ class SlackConnector:
 
     connector_name = "slack"
     connector_version = "0.1.21"
-    sdk_version = "0.1.188"
+    sdk_version = "0.1.189"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -142,8 +142,8 @@ class SlackConnector:
         ('channels', 'get'): {'channel': 'channel'},
         ('channel_messages', 'list'): {'channel': 'channel', 'cursor': 'cursor', 'limit': 'limit', 'oldest': 'oldest', 'latest': 'latest', 'inclusive': 'inclusive'},
         ('threads', 'list'): {'channel': 'channel', 'ts': 'ts', 'cursor': 'cursor', 'limit': 'limit', 'oldest': 'oldest', 'latest': 'latest', 'inclusive': 'inclusive'},
-        ('messages', 'create'): {'channel': 'channel', 'text': 'text', 'thread_ts': 'thread_ts', 'reply_broadcast': 'reply_broadcast', 'unfurl_links': 'unfurl_links', 'unfurl_media': 'unfurl_media'},
-        ('messages', 'update'): {'channel': 'channel', 'ts': 'ts', 'text': 'text'},
+        ('messages', 'create'): {'channel': 'channel', 'text': 'text', 'thread_ts': 'thread_ts', 'reply_broadcast': 'reply_broadcast', 'unfurl_links': 'unfurl_links', 'unfurl_media': 'unfurl_media', 'blocks': 'blocks', 'mrkdwn': 'mrkdwn'},
+        ('messages', 'update'): {'channel': 'channel', 'ts': 'ts', 'text': 'text', 'blocks': 'blocks'},
         ('channels', 'create'): {'name': 'name', 'is_private': 'is_private'},
         ('channels', 'update'): {'channel': 'channel', 'name': 'name'},
         ('channel_topics', 'create'): {'channel': 'channel', 'topic': 'topic'},
@@ -151,8 +151,8 @@ class SlackConnector:
         ('channel_invites', 'create'): {'channel': 'channel', 'users': 'users', 'force': 'force'},
         ('reactions', 'create'): {'channel': 'channel', 'timestamp': 'timestamp', 'name': 'name'},
         ('reactions', 'delete'): {'channel': 'channel', 'timestamp': 'timestamp', 'name': 'name'},
-        ('ephemeral_messages', 'create'): {'channel': 'channel', 'user': 'user', 'text': 'text', 'thread_ts': 'thread_ts', 'blocks': 'blocks'},
-        ('scheduled_messages', 'create'): {'channel': 'channel', 'text': 'text', 'post_at': 'post_at', 'thread_ts': 'thread_ts', 'reply_broadcast': 'reply_broadcast', 'unfurl_links': 'unfurl_links', 'unfurl_media': 'unfurl_media'},
+        ('ephemeral_messages', 'create'): {'channel': 'channel', 'user': 'user', 'text': 'text', 'thread_ts': 'thread_ts', 'blocks': 'blocks', 'mrkdwn': 'mrkdwn'},
+        ('scheduled_messages', 'create'): {'channel': 'channel', 'text': 'text', 'post_at': 'post_at', 'thread_ts': 'thread_ts', 'reply_broadcast': 'reply_broadcast', 'unfurl_links': 'unfurl_links', 'unfurl_media': 'unfurl_media', 'blocks': 'blocks', 'mrkdwn': 'mrkdwn'},
         ('messages', 'delete'): {'channel': 'channel', 'ts': 'ts'},
         ('channel_archives', 'create'): {'channel': 'channel'},
         ('channel_kicks', 'create'): {'channel': 'channel', 'user': 'user'},
@@ -1347,6 +1347,8 @@ class MessagesQuery:
         reply_broadcast: bool | None = None,
         unfurl_links: bool | None = None,
         unfurl_media: bool | None = None,
+        blocks: list[dict[str, Any]] | None = None,
+        mrkdwn: bool | None = None,
         **kwargs
     ) -> CreatedMessage:
         """
@@ -1359,6 +1361,8 @@ class MessagesQuery:
             reply_broadcast: Also post reply to channel when replying to a thread
             unfurl_links: Enable unfurling of primarily text-based content
             unfurl_media: Enable unfurling of media content
+            blocks: Block Kit blocks for rich message layout. When set, `text` is used as the notification fallback.
+            mrkdwn: Whether to render mrkdwn formatting in `text` (default true).
             **kwargs: Additional parameters
 
         Returns:
@@ -1371,6 +1375,8 @@ class MessagesQuery:
             "reply_broadcast": reply_broadcast,
             "unfurl_links": unfurl_links,
             "unfurl_media": unfurl_media,
+            "blocks": blocks,
+            "mrkdwn": mrkdwn,
             **kwargs
         }.items() if v is not None}
 
@@ -1384,6 +1390,7 @@ class MessagesQuery:
         channel: str,
         ts: str,
         text: str,
+        blocks: list[dict[str, Any]] | None = None,
         **kwargs
     ) -> CreatedMessage:
         """
@@ -1393,6 +1400,7 @@ class MessagesQuery:
             channel: Channel ID containing the message
             ts: Timestamp of the message to update
             text: New message text content
+            blocks: Block Kit blocks for rich message layout. When set, `text` is used as the notification fallback.
             **kwargs: Additional parameters
 
         Returns:
@@ -1402,6 +1410,7 @@ class MessagesQuery:
             "channel": channel,
             "ts": ts,
             "text": text,
+            "blocks": blocks,
             **kwargs
         }.items() if v is not None}
 
@@ -1638,7 +1647,8 @@ class EphemeralMessagesQuery:
         user: str,
         text: str,
         thread_ts: str | None = None,
-        blocks: str | None = None,
+        blocks: list[dict[str, Any]] | None = None,
+        mrkdwn: bool | None = None,
         **kwargs
     ) -> EphemeralMessageCreateResponse:
         """
@@ -1649,7 +1659,8 @@ class EphemeralMessagesQuery:
             user: ID of the user who will receive the ephemeral message. The user should be in the channel specified by the channel argument.
             text: Message text content (supports mrkdwn formatting). How this field works depends on whether blocks are also provided.
             thread_ts: Provide another message's ts value to post this ephemeral message in a thread. The thread must already be active.
-            blocks: A JSON-based array of structured blocks, presented as a URL-encoded string.
+            blocks: Block Kit blocks for rich message layout. When set, `text` is used as the notification fallback.
+            mrkdwn: Whether to render mrkdwn formatting in `text` (default true).
             **kwargs: Additional parameters
 
         Returns:
@@ -1661,6 +1672,7 @@ class EphemeralMessagesQuery:
             "text": text,
             "thread_ts": thread_ts,
             "blocks": blocks,
+            "mrkdwn": mrkdwn,
             **kwargs
         }.items() if v is not None}
 
@@ -1687,6 +1699,8 @@ class ScheduledMessagesQuery:
         reply_broadcast: bool | None = None,
         unfurl_links: bool | None = None,
         unfurl_media: bool | None = None,
+        blocks: list[dict[str, Any]] | None = None,
+        mrkdwn: bool | None = None,
         **kwargs
     ) -> ScheduledMessageCreateResponse:
         """
@@ -1700,6 +1714,8 @@ class ScheduledMessagesQuery:
             reply_broadcast: Used in conjunction with thread_ts and indicates whether reply should be made visible to everyone in the channel. Defaults to false.
             unfurl_links: Pass true to enable unfurling of primarily text-based content.
             unfurl_media: Pass false to disable unfurling of media content.
+            blocks: Block Kit blocks for rich message layout. When set, `text` is used as the notification fallback.
+            mrkdwn: Whether to render mrkdwn formatting in `text` (default true).
             **kwargs: Additional parameters
 
         Returns:
@@ -1713,6 +1729,8 @@ class ScheduledMessagesQuery:
             "reply_broadcast": reply_broadcast,
             "unfurl_links": unfurl_links,
             "unfurl_media": unfurl_media,
+            "blocks": blocks,
+            "mrkdwn": mrkdwn,
             **kwargs
         }.items() if v is not None}
 

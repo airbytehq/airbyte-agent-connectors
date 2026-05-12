@@ -9,8 +9,8 @@ info:
     development workflow analysis and project management insights.
   x-airbyte-connector-name: github
   x-airbyte-connector-definition-id: ef69ef6e-aa7f-4af1-a01d-ef775033524e
-  x-airbyte-replication-version: "2.1.27"
-  x-airbyte-replication-compatibility: ">=2.1.27, <3.0.0"
+  x-airbyte-replication-version: "2.1.28"
+  x-airbyte-replication-compatibility: ">=2.1.28, <3.0.0"
   x-airbyte-external-documentation-urls:
     - type: api_reference
       title: GitHub REST API Documentation

@@ -2490,6 +2490,15 @@ components:
         unfurl_media:
           type: boolean
           description: Enable unfurling of media content
+        blocks:
+          type: array
+          description: Block Kit blocks for rich message layout. When set, `text` is used as the notification fallback.
+          items:
+            type: object
+            additionalProperties: true
+        mrkdwn:
+          type: boolean
+          description: Whether to render mrkdwn formatting in `text` (default true).
 
     MessageCreateResponse:
       type: object
@@ -2558,6 +2567,12 @@ components:
         text:
           type: string
           description: New message text content
+        blocks:
+          type: array
+          description: Block Kit blocks for rich message layout. When set, `text` is used as the notification fallback.
+          items:
+            type: object
+            additionalProperties: true
 
     MessageUpdateResponse:
       type: object
@@ -2779,8 +2794,14 @@ components:
           type: string
           description: Provide another message's ts value to post this ephemeral message in a thread. The thread must already be active.
         blocks:
-          type: string
-          description: A JSON-based array of structured blocks, presented as a URL-encoded string.
+          type: array
+          description: Block Kit blocks for rich message layout. When set, `text` is used as the notification fallback.
+          items:
+            type: object
+            additionalProperties: true
+        mrkdwn:
+          type: boolean
+          description: Whether to render mrkdwn formatting in `text` (default true).
 
     EphemeralMessageCreateResponse:
       type: object
@@ -2823,6 +2844,15 @@ components:
         unfurl_media:
           type: boolean
           description: Pass false to disable unfurling of media content.
+        blocks:
+          type: array
+          description: Block Kit blocks for rich message layout. When set, `text` is used as the notification fallback.
+          items:
+            type: object
+            additionalProperties: true
+        mrkdwn:
+          type: boolean
+          description: Whether to render mrkdwn formatting in `text` (default true).
 
     ScheduledMessageCreateResponse:
       type: object

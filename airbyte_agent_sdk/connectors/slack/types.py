@@ -66,12 +66,15 @@ class MessagesCreateParams(TypedDict):
     reply_broadcast: NotRequired[bool]
     unfurl_links: NotRequired[bool]
     unfurl_media: NotRequired[bool]
+    blocks: NotRequired[list[dict[str, Any]]]
+    mrkdwn: NotRequired[bool]
 
 class MessagesUpdateParams(TypedDict):
     """Parameters for messages.update operation"""
     channel: str
     ts: str
     text: str
+    blocks: NotRequired[list[dict[str, Any]]]
 
 class ChannelsCreateParams(TypedDict):
     """Parameters for channels.create operation"""
@@ -117,7 +120,8 @@ class EphemeralMessagesCreateParams(TypedDict):
     user: str
     text: str
     thread_ts: NotRequired[str]
-    blocks: NotRequired[str]
+    blocks: NotRequired[list[dict[str, Any]]]
+    mrkdwn: NotRequired[bool]
 
 class ScheduledMessagesCreateParams(TypedDict):
     """Parameters for scheduled_messages.create operation"""
@@ -128,6 +132,8 @@ class ScheduledMessagesCreateParams(TypedDict):
     reply_broadcast: NotRequired[bool]
     unfurl_links: NotRequired[bool]
     unfurl_media: NotRequired[bool]
+    blocks: NotRequired[list[dict[str, Any]]]
+    mrkdwn: NotRequired[bool]
 
 class MessagesDeleteParams(TypedDict):
     """Parameters for messages.delete operation"""

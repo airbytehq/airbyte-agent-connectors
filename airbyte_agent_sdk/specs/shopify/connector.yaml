@@ -9,8 +9,8 @@ info:
     orders, products, inventory, and more.
   x-airbyte-connector-name: shopify
   x-airbyte-connector-definition-id: 9da77001-af33-4bcd-be46-6252bf9342b9
-  x-airbyte-replication-version: "3.3.2"
-  x-airbyte-replication-compatibility: ">=3.3.2, <4.0.0"
+  x-airbyte-replication-version: "3.3.3"
+  x-airbyte-replication-compatibility: ">=3.3.3, <4.0.0"
   x-airbyte-external-documentation-urls:
   - title: Shopify Admin REST API Reference
     type: api_reference

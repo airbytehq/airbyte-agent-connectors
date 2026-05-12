@@ -774,6 +774,32 @@
             },
             "required": false,
             "description": "Enable unfurling of media content"
+          },
+          {
+            "name": "blocks",
+            "python_name": "blocks",
+            "type": "list[dict[str, Any]]",
+            "schema": {
+              "type": "array",
+              "description": "Block Kit blocks for rich message layout. When set, `text` is used as the notification fallback.",
+              "items": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            },
+            "required": false,
+            "description": "Block Kit blocks for rich message layout. When set, `text` is used as the notification fallback."
+          },
+          {
+            "name": "mrkdwn",
+            "python_name": "mrkdwn",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Whether to render mrkdwn formatting in `text` (default true)."
+            },
+            "required": false,
+            "description": "Whether to render mrkdwn formatting in `text` (default true)."
           }
         ],
         "params_type_name": "MessagesCreateParams",
@@ -825,6 +851,21 @@
             },
             "required": true,
             "description": "New message text content"
+          },
+          {
+            "name": "blocks",
+            "python_name": "blocks",
+            "type": "list[dict[str, Any]]",
+            "schema": {
+              "type": "array",
+              "description": "Block Kit blocks for rich message layout. When set, `text` is used as the notification fallback.",
+              "items": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            },
+            "required": false,
+            "description": "Block Kit blocks for rich message layout. When set, `text` is used as the notification fallback."
           }
         ],
         "params_type_name": "MessagesUpdateParams",
@@ -1174,13 +1215,28 @@
           {
             "name": "blocks",
             "python_name": "blocks",
-            "type": "str",
+            "type": "list[dict[str, Any]]",
             "schema": {
-              "type": "string",
-              "description": "A JSON-based array of structured blocks, presented as a URL-encoded string."
+              "type": "array",
+              "description": "Block Kit blocks for rich message layout. When set, `text` is used as the notification fallback.",
+              "items": {
+                "type": "object",
+                "additionalProperties": true
+              }
             },
             "required": false,
-            "description": "A JSON-based array of structured blocks, presented as a URL-encoded string."
+            "description": "Block Kit blocks for rich message layout. When set, `text` is used as the notification fallback."
+          },
+          {
+            "name": "mrkdwn",
+            "python_name": "mrkdwn",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Whether to render mrkdwn formatting in `text` (default true)."
+            },
+            "required": false,
+            "description": "Whether to render mrkdwn formatting in `text` (default true)."
           }
         ],
         "params_type_name": "EphemeralMessagesCreateParams",
@@ -1278,6 +1334,32 @@
             },
             "required": false,
             "description": "Pass false to disable unfurling of media content."
+          },
+          {
+            "name": "blocks",
+            "python_name": "blocks",
+            "type": "list[dict[str, Any]]",
+            "schema": {
+              "type": "array",
+              "description": "Block Kit blocks for rich message layout. When set, `text` is used as the notification fallback.",
+              "items": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            },
+            "required": false,
+            "description": "Block Kit blocks for rich message layout. When set, `text` is used as the notification fallback."
+          },
+          {
+            "name": "mrkdwn",
+            "python_name": "mrkdwn",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Whether to render mrkdwn formatting in `text` (default true)."
+            },
+            "required": false,
+            "description": "Whether to render mrkdwn formatting in `text` (default true)."
           }
         ],
         "params_type_name": "ScheduledMessagesCreateParams",

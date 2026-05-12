@@ -195,30 +195,6 @@ class ChannelResponse(BaseModel):
     ok: bool | None = Field(default=None)
     channel: Channel | None = Field(default=None)
 
-class File(BaseModel):
-    """File object"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: str | None = Field(default=None)
-    name: str | None = Field(default=None)
-    title: str | None = Field(default=None)
-    mimetype: str | None = Field(default=None)
-    filetype: str | None = Field(default=None)
-    pretty_type: str | None = Field(default=None)
-    user: str | None = Field(default=None)
-    size: int | None = Field(default=None)
-    mode: str | None = Field(default=None)
-    is_external: bool | None = Field(default=None)
-    external_type: str | None = Field(default=None)
-    is_public: bool | None = Field(default=None)
-    public_url_shared: bool | None = Field(default=None)
-    url_private: str | None = Field(default=None)
-    url_private_download: str | None = Field(default=None)
-    permalink: str | None = Field(default=None)
-    permalink_public: str | None = Field(default=None)
-    created: int | None = Field(default=None)
-    timestamp: int | None = Field(default=None)
-
 class Reaction(BaseModel):
     """Message reaction"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -247,6 +223,30 @@ class Attachment(BaseModel):
     footer: str | None = Field(default=None)
     footer_icon: str | None = Field(default=None)
     ts: Any | None = Field(default=None)
+
+class File(BaseModel):
+    """File object"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    title: str | None = Field(default=None)
+    mimetype: str | None = Field(default=None)
+    filetype: str | None = Field(default=None)
+    pretty_type: str | None = Field(default=None)
+    user: str | None = Field(default=None)
+    size: int | None = Field(default=None)
+    mode: str | None = Field(default=None)
+    is_external: bool | None = Field(default=None)
+    external_type: str | None = Field(default=None)
+    is_public: bool | None = Field(default=None)
+    public_url_shared: bool | None = Field(default=None)
+    url_private: str | None = Field(default=None)
+    url_private_download: str | None = Field(default=None)
+    permalink: str | None = Field(default=None)
+    permalink_public: str | None = Field(default=None)
+    created: int | None = Field(default=None)
+    timestamp: int | None = Field(default=None)
 
 class Message(BaseModel):
     """Slack message object"""
@@ -348,6 +348,8 @@ class MessageCreateParams(BaseModel):
     reply_broadcast: bool | None = Field(default=None)
     unfurl_links: bool | None = Field(default=None)
     unfurl_media: bool | None = Field(default=None)
+    blocks: list[dict[str, Any]] | None = Field(default=None)
+    mrkdwn: bool | None = Field(default=None)
 
 class CreatedMessage(BaseModel):
     """A message object returned from create/update operations"""
@@ -379,6 +381,7 @@ class MessageUpdateParams(BaseModel):
     channel: str
     ts: str
     text: str
+    blocks: list[dict[str, Any]] | None = Field(default=None)
 
 class MessageUpdateResponse(BaseModel):
     """Response from updating a message"""
@@ -497,7 +500,8 @@ class EphemeralMessageCreateParams(BaseModel):
     user: str
     text: str
     thread_ts: str | None = Field(default=None)
-    blocks: str | None = Field(default=None)
+    blocks: list[dict[str, Any]] | None = Field(default=None)
+    mrkdwn: bool | None = Field(default=None)
 
 class EphemeralMessageCreateResponse(BaseModel):
     """Response from sending an ephemeral message"""
@@ -517,6 +521,8 @@ class ScheduledMessageCreateParams(BaseModel):
     reply_broadcast: bool | None = Field(default=None)
     unfurl_links: bool | None = Field(default=None)
     unfurl_media: bool | None = Field(default=None)
+    blocks: list[dict[str, Any]] | None = Field(default=None)
+    mrkdwn: bool | None = Field(default=None)
 
 class ScheduledMessageCreateResponse(BaseModel):
     """Response from scheduling a message"""

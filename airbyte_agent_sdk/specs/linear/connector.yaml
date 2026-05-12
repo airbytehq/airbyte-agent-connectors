@@ -13,8 +13,8 @@ info:
     for sprint planning, backlog management, and development workflow analysis.
   x-airbyte-connector-name: linear
   x-airbyte-connector-definition-id: 1c5d8316-ed42-4473-8fbc-2626f03f070c
-  x-airbyte-replication-version: "0.2.0"
-  x-airbyte-replication-compatibility: ">=0.2.0, <1.0.0"
+  x-airbyte-replication-version: "0.2.1"
+  x-airbyte-replication-compatibility: ">=0.2.1, <1.0.0"
   x-airbyte-external-documentation-urls:
     - type: api_reference
       title: Linear API Getting Started Guide
