@@ -50,6 +50,11 @@ from .types import (
     SnippetsUpdateParams,
     TransactionalEmailCreateParams,
     TransactionalInboxMessageCreateParams,
+    TransactionalMessageContentsListParams,
+    TransactionalMessageContentsUpdateParams,
+    TransactionalMessageContentsUpdateParamsHeadersItem,
+    TransactionalMessagesGetParams,
+    TransactionalMessagesListParams,
     TransactionalPushCreateParams,
     TransactionalSmsCreateParams,
     AirbyteSearchParams,
@@ -80,6 +85,8 @@ from .models import (
     CollectionsListResult,
     ReportingWebhooksListResult,
     ExportsListResult,
+    TransactionalMessagesListResult,
+    TransactionalMessageContentsListResult,
     Activity,
     BroadcastTriggerResponse,
     Campaign,
@@ -92,6 +99,8 @@ from .models import (
     Segment,
     SenderIdentity,
     Snippet,
+    TransactionalMessage,
+    TransactionalMessageContent,
     TransactionalSendResponse,
     AirbyteSearchMeta,
     AirbyteSearchResult,
@@ -118,7 +127,7 @@ class CustomerIoConnector:
 
     connector_name = "customer-io"
     connector_version = "1.0.0"
-    sdk_version = "0.1.191"
+    sdk_version = "0.1.192"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -150,6 +159,10 @@ class CustomerIoConnector:
         ("exports", "list"): True,
         ("exports", "create"): None,
         ("exports", "get"): None,
+        ("transactional_messages", "list"): True,
+        ("transactional_messages", "get"): None,
+        ("transactional_message_contents", "list"): True,
+        ("transactional_message_contents", "update"): None,
         ("transactional_email", "create"): None,
         ("transactional_sms", "create"): None,
         ("transactional_push", "create"): None,
@@ -182,6 +195,9 @@ class CustomerIoConnector:
         ('reporting_webhooks', 'update'): {'name': 'name', 'endpoint': 'endpoint', 'events': 'events', 'disabled': 'disabled', 'full_resolution': 'full_resolution', 'with_content': 'with_content', 'webhook_id': 'webhook_id'},
         ('exports', 'create'): {'filters': 'filters'},
         ('exports', 'get'): {'export_id': 'export_id'},
+        ('transactional_messages', 'get'): {'transactional_id': 'transactional_id'},
+        ('transactional_message_contents', 'list'): {'transactional_id': 'transactional_id'},
+        ('transactional_message_contents', 'update'): {'body': 'body', 'from_id': 'from_id', 'reply_to_id': 'reply_to_id', 'recipient': 'recipient', 'subject': 'subject', 'preheader_text': 'preheader_text', 'body_amp': 'body_amp', 'headers': 'headers', 'transactional_id': 'transactional_id', 'content_id': 'content_id'},
         ('transactional_email', 'create'): {'transactional_message_id': 'transactional_message_id', 'to': 'to', 'identifiers': 'identifiers', 'message_data': 'message_data', 'from_': 'from', 'subject': 'subject', 'body': 'body', 'body_plain': 'body_plain', 'reply_to': 'reply_to', 'bcc': 'bcc', 'headers': 'headers', 'preheader_text': 'preheader_text', 'attachments': 'attachments', 'disable_message_retention': 'disable_message_retention', 'send_to_unsubscribed': 'send_to_unsubscribed', 'tracked': 'tracked', 'queue_draft': 'queue_draft', 'send_at': 'send_at'},
         ('transactional_sms', 'create'): {'transactional_message_id': 'transactional_message_id', 'to': 'to', 'identifiers': 'identifiers', 'message_data': 'message_data', 'from_': 'from', 'send_to_unsubscribed': 'send_to_unsubscribed', 'tracked': 'tracked', 'queue_draft': 'queue_draft', 'disable_message_retention': 'disable_message_retention'},
         ('transactional_push', 'create'): {'transactional_message_id': 'transactional_message_id', 'to': 'to', 'identifiers': 'identifiers', 'message_data': 'message_data', 'title': 'title', 'message': 'message', 'link': 'link', 'image_url': 'image_url', 'custom_data': 'custom_data', 'custom_payload': 'custom_payload', 'sound': 'sound', 'send_to_unsubscribed': 'send_to_unsubscribed', 'queue_draft': 'queue_draft', 'disable_message_retention': 'disable_message_retention', 'send_at': 'send_at'},
@@ -293,6 +309,8 @@ class CustomerIoConnector:
         self.collections = CollectionsQuery(self)
         self.reporting_webhooks = ReportingWebhooksQuery(self)
         self.exports = ExportsQuery(self)
+        self.transactional_messages = TransactionalMessagesQuery(self)
+        self.transactional_message_contents = TransactionalMessageContentsQuery(self)
         self.transactional_email = TransactionalEmailQuery(self)
         self.transactional_sms = TransactionalSmsQuery(self)
         self.transactional_push = TransactionalPushQuery(self)
@@ -524,6 +542,38 @@ class CustomerIoConnector:
         action: Literal["get"],
         params: "ExportsGetParams"
     ) -> "Export": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["transactional_messages"],
+        action: Literal["list"],
+        params: "TransactionalMessagesListParams"
+    ) -> "TransactionalMessagesListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["transactional_messages"],
+        action: Literal["get"],
+        params: "TransactionalMessagesGetParams"
+    ) -> "TransactionalMessage": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["transactional_message_contents"],
+        action: Literal["list"],
+        params: "TransactionalMessageContentsListParams"
+    ) -> "TransactionalMessageContentsListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["transactional_message_contents"],
+        action: Literal["update"],
+        params: "TransactionalMessageContentsUpdateParams"
+    ) -> "TransactionalMessageContent": ...
 
     @overload
     async def execute(
@@ -1947,6 +1997,151 @@ class ExportsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("exports", "get", params)
+        return result
+
+
+
+class TransactionalMessagesQuery:
+    """
+    Query class for TransactionalMessages entity operations.
+    """
+
+    def __init__(self, connector: CustomerIoConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        **kwargs
+    ) -> TransactionalMessagesListResult:
+        """
+        Returns a list of all transactional message templates in the workspace.
+
+        Returns:
+            TransactionalMessagesListResult
+        """
+        params = {k: v for k, v in {
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("transactional_messages", "list", params)
+        # Cast generic envelope to concrete typed result
+        return TransactionalMessagesListResult(
+            data=result.data
+        )
+
+
+
+    async def get(
+        self,
+        transactional_id: str,
+        **kwargs
+    ) -> TransactionalMessage:
+        """
+        Returns a single transactional message template by ID.
+
+        Args:
+            transactional_id: The transactional message identifier
+            **kwargs: Additional parameters
+
+        Returns:
+            TransactionalMessage
+        """
+        params = {k: v for k, v in {
+            "transactional_id": transactional_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("transactional_messages", "get", params)
+        return result
+
+
+
+class TransactionalMessageContentsQuery:
+    """
+    Query class for TransactionalMessageContents entity operations.
+    """
+
+    def __init__(self, connector: CustomerIoConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        transactional_id: str,
+        **kwargs
+    ) -> TransactionalMessageContentsListResult:
+        """
+        Returns all content variants (including language translations) for a transactional message template.
+
+        Args:
+            transactional_id: The transactional message identifier
+            **kwargs: Additional parameters
+
+        Returns:
+            TransactionalMessageContentsListResult
+        """
+        params = {k: v for k, v in {
+            "transactional_id": transactional_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("transactional_message_contents", "list", params)
+        # Cast generic envelope to concrete typed result
+        return TransactionalMessageContentsListResult(
+            data=result.data
+        )
+
+
+
+    async def update(
+        self,
+        transactional_id: str,
+        content_id: str,
+        body: str | None = None,
+        from_id: int | None = None,
+        reply_to_id: int | None | None = None,
+        recipient: str | None = None,
+        subject: str | None = None,
+        preheader_text: str | None = None,
+        body_amp: str | None = None,
+        headers: list[TransactionalMessageContentsUpdateParamsHeadersItem] | None = None,
+        **kwargs
+    ) -> TransactionalMessageContent:
+        """
+        Updates the content of a specific variant of a transactional message template by content ID.
+
+        Args:
+            body: HTML body content of the message
+            from_id: Sender identity ID
+            reply_to_id: Reply-to sender identity ID
+            recipient: Recipient expression (e.g. "{{customer.email}}")
+            subject: Email subject line
+            preheader_text: Email preheader/preview text
+            body_amp: AMP HTML body content
+            headers: Custom email headers as an array of name-value objects
+            transactional_id: The transactional message identifier
+            content_id: The content variant identifier
+            **kwargs: Additional parameters
+
+        Returns:
+            TransactionalMessageContent
+        """
+        params = {k: v for k, v in {
+            "body": body,
+            "from_id": from_id,
+            "reply_to_id": reply_to_id,
+            "recipient": recipient,
+            "subject": subject,
+            "preheader_text": preheader_text,
+            "body_amp": body_amp,
+            "headers": headers,
+            "transactional_id": transactional_id,
+            "content_id": content_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("transactional_message_contents", "update", params)
         return result
 
 

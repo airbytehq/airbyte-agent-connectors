@@ -44,8 +44,8 @@
       }
     ]
   },
-  "custom_description": "Connector for the Customer.io App API, providing read access to campaigns, newsletters, segments, messages, activities, sender identities, snippets, collections, reporting webhooks, and exports. Customer.io is a messaging platform that lets you send automated emails, push notifications, SMS, and in-app messages based on customer behavior. This connector retrieves data from the App API (not the Track API) and requires a Bearer-type App API key generated in your Customer.io workspace settings.\n",
-  "supported_questions": "- List all campaigns in Customer.io\n- Show me all newsletters\n- What segments are defined in my workspace?\n- Get the details of campaign 42\n- List all sender identities\n- Show me all reporting webhooks\n- What snippets do we have?\n- List all collections\n- Show recent activities\n- Create a snippet called 'footer' with content '<p>Thanks!</p>'\n- Update the snippet 'header' to say 'Welcome back!'\n- Create a new collection called 'products'\n- Create a reporting webhook for email events\n- Create a manual segment called 'VIP Customers'\n- Export all customers matching a segment\n- Send a transactional email to user@example.com\n- Send an SMS notification to +15551234567\n- Send a push notification to user 123\n- Trigger broadcast campaign 42\n- Which campaigns are currently active?\n- Find newsletters sent in the last month\n- What are the most recent email deliveries?\n- Which exports have completed?",
+  "custom_description": "Connector for the Customer.io App API, providing read access to campaigns, newsletters, segments, messages, activities, sender identities, snippets, collections, reporting webhooks, exports, and transactional message templates. Customer.io is a messaging platform that lets you send automated emails, push notifications, SMS, and in-app messages based on customer behavior. This connector retrieves data from the App API (not the Track API) and requires a Bearer-type App API key generated in your Customer.io workspace settings.\n",
+  "supported_questions": "- List all campaigns in Customer.io\n- Show me all newsletters\n- What segments are defined in my workspace?\n- Get the details of campaign 42\n- List all sender identities\n- Show me all reporting webhooks\n- What snippets do we have?\n- List all collections\n- Show recent activities\n- Create a snippet called 'footer' with content '<p>Thanks!</p>'\n- Update the snippet 'header' to say 'Welcome back!'\n- Create a new collection called 'products'\n- Create a reporting webhook for email events\n- Create a manual segment called 'VIP Customers'\n- Export all customers matching a segment\n- Send a transactional email to user@example.com\n- Send an SMS notification to +15551234567\n- Send a push notification to user 123\n- Trigger broadcast campaign 42\n- List all transactional message templates\n- Get the details of transactional message 5\n- Show the content variants of transactional template 3\n- Update the subject of transactional content 139 in template 3\n- Which campaigns are currently active?\n- Find newsletters sent in the last month\n- What are the most recent email deliveries?\n- Which exports have completed?",
   "unsupported_questions": "- Create a new campaign\n- Delete a segment\n- Delete a snippet\n- Delete a collection\n- Delete a reporting webhook\n- Delete a newsletter\n- Send a newsletter via API\n- Schedule a newsletter via API",
   "first_operation": {
     "method_name": "list_campaigns",
@@ -1288,6 +1288,225 @@
         "meta_extractor": null,
         "needs_envelope": null,
         "record_type": "Export",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "transactional_messages": [
+      {
+        "method_name": "list_transactional_messages",
+        "http_method": "get",
+        "path": "/v1/transactional",
+        "entity": "transactional_messages",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "TransactionalMessagesListParams",
+        "response_type": "TransactionalMessagesListResult",
+        "description": "Returns a list of all transactional message templates in the workspace.",
+        "record_extractor": "$.messages",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[TransactionalMessage]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_transactional_message",
+        "http_method": "get",
+        "path": "/v1/transactional/{transactional_id}",
+        "entity": "transactional_messages",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "transactional_id",
+            "python_name": "transactional_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The transactional message identifier"
+          }
+        ],
+        "params_type_name": "TransactionalMessagesGetParams",
+        "response_type": "TransactionalMessage",
+        "description": "Returns a single transactional message template by ID.",
+        "record_extractor": "$.message",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "TransactionalMessage",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "transactional_message_contents": [
+      {
+        "method_name": "list_transactional_message_contents",
+        "http_method": "get",
+        "path": "/v1/transactional/{transactional_id}/contents",
+        "entity": "transactional_message_contents",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "transactional_id",
+            "python_name": "transactional_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The transactional message identifier"
+          }
+        ],
+        "params_type_name": "TransactionalMessageContentsListParams",
+        "response_type": "TransactionalMessageContentsListResult",
+        "description": "Returns all content variants (including language translations) for a transactional message template.",
+        "record_extractor": "$.contents",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[TransactionalMessageContent]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "update_transactional_message_content",
+        "http_method": "put",
+        "path": "/v1/transactional/{transactional_id}/content/{content_id}",
+        "entity": "transactional_message_contents",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "body",
+            "python_name": "body",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "HTML body content of the message"
+            },
+            "required": false,
+            "description": "HTML body content of the message"
+          },
+          {
+            "name": "from_id",
+            "python_name": "from_id",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Sender identity ID"
+            },
+            "required": false,
+            "description": "Sender identity ID"
+          },
+          {
+            "name": "reply_to_id",
+            "python_name": "reply_to_id",
+            "type": "int | None",
+            "schema": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "description": "Reply-to sender identity ID"
+            },
+            "required": false,
+            "description": "Reply-to sender identity ID"
+          },
+          {
+            "name": "recipient",
+            "python_name": "recipient",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Recipient expression (e.g. \"{{customer.email}}\")"
+            },
+            "required": false,
+            "description": "Recipient expression (e.g. \"{{customer.email}}\")"
+          },
+          {
+            "name": "subject",
+            "python_name": "subject",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Email subject line"
+            },
+            "required": false,
+            "description": "Email subject line"
+          },
+          {
+            "name": "preheader_text",
+            "python_name": "preheader_text",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Email preheader/preview text"
+            },
+            "required": false,
+            "description": "Email preheader/preview text"
+          },
+          {
+            "name": "body_amp",
+            "python_name": "body_amp",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "AMP HTML body content"
+            },
+            "required": false,
+            "description": "AMP HTML body content"
+          },
+          {
+            "name": "headers",
+            "python_name": "headers",
+            "type": "list[TransactionalMessageContentsUpdateParamsHeadersItem]",
+            "schema": {
+              "type": "array",
+              "description": "Custom email headers as an array of name-value objects",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Header name"
+                  },
+                  "value": {
+                    "type": "string",
+                    "description": "Header value"
+                  }
+                }
+              }
+            },
+            "required": false,
+            "description": "Custom email headers as an array of name-value objects"
+          },
+          {
+            "name": "transactional_id",
+            "python_name": "transactional_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The transactional message identifier"
+          },
+          {
+            "name": "content_id",
+            "python_name": "content_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The content variant identifier"
+          }
+        ],
+        "params_type_name": "TransactionalMessageContentsUpdateParams",
+        "response_type": "TransactionalMessageContent",
+        "description": "Updates the content of a specific variant of a transactional message template by content ID.",
+        "record_extractor": "$.content",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "TransactionalMessageContent",
         "meta_fields": null,
         "is_download": false
       }

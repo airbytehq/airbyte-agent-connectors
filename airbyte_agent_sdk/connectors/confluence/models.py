@@ -67,6 +67,15 @@ class SpacesList(BaseModel):
     results: list[Space] | None = Field(default=None)
     links: SpacesListLinks | None = Field(default=None, alias="_links")
 
+class PageBody(BaseModel):
+    """Page body content"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    storage: dict[str, Any] | None = Field(default=None, description="Storage format body")
+    """Storage format body"""
+    atlas_doc_format: dict[str, Any] | None = Field(default=None, description="Atlas doc format body")
+    """Atlas doc format body"""
+
 class PageLinks(BaseModel):
     """Links related to the page"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -98,15 +107,6 @@ class PageVersion(BaseModel):
     """ID of the version author"""
     ncs_step_version: Any | None = Field(default=None, alias="ncsStepVersion", description="NCS step version")
     """NCS step version"""
-
-class PageBody(BaseModel):
-    """Page body content"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    storage: dict[str, Any] | None = Field(default=None, description="Storage format body")
-    """Storage format body"""
-    atlas_doc_format: dict[str, Any] | None = Field(default=None, description="Atlas doc format body")
-    """Atlas doc format body"""
 
 class Page(BaseModel):
     """Confluence page object"""

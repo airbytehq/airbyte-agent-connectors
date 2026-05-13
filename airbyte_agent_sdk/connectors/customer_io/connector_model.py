@@ -3740,6 +3740,636 @@ CustomerIoConnectorModel: ConnectorModel = ConnectorModel(
             },
         ),
         EntityDefinition(
+            name='transactional_messages',
+            actions=[Action.LIST, Action.GET],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/v1/transactional',
+                    action=Action.LIST,
+                    description='Returns a list of all transactional message templates in the workspace.',
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'messages': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'properties': {
+                                        'id': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Unique transactional message identifier',
+                                        },
+                                        'name': {
+                                            'type': ['null', 'string'],
+                                            'description': 'Transactional message template name',
+                                        },
+                                        'description': {
+                                            'type': ['null', 'string'],
+                                            'description': 'Description of the transactional message',
+                                        },
+                                        'send_to_unsubscribed': {
+                                            'type': ['null', 'boolean'],
+                                            'description': 'Whether to send to unsubscribed recipients',
+                                        },
+                                        'link_tracking': {
+                                            'type': ['null', 'boolean'],
+                                            'description': 'Whether link tracking is enabled',
+                                        },
+                                        'open_tracking': {
+                                            'type': ['null', 'boolean'],
+                                            'description': 'Whether open tracking is enabled',
+                                        },
+                                        'hide_message_body': {
+                                            'type': ['null', 'boolean'],
+                                            'description': 'Whether to hide the message body (disable message retention)',
+                                        },
+                                        'queue_drafts': {
+                                            'type': ['null', 'boolean'],
+                                            'description': 'Whether to queue messages as drafts instead of sending immediately',
+                                        },
+                                        'trigger_name': {
+                                            'type': ['null', 'string'],
+                                            'description': 'Trigger name used to reference this transactional message via API',
+                                        },
+                                        'created_at': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Creation timestamp (Unix)',
+                                        },
+                                        'updated_at': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Last update timestamp (Unix)',
+                                        },
+                                    },
+                                    'x-airbyte-entity-name': 'transactional_messages',
+                                    'x-airbyte-ai-hints': {
+                                        'summary': 'Transactional message templates for sending one-to-one messages like receipts and password resets',
+                                        'when_to_use': 'Questions about transactional message templates, their settings, or listing available templates',
+                                        'trigger_phrases': [
+                                            'transactional messages',
+                                            'transactional templates',
+                                            'email templates',
+                                            'message templates',
+                                        ],
+                                        'freshness': 'live',
+                                        'example_questions': ['What transactional message templates are configured?', 'Show me the details of transactional message 5', 'List all transactional templates'],
+                                        'search_strategy': 'Search by template name',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    record_extractor='$.messages',
+                    no_pagination='Returns all transactional messages in a single response without pagination',
+                ),
+                Action.GET: EndpointDefinition(
+                    method='GET',
+                    path='/v1/transactional/{transactional_id}',
+                    action=Action.GET,
+                    description='Returns a single transactional message template by ID.',
+                    path_params=['transactional_id'],
+                    path_params_schema={
+                        'transactional_id': {'type': 'integer', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'message': {
+                                'type': 'object',
+                                'properties': {
+                                    'id': {
+                                        'type': ['null', 'integer'],
+                                        'description': 'Unique transactional message identifier',
+                                    },
+                                    'name': {
+                                        'type': ['null', 'string'],
+                                        'description': 'Transactional message template name',
+                                    },
+                                    'description': {
+                                        'type': ['null', 'string'],
+                                        'description': 'Description of the transactional message',
+                                    },
+                                    'send_to_unsubscribed': {
+                                        'type': ['null', 'boolean'],
+                                        'description': 'Whether to send to unsubscribed recipients',
+                                    },
+                                    'link_tracking': {
+                                        'type': ['null', 'boolean'],
+                                        'description': 'Whether link tracking is enabled',
+                                    },
+                                    'open_tracking': {
+                                        'type': ['null', 'boolean'],
+                                        'description': 'Whether open tracking is enabled',
+                                    },
+                                    'hide_message_body': {
+                                        'type': ['null', 'boolean'],
+                                        'description': 'Whether to hide the message body (disable message retention)',
+                                    },
+                                    'queue_drafts': {
+                                        'type': ['null', 'boolean'],
+                                        'description': 'Whether to queue messages as drafts instead of sending immediately',
+                                    },
+                                    'trigger_name': {
+                                        'type': ['null', 'string'],
+                                        'description': 'Trigger name used to reference this transactional message via API',
+                                    },
+                                    'created_at': {
+                                        'type': ['null', 'integer'],
+                                        'description': 'Creation timestamp (Unix)',
+                                    },
+                                    'updated_at': {
+                                        'type': ['null', 'integer'],
+                                        'description': 'Last update timestamp (Unix)',
+                                    },
+                                },
+                                'x-airbyte-entity-name': 'transactional_messages',
+                                'x-airbyte-ai-hints': {
+                                    'summary': 'Transactional message templates for sending one-to-one messages like receipts and password resets',
+                                    'when_to_use': 'Questions about transactional message templates, their settings, or listing available templates',
+                                    'trigger_phrases': [
+                                        'transactional messages',
+                                        'transactional templates',
+                                        'email templates',
+                                        'message templates',
+                                    ],
+                                    'freshness': 'live',
+                                    'example_questions': ['What transactional message templates are configured?', 'Show me the details of transactional message 5', 'List all transactional templates'],
+                                    'search_strategy': 'Search by template name',
+                                },
+                            },
+                        },
+                    },
+                    record_extractor='$.message',
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'properties': {
+                    'id': {
+                        'type': ['null', 'integer'],
+                        'description': 'Unique transactional message identifier',
+                    },
+                    'name': {
+                        'type': ['null', 'string'],
+                        'description': 'Transactional message template name',
+                    },
+                    'description': {
+                        'type': ['null', 'string'],
+                        'description': 'Description of the transactional message',
+                    },
+                    'send_to_unsubscribed': {
+                        'type': ['null', 'boolean'],
+                        'description': 'Whether to send to unsubscribed recipients',
+                    },
+                    'link_tracking': {
+                        'type': ['null', 'boolean'],
+                        'description': 'Whether link tracking is enabled',
+                    },
+                    'open_tracking': {
+                        'type': ['null', 'boolean'],
+                        'description': 'Whether open tracking is enabled',
+                    },
+                    'hide_message_body': {
+                        'type': ['null', 'boolean'],
+                        'description': 'Whether to hide the message body (disable message retention)',
+                    },
+                    'queue_drafts': {
+                        'type': ['null', 'boolean'],
+                        'description': 'Whether to queue messages as drafts instead of sending immediately',
+                    },
+                    'trigger_name': {
+                        'type': ['null', 'string'],
+                        'description': 'Trigger name used to reference this transactional message via API',
+                    },
+                    'created_at': {
+                        'type': ['null', 'integer'],
+                        'description': 'Creation timestamp (Unix)',
+                    },
+                    'updated_at': {
+                        'type': ['null', 'integer'],
+                        'description': 'Last update timestamp (Unix)',
+                    },
+                },
+                'x-airbyte-entity-name': 'transactional_messages',
+                'x-airbyte-ai-hints': {
+                    'summary': 'Transactional message templates for sending one-to-one messages like receipts and password resets',
+                    'when_to_use': 'Questions about transactional message templates, their settings, or listing available templates',
+                    'trigger_phrases': [
+                        'transactional messages',
+                        'transactional templates',
+                        'email templates',
+                        'message templates',
+                    ],
+                    'freshness': 'live',
+                    'example_questions': ['What transactional message templates are configured?', 'Show me the details of transactional message 5', 'List all transactional templates'],
+                    'search_strategy': 'Search by template name',
+                },
+            },
+            ai_hints={
+                'summary': 'Transactional message templates for sending one-to-one messages like receipts and password resets',
+                'when_to_use': 'Questions about transactional message templates, their settings, or listing available templates',
+                'trigger_phrases': [
+                    'transactional messages',
+                    'transactional templates',
+                    'email templates',
+                    'message templates',
+                ],
+                'freshness': 'live',
+                'example_questions': ['What transactional message templates are configured?', 'Show me the details of transactional message 5', 'List all transactional templates'],
+                'search_strategy': 'Search by template name',
+            },
+        ),
+        EntityDefinition(
+            name='transactional_message_contents',
+            actions=[Action.LIST, Action.UPDATE],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/v1/transactional/{transactional_id}/contents',
+                    action=Action.LIST,
+                    description='Returns all content variants (including language translations) for a transactional message template.',
+                    path_params=['transactional_id'],
+                    path_params_schema={
+                        'transactional_id': {'type': 'integer', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'contents': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'properties': {
+                                        'id': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Unique content variant identifier',
+                                        },
+                                        'name': {
+                                            'type': ['null', 'string'],
+                                            'description': 'Content variant name',
+                                        },
+                                        'created': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Creation timestamp (Unix)',
+                                        },
+                                        'updated': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Last update timestamp (Unix)',
+                                        },
+                                        'body': {
+                                            'type': ['null', 'string'],
+                                            'description': 'HTML body content of the message',
+                                        },
+                                        'language': {
+                                            'type': ['null', 'string'],
+                                            'description': 'Language code for this variant (empty string for default language)',
+                                        },
+                                        'type': {
+                                            'type': ['null', 'string'],
+                                            'description': 'Channel type (email or push)',
+                                        },
+                                        'from': {
+                                            'type': ['null', 'string'],
+                                            'description': 'Sender email address',
+                                        },
+                                        'from_id': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Sender identity ID',
+                                        },
+                                        'reply_to': {
+                                            'type': ['null', 'string'],
+                                            'description': 'Reply-to email address',
+                                        },
+                                        'reply_to_id': {
+                                            'type': ['null', 'integer'],
+                                            'description': 'Reply-to sender identity ID',
+                                        },
+                                        'preprocessor': {
+                                            'type': ['null', 'string'],
+                                            'description': 'CSS preprocessor setting (e.g. premailer)',
+                                        },
+                                        'recipient': {
+                                            'type': ['null', 'string'],
+                                            'description': 'Recipient expression (e.g. "{{customer.email}}")',
+                                        },
+                                        'subject': {
+                                            'type': ['null', 'string'],
+                                            'description': 'Email subject line',
+                                        },
+                                        'bcc': {
+                                            'type': ['null', 'string'],
+                                            'description': 'BCC addresses',
+                                        },
+                                        'fake_bcc': {
+                                            'type': ['null', 'boolean'],
+                                            'description': 'Whether to use fake BCC',
+                                        },
+                                        'preheader_text': {
+                                            'type': ['null', 'string'],
+                                            'description': 'Email preheader/preview text',
+                                        },
+                                        'body_amp': {
+                                            'type': ['null', 'string'],
+                                            'description': 'AMP HTML body content',
+                                        },
+                                        'headers': {
+                                            'type': ['null', 'string'],
+                                            'description': 'Custom email headers as a JSON string',
+                                        },
+                                    },
+                                    'x-airbyte-entity-name': 'transactional_message_contents',
+                                    'x-airbyte-ai-hints': {
+                                        'summary': 'Content variants and language translations of transactional message templates',
+                                        'when_to_use': 'Questions about the content, body, subject, or language variants of a transactional message template',
+                                        'trigger_phrases': [
+                                            'transactional content',
+                                            'template content',
+                                            'template variants',
+                                            'message body',
+                                            'language variant',
+                                        ],
+                                        'freshness': 'live',
+                                        'example_questions': ['Show me the content of transactional message 3', 'What language variants exist for template 5?', 'Update the subject of transactional template content 139'],
+                                        'search_strategy': 'Access via parent transactional message ID',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    record_extractor='$.contents',
+                    no_pagination='Returns all content variants in a single response without pagination',
+                ),
+                Action.UPDATE: EndpointDefinition(
+                    method='PUT',
+                    path='/v1/transactional/{transactional_id}/content/{content_id}',
+                    action=Action.UPDATE,
+                    description='Updates the content of a specific variant of a transactional message template by content ID.',
+                    body_fields=[
+                        'body',
+                        'from_id',
+                        'reply_to_id',
+                        'recipient',
+                        'subject',
+                        'preheader_text',
+                        'body_amp',
+                        'headers',
+                    ],
+                    path_params=['transactional_id', 'content_id'],
+                    path_params_schema={
+                        'transactional_id': {'type': 'integer', 'required': True},
+                        'content_id': {'type': 'integer', 'required': True},
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'properties': {
+                            'body': {'type': 'string', 'description': 'HTML body content of the message'},
+                            'from_id': {'type': 'integer', 'description': 'Sender identity ID'},
+                            'reply_to_id': {
+                                'type': ['integer', 'null'],
+                                'description': 'Reply-to sender identity ID',
+                            },
+                            'recipient': {'type': 'string', 'description': 'Recipient expression (e.g. "{{customer.email}}")'},
+                            'subject': {'type': 'string', 'description': 'Email subject line'},
+                            'preheader_text': {'type': 'string', 'description': 'Email preheader/preview text'},
+                            'body_amp': {'type': 'string', 'description': 'AMP HTML body content'},
+                            'headers': {
+                                'type': 'array',
+                                'description': 'Custom email headers as an array of name-value objects',
+                                'items': {
+                                    'type': 'object',
+                                    'properties': {
+                                        'name': {'type': 'string', 'description': 'Header name'},
+                                        'value': {'type': 'string', 'description': 'Header value'},
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'content': {
+                                'type': 'object',
+                                'properties': {
+                                    'id': {
+                                        'type': ['null', 'integer'],
+                                        'description': 'Unique content variant identifier',
+                                    },
+                                    'name': {
+                                        'type': ['null', 'string'],
+                                        'description': 'Content variant name',
+                                    },
+                                    'created': {
+                                        'type': ['null', 'integer'],
+                                        'description': 'Creation timestamp (Unix)',
+                                    },
+                                    'updated': {
+                                        'type': ['null', 'integer'],
+                                        'description': 'Last update timestamp (Unix)',
+                                    },
+                                    'body': {
+                                        'type': ['null', 'string'],
+                                        'description': 'HTML body content of the message',
+                                    },
+                                    'language': {
+                                        'type': ['null', 'string'],
+                                        'description': 'Language code for this variant (empty string for default language)',
+                                    },
+                                    'type': {
+                                        'type': ['null', 'string'],
+                                        'description': 'Channel type (email or push)',
+                                    },
+                                    'from': {
+                                        'type': ['null', 'string'],
+                                        'description': 'Sender email address',
+                                    },
+                                    'from_id': {
+                                        'type': ['null', 'integer'],
+                                        'description': 'Sender identity ID',
+                                    },
+                                    'reply_to': {
+                                        'type': ['null', 'string'],
+                                        'description': 'Reply-to email address',
+                                    },
+                                    'reply_to_id': {
+                                        'type': ['null', 'integer'],
+                                        'description': 'Reply-to sender identity ID',
+                                    },
+                                    'preprocessor': {
+                                        'type': ['null', 'string'],
+                                        'description': 'CSS preprocessor setting (e.g. premailer)',
+                                    },
+                                    'recipient': {
+                                        'type': ['null', 'string'],
+                                        'description': 'Recipient expression (e.g. "{{customer.email}}")',
+                                    },
+                                    'subject': {
+                                        'type': ['null', 'string'],
+                                        'description': 'Email subject line',
+                                    },
+                                    'bcc': {
+                                        'type': ['null', 'string'],
+                                        'description': 'BCC addresses',
+                                    },
+                                    'fake_bcc': {
+                                        'type': ['null', 'boolean'],
+                                        'description': 'Whether to use fake BCC',
+                                    },
+                                    'preheader_text': {
+                                        'type': ['null', 'string'],
+                                        'description': 'Email preheader/preview text',
+                                    },
+                                    'body_amp': {
+                                        'type': ['null', 'string'],
+                                        'description': 'AMP HTML body content',
+                                    },
+                                    'headers': {
+                                        'type': ['null', 'string'],
+                                        'description': 'Custom email headers as a JSON string',
+                                    },
+                                },
+                                'x-airbyte-entity-name': 'transactional_message_contents',
+                                'x-airbyte-ai-hints': {
+                                    'summary': 'Content variants and language translations of transactional message templates',
+                                    'when_to_use': 'Questions about the content, body, subject, or language variants of a transactional message template',
+                                    'trigger_phrases': [
+                                        'transactional content',
+                                        'template content',
+                                        'template variants',
+                                        'message body',
+                                        'language variant',
+                                    ],
+                                    'freshness': 'live',
+                                    'example_questions': ['Show me the content of transactional message 3', 'What language variants exist for template 5?', 'Update the subject of transactional template content 139'],
+                                    'search_strategy': 'Access via parent transactional message ID',
+                                },
+                            },
+                        },
+                    },
+                    record_extractor='$.content',
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'properties': {
+                    'id': {
+                        'type': ['null', 'integer'],
+                        'description': 'Unique content variant identifier',
+                    },
+                    'name': {
+                        'type': ['null', 'string'],
+                        'description': 'Content variant name',
+                    },
+                    'created': {
+                        'type': ['null', 'integer'],
+                        'description': 'Creation timestamp (Unix)',
+                    },
+                    'updated': {
+                        'type': ['null', 'integer'],
+                        'description': 'Last update timestamp (Unix)',
+                    },
+                    'body': {
+                        'type': ['null', 'string'],
+                        'description': 'HTML body content of the message',
+                    },
+                    'language': {
+                        'type': ['null', 'string'],
+                        'description': 'Language code for this variant (empty string for default language)',
+                    },
+                    'type': {
+                        'type': ['null', 'string'],
+                        'description': 'Channel type (email or push)',
+                    },
+                    'from': {
+                        'type': ['null', 'string'],
+                        'description': 'Sender email address',
+                    },
+                    'from_id': {
+                        'type': ['null', 'integer'],
+                        'description': 'Sender identity ID',
+                    },
+                    'reply_to': {
+                        'type': ['null', 'string'],
+                        'description': 'Reply-to email address',
+                    },
+                    'reply_to_id': {
+                        'type': ['null', 'integer'],
+                        'description': 'Reply-to sender identity ID',
+                    },
+                    'preprocessor': {
+                        'type': ['null', 'string'],
+                        'description': 'CSS preprocessor setting (e.g. premailer)',
+                    },
+                    'recipient': {
+                        'type': ['null', 'string'],
+                        'description': 'Recipient expression (e.g. "{{customer.email}}")',
+                    },
+                    'subject': {
+                        'type': ['null', 'string'],
+                        'description': 'Email subject line',
+                    },
+                    'bcc': {
+                        'type': ['null', 'string'],
+                        'description': 'BCC addresses',
+                    },
+                    'fake_bcc': {
+                        'type': ['null', 'boolean'],
+                        'description': 'Whether to use fake BCC',
+                    },
+                    'preheader_text': {
+                        'type': ['null', 'string'],
+                        'description': 'Email preheader/preview text',
+                    },
+                    'body_amp': {
+                        'type': ['null', 'string'],
+                        'description': 'AMP HTML body content',
+                    },
+                    'headers': {
+                        'type': ['null', 'string'],
+                        'description': 'Custom email headers as a JSON string',
+                    },
+                },
+                'x-airbyte-entity-name': 'transactional_message_contents',
+                'x-airbyte-ai-hints': {
+                    'summary': 'Content variants and language translations of transactional message templates',
+                    'when_to_use': 'Questions about the content, body, subject, or language variants of a transactional message template',
+                    'trigger_phrases': [
+                        'transactional content',
+                        'template content',
+                        'template variants',
+                        'message body',
+                        'language variant',
+                    ],
+                    'freshness': 'live',
+                    'example_questions': ['Show me the content of transactional message 3', 'What language variants exist for template 5?', 'Update the subject of transactional template content 139'],
+                    'search_strategy': 'Access via parent transactional message ID',
+                },
+            },
+            ai_hints={
+                'summary': 'Content variants and language translations of transactional message templates',
+                'when_to_use': 'Questions about the content, body, subject, or language variants of a transactional message template',
+                'trigger_phrases': [
+                    'transactional content',
+                    'template content',
+                    'template variants',
+                    'message body',
+                    'language variant',
+                ],
+                'freshness': 'live',
+                'example_questions': ['Show me the content of transactional message 3', 'What language variants exist for template 5?', 'Update the subject of transactional template content 139'],
+                'search_strategy': 'Access via parent transactional message ID',
+            },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='transactional_message_contents',
+                    target_entity='transactional_messages',
+                    foreign_key='transactional_id',
+                    cardinality='many_to_one',
+                    description='Scoping-only relationship: transactional_id is a required path parameter for contents endpoints, not a field on emitted records. Declares how to resolve the parent transactional message for per-entity health checks.\n',
+                ),
+            ],
+        ),
+        EntityDefinition(
             name='transactional_email',
             actions=[Action.CREATE],
             endpoints={
@@ -4154,6 +4784,10 @@ CustomerIoConnectorModel: ConnectorModel = ConnectorModel(
             'Send an SMS notification to +15551234567',
             'Send a push notification to user 123',
             'Trigger broadcast campaign 42',
+            'List all transactional message templates',
+            'Get the details of transactional message 5',
+            'Show the content variants of transactional template 3',
+            'Update the subject of transactional content 139 in template 3',
         ],
         context_store_search=[
             'Which campaigns are currently active?',

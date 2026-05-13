@@ -6,11 +6,12 @@ info:
   description: >
     Connector for the Customer.io App API, providing read access to campaigns,
     newsletters, segments, messages, activities, sender identities, snippets,
-    collections, reporting webhooks, and exports. Customer.io is a messaging
-    platform that lets you send automated emails, push notifications, SMS, and
-    in-app messages based on customer behavior. This connector retrieves data
-    from the App API (not the Track API) and requires a Bearer-type App API key
-    generated in your Customer.io workspace settings.
+    collections, reporting webhooks, exports, and transactional message
+    templates. Customer.io is a messaging platform that lets you send automated
+    emails, push notifications, SMS, and in-app messages based on customer
+    behavior. This connector retrieves data from the App API (not the Track
+    API) and requires a Bearer-type App API key generated in your Customer.io
+    workspace settings.
   x-airbyte-connector-name: customer-io
   x-airbyte-connector-definition-id: 34f697bc-b989-4eda-b06f-d0f39b88825b
   x-airbyte-replication-version: "0.4.1"
@@ -40,6 +41,10 @@ info:
       - "Send an SMS notification to +15551234567"
       - "Send a push notification to user 123"
       - "Trigger broadcast campaign 42"
+      - "List all transactional message templates"
+      - "Get the details of transactional message 5"
+      - "Show the content variants of transactional template 3"
+      - "Update the subject of transactional content 139 in template 3"
     search:
       - "Which campaigns are currently active?"
       - "Find newsletters sent in the last month"
@@ -261,6 +266,16 @@ info:
       target_key: id
       cardinality: many_to_one
       description: Campaign actions belong to a campaign
+    - source_entity: transactional_message_contents
+      target_entity: transactional_messages
+      foreign_key: transactional_id
+      target_key: id
+      cardinality: many_to_one
+      description: >
+        Scoping-only relationship: transactional_id is a required path
+        parameter for contents endpoints, not a field on emitted records.
+        Declares how to resolve the parent transactional message for
+        per-entity health checks.
 
 
 servers:
@@ -1217,6 +1232,145 @@ paths:
           description: Unauthorized
         "404":
           description: Export not found
+
+  # ── Transactional Messages (Templates) ────────────────
+  /v1/transactional:
+    get:
+      summary: List transactional messages
+      description: Returns a list of all transactional message templates in the workspace.
+      operationId: listTransactionalMessages
+      x-airbyte-entity: transactional_messages
+      x-airbyte-action: list
+      x-airbyte-record-extractor: $.messages
+      x-airbyte-no-pagination: "Returns all transactional messages in a single response without pagination"
+      responses:
+        "200":
+          description: List of transactional messages
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/TransactionalMessage"
+        "401":
+          description: Unauthorized
+        "429":
+          description: Rate limited
+
+  /v1/transactional/{transactional_id}:
+    get:
+      summary: Get a transactional message
+      description: Returns a single transactional message template by ID.
+      operationId: getTransactionalMessage
+      x-airbyte-entity: transactional_messages
+      x-airbyte-action: get
+      x-airbyte-record-extractor: $.message
+      parameters:
+        - name: transactional_id
+          in: path
+          required: true
+          description: The transactional message identifier
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Transactional message object
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    $ref: "#/components/schemas/TransactionalMessage"
+        "401":
+          description: Unauthorized
+        "404":
+          description: Transactional message not found
+        "429":
+          description: Rate limited
+
+  # ── Transactional Message Contents (Variants) ───────
+  /v1/transactional/{transactional_id}/contents:
+    get:
+      summary: List transactional message contents
+      description: Returns all content variants (including language translations) for a transactional message template.
+      operationId: listTransactionalMessageContents
+      x-airbyte-entity: transactional_message_contents
+      x-airbyte-action: list
+      x-airbyte-record-extractor: $.contents
+      x-airbyte-no-pagination: "Returns all content variants in a single response without pagination"
+      parameters:
+        - name: transactional_id
+          in: path
+          required: true
+          description: The transactional message identifier
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of content variants
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  contents:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/TransactionalMessageContent"
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "404":
+          description: Transactional message not found
+
+  /v1/transactional/{transactional_id}/content/{content_id}:
+    put:
+      summary: Update transactional message content
+      description: Updates the content of a specific variant of a transactional message template by content ID.
+      operationId: updateTransactionalMessageContent
+      x-airbyte-entity: transactional_message_contents
+      x-airbyte-action: update
+      x-airbyte-record-extractor: $.content
+      parameters:
+        - name: transactional_id
+          in: path
+          required: true
+          description: The transactional message identifier
+          schema:
+            type: integer
+        - name: content_id
+          in: path
+          required: true
+          description: The content variant identifier
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TransactionalMessageContentUpdateParams"
+      responses:
+        "200":
+          description: Updated content variant
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  content:
+                    $ref: "#/components/schemas/TransactionalMessageContent"
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "404":
+          description: Content variant not found
 
   # ── Transactional Email ────────────────────────────────
   /v1/send/email:
@@ -2603,6 +2757,236 @@ components:
             "segment" objects with an "id" field, and "attribute" objects with
             "field", "operator", and "value" fields. Example:
             {"and": [{"segment": {"id": 3}}, {"attribute": {"field": "plan", "operator": "eq", "value": "premium"}}]}
+
+    # ── Transactional Message (Template) ─────────────────
+    TransactionalMessage:
+      type: object
+      x-airbyte-entity-name: transactional_messages
+      x-airbyte-ai-hints:
+        summary: "Transactional message templates for sending one-to-one messages like receipts and password resets"
+        when_to_use: "Questions about transactional message templates, their settings, or listing available templates"
+        trigger_phrases:
+          - "transactional messages"
+          - "transactional templates"
+          - "email templates"
+          - "message templates"
+        freshness: live
+        search_strategy: "Search by template name"
+        example_questions:
+          - "What transactional message templates are configured?"
+          - "Show me the details of transactional message 5"
+          - "List all transactional templates"
+      properties:
+        id:
+          type:
+            - "null"
+            - integer
+          description: Unique transactional message identifier
+        name:
+          type:
+            - "null"
+            - string
+          description: Transactional message template name
+        description:
+          type:
+            - "null"
+            - string
+          description: Description of the transactional message
+        send_to_unsubscribed:
+          type:
+            - "null"
+            - boolean
+          description: Whether to send to unsubscribed recipients
+        link_tracking:
+          type:
+            - "null"
+            - boolean
+          description: Whether link tracking is enabled
+        open_tracking:
+          type:
+            - "null"
+            - boolean
+          description: Whether open tracking is enabled
+        hide_message_body:
+          type:
+            - "null"
+            - boolean
+          description: Whether to hide the message body (disable message retention)
+        queue_drafts:
+          type:
+            - "null"
+            - boolean
+          description: Whether to queue messages as drafts instead of sending immediately
+        trigger_name:
+          type:
+            - "null"
+            - string
+          description: Trigger name used to reference this transactional message via API
+        created_at:
+          type:
+            - "null"
+            - integer
+          description: Creation timestamp (Unix)
+        updated_at:
+          type:
+            - "null"
+            - integer
+          description: Last update timestamp (Unix)
+
+    # ── Transactional Message Content (Variant) ──────────
+    TransactionalMessageContent:
+      type: object
+      x-airbyte-entity-name: transactional_message_contents
+      x-airbyte-ai-hints:
+        summary: "Content variants and language translations of transactional message templates"
+        when_to_use: "Questions about the content, body, subject, or language variants of a transactional message template"
+        trigger_phrases:
+          - "transactional content"
+          - "template content"
+          - "template variants"
+          - "message body"
+          - "language variant"
+        freshness: live
+        search_strategy: "Access via parent transactional message ID"
+        example_questions:
+          - "Show me the content of transactional message 3"
+          - "What language variants exist for template 5?"
+          - "Update the subject of transactional template content 139"
+      properties:
+        id:
+          type:
+            - "null"
+            - integer
+          description: Unique content variant identifier
+        name:
+          type:
+            - "null"
+            - string
+          description: Content variant name
+        created:
+          type:
+            - "null"
+            - integer
+          description: Creation timestamp (Unix)
+        updated:
+          type:
+            - "null"
+            - integer
+          description: Last update timestamp (Unix)
+        body:
+          type:
+            - "null"
+            - string
+          description: HTML body content of the message
+        language:
+          type:
+            - "null"
+            - string
+          description: Language code for this variant (empty string for default language)
+        type:
+          type:
+            - "null"
+            - string
+          description: Channel type (email or push)
+        from:
+          type:
+            - "null"
+            - string
+          description: Sender email address
+        from_id:
+          type:
+            - "null"
+            - integer
+          description: Sender identity ID
+        reply_to:
+          type:
+            - "null"
+            - string
+          description: Reply-to email address
+        reply_to_id:
+          type:
+            - "null"
+            - integer
+          description: Reply-to sender identity ID
+        preprocessor:
+          type:
+            - "null"
+            - string
+          description: CSS preprocessor setting (e.g. premailer)
+        recipient:
+          type:
+            - "null"
+            - string
+          description: Recipient expression (e.g. "{{customer.email}}")
+        subject:
+          type:
+            - "null"
+            - string
+          description: Email subject line
+        bcc:
+          type:
+            - "null"
+            - string
+          description: BCC addresses
+        fake_bcc:
+          type:
+            - "null"
+            - boolean
+          description: Whether to use fake BCC
+        preheader_text:
+          type:
+            - "null"
+            - string
+          description: Email preheader/preview text
+        body_amp:
+          type:
+            - "null"
+            - string
+          description: AMP HTML body content
+        headers:
+          type:
+            - "null"
+            - string
+          description: Custom email headers as a JSON string
+
+    TransactionalMessageContentUpdateParams:
+      type: object
+      properties:
+        body:
+          type: string
+          description: HTML body content of the message
+        from_id:
+          type: integer
+          description: Sender identity ID
+        reply_to_id:
+          type:
+            - integer
+            - "null"
+          description: Reply-to sender identity ID
+        recipient:
+          type: string
+          description: Recipient expression (e.g. "{{customer.email}}")
+        subject:
+          type: string
+          description: Email subject line
+        preheader_text:
+          type: string
+          description: Email preheader/preview text
+        body_amp:
+          type: string
+          description: AMP HTML body content
+        headers:
+          type: array
+          description: Custom email headers as an array of name-value objects
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: Header name
+              value:
+                type: string
+                description: Header value
 
     # ── Transactional & Broadcast Schemas ────────────────
 

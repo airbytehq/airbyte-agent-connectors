@@ -129,17 +129,6 @@ class Segment(BaseModel):
     progress: int | None = Field(default=None)
     conditions: dict[str, Any] | None = Field(default=None)
 
-class MessageCustomerIdentifiers(BaseModel):
-    """Customer identification details"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: str | None | None = Field(default=None, description="Person's ID")
-    """Person's ID"""
-    cio_id: str | None | None = Field(default=None, description="Customer.io internal ID")
-    """Customer.io internal ID"""
-    email: str | None | None = Field(default=None, description="Person's email address")
-    """Person's email address"""
-
 class MessageMetrics(BaseModel):
     """Delivery metrics timestamps"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -154,6 +143,17 @@ class MessageMetrics(BaseModel):
     bounced: int | None | None = Field(default=None)
     failed: int | None | None = Field(default=None)
     undeliverable: int | None | None = Field(default=None)
+
+class MessageCustomerIdentifiers(BaseModel):
+    """Customer identification details"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None | None = Field(default=None, description="Person's ID")
+    """Person's ID"""
+    cio_id: str | None | None = Field(default=None, description="Customer.io internal ID")
+    """Customer.io internal ID"""
+    email: str | None | None = Field(default=None, description="Person's email address")
+    """Person's email address"""
 
 class Message(BaseModel):
     """Message type definition"""
@@ -334,6 +334,68 @@ class ExportCreateParams(BaseModel):
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     filters: dict[str, Any]
+
+class TransactionalMessage(BaseModel):
+    """TransactionalMessage type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int | None = Field(default=None)
+    name: str | None = Field(default=None)
+    description: str | None = Field(default=None)
+    send_to_unsubscribed: bool | None = Field(default=None)
+    link_tracking: bool | None = Field(default=None)
+    open_tracking: bool | None = Field(default=None)
+    hide_message_body: bool | None = Field(default=None)
+    queue_drafts: bool | None = Field(default=None)
+    trigger_name: str | None = Field(default=None)
+    created_at: int | None = Field(default=None)
+    updated_at: int | None = Field(default=None)
+
+class TransactionalMessageContent(BaseModel):
+    """TransactionalMessageContent type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int | None = Field(default=None)
+    name: str | None = Field(default=None)
+    created: int | None = Field(default=None)
+    updated: int | None = Field(default=None)
+    body: str | None = Field(default=None)
+    language: str | None = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    from_: str | None = Field(default=None, alias="from")
+    from_id: int | None = Field(default=None)
+    reply_to: str | None = Field(default=None)
+    reply_to_id: int | None = Field(default=None)
+    preprocessor: str | None = Field(default=None)
+    recipient: str | None = Field(default=None)
+    subject: str | None = Field(default=None)
+    bcc: str | None = Field(default=None)
+    fake_bcc: bool | None = Field(default=None)
+    preheader_text: str | None = Field(default=None)
+    body_amp: str | None = Field(default=None)
+    headers: str | None = Field(default=None)
+
+class TransactionalMessageContentUpdateParamsHeadersItem(BaseModel):
+    """Nested schema for TransactionalMessageContentUpdateParams.headers_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: str | None = Field(default=None, description="Header name")
+    """Header name"""
+    value: str | None = Field(default=None, description="Header value")
+    """Header value"""
+
+class TransactionalMessageContentUpdateParams(BaseModel):
+    """TransactionalMessageContentUpdateParams type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    body: str | None = Field(default=None)
+    from_id: int | None = Field(default=None)
+    reply_to_id: int | None = Field(default=None)
+    recipient: str | None = Field(default=None)
+    subject: str | None = Field(default=None)
+    preheader_text: str | None = Field(default=None)
+    body_amp: str | None = Field(default=None)
+    headers: list[TransactionalMessageContentUpdateParamsHeadersItem] | None = Field(default=None)
 
 class TransactionalSendResponse(BaseModel):
     """TransactionalSendResponse type definition"""
@@ -717,4 +779,10 @@ ReportingWebhooksListResult = CustomerIoExecuteResult[list[ReportingWebhook]]
 
 ExportsListResult = CustomerIoExecuteResult[list[Export]]
 """Result type for exports.list operation."""
+
+TransactionalMessagesListResult = CustomerIoExecuteResult[list[TransactionalMessage]]
+"""Result type for transactional_messages.list operation."""
+
+TransactionalMessageContentsListResult = CustomerIoExecuteResult[list[TransactionalMessageContent]]
+"""Result type for transactional_message_contents.list operation."""
 

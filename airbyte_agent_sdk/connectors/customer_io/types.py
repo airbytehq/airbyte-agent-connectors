@@ -22,6 +22,11 @@ class SegmentsCreateParamsSegment(TypedDict):
     name: str
     description: NotRequired[str]
 
+class TransactionalMessageContentsUpdateParamsHeadersItem(TypedDict):
+    """Nested schema for TransactionalMessageContentsUpdateParams.headers_item"""
+    name: NotRequired[str]
+    value: NotRequired[str]
+
 # ===== OPERATION PARAMS TYPE DEFINITIONS =====
 
 class CampaignsListParams(TypedDict):
@@ -167,6 +172,31 @@ class ExportsCreateParams(TypedDict):
 class ExportsGetParams(TypedDict):
     """Parameters for exports.get operation"""
     export_id: str
+
+class TransactionalMessagesListParams(TypedDict):
+    """Parameters for transactional_messages.list operation"""
+    pass
+
+class TransactionalMessagesGetParams(TypedDict):
+    """Parameters for transactional_messages.get operation"""
+    transactional_id: str
+
+class TransactionalMessageContentsListParams(TypedDict):
+    """Parameters for transactional_message_contents.list operation"""
+    transactional_id: str
+
+class TransactionalMessageContentsUpdateParams(TypedDict):
+    """Parameters for transactional_message_contents.update operation"""
+    body: NotRequired[str]
+    from_id: NotRequired[int]
+    reply_to_id: NotRequired[int | None]
+    recipient: NotRequired[str]
+    subject: NotRequired[str]
+    preheader_text: NotRequired[str]
+    body_amp: NotRequired[str]
+    headers: NotRequired[list[TransactionalMessageContentsUpdateParamsHeadersItem]]
+    transactional_id: str
+    content_id: str
 
 class TransactionalEmailCreateParams(TypedDict):
     """Parameters for transactional_email.create operation"""
