@@ -995,31 +995,25 @@ components:
           tokenUrl: https://oauth2.googleapis.com/token
           refreshUrl: https://oauth2.googleapis.com/token
           scopes:
-            https://www.googleapis.com/auth/gmail.readonly: View your email messages and settings
             https://www.googleapis.com/auth/gmail.modify: View and modify but not delete your email
             https://www.googleapis.com/auth/gmail.compose: Manage drafts and send emails
             https://www.googleapis.com/auth/gmail.labels: Manage mailbox labels
-            https://mail.google.com/: Full access to the account's mailboxes including permanent deletion
       # Google may show previously granted Airbyte scopes on the consent screen
       # when include_granted_scopes=true; this mapping is what Sonar requests.
       x-airbyte-oauth-scopes:
-        - scope: "https://www.googleapis.com/auth/gmail.readonly"
-          mode: read
+        - scope: "https://www.googleapis.com/auth/gmail.modify"
+          mode: read_write
           entities:
             - profile
             - messages
             - threads
             - drafts
+            - messages_trash
+            - messages_untrash
         - scope: "https://www.googleapis.com/auth/gmail.labels"
           mode: read_write
           entities:
             - labels
-        - scope: "https://www.googleapis.com/auth/gmail.modify"
-          mode: write
-          entities:
-            - messages
-            - messages_trash
-            - messages_untrash
         - scope: "https://www.googleapis.com/auth/gmail.compose"
           mode: write
           entities:
