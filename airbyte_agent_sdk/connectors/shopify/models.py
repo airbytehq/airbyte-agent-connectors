@@ -117,55 +117,6 @@ class OrderAddress(BaseModel):
     latitude: float | None = Field(default=None)
     longitude: float | None = Field(default=None)
 
-class Transaction(BaseModel):
-    """An order transaction"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: int
-    order_id: int | None = Field(default=None)
-    kind: str | None = Field(default=None)
-    gateway: str | None = Field(default=None)
-    status: str | None = Field(default=None)
-    message: str | None = Field(default=None)
-    created_at: str | None = Field(default=None)
-    test: bool | None = Field(default=None)
-    authorization: str | None = Field(default=None)
-    location_id: int | None = Field(default=None)
-    user_id: int | None = Field(default=None)
-    parent_id: int | None = Field(default=None)
-    processed_at: str | None = Field(default=None)
-    device_id: int | None = Field(default=None)
-    error_code: str | None = Field(default=None)
-    source_name: str | None = Field(default=None)
-    receipt: dict[str, Any] | None = Field(default=None)
-    currency_exchange_adjustment: dict[str, Any] | None = Field(default=None)
-    amount: str | None = Field(default=None)
-    currency: str | None = Field(default=None)
-    payment_id: str | None = Field(default=None)
-    total_unsettled_set: dict[str, Any] | None = Field(default=None)
-    manual_payment_gateway: bool | None = Field(default=None)
-    admin_graphql_api_id: str | None = Field(default=None)
-
-class Refund(BaseModel):
-    """An order refund"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: int
-    order_id: int | None = Field(default=None)
-    created_at: str | None = Field(default=None)
-    note: str | None = Field(default=None)
-    user_id: int | None = Field(default=None)
-    processed_at: str | None = Field(default=None)
-    restock: bool | None = Field(default=None)
-    duties: list[dict[str, Any]] | None = Field(default=None)
-    total_duties_set: dict[str, Any] | None = Field(default=None)
-    return_: dict[str, Any] | None = Field(default=None, alias="return")
-    refund_line_items: list[dict[str, Any]] | None = Field(default=None)
-    transactions: list[Transaction] | None = Field(default=None)
-    order_adjustments: list[dict[str, Any]] | None = Field(default=None)
-    admin_graphql_api_id: str | None = Field(default=None)
-    refund_shipping_lines: list[dict[str, Any]] | None = Field(default=None)
-
 class LineItem(BaseModel):
     """LineItem type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -222,6 +173,55 @@ class Fulfillment(BaseModel):
     receipt: dict[str, Any] | None = Field(default=None)
     name: str | None = Field(default=None)
     admin_graphql_api_id: str | None = Field(default=None)
+
+class Transaction(BaseModel):
+    """An order transaction"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int
+    order_id: int | None = Field(default=None)
+    kind: str | None = Field(default=None)
+    gateway: str | None = Field(default=None)
+    status: str | None = Field(default=None)
+    message: str | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    test: bool | None = Field(default=None)
+    authorization: str | None = Field(default=None)
+    location_id: int | None = Field(default=None)
+    user_id: int | None = Field(default=None)
+    parent_id: int | None = Field(default=None)
+    processed_at: str | None = Field(default=None)
+    device_id: int | None = Field(default=None)
+    error_code: str | None = Field(default=None)
+    source_name: str | None = Field(default=None)
+    receipt: dict[str, Any] | None = Field(default=None)
+    currency_exchange_adjustment: dict[str, Any] | None = Field(default=None)
+    amount: str | None = Field(default=None)
+    currency: str | None = Field(default=None)
+    payment_id: str | None = Field(default=None)
+    total_unsettled_set: dict[str, Any] | None = Field(default=None)
+    manual_payment_gateway: bool | None = Field(default=None)
+    admin_graphql_api_id: str | None = Field(default=None)
+
+class Refund(BaseModel):
+    """An order refund"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int
+    order_id: int | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    note: str | None = Field(default=None)
+    user_id: int | None = Field(default=None)
+    processed_at: str | None = Field(default=None)
+    restock: bool | None = Field(default=None)
+    duties: list[dict[str, Any]] | None = Field(default=None)
+    total_duties_set: dict[str, Any] | None = Field(default=None)
+    return_: dict[str, Any] | None = Field(default=None, alias="return")
+    refund_line_items: list[dict[str, Any]] | None = Field(default=None)
+    transactions: list[Transaction] | None = Field(default=None)
+    order_adjustments: list[dict[str, Any]] | None = Field(default=None)
+    admin_graphql_api_id: str | None = Field(default=None)
+    refund_shipping_lines: list[dict[str, Any]] | None = Field(default=None)
 
 class Order(BaseModel):
     """A Shopify order"""
@@ -327,22 +327,6 @@ class OrderList(BaseModel):
 
     orders: list[Order] | None = Field(default=None)
 
-class ProductImage(BaseModel):
-    """A product image"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: int
-    product_id: int | None = Field(default=None)
-    position: int | None = Field(default=None)
-    created_at: str | None = Field(default=None)
-    updated_at: str | None = Field(default=None)
-    alt: str | None = Field(default=None)
-    width: int | None = Field(default=None)
-    height: int | None = Field(default=None)
-    src: str | None = Field(default=None)
-    variant_ids: list[int] | None = Field(default=None)
-    admin_graphql_api_id: str | None = Field(default=None)
-
 class ProductVariant(BaseModel):
     """A product variant"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -372,6 +356,22 @@ class ProductVariant(BaseModel):
     inventory_quantity: int | None = Field(default=None)
     old_inventory_quantity: int | None = Field(default=None)
     requires_shipping: bool | None = Field(default=None)
+    admin_graphql_api_id: str | None = Field(default=None)
+
+class ProductImage(BaseModel):
+    """A product image"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int
+    product_id: int | None = Field(default=None)
+    position: int | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
+    alt: str | None = Field(default=None)
+    width: int | None = Field(default=None)
+    height: int | None = Field(default=None)
+    src: str | None = Field(default=None)
+    variant_ids: list[int] | None = Field(default=None)
     admin_graphql_api_id: str | None = Field(default=None)
 
 class Product(BaseModel):
