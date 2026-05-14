@@ -315,6 +315,8 @@ info:
     replication_config_key_mapping:
       site_urls: site_urls
       start_date: start_date
+    replication_config_constants:
+      start_date: "{{ day_delta(-30, '%Y-%m-%d') }}"
 
 servers:
 - url: https://www.googleapis.com/webmasters/v3

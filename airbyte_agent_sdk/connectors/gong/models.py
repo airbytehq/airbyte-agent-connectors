@@ -251,12 +251,6 @@ class ExtensiveCallPartiesItem(BaseModel):
     context: list[ExtensiveCallPartiesItemContextItem] | None = Field(default=None, description="CRM context data linked to this participant")
     """CRM context data linked to this participant"""
 
-class ExtensiveCallCollaboration(BaseModel):
-    """Collaboration data"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    public_comments: list[dict[str, Any]] | None = Field(default=None, alias="publicComments")
-
 class ExtensiveCallContentTrackersItem(BaseModel):
     """Nested schema for ExtensiveCallContent.trackers_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -282,12 +276,11 @@ class ExtensiveCallContent(BaseModel):
     trackers: list[ExtensiveCallContentTrackersItem] | None = Field(default=None)
     points_of_interest: dict[str, Any] | None = Field(default=None, alias="pointsOfInterest")
 
-class ExtensiveCallMedia(BaseModel):
-    """Media URLs"""
+class ExtensiveCallCollaboration(BaseModel):
+    """Collaboration data"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    audio_url: str | None = Field(default=None, alias="audioUrl")
-    video_url: str | None = Field(default=None, alias="videoUrl")
+    public_comments: list[dict[str, Any]] | None = Field(default=None, alias="publicComments")
 
 class ExtensiveCallInteractionQuestions(BaseModel):
     """Nested schema for ExtensiveCallInteraction.questions"""
@@ -311,6 +304,13 @@ class ExtensiveCallInteraction(BaseModel):
 
     interaction_stats: list[ExtensiveCallInteractionInteractionstatsItem] | None = Field(default=None, alias="interactionStats")
     questions: ExtensiveCallInteractionQuestions | None = Field(default=None)
+
+class ExtensiveCallMedia(BaseModel):
+    """Media URLs"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    audio_url: str | None = Field(default=None, alias="audioUrl")
+    video_url: str | None = Field(default=None, alias="videoUrl")
 
 class ExtensiveCallMetadata(BaseModel):
     """Call metadata"""
