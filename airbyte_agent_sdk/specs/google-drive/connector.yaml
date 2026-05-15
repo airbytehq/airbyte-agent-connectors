@@ -1137,6 +1137,27 @@ components:
             https://www.googleapis.com/auth/drive.readonly: See and download all your Google Drive files
             https://www.googleapis.com/auth/drive.metadata.readonly: View metadata for files in your Google Drive
             https://www.googleapis.com/auth/drive.file: See, edit, create, and delete only the specific Google Drive files you use with this app
+      x-airbyte-oauth-scopes:
+        - scope: "https://www.googleapis.com/auth/drive.readonly"
+          mode: read
+          entities:
+            - files
+            - files_export
+            - drives
+            - permissions
+            - comments
+            - replies
+            - revisions
+            - changes
+            - changes_start_page_token
+            - about
+          description: Read Google Drive files, metadata, permissions, comments, revisions, changes, and account info
+        - scope: "https://www.googleapis.com/auth/drive"
+          mode: write
+          entities:
+            - files
+            - files_upload
+          description: Create, update, delete, and upload Google Drive files
       x-airbyte-auth-config:
         title: "OAuth 2.0 Authentication"
         type: object
