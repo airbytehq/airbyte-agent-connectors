@@ -18,7 +18,7 @@ class GranolaAuthConfig(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     api_key: str
-    """Granola Enterprise API key generated from Settings > Workspaces > API tab"""
+    """Granola API key. For a personal key, open the Granola desktop app and go to Settings > Connectors > API keys > Create new key. For an Enterprise API key, go to Settings > API > Create new key. On Enterprise plans, workspace admins must enable "Allow personal API keys" in Settings > Workspace > General before personal keys can be created."""
 
 # ===== RESPONSE TYPE DEFINITIONS (PYDANTIC) =====
 

@@ -29,7 +29,7 @@ from uuid import (
 GranolaConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('9023923c-002f-4131-9554-3ebdf56540a4'),
     name='granola',
-    version='1.0.6',
+    version='1.0.7',
     base_url='https://public-api.granola.ai',
     auth=AuthConfig(
         type=AuthType.BEARER,
@@ -41,7 +41,7 @@ GranolaConnectorModel: ConnectorModel = ConnectorModel(
             properties={
                 'api_key': AuthConfigFieldSpec(
                     title='API Key',
-                    description='Granola Enterprise API key generated from Settings > Workspaces > API tab',
+                    description='Granola API key. For a personal key, open the Granola desktop app and go to Settings > Connectors > API keys > Create new key. For an Enterprise API key, go to Settings > API > Create new key. On Enterprise plans, workspace admins must enable "Allow personal API keys" in Settings > Workspace > General before personal keys can be created.',
                 ),
             },
             auth_mapping={'token': '${api_key}'},

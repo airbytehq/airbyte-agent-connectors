@@ -2,16 +2,16 @@ openapi: 3.1.0
 
 info:
   title: Granola API Connector
-  version: 1.0.6
+  version: 1.0.7
   description: |
     The Granola API connector provides read access to meeting notes from Granola,
     an AI-powered meeting notes platform. This connector integrates with the Granola
-    Enterprise API to list and retrieve notes, including summaries, transcripts,
-    attendees, and calendar event details. Requires an Enterprise plan API key.
+    API to list and retrieve notes, including summaries, transcripts, attendees,
+    and calendar event details. Requires a Granola API key.
   x-airbyte-connector-name: granola
   x-airbyte-connector-definition-id: 9023923c-002f-4131-9554-3ebdf56540a4
-  x-airbyte-replication-version: "0.2.0"
-  x-airbyte-replication-compatibility: ">=0.2.0, <1.0.0"
+  x-airbyte-replication-version: "0.2.1"
+  x-airbyte-replication-compatibility: ">=0.2.1, <1.0.0"
   x-airbyte-example-questions:
     direct:
       - "List all meeting notes from Granola"
@@ -283,7 +283,7 @@ components:
     bearerAuth:
       type: http
       scheme: bearer
-      description: Bearer token authentication using an Enterprise API key
+      description: Bearer token authentication using a Granola API key
       x-airbyte-auth-config:
         title: API Key Authentication
         type: object
@@ -293,7 +293,7 @@ components:
           api_key:
             type: string
             title: API Key
-            description: Granola Enterprise API key generated from Settings > Workspaces > API tab
+            description: Granola API key. For a personal key, open the Granola desktop app and go to Settings > Connectors > API keys > Create new key. For an Enterprise API key, go to Settings > API > Create new key. On Enterprise plans, workspace admins must enable "Allow personal API keys" in Settings > Workspace > General before personal keys can be created.
         auth_mapping:
           token: "${api_key}"
         replication_auth_key_mapping:

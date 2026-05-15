@@ -3,7 +3,7 @@
   "class_name": "GranolaConnector",
   "package_name": "airbyte_agent_sdk.connectors.granola",
   "install_package": "airbyte-agent-sdk",
-  "yaml_version": "1.0.6",
+  "yaml_version": "1.0.7",
   "api_reference_url": "https://docs.granola.ai/introduction",
   "auth_example": "GranolaAuthConfig(api_key=\"...\")",
   "auth_import": ", GranolaAuthConfig",
@@ -20,7 +20,7 @@
             "type": "str",
             "required": true,
             "title": "API Key",
-            "description": "Granola Enterprise API key generated from Settings > Workspaces > API tab"
+            "description": "Granola API key. For a personal key, open the Granola desktop app and go to Settings > Connectors > API keys > Create new key. For an Enterprise API key, go to Settings > API > Create new key. On Enterprise plans, workspace admins must enable \"Allow personal API keys\" in Settings > Workspace > General before personal keys can be created."
           }
         ],
         "type_suffix": "ApiKeyAuthentication"
@@ -29,7 +29,7 @@
     "is_multi_auth": false
   },
   "replication_config": null,
-  "custom_description": "The Granola API connector provides read access to meeting notes from Granola,\nan AI-powered meeting notes platform. This connector integrates with the Granola\nEnterprise API to list and retrieve notes, including summaries, transcripts,\nattendees, and calendar event details. Requires an Enterprise plan API key.\n",
+  "custom_description": "The Granola API connector provides read access to meeting notes from Granola,\nan AI-powered meeting notes platform. This connector integrates with the Granola\nAPI to list and retrieve notes, including summaries, transcripts, attendees,\nand calendar event details. Requires a Granola API key.\n",
   "supported_questions": "- List all meeting notes from Granola\n- Show me recent meeting notes\n- Get the details of a specific note\n- List notes created in the last week\n- Find meeting notes from last month\n- Which meetings had the most attendees?\n- Show me notes that mention budget reviews\n- What meetings happened this quarter?",
   "unsupported_questions": "- Create a new meeting note\n- Delete a meeting note\n- Update an existing note\n- Share a note with someone",
   "first_operation": {
