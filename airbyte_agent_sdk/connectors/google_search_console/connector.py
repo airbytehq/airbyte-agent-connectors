@@ -101,7 +101,7 @@ class GoogleSearchConsoleConnector:
 
     connector_name = "google-search-console"
     connector_version = "1.0.3"
-    sdk_version = "0.1.198"
+    sdk_version = "0.1.199"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {

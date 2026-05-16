@@ -54,6 +54,52 @@ class IssueCreateParams(BaseModel):
     assignees: list[str] | None = Field(default=None)
     milestone: int | None = Field(default=None)
 
+class IssueResponseAssigneesItem(BaseModel):
+    """Nested schema for IssueResponse.assignees_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    login: str | None = Field(default=None)
+    id: int | None = Field(default=None)
+    node_id: str | None = Field(default=None)
+    avatar_url: str | None = Field(default=None)
+    url: str | None = Field(default=None)
+    html_url: str | None = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    site_admin: bool | None = Field(default=None)
+
+class IssueResponseLabelsItem(BaseModel):
+    """Nested schema for IssueResponse.labels_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int | None = Field(default=None)
+    node_id: str | None = Field(default=None)
+    url: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    color: str | None = Field(default=None)
+    default: bool | None = Field(default=None)
+    description: str | None | None = Field(default=None)
+
+class IssueResponseSubIssuesSummary(BaseModel):
+    """Summary of sub-issues"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    total: int | None = Field(default=None)
+    completed: int | None = Field(default=None)
+    percent_completed: int | None = Field(default=None)
+
+class IssueResponseUser(BaseModel):
+    """The user who created the issue"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    login: str | None = Field(default=None)
+    id: int | None = Field(default=None)
+    node_id: str | None = Field(default=None)
+    avatar_url: str | None = Field(default=None)
+    url: str | None = Field(default=None)
+    html_url: str | None = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    site_admin: bool | None = Field(default=None)
+
 class IssueResponseReactions(BaseModel):
     """Reaction counts"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -69,27 +115,6 @@ class IssueResponseReactions(BaseModel):
     rocket: int | None = Field(default=None)
     eyes: int | None = Field(default=None)
 
-class IssueResponseIssueDependenciesSummary(BaseModel):
-    """Summary of issue dependencies"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    blocked_by: int | None = Field(default=None)
-    blocking: int | None = Field(default=None)
-    total_blocked_by: int | None = Field(default=None)
-    total_blocking: int | None = Field(default=None)
-
-class IssueResponseLabelsItem(BaseModel):
-    """Nested schema for IssueResponse.labels_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: int | None = Field(default=None)
-    node_id: str | None = Field(default=None)
-    url: str | None = Field(default=None)
-    name: str | None = Field(default=None)
-    color: str | None = Field(default=None)
-    default: bool | None = Field(default=None)
-    description: str | None | None = Field(default=None)
-
 class IssueResponseAssignee(BaseModel):
     """Primary user assigned to this issue"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -103,39 +128,14 @@ class IssueResponseAssignee(BaseModel):
     type_: str | None = Field(default=None, alias="type")
     site_admin: bool | None = Field(default=None)
 
-class IssueResponseUser(BaseModel):
-    """The user who created the issue"""
+class IssueResponseIssueDependenciesSummary(BaseModel):
+    """Summary of issue dependencies"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    login: str | None = Field(default=None)
-    id: int | None = Field(default=None)
-    node_id: str | None = Field(default=None)
-    avatar_url: str | None = Field(default=None)
-    url: str | None = Field(default=None)
-    html_url: str | None = Field(default=None)
-    type_: str | None = Field(default=None, alias="type")
-    site_admin: bool | None = Field(default=None)
-
-class IssueResponseAssigneesItem(BaseModel):
-    """Nested schema for IssueResponse.assignees_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    login: str | None = Field(default=None)
-    id: int | None = Field(default=None)
-    node_id: str | None = Field(default=None)
-    avatar_url: str | None = Field(default=None)
-    url: str | None = Field(default=None)
-    html_url: str | None = Field(default=None)
-    type_: str | None = Field(default=None, alias="type")
-    site_admin: bool | None = Field(default=None)
-
-class IssueResponseSubIssuesSummary(BaseModel):
-    """Summary of sub-issues"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    total: int | None = Field(default=None)
-    completed: int | None = Field(default=None)
-    percent_completed: int | None = Field(default=None)
+    blocked_by: int | None = Field(default=None)
+    blocking: int | None = Field(default=None)
+    total_blocked_by: int | None = Field(default=None)
+    total_blocking: int | None = Field(default=None)
 
 class IssueResponse(BaseModel):
     """IssueResponse type definition"""

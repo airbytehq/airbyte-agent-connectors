@@ -10,6 +10,7 @@ from __future__ import annotations
 from airbyte_agent_sdk.types import (
     Action,
     AuthConfig,
+    AuthOption,
     AuthType,
     ConnectorModel,
     EndpointDefinition,
@@ -38,23 +39,75 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
     version='0.1.19',
     base_url='https://api.linear.app',
     auth=AuthConfig(
-        type=AuthType.API_KEY,
-        config={'header': 'Authorization', 'in': 'header'},
-        user_config_spec=AuthConfigSpec(
-            title='Linear API Key Authentication',
-            description='Authenticate using your Linear API key',
-            type='object',
-            required=['api_key'],
-            properties={
-                'api_key': AuthConfigFieldSpec(
-                    title='API Key',
-                    description='Your Linear API key from Settings > API > Personal API keys',
+        options=[
+            AuthOption(
+                scheme_name='linearOAuth',
+                type=AuthType.OAUTH2,
+                config={
+                    'header': 'Authorization',
+                    'prefix': 'Bearer',
+                    'refresh_url': 'https://api.linear.app/oauth/token',
+                    'auth_style': 'body',
+                    'body_format': 'form',
+                },
+                user_config_spec=AuthConfigSpec(
+                    title='OAuth2',
+                    type='object',
+                    required=['client_id', 'client_secret', 'refresh_token'],
+                    properties={
+                        'client_id': AuthConfigFieldSpec(
+                            title='Client ID',
+                            description='Your Linear OAuth2 application client ID',
+                        ),
+                        'client_secret': AuthConfigFieldSpec(
+                            title='Client Secret',
+                            description='Your Linear OAuth2 application client secret',
+                        ),
+                        'refresh_token': AuthConfigFieldSpec(
+                            title='Refresh Token',
+                            description='Your Linear OAuth2 refresh token',
+                        ),
+                        'access_token': AuthConfigFieldSpec(
+                            title='Access Token',
+                            description='Your Linear OAuth2 access token (optional if refresh_token is provided)',
+                        ),
+                    },
+                    auth_mapping={
+                        'client_id': '${client_id}',
+                        'client_secret': '${client_secret}',
+                        'refresh_token': '${refresh_token}',
+                        'access_token': '${access_token}',
+                    },
+                    replication_auth_key_mapping={
+                        'credentials.client_id': 'client_id',
+                        'credentials.client_secret': 'client_secret',
+                        'credentials.refresh_token': 'refresh_token',
+                    },
+                    replication_auth_key_constants={'credentials.auth_type': 'OAuth2.0'},
                 ),
-            },
-            auth_mapping={'api_key': '${api_key}'},
-            replication_auth_key_mapping={'credentials.api_key': 'api_key'},
-            replication_auth_key_constants={'credentials.auth_type': 'API Key'},
-        ),
+                untested=True,
+            ),
+            AuthOption(
+                scheme_name='apiKeyAuth',
+                type=AuthType.API_KEY,
+                config={'header': 'Authorization', 'in': 'header'},
+                user_config_spec=AuthConfigSpec(
+                    title='Linear API Key Authentication',
+                    description='Authenticate using your Linear API key',
+                    type='object',
+                    required=['api_key'],
+                    properties={
+                        'api_key': AuthConfigFieldSpec(
+                            title='API Key',
+                            description='Your Linear API key from Settings > API > Personal API keys',
+                        ),
+                    },
+                    auth_mapping={'api_key': '${api_key}'},
+                    replication_auth_key_mapping={'credentials.api_key': 'api_key'},
+                    replication_auth_key_constants={'credentials.auth_type': 'API Key'},
+                ),
+            ),
+        ],
     ),
     entities=[
         EntityDefinition(

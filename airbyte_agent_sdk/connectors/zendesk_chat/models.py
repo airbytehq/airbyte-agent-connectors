@@ -142,16 +142,6 @@ class Ban(BaseModel):
     reason: str | None = Field(default=None)
     created_at: str | None = Field(default=None)
 
-class ChatConversion(BaseModel):
-    """ChatConversion type definition"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: str | None = Field(default=None)
-    goal_id: int | None = Field(default=None)
-    goal_name: str | None = Field(default=None)
-    timestamp: str | None = Field(default=None)
-    attribution: Any | None = Field(default=None)
-
 class ChatEngagement(BaseModel):
     """ChatEngagement type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -173,6 +163,13 @@ class ChatEngagement(BaseModel):
     skills_requested: list[int] | None = Field(default=None)
     skills_fulfilled: bool | None = Field(default=None)
 
+class WebpathItem(BaseModel):
+    """WebpathItem type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    from_: str | None = Field(default=None, alias="from")
+    timestamp: str | None = Field(default=None)
+
 class ChatHistoryItem(BaseModel):
     """ChatHistoryItem type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -192,12 +189,15 @@ class ChatHistoryItem(BaseModel):
     new_tags: list[str] | None = Field(default=None)
     options: str | None = Field(default=None)
 
-class WebpathItem(BaseModel):
-    """WebpathItem type definition"""
+class ChatConversion(BaseModel):
+    """ChatConversion type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    from_: str | None = Field(default=None, alias="from")
+    id: str | None = Field(default=None)
+    goal_id: int | None = Field(default=None)
+    goal_name: str | None = Field(default=None)
     timestamp: str | None = Field(default=None)
+    attribution: Any | None = Field(default=None)
 
 class Chat(BaseModel):
     """Chat conversation transcript"""

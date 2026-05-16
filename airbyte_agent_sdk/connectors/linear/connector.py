@@ -49,6 +49,7 @@ from .types import (
     WorkflowStatesSearchFilter,
     WorkflowStatesSearchQuery,
 )
+from .models import LinearOauth2AuthConfig, LinearLinearApiKeyAuthenticationAuthConfig
 from .models import LinearAuthConfig
 
 # Import response models and envelope models at runtime
@@ -102,7 +103,7 @@ class LinearConnector:
 
     connector_name = "linear"
     connector_version = "0.1.19"
-    sdk_version = "0.1.198"
+    sdk_version = "0.1.199"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -148,7 +149,7 @@ class LinearConnector:
     }
 
     # Accepted auth_config types for isinstance validation
-    _ACCEPTED_AUTH_TYPES = (LinearAuthConfig, AirbyteAuthConfig)
+    _ACCEPTED_AUTH_TYPES = (LinearOauth2AuthConfig, LinearLinearApiKeyAuthenticationAuthConfig, AirbyteAuthConfig)
 
     def __init__(
         self,
@@ -168,7 +169,7 @@ class LinearConnector:
                 Example: lambda tokens: save_to_database(tokens)
         Examples:
             # Local mode (direct API calls)
-            connector = LinearConnector(auth_config=LinearAuthConfig(api_key="..."))
+            connector = LinearConnector(auth_config=LinearAuthConfig(client_id="...", client_secret="...", refresh_token="...", access_token="..."))
             # Hosted mode with explicit connector_id (no lookup needed)
             connector = LinearConnector(
                 auth_config=AirbyteAuthConfig(
@@ -230,9 +231,18 @@ class LinearConnector:
             # Build config_values dict from server variables
             config_values = None
 
+            # Multi-auth connector: detect auth scheme from auth_config type
+            auth_scheme: str | None = None
+            if auth_config:
+                if isinstance(auth_config, LinearOauth2AuthConfig):
+                    auth_scheme = "linearOAuth"
+                if isinstance(auth_config, LinearLinearApiKeyAuthenticationAuthConfig):
+                    auth_scheme = "apiKeyAuth"
+
             self._executor = LocalExecutor(
                 model=LinearConnectorModel,
                 auth_config=auth_config.model_dump() if auth_config else None,
+                auth_scheme=auth_scheme,
                 config_values=config_values,
                 on_token_refresh=on_token_refresh
             )

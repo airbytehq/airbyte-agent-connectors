@@ -9,16 +9,33 @@ from __future__ import annotations
 
 from pydantic import BaseModel, ConfigDict, Field
 from typing import TypeVar, Generic, Any
+from typing import Optional
 
-# Authentication configuration
+# Authentication configuration - multiple options available
 
-class LinearAuthConfig(BaseModel):
+class LinearOauth2AuthConfig(BaseModel):
+    """OAuth2"""
+
+    model_config = ConfigDict(extra="forbid")
+
+    client_id: str
+    """Your Linear OAuth2 application client ID"""
+    client_secret: str
+    """Your Linear OAuth2 application client secret"""
+    refresh_token: str
+    """Your Linear OAuth2 refresh token"""
+    access_token: Optional[str] = None
+    """Your Linear OAuth2 access token (optional if refresh_token is provided)"""
+
+class LinearLinearApiKeyAuthenticationAuthConfig(BaseModel):
     """Linear API Key Authentication - Authenticate using your Linear API key"""
 
     model_config = ConfigDict(extra="forbid")
 
     api_key: str
     """Your Linear API key from Settings > API > Personal API keys"""
+
+LinearAuthConfig = LinearOauth2AuthConfig | LinearLinearApiKeyAuthenticationAuthConfig
 
 # ===== RESPONSE TYPE DEFINITIONS (PYDANTIC) =====
 

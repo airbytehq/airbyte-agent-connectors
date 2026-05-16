@@ -5,12 +5,48 @@
   "install_package": "airbyte-agent-sdk",
   "yaml_version": "0.1.19",
   "api_reference_url": "https://linear.app/developers/graphql",
-  "auth_example": "LinearAuthConfig(api_key=\"...\")",
+  "auth_example": "LinearAuthConfig(client_id=\"...\", client_secret=\"...\", refresh_token=\"...\", access_token=\"...\")",
   "auth_import": ", LinearAuthConfig",
   "auth_config": {
     "type_name": "LinearAuthConfig",
     "base_name": "Linear",
     "options": [
+      {
+        "title": "OAuth2",
+        "description": "",
+        "fields": [
+          {
+            "name": "client_id",
+            "type": "str",
+            "required": true,
+            "title": "Client ID",
+            "description": "Your Linear OAuth2 application client ID"
+          },
+          {
+            "name": "client_secret",
+            "type": "str",
+            "required": true,
+            "title": "Client Secret",
+            "description": "Your Linear OAuth2 application client secret"
+          },
+          {
+            "name": "refresh_token",
+            "type": "str",
+            "required": true,
+            "title": "Refresh Token",
+            "description": "Your Linear OAuth2 refresh token"
+          },
+          {
+            "name": "access_token",
+            "type": "str",
+            "required": false,
+            "title": "Access Token",
+            "description": "Your Linear OAuth2 access token (optional if refresh_token is provided)"
+          }
+        ],
+        "type_suffix": "Oauth2",
+        "scheme_name": "linearOAuth"
+      },
       {
         "title": "Linear API Key Authentication",
         "description": "Authenticate using your Linear API key",
@@ -23,10 +59,11 @@
             "description": "Your Linear API key from Settings > API > Personal API keys"
           }
         ],
-        "type_suffix": "LinearApiKeyAuthentication"
+        "type_suffix": "LinearApiKeyAuthentication",
+        "scheme_name": "apiKeyAuth"
       }
     ],
-    "is_multi_auth": false
+    "is_multi_auth": true
   },
   "replication_config": null,
   "custom_description": "Linear is a modern issue tracking and project management tool built for software\ndevelopment teams. This connector provides access to issues, projects, and teams\nfor sprint planning, backlog management, and development workflow analysis.\n",

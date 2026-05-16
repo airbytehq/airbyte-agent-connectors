@@ -79,8 +79,6 @@ info:
       - "Schedule a sprint planning meeting"
       - "Delete this issue"
       - "Remove a comment from an issue"
-  x-airbyte-skip-auth-methods:
-    - oauth2
 
   x-airbyte-entity-relationships:
   - source_entity: comments
@@ -1016,6 +1014,7 @@ servers:
     description: Linear API server
 
 security:
+  - linearOAuth: []
   - apiKeyAuth: []
 
 paths:
@@ -1867,6 +1866,87 @@ paths:
 
 components:
   securitySchemes:
+    linearOAuth:
+      type: oauth2
+      x-airbyte-untested: true
+      description: Linear OAuth 2.0 authentication with automatic token refresh
+      flows:
+        authorizationCode:
+          authorizationUrl: https://linear.app/oauth/authorize
+          tokenUrl: https://api.linear.app/oauth/token
+          refreshUrl: https://api.linear.app/oauth/token
+          scopes:
+            read: Read access for the user's account
+            write: Write access for the user's account
+            issues:create: Allows creating new issues and their attachments
+            comments:create: Allows creating new issue comments
+      x-airbyte-oauth-scopes:
+        - scope: "read"
+          mode: read
+          description: Read access for the user's account
+          entities:
+            - issues
+            - projects
+            - teams
+            - users
+            - comments
+            - workflow_states
+        - scope: "write"
+          mode: write
+          description: Write access for the user's account
+          entities:
+            - issues
+            - projects
+            - comments
+        - scope: "issues:create"
+          mode: write
+          description: Allows creating new issues and their attachments
+          entities:
+            - issues
+        - scope: "comments:create"
+          mode: write
+          description: Allows creating new issue comments
+          entities:
+            - comments
+      x-airbyte-token-refresh:
+        auth_style: body
+        body_format: form
+      x-airbyte-auth-config:
+        title: "OAuth2"
+        type: object
+        required:
+          - client_id
+          - client_secret
+          - refresh_token
+        properties:
+          client_id:
+            type: string
+            title: "Client ID"
+            description: "Your Linear OAuth2 application client ID"
+          client_secret:
+            type: string
+            title: "Client Secret"
+            description: "Your Linear OAuth2 application client secret"
+          refresh_token:
+            type: string
+            title: "Refresh Token"
+            description: "Your Linear OAuth2 refresh token"
+          access_token:
+            type: string
+            title: "Access Token"
+            description: "Your Linear OAuth2 access token (optional if refresh_token is provided)"
+        auth_mapping:
+          client_id: "${client_id}"
+          client_secret: "${client_secret}"
+          refresh_token: "${refresh_token}"
+          access_token: "${access_token}"
+        replication_auth_key_mapping:
+          credentials.client_id: "client_id"
+          credentials.client_secret: "client_secret"
+          credentials.refresh_token: "refresh_token"
+        replication_auth_key_constants:
+          credentials.auth_type: "OAuth2.0"
+
     apiKeyAuth:
       type: apiKey
       in: header
