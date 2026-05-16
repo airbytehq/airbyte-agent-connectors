@@ -7,6 +7,7 @@ Auto-generated from OpenAPI specification.
 from .connector import AsanaConnector
 from .models import (
     AsanaAuthConfig,
+    AsanaOAuthCredentials,
     AirbyteSearchMeta,
     AirbyteSearchResult,
     AttachmentsSearchData,
@@ -32,6 +33,7 @@ __all__ = [
     "AsanaConnector",
     "AirbyteAuthConfig",
     "AsanaAuthConfig",
+    "AsanaOAuthCredentials",
     "AirbyteSearchMeta",
     "AirbyteSearchResult",
     "AttachmentsSearchData",

@@ -65,11 +65,11 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                         ),
                         'client_id': AuthConfigFieldSpec(
                             title='Client ID',
-                            description='Connected App Consumer Key',
+                            description='Connected App Client ID',
                         ),
                         'client_secret': AuthConfigFieldSpec(
                             title='Client Secret',
-                            description='Connected App Consumer Secret',
+                            description='Connected App Client Secret',
                         ),
                     },
                     auth_mapping={

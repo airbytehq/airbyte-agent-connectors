@@ -34,14 +34,14 @@
             "type": "str",
             "required": false,
             "title": "Client ID",
-            "description": "Connected App Consumer Key"
+            "description": "Connected App Client ID"
           },
           {
             "name": "client_secret",
             "type": "str",
             "required": false,
             "title": "Client Secret",
-            "description": "Connected App Consumer Secret"
+            "description": "Connected App Client Secret"
           }
         ],
         "type_suffix": "Oauth2",
