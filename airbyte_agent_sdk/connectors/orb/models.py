@@ -136,6 +136,15 @@ class SubscriptionsList(BaseModel):
     data: list[Subscription] | None = Field(default=None)
     pagination_metadata: PaginationMetadata | None = Field(default=None)
 
+class PlanProduct(BaseModel):
+    """The product associated with the plan"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None | None = Field(default=None, description="The product ID")
+    """The product ID"""
+    name: str | None | None = Field(default=None, description="The product name")
+    """The product name"""
+
 class PlanPricesItem(BaseModel):
     """Nested schema for Plan.prices_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -150,15 +159,6 @@ class PlanPricesItem(BaseModel):
     """The model type of the price"""
     currency: str | None | None = Field(default=None, description="The currency of the price")
     """The currency of the price"""
-
-class PlanProduct(BaseModel):
-    """The product associated with the plan"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: str | None | None = Field(default=None, description="The product ID")
-    """The product ID"""
-    name: str | None | None = Field(default=None, description="The product name")
-    """The product name"""
 
 class Plan(BaseModel):
     """Plan object"""

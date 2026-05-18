@@ -197,12 +197,50 @@ class TranscriptsResponse(BaseModel):
     records: PaginationRecords | None = Field(default=None)
     request_id: str | None = Field(default=None, alias="requestId")
 
-class ExtensiveCallMedia(BaseModel):
-    """Media URLs"""
+class ExtensiveCallMetadata(BaseModel):
+    """Call metadata"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    audio_url: str | None = Field(default=None, alias="audioUrl")
-    video_url: str | None = Field(default=None, alias="videoUrl")
+    id: str | None = Field(default=None, description="Unique call identifier")
+    """Unique call identifier"""
+    url: str | None = Field(default=None, description="URL to call in Gong")
+    """URL to call in Gong"""
+    title: str | None = Field(default=None, description="Call title")
+    """Call title"""
+    scheduled: str | None = Field(default=None, description="Scheduled time")
+    """Scheduled time"""
+    started: str | None = Field(default=None, description="Call start time")
+    """Call start time"""
+    duration: int | None = Field(default=None, description="Call duration in seconds")
+    """Call duration in seconds"""
+    primary_user_id: str | None = Field(default=None, alias="primaryUserId", description="Primary user ID")
+    """Primary user ID"""
+    direction: str | None = Field(default=None, description="Call direction")
+    """Call direction"""
+    system: str | None = Field(default=None, description="System type")
+    """System type"""
+    scope: str | None = Field(default=None, description="Call scope")
+    """Call scope"""
+    media: str | None = Field(default=None, description="Media type (Audio/Video)")
+    """Media type (Audio/Video)"""
+    language: str | None = Field(default=None, description="Call language")
+    """Call language"""
+    workspace_id: str | None = Field(default=None, alias="workspaceId", description="Workspace ID")
+    """Workspace ID"""
+    sdr_disposition: str | None | None = Field(default=None, alias="sdrDisposition", description="SDR disposition")
+    """SDR disposition"""
+    client_unique_id: str | None | None = Field(default=None, alias="clientUniqueId", description="Client unique identifier")
+    """Client unique identifier"""
+    custom_data: str | None | None = Field(default=None, alias="customData", description="Custom data")
+    """Custom data"""
+    purpose: str | None | None = Field(default=None, description="Call purpose")
+    """Call purpose"""
+    is_private: bool | None = Field(default=None, alias="isPrivate", description="Whether call is private")
+    """Whether call is private"""
+    meeting_url: str | None = Field(default=None, alias="meetingUrl", description="Meeting URL")
+    """Meeting URL"""
+    calendar_event_id: str | None | None = Field(default=None, alias="calendarEventId", description="Calendar event ID")
+    """Calendar event ID"""
 
 class ExtensiveCallPartiesItemContextItemObjectsItemFieldsItem(BaseModel):
     """Nested schema for ExtensiveCallPartiesItemContextItemObjectsItem.fields_item"""
@@ -258,58 +296,6 @@ class ExtensiveCallPartiesItem(BaseModel):
     context: list[ExtensiveCallPartiesItemContextItem] | None = Field(default=None, description="CRM context data linked to this participant")
     """CRM context data linked to this participant"""
 
-class ExtensiveCallMetadata(BaseModel):
-    """Call metadata"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: str | None = Field(default=None, description="Unique call identifier")
-    """Unique call identifier"""
-    url: str | None = Field(default=None, description="URL to call in Gong")
-    """URL to call in Gong"""
-    title: str | None = Field(default=None, description="Call title")
-    """Call title"""
-    scheduled: str | None = Field(default=None, description="Scheduled time")
-    """Scheduled time"""
-    started: str | None = Field(default=None, description="Call start time")
-    """Call start time"""
-    duration: int | None = Field(default=None, description="Call duration in seconds")
-    """Call duration in seconds"""
-    primary_user_id: str | None = Field(default=None, alias="primaryUserId", description="Primary user ID")
-    """Primary user ID"""
-    direction: str | None = Field(default=None, description="Call direction")
-    """Call direction"""
-    system: str | None = Field(default=None, description="System type")
-    """System type"""
-    scope: str | None = Field(default=None, description="Call scope")
-    """Call scope"""
-    media: str | None = Field(default=None, description="Media type (Audio/Video)")
-    """Media type (Audio/Video)"""
-    language: str | None = Field(default=None, description="Call language")
-    """Call language"""
-    workspace_id: str | None = Field(default=None, alias="workspaceId", description="Workspace ID")
-    """Workspace ID"""
-    sdr_disposition: str | None | None = Field(default=None, alias="sdrDisposition", description="SDR disposition")
-    """SDR disposition"""
-    client_unique_id: str | None | None = Field(default=None, alias="clientUniqueId", description="Client unique identifier")
-    """Client unique identifier"""
-    custom_data: str | None | None = Field(default=None, alias="customData", description="Custom data")
-    """Custom data"""
-    purpose: str | None | None = Field(default=None, description="Call purpose")
-    """Call purpose"""
-    is_private: bool | None = Field(default=None, alias="isPrivate", description="Whether call is private")
-    """Whether call is private"""
-    meeting_url: str | None = Field(default=None, alias="meetingUrl", description="Meeting URL")
-    """Meeting URL"""
-    calendar_event_id: str | None | None = Field(default=None, alias="calendarEventId", description="Calendar event ID")
-    """Calendar event ID"""
-
-class ExtensiveCallContentTopicsItem(BaseModel):
-    """Nested schema for ExtensiveCallContent.topics_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: str | None = Field(default=None)
-    duration: float | None = Field(default=None)
-
 class ExtensiveCallContentTrackersItem(BaseModel):
     """Nested schema for ExtensiveCallContent.trackers_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -319,6 +305,13 @@ class ExtensiveCallContentTrackersItem(BaseModel):
     count: int | None = Field(default=None)
     type_: str | None = Field(default=None, alias="type")
     occurrences: list[dict[str, Any]] | None = Field(default=None)
+
+class ExtensiveCallContentTopicsItem(BaseModel):
+    """Nested schema for ExtensiveCallContent.topics_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: str | None = Field(default=None)
+    duration: float | None = Field(default=None)
 
 class ExtensiveCallContent(BaseModel):
     """Content data including topics and trackers"""
@@ -350,6 +343,13 @@ class ExtensiveCallInteraction(BaseModel):
 
     interaction_stats: list[ExtensiveCallInteractionInteractionstatsItem] | None = Field(default=None, alias="interactionStats")
     questions: ExtensiveCallInteractionQuestions | None = Field(default=None)
+
+class ExtensiveCallMedia(BaseModel):
+    """Media URLs"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    audio_url: str | None = Field(default=None, alias="audioUrl")
+    video_url: str | None = Field(default=None, alias="videoUrl")
 
 class ExtensiveCallCollaboration(BaseModel):
     """Collaboration data"""
