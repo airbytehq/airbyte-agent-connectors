@@ -5,7 +5,7 @@ openapi: 3.1.0
 
 info:
   title: Asana API Connector
-  version: 0.1.20
+  version: 0.1.21
   description: |
     Asana is a work management platform that helps teams organize, track, and manage
     projects and tasks. This connector provides access to tasks, projects, workspaces,
@@ -2896,72 +2896,36 @@ components:
             stories:read: Read access to task comments and stories
             stories:write: Write access to create comments on tasks
       x-airbyte-oauth-scopes:
-        - scope: "tasks:read"
-          mode: read
+        - scope: default
+          mode: read_write
           entities:
             - tasks
             - project_tasks
-            - section_tasks
-            - task_dependencies
-            - task_dependents
-            - task_projects
-            - task_subtasks
-            - task_tags
             - workspace_task_search
-        - scope: "projects:read"
-          mode: read
-          entities:
             - projects
+            - task_projects
             - team_projects
             - workspace_projects
-            - project_sections
-            - sections
-        - scope: "workspaces:read"
-          mode: read
-          entities:
             - workspaces
-        - scope: "users:read"
-          mode: read
-          entities:
             - users
-            - user_teams
             - workspace_users
-        - scope: "teams:read"
-          mode: read
-          entities:
-            - teams
             - team_users
+            - teams
             - workspace_teams
-        - scope: "attachments:read"
-          mode: read
-          entities:
+            - user_teams
             - attachments
-        - scope: "tags:read"
-          mode: read
-          entities:
+            - workspace_tags
             - tags
             - tag_tasks
-            - workspace_tags
-        - scope: "stories:read"
-          mode: read
-          entities:
-            - task_stories
-        - scope: "stories:write"
-          mode: write
-          entities:
-            - task_stories
-        - scope: "tasks:write"
-          mode: write
-          entities:
-            - tasks
-            - task_tags
+            - project_sections
+            - sections
             - section_tasks
+            - task_subtasks
+            - task_dependencies
+            - task_dependents
+            - task_stories
+            - task_tags
             - workspace_memberships
-        - scope: "tags:write"
-          mode: write
-          entities:
-            - tags
-            - workspace_tags
       x-airbyte-token-refresh:
         auth_style: body
         body_format: form

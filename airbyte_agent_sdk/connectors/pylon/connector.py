@@ -159,7 +159,7 @@ class PylonConnector:
 
     connector_name = "pylon"
     connector_version = "0.1.10"
-    sdk_version = "0.1.200"
+    sdk_version = "0.1.201"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {

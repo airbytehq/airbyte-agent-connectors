@@ -3,7 +3,7 @@
   "class_name": "AsanaConnector",
   "package_name": "airbyte_agent_sdk.connectors.asana",
   "install_package": "airbyte-agent-sdk",
-  "yaml_version": "0.1.20",
+  "yaml_version": "0.1.21",
   "api_reference_url": "https://developers.asana.com/reference/rest-api-reference",
   "auth_example": "AsanaAuthConfig(access_token=\"...\", refresh_token=\"...\", client_id=\"...\", client_secret=\"...\")",
   "auth_import": ", AsanaAuthConfig",
