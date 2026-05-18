@@ -100,13 +100,13 @@
               "default": "SELECT FIELDS(STANDARD) FROM Account ORDER BY LastModifiedDate DESC LIMIT 200"
             },
             "required": true,
-            "description": "SOQL query for accounts. Default returns up to 200 records.\nTo change the limit, provide your own query with a LIMIT clause.\n\nExamples:\n  SELECT FIELDS(STANDARD) FROM Account ORDER BY LastModifiedDate DESC LIMIT 50\n  SELECT Id, Name, Owner.Name, Owner.Email FROM Account LIMIT 50\n  SELECT Id, Name, Parent.Name, Owner.Name FROM Account WHERE Industry = 'Technology' LIMIT 50\n\nUse dot-path traversal (Owner.Name, Parent.Name) to resolve relationship\nfields inline instead of returning raw IDs.\n",
+            "description": "SOQL query for accounts. Default returns up to 200 records.\nTo change the limit, provide your own query with a LIMIT clause.\n\nExamples:\n  SELECT FIELDS(STANDARD) FROM Account ORDER BY LastModifiedDate DESC LIMIT 50\n  SELECT Id, Name, Owner.Name, Owner.Email FROM Account LIMIT 50\n  SELECT Id, Name, Parent.Name, Owner.Name FROM Account WHERE Industry = 'Technology' LIMIT 50\n  SELECT Id, Name, AnnualRevenue FROM Account ORDER BY AnnualRevenue DESC LIMIT 10\n  SELECT Id, Name, NumberOfEmployees FROM Account ORDER BY NumberOfEmployees DESC LIMIT 10\n\nUse dot-path traversal (Owner.Name, Parent.Name) to resolve relationship\nfields inline instead of returning raw IDs.\n",
             "is_deep_object": false
           }
         ],
         "params_type_name": "AccountsListParams",
         "response_type": "AccountsListResult",
-        "description": "Returns a list of accounts via SOQL query. Default returns up to 200 records.\nFor pagination, check the response: if `done` is false, use `nextRecordsUrl` to fetch the next page.\n",
+        "description": "Returns a list of accounts via SOQL query. Default returns up to 200 records.\nFor pagination, check the response: if `done` is false, use `nextRecordsUrl` to fetch the next page.\nFor \"top\", \"largest\", or \"highest-value\" account requests, rank by a financial account value field\nsuch as ARR, annual recurring revenue, revenue, annual revenue, amount, or value. ARR is often a\nSalesforce custom field, so prefer the customer's org-specific ARR or account value field when\navailable. If no better org-specific field is visible, `AnnualRevenue` is the standard Account\nfallback. Do not use `NumberOfEmployees` unless the user asks for employee count, headcount,\ncompany size, or largest employer.\n",
         "record_extractor": "$.records",
         "meta_extractor": {
           "done": "$.done",
@@ -462,13 +462,13 @@
               "default": "SELECT FIELDS(STANDARD) FROM Opportunity ORDER BY LastModifiedDate DESC LIMIT 200"
             },
             "required": true,
-            "description": "SOQL query for opportunities. Default returns up to 200 records.\nTo change the limit, provide your own query with a LIMIT clause.\n\nExamples:\n  SELECT FIELDS(STANDARD) FROM Opportunity WHERE StageName = 'Closed Won' LIMIT 50\n  SELECT Id, Name, Amount, Account.Name, Owner.Name FROM Opportunity LIMIT 50\n  SELECT Id, Name, StageName, Account.Name, Account.Industry, Owner.Name, Campaign.Name FROM Opportunity WHERE CloseDate = THIS_QUARTER LIMIT 50\n\nUse dot-path traversal (Account.Name, Owner.Name, Campaign.Name) to resolve\nrelationship fields inline instead of returning raw IDs.\n",
+            "description": "SOQL query for opportunities. Default returns up to 200 records.\nTo change the limit, provide your own query with a LIMIT clause.\n\nExamples:\n  SELECT FIELDS(STANDARD) FROM Opportunity WHERE StageName = 'Closed Won' LIMIT 50\n  SELECT Id, Name, Amount, Account.Name, Owner.Name FROM Opportunity LIMIT 50\n  SELECT Id, Name, Amount, StageName, Account.Name FROM Opportunity ORDER BY Amount DESC LIMIT 10\n  SELECT Id, Name, ExpectedRevenue, Probability, Amount FROM Opportunity ORDER BY ExpectedRevenue DESC LIMIT 10\n  SELECT Id, Name, StageName, Account.Name, Account.Industry, Owner.Name, Campaign.Name FROM Opportunity WHERE CloseDate = THIS_QUARTER LIMIT 50\n\nUse dot-path traversal (Account.Name, Owner.Name, Campaign.Name) to resolve\nrelationship fields inline instead of returning raw IDs.\n",
             "is_deep_object": false
           }
         ],
         "params_type_name": "OpportunitiesListParams",
         "response_type": "OpportunitiesListResult",
-        "description": "Returns a list of opportunities via SOQL query. Default returns up to 200 records.\nFor pagination, check the response: if `done` is false, use `nextRecordsUrl` to fetch the next page.\n",
+        "description": "Returns a list of opportunities via SOQL query. Default returns up to 200 records.\nFor pagination, check the response: if `done` is false, use `nextRecordsUrl` to fetch the next page.\nFor \"top\", \"largest\", or \"highest-value\" opportunity requests, first choose a\nvisible financial opportunity field. Standard candidates include `Amount` for\ntotal deal value and `ExpectedRevenue` for expected, weighted, or forecast revenue.\n",
         "record_extractor": "$.records",
         "meta_extractor": {
           "done": "$.done",
