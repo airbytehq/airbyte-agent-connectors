@@ -12,8 +12,8 @@ info:
     teams, and users for project tracking, workload analysis, and productivity insights.
   x-airbyte-connector-name: asana
   x-airbyte-connector-definition-id: d0243522-dccf-4978-8ba0-37ed47a0bdbf
-  x-airbyte-replication-version: "1.7.0"
-  x-airbyte-replication-compatibility: ">=1.7.0, <2.0.0"
+  x-airbyte-replication-version: "1.7.1"
+  x-airbyte-replication-compatibility: ">=1.7.1, <2.0.0"
   x-airbyte-external-documentation-urls:
   - type: api_reference
     title: Asana API Reference
