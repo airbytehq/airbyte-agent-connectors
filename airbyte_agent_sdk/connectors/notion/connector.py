@@ -18,17 +18,53 @@ from airbyte_agent_sdk.introspection import describe_entities, generate_tool_des
 from airbyte_agent_sdk.translation import DEFAULT_MAX_OUTPUT_CHARS, FrameworkName, translate_exceptions
 from airbyte_agent_sdk.types import AirbyteAuthConfig
 from .types import (
+    BlocksCreateParams,
+    BlocksCreateParamsChildrenItem,
     BlocksGetParams,
     BlocksListParams,
+    BlocksUpdateParams,
+    BlocksUpdateParamsAudio,
+    BlocksUpdateParamsBookmark,
+    BlocksUpdateParamsBulletedListItem,
+    BlocksUpdateParamsCallout,
+    BlocksUpdateParamsCode,
+    BlocksUpdateParamsEmbed,
+    BlocksUpdateParamsEquation,
+    BlocksUpdateParamsFile,
+    BlocksUpdateParamsHeading1,
+    BlocksUpdateParamsHeading2,
+    BlocksUpdateParamsHeading3,
+    BlocksUpdateParamsImage,
+    BlocksUpdateParamsNumberedListItem,
+    BlocksUpdateParamsParagraph,
+    BlocksUpdateParamsPdf,
+    BlocksUpdateParamsQuote,
+    BlocksUpdateParamsTable,
+    BlocksUpdateParamsToDo,
+    BlocksUpdateParamsToggle,
+    BlocksUpdateParamsVideo,
+    CommentsCreateParams,
+    CommentsCreateParamsRichTextItem,
     CommentsListParams,
     DataSourcesGetParams,
     DataSourcesListParams,
     DataSourcesListParamsFilter,
     DataSourcesListParamsSort,
+    DataSourcesUpdateParams,
+    DataSourcesUpdateParamsCover,
+    DataSourcesUpdateParamsDescriptionItem,
+    DataSourcesUpdateParamsIcon,
+    DataSourcesUpdateParamsTitleItem,
+    PagesCreateParams,
+    PagesCreateParamsCover,
+    PagesCreateParamsIcon,
     PagesGetParams,
     PagesListParams,
     PagesListParamsFilter,
     PagesListParamsSort,
+    PagesUpdateParams,
+    PagesUpdateParamsCover,
+    PagesUpdateParamsIcon,
     UsersGetParams,
     UsersListParams,
     AirbyteSearchParams,
@@ -90,19 +126,25 @@ class NotionConnector:
 
     connector_name = "notion"
     connector_version = "0.1.12"
-    sdk_version = "0.1.204"
+    sdk_version = "0.1.205"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
         ("users", "list"): True,
         ("users", "get"): None,
         ("pages", "list"): True,
+        ("pages", "create"): None,
         ("pages", "get"): None,
+        ("pages", "update"): None,
         ("data_sources", "list"): True,
         ("data_sources", "get"): None,
         ("blocks", "list"): True,
+        ("blocks", "create"): None,
         ("blocks", "get"): None,
+        ("blocks", "update"): None,
         ("comments", "list"): True,
+        ("comments", "create"): None,
+        ("data_sources", "update"): None,
     }
 
     # Map of (entity, action) -> {python_param_name: api_param_name}
@@ -111,12 +153,18 @@ class NotionConnector:
         ('users', 'list'): {'start_cursor': 'start_cursor', 'page_size': 'page_size'},
         ('users', 'get'): {'user_id': 'user_id'},
         ('pages', 'list'): {'filter': 'filter', 'sort': 'sort', 'start_cursor': 'start_cursor', 'page_size': 'page_size'},
+        ('pages', 'create'): {'parent': 'parent', 'properties': 'properties', 'children': 'children', 'icon': 'icon', 'cover': 'cover'},
         ('pages', 'get'): {'page_id': 'page_id'},
+        ('pages', 'update'): {'properties': 'properties', 'icon': 'icon', 'cover': 'cover', 'archived': 'archived', 'in_trash': 'in_trash', 'page_id': 'page_id'},
         ('data_sources', 'list'): {'filter': 'filter', 'sort': 'sort', 'start_cursor': 'start_cursor', 'page_size': 'page_size'},
         ('data_sources', 'get'): {'data_source_id': 'data_source_id'},
         ('blocks', 'list'): {'block_id': 'block_id', 'start_cursor': 'start_cursor', 'page_size': 'page_size'},
+        ('blocks', 'create'): {'children': 'children', 'block_id': 'block_id'},
         ('blocks', 'get'): {'block_id': 'block_id'},
+        ('blocks', 'update'): {'paragraph': 'paragraph', 'heading_1': 'heading_1', 'heading_2': 'heading_2', 'heading_3': 'heading_3', 'bulleted_list_item': 'bulleted_list_item', 'numbered_list_item': 'numbered_list_item', 'to_do': 'to_do', 'toggle': 'toggle', 'code': 'code', 'quote': 'quote', 'callout': 'callout', 'bookmark': 'bookmark', 'embed': 'embed', 'equation': 'equation', 'image': 'image', 'video': 'video', 'file': 'file', 'pdf': 'pdf', 'audio': 'audio', 'table': 'table', 'archived': 'archived', 'block_id': 'block_id'},
         ('comments', 'list'): {'block_id': 'block_id', 'start_cursor': 'start_cursor', 'page_size': 'page_size'},
+        ('comments', 'create'): {'parent': 'parent', 'discussion_id': 'discussion_id', 'rich_text': 'rich_text'},
+        ('data_sources', 'update'): {'title': 'title', 'description': 'description', 'properties': 'properties', 'icon': 'icon', 'cover': 'cover', 'archived': 'archived', 'in_trash': 'in_trash', 'data_source_id': 'data_source_id'},
     }
 
     # Accepted auth_config types for isinstance validation
@@ -269,8 +317,32 @@ class NotionConnector:
     async def execute(
         self,
         entity: Literal["pages"],
+        action: Literal["create"],
+        params: "PagesCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "Page": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["pages"],
         action: Literal["get"],
         params: "PagesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "Page": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["pages"],
+        action: Literal["update"],
+        params: "PagesUpdateParams",
         *,
         select_fields: list[str] | None = ...,
         exclude_fields: list[str] | None = ...,
@@ -317,8 +389,32 @@ class NotionConnector:
     async def execute(
         self,
         entity: Literal["blocks"],
+        action: Literal["create"],
+        params: "BlocksCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "list[Block]": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["blocks"],
         action: Literal["get"],
         params: "BlocksGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "Block": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["blocks"],
+        action: Literal["update"],
+        params: "BlocksUpdateParams",
         *,
         select_fields: list[str] | None = ...,
         exclude_fields: list[str] | None = ...,
@@ -337,12 +433,36 @@ class NotionConnector:
         skip_truncation: bool = ...
     ) -> "CommentsListResult": ...
 
+    @overload
+    async def execute(
+        self,
+        entity: Literal["comments"],
+        action: Literal["create"],
+        params: "CommentsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "Comment": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["data_sources"],
+        action: Literal["update"],
+        params: "DataSourcesUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "DataSource": ...
+
 
     @overload
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get", "context_store_search"],
+        action: Literal["list", "get", "create", "update", "context_store_search"],
         params: Mapping[str, Any],
         *,
         select_fields: list[str] | None = ...,
@@ -353,7 +473,7 @@ class NotionConnector:
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get", "context_store_search"],
+        action: Literal["list", "get", "create", "update", "context_store_search"],
         params: Mapping[str, Any] | None = None,
         *,
         select_fields: list[str] | None = None,
@@ -792,6 +912,43 @@ class PagesQuery:
 
 
 
+    async def create(
+        self,
+        parent: dict[str, Any],
+        properties: dict[str, Any] | None = None,
+        children: list[dict[str, Any]] | None = None,
+        icon: PagesCreateParamsIcon | None | None = None,
+        cover: PagesCreateParamsCover | None | None = None,
+        **kwargs
+    ) -> Page:
+        """
+        Creates a new page as a child of an existing page or data source
+
+        Args:
+            parent: Parent of the page. Provide exactly one of page_id, database_id, data_source_id, or workspace.
+            properties: Page properties. For pages under a page, use title property. For data source pages, match the data source schema.
+            children: Content blocks to add to the page (max 100)
+            icon: Icon. Supports emoji, external URL, file upload, custom emoji, and Notion native icons. Set to null to remove.
+            cover: Cover image. Supports external URL or file upload. Set to null to remove.
+            **kwargs: Additional parameters
+
+        Returns:
+            Page
+        """
+        params = {k: v for k, v in {
+            "parent": parent,
+            "properties": properties,
+            "children": children,
+            "icon": icon,
+            "cover": cover,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("pages", "create", params)
+        return result
+
+
+
     async def get(
         self,
         page_id: str,
@@ -813,6 +970,46 @@ class PagesQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("pages", "get", params)
+        return result
+
+
+
+    async def update(
+        self,
+        page_id: str,
+        properties: dict[str, Any] | None = None,
+        icon: PagesUpdateParamsIcon | None | None = None,
+        cover: PagesUpdateParamsCover | None | None = None,
+        archived: bool | None = None,
+        in_trash: bool | None = None,
+        **kwargs
+    ) -> Page:
+        """
+        Updates page properties, icon, cover, or archived status
+
+        Args:
+            properties: Page property values to update. Keys must match the page's property schema.
+            icon: Icon. Supports emoji, external URL, file upload, custom emoji, and Notion native icons. Set to null to remove.
+            cover: Cover image. Supports external URL or file upload. Set to null to remove.
+            archived: Set to true to archive the page, false to un-archive
+            in_trash: Set to true to move the page to trash, false to restore
+            page_id: Page ID
+            **kwargs: Additional parameters
+
+        Returns:
+            Page
+        """
+        params = {k: v for k, v in {
+            "properties": properties,
+            "icon": icon,
+            "cover": cover,
+            "archived": archived,
+            "in_trash": in_trash,
+            "page_id": page_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("pages", "update", params)
         return result
 
 
@@ -957,6 +1154,52 @@ class DataSourcesQuery:
 
 
 
+    async def update(
+        self,
+        data_source_id: str,
+        title: list[DataSourcesUpdateParamsTitleItem] | None = None,
+        description: list[DataSourcesUpdateParamsDescriptionItem] | None = None,
+        properties: dict[str, Any] | None = None,
+        icon: DataSourcesUpdateParamsIcon | None | None = None,
+        cover: DataSourcesUpdateParamsCover | None | None = None,
+        archived: bool | None = None,
+        in_trash: bool | None = None,
+        **kwargs
+    ) -> DataSource:
+        """
+        Updates a data source's title, description, icon, properties, or trash status
+
+        Args:
+            title: Updated title of the data source as rich text
+            description: Updated description of the data source as rich text
+            properties: Data source property schema to update. Keys are property names or IDs. Set a property to null to remove it.
+            icon: Icon. Supports emoji, external URL, file upload, custom emoji, and Notion native icons. Set to null to remove.
+            cover: Cover image. Supports external URL or file upload. Set to null to remove.
+            archived: Set to true to archive the data source
+            in_trash: Set to true to move the data source to trash
+            data_source_id: Data source ID
+            **kwargs: Additional parameters
+
+        Returns:
+            DataSource
+        """
+        params = {k: v for k, v in {
+            "title": title,
+            "description": description,
+            "properties": properties,
+            "icon": icon,
+            "cover": cover,
+            "archived": archived,
+            "in_trash": in_trash,
+            "data_source_id": data_source_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("data_sources", "update", params)
+        return result
+
+
+
     async def context_store_search(
         self,
         query: DataSourcesSearchQuery,
@@ -1072,6 +1315,34 @@ class BlocksQuery:
 
 
 
+    async def create(
+        self,
+        children: list[BlocksCreateParamsChildrenItem],
+        block_id: str,
+        **kwargs
+    ) -> list[Block]:
+        """
+        Creates and appends new children blocks to the specified parent block or page
+
+        Args:
+            children: Array of block objects to append (max 100). Each block must specify a type and corresponding content.
+            block_id: Block or page ID to append children to
+            **kwargs: Additional parameters
+
+        Returns:
+            list[Block]
+        """
+        params = {k: v for k, v in {
+            "children": children,
+            "block_id": block_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("blocks", "create", params)
+        return result
+
+
+
     async def get(
         self,
         block_id: str,
@@ -1093,6 +1364,94 @@ class BlocksQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("blocks", "get", params)
+        return result
+
+
+
+    async def update(
+        self,
+        block_id: str,
+        paragraph: BlocksUpdateParamsParagraph | None = None,
+        heading_1: BlocksUpdateParamsHeading1 | None = None,
+        heading_2: BlocksUpdateParamsHeading2 | None = None,
+        heading_3: BlocksUpdateParamsHeading3 | None = None,
+        bulleted_list_item: BlocksUpdateParamsBulletedListItem | None = None,
+        numbered_list_item: BlocksUpdateParamsNumberedListItem | None = None,
+        to_do: BlocksUpdateParamsToDo | None = None,
+        toggle: BlocksUpdateParamsToggle | None = None,
+        code: BlocksUpdateParamsCode | None = None,
+        quote: BlocksUpdateParamsQuote | None = None,
+        callout: BlocksUpdateParamsCallout | None = None,
+        bookmark: BlocksUpdateParamsBookmark | None = None,
+        embed: BlocksUpdateParamsEmbed | None = None,
+        equation: BlocksUpdateParamsEquation | None = None,
+        image: BlocksUpdateParamsImage | None = None,
+        video: BlocksUpdateParamsVideo | None = None,
+        file: BlocksUpdateParamsFile | None = None,
+        pdf: BlocksUpdateParamsPdf | None = None,
+        audio: BlocksUpdateParamsAudio | None = None,
+        table: BlocksUpdateParamsTable | None = None,
+        archived: bool | None = None,
+        **kwargs
+    ) -> Block:
+        """
+        Updates the content of a block based on its type
+
+        Args:
+            paragraph: Updated paragraph content
+            heading_1: Updated heading 1 content
+            heading_2: Updated heading 2 content
+            heading_3: Updated heading 3 content
+            bulleted_list_item: Updated bulleted list item
+            numbered_list_item: Updated numbered list item
+            to_do: Updated to-do content
+            toggle: Updated toggle content
+            code: Updated code block content
+            quote: Updated quote content
+            callout: Updated callout content
+            bookmark: Updated bookmark
+            embed: Updated embed
+            equation: Updated equation
+            image: Media file. Use external URL or file upload.
+            video: Media file. Use external URL or file upload.
+            file: Media file. Use external URL or file upload.
+            pdf: Media file. Use external URL or file upload.
+            audio: Media file. Use external URL or file upload.
+            table: Updated table properties
+            archived: Set to true to archive the block (API version 2025-09-03)
+            block_id: Block ID
+            **kwargs: Additional parameters
+
+        Returns:
+            Block
+        """
+        params = {k: v for k, v in {
+            "paragraph": paragraph,
+            "heading_1": heading_1,
+            "heading_2": heading_2,
+            "heading_3": heading_3,
+            "bulleted_list_item": bulleted_list_item,
+            "numbered_list_item": numbered_list_item,
+            "to_do": to_do,
+            "toggle": toggle,
+            "code": code,
+            "quote": quote,
+            "callout": callout,
+            "bookmark": bookmark,
+            "embed": embed,
+            "equation": equation,
+            "image": image,
+            "video": video,
+            "file": file,
+            "pdf": pdf,
+            "audio": audio,
+            "table": table,
+            "archived": archived,
+            "block_id": block_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("blocks", "update", params)
         return result
 
 
@@ -1234,6 +1593,37 @@ class CommentsQuery:
             data=result.data,
             meta=getattr(result, "meta", None)
         )
+
+
+
+    async def create(
+        self,
+        rich_text: list[CommentsCreateParamsRichTextItem],
+        parent: dict[str, Any] | None = None,
+        discussion_id: str | None = None,
+        **kwargs
+    ) -> Comment:
+        """
+        Creates a comment on a page or block, or replies to an existing discussion thread
+
+        Args:
+            parent: Parent of the comment. Provide exactly one of page_id or block_id. Mutually exclusive with discussion_id.
+            discussion_id: ID of an existing discussion thread to reply to. Mutually exclusive with parent.
+            rich_text: Content of the comment as rich text
+            **kwargs: Additional parameters
+
+        Returns:
+            Comment
+        """
+        params = {k: v for k, v in {
+            "parent": parent,
+            "discussion_id": discussion_id,
+            "rich_text": rich_text,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("comments", "create", params)
+        return result
 
 
 

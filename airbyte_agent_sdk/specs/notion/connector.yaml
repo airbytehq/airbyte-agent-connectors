@@ -5,10 +5,10 @@ info:
   version: 0.1.12
   description: |
     Notion is an all-in-one workspace for notes, docs, wikis, projects, and collaboration.
-    This connector provides read access to Notion workspaces including users, pages, data sources,
+    This connector provides read and write access to Notion workspaces including users, pages, data sources,
     blocks, and comments through the Notion REST API (version 2025-09-03). It enables querying
-    workspace structure, page content, data source schemas, and collaboration data for productivity
-    analysis and content management insights.
+    workspace structure, page content, data source schemas, and collaboration data, as well as
+    creating and updating pages, appending and updating blocks, and creating comments.
   x-airbyte-connector-name: notion
   x-airbyte-connector-definition-id: 6e00b415-b02e-4160-bf02-58176a0ae687
   x-airbyte-replication-version: "4.0.7"
@@ -505,15 +505,22 @@ info:
       - "Show me comments on a specific page"
       - "What is the schema of a specific data source?"
       - "Who are the bot users in my workspace?"
+      - "Create a new page titled 'Meeting Notes' under page X"
+      - "Update the icon of page X to a rocket emoji"
+      - "Add a paragraph block saying 'Hello World' to page X"
+      - "Mark the to-do block as completed"
+      - "Add a comment to page X saying 'Looks good!'"
+      - "Archive page X"
+      - "Update the title of data source X to 'Project Tracker'"
     search:
       - "Find pages created in the last week"
       - "List data sources that have been recently edited"
       - "Show me all archived pages"
     unsupported:
-      - "Create a new page in Notion"
-      - "Update a data source property"
-      - "Delete a block"
-      - "Add a comment to a page"
+      - "Delete a page permanently"
+      - "Delete a block permanently"
+      - "Delete a comment"
+      - "Create a new user"
 
 servers:
   - url: https://api.notion.com
@@ -663,6 +670,40 @@ paths:
         "401":
           description: Unauthorized
 
+  "/v1/pages":
+    post:
+      summary: Create a page
+      description: Creates a new page as a child of an existing page or data source
+      operationId: createPage
+      x-airbyte-entity: pages
+      x-airbyte-action: create
+      parameters:
+        - name: Notion-Version
+          in: header
+          required: true
+          schema:
+            type: string
+            default: "2025-09-03"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PageCreateParams"
+      responses:
+        "200":
+          description: Page created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Page"
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+
   "/v1/pages/{page_id}":
     get:
       summary: Get a page
@@ -690,6 +731,44 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Page"
+        "404":
+          description: Page not found
+        "401":
+          description: Unauthorized
+    patch:
+      summary: Update a page
+      description: Updates page properties, icon, cover, or archived status
+      operationId: updatePage
+      x-airbyte-entity: pages
+      x-airbyte-action: update
+      parameters:
+        - name: page_id
+          in: path
+          required: true
+          description: Page ID
+          schema:
+            type: string
+        - name: Notion-Version
+          in: header
+          required: true
+          schema:
+            type: string
+            default: "2025-09-03"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PageUpdateParams"
+      responses:
+        "200":
+          description: Page updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Page"
+        "400":
+          description: Invalid input
         "404":
           description: Page not found
         "401":
@@ -840,6 +919,45 @@ paths:
           description: Block not found
         "401":
           description: Unauthorized
+    patch:
+      summary: Append block children
+      description: Creates and appends new children blocks to the specified parent block or page
+      operationId: appendBlockChildren
+      x-airbyte-entity: blocks
+      x-airbyte-action: create
+      x-airbyte-record-extractor: $.results
+      parameters:
+        - name: block_id
+          in: path
+          required: true
+          description: Block or page ID to append children to
+          schema:
+            type: string
+        - name: Notion-Version
+          in: header
+          required: true
+          schema:
+            type: string
+            default: "2025-09-03"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BlockCreateParams"
+      responses:
+        "200":
+          description: Blocks appended
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BlocksListResponse"
+        "400":
+          description: Invalid input
+        "404":
+          description: Block not found
+        "401":
+          description: Unauthorized
 
   "/v1/blocks/{block_id}":
     get:
@@ -868,6 +986,44 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Block"
+        "404":
+          description: Block not found
+        "401":
+          description: Unauthorized
+    patch:
+      summary: Update a block
+      description: Updates the content of a block based on its type
+      operationId: updateBlock
+      x-airbyte-entity: blocks
+      x-airbyte-action: update
+      parameters:
+        - name: block_id
+          in: path
+          required: true
+          description: Block ID
+          schema:
+            type: string
+        - name: Notion-Version
+          in: header
+          required: true
+          schema:
+            type: string
+            default: "2025-09-03"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BlockUpdateParams"
+      responses:
+        "200":
+          description: Block updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Block"
+        "400":
+          description: Invalid input
         "404":
           description: Block not found
         "401":
@@ -919,6 +1075,80 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/CommentsListResponse"
+        "401":
+          description: Unauthorized
+    post:
+      summary: Create a comment
+      description: Creates a comment on a page or block, or replies to an existing discussion thread
+      operationId: createComment
+      x-airbyte-entity: comments
+      x-airbyte-action: create
+      parameters:
+        - name: Notion-Version
+          in: header
+          required: true
+          schema:
+            type: string
+            default: "2025-09-03"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CommentCreateParams"
+      responses:
+        "200":
+          description: Comment created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Comment"
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+
+  "/v1/data_sources/{data_source_id}:update":
+    patch:
+      summary: Update a data source
+      description: Updates a data source's title, description, icon, properties, or trash status
+      operationId: updateDataSource
+      x-airbyte-entity: data_sources
+      x-airbyte-action: update
+      x-airbyte-path-override:
+        path: /v1/data_sources/{data_source_id}
+      parameters:
+        - name: data_source_id
+          in: path
+          required: true
+          description: Data source ID
+          schema:
+            type: string
+        - name: Notion-Version
+          in: header
+          required: true
+          schema:
+            type: string
+            default: "2025-09-03"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DataSourceUpdateParams"
+      responses:
+        "200":
+          description: Data source updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DataSource"
+        "400":
+          description: Invalid input
+        "404":
+          description: Data source not found
         "401":
           description: Unauthorized
 
@@ -1770,3 +2000,1825 @@ components:
         request_id:
           type: [string, "null"]
           description: Request ID for debugging
+
+    PageCreateParams:
+      type: object
+      description: "Parameters for creating a new page as a child of an existing page, data source, or at the workspace level."
+      required:
+        - parent
+      properties:
+        parent:
+          type: object
+          description: "Parent of the page. Provide exactly one of page_id, database_id, data_source_id, or workspace."
+          oneOf:
+            - type: object
+              required: [page_id]
+              properties:
+                page_id:
+                  type: string
+                  description: ID of the parent page
+            - type: object
+              required: [database_id]
+              properties:
+                database_id:
+                  type: string
+                  description: ID of the parent database
+            - type: object
+              required: [data_source_id]
+              properties:
+                data_source_id:
+                  type: string
+                  description: ID of the parent data source
+            - type: object
+              required: [workspace]
+              properties:
+                workspace:
+                  type: boolean
+                  description: Set to true to create at workspace level
+        properties:
+          type: object
+          description: "Page properties. For pages under a page, use title property. For data source pages, match the data source schema."
+          additionalProperties: true
+        children:
+          type: array
+          description: Content blocks to add to the page (max 100)
+          items:
+            type: object
+            additionalProperties: true
+        icon:
+          type: [object, "null"]
+          description: "Icon. Supports emoji, external URL, file upload, custom emoji, and Notion native icons. Set to null to remove."
+          properties:
+            type:
+              type: string
+              description: "Icon type: emoji, external, file_upload, custom_emoji, or icon"
+            emoji:
+              type: string
+              description: Emoji character (when type is emoji)
+            external:
+              type: object
+              description: External URL icon (when type is external)
+              properties:
+                url:
+                  type: string
+            file_upload:
+              type: object
+              description: Uploaded file icon (when type is file_upload)
+              properties:
+                id:
+                  type: string
+            custom_emoji:
+              type: object
+              description: Custom emoji icon (when type is custom_emoji)
+              properties:
+                id:
+                  type: string
+            icon:
+              type: object
+              description: Notion native icon (when type is icon)
+              properties:
+                name:
+                  type: string
+                color:
+                  type: string
+        cover:
+          type: [object, "null"]
+          description: "Cover image. Supports external URL or file upload. Set to null to remove."
+          properties:
+            type:
+              type: string
+              description: "Cover type: external or file_upload"
+            external:
+              type: object
+              description: External URL cover
+              properties:
+                url:
+                  type: string
+            file_upload:
+              type: object
+              description: Uploaded file cover
+              properties:
+                id:
+                  type: string
+
+    PageUpdateParams:
+      type: object
+      description: "Parameters for updating a page. All fields are optional for partial updates."
+      properties:
+        properties:
+          type: object
+          description: "Page property values to update. Keys must match the page's property schema."
+          additionalProperties: true
+        icon:
+          type: [object, "null"]
+          description: "Icon. Supports emoji, external URL, file upload, custom emoji, and Notion native icons. Set to null to remove."
+          properties:
+            type:
+              type: string
+              description: "Icon type: emoji, external, file_upload, custom_emoji, or icon"
+            emoji:
+              type: string
+              description: Emoji character (when type is emoji)
+            external:
+              type: object
+              description: External URL icon (when type is external)
+              properties:
+                url:
+                  type: string
+            file_upload:
+              type: object
+              description: Uploaded file icon (when type is file_upload)
+              properties:
+                id:
+                  type: string
+            custom_emoji:
+              type: object
+              description: Custom emoji icon (when type is custom_emoji)
+              properties:
+                id:
+                  type: string
+            icon:
+              type: object
+              description: Notion native icon (when type is icon)
+              properties:
+                name:
+                  type: string
+                color:
+                  type: string
+        cover:
+          type: [object, "null"]
+          description: "Cover image. Supports external URL or file upload. Set to null to remove."
+          properties:
+            type:
+              type: string
+              description: "Cover type: external or file_upload"
+            external:
+              type: object
+              description: External URL cover
+              properties:
+                url:
+                  type: string
+            file_upload:
+              type: object
+              description: Uploaded file cover
+              properties:
+                id:
+                  type: string
+        archived:
+          type: boolean
+          description: Set to true to archive the page, false to un-archive
+        in_trash:
+          type: boolean
+          description: Set to true to move the page to trash, false to restore
+
+    BlockCreateParams:
+      type: object
+      description: "Parameters for appending child blocks to a parent block or page. The block_id path parameter specifies the parent."
+      required:
+        - children
+      properties:
+        children:
+          type: array
+          description: "Array of block objects to append (max 100). Each block must specify a type and corresponding content."
+          items:
+            type: object
+            description: "A block object. Set type to the block kind and include matching content."
+            properties:
+              type:
+                type: string
+                description: "Block type: paragraph, heading_1, heading_2, heading_3, bulleted_list_item, numbered_list_item, to_do, toggle, code, quote, callout, divider, bookmark, embed, equation, table_of_contents, image, video, file, pdf, audio, column_list, column, table, synced_block, link_to_page, etc."
+              paragraph:
+                type: object
+                description: Paragraph block content
+                properties:
+                  rich_text:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          default: "text"
+                        text:
+                          type: object
+                          properties:
+                            content:
+                              type: string
+                            link:
+                              type: [object, "null"]
+                              properties:
+                                url:
+                                  type: string
+                        mention:
+                          type: object
+                          additionalProperties: true
+                        equation:
+                          type: object
+                          properties:
+                            expression:
+                              type: string
+                        annotations:
+                          type: object
+                          properties:
+                            bold:
+                              type: boolean
+                            italic:
+                              type: boolean
+                            strikethrough:
+                              type: boolean
+                            underline:
+                              type: boolean
+                            code:
+                              type: boolean
+                            color:
+                              type: string
+                  color:
+                    type: string
+              heading_1:
+                type: object
+                description: Heading 1 block content
+                properties:
+                  rich_text:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          default: "text"
+                        text:
+                          type: object
+                          properties:
+                            content:
+                              type: string
+                            link:
+                              type: [object, "null"]
+                              properties:
+                                url:
+                                  type: string
+                        mention:
+                          type: object
+                          additionalProperties: true
+                        equation:
+                          type: object
+                          properties:
+                            expression:
+                              type: string
+                        annotations:
+                          type: object
+                          properties:
+                            bold:
+                              type: boolean
+                            italic:
+                              type: boolean
+                            strikethrough:
+                              type: boolean
+                            underline:
+                              type: boolean
+                            code:
+                              type: boolean
+                            color:
+                              type: string
+                  color:
+                    type: string
+                  is_toggleable:
+                    type: boolean
+              heading_2:
+                type: object
+                description: Heading 2 block content
+                properties:
+                  rich_text:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          default: "text"
+                        text:
+                          type: object
+                          properties:
+                            content:
+                              type: string
+                            link:
+                              type: [object, "null"]
+                              properties:
+                                url:
+                                  type: string
+                        mention:
+                          type: object
+                          additionalProperties: true
+                        equation:
+                          type: object
+                          properties:
+                            expression:
+                              type: string
+                        annotations:
+                          type: object
+                          properties:
+                            bold:
+                              type: boolean
+                            italic:
+                              type: boolean
+                            strikethrough:
+                              type: boolean
+                            underline:
+                              type: boolean
+                            code:
+                              type: boolean
+                            color:
+                              type: string
+                  color:
+                    type: string
+                  is_toggleable:
+                    type: boolean
+              heading_3:
+                type: object
+                description: Heading 3 block content
+                properties:
+                  rich_text:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          default: "text"
+                        text:
+                          type: object
+                          properties:
+                            content:
+                              type: string
+                            link:
+                              type: [object, "null"]
+                              properties:
+                                url:
+                                  type: string
+                        mention:
+                          type: object
+                          additionalProperties: true
+                        equation:
+                          type: object
+                          properties:
+                            expression:
+                              type: string
+                        annotations:
+                          type: object
+                          properties:
+                            bold:
+                              type: boolean
+                            italic:
+                              type: boolean
+                            strikethrough:
+                              type: boolean
+                            underline:
+                              type: boolean
+                            code:
+                              type: boolean
+                            color:
+                              type: string
+                  color:
+                    type: string
+                  is_toggleable:
+                    type: boolean
+              bulleted_list_item:
+                type: object
+                description: Bulleted list item content
+                properties:
+                  rich_text:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          default: "text"
+                        text:
+                          type: object
+                          properties:
+                            content:
+                              type: string
+                            link:
+                              type: [object, "null"]
+                              properties:
+                                url:
+                                  type: string
+                        mention:
+                          type: object
+                          additionalProperties: true
+                        equation:
+                          type: object
+                          properties:
+                            expression:
+                              type: string
+                        annotations:
+                          type: object
+                          properties:
+                            bold:
+                              type: boolean
+                            italic:
+                              type: boolean
+                            strikethrough:
+                              type: boolean
+                            underline:
+                              type: boolean
+                            code:
+                              type: boolean
+                            color:
+                              type: string
+                  color:
+                    type: string
+              numbered_list_item:
+                type: object
+                description: Numbered list item content
+                properties:
+                  rich_text:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          default: "text"
+                        text:
+                          type: object
+                          properties:
+                            content:
+                              type: string
+                            link:
+                              type: [object, "null"]
+                              properties:
+                                url:
+                                  type: string
+                        mention:
+                          type: object
+                          additionalProperties: true
+                        equation:
+                          type: object
+                          properties:
+                            expression:
+                              type: string
+                        annotations:
+                          type: object
+                          properties:
+                            bold:
+                              type: boolean
+                            italic:
+                              type: boolean
+                            strikethrough:
+                              type: boolean
+                            underline:
+                              type: boolean
+                            code:
+                              type: boolean
+                            color:
+                              type: string
+                  color:
+                    type: string
+              to_do:
+                type: object
+                description: To-do block content
+                properties:
+                  rich_text:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          default: "text"
+                        text:
+                          type: object
+                          properties:
+                            content:
+                              type: string
+                            link:
+                              type: [object, "null"]
+                              properties:
+                                url:
+                                  type: string
+                        mention:
+                          type: object
+                          additionalProperties: true
+                        equation:
+                          type: object
+                          properties:
+                            expression:
+                              type: string
+                        annotations:
+                          type: object
+                          properties:
+                            bold:
+                              type: boolean
+                            italic:
+                              type: boolean
+                            strikethrough:
+                              type: boolean
+                            underline:
+                              type: boolean
+                            code:
+                              type: boolean
+                            color:
+                              type: string
+                  checked:
+                    type: boolean
+                  color:
+                    type: string
+              toggle:
+                type: object
+                description: Toggle block content
+                properties:
+                  rich_text:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          default: "text"
+                        text:
+                          type: object
+                          properties:
+                            content:
+                              type: string
+                            link:
+                              type: [object, "null"]
+                              properties:
+                                url:
+                                  type: string
+                        mention:
+                          type: object
+                          additionalProperties: true
+                        equation:
+                          type: object
+                          properties:
+                            expression:
+                              type: string
+                        annotations:
+                          type: object
+                          properties:
+                            bold:
+                              type: boolean
+                            italic:
+                              type: boolean
+                            strikethrough:
+                              type: boolean
+                            underline:
+                              type: boolean
+                            code:
+                              type: boolean
+                            color:
+                              type: string
+                  color:
+                    type: string
+              code:
+                type: object
+                description: Code block content
+                properties:
+                  rich_text:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          default: "text"
+                        text:
+                          type: object
+                          properties:
+                            content:
+                              type: string
+                            link:
+                              type: [object, "null"]
+                              properties:
+                                url:
+                                  type: string
+                        mention:
+                          type: object
+                          additionalProperties: true
+                        equation:
+                          type: object
+                          properties:
+                            expression:
+                              type: string
+                        annotations:
+                          type: object
+                          properties:
+                            bold:
+                              type: boolean
+                            italic:
+                              type: boolean
+                            strikethrough:
+                              type: boolean
+                            underline:
+                              type: boolean
+                            code:
+                              type: boolean
+                            color:
+                              type: string
+                  language:
+                    type: string
+                    description: Programming language for syntax highlighting
+              quote:
+                type: object
+                description: Quote block content
+                properties:
+                  rich_text:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          default: "text"
+                        text:
+                          type: object
+                          properties:
+                            content:
+                              type: string
+                            link:
+                              type: [object, "null"]
+                              properties:
+                                url:
+                                  type: string
+                        mention:
+                          type: object
+                          additionalProperties: true
+                        equation:
+                          type: object
+                          properties:
+                            expression:
+                              type: string
+                        annotations:
+                          type: object
+                          properties:
+                            bold:
+                              type: boolean
+                            italic:
+                              type: boolean
+                            strikethrough:
+                              type: boolean
+                            underline:
+                              type: boolean
+                            code:
+                              type: boolean
+                            color:
+                              type: string
+                  color:
+                    type: string
+              callout:
+                type: object
+                description: Callout block content
+                properties:
+                  rich_text:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          default: "text"
+                        text:
+                          type: object
+                          properties:
+                            content:
+                              type: string
+                            link:
+                              type: [object, "null"]
+                              properties:
+                                url:
+                                  type: string
+                        mention:
+                          type: object
+                          additionalProperties: true
+                        equation:
+                          type: object
+                          properties:
+                            expression:
+                              type: string
+                        annotations:
+                          type: object
+                          properties:
+                            bold:
+                              type: boolean
+                            italic:
+                              type: boolean
+                            strikethrough:
+                              type: boolean
+                            underline:
+                              type: boolean
+                            code:
+                              type: boolean
+                            color:
+                              type: string
+                  icon:
+                    type: object
+                  color:
+                    type: string
+              divider:
+                type: object
+                description: Divider block (empty object)
+              bookmark:
+                type: object
+                description: Bookmark block
+                properties:
+                  url:
+                    type: string
+                    description: URL to bookmark
+                  caption:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          default: "text"
+                        text:
+                          type: object
+                          properties:
+                            content:
+                              type: string
+                            link:
+                              type: [object, "null"]
+                              properties:
+                                url:
+                                  type: string
+                        mention:
+                          type: object
+                          additionalProperties: true
+                        equation:
+                          type: object
+                          properties:
+                            expression:
+                              type: string
+                        annotations:
+                          type: object
+                          properties:
+                            bold:
+                              type: boolean
+                            italic:
+                              type: boolean
+                            strikethrough:
+                              type: boolean
+                            underline:
+                              type: boolean
+                            code:
+                              type: boolean
+                            color:
+                              type: string
+              embed:
+                type: object
+                description: Embed block
+                properties:
+                  url:
+                    type: string
+                    description: URL to embed
+              equation:
+                type: object
+                description: Equation block
+                properties:
+                  expression:
+                    type: string
+                    description: LaTeX expression
+              table_of_contents:
+                type: object
+                description: Table of contents block
+                properties:
+                  color:
+                    type: string
+              image:
+                type: object
+                description: "Media file. Use external URL or file upload."
+                properties:
+                  type:
+                    type: string
+                    description: "File type: external or file_upload"
+                  external:
+                    type: object
+                    properties:
+                      url:
+                        type: string
+                  file_upload:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+              video:
+                type: object
+                description: "Media file. Use external URL or file upload."
+                properties:
+                  type:
+                    type: string
+                    description: "File type: external or file_upload"
+                  external:
+                    type: object
+                    properties:
+                      url:
+                        type: string
+                  file_upload:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+              file:
+                type: object
+                description: "Media file. Use external URL or file upload."
+                properties:
+                  type:
+                    type: string
+                    description: "File type: external or file_upload"
+                  external:
+                    type: object
+                    properties:
+                      url:
+                        type: string
+                  file_upload:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+              pdf:
+                type: object
+                description: "Media file. Use external URL or file upload."
+                properties:
+                  type:
+                    type: string
+                    description: "File type: external or file_upload"
+                  external:
+                    type: object
+                    properties:
+                      url:
+                        type: string
+                  file_upload:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+              audio:
+                type: object
+                description: "Media file. Use external URL or file upload."
+                properties:
+                  type:
+                    type: string
+                    description: "File type: external or file_upload"
+                  external:
+                    type: object
+                    properties:
+                      url:
+                        type: string
+                  file_upload:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+            additionalProperties: true
+
+    BlockUpdateParams:
+      type: object
+      description: "Parameters for updating a block. Include the block type and its updated content. Omitted fields within the type are unchanged."
+      properties:
+        paragraph:
+          type: object
+          description: Updated paragraph content
+          properties:
+            rich_text:
+              type: array
+              items:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    default: "text"
+                  text:
+                    type: object
+                    properties:
+                      content:
+                        type: string
+                      link:
+                        type: [object, "null"]
+                        properties:
+                          url:
+                            type: string
+                  mention:
+                    type: object
+                    additionalProperties: true
+                  equation:
+                    type: object
+                    properties:
+                      expression:
+                        type: string
+                  annotations:
+                    type: object
+                    properties:
+                      bold:
+                        type: boolean
+                      italic:
+                        type: boolean
+                      strikethrough:
+                        type: boolean
+                      underline:
+                        type: boolean
+                      code:
+                        type: boolean
+                      color:
+                        type: string
+            color:
+              type: string
+        heading_1:
+          type: object
+          description: Updated heading 1 content
+          properties:
+            rich_text:
+              type: array
+              items:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    default: "text"
+                  text:
+                    type: object
+                    properties:
+                      content:
+                        type: string
+                      link:
+                        type: [object, "null"]
+                        properties:
+                          url:
+                            type: string
+                  mention:
+                    type: object
+                    additionalProperties: true
+                  equation:
+                    type: object
+                    properties:
+                      expression:
+                        type: string
+                  annotations:
+                    type: object
+                    properties:
+                      bold:
+                        type: boolean
+                      italic:
+                        type: boolean
+                      strikethrough:
+                        type: boolean
+                      underline:
+                        type: boolean
+                      code:
+                        type: boolean
+                      color:
+                        type: string
+            color:
+              type: string
+            is_toggleable:
+              type: boolean
+        heading_2:
+          type: object
+          description: Updated heading 2 content
+          properties:
+            rich_text:
+              type: array
+              items:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    default: "text"
+                  text:
+                    type: object
+                    properties:
+                      content:
+                        type: string
+                      link:
+                        type: [object, "null"]
+                        properties:
+                          url:
+                            type: string
+                  mention:
+                    type: object
+                    additionalProperties: true
+                  equation:
+                    type: object
+                    properties:
+                      expression:
+                        type: string
+                  annotations:
+                    type: object
+                    properties:
+                      bold:
+                        type: boolean
+                      italic:
+                        type: boolean
+                      strikethrough:
+                        type: boolean
+                      underline:
+                        type: boolean
+                      code:
+                        type: boolean
+                      color:
+                        type: string
+            color:
+              type: string
+            is_toggleable:
+              type: boolean
+        heading_3:
+          type: object
+          description: Updated heading 3 content
+          properties:
+            rich_text:
+              type: array
+              items:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    default: "text"
+                  text:
+                    type: object
+                    properties:
+                      content:
+                        type: string
+                      link:
+                        type: [object, "null"]
+                        properties:
+                          url:
+                            type: string
+                  mention:
+                    type: object
+                    additionalProperties: true
+                  equation:
+                    type: object
+                    properties:
+                      expression:
+                        type: string
+                  annotations:
+                    type: object
+                    properties:
+                      bold:
+                        type: boolean
+                      italic:
+                        type: boolean
+                      strikethrough:
+                        type: boolean
+                      underline:
+                        type: boolean
+                      code:
+                        type: boolean
+                      color:
+                        type: string
+            color:
+              type: string
+            is_toggleable:
+              type: boolean
+        bulleted_list_item:
+          type: object
+          description: Updated bulleted list item
+          properties:
+            rich_text:
+              type: array
+              items:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    default: "text"
+                  text:
+                    type: object
+                    properties:
+                      content:
+                        type: string
+                      link:
+                        type: [object, "null"]
+                        properties:
+                          url:
+                            type: string
+                  mention:
+                    type: object
+                    additionalProperties: true
+                  equation:
+                    type: object
+                    properties:
+                      expression:
+                        type: string
+                  annotations:
+                    type: object
+                    properties:
+                      bold:
+                        type: boolean
+                      italic:
+                        type: boolean
+                      strikethrough:
+                        type: boolean
+                      underline:
+                        type: boolean
+                      code:
+                        type: boolean
+                      color:
+                        type: string
+            color:
+              type: string
+        numbered_list_item:
+          type: object
+          description: Updated numbered list item
+          properties:
+            rich_text:
+              type: array
+              items:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    default: "text"
+                  text:
+                    type: object
+                    properties:
+                      content:
+                        type: string
+                      link:
+                        type: [object, "null"]
+                        properties:
+                          url:
+                            type: string
+                  mention:
+                    type: object
+                    additionalProperties: true
+                  equation:
+                    type: object
+                    properties:
+                      expression:
+                        type: string
+                  annotations:
+                    type: object
+                    properties:
+                      bold:
+                        type: boolean
+                      italic:
+                        type: boolean
+                      strikethrough:
+                        type: boolean
+                      underline:
+                        type: boolean
+                      code:
+                        type: boolean
+                      color:
+                        type: string
+            color:
+              type: string
+        to_do:
+          type: object
+          description: Updated to-do content
+          properties:
+            rich_text:
+              type: array
+              items:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    default: "text"
+                  text:
+                    type: object
+                    properties:
+                      content:
+                        type: string
+                      link:
+                        type: [object, "null"]
+                        properties:
+                          url:
+                            type: string
+                  mention:
+                    type: object
+                    additionalProperties: true
+                  equation:
+                    type: object
+                    properties:
+                      expression:
+                        type: string
+                  annotations:
+                    type: object
+                    properties:
+                      bold:
+                        type: boolean
+                      italic:
+                        type: boolean
+                      strikethrough:
+                        type: boolean
+                      underline:
+                        type: boolean
+                      code:
+                        type: boolean
+                      color:
+                        type: string
+            checked:
+              type: boolean
+            color:
+              type: string
+        toggle:
+          type: object
+          description: Updated toggle content
+          properties:
+            rich_text:
+              type: array
+              items:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    default: "text"
+                  text:
+                    type: object
+                    properties:
+                      content:
+                        type: string
+                      link:
+                        type: [object, "null"]
+                        properties:
+                          url:
+                            type: string
+                  mention:
+                    type: object
+                    additionalProperties: true
+                  equation:
+                    type: object
+                    properties:
+                      expression:
+                        type: string
+                  annotations:
+                    type: object
+                    properties:
+                      bold:
+                        type: boolean
+                      italic:
+                        type: boolean
+                      strikethrough:
+                        type: boolean
+                      underline:
+                        type: boolean
+                      code:
+                        type: boolean
+                      color:
+                        type: string
+            color:
+              type: string
+        code:
+          type: object
+          description: Updated code block content
+          properties:
+            rich_text:
+              type: array
+              items:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    default: "text"
+                  text:
+                    type: object
+                    properties:
+                      content:
+                        type: string
+                      link:
+                        type: [object, "null"]
+                        properties:
+                          url:
+                            type: string
+                  mention:
+                    type: object
+                    additionalProperties: true
+                  equation:
+                    type: object
+                    properties:
+                      expression:
+                        type: string
+                  annotations:
+                    type: object
+                    properties:
+                      bold:
+                        type: boolean
+                      italic:
+                        type: boolean
+                      strikethrough:
+                        type: boolean
+                      underline:
+                        type: boolean
+                      code:
+                        type: boolean
+                      color:
+                        type: string
+            language:
+              type: string
+            caption:
+              type: array
+              items:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    default: "text"
+                  text:
+                    type: object
+                    properties:
+                      content:
+                        type: string
+                      link:
+                        type: [object, "null"]
+                        properties:
+                          url:
+                            type: string
+                  mention:
+                    type: object
+                    additionalProperties: true
+                  equation:
+                    type: object
+                    properties:
+                      expression:
+                        type: string
+                  annotations:
+                    type: object
+                    properties:
+                      bold:
+                        type: boolean
+                      italic:
+                        type: boolean
+                      strikethrough:
+                        type: boolean
+                      underline:
+                        type: boolean
+                      code:
+                        type: boolean
+                      color:
+                        type: string
+        quote:
+          type: object
+          description: Updated quote content
+          properties:
+            rich_text:
+              type: array
+              items:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    default: "text"
+                  text:
+                    type: object
+                    properties:
+                      content:
+                        type: string
+                      link:
+                        type: [object, "null"]
+                        properties:
+                          url:
+                            type: string
+                  mention:
+                    type: object
+                    additionalProperties: true
+                  equation:
+                    type: object
+                    properties:
+                      expression:
+                        type: string
+                  annotations:
+                    type: object
+                    properties:
+                      bold:
+                        type: boolean
+                      italic:
+                        type: boolean
+                      strikethrough:
+                        type: boolean
+                      underline:
+                        type: boolean
+                      code:
+                        type: boolean
+                      color:
+                        type: string
+            color:
+              type: string
+        callout:
+          type: object
+          description: Updated callout content
+          properties:
+            rich_text:
+              type: array
+              items:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    default: "text"
+                  text:
+                    type: object
+                    properties:
+                      content:
+                        type: string
+                      link:
+                        type: [object, "null"]
+                        properties:
+                          url:
+                            type: string
+                  mention:
+                    type: object
+                    additionalProperties: true
+                  equation:
+                    type: object
+                    properties:
+                      expression:
+                        type: string
+                  annotations:
+                    type: object
+                    properties:
+                      bold:
+                        type: boolean
+                      italic:
+                        type: boolean
+                      strikethrough:
+                        type: boolean
+                      underline:
+                        type: boolean
+                      code:
+                        type: boolean
+                      color:
+                        type: string
+            icon:
+              type: object
+            color:
+              type: string
+        bookmark:
+          type: object
+          description: Updated bookmark
+          properties:
+            url:
+              type: string
+            caption:
+              type: array
+              items:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    default: "text"
+                  text:
+                    type: object
+                    properties:
+                      content:
+                        type: string
+                      link:
+                        type: [object, "null"]
+                        properties:
+                          url:
+                            type: string
+                  mention:
+                    type: object
+                    additionalProperties: true
+                  equation:
+                    type: object
+                    properties:
+                      expression:
+                        type: string
+                  annotations:
+                    type: object
+                    properties:
+                      bold:
+                        type: boolean
+                      italic:
+                        type: boolean
+                      strikethrough:
+                        type: boolean
+                      underline:
+                        type: boolean
+                      code:
+                        type: boolean
+                      color:
+                        type: string
+        embed:
+          type: object
+          description: Updated embed
+          properties:
+            url:
+              type: string
+        equation:
+          type: object
+          description: Updated equation
+          properties:
+            expression:
+              type: string
+        image:
+          type: object
+          description: "Media file. Use external URL or file upload."
+          properties:
+            type:
+              type: string
+              description: "File type: external or file_upload"
+            external:
+              type: object
+              properties:
+                url:
+                  type: string
+            file_upload:
+              type: object
+              properties:
+                id:
+                  type: string
+        video:
+          type: object
+          description: "Media file. Use external URL or file upload."
+          properties:
+            type:
+              type: string
+              description: "File type: external or file_upload"
+            external:
+              type: object
+              properties:
+                url:
+                  type: string
+            file_upload:
+              type: object
+              properties:
+                id:
+                  type: string
+        file:
+          type: object
+          description: "Media file. Use external URL or file upload."
+          properties:
+            type:
+              type: string
+              description: "File type: external or file_upload"
+            external:
+              type: object
+              properties:
+                url:
+                  type: string
+            file_upload:
+              type: object
+              properties:
+                id:
+                  type: string
+        pdf:
+          type: object
+          description: "Media file. Use external URL or file upload."
+          properties:
+            type:
+              type: string
+              description: "File type: external or file_upload"
+            external:
+              type: object
+              properties:
+                url:
+                  type: string
+            file_upload:
+              type: object
+              properties:
+                id:
+                  type: string
+        audio:
+          type: object
+          description: "Media file. Use external URL or file upload."
+          properties:
+            type:
+              type: string
+              description: "File type: external or file_upload"
+            external:
+              type: object
+              properties:
+                url:
+                  type: string
+            file_upload:
+              type: object
+              properties:
+                id:
+                  type: string
+        table:
+          type: object
+          description: Updated table properties
+          properties:
+            has_column_header:
+              type: boolean
+            has_row_header:
+              type: boolean
+        archived:
+          type: boolean
+          description: Set to true to archive the block (API version 2025-09-03)
+
+    CommentCreateParams:
+      type: object
+      description: "Parameters for creating a comment. Provide either parent (with page_id or block_id) for a new comment, or discussion_id to reply to an existing thread. Exactly one of parent or discussion_id must be provided."
+      required:
+        - rich_text
+      properties:
+        parent:
+          type: object
+          description: "Parent of the comment. Provide exactly one of page_id or block_id. Mutually exclusive with discussion_id."
+          oneOf:
+            - type: object
+              required: [page_id]
+              properties:
+                page_id:
+                  type: string
+                  description: ID of the page to comment on
+            - type: object
+              required: [block_id]
+              properties:
+                block_id:
+                  type: string
+                  description: ID of the block to comment on
+        discussion_id:
+          type: string
+          description: ID of an existing discussion thread to reply to. Mutually exclusive with parent.
+        rich_text:
+          type: array
+          description: Content of the comment as rich text
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                default: "text"
+              text:
+                type: object
+                properties:
+                  content:
+                    type: string
+                  link:
+                    type: [object, "null"]
+                    properties:
+                      url:
+                        type: string
+              mention:
+                type: object
+                additionalProperties: true
+              equation:
+                type: object
+                properties:
+                  expression:
+                    type: string
+              annotations:
+                type: object
+                properties:
+                  bold:
+                    type: boolean
+                  italic:
+                    type: boolean
+                  strikethrough:
+                    type: boolean
+                  underline:
+                    type: boolean
+                  code:
+                    type: boolean
+                  color:
+                    type: string
+
+    DataSourceUpdateParams:
+      type: object
+      description: "Parameters for updating a data source. All fields are optional."
+      properties:
+        title:
+          type: array
+          description: Updated title of the data source as rich text
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                default: "text"
+              text:
+                type: object
+                properties:
+                  content:
+                    type: string
+                  link:
+                    type: [object, "null"]
+                    properties:
+                      url:
+                        type: string
+              mention:
+                type: object
+                additionalProperties: true
+              equation:
+                type: object
+                properties:
+                  expression:
+                    type: string
+              annotations:
+                type: object
+                properties:
+                  bold:
+                    type: boolean
+                  italic:
+                    type: boolean
+                  strikethrough:
+                    type: boolean
+                  underline:
+                    type: boolean
+                  code:
+                    type: boolean
+                  color:
+                    type: string
+        description:
+          type: array
+          description: Updated description of the data source as rich text
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                default: "text"
+              text:
+                type: object
+                properties:
+                  content:
+                    type: string
+                  link:
+                    type: [object, "null"]
+                    properties:
+                      url:
+                        type: string
+              mention:
+                type: object
+                additionalProperties: true
+              equation:
+                type: object
+                properties:
+                  expression:
+                    type: string
+              annotations:
+                type: object
+                properties:
+                  bold:
+                    type: boolean
+                  italic:
+                    type: boolean
+                  strikethrough:
+                    type: boolean
+                  underline:
+                    type: boolean
+                  code:
+                    type: boolean
+                  color:
+                    type: string
+        properties:
+          type: object
+          description: "Data source property schema to update. Keys are property names or IDs. Set a property to null to remove it."
+          additionalProperties: true
+        icon:
+          type: [object, "null"]
+          description: "Icon. Supports emoji, external URL, file upload, custom emoji, and Notion native icons. Set to null to remove."
+          properties:
+            type:
+              type: string
+              description: "Icon type: emoji, external, file_upload, custom_emoji, or icon"
+            emoji:
+              type: string
+              description: Emoji character (when type is emoji)
+            external:
+              type: object
+              description: External URL icon (when type is external)
+              properties:
+                url:
+                  type: string
+            file_upload:
+              type: object
+              description: Uploaded file icon (when type is file_upload)
+              properties:
+                id:
+                  type: string
+            custom_emoji:
+              type: object
+              description: Custom emoji icon (when type is custom_emoji)
+              properties:
+                id:
+                  type: string
+            icon:
+              type: object
+              description: Notion native icon (when type is icon)
+              properties:
+                name:
+                  type: string
+                color:
+                  type: string
+        cover:
+          type: [object, "null"]
+          description: "Cover image. Supports external URL or file upload. Set to null to remove."
+          properties:
+            type:
+              type: string
+              description: "Cover type: external or file_upload"
+            external:
+              type: object
+              description: External URL cover
+              properties:
+                url:
+                  type: string
+            file_upload:
+              type: object
+              description: Uploaded file cover
+              properties:
+                id:
+                  type: string
+        archived:
+          type: boolean
+          description: Set to true to archive the data source
+        in_trash:
+          type: boolean
+          description: Set to true to move the data source to trash

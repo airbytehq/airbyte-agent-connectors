@@ -27,6 +27,86 @@ class PagesListParamsSort(TypedDict):
     direction: NotRequired[str]
     timestamp: NotRequired[str]
 
+class PagesCreateParamsIconExternal(TypedDict):
+    """External URL icon (when type is external)"""
+    url: NotRequired[str]
+
+class PagesCreateParamsIconFileUpload(TypedDict):
+    """Uploaded file icon (when type is file_upload)"""
+    id: NotRequired[str]
+
+class PagesCreateParamsIconCustomEmoji(TypedDict):
+    """Custom emoji icon (when type is custom_emoji)"""
+    id: NotRequired[str]
+
+class PagesCreateParamsIconIcon(TypedDict):
+    """Notion native icon (when type is icon)"""
+    name: NotRequired[str]
+    color: NotRequired[str]
+
+class PagesCreateParamsIcon(TypedDict):
+    """Icon. Supports emoji, external URL, file upload, custom emoji, and Notion native icons. Set to null to remove."""
+    type: NotRequired[str]
+    emoji: NotRequired[str]
+    external: NotRequired[PagesCreateParamsIconExternal]
+    file_upload: NotRequired[PagesCreateParamsIconFileUpload]
+    custom_emoji: NotRequired[PagesCreateParamsIconCustomEmoji]
+    icon: NotRequired[PagesCreateParamsIconIcon]
+
+class PagesCreateParamsCoverExternal(TypedDict):
+    """External URL cover"""
+    url: NotRequired[str]
+
+class PagesCreateParamsCoverFileUpload(TypedDict):
+    """Uploaded file cover"""
+    id: NotRequired[str]
+
+class PagesCreateParamsCover(TypedDict):
+    """Cover image. Supports external URL or file upload. Set to null to remove."""
+    type: NotRequired[str]
+    external: NotRequired[PagesCreateParamsCoverExternal]
+    file_upload: NotRequired[PagesCreateParamsCoverFileUpload]
+
+class PagesUpdateParamsIconExternal(TypedDict):
+    """External URL icon (when type is external)"""
+    url: NotRequired[str]
+
+class PagesUpdateParamsIconFileUpload(TypedDict):
+    """Uploaded file icon (when type is file_upload)"""
+    id: NotRequired[str]
+
+class PagesUpdateParamsIconCustomEmoji(TypedDict):
+    """Custom emoji icon (when type is custom_emoji)"""
+    id: NotRequired[str]
+
+class PagesUpdateParamsIconIcon(TypedDict):
+    """Notion native icon (when type is icon)"""
+    name: NotRequired[str]
+    color: NotRequired[str]
+
+class PagesUpdateParamsIcon(TypedDict):
+    """Icon. Supports emoji, external URL, file upload, custom emoji, and Notion native icons. Set to null to remove."""
+    type: NotRequired[str]
+    emoji: NotRequired[str]
+    external: NotRequired[PagesUpdateParamsIconExternal]
+    file_upload: NotRequired[PagesUpdateParamsIconFileUpload]
+    custom_emoji: NotRequired[PagesUpdateParamsIconCustomEmoji]
+    icon: NotRequired[PagesUpdateParamsIconIcon]
+
+class PagesUpdateParamsCoverExternal(TypedDict):
+    """External URL cover"""
+    url: NotRequired[str]
+
+class PagesUpdateParamsCoverFileUpload(TypedDict):
+    """Uploaded file cover"""
+    id: NotRequired[str]
+
+class PagesUpdateParamsCover(TypedDict):
+    """Cover image. Supports external URL or file upload. Set to null to remove."""
+    type: NotRequired[str]
+    external: NotRequired[PagesUpdateParamsCoverExternal]
+    file_upload: NotRequired[PagesUpdateParamsCoverFileUpload]
+
 class DataSourcesListParamsFilter(TypedDict):
     """Nested schema for DataSourcesListParams.filter"""
     property: NotRequired[str]
@@ -36,6 +116,1207 @@ class DataSourcesListParamsSort(TypedDict):
     """Nested schema for DataSourcesListParams.sort"""
     direction: NotRequired[str]
     timestamp: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemParagraphRichTextItemTextLink(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemParagraphRichTextItemText.link"""
+    url: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemParagraphRichTextItemText(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemParagraphRichTextItem.text"""
+    content: NotRequired[str]
+    link: NotRequired[BlocksCreateParamsChildrenItemParagraphRichTextItemTextLink | None]
+
+class BlocksCreateParamsChildrenItemParagraphRichTextItemEquation(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemParagraphRichTextItem.equation"""
+    expression: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemParagraphRichTextItemAnnotations(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemParagraphRichTextItem.annotations"""
+    bold: NotRequired[bool]
+    italic: NotRequired[bool]
+    strikethrough: NotRequired[bool]
+    underline: NotRequired[bool]
+    code: NotRequired[bool]
+    color: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemParagraphRichTextItem(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemParagraph.rich_text_item"""
+    type: NotRequired[str]
+    text: NotRequired[BlocksCreateParamsChildrenItemParagraphRichTextItemText]
+    mention: NotRequired[dict[str, Any]]
+    equation: NotRequired[BlocksCreateParamsChildrenItemParagraphRichTextItemEquation]
+    annotations: NotRequired[BlocksCreateParamsChildrenItemParagraphRichTextItemAnnotations]
+
+class BlocksCreateParamsChildrenItemParagraph(TypedDict):
+    """Paragraph block content"""
+    rich_text: NotRequired[list[BlocksCreateParamsChildrenItemParagraphRichTextItem]]
+    color: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemHeading1RichTextItemTextLink(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemHeading1RichTextItemText.link"""
+    url: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemHeading1RichTextItemText(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemHeading1RichTextItem.text"""
+    content: NotRequired[str]
+    link: NotRequired[BlocksCreateParamsChildrenItemHeading1RichTextItemTextLink | None]
+
+class BlocksCreateParamsChildrenItemHeading1RichTextItemEquation(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemHeading1RichTextItem.equation"""
+    expression: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemHeading1RichTextItemAnnotations(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemHeading1RichTextItem.annotations"""
+    bold: NotRequired[bool]
+    italic: NotRequired[bool]
+    strikethrough: NotRequired[bool]
+    underline: NotRequired[bool]
+    code: NotRequired[bool]
+    color: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemHeading1RichTextItem(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemHeading1.rich_text_item"""
+    type: NotRequired[str]
+    text: NotRequired[BlocksCreateParamsChildrenItemHeading1RichTextItemText]
+    mention: NotRequired[dict[str, Any]]
+    equation: NotRequired[BlocksCreateParamsChildrenItemHeading1RichTextItemEquation]
+    annotations: NotRequired[BlocksCreateParamsChildrenItemHeading1RichTextItemAnnotations]
+
+class BlocksCreateParamsChildrenItemHeading1(TypedDict):
+    """Heading 1 block content"""
+    rich_text: NotRequired[list[BlocksCreateParamsChildrenItemHeading1RichTextItem]]
+    color: NotRequired[str]
+    is_toggleable: NotRequired[bool]
+
+class BlocksCreateParamsChildrenItemHeading2RichTextItemTextLink(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemHeading2RichTextItemText.link"""
+    url: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemHeading2RichTextItemText(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemHeading2RichTextItem.text"""
+    content: NotRequired[str]
+    link: NotRequired[BlocksCreateParamsChildrenItemHeading2RichTextItemTextLink | None]
+
+class BlocksCreateParamsChildrenItemHeading2RichTextItemEquation(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemHeading2RichTextItem.equation"""
+    expression: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemHeading2RichTextItemAnnotations(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemHeading2RichTextItem.annotations"""
+    bold: NotRequired[bool]
+    italic: NotRequired[bool]
+    strikethrough: NotRequired[bool]
+    underline: NotRequired[bool]
+    code: NotRequired[bool]
+    color: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemHeading2RichTextItem(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemHeading2.rich_text_item"""
+    type: NotRequired[str]
+    text: NotRequired[BlocksCreateParamsChildrenItemHeading2RichTextItemText]
+    mention: NotRequired[dict[str, Any]]
+    equation: NotRequired[BlocksCreateParamsChildrenItemHeading2RichTextItemEquation]
+    annotations: NotRequired[BlocksCreateParamsChildrenItemHeading2RichTextItemAnnotations]
+
+class BlocksCreateParamsChildrenItemHeading2(TypedDict):
+    """Heading 2 block content"""
+    rich_text: NotRequired[list[BlocksCreateParamsChildrenItemHeading2RichTextItem]]
+    color: NotRequired[str]
+    is_toggleable: NotRequired[bool]
+
+class BlocksCreateParamsChildrenItemHeading3RichTextItemTextLink(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemHeading3RichTextItemText.link"""
+    url: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemHeading3RichTextItemText(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemHeading3RichTextItem.text"""
+    content: NotRequired[str]
+    link: NotRequired[BlocksCreateParamsChildrenItemHeading3RichTextItemTextLink | None]
+
+class BlocksCreateParamsChildrenItemHeading3RichTextItemEquation(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemHeading3RichTextItem.equation"""
+    expression: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemHeading3RichTextItemAnnotations(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemHeading3RichTextItem.annotations"""
+    bold: NotRequired[bool]
+    italic: NotRequired[bool]
+    strikethrough: NotRequired[bool]
+    underline: NotRequired[bool]
+    code: NotRequired[bool]
+    color: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemHeading3RichTextItem(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemHeading3.rich_text_item"""
+    type: NotRequired[str]
+    text: NotRequired[BlocksCreateParamsChildrenItemHeading3RichTextItemText]
+    mention: NotRequired[dict[str, Any]]
+    equation: NotRequired[BlocksCreateParamsChildrenItemHeading3RichTextItemEquation]
+    annotations: NotRequired[BlocksCreateParamsChildrenItemHeading3RichTextItemAnnotations]
+
+class BlocksCreateParamsChildrenItemHeading3(TypedDict):
+    """Heading 3 block content"""
+    rich_text: NotRequired[list[BlocksCreateParamsChildrenItemHeading3RichTextItem]]
+    color: NotRequired[str]
+    is_toggleable: NotRequired[bool]
+
+class BlocksCreateParamsChildrenItemBulletedListItemRichTextItemTextLink(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemBulletedListItemRichTextItemText.link"""
+    url: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemBulletedListItemRichTextItemText(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemBulletedListItemRichTextItem.text"""
+    content: NotRequired[str]
+    link: NotRequired[BlocksCreateParamsChildrenItemBulletedListItemRichTextItemTextLink | None]
+
+class BlocksCreateParamsChildrenItemBulletedListItemRichTextItemEquation(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemBulletedListItemRichTextItem.equation"""
+    expression: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemBulletedListItemRichTextItemAnnotations(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemBulletedListItemRichTextItem.annotations"""
+    bold: NotRequired[bool]
+    italic: NotRequired[bool]
+    strikethrough: NotRequired[bool]
+    underline: NotRequired[bool]
+    code: NotRequired[bool]
+    color: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemBulletedListItemRichTextItem(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemBulletedListItem.rich_text_item"""
+    type: NotRequired[str]
+    text: NotRequired[BlocksCreateParamsChildrenItemBulletedListItemRichTextItemText]
+    mention: NotRequired[dict[str, Any]]
+    equation: NotRequired[BlocksCreateParamsChildrenItemBulletedListItemRichTextItemEquation]
+    annotations: NotRequired[BlocksCreateParamsChildrenItemBulletedListItemRichTextItemAnnotations]
+
+class BlocksCreateParamsChildrenItemBulletedListItem(TypedDict):
+    """Bulleted list item content"""
+    rich_text: NotRequired[list[BlocksCreateParamsChildrenItemBulletedListItemRichTextItem]]
+    color: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemNumberedListItemRichTextItemTextLink(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemNumberedListItemRichTextItemText.link"""
+    url: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemNumberedListItemRichTextItemText(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemNumberedListItemRichTextItem.text"""
+    content: NotRequired[str]
+    link: NotRequired[BlocksCreateParamsChildrenItemNumberedListItemRichTextItemTextLink | None]
+
+class BlocksCreateParamsChildrenItemNumberedListItemRichTextItemEquation(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemNumberedListItemRichTextItem.equation"""
+    expression: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemNumberedListItemRichTextItemAnnotations(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemNumberedListItemRichTextItem.annotations"""
+    bold: NotRequired[bool]
+    italic: NotRequired[bool]
+    strikethrough: NotRequired[bool]
+    underline: NotRequired[bool]
+    code: NotRequired[bool]
+    color: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemNumberedListItemRichTextItem(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemNumberedListItem.rich_text_item"""
+    type: NotRequired[str]
+    text: NotRequired[BlocksCreateParamsChildrenItemNumberedListItemRichTextItemText]
+    mention: NotRequired[dict[str, Any]]
+    equation: NotRequired[BlocksCreateParamsChildrenItemNumberedListItemRichTextItemEquation]
+    annotations: NotRequired[BlocksCreateParamsChildrenItemNumberedListItemRichTextItemAnnotations]
+
+class BlocksCreateParamsChildrenItemNumberedListItem(TypedDict):
+    """Numbered list item content"""
+    rich_text: NotRequired[list[BlocksCreateParamsChildrenItemNumberedListItemRichTextItem]]
+    color: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemToDoRichTextItemTextLink(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemToDoRichTextItemText.link"""
+    url: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemToDoRichTextItemText(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemToDoRichTextItem.text"""
+    content: NotRequired[str]
+    link: NotRequired[BlocksCreateParamsChildrenItemToDoRichTextItemTextLink | None]
+
+class BlocksCreateParamsChildrenItemToDoRichTextItemEquation(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemToDoRichTextItem.equation"""
+    expression: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemToDoRichTextItemAnnotations(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemToDoRichTextItem.annotations"""
+    bold: NotRequired[bool]
+    italic: NotRequired[bool]
+    strikethrough: NotRequired[bool]
+    underline: NotRequired[bool]
+    code: NotRequired[bool]
+    color: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemToDoRichTextItem(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemToDo.rich_text_item"""
+    type: NotRequired[str]
+    text: NotRequired[BlocksCreateParamsChildrenItemToDoRichTextItemText]
+    mention: NotRequired[dict[str, Any]]
+    equation: NotRequired[BlocksCreateParamsChildrenItemToDoRichTextItemEquation]
+    annotations: NotRequired[BlocksCreateParamsChildrenItemToDoRichTextItemAnnotations]
+
+class BlocksCreateParamsChildrenItemToDo(TypedDict):
+    """To-do block content"""
+    rich_text: NotRequired[list[BlocksCreateParamsChildrenItemToDoRichTextItem]]
+    checked: NotRequired[bool]
+    color: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemToggleRichTextItemTextLink(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemToggleRichTextItemText.link"""
+    url: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemToggleRichTextItemText(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemToggleRichTextItem.text"""
+    content: NotRequired[str]
+    link: NotRequired[BlocksCreateParamsChildrenItemToggleRichTextItemTextLink | None]
+
+class BlocksCreateParamsChildrenItemToggleRichTextItemEquation(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemToggleRichTextItem.equation"""
+    expression: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemToggleRichTextItemAnnotations(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemToggleRichTextItem.annotations"""
+    bold: NotRequired[bool]
+    italic: NotRequired[bool]
+    strikethrough: NotRequired[bool]
+    underline: NotRequired[bool]
+    code: NotRequired[bool]
+    color: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemToggleRichTextItem(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemToggle.rich_text_item"""
+    type: NotRequired[str]
+    text: NotRequired[BlocksCreateParamsChildrenItemToggleRichTextItemText]
+    mention: NotRequired[dict[str, Any]]
+    equation: NotRequired[BlocksCreateParamsChildrenItemToggleRichTextItemEquation]
+    annotations: NotRequired[BlocksCreateParamsChildrenItemToggleRichTextItemAnnotations]
+
+class BlocksCreateParamsChildrenItemToggle(TypedDict):
+    """Toggle block content"""
+    rich_text: NotRequired[list[BlocksCreateParamsChildrenItemToggleRichTextItem]]
+    color: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemCodeRichTextItemTextLink(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemCodeRichTextItemText.link"""
+    url: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemCodeRichTextItemText(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemCodeRichTextItem.text"""
+    content: NotRequired[str]
+    link: NotRequired[BlocksCreateParamsChildrenItemCodeRichTextItemTextLink | None]
+
+class BlocksCreateParamsChildrenItemCodeRichTextItemEquation(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemCodeRichTextItem.equation"""
+    expression: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemCodeRichTextItemAnnotations(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemCodeRichTextItem.annotations"""
+    bold: NotRequired[bool]
+    italic: NotRequired[bool]
+    strikethrough: NotRequired[bool]
+    underline: NotRequired[bool]
+    code: NotRequired[bool]
+    color: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemCodeRichTextItem(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemCode.rich_text_item"""
+    type: NotRequired[str]
+    text: NotRequired[BlocksCreateParamsChildrenItemCodeRichTextItemText]
+    mention: NotRequired[dict[str, Any]]
+    equation: NotRequired[BlocksCreateParamsChildrenItemCodeRichTextItemEquation]
+    annotations: NotRequired[BlocksCreateParamsChildrenItemCodeRichTextItemAnnotations]
+
+class BlocksCreateParamsChildrenItemCode(TypedDict):
+    """Code block content"""
+    rich_text: NotRequired[list[BlocksCreateParamsChildrenItemCodeRichTextItem]]
+    language: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemQuoteRichTextItemTextLink(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemQuoteRichTextItemText.link"""
+    url: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemQuoteRichTextItemText(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemQuoteRichTextItem.text"""
+    content: NotRequired[str]
+    link: NotRequired[BlocksCreateParamsChildrenItemQuoteRichTextItemTextLink | None]
+
+class BlocksCreateParamsChildrenItemQuoteRichTextItemEquation(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemQuoteRichTextItem.equation"""
+    expression: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemQuoteRichTextItemAnnotations(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemQuoteRichTextItem.annotations"""
+    bold: NotRequired[bool]
+    italic: NotRequired[bool]
+    strikethrough: NotRequired[bool]
+    underline: NotRequired[bool]
+    code: NotRequired[bool]
+    color: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemQuoteRichTextItem(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemQuote.rich_text_item"""
+    type: NotRequired[str]
+    text: NotRequired[BlocksCreateParamsChildrenItemQuoteRichTextItemText]
+    mention: NotRequired[dict[str, Any]]
+    equation: NotRequired[BlocksCreateParamsChildrenItemQuoteRichTextItemEquation]
+    annotations: NotRequired[BlocksCreateParamsChildrenItemQuoteRichTextItemAnnotations]
+
+class BlocksCreateParamsChildrenItemQuote(TypedDict):
+    """Quote block content"""
+    rich_text: NotRequired[list[BlocksCreateParamsChildrenItemQuoteRichTextItem]]
+    color: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemCalloutRichTextItemTextLink(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemCalloutRichTextItemText.link"""
+    url: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemCalloutRichTextItemText(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemCalloutRichTextItem.text"""
+    content: NotRequired[str]
+    link: NotRequired[BlocksCreateParamsChildrenItemCalloutRichTextItemTextLink | None]
+
+class BlocksCreateParamsChildrenItemCalloutRichTextItemEquation(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemCalloutRichTextItem.equation"""
+    expression: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemCalloutRichTextItemAnnotations(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemCalloutRichTextItem.annotations"""
+    bold: NotRequired[bool]
+    italic: NotRequired[bool]
+    strikethrough: NotRequired[bool]
+    underline: NotRequired[bool]
+    code: NotRequired[bool]
+    color: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemCalloutRichTextItem(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemCallout.rich_text_item"""
+    type: NotRequired[str]
+    text: NotRequired[BlocksCreateParamsChildrenItemCalloutRichTextItemText]
+    mention: NotRequired[dict[str, Any]]
+    equation: NotRequired[BlocksCreateParamsChildrenItemCalloutRichTextItemEquation]
+    annotations: NotRequired[BlocksCreateParamsChildrenItemCalloutRichTextItemAnnotations]
+
+class BlocksCreateParamsChildrenItemCallout(TypedDict):
+    """Callout block content"""
+    rich_text: NotRequired[list[BlocksCreateParamsChildrenItemCalloutRichTextItem]]
+    icon: NotRequired[dict[str, Any]]
+    color: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemBookmarkCaptionItemTextLink(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemBookmarkCaptionItemText.link"""
+    url: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemBookmarkCaptionItemText(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemBookmarkCaptionItem.text"""
+    content: NotRequired[str]
+    link: NotRequired[BlocksCreateParamsChildrenItemBookmarkCaptionItemTextLink | None]
+
+class BlocksCreateParamsChildrenItemBookmarkCaptionItemEquation(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemBookmarkCaptionItem.equation"""
+    expression: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemBookmarkCaptionItemAnnotations(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemBookmarkCaptionItem.annotations"""
+    bold: NotRequired[bool]
+    italic: NotRequired[bool]
+    strikethrough: NotRequired[bool]
+    underline: NotRequired[bool]
+    code: NotRequired[bool]
+    color: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemBookmarkCaptionItem(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemBookmark.caption_item"""
+    type: NotRequired[str]
+    text: NotRequired[BlocksCreateParamsChildrenItemBookmarkCaptionItemText]
+    mention: NotRequired[dict[str, Any]]
+    equation: NotRequired[BlocksCreateParamsChildrenItemBookmarkCaptionItemEquation]
+    annotations: NotRequired[BlocksCreateParamsChildrenItemBookmarkCaptionItemAnnotations]
+
+class BlocksCreateParamsChildrenItemBookmark(TypedDict):
+    """Bookmark block"""
+    url: NotRequired[str]
+    caption: NotRequired[list[BlocksCreateParamsChildrenItemBookmarkCaptionItem]]
+
+class BlocksCreateParamsChildrenItemEmbed(TypedDict):
+    """Embed block"""
+    url: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemEquation(TypedDict):
+    """Equation block"""
+    expression: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemTableOfContents(TypedDict):
+    """Table of contents block"""
+    color: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemImageExternal(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemImage.external"""
+    url: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemImageFileUpload(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemImage.file_upload"""
+    id: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemImage(TypedDict):
+    """Media file. Use external URL or file upload."""
+    type: NotRequired[str]
+    external: NotRequired[BlocksCreateParamsChildrenItemImageExternal]
+    file_upload: NotRequired[BlocksCreateParamsChildrenItemImageFileUpload]
+
+class BlocksCreateParamsChildrenItemVideoExternal(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemVideo.external"""
+    url: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemVideoFileUpload(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemVideo.file_upload"""
+    id: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemVideo(TypedDict):
+    """Media file. Use external URL or file upload."""
+    type: NotRequired[str]
+    external: NotRequired[BlocksCreateParamsChildrenItemVideoExternal]
+    file_upload: NotRequired[BlocksCreateParamsChildrenItemVideoFileUpload]
+
+class BlocksCreateParamsChildrenItemFileExternal(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemFile.external"""
+    url: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemFileFileUpload(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemFile.file_upload"""
+    id: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemFile(TypedDict):
+    """Media file. Use external URL or file upload."""
+    type: NotRequired[str]
+    external: NotRequired[BlocksCreateParamsChildrenItemFileExternal]
+    file_upload: NotRequired[BlocksCreateParamsChildrenItemFileFileUpload]
+
+class BlocksCreateParamsChildrenItemPdfExternal(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemPdf.external"""
+    url: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemPdfFileUpload(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemPdf.file_upload"""
+    id: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemPdf(TypedDict):
+    """Media file. Use external URL or file upload."""
+    type: NotRequired[str]
+    external: NotRequired[BlocksCreateParamsChildrenItemPdfExternal]
+    file_upload: NotRequired[BlocksCreateParamsChildrenItemPdfFileUpload]
+
+class BlocksCreateParamsChildrenItemAudioExternal(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemAudio.external"""
+    url: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemAudioFileUpload(TypedDict):
+    """Nested schema for BlocksCreateParamsChildrenItemAudio.file_upload"""
+    id: NotRequired[str]
+
+class BlocksCreateParamsChildrenItemAudio(TypedDict):
+    """Media file. Use external URL or file upload."""
+    type: NotRequired[str]
+    external: NotRequired[BlocksCreateParamsChildrenItemAudioExternal]
+    file_upload: NotRequired[BlocksCreateParamsChildrenItemAudioFileUpload]
+
+class BlocksCreateParamsChildrenItem(TypedDict):
+    """A block object. Set type to the block kind and include matching content."""
+    type: NotRequired[str]
+    paragraph: NotRequired[BlocksCreateParamsChildrenItemParagraph]
+    heading_1: NotRequired[BlocksCreateParamsChildrenItemHeading1]
+    heading_2: NotRequired[BlocksCreateParamsChildrenItemHeading2]
+    heading_3: NotRequired[BlocksCreateParamsChildrenItemHeading3]
+    bulleted_list_item: NotRequired[BlocksCreateParamsChildrenItemBulletedListItem]
+    numbered_list_item: NotRequired[BlocksCreateParamsChildrenItemNumberedListItem]
+    to_do: NotRequired[BlocksCreateParamsChildrenItemToDo]
+    toggle: NotRequired[BlocksCreateParamsChildrenItemToggle]
+    code: NotRequired[BlocksCreateParamsChildrenItemCode]
+    quote: NotRequired[BlocksCreateParamsChildrenItemQuote]
+    callout: NotRequired[BlocksCreateParamsChildrenItemCallout]
+    divider: NotRequired[dict[str, Any]]
+    bookmark: NotRequired[BlocksCreateParamsChildrenItemBookmark]
+    embed: NotRequired[BlocksCreateParamsChildrenItemEmbed]
+    equation: NotRequired[BlocksCreateParamsChildrenItemEquation]
+    table_of_contents: NotRequired[BlocksCreateParamsChildrenItemTableOfContents]
+    image: NotRequired[BlocksCreateParamsChildrenItemImage]
+    video: NotRequired[BlocksCreateParamsChildrenItemVideo]
+    file: NotRequired[BlocksCreateParamsChildrenItemFile]
+    pdf: NotRequired[BlocksCreateParamsChildrenItemPdf]
+    audio: NotRequired[BlocksCreateParamsChildrenItemAudio]
+
+class BlocksUpdateParamsParagraphRichTextItemTextLink(TypedDict):
+    """Nested schema for BlocksUpdateParamsParagraphRichTextItemText.link"""
+    url: NotRequired[str]
+
+class BlocksUpdateParamsParagraphRichTextItemText(TypedDict):
+    """Nested schema for BlocksUpdateParamsParagraphRichTextItem.text"""
+    content: NotRequired[str]
+    link: NotRequired[BlocksUpdateParamsParagraphRichTextItemTextLink | None]
+
+class BlocksUpdateParamsParagraphRichTextItemEquation(TypedDict):
+    """Nested schema for BlocksUpdateParamsParagraphRichTextItem.equation"""
+    expression: NotRequired[str]
+
+class BlocksUpdateParamsParagraphRichTextItemAnnotations(TypedDict):
+    """Nested schema for BlocksUpdateParamsParagraphRichTextItem.annotations"""
+    bold: NotRequired[bool]
+    italic: NotRequired[bool]
+    strikethrough: NotRequired[bool]
+    underline: NotRequired[bool]
+    code: NotRequired[bool]
+    color: NotRequired[str]
+
+class BlocksUpdateParamsParagraphRichTextItem(TypedDict):
+    """Nested schema for BlocksUpdateParamsParagraph.rich_text_item"""
+    type: NotRequired[str]
+    text: NotRequired[BlocksUpdateParamsParagraphRichTextItemText]
+    mention: NotRequired[dict[str, Any]]
+    equation: NotRequired[BlocksUpdateParamsParagraphRichTextItemEquation]
+    annotations: NotRequired[BlocksUpdateParamsParagraphRichTextItemAnnotations]
+
+class BlocksUpdateParamsParagraph(TypedDict):
+    """Updated paragraph content"""
+    rich_text: NotRequired[list[BlocksUpdateParamsParagraphRichTextItem]]
+    color: NotRequired[str]
+
+class BlocksUpdateParamsHeading1RichTextItemTextLink(TypedDict):
+    """Nested schema for BlocksUpdateParamsHeading1RichTextItemText.link"""
+    url: NotRequired[str]
+
+class BlocksUpdateParamsHeading1RichTextItemText(TypedDict):
+    """Nested schema for BlocksUpdateParamsHeading1RichTextItem.text"""
+    content: NotRequired[str]
+    link: NotRequired[BlocksUpdateParamsHeading1RichTextItemTextLink | None]
+
+class BlocksUpdateParamsHeading1RichTextItemEquation(TypedDict):
+    """Nested schema for BlocksUpdateParamsHeading1RichTextItem.equation"""
+    expression: NotRequired[str]
+
+class BlocksUpdateParamsHeading1RichTextItemAnnotations(TypedDict):
+    """Nested schema for BlocksUpdateParamsHeading1RichTextItem.annotations"""
+    bold: NotRequired[bool]
+    italic: NotRequired[bool]
+    strikethrough: NotRequired[bool]
+    underline: NotRequired[bool]
+    code: NotRequired[bool]
+    color: NotRequired[str]
+
+class BlocksUpdateParamsHeading1RichTextItem(TypedDict):
+    """Nested schema for BlocksUpdateParamsHeading1.rich_text_item"""
+    type: NotRequired[str]
+    text: NotRequired[BlocksUpdateParamsHeading1RichTextItemText]
+    mention: NotRequired[dict[str, Any]]
+    equation: NotRequired[BlocksUpdateParamsHeading1RichTextItemEquation]
+    annotations: NotRequired[BlocksUpdateParamsHeading1RichTextItemAnnotations]
+
+class BlocksUpdateParamsHeading1(TypedDict):
+    """Updated heading 1 content"""
+    rich_text: NotRequired[list[BlocksUpdateParamsHeading1RichTextItem]]
+    color: NotRequired[str]
+    is_toggleable: NotRequired[bool]
+
+class BlocksUpdateParamsHeading2RichTextItemTextLink(TypedDict):
+    """Nested schema for BlocksUpdateParamsHeading2RichTextItemText.link"""
+    url: NotRequired[str]
+
+class BlocksUpdateParamsHeading2RichTextItemText(TypedDict):
+    """Nested schema for BlocksUpdateParamsHeading2RichTextItem.text"""
+    content: NotRequired[str]
+    link: NotRequired[BlocksUpdateParamsHeading2RichTextItemTextLink | None]
+
+class BlocksUpdateParamsHeading2RichTextItemEquation(TypedDict):
+    """Nested schema for BlocksUpdateParamsHeading2RichTextItem.equation"""
+    expression: NotRequired[str]
+
+class BlocksUpdateParamsHeading2RichTextItemAnnotations(TypedDict):
+    """Nested schema for BlocksUpdateParamsHeading2RichTextItem.annotations"""
+    bold: NotRequired[bool]
+    italic: NotRequired[bool]
+    strikethrough: NotRequired[bool]
+    underline: NotRequired[bool]
+    code: NotRequired[bool]
+    color: NotRequired[str]
+
+class BlocksUpdateParamsHeading2RichTextItem(TypedDict):
+    """Nested schema for BlocksUpdateParamsHeading2.rich_text_item"""
+    type: NotRequired[str]
+    text: NotRequired[BlocksUpdateParamsHeading2RichTextItemText]
+    mention: NotRequired[dict[str, Any]]
+    equation: NotRequired[BlocksUpdateParamsHeading2RichTextItemEquation]
+    annotations: NotRequired[BlocksUpdateParamsHeading2RichTextItemAnnotations]
+
+class BlocksUpdateParamsHeading2(TypedDict):
+    """Updated heading 2 content"""
+    rich_text: NotRequired[list[BlocksUpdateParamsHeading2RichTextItem]]
+    color: NotRequired[str]
+    is_toggleable: NotRequired[bool]
+
+class BlocksUpdateParamsHeading3RichTextItemTextLink(TypedDict):
+    """Nested schema for BlocksUpdateParamsHeading3RichTextItemText.link"""
+    url: NotRequired[str]
+
+class BlocksUpdateParamsHeading3RichTextItemText(TypedDict):
+    """Nested schema for BlocksUpdateParamsHeading3RichTextItem.text"""
+    content: NotRequired[str]
+    link: NotRequired[BlocksUpdateParamsHeading3RichTextItemTextLink | None]
+
+class BlocksUpdateParamsHeading3RichTextItemEquation(TypedDict):
+    """Nested schema for BlocksUpdateParamsHeading3RichTextItem.equation"""
+    expression: NotRequired[str]
+
+class BlocksUpdateParamsHeading3RichTextItemAnnotations(TypedDict):
+    """Nested schema for BlocksUpdateParamsHeading3RichTextItem.annotations"""
+    bold: NotRequired[bool]
+    italic: NotRequired[bool]
+    strikethrough: NotRequired[bool]
+    underline: NotRequired[bool]
+    code: NotRequired[bool]
+    color: NotRequired[str]
+
+class BlocksUpdateParamsHeading3RichTextItem(TypedDict):
+    """Nested schema for BlocksUpdateParamsHeading3.rich_text_item"""
+    type: NotRequired[str]
+    text: NotRequired[BlocksUpdateParamsHeading3RichTextItemText]
+    mention: NotRequired[dict[str, Any]]
+    equation: NotRequired[BlocksUpdateParamsHeading3RichTextItemEquation]
+    annotations: NotRequired[BlocksUpdateParamsHeading3RichTextItemAnnotations]
+
+class BlocksUpdateParamsHeading3(TypedDict):
+    """Updated heading 3 content"""
+    rich_text: NotRequired[list[BlocksUpdateParamsHeading3RichTextItem]]
+    color: NotRequired[str]
+    is_toggleable: NotRequired[bool]
+
+class BlocksUpdateParamsBulletedListItemRichTextItemTextLink(TypedDict):
+    """Nested schema for BlocksUpdateParamsBulletedListItemRichTextItemText.link"""
+    url: NotRequired[str]
+
+class BlocksUpdateParamsBulletedListItemRichTextItemText(TypedDict):
+    """Nested schema for BlocksUpdateParamsBulletedListItemRichTextItem.text"""
+    content: NotRequired[str]
+    link: NotRequired[BlocksUpdateParamsBulletedListItemRichTextItemTextLink | None]
+
+class BlocksUpdateParamsBulletedListItemRichTextItemEquation(TypedDict):
+    """Nested schema for BlocksUpdateParamsBulletedListItemRichTextItem.equation"""
+    expression: NotRequired[str]
+
+class BlocksUpdateParamsBulletedListItemRichTextItemAnnotations(TypedDict):
+    """Nested schema for BlocksUpdateParamsBulletedListItemRichTextItem.annotations"""
+    bold: NotRequired[bool]
+    italic: NotRequired[bool]
+    strikethrough: NotRequired[bool]
+    underline: NotRequired[bool]
+    code: NotRequired[bool]
+    color: NotRequired[str]
+
+class BlocksUpdateParamsBulletedListItemRichTextItem(TypedDict):
+    """Nested schema for BlocksUpdateParamsBulletedListItem.rich_text_item"""
+    type: NotRequired[str]
+    text: NotRequired[BlocksUpdateParamsBulletedListItemRichTextItemText]
+    mention: NotRequired[dict[str, Any]]
+    equation: NotRequired[BlocksUpdateParamsBulletedListItemRichTextItemEquation]
+    annotations: NotRequired[BlocksUpdateParamsBulletedListItemRichTextItemAnnotations]
+
+class BlocksUpdateParamsBulletedListItem(TypedDict):
+    """Updated bulleted list item"""
+    rich_text: NotRequired[list[BlocksUpdateParamsBulletedListItemRichTextItem]]
+    color: NotRequired[str]
+
+class BlocksUpdateParamsNumberedListItemRichTextItemTextLink(TypedDict):
+    """Nested schema for BlocksUpdateParamsNumberedListItemRichTextItemText.link"""
+    url: NotRequired[str]
+
+class BlocksUpdateParamsNumberedListItemRichTextItemText(TypedDict):
+    """Nested schema for BlocksUpdateParamsNumberedListItemRichTextItem.text"""
+    content: NotRequired[str]
+    link: NotRequired[BlocksUpdateParamsNumberedListItemRichTextItemTextLink | None]
+
+class BlocksUpdateParamsNumberedListItemRichTextItemEquation(TypedDict):
+    """Nested schema for BlocksUpdateParamsNumberedListItemRichTextItem.equation"""
+    expression: NotRequired[str]
+
+class BlocksUpdateParamsNumberedListItemRichTextItemAnnotations(TypedDict):
+    """Nested schema for BlocksUpdateParamsNumberedListItemRichTextItem.annotations"""
+    bold: NotRequired[bool]
+    italic: NotRequired[bool]
+    strikethrough: NotRequired[bool]
+    underline: NotRequired[bool]
+    code: NotRequired[bool]
+    color: NotRequired[str]
+
+class BlocksUpdateParamsNumberedListItemRichTextItem(TypedDict):
+    """Nested schema for BlocksUpdateParamsNumberedListItem.rich_text_item"""
+    type: NotRequired[str]
+    text: NotRequired[BlocksUpdateParamsNumberedListItemRichTextItemText]
+    mention: NotRequired[dict[str, Any]]
+    equation: NotRequired[BlocksUpdateParamsNumberedListItemRichTextItemEquation]
+    annotations: NotRequired[BlocksUpdateParamsNumberedListItemRichTextItemAnnotations]
+
+class BlocksUpdateParamsNumberedListItem(TypedDict):
+    """Updated numbered list item"""
+    rich_text: NotRequired[list[BlocksUpdateParamsNumberedListItemRichTextItem]]
+    color: NotRequired[str]
+
+class BlocksUpdateParamsToDoRichTextItemTextLink(TypedDict):
+    """Nested schema for BlocksUpdateParamsToDoRichTextItemText.link"""
+    url: NotRequired[str]
+
+class BlocksUpdateParamsToDoRichTextItemText(TypedDict):
+    """Nested schema for BlocksUpdateParamsToDoRichTextItem.text"""
+    content: NotRequired[str]
+    link: NotRequired[BlocksUpdateParamsToDoRichTextItemTextLink | None]
+
+class BlocksUpdateParamsToDoRichTextItemEquation(TypedDict):
+    """Nested schema for BlocksUpdateParamsToDoRichTextItem.equation"""
+    expression: NotRequired[str]
+
+class BlocksUpdateParamsToDoRichTextItemAnnotations(TypedDict):
+    """Nested schema for BlocksUpdateParamsToDoRichTextItem.annotations"""
+    bold: NotRequired[bool]
+    italic: NotRequired[bool]
+    strikethrough: NotRequired[bool]
+    underline: NotRequired[bool]
+    code: NotRequired[bool]
+    color: NotRequired[str]
+
+class BlocksUpdateParamsToDoRichTextItem(TypedDict):
+    """Nested schema for BlocksUpdateParamsToDo.rich_text_item"""
+    type: NotRequired[str]
+    text: NotRequired[BlocksUpdateParamsToDoRichTextItemText]
+    mention: NotRequired[dict[str, Any]]
+    equation: NotRequired[BlocksUpdateParamsToDoRichTextItemEquation]
+    annotations: NotRequired[BlocksUpdateParamsToDoRichTextItemAnnotations]
+
+class BlocksUpdateParamsToDo(TypedDict):
+    """Updated to-do content"""
+    rich_text: NotRequired[list[BlocksUpdateParamsToDoRichTextItem]]
+    checked: NotRequired[bool]
+    color: NotRequired[str]
+
+class BlocksUpdateParamsToggleRichTextItemTextLink(TypedDict):
+    """Nested schema for BlocksUpdateParamsToggleRichTextItemText.link"""
+    url: NotRequired[str]
+
+class BlocksUpdateParamsToggleRichTextItemText(TypedDict):
+    """Nested schema for BlocksUpdateParamsToggleRichTextItem.text"""
+    content: NotRequired[str]
+    link: NotRequired[BlocksUpdateParamsToggleRichTextItemTextLink | None]
+
+class BlocksUpdateParamsToggleRichTextItemEquation(TypedDict):
+    """Nested schema for BlocksUpdateParamsToggleRichTextItem.equation"""
+    expression: NotRequired[str]
+
+class BlocksUpdateParamsToggleRichTextItemAnnotations(TypedDict):
+    """Nested schema for BlocksUpdateParamsToggleRichTextItem.annotations"""
+    bold: NotRequired[bool]
+    italic: NotRequired[bool]
+    strikethrough: NotRequired[bool]
+    underline: NotRequired[bool]
+    code: NotRequired[bool]
+    color: NotRequired[str]
+
+class BlocksUpdateParamsToggleRichTextItem(TypedDict):
+    """Nested schema for BlocksUpdateParamsToggle.rich_text_item"""
+    type: NotRequired[str]
+    text: NotRequired[BlocksUpdateParamsToggleRichTextItemText]
+    mention: NotRequired[dict[str, Any]]
+    equation: NotRequired[BlocksUpdateParamsToggleRichTextItemEquation]
+    annotations: NotRequired[BlocksUpdateParamsToggleRichTextItemAnnotations]
+
+class BlocksUpdateParamsToggle(TypedDict):
+    """Updated toggle content"""
+    rich_text: NotRequired[list[BlocksUpdateParamsToggleRichTextItem]]
+    color: NotRequired[str]
+
+class BlocksUpdateParamsCodeRichTextItemTextLink(TypedDict):
+    """Nested schema for BlocksUpdateParamsCodeRichTextItemText.link"""
+    url: NotRequired[str]
+
+class BlocksUpdateParamsCodeRichTextItemText(TypedDict):
+    """Nested schema for BlocksUpdateParamsCodeRichTextItem.text"""
+    content: NotRequired[str]
+    link: NotRequired[BlocksUpdateParamsCodeRichTextItemTextLink | None]
+
+class BlocksUpdateParamsCodeRichTextItemEquation(TypedDict):
+    """Nested schema for BlocksUpdateParamsCodeRichTextItem.equation"""
+    expression: NotRequired[str]
+
+class BlocksUpdateParamsCodeRichTextItemAnnotations(TypedDict):
+    """Nested schema for BlocksUpdateParamsCodeRichTextItem.annotations"""
+    bold: NotRequired[bool]
+    italic: NotRequired[bool]
+    strikethrough: NotRequired[bool]
+    underline: NotRequired[bool]
+    code: NotRequired[bool]
+    color: NotRequired[str]
+
+class BlocksUpdateParamsCodeRichTextItem(TypedDict):
+    """Nested schema for BlocksUpdateParamsCode.rich_text_item"""
+    type: NotRequired[str]
+    text: NotRequired[BlocksUpdateParamsCodeRichTextItemText]
+    mention: NotRequired[dict[str, Any]]
+    equation: NotRequired[BlocksUpdateParamsCodeRichTextItemEquation]
+    annotations: NotRequired[BlocksUpdateParamsCodeRichTextItemAnnotations]
+
+class BlocksUpdateParamsCodeCaptionItemTextLink(TypedDict):
+    """Nested schema for BlocksUpdateParamsCodeCaptionItemText.link"""
+    url: NotRequired[str]
+
+class BlocksUpdateParamsCodeCaptionItemText(TypedDict):
+    """Nested schema for BlocksUpdateParamsCodeCaptionItem.text"""
+    content: NotRequired[str]
+    link: NotRequired[BlocksUpdateParamsCodeCaptionItemTextLink | None]
+
+class BlocksUpdateParamsCodeCaptionItemEquation(TypedDict):
+    """Nested schema for BlocksUpdateParamsCodeCaptionItem.equation"""
+    expression: NotRequired[str]
+
+class BlocksUpdateParamsCodeCaptionItemAnnotations(TypedDict):
+    """Nested schema for BlocksUpdateParamsCodeCaptionItem.annotations"""
+    bold: NotRequired[bool]
+    italic: NotRequired[bool]
+    strikethrough: NotRequired[bool]
+    underline: NotRequired[bool]
+    code: NotRequired[bool]
+    color: NotRequired[str]
+
+class BlocksUpdateParamsCodeCaptionItem(TypedDict):
+    """Nested schema for BlocksUpdateParamsCode.caption_item"""
+    type: NotRequired[str]
+    text: NotRequired[BlocksUpdateParamsCodeCaptionItemText]
+    mention: NotRequired[dict[str, Any]]
+    equation: NotRequired[BlocksUpdateParamsCodeCaptionItemEquation]
+    annotations: NotRequired[BlocksUpdateParamsCodeCaptionItemAnnotations]
+
+class BlocksUpdateParamsCode(TypedDict):
+    """Updated code block content"""
+    rich_text: NotRequired[list[BlocksUpdateParamsCodeRichTextItem]]
+    language: NotRequired[str]
+    caption: NotRequired[list[BlocksUpdateParamsCodeCaptionItem]]
+
+class BlocksUpdateParamsQuoteRichTextItemTextLink(TypedDict):
+    """Nested schema for BlocksUpdateParamsQuoteRichTextItemText.link"""
+    url: NotRequired[str]
+
+class BlocksUpdateParamsQuoteRichTextItemText(TypedDict):
+    """Nested schema for BlocksUpdateParamsQuoteRichTextItem.text"""
+    content: NotRequired[str]
+    link: NotRequired[BlocksUpdateParamsQuoteRichTextItemTextLink | None]
+
+class BlocksUpdateParamsQuoteRichTextItemEquation(TypedDict):
+    """Nested schema for BlocksUpdateParamsQuoteRichTextItem.equation"""
+    expression: NotRequired[str]
+
+class BlocksUpdateParamsQuoteRichTextItemAnnotations(TypedDict):
+    """Nested schema for BlocksUpdateParamsQuoteRichTextItem.annotations"""
+    bold: NotRequired[bool]
+    italic: NotRequired[bool]
+    strikethrough: NotRequired[bool]
+    underline: NotRequired[bool]
+    code: NotRequired[bool]
+    color: NotRequired[str]
+
+class BlocksUpdateParamsQuoteRichTextItem(TypedDict):
+    """Nested schema for BlocksUpdateParamsQuote.rich_text_item"""
+    type: NotRequired[str]
+    text: NotRequired[BlocksUpdateParamsQuoteRichTextItemText]
+    mention: NotRequired[dict[str, Any]]
+    equation: NotRequired[BlocksUpdateParamsQuoteRichTextItemEquation]
+    annotations: NotRequired[BlocksUpdateParamsQuoteRichTextItemAnnotations]
+
+class BlocksUpdateParamsQuote(TypedDict):
+    """Updated quote content"""
+    rich_text: NotRequired[list[BlocksUpdateParamsQuoteRichTextItem]]
+    color: NotRequired[str]
+
+class BlocksUpdateParamsCalloutRichTextItemTextLink(TypedDict):
+    """Nested schema for BlocksUpdateParamsCalloutRichTextItemText.link"""
+    url: NotRequired[str]
+
+class BlocksUpdateParamsCalloutRichTextItemText(TypedDict):
+    """Nested schema for BlocksUpdateParamsCalloutRichTextItem.text"""
+    content: NotRequired[str]
+    link: NotRequired[BlocksUpdateParamsCalloutRichTextItemTextLink | None]
+
+class BlocksUpdateParamsCalloutRichTextItemEquation(TypedDict):
+    """Nested schema for BlocksUpdateParamsCalloutRichTextItem.equation"""
+    expression: NotRequired[str]
+
+class BlocksUpdateParamsCalloutRichTextItemAnnotations(TypedDict):
+    """Nested schema for BlocksUpdateParamsCalloutRichTextItem.annotations"""
+    bold: NotRequired[bool]
+    italic: NotRequired[bool]
+    strikethrough: NotRequired[bool]
+    underline: NotRequired[bool]
+    code: NotRequired[bool]
+    color: NotRequired[str]
+
+class BlocksUpdateParamsCalloutRichTextItem(TypedDict):
+    """Nested schema for BlocksUpdateParamsCallout.rich_text_item"""
+    type: NotRequired[str]
+    text: NotRequired[BlocksUpdateParamsCalloutRichTextItemText]
+    mention: NotRequired[dict[str, Any]]
+    equation: NotRequired[BlocksUpdateParamsCalloutRichTextItemEquation]
+    annotations: NotRequired[BlocksUpdateParamsCalloutRichTextItemAnnotations]
+
+class BlocksUpdateParamsCallout(TypedDict):
+    """Updated callout content"""
+    rich_text: NotRequired[list[BlocksUpdateParamsCalloutRichTextItem]]
+    icon: NotRequired[dict[str, Any]]
+    color: NotRequired[str]
+
+class BlocksUpdateParamsBookmarkCaptionItemTextLink(TypedDict):
+    """Nested schema for BlocksUpdateParamsBookmarkCaptionItemText.link"""
+    url: NotRequired[str]
+
+class BlocksUpdateParamsBookmarkCaptionItemText(TypedDict):
+    """Nested schema for BlocksUpdateParamsBookmarkCaptionItem.text"""
+    content: NotRequired[str]
+    link: NotRequired[BlocksUpdateParamsBookmarkCaptionItemTextLink | None]
+
+class BlocksUpdateParamsBookmarkCaptionItemEquation(TypedDict):
+    """Nested schema for BlocksUpdateParamsBookmarkCaptionItem.equation"""
+    expression: NotRequired[str]
+
+class BlocksUpdateParamsBookmarkCaptionItemAnnotations(TypedDict):
+    """Nested schema for BlocksUpdateParamsBookmarkCaptionItem.annotations"""
+    bold: NotRequired[bool]
+    italic: NotRequired[bool]
+    strikethrough: NotRequired[bool]
+    underline: NotRequired[bool]
+    code: NotRequired[bool]
+    color: NotRequired[str]
+
+class BlocksUpdateParamsBookmarkCaptionItem(TypedDict):
+    """Nested schema for BlocksUpdateParamsBookmark.caption_item"""
+    type: NotRequired[str]
+    text: NotRequired[BlocksUpdateParamsBookmarkCaptionItemText]
+    mention: NotRequired[dict[str, Any]]
+    equation: NotRequired[BlocksUpdateParamsBookmarkCaptionItemEquation]
+    annotations: NotRequired[BlocksUpdateParamsBookmarkCaptionItemAnnotations]
+
+class BlocksUpdateParamsBookmark(TypedDict):
+    """Updated bookmark"""
+    url: NotRequired[str]
+    caption: NotRequired[list[BlocksUpdateParamsBookmarkCaptionItem]]
+
+class BlocksUpdateParamsEmbed(TypedDict):
+    """Updated embed"""
+    url: NotRequired[str]
+
+class BlocksUpdateParamsEquation(TypedDict):
+    """Updated equation"""
+    expression: NotRequired[str]
+
+class BlocksUpdateParamsImageExternal(TypedDict):
+    """Nested schema for BlocksUpdateParamsImage.external"""
+    url: NotRequired[str]
+
+class BlocksUpdateParamsImageFileUpload(TypedDict):
+    """Nested schema for BlocksUpdateParamsImage.file_upload"""
+    id: NotRequired[str]
+
+class BlocksUpdateParamsImage(TypedDict):
+    """Media file. Use external URL or file upload."""
+    type: NotRequired[str]
+    external: NotRequired[BlocksUpdateParamsImageExternal]
+    file_upload: NotRequired[BlocksUpdateParamsImageFileUpload]
+
+class BlocksUpdateParamsVideoExternal(TypedDict):
+    """Nested schema for BlocksUpdateParamsVideo.external"""
+    url: NotRequired[str]
+
+class BlocksUpdateParamsVideoFileUpload(TypedDict):
+    """Nested schema for BlocksUpdateParamsVideo.file_upload"""
+    id: NotRequired[str]
+
+class BlocksUpdateParamsVideo(TypedDict):
+    """Media file. Use external URL or file upload."""
+    type: NotRequired[str]
+    external: NotRequired[BlocksUpdateParamsVideoExternal]
+    file_upload: NotRequired[BlocksUpdateParamsVideoFileUpload]
+
+class BlocksUpdateParamsFileExternal(TypedDict):
+    """Nested schema for BlocksUpdateParamsFile.external"""
+    url: NotRequired[str]
+
+class BlocksUpdateParamsFileFileUpload(TypedDict):
+    """Nested schema for BlocksUpdateParamsFile.file_upload"""
+    id: NotRequired[str]
+
+class BlocksUpdateParamsFile(TypedDict):
+    """Media file. Use external URL or file upload."""
+    type: NotRequired[str]
+    external: NotRequired[BlocksUpdateParamsFileExternal]
+    file_upload: NotRequired[BlocksUpdateParamsFileFileUpload]
+
+class BlocksUpdateParamsPdfExternal(TypedDict):
+    """Nested schema for BlocksUpdateParamsPdf.external"""
+    url: NotRequired[str]
+
+class BlocksUpdateParamsPdfFileUpload(TypedDict):
+    """Nested schema for BlocksUpdateParamsPdf.file_upload"""
+    id: NotRequired[str]
+
+class BlocksUpdateParamsPdf(TypedDict):
+    """Media file. Use external URL or file upload."""
+    type: NotRequired[str]
+    external: NotRequired[BlocksUpdateParamsPdfExternal]
+    file_upload: NotRequired[BlocksUpdateParamsPdfFileUpload]
+
+class BlocksUpdateParamsAudioExternal(TypedDict):
+    """Nested schema for BlocksUpdateParamsAudio.external"""
+    url: NotRequired[str]
+
+class BlocksUpdateParamsAudioFileUpload(TypedDict):
+    """Nested schema for BlocksUpdateParamsAudio.file_upload"""
+    id: NotRequired[str]
+
+class BlocksUpdateParamsAudio(TypedDict):
+    """Media file. Use external URL or file upload."""
+    type: NotRequired[str]
+    external: NotRequired[BlocksUpdateParamsAudioExternal]
+    file_upload: NotRequired[BlocksUpdateParamsAudioFileUpload]
+
+class BlocksUpdateParamsTable(TypedDict):
+    """Updated table properties"""
+    has_column_header: NotRequired[bool]
+    has_row_header: NotRequired[bool]
+
+class CommentsCreateParamsRichTextItemTextLink(TypedDict):
+    """Nested schema for CommentsCreateParamsRichTextItemText.link"""
+    url: NotRequired[str]
+
+class CommentsCreateParamsRichTextItemText(TypedDict):
+    """Nested schema for CommentsCreateParamsRichTextItem.text"""
+    content: NotRequired[str]
+    link: NotRequired[CommentsCreateParamsRichTextItemTextLink | None]
+
+class CommentsCreateParamsRichTextItemEquation(TypedDict):
+    """Nested schema for CommentsCreateParamsRichTextItem.equation"""
+    expression: NotRequired[str]
+
+class CommentsCreateParamsRichTextItemAnnotations(TypedDict):
+    """Nested schema for CommentsCreateParamsRichTextItem.annotations"""
+    bold: NotRequired[bool]
+    italic: NotRequired[bool]
+    strikethrough: NotRequired[bool]
+    underline: NotRequired[bool]
+    code: NotRequired[bool]
+    color: NotRequired[str]
+
+class CommentsCreateParamsRichTextItem(TypedDict):
+    """Nested schema for CommentsCreateParams.rich_text_item"""
+    type: NotRequired[str]
+    text: NotRequired[CommentsCreateParamsRichTextItemText]
+    mention: NotRequired[dict[str, Any]]
+    equation: NotRequired[CommentsCreateParamsRichTextItemEquation]
+    annotations: NotRequired[CommentsCreateParamsRichTextItemAnnotations]
+
+class DataSourcesUpdateParamsTitleItemTextLink(TypedDict):
+    """Nested schema for DataSourcesUpdateParamsTitleItemText.link"""
+    url: NotRequired[str]
+
+class DataSourcesUpdateParamsTitleItemText(TypedDict):
+    """Nested schema for DataSourcesUpdateParamsTitleItem.text"""
+    content: NotRequired[str]
+    link: NotRequired[DataSourcesUpdateParamsTitleItemTextLink | None]
+
+class DataSourcesUpdateParamsTitleItemEquation(TypedDict):
+    """Nested schema for DataSourcesUpdateParamsTitleItem.equation"""
+    expression: NotRequired[str]
+
+class DataSourcesUpdateParamsTitleItemAnnotations(TypedDict):
+    """Nested schema for DataSourcesUpdateParamsTitleItem.annotations"""
+    bold: NotRequired[bool]
+    italic: NotRequired[bool]
+    strikethrough: NotRequired[bool]
+    underline: NotRequired[bool]
+    code: NotRequired[bool]
+    color: NotRequired[str]
+
+class DataSourcesUpdateParamsTitleItem(TypedDict):
+    """Nested schema for DataSourcesUpdateParams.title_item"""
+    type: NotRequired[str]
+    text: NotRequired[DataSourcesUpdateParamsTitleItemText]
+    mention: NotRequired[dict[str, Any]]
+    equation: NotRequired[DataSourcesUpdateParamsTitleItemEquation]
+    annotations: NotRequired[DataSourcesUpdateParamsTitleItemAnnotations]
+
+class DataSourcesUpdateParamsDescriptionItemTextLink(TypedDict):
+    """Nested schema for DataSourcesUpdateParamsDescriptionItemText.link"""
+    url: NotRequired[str]
+
+class DataSourcesUpdateParamsDescriptionItemText(TypedDict):
+    """Nested schema for DataSourcesUpdateParamsDescriptionItem.text"""
+    content: NotRequired[str]
+    link: NotRequired[DataSourcesUpdateParamsDescriptionItemTextLink | None]
+
+class DataSourcesUpdateParamsDescriptionItemEquation(TypedDict):
+    """Nested schema for DataSourcesUpdateParamsDescriptionItem.equation"""
+    expression: NotRequired[str]
+
+class DataSourcesUpdateParamsDescriptionItemAnnotations(TypedDict):
+    """Nested schema for DataSourcesUpdateParamsDescriptionItem.annotations"""
+    bold: NotRequired[bool]
+    italic: NotRequired[bool]
+    strikethrough: NotRequired[bool]
+    underline: NotRequired[bool]
+    code: NotRequired[bool]
+    color: NotRequired[str]
+
+class DataSourcesUpdateParamsDescriptionItem(TypedDict):
+    """Nested schema for DataSourcesUpdateParams.description_item"""
+    type: NotRequired[str]
+    text: NotRequired[DataSourcesUpdateParamsDescriptionItemText]
+    mention: NotRequired[dict[str, Any]]
+    equation: NotRequired[DataSourcesUpdateParamsDescriptionItemEquation]
+    annotations: NotRequired[DataSourcesUpdateParamsDescriptionItemAnnotations]
+
+class DataSourcesUpdateParamsIconExternal(TypedDict):
+    """External URL icon (when type is external)"""
+    url: NotRequired[str]
+
+class DataSourcesUpdateParamsIconFileUpload(TypedDict):
+    """Uploaded file icon (when type is file_upload)"""
+    id: NotRequired[str]
+
+class DataSourcesUpdateParamsIconCustomEmoji(TypedDict):
+    """Custom emoji icon (when type is custom_emoji)"""
+    id: NotRequired[str]
+
+class DataSourcesUpdateParamsIconIcon(TypedDict):
+    """Notion native icon (when type is icon)"""
+    name: NotRequired[str]
+    color: NotRequired[str]
+
+class DataSourcesUpdateParamsIcon(TypedDict):
+    """Icon. Supports emoji, external URL, file upload, custom emoji, and Notion native icons. Set to null to remove."""
+    type: NotRequired[str]
+    emoji: NotRequired[str]
+    external: NotRequired[DataSourcesUpdateParamsIconExternal]
+    file_upload: NotRequired[DataSourcesUpdateParamsIconFileUpload]
+    custom_emoji: NotRequired[DataSourcesUpdateParamsIconCustomEmoji]
+    icon: NotRequired[DataSourcesUpdateParamsIconIcon]
+
+class DataSourcesUpdateParamsCoverExternal(TypedDict):
+    """External URL cover"""
+    url: NotRequired[str]
+
+class DataSourcesUpdateParamsCoverFileUpload(TypedDict):
+    """Uploaded file cover"""
+    id: NotRequired[str]
+
+class DataSourcesUpdateParamsCover(TypedDict):
+    """Cover image. Supports external URL or file upload. Set to null to remove."""
+    type: NotRequired[str]
+    external: NotRequired[DataSourcesUpdateParamsCoverExternal]
+    file_upload: NotRequired[DataSourcesUpdateParamsCoverFileUpload]
 
 # ===== OPERATION PARAMS TYPE DEFINITIONS =====
 
@@ -55,8 +1336,25 @@ class PagesListParams(TypedDict):
     start_cursor: NotRequired[str]
     page_size: NotRequired[int]
 
+class PagesCreateParams(TypedDict):
+    """Parameters for pages.create operation"""
+    parent: dict[str, Any]
+    properties: NotRequired[dict[str, Any]]
+    children: NotRequired[list[dict[str, Any]]]
+    icon: NotRequired[PagesCreateParamsIcon | None]
+    cover: NotRequired[PagesCreateParamsCover | None]
+
 class PagesGetParams(TypedDict):
     """Parameters for pages.get operation"""
+    page_id: str
+
+class PagesUpdateParams(TypedDict):
+    """Parameters for pages.update operation"""
+    properties: NotRequired[dict[str, Any]]
+    icon: NotRequired[PagesUpdateParamsIcon | None]
+    cover: NotRequired[PagesUpdateParamsCover | None]
+    archived: NotRequired[bool]
+    in_trash: NotRequired[bool]
     page_id: str
 
 class DataSourcesListParams(TypedDict):
@@ -76,8 +1374,38 @@ class BlocksListParams(TypedDict):
     start_cursor: NotRequired[str]
     page_size: NotRequired[int]
 
+class BlocksCreateParams(TypedDict):
+    """Parameters for blocks.create operation"""
+    children: list[BlocksCreateParamsChildrenItem]
+    block_id: str
+
 class BlocksGetParams(TypedDict):
     """Parameters for blocks.get operation"""
+    block_id: str
+
+class BlocksUpdateParams(TypedDict):
+    """Parameters for blocks.update operation"""
+    paragraph: NotRequired[BlocksUpdateParamsParagraph]
+    heading_1: NotRequired[BlocksUpdateParamsHeading1]
+    heading_2: NotRequired[BlocksUpdateParamsHeading2]
+    heading_3: NotRequired[BlocksUpdateParamsHeading3]
+    bulleted_list_item: NotRequired[BlocksUpdateParamsBulletedListItem]
+    numbered_list_item: NotRequired[BlocksUpdateParamsNumberedListItem]
+    to_do: NotRequired[BlocksUpdateParamsToDo]
+    toggle: NotRequired[BlocksUpdateParamsToggle]
+    code: NotRequired[BlocksUpdateParamsCode]
+    quote: NotRequired[BlocksUpdateParamsQuote]
+    callout: NotRequired[BlocksUpdateParamsCallout]
+    bookmark: NotRequired[BlocksUpdateParamsBookmark]
+    embed: NotRequired[BlocksUpdateParamsEmbed]
+    equation: NotRequired[BlocksUpdateParamsEquation]
+    image: NotRequired[BlocksUpdateParamsImage]
+    video: NotRequired[BlocksUpdateParamsVideo]
+    file: NotRequired[BlocksUpdateParamsFile]
+    pdf: NotRequired[BlocksUpdateParamsPdf]
+    audio: NotRequired[BlocksUpdateParamsAudio]
+    table: NotRequired[BlocksUpdateParamsTable]
+    archived: NotRequired[bool]
     block_id: str
 
 class CommentsListParams(TypedDict):
@@ -85,6 +1413,23 @@ class CommentsListParams(TypedDict):
     block_id: str
     start_cursor: NotRequired[str]
     page_size: NotRequired[int]
+
+class CommentsCreateParams(TypedDict):
+    """Parameters for comments.create operation"""
+    parent: NotRequired[dict[str, Any]]
+    discussion_id: NotRequired[str]
+    rich_text: list[CommentsCreateParamsRichTextItem]
+
+class DataSourcesUpdateParams(TypedDict):
+    """Parameters for data_sources.update operation"""
+    title: NotRequired[list[DataSourcesUpdateParamsTitleItem]]
+    description: NotRequired[list[DataSourcesUpdateParamsDescriptionItem]]
+    properties: NotRequired[dict[str, Any]]
+    icon: NotRequired[DataSourcesUpdateParamsIcon | None]
+    cover: NotRequired[DataSourcesUpdateParamsCover | None]
+    archived: NotRequired[bool]
+    in_trash: NotRequired[bool]
+    data_source_id: str
 
 # ===== SEARCH TYPES =====
 

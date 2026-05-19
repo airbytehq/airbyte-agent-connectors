@@ -689,15 +689,6 @@ class AdUpdateParams(BaseModel):
     tracking_specs: str | None = Field(default=None)
     bid_amount: str | None = Field(default=None)
 
-class AdLibraryAdEstimatedAudienceSize(BaseModel):
-    """Estimated audience size range"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    lower_bound: int | None | None = Field(default=None, description="Lower bound of the estimated audience size")
-    """Lower bound of the estimated audience size"""
-    upper_bound: int | None | None = Field(default=None, description="Upper bound of the estimated audience size")
-    """Upper bound of the estimated audience size"""
-
 class AdLibraryAdSpend(BaseModel):
     """Amount spent on the ad as a range"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -735,6 +726,15 @@ class AdLibraryAdDemographicDistributionItem(BaseModel):
     """Gender category"""
     percentage: str | None | None = Field(default=None, description="Percentage of audience in this demographic")
     """Percentage of audience in this demographic"""
+
+class AdLibraryAdEstimatedAudienceSize(BaseModel):
+    """Estimated audience size range"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    lower_bound: int | None | None = Field(default=None, description="Lower bound of the estimated audience size")
+    """Lower bound of the estimated audience size"""
+    upper_bound: int | None | None = Field(default=None, description="Upper bound of the estimated audience size")
+    """Upper bound of the estimated audience size"""
 
 class AdLibraryAd(BaseModel):
     """An archived ad from the Facebook Ad Library, containing ad creative content, delivery information, spend data, and demographic reach breakdowns."""

@@ -197,19 +197,6 @@ class TranscriptsResponse(BaseModel):
     records: PaginationRecords | None = Field(default=None)
     request_id: str | None = Field(default=None, alias="requestId")
 
-class ExtensiveCallCollaboration(BaseModel):
-    """Collaboration data"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    public_comments: list[dict[str, Any]] | None = Field(default=None, alias="publicComments")
-
-class ExtensiveCallContentTopicsItem(BaseModel):
-    """Nested schema for ExtensiveCallContent.topics_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: str | None = Field(default=None)
-    duration: float | None = Field(default=None)
-
 class ExtensiveCallContentTrackersItem(BaseModel):
     """Nested schema for ExtensiveCallContent.trackers_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -219,6 +206,13 @@ class ExtensiveCallContentTrackersItem(BaseModel):
     count: int | None = Field(default=None)
     type_: str | None = Field(default=None, alias="type")
     occurrences: list[dict[str, Any]] | None = Field(default=None)
+
+class ExtensiveCallContentTopicsItem(BaseModel):
+    """Nested schema for ExtensiveCallContent.topics_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: str | None = Field(default=None)
+    duration: float | None = Field(default=None)
 
 class ExtensiveCallContent(BaseModel):
     """Content data including topics and trackers"""
@@ -326,6 +320,12 @@ class ExtensiveCallPartiesItem(BaseModel):
     """Phone number"""
     context: list[ExtensiveCallPartiesItemContextItem] | None = Field(default=None, description="CRM context data linked to this participant")
     """CRM context data linked to this participant"""
+
+class ExtensiveCallCollaboration(BaseModel):
+    """Collaboration data"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    public_comments: list[dict[str, Any]] | None = Field(default=None, alias="publicComments")
 
 class ExtensiveCallMedia(BaseModel):
     """Media URLs"""
