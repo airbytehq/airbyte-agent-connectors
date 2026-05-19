@@ -109,7 +109,7 @@ class MondayConnector:
 
     connector_name = "monday"
     connector_version = "1.0.4"
-    sdk_version = "0.1.203"
+    sdk_version = "0.1.204"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -261,7 +261,11 @@ class MondayConnector:
         self,
         entity: Literal["users"],
         action: Literal["list"],
-        params: "UsersListParams"
+        params: "UsersListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "UsersListResult": ...
 
     @overload
@@ -269,7 +273,11 @@ class MondayConnector:
         self,
         entity: Literal["users"],
         action: Literal["get"],
-        params: "UsersGetParams"
+        params: "UsersGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -277,7 +285,11 @@ class MondayConnector:
         self,
         entity: Literal["boards"],
         action: Literal["list"],
-        params: "BoardsListParams"
+        params: "BoardsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "BoardsListResult": ...
 
     @overload
@@ -285,7 +297,11 @@ class MondayConnector:
         self,
         entity: Literal["boards"],
         action: Literal["get"],
-        params: "BoardsGetParams"
+        params: "BoardsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -293,7 +309,11 @@ class MondayConnector:
         self,
         entity: Literal["items"],
         action: Literal["list"],
-        params: "ItemsListParams"
+        params: "ItemsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ItemsListResult": ...
 
     @overload
@@ -301,7 +321,11 @@ class MondayConnector:
         self,
         entity: Literal["items"],
         action: Literal["get"],
-        params: "ItemsGetParams"
+        params: "ItemsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -309,7 +333,11 @@ class MondayConnector:
         self,
         entity: Literal["teams"],
         action: Literal["list"],
-        params: "TeamsListParams"
+        params: "TeamsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TeamsListResult": ...
 
     @overload
@@ -317,7 +345,11 @@ class MondayConnector:
         self,
         entity: Literal["teams"],
         action: Literal["get"],
-        params: "TeamsGetParams"
+        params: "TeamsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -325,7 +357,11 @@ class MondayConnector:
         self,
         entity: Literal["tags"],
         action: Literal["list"],
-        params: "TagsListParams"
+        params: "TagsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TagsListResult": ...
 
     @overload
@@ -333,7 +369,11 @@ class MondayConnector:
         self,
         entity: Literal["updates"],
         action: Literal["list"],
-        params: "UpdatesListParams"
+        params: "UpdatesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "UpdatesListResult": ...
 
     @overload
@@ -341,7 +381,11 @@ class MondayConnector:
         self,
         entity: Literal["updates"],
         action: Literal["get"],
-        params: "UpdatesGetParams"
+        params: "UpdatesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -349,7 +393,11 @@ class MondayConnector:
         self,
         entity: Literal["workspaces"],
         action: Literal["list"],
-        params: "WorkspacesListParams"
+        params: "WorkspacesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "WorkspacesListResult": ...
 
     @overload
@@ -357,7 +405,11 @@ class MondayConnector:
         self,
         entity: Literal["workspaces"],
         action: Literal["get"],
-        params: "WorkspacesGetParams"
+        params: "WorkspacesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -365,7 +417,11 @@ class MondayConnector:
         self,
         entity: Literal["activity_logs"],
         action: Literal["list"],
-        params: "ActivityLogsListParams"
+        params: "ActivityLogsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ActivityLogsListResult": ...
 
 
@@ -374,14 +430,22 @@ class MondayConnector:
         self,
         entity: str,
         action: Literal["list", "get", "context_store_search"],
-        params: Mapping[str, Any]
+        params: Mapping[str, Any],
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> MondayExecuteResult[Any] | MondayExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
         action: Literal["list", "get", "context_store_search"],
-        params: Mapping[str, Any] | None = None
+        params: Mapping[str, Any] | None = None,
+        *,
+        select_fields: list[str] | None = None,
+        exclude_fields: list[str] | None = None,
+        skip_truncation: bool = True
     ) -> Any:
         """
         Execute an entity operation with full type safety.
@@ -395,6 +459,9 @@ class MondayConnector:
             entity: Entity name (e.g., "customers")
             action: Operation action (e.g., "create", "get", "list")
             params: Operation parameters (typed based on entity+action)
+            select_fields: Optional allowlist of dot-notation fields to include
+            exclude_fields: Optional blocklist of dot-notation fields to remove
+            skip_truncation: Disable long-text truncation for collection actions
 
         Returns:
             Typed response based on the operation
@@ -419,7 +486,10 @@ class MondayConnector:
         config = ExecutionConfig(
             entity=entity,
             action=action,
-            params=resolved_params
+            params=resolved_params,
+            select_fields=select_fields,
+            exclude_fields=exclude_fields,
+            skip_truncation=skip_truncation
         )
 
         result = await self._executor.execute(config)

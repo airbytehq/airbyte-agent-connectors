@@ -108,7 +108,7 @@ class LinkedinAdsConnector:
 
     connector_name = "linkedin-ads"
     connector_version = "1.0.5"
-    sdk_version = "0.1.203"
+    sdk_version = "0.1.204"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -254,7 +254,11 @@ class LinkedinAdsConnector:
         self,
         entity: Literal["accounts"],
         action: Literal["list"],
-        params: "AccountsListParams"
+        params: "AccountsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AccountsListResult": ...
 
     @overload
@@ -262,7 +266,11 @@ class LinkedinAdsConnector:
         self,
         entity: Literal["accounts"],
         action: Literal["get"],
-        params: "AccountsGetParams"
+        params: "AccountsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Account": ...
 
     @overload
@@ -270,7 +278,11 @@ class LinkedinAdsConnector:
         self,
         entity: Literal["account_users"],
         action: Literal["list"],
-        params: "AccountUsersListParams"
+        params: "AccountUsersListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AccountUsersListResult": ...
 
     @overload
@@ -278,7 +290,11 @@ class LinkedinAdsConnector:
         self,
         entity: Literal["campaigns"],
         action: Literal["list"],
-        params: "CampaignsListParams"
+        params: "CampaignsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CampaignsListResult": ...
 
     @overload
@@ -286,7 +302,11 @@ class LinkedinAdsConnector:
         self,
         entity: Literal["campaigns"],
         action: Literal["get"],
-        params: "CampaignsGetParams"
+        params: "CampaignsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Campaign": ...
 
     @overload
@@ -294,7 +314,11 @@ class LinkedinAdsConnector:
         self,
         entity: Literal["campaign_groups"],
         action: Literal["list"],
-        params: "CampaignGroupsListParams"
+        params: "CampaignGroupsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CampaignGroupsListResult": ...
 
     @overload
@@ -302,7 +326,11 @@ class LinkedinAdsConnector:
         self,
         entity: Literal["campaign_groups"],
         action: Literal["get"],
-        params: "CampaignGroupsGetParams"
+        params: "CampaignGroupsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CampaignGroup": ...
 
     @overload
@@ -310,7 +338,11 @@ class LinkedinAdsConnector:
         self,
         entity: Literal["creatives"],
         action: Literal["list"],
-        params: "CreativesListParams"
+        params: "CreativesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CreativesListResult": ...
 
     @overload
@@ -318,7 +350,11 @@ class LinkedinAdsConnector:
         self,
         entity: Literal["creatives"],
         action: Literal["get"],
-        params: "CreativesGetParams"
+        params: "CreativesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Creative": ...
 
     @overload
@@ -326,7 +362,11 @@ class LinkedinAdsConnector:
         self,
         entity: Literal["conversions"],
         action: Literal["list"],
-        params: "ConversionsListParams"
+        params: "ConversionsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ConversionsListResult": ...
 
     @overload
@@ -334,7 +374,11 @@ class LinkedinAdsConnector:
         self,
         entity: Literal["conversions"],
         action: Literal["get"],
-        params: "ConversionsGetParams"
+        params: "ConversionsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Conversion": ...
 
     @overload
@@ -342,7 +386,11 @@ class LinkedinAdsConnector:
         self,
         entity: Literal["ad_campaign_analytics"],
         action: Literal["list"],
-        params: "AdCampaignAnalyticsListParams"
+        params: "AdCampaignAnalyticsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AdCampaignAnalyticsListResult": ...
 
     @overload
@@ -350,7 +398,11 @@ class LinkedinAdsConnector:
         self,
         entity: Literal["ad_creative_analytics"],
         action: Literal["list"],
-        params: "AdCreativeAnalyticsListParams"
+        params: "AdCreativeAnalyticsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AdCreativeAnalyticsListResult": ...
 
 
@@ -359,14 +411,22 @@ class LinkedinAdsConnector:
         self,
         entity: str,
         action: Literal["list", "get", "context_store_search"],
-        params: Mapping[str, Any]
+        params: Mapping[str, Any],
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> LinkedinAdsExecuteResult[Any] | LinkedinAdsExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
         action: Literal["list", "get", "context_store_search"],
-        params: Mapping[str, Any] | None = None
+        params: Mapping[str, Any] | None = None,
+        *,
+        select_fields: list[str] | None = None,
+        exclude_fields: list[str] | None = None,
+        skip_truncation: bool = True
     ) -> Any:
         """
         Execute an entity operation with full type safety.
@@ -380,6 +440,9 @@ class LinkedinAdsConnector:
             entity: Entity name (e.g., "customers")
             action: Operation action (e.g., "create", "get", "list")
             params: Operation parameters (typed based on entity+action)
+            select_fields: Optional allowlist of dot-notation fields to include
+            exclude_fields: Optional blocklist of dot-notation fields to remove
+            skip_truncation: Disable long-text truncation for collection actions
 
         Returns:
             Typed response based on the operation
@@ -404,7 +467,10 @@ class LinkedinAdsConnector:
         config = ExecutionConfig(
             entity=entity,
             action=action,
-            params=resolved_params
+            params=resolved_params,
+            select_fields=select_fields,
+            exclude_fields=exclude_fields,
+            skip_truncation=skip_truncation
         )
 
         result = await self._executor.execute(config)

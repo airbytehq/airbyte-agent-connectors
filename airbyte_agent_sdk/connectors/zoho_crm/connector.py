@@ -155,7 +155,7 @@ class ZohoCrmConnector:
 
     connector_name = "zoho-crm"
     connector_version = "1.0.3"
-    sdk_version = "0.1.203"
+    sdk_version = "0.1.204"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -350,7 +350,11 @@ class ZohoCrmConnector:
         self,
         entity: Literal["leads"],
         action: Literal["list"],
-        params: "LeadsListParams"
+        params: "LeadsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "LeadsListResult": ...
 
     @overload
@@ -358,7 +362,11 @@ class ZohoCrmConnector:
         self,
         entity: Literal["leads"],
         action: Literal["create"],
-        params: "LeadsCreateParams"
+        params: "LeadsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "WriteResponse": ...
 
     @overload
@@ -366,7 +374,11 @@ class ZohoCrmConnector:
         self,
         entity: Literal["leads"],
         action: Literal["get"],
-        params: "LeadsGetParams"
+        params: "LeadsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -374,7 +386,11 @@ class ZohoCrmConnector:
         self,
         entity: Literal["leads"],
         action: Literal["update"],
-        params: "LeadsUpdateParams"
+        params: "LeadsUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "WriteResponse": ...
 
     @overload
@@ -382,7 +398,11 @@ class ZohoCrmConnector:
         self,
         entity: Literal["contacts"],
         action: Literal["list"],
-        params: "ContactsListParams"
+        params: "ContactsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ContactsListResult": ...
 
     @overload
@@ -390,7 +410,11 @@ class ZohoCrmConnector:
         self,
         entity: Literal["contacts"],
         action: Literal["create"],
-        params: "ContactsCreateParams"
+        params: "ContactsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "WriteResponse": ...
 
     @overload
@@ -398,7 +422,11 @@ class ZohoCrmConnector:
         self,
         entity: Literal["contacts"],
         action: Literal["get"],
-        params: "ContactsGetParams"
+        params: "ContactsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -406,7 +434,11 @@ class ZohoCrmConnector:
         self,
         entity: Literal["contacts"],
         action: Literal["update"],
-        params: "ContactsUpdateParams"
+        params: "ContactsUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "WriteResponse": ...
 
     @overload
@@ -414,7 +446,11 @@ class ZohoCrmConnector:
         self,
         entity: Literal["accounts"],
         action: Literal["list"],
-        params: "AccountsListParams"
+        params: "AccountsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AccountsListResult": ...
 
     @overload
@@ -422,7 +458,11 @@ class ZohoCrmConnector:
         self,
         entity: Literal["accounts"],
         action: Literal["create"],
-        params: "AccountsCreateParams"
+        params: "AccountsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "WriteResponse": ...
 
     @overload
@@ -430,7 +470,11 @@ class ZohoCrmConnector:
         self,
         entity: Literal["accounts"],
         action: Literal["get"],
-        params: "AccountsGetParams"
+        params: "AccountsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -438,7 +482,11 @@ class ZohoCrmConnector:
         self,
         entity: Literal["accounts"],
         action: Literal["update"],
-        params: "AccountsUpdateParams"
+        params: "AccountsUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "WriteResponse": ...
 
     @overload
@@ -446,7 +494,11 @@ class ZohoCrmConnector:
         self,
         entity: Literal["deals"],
         action: Literal["list"],
-        params: "DealsListParams"
+        params: "DealsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "DealsListResult": ...
 
     @overload
@@ -454,7 +506,11 @@ class ZohoCrmConnector:
         self,
         entity: Literal["deals"],
         action: Literal["create"],
-        params: "DealsCreateParams"
+        params: "DealsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "WriteResponse": ...
 
     @overload
@@ -462,7 +518,11 @@ class ZohoCrmConnector:
         self,
         entity: Literal["deals"],
         action: Literal["get"],
-        params: "DealsGetParams"
+        params: "DealsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -470,7 +530,11 @@ class ZohoCrmConnector:
         self,
         entity: Literal["deals"],
         action: Literal["update"],
-        params: "DealsUpdateParams"
+        params: "DealsUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "WriteResponse": ...
 
     @overload
@@ -478,7 +542,11 @@ class ZohoCrmConnector:
         self,
         entity: Literal["campaigns"],
         action: Literal["list"],
-        params: "CampaignsListParams"
+        params: "CampaignsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CampaignsListResult": ...
 
     @overload
@@ -486,7 +554,11 @@ class ZohoCrmConnector:
         self,
         entity: Literal["campaigns"],
         action: Literal["get"],
-        params: "CampaignsGetParams"
+        params: "CampaignsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -494,7 +566,11 @@ class ZohoCrmConnector:
         self,
         entity: Literal["tasks"],
         action: Literal["list"],
-        params: "TasksListParams"
+        params: "TasksListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TasksListResult": ...
 
     @overload
@@ -502,7 +578,11 @@ class ZohoCrmConnector:
         self,
         entity: Literal["tasks"],
         action: Literal["create"],
-        params: "TasksCreateParams"
+        params: "TasksCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "WriteResponse": ...
 
     @overload
@@ -510,7 +590,11 @@ class ZohoCrmConnector:
         self,
         entity: Literal["tasks"],
         action: Literal["get"],
-        params: "TasksGetParams"
+        params: "TasksGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -518,7 +602,11 @@ class ZohoCrmConnector:
         self,
         entity: Literal["tasks"],
         action: Literal["update"],
-        params: "TasksUpdateParams"
+        params: "TasksUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "WriteResponse": ...
 
     @overload
@@ -526,7 +614,11 @@ class ZohoCrmConnector:
         self,
         entity: Literal["events"],
         action: Literal["list"],
-        params: "EventsListParams"
+        params: "EventsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "EventsListResult": ...
 
     @overload
@@ -534,7 +626,11 @@ class ZohoCrmConnector:
         self,
         entity: Literal["events"],
         action: Literal["get"],
-        params: "EventsGetParams"
+        params: "EventsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -542,7 +638,11 @@ class ZohoCrmConnector:
         self,
         entity: Literal["calls"],
         action: Literal["list"],
-        params: "CallsListParams"
+        params: "CallsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CallsListResult": ...
 
     @overload
@@ -550,7 +650,11 @@ class ZohoCrmConnector:
         self,
         entity: Literal["calls"],
         action: Literal["get"],
-        params: "CallsGetParams"
+        params: "CallsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -558,7 +662,11 @@ class ZohoCrmConnector:
         self,
         entity: Literal["products"],
         action: Literal["list"],
-        params: "ProductsListParams"
+        params: "ProductsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ProductsListResult": ...
 
     @overload
@@ -566,7 +674,11 @@ class ZohoCrmConnector:
         self,
         entity: Literal["products"],
         action: Literal["get"],
-        params: "ProductsGetParams"
+        params: "ProductsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -574,7 +686,11 @@ class ZohoCrmConnector:
         self,
         entity: Literal["quotes"],
         action: Literal["list"],
-        params: "QuotesListParams"
+        params: "QuotesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "QuotesListResult": ...
 
     @overload
@@ -582,7 +698,11 @@ class ZohoCrmConnector:
         self,
         entity: Literal["quotes"],
         action: Literal["get"],
-        params: "QuotesGetParams"
+        params: "QuotesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -590,7 +710,11 @@ class ZohoCrmConnector:
         self,
         entity: Literal["invoices"],
         action: Literal["list"],
-        params: "InvoicesListParams"
+        params: "InvoicesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "InvoicesListResult": ...
 
     @overload
@@ -598,7 +722,11 @@ class ZohoCrmConnector:
         self,
         entity: Literal["invoices"],
         action: Literal["get"],
-        params: "InvoicesGetParams"
+        params: "InvoicesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
 
@@ -607,14 +735,22 @@ class ZohoCrmConnector:
         self,
         entity: str,
         action: Literal["list", "create", "get", "update", "context_store_search"],
-        params: Mapping[str, Any]
+        params: Mapping[str, Any],
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> ZohoCrmExecuteResult[Any] | ZohoCrmExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
         action: Literal["list", "create", "get", "update", "context_store_search"],
-        params: Mapping[str, Any] | None = None
+        params: Mapping[str, Any] | None = None,
+        *,
+        select_fields: list[str] | None = None,
+        exclude_fields: list[str] | None = None,
+        skip_truncation: bool = True
     ) -> Any:
         """
         Execute an entity operation with full type safety.
@@ -628,6 +764,9 @@ class ZohoCrmConnector:
             entity: Entity name (e.g., "customers")
             action: Operation action (e.g., "create", "get", "list")
             params: Operation parameters (typed based on entity+action)
+            select_fields: Optional allowlist of dot-notation fields to include
+            exclude_fields: Optional blocklist of dot-notation fields to remove
+            skip_truncation: Disable long-text truncation for collection actions
 
         Returns:
             Typed response based on the operation
@@ -652,7 +791,10 @@ class ZohoCrmConnector:
         config = ExecutionConfig(
             entity=entity,
             action=action,
-            params=resolved_params
+            params=resolved_params,
+            select_fields=select_fields,
+            exclude_fields=exclude_fields,
+            skip_truncation=skip_truncation
         )
 
         result = await self._executor.execute(config)

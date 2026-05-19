@@ -114,7 +114,7 @@ class GoogleAdsConnector:
 
     connector_name = "google-ads"
     connector_version = "1.0.9"
-    sdk_version = "0.1.203"
+    sdk_version = "0.1.204"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -260,7 +260,11 @@ class GoogleAdsConnector:
         self,
         entity: Literal["accessible_customers"],
         action: Literal["list"],
-        params: "AccessibleCustomersListParams"
+        params: "AccessibleCustomersListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AccessibleCustomersListResult": ...
 
     @overload
@@ -268,7 +272,11 @@ class GoogleAdsConnector:
         self,
         entity: Literal["accounts"],
         action: Literal["list"],
-        params: "AccountsListParams"
+        params: "AccountsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AccountsListResult": ...
 
     @overload
@@ -276,7 +284,11 @@ class GoogleAdsConnector:
         self,
         entity: Literal["campaigns"],
         action: Literal["list"],
-        params: "CampaignsListParams"
+        params: "CampaignsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CampaignsListResult": ...
 
     @overload
@@ -284,7 +296,11 @@ class GoogleAdsConnector:
         self,
         entity: Literal["ad_groups"],
         action: Literal["list"],
-        params: "AdGroupsListParams"
+        params: "AdGroupsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AdGroupsListResult": ...
 
     @overload
@@ -292,7 +308,11 @@ class GoogleAdsConnector:
         self,
         entity: Literal["ad_group_ads"],
         action: Literal["list"],
-        params: "AdGroupAdsListParams"
+        params: "AdGroupAdsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AdGroupAdsListResult": ...
 
     @overload
@@ -300,7 +320,11 @@ class GoogleAdsConnector:
         self,
         entity: Literal["campaign_labels"],
         action: Literal["list"],
-        params: "CampaignLabelsListParams"
+        params: "CampaignLabelsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CampaignLabelsListResult": ...
 
     @overload
@@ -308,7 +332,11 @@ class GoogleAdsConnector:
         self,
         entity: Literal["ad_group_labels"],
         action: Literal["list"],
-        params: "AdGroupLabelsListParams"
+        params: "AdGroupLabelsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AdGroupLabelsListResult": ...
 
     @overload
@@ -316,7 +344,11 @@ class GoogleAdsConnector:
         self,
         entity: Literal["ad_group_ad_labels"],
         action: Literal["list"],
-        params: "AdGroupAdLabelsListParams"
+        params: "AdGroupAdLabelsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AdGroupAdLabelsListResult": ...
 
     @overload
@@ -324,7 +356,11 @@ class GoogleAdsConnector:
         self,
         entity: Literal["campaigns"],
         action: Literal["update"],
-        params: "CampaignsUpdateParams"
+        params: "CampaignsUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CampaignMutateResponse": ...
 
     @overload
@@ -332,7 +368,11 @@ class GoogleAdsConnector:
         self,
         entity: Literal["ad_groups"],
         action: Literal["update"],
-        params: "AdGroupsUpdateParams"
+        params: "AdGroupsUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AdGroupMutateResponse": ...
 
     @overload
@@ -340,7 +380,11 @@ class GoogleAdsConnector:
         self,
         entity: Literal["labels"],
         action: Literal["create"],
-        params: "LabelsCreateParams"
+        params: "LabelsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "LabelMutateResponse": ...
 
     @overload
@@ -348,7 +392,11 @@ class GoogleAdsConnector:
         self,
         entity: Literal["campaign_labels"],
         action: Literal["create"],
-        params: "CampaignLabelsCreateParams"
+        params: "CampaignLabelsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CampaignLabelMutateResponse": ...
 
     @overload
@@ -356,7 +404,11 @@ class GoogleAdsConnector:
         self,
         entity: Literal["ad_group_labels"],
         action: Literal["create"],
-        params: "AdGroupLabelsCreateParams"
+        params: "AdGroupLabelsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AdGroupLabelMutateResponse": ...
 
 
@@ -365,14 +417,22 @@ class GoogleAdsConnector:
         self,
         entity: str,
         action: Literal["list", "update", "create", "context_store_search"],
-        params: Mapping[str, Any]
+        params: Mapping[str, Any],
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> GoogleAdsExecuteResult[Any] | GoogleAdsExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
         action: Literal["list", "update", "create", "context_store_search"],
-        params: Mapping[str, Any] | None = None
+        params: Mapping[str, Any] | None = None,
+        *,
+        select_fields: list[str] | None = None,
+        exclude_fields: list[str] | None = None,
+        skip_truncation: bool = True
     ) -> Any:
         """
         Execute an entity operation with full type safety.
@@ -386,6 +446,9 @@ class GoogleAdsConnector:
             entity: Entity name (e.g., "customers")
             action: Operation action (e.g., "create", "get", "list")
             params: Operation parameters (typed based on entity+action)
+            select_fields: Optional allowlist of dot-notation fields to include
+            exclude_fields: Optional blocklist of dot-notation fields to remove
+            skip_truncation: Disable long-text truncation for collection actions
 
         Returns:
             Typed response based on the operation
@@ -410,7 +473,10 @@ class GoogleAdsConnector:
         config = ExecutionConfig(
             entity=entity,
             action=action,
-            params=resolved_params
+            params=resolved_params,
+            select_fields=select_fields,
+            exclude_fields=exclude_fields,
+            skip_truncation=skip_truncation
         )
 
         result = await self._executor.execute(config)

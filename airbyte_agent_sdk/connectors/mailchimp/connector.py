@@ -137,7 +137,7 @@ class MailchimpConnector:
 
     connector_name = "mailchimp"
     connector_version = "1.0.11"
-    sdk_version = "0.1.203"
+    sdk_version = "0.1.204"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -306,7 +306,11 @@ class MailchimpConnector:
         self,
         entity: Literal["campaigns"],
         action: Literal["list"],
-        params: "CampaignsListParams"
+        params: "CampaignsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CampaignsListResult": ...
 
     @overload
@@ -314,7 +318,11 @@ class MailchimpConnector:
         self,
         entity: Literal["campaigns"],
         action: Literal["get"],
-        params: "CampaignsGetParams"
+        params: "CampaignsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Campaign": ...
 
     @overload
@@ -322,7 +330,11 @@ class MailchimpConnector:
         self,
         entity: Literal["lists"],
         action: Literal["list"],
-        params: "ListsListParams"
+        params: "ListsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ListsListResult": ...
 
     @overload
@@ -330,7 +342,11 @@ class MailchimpConnector:
         self,
         entity: Literal["lists"],
         action: Literal["get"],
-        params: "ListsGetParams"
+        params: "ListsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "List": ...
 
     @overload
@@ -338,7 +354,11 @@ class MailchimpConnector:
         self,
         entity: Literal["list_members"],
         action: Literal["list"],
-        params: "ListMembersListParams"
+        params: "ListMembersListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ListMembersListResult": ...
 
     @overload
@@ -346,7 +366,11 @@ class MailchimpConnector:
         self,
         entity: Literal["list_members"],
         action: Literal["get"],
-        params: "ListMembersGetParams"
+        params: "ListMembersGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ListMember": ...
 
     @overload
@@ -354,7 +378,11 @@ class MailchimpConnector:
         self,
         entity: Literal["reports"],
         action: Literal["list"],
-        params: "ReportsListParams"
+        params: "ReportsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ReportsListResult": ...
 
     @overload
@@ -362,7 +390,11 @@ class MailchimpConnector:
         self,
         entity: Literal["reports"],
         action: Literal["get"],
-        params: "ReportsGetParams"
+        params: "ReportsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Report": ...
 
     @overload
@@ -370,7 +402,11 @@ class MailchimpConnector:
         self,
         entity: Literal["email_activity"],
         action: Literal["list"],
-        params: "EmailActivityListParams"
+        params: "EmailActivityListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "EmailActivityListResult": ...
 
     @overload
@@ -378,7 +414,11 @@ class MailchimpConnector:
         self,
         entity: Literal["automations"],
         action: Literal["list"],
-        params: "AutomationsListParams"
+        params: "AutomationsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AutomationsListResult": ...
 
     @overload
@@ -386,7 +426,11 @@ class MailchimpConnector:
         self,
         entity: Literal["tags"],
         action: Literal["list"],
-        params: "TagsListParams"
+        params: "TagsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TagsListResult": ...
 
     @overload
@@ -394,7 +438,11 @@ class MailchimpConnector:
         self,
         entity: Literal["interest_categories"],
         action: Literal["list"],
-        params: "InterestCategoriesListParams"
+        params: "InterestCategoriesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "InterestCategoriesListResult": ...
 
     @overload
@@ -402,7 +450,11 @@ class MailchimpConnector:
         self,
         entity: Literal["interest_categories"],
         action: Literal["get"],
-        params: "InterestCategoriesGetParams"
+        params: "InterestCategoriesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "InterestCategory": ...
 
     @overload
@@ -410,7 +462,11 @@ class MailchimpConnector:
         self,
         entity: Literal["interests"],
         action: Literal["list"],
-        params: "InterestsListParams"
+        params: "InterestsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "InterestsListResult": ...
 
     @overload
@@ -418,7 +474,11 @@ class MailchimpConnector:
         self,
         entity: Literal["interests"],
         action: Literal["get"],
-        params: "InterestsGetParams"
+        params: "InterestsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Interest": ...
 
     @overload
@@ -426,7 +486,11 @@ class MailchimpConnector:
         self,
         entity: Literal["segments"],
         action: Literal["list"],
-        params: "SegmentsListParams"
+        params: "SegmentsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SegmentsListResult": ...
 
     @overload
@@ -434,7 +498,11 @@ class MailchimpConnector:
         self,
         entity: Literal["segments"],
         action: Literal["get"],
-        params: "SegmentsGetParams"
+        params: "SegmentsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Segment": ...
 
     @overload
@@ -442,7 +510,11 @@ class MailchimpConnector:
         self,
         entity: Literal["segment_members"],
         action: Literal["list"],
-        params: "SegmentMembersListParams"
+        params: "SegmentMembersListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SegmentMembersListResult": ...
 
     @overload
@@ -450,7 +522,11 @@ class MailchimpConnector:
         self,
         entity: Literal["unsubscribes"],
         action: Literal["list"],
-        params: "UnsubscribesListParams"
+        params: "UnsubscribesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "UnsubscribesListResult": ...
 
 
@@ -459,14 +535,22 @@ class MailchimpConnector:
         self,
         entity: str,
         action: Literal["list", "get", "context_store_search"],
-        params: Mapping[str, Any]
+        params: Mapping[str, Any],
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> MailchimpExecuteResult[Any] | MailchimpExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
         action: Literal["list", "get", "context_store_search"],
-        params: Mapping[str, Any] | None = None
+        params: Mapping[str, Any] | None = None,
+        *,
+        select_fields: list[str] | None = None,
+        exclude_fields: list[str] | None = None,
+        skip_truncation: bool = True
     ) -> Any:
         """
         Execute an entity operation with full type safety.
@@ -480,6 +564,9 @@ class MailchimpConnector:
             entity: Entity name (e.g., "customers")
             action: Operation action (e.g., "create", "get", "list")
             params: Operation parameters (typed based on entity+action)
+            select_fields: Optional allowlist of dot-notation fields to include
+            exclude_fields: Optional blocklist of dot-notation fields to remove
+            skip_truncation: Disable long-text truncation for collection actions
 
         Returns:
             Typed response based on the operation
@@ -504,7 +591,10 @@ class MailchimpConnector:
         config = ExecutionConfig(
             entity=entity,
             action=action,
-            params=resolved_params
+            params=resolved_params,
+            select_fields=select_fields,
+            exclude_fields=exclude_fields,
+            skip_truncation=skip_truncation
         )
 
         result = await self._executor.execute(config)

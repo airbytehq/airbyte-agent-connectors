@@ -138,7 +138,7 @@ class TwilioConnector:
 
     connector_name = "twilio"
     connector_version = "1.0.4"
-    sdk_version = "0.1.203"
+    sdk_version = "0.1.204"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -309,7 +309,11 @@ class TwilioConnector:
         self,
         entity: Literal["accounts"],
         action: Literal["list"],
-        params: "AccountsListParams"
+        params: "AccountsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AccountsListResult": ...
 
     @overload
@@ -317,7 +321,11 @@ class TwilioConnector:
         self,
         entity: Literal["accounts"],
         action: Literal["get"],
-        params: "AccountsGetParams"
+        params: "AccountsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Account": ...
 
     @overload
@@ -325,7 +333,11 @@ class TwilioConnector:
         self,
         entity: Literal["calls"],
         action: Literal["list"],
-        params: "CallsListParams"
+        params: "CallsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CallsListResult": ...
 
     @overload
@@ -333,7 +345,11 @@ class TwilioConnector:
         self,
         entity: Literal["calls"],
         action: Literal["create"],
-        params: "CallsCreateParams"
+        params: "CallsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Call": ...
 
     @overload
@@ -341,7 +357,11 @@ class TwilioConnector:
         self,
         entity: Literal["calls"],
         action: Literal["get"],
-        params: "CallsGetParams"
+        params: "CallsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Call": ...
 
     @overload
@@ -349,7 +369,11 @@ class TwilioConnector:
         self,
         entity: Literal["messages"],
         action: Literal["list"],
-        params: "MessagesListParams"
+        params: "MessagesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "MessagesListResult": ...
 
     @overload
@@ -357,7 +381,11 @@ class TwilioConnector:
         self,
         entity: Literal["messages"],
         action: Literal["create"],
-        params: "MessagesCreateParams"
+        params: "MessagesCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Message": ...
 
     @overload
@@ -365,7 +393,11 @@ class TwilioConnector:
         self,
         entity: Literal["messages"],
         action: Literal["get"],
-        params: "MessagesGetParams"
+        params: "MessagesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Message": ...
 
     @overload
@@ -373,7 +405,11 @@ class TwilioConnector:
         self,
         entity: Literal["incoming_phone_numbers"],
         action: Literal["list"],
-        params: "IncomingPhoneNumbersListParams"
+        params: "IncomingPhoneNumbersListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "IncomingPhoneNumbersListResult": ...
 
     @overload
@@ -381,7 +417,11 @@ class TwilioConnector:
         self,
         entity: Literal["incoming_phone_numbers"],
         action: Literal["create"],
-        params: "IncomingPhoneNumbersCreateParams"
+        params: "IncomingPhoneNumbersCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "IncomingPhoneNumber": ...
 
     @overload
@@ -389,7 +429,11 @@ class TwilioConnector:
         self,
         entity: Literal["incoming_phone_numbers"],
         action: Literal["get"],
-        params: "IncomingPhoneNumbersGetParams"
+        params: "IncomingPhoneNumbersGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "IncomingPhoneNumber": ...
 
     @overload
@@ -397,7 +441,11 @@ class TwilioConnector:
         self,
         entity: Literal["recordings"],
         action: Literal["list"],
-        params: "RecordingsListParams"
+        params: "RecordingsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "RecordingsListResult": ...
 
     @overload
@@ -405,7 +453,11 @@ class TwilioConnector:
         self,
         entity: Literal["recordings"],
         action: Literal["get"],
-        params: "RecordingsGetParams"
+        params: "RecordingsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Recording": ...
 
     @overload
@@ -413,7 +465,11 @@ class TwilioConnector:
         self,
         entity: Literal["conferences"],
         action: Literal["list"],
-        params: "ConferencesListParams"
+        params: "ConferencesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ConferencesListResult": ...
 
     @overload
@@ -421,7 +477,11 @@ class TwilioConnector:
         self,
         entity: Literal["conferences"],
         action: Literal["get"],
-        params: "ConferencesGetParams"
+        params: "ConferencesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Conference": ...
 
     @overload
@@ -429,7 +489,11 @@ class TwilioConnector:
         self,
         entity: Literal["usage_records"],
         action: Literal["list"],
-        params: "UsageRecordsListParams"
+        params: "UsageRecordsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "UsageRecordsListResult": ...
 
     @overload
@@ -437,7 +501,11 @@ class TwilioConnector:
         self,
         entity: Literal["addresses"],
         action: Literal["list"],
-        params: "AddressesListParams"
+        params: "AddressesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AddressesListResult": ...
 
     @overload
@@ -445,7 +513,11 @@ class TwilioConnector:
         self,
         entity: Literal["addresses"],
         action: Literal["get"],
-        params: "AddressesGetParams"
+        params: "AddressesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Address": ...
 
     @overload
@@ -453,7 +525,11 @@ class TwilioConnector:
         self,
         entity: Literal["queues"],
         action: Literal["list"],
-        params: "QueuesListParams"
+        params: "QueuesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "QueuesListResult": ...
 
     @overload
@@ -461,7 +537,11 @@ class TwilioConnector:
         self,
         entity: Literal["queues"],
         action: Literal["get"],
-        params: "QueuesGetParams"
+        params: "QueuesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Queue": ...
 
     @overload
@@ -469,7 +549,11 @@ class TwilioConnector:
         self,
         entity: Literal["transcriptions"],
         action: Literal["list"],
-        params: "TranscriptionsListParams"
+        params: "TranscriptionsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TranscriptionsListResult": ...
 
     @overload
@@ -477,7 +561,11 @@ class TwilioConnector:
         self,
         entity: Literal["transcriptions"],
         action: Literal["get"],
-        params: "TranscriptionsGetParams"
+        params: "TranscriptionsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Transcription": ...
 
     @overload
@@ -485,7 +573,11 @@ class TwilioConnector:
         self,
         entity: Literal["outgoing_caller_ids"],
         action: Literal["list"],
-        params: "OutgoingCallerIdsListParams"
+        params: "OutgoingCallerIdsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "OutgoingCallerIdsListResult": ...
 
     @overload
@@ -493,7 +585,11 @@ class TwilioConnector:
         self,
         entity: Literal["outgoing_caller_ids"],
         action: Literal["get"],
-        params: "OutgoingCallerIdsGetParams"
+        params: "OutgoingCallerIdsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "OutgoingCallerId": ...
 
 
@@ -502,14 +598,22 @@ class TwilioConnector:
         self,
         entity: str,
         action: Literal["list", "get", "create", "context_store_search"],
-        params: Mapping[str, Any]
+        params: Mapping[str, Any],
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> TwilioExecuteResult[Any] | TwilioExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
         action: Literal["list", "get", "create", "context_store_search"],
-        params: Mapping[str, Any] | None = None
+        params: Mapping[str, Any] | None = None,
+        *,
+        select_fields: list[str] | None = None,
+        exclude_fields: list[str] | None = None,
+        skip_truncation: bool = True
     ) -> Any:
         """
         Execute an entity operation with full type safety.
@@ -523,6 +627,9 @@ class TwilioConnector:
             entity: Entity name (e.g., "customers")
             action: Operation action (e.g., "create", "get", "list")
             params: Operation parameters (typed based on entity+action)
+            select_fields: Optional allowlist of dot-notation fields to include
+            exclude_fields: Optional blocklist of dot-notation fields to remove
+            skip_truncation: Disable long-text truncation for collection actions
 
         Returns:
             Typed response based on the operation
@@ -547,7 +654,10 @@ class TwilioConnector:
         config = ExecutionConfig(
             entity=entity,
             action=action,
-            params=resolved_params
+            params=resolved_params,
+            select_fields=select_fields,
+            exclude_fields=exclude_fields,
+            skip_truncation=skip_truncation
         )
 
         result = await self._executor.execute(config)

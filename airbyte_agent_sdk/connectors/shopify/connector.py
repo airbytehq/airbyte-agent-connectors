@@ -265,7 +265,7 @@ class ShopifyConnector:
 
     connector_name = "shopify"
     connector_version = "0.1.13"
-    sdk_version = "0.1.203"
+    sdk_version = "0.1.204"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -518,7 +518,11 @@ class ShopifyConnector:
         self,
         entity: Literal["customers"],
         action: Literal["list"],
-        params: "CustomersListParams"
+        params: "CustomersListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CustomersListResult": ...
 
     @overload
@@ -526,7 +530,11 @@ class ShopifyConnector:
         self,
         entity: Literal["customers"],
         action: Literal["get"],
-        params: "CustomersGetParams"
+        params: "CustomersGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Customer": ...
 
     @overload
@@ -534,7 +542,11 @@ class ShopifyConnector:
         self,
         entity: Literal["orders"],
         action: Literal["list"],
-        params: "OrdersListParams"
+        params: "OrdersListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "OrdersListResult": ...
 
     @overload
@@ -542,7 +554,11 @@ class ShopifyConnector:
         self,
         entity: Literal["orders"],
         action: Literal["get"],
-        params: "OrdersGetParams"
+        params: "OrdersGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Order": ...
 
     @overload
@@ -550,7 +566,11 @@ class ShopifyConnector:
         self,
         entity: Literal["products"],
         action: Literal["list"],
-        params: "ProductsListParams"
+        params: "ProductsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ProductsListResult": ...
 
     @overload
@@ -558,7 +578,11 @@ class ShopifyConnector:
         self,
         entity: Literal["products"],
         action: Literal["get"],
-        params: "ProductsGetParams"
+        params: "ProductsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Product": ...
 
     @overload
@@ -566,7 +590,11 @@ class ShopifyConnector:
         self,
         entity: Literal["product_variants"],
         action: Literal["list"],
-        params: "ProductVariantsListParams"
+        params: "ProductVariantsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ProductVariantsListResult": ...
 
     @overload
@@ -574,7 +602,11 @@ class ShopifyConnector:
         self,
         entity: Literal["product_variants"],
         action: Literal["get"],
-        params: "ProductVariantsGetParams"
+        params: "ProductVariantsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ProductVariant": ...
 
     @overload
@@ -582,7 +614,11 @@ class ShopifyConnector:
         self,
         entity: Literal["product_images"],
         action: Literal["list"],
-        params: "ProductImagesListParams"
+        params: "ProductImagesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ProductImagesListResult": ...
 
     @overload
@@ -590,7 +626,11 @@ class ShopifyConnector:
         self,
         entity: Literal["product_images"],
         action: Literal["get"],
-        params: "ProductImagesGetParams"
+        params: "ProductImagesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ProductImage": ...
 
     @overload
@@ -598,7 +638,11 @@ class ShopifyConnector:
         self,
         entity: Literal["abandoned_checkouts"],
         action: Literal["list"],
-        params: "AbandonedCheckoutsListParams"
+        params: "AbandonedCheckoutsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AbandonedCheckoutsListResult": ...
 
     @overload
@@ -606,7 +650,11 @@ class ShopifyConnector:
         self,
         entity: Literal["locations"],
         action: Literal["list"],
-        params: "LocationsListParams"
+        params: "LocationsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "LocationsListResult": ...
 
     @overload
@@ -614,7 +662,11 @@ class ShopifyConnector:
         self,
         entity: Literal["locations"],
         action: Literal["get"],
-        params: "LocationsGetParams"
+        params: "LocationsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Location": ...
 
     @overload
@@ -622,7 +674,11 @@ class ShopifyConnector:
         self,
         entity: Literal["inventory_levels"],
         action: Literal["list"],
-        params: "InventoryLevelsListParams"
+        params: "InventoryLevelsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "InventoryLevelsListResult": ...
 
     @overload
@@ -630,7 +686,11 @@ class ShopifyConnector:
         self,
         entity: Literal["inventory_items"],
         action: Literal["list"],
-        params: "InventoryItemsListParams"
+        params: "InventoryItemsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "InventoryItemsListResult": ...
 
     @overload
@@ -638,7 +698,11 @@ class ShopifyConnector:
         self,
         entity: Literal["inventory_items"],
         action: Literal["get"],
-        params: "InventoryItemsGetParams"
+        params: "InventoryItemsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "InventoryItem": ...
 
     @overload
@@ -646,7 +710,11 @@ class ShopifyConnector:
         self,
         entity: Literal["shop"],
         action: Literal["get"],
-        params: "ShopGetParams"
+        params: "ShopGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Shop": ...
 
     @overload
@@ -654,7 +722,11 @@ class ShopifyConnector:
         self,
         entity: Literal["price_rules"],
         action: Literal["list"],
-        params: "PriceRulesListParams"
+        params: "PriceRulesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "PriceRulesListResult": ...
 
     @overload
@@ -662,7 +734,11 @@ class ShopifyConnector:
         self,
         entity: Literal["price_rules"],
         action: Literal["get"],
-        params: "PriceRulesGetParams"
+        params: "PriceRulesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "PriceRule": ...
 
     @overload
@@ -670,7 +746,11 @@ class ShopifyConnector:
         self,
         entity: Literal["discount_codes"],
         action: Literal["list"],
-        params: "DiscountCodesListParams"
+        params: "DiscountCodesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "DiscountCodesListResult": ...
 
     @overload
@@ -678,7 +758,11 @@ class ShopifyConnector:
         self,
         entity: Literal["discount_codes"],
         action: Literal["get"],
-        params: "DiscountCodesGetParams"
+        params: "DiscountCodesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "DiscountCode": ...
 
     @overload
@@ -686,7 +770,11 @@ class ShopifyConnector:
         self,
         entity: Literal["custom_collections"],
         action: Literal["list"],
-        params: "CustomCollectionsListParams"
+        params: "CustomCollectionsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CustomCollectionsListResult": ...
 
     @overload
@@ -694,7 +782,11 @@ class ShopifyConnector:
         self,
         entity: Literal["custom_collections"],
         action: Literal["get"],
-        params: "CustomCollectionsGetParams"
+        params: "CustomCollectionsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CustomCollection": ...
 
     @overload
@@ -702,7 +794,11 @@ class ShopifyConnector:
         self,
         entity: Literal["smart_collections"],
         action: Literal["list"],
-        params: "SmartCollectionsListParams"
+        params: "SmartCollectionsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SmartCollectionsListResult": ...
 
     @overload
@@ -710,7 +806,11 @@ class ShopifyConnector:
         self,
         entity: Literal["smart_collections"],
         action: Literal["get"],
-        params: "SmartCollectionsGetParams"
+        params: "SmartCollectionsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SmartCollection": ...
 
     @overload
@@ -718,7 +818,11 @@ class ShopifyConnector:
         self,
         entity: Literal["collects"],
         action: Literal["list"],
-        params: "CollectsListParams"
+        params: "CollectsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CollectsListResult": ...
 
     @overload
@@ -726,7 +830,11 @@ class ShopifyConnector:
         self,
         entity: Literal["collects"],
         action: Literal["get"],
-        params: "CollectsGetParams"
+        params: "CollectsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Collect": ...
 
     @overload
@@ -734,7 +842,11 @@ class ShopifyConnector:
         self,
         entity: Literal["draft_orders"],
         action: Literal["list"],
-        params: "DraftOrdersListParams"
+        params: "DraftOrdersListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "DraftOrdersListResult": ...
 
     @overload
@@ -742,7 +854,11 @@ class ShopifyConnector:
         self,
         entity: Literal["draft_orders"],
         action: Literal["get"],
-        params: "DraftOrdersGetParams"
+        params: "DraftOrdersGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "DraftOrder": ...
 
     @overload
@@ -750,7 +866,11 @@ class ShopifyConnector:
         self,
         entity: Literal["fulfillments"],
         action: Literal["list"],
-        params: "FulfillmentsListParams"
+        params: "FulfillmentsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "FulfillmentsListResult": ...
 
     @overload
@@ -758,7 +878,11 @@ class ShopifyConnector:
         self,
         entity: Literal["fulfillments"],
         action: Literal["get"],
-        params: "FulfillmentsGetParams"
+        params: "FulfillmentsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Fulfillment": ...
 
     @overload
@@ -766,7 +890,11 @@ class ShopifyConnector:
         self,
         entity: Literal["order_refunds"],
         action: Literal["list"],
-        params: "OrderRefundsListParams"
+        params: "OrderRefundsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "OrderRefundsListResult": ...
 
     @overload
@@ -774,7 +902,11 @@ class ShopifyConnector:
         self,
         entity: Literal["order_refunds"],
         action: Literal["get"],
-        params: "OrderRefundsGetParams"
+        params: "OrderRefundsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Refund": ...
 
     @overload
@@ -782,7 +914,11 @@ class ShopifyConnector:
         self,
         entity: Literal["transactions"],
         action: Literal["list"],
-        params: "TransactionsListParams"
+        params: "TransactionsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TransactionsListResult": ...
 
     @overload
@@ -790,7 +926,11 @@ class ShopifyConnector:
         self,
         entity: Literal["transactions"],
         action: Literal["get"],
-        params: "TransactionsGetParams"
+        params: "TransactionsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Transaction": ...
 
     @overload
@@ -798,7 +938,11 @@ class ShopifyConnector:
         self,
         entity: Literal["tender_transactions"],
         action: Literal["list"],
-        params: "TenderTransactionsListParams"
+        params: "TenderTransactionsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TenderTransactionsListResult": ...
 
     @overload
@@ -806,7 +950,11 @@ class ShopifyConnector:
         self,
         entity: Literal["countries"],
         action: Literal["list"],
-        params: "CountriesListParams"
+        params: "CountriesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CountriesListResult": ...
 
     @overload
@@ -814,7 +962,11 @@ class ShopifyConnector:
         self,
         entity: Literal["countries"],
         action: Literal["get"],
-        params: "CountriesGetParams"
+        params: "CountriesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Country": ...
 
     @overload
@@ -822,7 +974,11 @@ class ShopifyConnector:
         self,
         entity: Literal["metafield_shops"],
         action: Literal["list"],
-        params: "MetafieldShopsListParams"
+        params: "MetafieldShopsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "MetafieldShopsListResult": ...
 
     @overload
@@ -830,7 +986,11 @@ class ShopifyConnector:
         self,
         entity: Literal["metafield_shops"],
         action: Literal["get"],
-        params: "MetafieldShopsGetParams"
+        params: "MetafieldShopsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Metafield": ...
 
     @overload
@@ -838,7 +998,11 @@ class ShopifyConnector:
         self,
         entity: Literal["metafield_customers"],
         action: Literal["list"],
-        params: "MetafieldCustomersListParams"
+        params: "MetafieldCustomersListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "MetafieldCustomersListResult": ...
 
     @overload
@@ -846,7 +1010,11 @@ class ShopifyConnector:
         self,
         entity: Literal["metafield_products"],
         action: Literal["list"],
-        params: "MetafieldProductsListParams"
+        params: "MetafieldProductsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "MetafieldProductsListResult": ...
 
     @overload
@@ -854,7 +1022,11 @@ class ShopifyConnector:
         self,
         entity: Literal["metafield_orders"],
         action: Literal["list"],
-        params: "MetafieldOrdersListParams"
+        params: "MetafieldOrdersListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "MetafieldOrdersListResult": ...
 
     @overload
@@ -862,7 +1034,11 @@ class ShopifyConnector:
         self,
         entity: Literal["metafield_draft_orders"],
         action: Literal["list"],
-        params: "MetafieldDraftOrdersListParams"
+        params: "MetafieldDraftOrdersListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "MetafieldDraftOrdersListResult": ...
 
     @overload
@@ -870,7 +1046,11 @@ class ShopifyConnector:
         self,
         entity: Literal["metafield_locations"],
         action: Literal["list"],
-        params: "MetafieldLocationsListParams"
+        params: "MetafieldLocationsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "MetafieldLocationsListResult": ...
 
     @overload
@@ -878,7 +1058,11 @@ class ShopifyConnector:
         self,
         entity: Literal["metafield_product_variants"],
         action: Literal["list"],
-        params: "MetafieldProductVariantsListParams"
+        params: "MetafieldProductVariantsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "MetafieldProductVariantsListResult": ...
 
     @overload
@@ -886,7 +1070,11 @@ class ShopifyConnector:
         self,
         entity: Literal["metafield_smart_collections"],
         action: Literal["list"],
-        params: "MetafieldSmartCollectionsListParams"
+        params: "MetafieldSmartCollectionsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "MetafieldSmartCollectionsListResult": ...
 
     @overload
@@ -894,7 +1082,11 @@ class ShopifyConnector:
         self,
         entity: Literal["metafield_product_images"],
         action: Literal["list"],
-        params: "MetafieldProductImagesListParams"
+        params: "MetafieldProductImagesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "MetafieldProductImagesListResult": ...
 
     @overload
@@ -902,7 +1094,11 @@ class ShopifyConnector:
         self,
         entity: Literal["customer_address"],
         action: Literal["list"],
-        params: "CustomerAddressListParams"
+        params: "CustomerAddressListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CustomerAddressListResult": ...
 
     @overload
@@ -910,7 +1106,11 @@ class ShopifyConnector:
         self,
         entity: Literal["customer_address"],
         action: Literal["get"],
-        params: "CustomerAddressGetParams"
+        params: "CustomerAddressGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CustomerAddress": ...
 
     @overload
@@ -918,7 +1118,11 @@ class ShopifyConnector:
         self,
         entity: Literal["fulfillment_orders"],
         action: Literal["list"],
-        params: "FulfillmentOrdersListParams"
+        params: "FulfillmentOrdersListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "FulfillmentOrdersListResult": ...
 
     @overload
@@ -926,7 +1130,11 @@ class ShopifyConnector:
         self,
         entity: Literal["fulfillment_orders"],
         action: Literal["get"],
-        params: "FulfillmentOrdersGetParams"
+        params: "FulfillmentOrdersGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "FulfillmentOrder": ...
 
 
@@ -935,14 +1143,22 @@ class ShopifyConnector:
         self,
         entity: str,
         action: Literal["list", "get", "context_store_search"],
-        params: Mapping[str, Any]
+        params: Mapping[str, Any],
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> ShopifyExecuteResult[Any] | ShopifyExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
         action: Literal["list", "get", "context_store_search"],
-        params: Mapping[str, Any] | None = None
+        params: Mapping[str, Any] | None = None,
+        *,
+        select_fields: list[str] | None = None,
+        exclude_fields: list[str] | None = None,
+        skip_truncation: bool = True
     ) -> Any:
         """
         Execute an entity operation with full type safety.
@@ -956,6 +1172,9 @@ class ShopifyConnector:
             entity: Entity name (e.g., "customers")
             action: Operation action (e.g., "create", "get", "list")
             params: Operation parameters (typed based on entity+action)
+            select_fields: Optional allowlist of dot-notation fields to include
+            exclude_fields: Optional blocklist of dot-notation fields to remove
+            skip_truncation: Disable long-text truncation for collection actions
 
         Returns:
             Typed response based on the operation
@@ -980,7 +1199,10 @@ class ShopifyConnector:
         config = ExecutionConfig(
             entity=entity,
             action=action,
-            params=resolved_params
+            params=resolved_params,
+            select_fields=select_fields,
+            exclude_fields=exclude_fields,
+            skip_truncation=skip_truncation
         )
 
         result = await self._executor.execute(config)

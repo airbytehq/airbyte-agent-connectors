@@ -85,7 +85,7 @@ class AmazonSellerPartnerConnector:
 
     connector_name = "amazon-seller-partner"
     connector_version = "1.0.5"
-    sdk_version = "0.1.203"
+    sdk_version = "0.1.204"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -232,7 +232,11 @@ The region is automatically mapped to the correct API endpoint (na/eu/fe) and ma
         self,
         entity: Literal["orders"],
         action: Literal["list"],
-        params: "OrdersListParams"
+        params: "OrdersListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "OrdersListResult": ...
 
     @overload
@@ -240,7 +244,11 @@ The region is automatically mapped to the correct API endpoint (na/eu/fe) and ma
         self,
         entity: Literal["orders"],
         action: Literal["get"],
-        params: "OrdersGetParams"
+        params: "OrdersGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -248,7 +256,11 @@ The region is automatically mapped to the correct API endpoint (na/eu/fe) and ma
         self,
         entity: Literal["order_items"],
         action: Literal["list"],
-        params: "OrderItemsListParams"
+        params: "OrderItemsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "OrderItemsListResult": ...
 
     @overload
@@ -256,7 +268,11 @@ The region is automatically mapped to the correct API endpoint (na/eu/fe) and ma
         self,
         entity: Literal["list_financial_event_groups"],
         action: Literal["list"],
-        params: "ListFinancialEventGroupsListParams"
+        params: "ListFinancialEventGroupsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ListFinancialEventGroupsListResult": ...
 
     @overload
@@ -264,7 +280,11 @@ The region is automatically mapped to the correct API endpoint (na/eu/fe) and ma
         self,
         entity: Literal["list_financial_events"],
         action: Literal["list"],
-        params: "ListFinancialEventsListParams"
+        params: "ListFinancialEventsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ListFinancialEventsListResult": ...
 
     @overload
@@ -272,7 +292,11 @@ The region is automatically mapped to the correct API endpoint (na/eu/fe) and ma
         self,
         entity: Literal["catalog_items"],
         action: Literal["list"],
-        params: "CatalogItemsListParams"
+        params: "CatalogItemsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CatalogItemsListResult": ...
 
     @overload
@@ -280,7 +304,11 @@ The region is automatically mapped to the correct API endpoint (na/eu/fe) and ma
         self,
         entity: Literal["catalog_items"],
         action: Literal["get"],
-        params: "CatalogItemsGetParams"
+        params: "CatalogItemsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CatalogItem": ...
 
     @overload
@@ -288,7 +316,11 @@ The region is automatically mapped to the correct API endpoint (na/eu/fe) and ma
         self,
         entity: Literal["reports"],
         action: Literal["list"],
-        params: "ReportsListParams"
+        params: "ReportsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ReportsListResult": ...
 
     @overload
@@ -296,7 +328,11 @@ The region is automatically mapped to the correct API endpoint (na/eu/fe) and ma
         self,
         entity: Literal["reports"],
         action: Literal["get"],
-        params: "ReportsGetParams"
+        params: "ReportsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Report": ...
 
 
@@ -305,14 +341,22 @@ The region is automatically mapped to the correct API endpoint (na/eu/fe) and ma
         self,
         entity: str,
         action: Literal["list", "get", "context_store_search"],
-        params: Mapping[str, Any]
+        params: Mapping[str, Any],
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> AmazonSellerPartnerExecuteResult[Any] | AmazonSellerPartnerExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
         action: Literal["list", "get", "context_store_search"],
-        params: Mapping[str, Any] | None = None
+        params: Mapping[str, Any] | None = None,
+        *,
+        select_fields: list[str] | None = None,
+        exclude_fields: list[str] | None = None,
+        skip_truncation: bool = True
     ) -> Any:
         """
         Execute an entity operation with full type safety.
@@ -326,6 +370,9 @@ The region is automatically mapped to the correct API endpoint (na/eu/fe) and ma
             entity: Entity name (e.g., "customers")
             action: Operation action (e.g., "create", "get", "list")
             params: Operation parameters (typed based on entity+action)
+            select_fields: Optional allowlist of dot-notation fields to include
+            exclude_fields: Optional blocklist of dot-notation fields to remove
+            skip_truncation: Disable long-text truncation for collection actions
 
         Returns:
             Typed response based on the operation
@@ -350,7 +397,10 @@ The region is automatically mapped to the correct API endpoint (na/eu/fe) and ma
         config = ExecutionConfig(
             entity=entity,
             action=action,
-            params=resolved_params
+            params=resolved_params,
+            select_fields=select_fields,
+            exclude_fields=exclude_fields,
+            skip_truncation=skip_truncation
         )
 
         result = await self._executor.execute(config)

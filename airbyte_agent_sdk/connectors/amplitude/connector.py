@@ -86,7 +86,7 @@ class AmplitudeConnector:
 
     connector_name = "amplitude"
     connector_version = "1.0.3"
-    sdk_version = "0.1.203"
+    sdk_version = "0.1.204"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -214,7 +214,11 @@ class AmplitudeConnector:
         self,
         entity: Literal["annotations"],
         action: Literal["list"],
-        params: "AnnotationsListParams"
+        params: "AnnotationsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AnnotationsListResult": ...
 
     @overload
@@ -222,7 +226,11 @@ class AmplitudeConnector:
         self,
         entity: Literal["annotations"],
         action: Literal["get"],
-        params: "AnnotationsGetParams"
+        params: "AnnotationsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AnnotationV3": ...
 
     @overload
@@ -230,7 +238,11 @@ class AmplitudeConnector:
         self,
         entity: Literal["cohorts"],
         action: Literal["list"],
-        params: "CohortsListParams"
+        params: "CohortsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CohortsListResult": ...
 
     @overload
@@ -238,7 +250,11 @@ class AmplitudeConnector:
         self,
         entity: Literal["cohorts"],
         action: Literal["get"],
-        params: "CohortsGetParams"
+        params: "CohortsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Cohort": ...
 
     @overload
@@ -246,7 +262,11 @@ class AmplitudeConnector:
         self,
         entity: Literal["events_list"],
         action: Literal["list"],
-        params: "EventsListListParams"
+        params: "EventsListListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "EventsListListResult": ...
 
     @overload
@@ -254,7 +274,11 @@ class AmplitudeConnector:
         self,
         entity: Literal["active_users"],
         action: Literal["list"],
-        params: "ActiveUsersListParams"
+        params: "ActiveUsersListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ActiveUsersListResult": ...
 
     @overload
@@ -262,7 +286,11 @@ class AmplitudeConnector:
         self,
         entity: Literal["average_session_length"],
         action: Literal["list"],
-        params: "AverageSessionLengthListParams"
+        params: "AverageSessionLengthListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AverageSessionLengthListResult": ...
 
 
@@ -271,14 +299,22 @@ class AmplitudeConnector:
         self,
         entity: str,
         action: Literal["list", "get", "context_store_search"],
-        params: Mapping[str, Any]
+        params: Mapping[str, Any],
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> AmplitudeExecuteResult[Any] | AmplitudeExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
         action: Literal["list", "get", "context_store_search"],
-        params: Mapping[str, Any] | None = None
+        params: Mapping[str, Any] | None = None,
+        *,
+        select_fields: list[str] | None = None,
+        exclude_fields: list[str] | None = None,
+        skip_truncation: bool = True
     ) -> Any:
         """
         Execute an entity operation with full type safety.
@@ -292,6 +328,9 @@ class AmplitudeConnector:
             entity: Entity name (e.g., "customers")
             action: Operation action (e.g., "create", "get", "list")
             params: Operation parameters (typed based on entity+action)
+            select_fields: Optional allowlist of dot-notation fields to include
+            exclude_fields: Optional blocklist of dot-notation fields to remove
+            skip_truncation: Disable long-text truncation for collection actions
 
         Returns:
             Typed response based on the operation
@@ -316,7 +355,10 @@ class AmplitudeConnector:
         config = ExecutionConfig(
             entity=entity,
             action=action,
-            params=resolved_params
+            params=resolved_params,
+            select_fields=select_fields,
+            exclude_fields=exclude_fields,
+            skip_truncation=skip_truncation
         )
 
         result = await self._executor.execute(config)

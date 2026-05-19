@@ -101,7 +101,7 @@ class KlaviyoConnector:
 
     connector_name = "klaviyo"
     connector_version = "1.0.6"
-    sdk_version = "0.1.203"
+    sdk_version = "0.1.204"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -246,7 +246,11 @@ class KlaviyoConnector:
         self,
         entity: Literal["profiles"],
         action: Literal["list"],
-        params: "ProfilesListParams"
+        params: "ProfilesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ProfilesListResult": ...
 
     @overload
@@ -254,7 +258,11 @@ class KlaviyoConnector:
         self,
         entity: Literal["profiles"],
         action: Literal["get"],
-        params: "ProfilesGetParams"
+        params: "ProfilesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Profile": ...
 
     @overload
@@ -262,7 +270,11 @@ class KlaviyoConnector:
         self,
         entity: Literal["lists"],
         action: Literal["list"],
-        params: "ListsListParams"
+        params: "ListsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ListsListResult": ...
 
     @overload
@@ -270,7 +282,11 @@ class KlaviyoConnector:
         self,
         entity: Literal["lists"],
         action: Literal["get"],
-        params: "ListsGetParams"
+        params: "ListsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "List": ...
 
     @overload
@@ -278,7 +294,11 @@ class KlaviyoConnector:
         self,
         entity: Literal["campaigns"],
         action: Literal["list"],
-        params: "CampaignsListParams"
+        params: "CampaignsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CampaignsListResult": ...
 
     @overload
@@ -286,7 +306,11 @@ class KlaviyoConnector:
         self,
         entity: Literal["campaigns"],
         action: Literal["get"],
-        params: "CampaignsGetParams"
+        params: "CampaignsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Campaign": ...
 
     @overload
@@ -294,7 +318,11 @@ class KlaviyoConnector:
         self,
         entity: Literal["events"],
         action: Literal["list"],
-        params: "EventsListParams"
+        params: "EventsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "EventsListResult": ...
 
     @overload
@@ -302,7 +330,11 @@ class KlaviyoConnector:
         self,
         entity: Literal["metrics"],
         action: Literal["list"],
-        params: "MetricsListParams"
+        params: "MetricsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "MetricsListResult": ...
 
     @overload
@@ -310,7 +342,11 @@ class KlaviyoConnector:
         self,
         entity: Literal["metrics"],
         action: Literal["get"],
-        params: "MetricsGetParams"
+        params: "MetricsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Metric": ...
 
     @overload
@@ -318,7 +354,11 @@ class KlaviyoConnector:
         self,
         entity: Literal["flows"],
         action: Literal["list"],
-        params: "FlowsListParams"
+        params: "FlowsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "FlowsListResult": ...
 
     @overload
@@ -326,7 +366,11 @@ class KlaviyoConnector:
         self,
         entity: Literal["flows"],
         action: Literal["get"],
-        params: "FlowsGetParams"
+        params: "FlowsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Flow": ...
 
     @overload
@@ -334,7 +378,11 @@ class KlaviyoConnector:
         self,
         entity: Literal["email_templates"],
         action: Literal["list"],
-        params: "EmailTemplatesListParams"
+        params: "EmailTemplatesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "EmailTemplatesListResult": ...
 
     @overload
@@ -342,7 +390,11 @@ class KlaviyoConnector:
         self,
         entity: Literal["email_templates"],
         action: Literal["get"],
-        params: "EmailTemplatesGetParams"
+        params: "EmailTemplatesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Template": ...
 
 
@@ -351,14 +403,22 @@ class KlaviyoConnector:
         self,
         entity: str,
         action: Literal["list", "get", "context_store_search"],
-        params: Mapping[str, Any]
+        params: Mapping[str, Any],
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> KlaviyoExecuteResult[Any] | KlaviyoExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
         action: Literal["list", "get", "context_store_search"],
-        params: Mapping[str, Any] | None = None
+        params: Mapping[str, Any] | None = None,
+        *,
+        select_fields: list[str] | None = None,
+        exclude_fields: list[str] | None = None,
+        skip_truncation: bool = True
     ) -> Any:
         """
         Execute an entity operation with full type safety.
@@ -372,6 +432,9 @@ class KlaviyoConnector:
             entity: Entity name (e.g., "customers")
             action: Operation action (e.g., "create", "get", "list")
             params: Operation parameters (typed based on entity+action)
+            select_fields: Optional allowlist of dot-notation fields to include
+            exclude_fields: Optional blocklist of dot-notation fields to remove
+            skip_truncation: Disable long-text truncation for collection actions
 
         Returns:
             Typed response based on the operation
@@ -396,7 +459,10 @@ class KlaviyoConnector:
         config = ExecutionConfig(
             entity=entity,
             action=action,
-            params=resolved_params
+            params=resolved_params,
+            select_fields=select_fields,
+            exclude_fields=exclude_fields,
+            skip_truncation=skip_truncation
         )
 
         result = await self._executor.execute(config)

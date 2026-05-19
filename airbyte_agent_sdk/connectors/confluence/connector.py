@@ -84,7 +84,7 @@ class ConfluenceConnector:
 
     connector_name = "confluence"
     connector_version = "1.0.1"
-    sdk_version = "0.1.203"
+    sdk_version = "0.1.204"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -224,7 +224,11 @@ class ConfluenceConnector:
         self,
         entity: Literal["spaces"],
         action: Literal["list"],
-        params: "SpacesListParams"
+        params: "SpacesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SpacesListResult": ...
 
     @overload
@@ -232,7 +236,11 @@ class ConfluenceConnector:
         self,
         entity: Literal["spaces"],
         action: Literal["get"],
-        params: "SpacesGetParams"
+        params: "SpacesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Space": ...
 
     @overload
@@ -240,7 +248,11 @@ class ConfluenceConnector:
         self,
         entity: Literal["pages"],
         action: Literal["list"],
-        params: "PagesListParams"
+        params: "PagesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "PagesListResult": ...
 
     @overload
@@ -248,7 +260,11 @@ class ConfluenceConnector:
         self,
         entity: Literal["pages"],
         action: Literal["get"],
-        params: "PagesGetParams"
+        params: "PagesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Page": ...
 
     @overload
@@ -256,7 +272,11 @@ class ConfluenceConnector:
         self,
         entity: Literal["blog_posts"],
         action: Literal["list"],
-        params: "BlogPostsListParams"
+        params: "BlogPostsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "BlogPostsListResult": ...
 
     @overload
@@ -264,7 +284,11 @@ class ConfluenceConnector:
         self,
         entity: Literal["blog_posts"],
         action: Literal["get"],
-        params: "BlogPostsGetParams"
+        params: "BlogPostsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "BlogPost": ...
 
     @overload
@@ -272,7 +296,11 @@ class ConfluenceConnector:
         self,
         entity: Literal["groups"],
         action: Literal["list"],
-        params: "GroupsListParams"
+        params: "GroupsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "GroupsListResult": ...
 
     @overload
@@ -280,7 +308,11 @@ class ConfluenceConnector:
         self,
         entity: Literal["audit"],
         action: Literal["list"],
-        params: "AuditListParams"
+        params: "AuditListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AuditListResult": ...
 
 
@@ -289,14 +321,22 @@ class ConfluenceConnector:
         self,
         entity: str,
         action: Literal["list", "get", "context_store_search"],
-        params: Mapping[str, Any]
+        params: Mapping[str, Any],
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> ConfluenceExecuteResult[Any] | ConfluenceExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
         action: Literal["list", "get", "context_store_search"],
-        params: Mapping[str, Any] | None = None
+        params: Mapping[str, Any] | None = None,
+        *,
+        select_fields: list[str] | None = None,
+        exclude_fields: list[str] | None = None,
+        skip_truncation: bool = True
     ) -> Any:
         """
         Execute an entity operation with full type safety.
@@ -310,6 +350,9 @@ class ConfluenceConnector:
             entity: Entity name (e.g., "customers")
             action: Operation action (e.g., "create", "get", "list")
             params: Operation parameters (typed based on entity+action)
+            select_fields: Optional allowlist of dot-notation fields to include
+            exclude_fields: Optional blocklist of dot-notation fields to remove
+            skip_truncation: Disable long-text truncation for collection actions
 
         Returns:
             Typed response based on the operation
@@ -334,7 +377,10 @@ class ConfluenceConnector:
         config = ExecutionConfig(
             entity=entity,
             action=action,
-            params=resolved_params
+            params=resolved_params,
+            select_fields=select_fields,
+            exclude_fields=exclude_fields,
+            skip_truncation=skip_truncation
         )
 
         result = await self._executor.execute(config)

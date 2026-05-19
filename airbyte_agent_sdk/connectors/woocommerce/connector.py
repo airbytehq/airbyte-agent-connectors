@@ -175,7 +175,7 @@ class WoocommerceConnector:
 
     connector_name = "woocommerce"
     connector_version = "1.0.5"
-    sdk_version = "0.1.203"
+    sdk_version = "0.1.204"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -368,7 +368,11 @@ class WoocommerceConnector:
         self,
         entity: Literal["customers"],
         action: Literal["list"],
-        params: "CustomersListParams"
+        params: "CustomersListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CustomersListResult": ...
 
     @overload
@@ -376,7 +380,11 @@ class WoocommerceConnector:
         self,
         entity: Literal["customers"],
         action: Literal["get"],
-        params: "CustomersGetParams"
+        params: "CustomersGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Customer": ...
 
     @overload
@@ -384,7 +392,11 @@ class WoocommerceConnector:
         self,
         entity: Literal["orders"],
         action: Literal["list"],
-        params: "OrdersListParams"
+        params: "OrdersListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "OrdersListResult": ...
 
     @overload
@@ -392,7 +404,11 @@ class WoocommerceConnector:
         self,
         entity: Literal["orders"],
         action: Literal["get"],
-        params: "OrdersGetParams"
+        params: "OrdersGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Order": ...
 
     @overload
@@ -400,7 +416,11 @@ class WoocommerceConnector:
         self,
         entity: Literal["products"],
         action: Literal["list"],
-        params: "ProductsListParams"
+        params: "ProductsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ProductsListResult": ...
 
     @overload
@@ -408,7 +428,11 @@ class WoocommerceConnector:
         self,
         entity: Literal["products"],
         action: Literal["get"],
-        params: "ProductsGetParams"
+        params: "ProductsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Product": ...
 
     @overload
@@ -416,7 +440,11 @@ class WoocommerceConnector:
         self,
         entity: Literal["coupons"],
         action: Literal["list"],
-        params: "CouponsListParams"
+        params: "CouponsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CouponsListResult": ...
 
     @overload
@@ -424,7 +452,11 @@ class WoocommerceConnector:
         self,
         entity: Literal["coupons"],
         action: Literal["get"],
-        params: "CouponsGetParams"
+        params: "CouponsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Coupon": ...
 
     @overload
@@ -432,7 +464,11 @@ class WoocommerceConnector:
         self,
         entity: Literal["product_categories"],
         action: Literal["list"],
-        params: "ProductCategoriesListParams"
+        params: "ProductCategoriesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ProductCategoriesListResult": ...
 
     @overload
@@ -440,7 +476,11 @@ class WoocommerceConnector:
         self,
         entity: Literal["product_categories"],
         action: Literal["get"],
-        params: "ProductCategoriesGetParams"
+        params: "ProductCategoriesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ProductCategory": ...
 
     @overload
@@ -448,7 +488,11 @@ class WoocommerceConnector:
         self,
         entity: Literal["product_tags"],
         action: Literal["list"],
-        params: "ProductTagsListParams"
+        params: "ProductTagsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ProductTagsListResult": ...
 
     @overload
@@ -456,7 +500,11 @@ class WoocommerceConnector:
         self,
         entity: Literal["product_tags"],
         action: Literal["get"],
-        params: "ProductTagsGetParams"
+        params: "ProductTagsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ProductTag": ...
 
     @overload
@@ -464,7 +512,11 @@ class WoocommerceConnector:
         self,
         entity: Literal["product_reviews"],
         action: Literal["list"],
-        params: "ProductReviewsListParams"
+        params: "ProductReviewsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ProductReviewsListResult": ...
 
     @overload
@@ -472,7 +524,11 @@ class WoocommerceConnector:
         self,
         entity: Literal["product_reviews"],
         action: Literal["get"],
-        params: "ProductReviewsGetParams"
+        params: "ProductReviewsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ProductReview": ...
 
     @overload
@@ -480,7 +536,11 @@ class WoocommerceConnector:
         self,
         entity: Literal["product_attributes"],
         action: Literal["list"],
-        params: "ProductAttributesListParams"
+        params: "ProductAttributesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ProductAttributesListResult": ...
 
     @overload
@@ -488,7 +548,11 @@ class WoocommerceConnector:
         self,
         entity: Literal["product_attributes"],
         action: Literal["get"],
-        params: "ProductAttributesGetParams"
+        params: "ProductAttributesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ProductAttribute": ...
 
     @overload
@@ -496,7 +560,11 @@ class WoocommerceConnector:
         self,
         entity: Literal["product_variations"],
         action: Literal["list"],
-        params: "ProductVariationsListParams"
+        params: "ProductVariationsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ProductVariationsListResult": ...
 
     @overload
@@ -504,7 +572,11 @@ class WoocommerceConnector:
         self,
         entity: Literal["product_variations"],
         action: Literal["get"],
-        params: "ProductVariationsGetParams"
+        params: "ProductVariationsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ProductVariation": ...
 
     @overload
@@ -512,7 +584,11 @@ class WoocommerceConnector:
         self,
         entity: Literal["order_notes"],
         action: Literal["list"],
-        params: "OrderNotesListParams"
+        params: "OrderNotesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "OrderNotesListResult": ...
 
     @overload
@@ -520,7 +596,11 @@ class WoocommerceConnector:
         self,
         entity: Literal["order_notes"],
         action: Literal["get"],
-        params: "OrderNotesGetParams"
+        params: "OrderNotesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "OrderNote": ...
 
     @overload
@@ -528,7 +608,11 @@ class WoocommerceConnector:
         self,
         entity: Literal["refunds"],
         action: Literal["list"],
-        params: "RefundsListParams"
+        params: "RefundsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "RefundsListResult": ...
 
     @overload
@@ -536,7 +620,11 @@ class WoocommerceConnector:
         self,
         entity: Literal["refunds"],
         action: Literal["get"],
-        params: "RefundsGetParams"
+        params: "RefundsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Refund": ...
 
     @overload
@@ -544,7 +632,11 @@ class WoocommerceConnector:
         self,
         entity: Literal["payment_gateways"],
         action: Literal["list"],
-        params: "PaymentGatewaysListParams"
+        params: "PaymentGatewaysListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "PaymentGatewaysListResult": ...
 
     @overload
@@ -552,7 +644,11 @@ class WoocommerceConnector:
         self,
         entity: Literal["payment_gateways"],
         action: Literal["get"],
-        params: "PaymentGatewaysGetParams"
+        params: "PaymentGatewaysGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "PaymentGateway": ...
 
     @overload
@@ -560,7 +656,11 @@ class WoocommerceConnector:
         self,
         entity: Literal["shipping_methods"],
         action: Literal["list"],
-        params: "ShippingMethodsListParams"
+        params: "ShippingMethodsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ShippingMethodsListResult": ...
 
     @overload
@@ -568,7 +668,11 @@ class WoocommerceConnector:
         self,
         entity: Literal["shipping_methods"],
         action: Literal["get"],
-        params: "ShippingMethodsGetParams"
+        params: "ShippingMethodsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ShippingMethod": ...
 
     @overload
@@ -576,7 +680,11 @@ class WoocommerceConnector:
         self,
         entity: Literal["shipping_zones"],
         action: Literal["list"],
-        params: "ShippingZonesListParams"
+        params: "ShippingZonesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ShippingZonesListResult": ...
 
     @overload
@@ -584,7 +692,11 @@ class WoocommerceConnector:
         self,
         entity: Literal["shipping_zones"],
         action: Literal["get"],
-        params: "ShippingZonesGetParams"
+        params: "ShippingZonesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ShippingZone": ...
 
     @overload
@@ -592,7 +704,11 @@ class WoocommerceConnector:
         self,
         entity: Literal["tax_rates"],
         action: Literal["list"],
-        params: "TaxRatesListParams"
+        params: "TaxRatesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TaxRatesListResult": ...
 
     @overload
@@ -600,7 +716,11 @@ class WoocommerceConnector:
         self,
         entity: Literal["tax_rates"],
         action: Literal["get"],
-        params: "TaxRatesGetParams"
+        params: "TaxRatesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TaxRate": ...
 
     @overload
@@ -608,7 +728,11 @@ class WoocommerceConnector:
         self,
         entity: Literal["tax_classes"],
         action: Literal["list"],
-        params: "TaxClassesListParams"
+        params: "TaxClassesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TaxClassesListResult": ...
 
 
@@ -617,14 +741,22 @@ class WoocommerceConnector:
         self,
         entity: str,
         action: Literal["list", "get", "context_store_search"],
-        params: Mapping[str, Any]
+        params: Mapping[str, Any],
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> WoocommerceExecuteResult[Any] | WoocommerceExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
         action: Literal["list", "get", "context_store_search"],
-        params: Mapping[str, Any] | None = None
+        params: Mapping[str, Any] | None = None,
+        *,
+        select_fields: list[str] | None = None,
+        exclude_fields: list[str] | None = None,
+        skip_truncation: bool = True
     ) -> Any:
         """
         Execute an entity operation with full type safety.
@@ -638,6 +770,9 @@ class WoocommerceConnector:
             entity: Entity name (e.g., "customers")
             action: Operation action (e.g., "create", "get", "list")
             params: Operation parameters (typed based on entity+action)
+            select_fields: Optional allowlist of dot-notation fields to include
+            exclude_fields: Optional blocklist of dot-notation fields to remove
+            skip_truncation: Disable long-text truncation for collection actions
 
         Returns:
             Typed response based on the operation
@@ -662,7 +797,10 @@ class WoocommerceConnector:
         config = ExecutionConfig(
             entity=entity,
             action=action,
-            params=resolved_params
+            params=resolved_params,
+            select_fields=select_fields,
+            exclude_fields=exclude_fields,
+            skip_truncation=skip_truncation
         )
 
         result = await self._executor.execute(config)

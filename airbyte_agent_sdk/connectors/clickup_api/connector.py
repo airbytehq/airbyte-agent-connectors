@@ -134,7 +134,7 @@ class ClickupApiConnector:
 
     connector_name = "clickup-api"
     connector_version = "0.1.5"
-    sdk_version = "0.1.203"
+    sdk_version = "0.1.204"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -307,7 +307,11 @@ class ClickupApiConnector:
         self,
         entity: Literal["user"],
         action: Literal["get"],
-        params: "UserGetParams"
+        params: "UserGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "User": ...
 
     @overload
@@ -315,7 +319,11 @@ class ClickupApiConnector:
         self,
         entity: Literal["teams"],
         action: Literal["list"],
-        params: "TeamsListParams"
+        params: "TeamsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TeamsListResult": ...
 
     @overload
@@ -323,7 +331,11 @@ class ClickupApiConnector:
         self,
         entity: Literal["spaces"],
         action: Literal["list"],
-        params: "SpacesListParams"
+        params: "SpacesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SpacesListResult": ...
 
     @overload
@@ -331,7 +343,11 @@ class ClickupApiConnector:
         self,
         entity: Literal["spaces"],
         action: Literal["get"],
-        params: "SpacesGetParams"
+        params: "SpacesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Space": ...
 
     @overload
@@ -339,7 +355,11 @@ class ClickupApiConnector:
         self,
         entity: Literal["folders"],
         action: Literal["list"],
-        params: "FoldersListParams"
+        params: "FoldersListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "FoldersListResult": ...
 
     @overload
@@ -347,7 +367,11 @@ class ClickupApiConnector:
         self,
         entity: Literal["folders"],
         action: Literal["get"],
-        params: "FoldersGetParams"
+        params: "FoldersGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Folder": ...
 
     @overload
@@ -355,7 +379,11 @@ class ClickupApiConnector:
         self,
         entity: Literal["lists"],
         action: Literal["list"],
-        params: "ListsListParams"
+        params: "ListsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ListsListResult": ...
 
     @overload
@@ -363,7 +391,11 @@ class ClickupApiConnector:
         self,
         entity: Literal["lists"],
         action: Literal["get"],
-        params: "ListsGetParams"
+        params: "ListsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "List": ...
 
     @overload
@@ -371,7 +403,11 @@ class ClickupApiConnector:
         self,
         entity: Literal["tasks"],
         action: Literal["list"],
-        params: "TasksListParams"
+        params: "TasksListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TasksListResult": ...
 
     @overload
@@ -379,7 +415,11 @@ class ClickupApiConnector:
         self,
         entity: Literal["tasks"],
         action: Literal["get"],
-        params: "TasksGetParams"
+        params: "TasksGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Task": ...
 
     @overload
@@ -387,7 +427,11 @@ class ClickupApiConnector:
         self,
         entity: Literal["tasks"],
         action: Literal["api_search"],
-        params: "TasksApiSearchParams"
+        params: "TasksApiSearchParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TasksApiSearchResult": ...
 
     @overload
@@ -395,7 +439,11 @@ class ClickupApiConnector:
         self,
         entity: Literal["comments"],
         action: Literal["list"],
-        params: "CommentsListParams"
+        params: "CommentsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CommentsListResult": ...
 
     @overload
@@ -403,7 +451,11 @@ class ClickupApiConnector:
         self,
         entity: Literal["comments"],
         action: Literal["create"],
-        params: "CommentsCreateParams"
+        params: "CommentsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CommentCreateResponse": ...
 
     @overload
@@ -411,7 +463,11 @@ class ClickupApiConnector:
         self,
         entity: Literal["comments"],
         action: Literal["get"],
-        params: "CommentsGetParams"
+        params: "CommentsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "list[Comment]": ...
 
     @overload
@@ -419,7 +475,11 @@ class ClickupApiConnector:
         self,
         entity: Literal["comments"],
         action: Literal["update"],
-        params: "CommentsUpdateParams"
+        params: "CommentsUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CommentUpdateResponse": ...
 
     @overload
@@ -427,7 +487,11 @@ class ClickupApiConnector:
         self,
         entity: Literal["goals"],
         action: Literal["list"],
-        params: "GoalsListParams"
+        params: "GoalsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "GoalsListResult": ...
 
     @overload
@@ -435,7 +499,11 @@ class ClickupApiConnector:
         self,
         entity: Literal["goals"],
         action: Literal["get"],
-        params: "GoalsGetParams"
+        params: "GoalsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Goal": ...
 
     @overload
@@ -443,7 +511,11 @@ class ClickupApiConnector:
         self,
         entity: Literal["views"],
         action: Literal["list"],
-        params: "ViewsListParams"
+        params: "ViewsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ViewsListResult": ...
 
     @overload
@@ -451,7 +523,11 @@ class ClickupApiConnector:
         self,
         entity: Literal["views"],
         action: Literal["get"],
-        params: "ViewsGetParams"
+        params: "ViewsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "View": ...
 
     @overload
@@ -459,7 +535,11 @@ class ClickupApiConnector:
         self,
         entity: Literal["view_tasks"],
         action: Literal["list"],
-        params: "ViewTasksListParams"
+        params: "ViewTasksListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ViewTasksListResult": ...
 
     @overload
@@ -467,7 +547,11 @@ class ClickupApiConnector:
         self,
         entity: Literal["time_tracking"],
         action: Literal["list"],
-        params: "TimeTrackingListParams"
+        params: "TimeTrackingListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TimeTrackingListResult": ...
 
     @overload
@@ -475,7 +559,11 @@ class ClickupApiConnector:
         self,
         entity: Literal["time_tracking"],
         action: Literal["get"],
-        params: "TimeTrackingGetParams"
+        params: "TimeTrackingGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TimeEntry": ...
 
     @overload
@@ -483,7 +571,11 @@ class ClickupApiConnector:
         self,
         entity: Literal["members"],
         action: Literal["list"],
-        params: "MembersListParams"
+        params: "MembersListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "MembersListResult": ...
 
     @overload
@@ -491,7 +583,11 @@ class ClickupApiConnector:
         self,
         entity: Literal["docs"],
         action: Literal["list"],
-        params: "DocsListParams"
+        params: "DocsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "DocsListResult": ...
 
     @overload
@@ -499,7 +595,11 @@ class ClickupApiConnector:
         self,
         entity: Literal["docs"],
         action: Literal["get"],
-        params: "DocsGetParams"
+        params: "DocsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Doc": ...
 
 
@@ -508,14 +608,22 @@ class ClickupApiConnector:
         self,
         entity: str,
         action: Literal["get", "list", "api_search", "create", "update", "context_store_search"],
-        params: Mapping[str, Any]
+        params: Mapping[str, Any],
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> ClickupApiExecuteResult[Any] | ClickupApiExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
         action: Literal["get", "list", "api_search", "create", "update", "context_store_search"],
-        params: Mapping[str, Any] | None = None
+        params: Mapping[str, Any] | None = None,
+        *,
+        select_fields: list[str] | None = None,
+        exclude_fields: list[str] | None = None,
+        skip_truncation: bool = True
     ) -> Any:
         """
         Execute an entity operation with full type safety.
@@ -529,6 +637,9 @@ class ClickupApiConnector:
             entity: Entity name (e.g., "customers")
             action: Operation action (e.g., "create", "get", "list")
             params: Operation parameters (typed based on entity+action)
+            select_fields: Optional allowlist of dot-notation fields to include
+            exclude_fields: Optional blocklist of dot-notation fields to remove
+            skip_truncation: Disable long-text truncation for collection actions
 
         Returns:
             Typed response based on the operation
@@ -553,7 +664,10 @@ class ClickupApiConnector:
         config = ExecutionConfig(
             entity=entity,
             action=action,
-            params=resolved_params
+            params=resolved_params,
+            select_fields=select_fields,
+            exclude_fields=exclude_fields,
+            skip_truncation=skip_truncation
         )
 
         result = await self._executor.execute(config)

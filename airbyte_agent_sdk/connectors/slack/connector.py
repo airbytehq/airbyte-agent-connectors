@@ -105,7 +105,7 @@ class SlackConnector:
 
     connector_name = "slack"
     connector_version = "0.1.21"
-    sdk_version = "0.1.203"
+    sdk_version = "0.1.204"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -285,7 +285,11 @@ class SlackConnector:
         self,
         entity: Literal["users"],
         action: Literal["list"],
-        params: "UsersListParams"
+        params: "UsersListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "UsersListResult": ...
 
     @overload
@@ -293,7 +297,11 @@ class SlackConnector:
         self,
         entity: Literal["users"],
         action: Literal["get"],
-        params: "UsersGetParams"
+        params: "UsersGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "User": ...
 
     @overload
@@ -301,7 +309,11 @@ class SlackConnector:
         self,
         entity: Literal["channels"],
         action: Literal["list"],
-        params: "ChannelsListParams"
+        params: "ChannelsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ChannelsListResult": ...
 
     @overload
@@ -309,7 +321,11 @@ class SlackConnector:
         self,
         entity: Literal["channels"],
         action: Literal["get"],
-        params: "ChannelsGetParams"
+        params: "ChannelsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Channel": ...
 
     @overload
@@ -317,7 +333,11 @@ class SlackConnector:
         self,
         entity: Literal["channel_messages"],
         action: Literal["list"],
-        params: "ChannelMessagesListParams"
+        params: "ChannelMessagesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ChannelMessagesListResult": ...
 
     @overload
@@ -325,7 +345,11 @@ class SlackConnector:
         self,
         entity: Literal["threads"],
         action: Literal["list"],
-        params: "ThreadsListParams"
+        params: "ThreadsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ThreadsListResult": ...
 
     @overload
@@ -333,7 +357,11 @@ class SlackConnector:
         self,
         entity: Literal["messages"],
         action: Literal["create"],
-        params: "MessagesCreateParams"
+        params: "MessagesCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CreatedMessage": ...
 
     @overload
@@ -341,7 +369,11 @@ class SlackConnector:
         self,
         entity: Literal["messages"],
         action: Literal["update"],
-        params: "MessagesUpdateParams"
+        params: "MessagesUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CreatedMessage": ...
 
     @overload
@@ -349,7 +381,11 @@ class SlackConnector:
         self,
         entity: Literal["channels"],
         action: Literal["create"],
-        params: "ChannelsCreateParams"
+        params: "ChannelsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Channel": ...
 
     @overload
@@ -357,7 +393,11 @@ class SlackConnector:
         self,
         entity: Literal["channels"],
         action: Literal["update"],
-        params: "ChannelsUpdateParams"
+        params: "ChannelsUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Channel": ...
 
     @overload
@@ -365,7 +405,11 @@ class SlackConnector:
         self,
         entity: Literal["channel_topics"],
         action: Literal["create"],
-        params: "ChannelTopicsCreateParams"
+        params: "ChannelTopicsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Channel": ...
 
     @overload
@@ -373,7 +417,11 @@ class SlackConnector:
         self,
         entity: Literal["channel_purposes"],
         action: Literal["create"],
-        params: "ChannelPurposesCreateParams"
+        params: "ChannelPurposesCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Channel": ...
 
     @overload
@@ -381,7 +429,11 @@ class SlackConnector:
         self,
         entity: Literal["channel_invites"],
         action: Literal["create"],
-        params: "ChannelInvitesCreateParams"
+        params: "ChannelInvitesCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Channel": ...
 
     @overload
@@ -389,7 +441,11 @@ class SlackConnector:
         self,
         entity: Literal["reactions"],
         action: Literal["create"],
-        params: "ReactionsCreateParams"
+        params: "ReactionsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ReactionAddResponse": ...
 
     @overload
@@ -397,7 +453,11 @@ class SlackConnector:
         self,
         entity: Literal["reactions"],
         action: Literal["delete"],
-        params: "ReactionsDeleteParams"
+        params: "ReactionsDeleteParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ReactionRemoveResponse": ...
 
     @overload
@@ -405,7 +465,11 @@ class SlackConnector:
         self,
         entity: Literal["ephemeral_messages"],
         action: Literal["create"],
-        params: "EphemeralMessagesCreateParams"
+        params: "EphemeralMessagesCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "EphemeralMessageCreateResponse": ...
 
     @overload
@@ -413,7 +477,11 @@ class SlackConnector:
         self,
         entity: Literal["scheduled_messages"],
         action: Literal["create"],
-        params: "ScheduledMessagesCreateParams"
+        params: "ScheduledMessagesCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ScheduledMessageCreateResponse": ...
 
     @overload
@@ -421,7 +489,11 @@ class SlackConnector:
         self,
         entity: Literal["messages"],
         action: Literal["delete"],
-        params: "MessagesDeleteParams"
+        params: "MessagesDeleteParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "MessageDeleteResponse": ...
 
     @overload
@@ -429,7 +501,11 @@ class SlackConnector:
         self,
         entity: Literal["channel_archives"],
         action: Literal["create"],
-        params: "ChannelArchivesCreateParams"
+        params: "ChannelArchivesCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ChannelArchiveResponse": ...
 
     @overload
@@ -437,7 +513,11 @@ class SlackConnector:
         self,
         entity: Literal["channel_kicks"],
         action: Literal["create"],
-        params: "ChannelKicksCreateParams"
+        params: "ChannelKicksCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ChannelKickResponse": ...
 
     @overload
@@ -445,7 +525,11 @@ class SlackConnector:
         self,
         entity: Literal["pins"],
         action: Literal["create"],
-        params: "PinsCreateParams"
+        params: "PinsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "PinAddResponse": ...
 
     @overload
@@ -453,7 +537,11 @@ class SlackConnector:
         self,
         entity: Literal["bookmarks"],
         action: Literal["create"],
-        params: "BookmarksCreateParams"
+        params: "BookmarksCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Bookmark": ...
 
 
@@ -462,14 +550,22 @@ class SlackConnector:
         self,
         entity: str,
         action: Literal["list", "get", "create", "update", "delete", "context_store_search"],
-        params: Mapping[str, Any]
+        params: Mapping[str, Any],
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> SlackExecuteResult[Any] | SlackExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
         action: Literal["list", "get", "create", "update", "delete", "context_store_search"],
-        params: Mapping[str, Any] | None = None
+        params: Mapping[str, Any] | None = None,
+        *,
+        select_fields: list[str] | None = None,
+        exclude_fields: list[str] | None = None,
+        skip_truncation: bool = True
     ) -> Any:
         """
         Execute an entity operation with full type safety.
@@ -483,6 +579,9 @@ class SlackConnector:
             entity: Entity name (e.g., "customers")
             action: Operation action (e.g., "create", "get", "list")
             params: Operation parameters (typed based on entity+action)
+            select_fields: Optional allowlist of dot-notation fields to include
+            exclude_fields: Optional blocklist of dot-notation fields to remove
+            skip_truncation: Disable long-text truncation for collection actions
 
         Returns:
             Typed response based on the operation
@@ -507,7 +606,10 @@ class SlackConnector:
         config = ExecutionConfig(
             entity=entity,
             action=action,
-            params=resolved_params
+            params=resolved_params,
+            select_fields=select_fields,
+            exclude_fields=exclude_fields,
+            skip_truncation=skip_truncation
         )
 
         result = await self._executor.execute(config)

@@ -101,7 +101,7 @@ class GoogleSearchConsoleConnector:
 
     connector_name = "google-search-console"
     connector_version = "1.0.3"
-    sdk_version = "0.1.203"
+    sdk_version = "0.1.204"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -240,7 +240,11 @@ class GoogleSearchConsoleConnector:
         self,
         entity: Literal["sites"],
         action: Literal["list"],
-        params: "SitesListParams"
+        params: "SitesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SitesListResult": ...
 
     @overload
@@ -248,7 +252,11 @@ class GoogleSearchConsoleConnector:
         self,
         entity: Literal["sites"],
         action: Literal["get"],
-        params: "SitesGetParams"
+        params: "SitesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Site": ...
 
     @overload
@@ -256,7 +264,11 @@ class GoogleSearchConsoleConnector:
         self,
         entity: Literal["sitemaps"],
         action: Literal["list"],
-        params: "SitemapsListParams"
+        params: "SitemapsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SitemapsListResult": ...
 
     @overload
@@ -264,7 +276,11 @@ class GoogleSearchConsoleConnector:
         self,
         entity: Literal["sitemaps"],
         action: Literal["get"],
-        params: "SitemapsGetParams"
+        params: "SitemapsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Sitemap": ...
 
     @overload
@@ -272,7 +288,11 @@ class GoogleSearchConsoleConnector:
         self,
         entity: Literal["search_analytics_by_date"],
         action: Literal["list"],
-        params: "SearchAnalyticsByDateListParams"
+        params: "SearchAnalyticsByDateListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SearchAnalyticsByDateListResult": ...
 
     @overload
@@ -280,7 +300,11 @@ class GoogleSearchConsoleConnector:
         self,
         entity: Literal["search_analytics_by_country"],
         action: Literal["list"],
-        params: "SearchAnalyticsByCountryListParams"
+        params: "SearchAnalyticsByCountryListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SearchAnalyticsByCountryListResult": ...
 
     @overload
@@ -288,7 +312,11 @@ class GoogleSearchConsoleConnector:
         self,
         entity: Literal["search_analytics_by_device"],
         action: Literal["list"],
-        params: "SearchAnalyticsByDeviceListParams"
+        params: "SearchAnalyticsByDeviceListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SearchAnalyticsByDeviceListResult": ...
 
     @overload
@@ -296,7 +324,11 @@ class GoogleSearchConsoleConnector:
         self,
         entity: Literal["search_analytics_by_page"],
         action: Literal["list"],
-        params: "SearchAnalyticsByPageListParams"
+        params: "SearchAnalyticsByPageListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SearchAnalyticsByPageListResult": ...
 
     @overload
@@ -304,7 +336,11 @@ class GoogleSearchConsoleConnector:
         self,
         entity: Literal["search_analytics_by_query"],
         action: Literal["list"],
-        params: "SearchAnalyticsByQueryListParams"
+        params: "SearchAnalyticsByQueryListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SearchAnalyticsByQueryListResult": ...
 
     @overload
@@ -312,7 +348,11 @@ class GoogleSearchConsoleConnector:
         self,
         entity: Literal["search_analytics_all_fields"],
         action: Literal["list"],
-        params: "SearchAnalyticsAllFieldsListParams"
+        params: "SearchAnalyticsAllFieldsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SearchAnalyticsAllFieldsListResult": ...
 
 
@@ -321,14 +361,22 @@ class GoogleSearchConsoleConnector:
         self,
         entity: str,
         action: Literal["list", "get", "context_store_search"],
-        params: Mapping[str, Any]
+        params: Mapping[str, Any],
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> GoogleSearchConsoleExecuteResult[Any] | GoogleSearchConsoleExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
         action: Literal["list", "get", "context_store_search"],
-        params: Mapping[str, Any] | None = None
+        params: Mapping[str, Any] | None = None,
+        *,
+        select_fields: list[str] | None = None,
+        exclude_fields: list[str] | None = None,
+        skip_truncation: bool = True
     ) -> Any:
         """
         Execute an entity operation with full type safety.
@@ -342,6 +390,9 @@ class GoogleSearchConsoleConnector:
             entity: Entity name (e.g., "customers")
             action: Operation action (e.g., "create", "get", "list")
             params: Operation parameters (typed based on entity+action)
+            select_fields: Optional allowlist of dot-notation fields to include
+            exclude_fields: Optional blocklist of dot-notation fields to remove
+            skip_truncation: Disable long-text truncation for collection actions
 
         Returns:
             Typed response based on the operation
@@ -366,7 +417,10 @@ class GoogleSearchConsoleConnector:
         config = ExecutionConfig(
             entity=entity,
             action=action,
-            params=resolved_params
+            params=resolved_params,
+            select_fields=select_fields,
+            exclude_fields=exclude_fields,
+            skip_truncation=skip_truncation
         )
 
         result = await self._executor.execute(config)

@@ -143,7 +143,16 @@ class HostedExecutor:
     async def execute(self, config: ExecutionConfig) -> ExecutionResult: ...
 
     @overload
-    async def execute(self, entity: str, action: str, *, params: dict[str, Any] | None = None) -> ExecutionResult: ...
+    async def execute(
+        self,
+        entity: str,
+        action: str,
+        *,
+        params: dict[str, Any] | None = None,
+        select_fields: list[str] | None = None,
+        exclude_fields: list[str] | None = None,
+        skip_truncation: bool = True,
+    ) -> ExecutionResult: ...
 
     async def execute(
         self,
@@ -151,6 +160,9 @@ class HostedExecutor:
         action: str | None = None,
         *,
         params: dict[str, Any] | None = None,
+        select_fields: list[str] | None = None,
+        exclude_fields: list[str] | None = None,
+        skip_truncation: bool = True,
     ) -> ExecutionResult:
         """Execute connector via cloud API (ExecutorProtocol implementation).
 
@@ -166,6 +178,12 @@ class HostedExecutor:
             config_or_entity: ExecutionConfig object *or* entity name string
             action: Action string (required when entity is a string)
             params: Optional parameters dict (only with string form)
+            select_fields: Optional allowlist of dot-notation fields to include
+                (only with string form)
+            exclude_fields: Optional blocklist of dot-notation fields to remove
+                (only with string form)
+            skip_truncation: Disable long-text truncation for collection actions
+                (only with string form)
 
         Returns:
             ExecutionResult with success/failure status
@@ -194,10 +212,17 @@ class HostedExecutor:
         if isinstance(config_or_entity, str):
             if action is None:
                 raise TypeError("action is required when passing entity as a string")
-            config = ExecutionConfig(entity=config_or_entity, action=action, params=params)
+            config = ExecutionConfig(
+                entity=config_or_entity,
+                action=action,
+                params=params,
+                select_fields=select_fields,
+                exclude_fields=exclude_fields,
+                skip_truncation=skip_truncation,
+            )
         else:
-            if action is not None or params is not None:
-                raise TypeError("Cannot pass action or params when using ExecutionConfig")
+            if action is not None or params is not None or select_fields is not None or exclude_fields is not None or skip_truncation is not True:
+                raise TypeError("Cannot pass action, params, field selection, or truncation options when using ExecutionConfig")
             config = config_or_entity
         tracer = trace.get_tracer("airbyte.connector-sdk.executor.hosted")
 
@@ -234,6 +259,9 @@ class HostedExecutor:
                     entity=config.entity,
                     action=config.action,
                     params=config.params,
+                    select_fields=config.select_fields,
+                    exclude_fields=config.exclude_fields,
+                    skip_truncation=config.skip_truncation,
                 )
 
                 # Step 4: Parse the response into ExecutionResult

@@ -121,7 +121,7 @@ class GoogleAnalyticsDataApiConnector:
 
     connector_name = "google-analytics-data-api"
     connector_version = "1.0.5"
-    sdk_version = "0.1.203"
+    sdk_version = "0.1.204"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -257,7 +257,11 @@ class GoogleAnalyticsDataApiConnector:
         self,
         entity: Literal["website_overview"],
         action: Literal["list"],
-        params: "WebsiteOverviewListParams"
+        params: "WebsiteOverviewListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "WebsiteOverviewListResult": ...
 
     @overload
@@ -265,7 +269,11 @@ class GoogleAnalyticsDataApiConnector:
         self,
         entity: Literal["daily_active_users"],
         action: Literal["list"],
-        params: "DailyActiveUsersListParams"
+        params: "DailyActiveUsersListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "DailyActiveUsersListResult": ...
 
     @overload
@@ -273,7 +281,11 @@ class GoogleAnalyticsDataApiConnector:
         self,
         entity: Literal["weekly_active_users"],
         action: Literal["list"],
-        params: "WeeklyActiveUsersListParams"
+        params: "WeeklyActiveUsersListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "WeeklyActiveUsersListResult": ...
 
     @overload
@@ -281,7 +293,11 @@ class GoogleAnalyticsDataApiConnector:
         self,
         entity: Literal["four_weekly_active_users"],
         action: Literal["list"],
-        params: "FourWeeklyActiveUsersListParams"
+        params: "FourWeeklyActiveUsersListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "FourWeeklyActiveUsersListResult": ...
 
     @overload
@@ -289,7 +305,11 @@ class GoogleAnalyticsDataApiConnector:
         self,
         entity: Literal["traffic_sources"],
         action: Literal["list"],
-        params: "TrafficSourcesListParams"
+        params: "TrafficSourcesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TrafficSourcesListResult": ...
 
     @overload
@@ -297,7 +317,11 @@ class GoogleAnalyticsDataApiConnector:
         self,
         entity: Literal["pages"],
         action: Literal["list"],
-        params: "PagesListParams"
+        params: "PagesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "PagesListResult": ...
 
     @overload
@@ -305,7 +329,11 @@ class GoogleAnalyticsDataApiConnector:
         self,
         entity: Literal["devices"],
         action: Literal["list"],
-        params: "DevicesListParams"
+        params: "DevicesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "DevicesListResult": ...
 
     @overload
@@ -313,7 +341,11 @@ class GoogleAnalyticsDataApiConnector:
         self,
         entity: Literal["locations"],
         action: Literal["list"],
-        params: "LocationsListParams"
+        params: "LocationsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "LocationsListResult": ...
 
 
@@ -322,14 +354,22 @@ class GoogleAnalyticsDataApiConnector:
         self,
         entity: str,
         action: Literal["list", "context_store_search"],
-        params: Mapping[str, Any]
+        params: Mapping[str, Any],
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> GoogleAnalyticsDataApiExecuteResult[Any] | GoogleAnalyticsDataApiExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
         action: Literal["list", "context_store_search"],
-        params: Mapping[str, Any] | None = None
+        params: Mapping[str, Any] | None = None,
+        *,
+        select_fields: list[str] | None = None,
+        exclude_fields: list[str] | None = None,
+        skip_truncation: bool = True
     ) -> Any:
         """
         Execute an entity operation with full type safety.
@@ -343,6 +383,9 @@ class GoogleAnalyticsDataApiConnector:
             entity: Entity name (e.g., "customers")
             action: Operation action (e.g., "create", "get", "list")
             params: Operation parameters (typed based on entity+action)
+            select_fields: Optional allowlist of dot-notation fields to include
+            exclude_fields: Optional blocklist of dot-notation fields to remove
+            skip_truncation: Disable long-text truncation for collection actions
 
         Returns:
             Typed response based on the operation
@@ -367,7 +410,10 @@ class GoogleAnalyticsDataApiConnector:
         config = ExecutionConfig(
             entity=entity,
             action=action,
-            params=resolved_params
+            params=resolved_params,
+            select_fields=select_fields,
+            exclude_fields=exclude_fields,
+            skip_truncation=skip_truncation
         )
 
         result = await self._executor.execute(config)

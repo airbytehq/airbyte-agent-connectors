@@ -110,7 +110,7 @@ class ZendeskChatConnector:
 
     connector_name = "zendesk-chat"
     connector_version = "0.1.10"
-    sdk_version = "0.1.203"
+    sdk_version = "0.1.204"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -273,7 +273,11 @@ class ZendeskChatConnector:
         self,
         entity: Literal["accounts"],
         action: Literal["get"],
-        params: "AccountsGetParams"
+        params: "AccountsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Account": ...
 
     @overload
@@ -281,7 +285,11 @@ class ZendeskChatConnector:
         self,
         entity: Literal["agents"],
         action: Literal["list"],
-        params: "AgentsListParams"
+        params: "AgentsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AgentsListResult": ...
 
     @overload
@@ -289,7 +297,11 @@ class ZendeskChatConnector:
         self,
         entity: Literal["agents"],
         action: Literal["get"],
-        params: "AgentsGetParams"
+        params: "AgentsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Agent": ...
 
     @overload
@@ -297,7 +309,11 @@ class ZendeskChatConnector:
         self,
         entity: Literal["agent_timeline"],
         action: Literal["list"],
-        params: "AgentTimelineListParams"
+        params: "AgentTimelineListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AgentTimelineListResult": ...
 
     @overload
@@ -305,7 +321,11 @@ class ZendeskChatConnector:
         self,
         entity: Literal["bans"],
         action: Literal["list"],
-        params: "BansListParams"
+        params: "BansListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "BansListResult": ...
 
     @overload
@@ -313,7 +333,11 @@ class ZendeskChatConnector:
         self,
         entity: Literal["bans"],
         action: Literal["get"],
-        params: "BansGetParams"
+        params: "BansGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Ban": ...
 
     @overload
@@ -321,7 +345,11 @@ class ZendeskChatConnector:
         self,
         entity: Literal["chats"],
         action: Literal["list"],
-        params: "ChatsListParams"
+        params: "ChatsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ChatsListResult": ...
 
     @overload
@@ -329,7 +357,11 @@ class ZendeskChatConnector:
         self,
         entity: Literal["chats"],
         action: Literal["get"],
-        params: "ChatsGetParams"
+        params: "ChatsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Chat": ...
 
     @overload
@@ -337,7 +369,11 @@ class ZendeskChatConnector:
         self,
         entity: Literal["departments"],
         action: Literal["list"],
-        params: "DepartmentsListParams"
+        params: "DepartmentsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "DepartmentsListResult": ...
 
     @overload
@@ -345,7 +381,11 @@ class ZendeskChatConnector:
         self,
         entity: Literal["departments"],
         action: Literal["get"],
-        params: "DepartmentsGetParams"
+        params: "DepartmentsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Department": ...
 
     @overload
@@ -353,7 +393,11 @@ class ZendeskChatConnector:
         self,
         entity: Literal["goals"],
         action: Literal["list"],
-        params: "GoalsListParams"
+        params: "GoalsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "GoalsListResult": ...
 
     @overload
@@ -361,7 +405,11 @@ class ZendeskChatConnector:
         self,
         entity: Literal["goals"],
         action: Literal["get"],
-        params: "GoalsGetParams"
+        params: "GoalsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Goal": ...
 
     @overload
@@ -369,7 +417,11 @@ class ZendeskChatConnector:
         self,
         entity: Literal["roles"],
         action: Literal["list"],
-        params: "RolesListParams"
+        params: "RolesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "RolesListResult": ...
 
     @overload
@@ -377,7 +429,11 @@ class ZendeskChatConnector:
         self,
         entity: Literal["roles"],
         action: Literal["get"],
-        params: "RolesGetParams"
+        params: "RolesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Role": ...
 
     @overload
@@ -385,7 +441,11 @@ class ZendeskChatConnector:
         self,
         entity: Literal["routing_settings"],
         action: Literal["get"],
-        params: "RoutingSettingsGetParams"
+        params: "RoutingSettingsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "RoutingSettings": ...
 
     @overload
@@ -393,7 +453,11 @@ class ZendeskChatConnector:
         self,
         entity: Literal["shortcuts"],
         action: Literal["list"],
-        params: "ShortcutsListParams"
+        params: "ShortcutsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ShortcutsListResult": ...
 
     @overload
@@ -401,7 +465,11 @@ class ZendeskChatConnector:
         self,
         entity: Literal["shortcuts"],
         action: Literal["get"],
-        params: "ShortcutsGetParams"
+        params: "ShortcutsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Shortcut": ...
 
     @overload
@@ -409,7 +477,11 @@ class ZendeskChatConnector:
         self,
         entity: Literal["skills"],
         action: Literal["list"],
-        params: "SkillsListParams"
+        params: "SkillsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SkillsListResult": ...
 
     @overload
@@ -417,7 +489,11 @@ class ZendeskChatConnector:
         self,
         entity: Literal["skills"],
         action: Literal["get"],
-        params: "SkillsGetParams"
+        params: "SkillsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Skill": ...
 
     @overload
@@ -425,7 +501,11 @@ class ZendeskChatConnector:
         self,
         entity: Literal["triggers"],
         action: Literal["list"],
-        params: "TriggersListParams"
+        params: "TriggersListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TriggersListResult": ...
 
 
@@ -434,14 +514,22 @@ class ZendeskChatConnector:
         self,
         entity: str,
         action: Literal["get", "list", "context_store_search"],
-        params: Mapping[str, Any]
+        params: Mapping[str, Any],
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> ZendeskChatExecuteResult[Any] | ZendeskChatExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
         action: Literal["get", "list", "context_store_search"],
-        params: Mapping[str, Any] | None = None
+        params: Mapping[str, Any] | None = None,
+        *,
+        select_fields: list[str] | None = None,
+        exclude_fields: list[str] | None = None,
+        skip_truncation: bool = True
     ) -> Any:
         """
         Execute an entity operation with full type safety.
@@ -455,6 +543,9 @@ class ZendeskChatConnector:
             entity: Entity name (e.g., "customers")
             action: Operation action (e.g., "create", "get", "list")
             params: Operation parameters (typed based on entity+action)
+            select_fields: Optional allowlist of dot-notation fields to include
+            exclude_fields: Optional blocklist of dot-notation fields to remove
+            skip_truncation: Disable long-text truncation for collection actions
 
         Returns:
             Typed response based on the operation
@@ -479,7 +570,10 @@ class ZendeskChatConnector:
         config = ExecutionConfig(
             entity=entity,
             action=action,
-            params=resolved_params
+            params=resolved_params,
+            select_fields=select_fields,
+            exclude_fields=exclude_fields,
+            skip_truncation=skip_truncation
         )
 
         result = await self._executor.execute(config)

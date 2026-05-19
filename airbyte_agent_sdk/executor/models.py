@@ -25,6 +25,9 @@ class ExecutionConfig:
             - For GET: {"id": "cus_123"}
             - For LIST: {"limit": 10}
             - For CREATE: {"email": "...", "name": "..."}
+        select_fields: Optional allowlist of dot-notation fields to include
+        exclude_fields: Optional blocklist of dot-notation fields to remove
+        skip_truncation: Disable long-text truncation for collection actions
 
     Example:
         config = ExecutionConfig(
@@ -37,6 +40,9 @@ class ExecutionConfig:
     entity: str
     action: str
     params: dict[str, Any] | None = field(default=None, kw_only=True)
+    select_fields: list[str] | None = field(default=None, kw_only=True)
+    exclude_fields: list[str] | None = field(default=None, kw_only=True)
+    skip_truncation: bool = field(default=True, kw_only=True)
 
 
 @dataclass

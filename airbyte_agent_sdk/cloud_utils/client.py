@@ -278,6 +278,10 @@ class AirbyteCloudClient:
         entity: str,
         action: str,
         params: dict[str, Any] | None,
+        *,
+        select_fields: list[str] | None = None,
+        exclude_fields: list[str] | None = None,
+        skip_truncation: bool = True,
     ) -> dict[str, Any]:
         """Execute a connector operation.
 
@@ -286,6 +290,9 @@ class AirbyteCloudClient:
             entity: Entity name (e.g., "customers", "invoices")
             action: Operation action (e.g., "list", "get", "create")
             params: Optional parameters for the operation
+            select_fields: Optional allowlist of dot-notation fields to include
+            exclude_fields: Optional blocklist of dot-notation fields to remove
+            skip_truncation: Disable long-text truncation for collection actions
 
         Returns:
             Raw JSON response dict from the API
@@ -311,8 +318,14 @@ class AirbyteCloudClient:
         request_body = {
             "entity": entity,
             "action": action,
-            "params": params,
+            "skip_truncation": skip_truncation,
         }
+        if params is not None:
+            request_body["params"] = params
+        if select_fields is not None:
+            request_body["select_fields"] = select_fields
+        if exclude_fields is not None:
+            request_body["exclude_fields"] = exclude_fields
 
         response = await self._http_client.post(url, json=request_body, headers=headers)
         _raise_with_body(response)

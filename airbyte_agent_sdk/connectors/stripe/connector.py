@@ -164,7 +164,7 @@ class StripeConnector:
 
     connector_name = "stripe"
     connector_version = "0.1.13"
-    sdk_version = "0.1.203"
+    sdk_version = "0.1.204"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -379,7 +379,11 @@ class StripeConnector:
         self,
         entity: Literal["customers"],
         action: Literal["list"],
-        params: "CustomersListParams"
+        params: "CustomersListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CustomersListResult": ...
 
     @overload
@@ -387,7 +391,11 @@ class StripeConnector:
         self,
         entity: Literal["customers"],
         action: Literal["create"],
-        params: "CustomersCreateParams"
+        params: "CustomersCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Customer": ...
 
     @overload
@@ -395,7 +403,11 @@ class StripeConnector:
         self,
         entity: Literal["customers"],
         action: Literal["get"],
-        params: "CustomersGetParams"
+        params: "CustomersGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Customer": ...
 
     @overload
@@ -403,7 +415,11 @@ class StripeConnector:
         self,
         entity: Literal["customers"],
         action: Literal["update"],
-        params: "CustomersUpdateParams"
+        params: "CustomersUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Customer": ...
 
     @overload
@@ -411,7 +427,11 @@ class StripeConnector:
         self,
         entity: Literal["customers"],
         action: Literal["delete"],
-        params: "CustomersDeleteParams"
+        params: "CustomersDeleteParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CustomerDeletedResponse": ...
 
     @overload
@@ -419,7 +439,11 @@ class StripeConnector:
         self,
         entity: Literal["customers"],
         action: Literal["api_search"],
-        params: "CustomersApiSearchParams"
+        params: "CustomersApiSearchParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CustomersApiSearchResult": ...
 
     @overload
@@ -427,7 +451,11 @@ class StripeConnector:
         self,
         entity: Literal["invoices"],
         action: Literal["list"],
-        params: "InvoicesListParams"
+        params: "InvoicesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "InvoicesListResult": ...
 
     @overload
@@ -435,7 +463,11 @@ class StripeConnector:
         self,
         entity: Literal["invoices"],
         action: Literal["create"],
-        params: "InvoicesCreateParams"
+        params: "InvoicesCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Invoice": ...
 
     @overload
@@ -443,7 +475,11 @@ class StripeConnector:
         self,
         entity: Literal["invoices"],
         action: Literal["get"],
-        params: "InvoicesGetParams"
+        params: "InvoicesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Invoice": ...
 
     @overload
@@ -451,7 +487,11 @@ class StripeConnector:
         self,
         entity: Literal["invoice_finalizations"],
         action: Literal["create"],
-        params: "InvoiceFinalizationsCreateParams"
+        params: "InvoiceFinalizationsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Invoice": ...
 
     @overload
@@ -459,7 +499,11 @@ class StripeConnector:
         self,
         entity: Literal["invoice_sends"],
         action: Literal["create"],
-        params: "InvoiceSendsCreateParams"
+        params: "InvoiceSendsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Invoice": ...
 
     @overload
@@ -467,7 +511,11 @@ class StripeConnector:
         self,
         entity: Literal["invoices"],
         action: Literal["api_search"],
-        params: "InvoicesApiSearchParams"
+        params: "InvoicesApiSearchParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "InvoicesApiSearchResult": ...
 
     @overload
@@ -475,7 +523,11 @@ class StripeConnector:
         self,
         entity: Literal["charges"],
         action: Literal["list"],
-        params: "ChargesListParams"
+        params: "ChargesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ChargesListResult": ...
 
     @overload
@@ -483,7 +535,11 @@ class StripeConnector:
         self,
         entity: Literal["charges"],
         action: Literal["get"],
-        params: "ChargesGetParams"
+        params: "ChargesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Charge": ...
 
     @overload
@@ -491,7 +547,11 @@ class StripeConnector:
         self,
         entity: Literal["charges"],
         action: Literal["api_search"],
-        params: "ChargesApiSearchParams"
+        params: "ChargesApiSearchParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ChargesApiSearchResult": ...
 
     @overload
@@ -499,7 +559,11 @@ class StripeConnector:
         self,
         entity: Literal["subscriptions"],
         action: Literal["list"],
-        params: "SubscriptionsListParams"
+        params: "SubscriptionsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SubscriptionsListResult": ...
 
     @overload
@@ -507,7 +571,11 @@ class StripeConnector:
         self,
         entity: Literal["subscriptions"],
         action: Literal["create"],
-        params: "SubscriptionsCreateParams"
+        params: "SubscriptionsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Subscription": ...
 
     @overload
@@ -515,7 +583,11 @@ class StripeConnector:
         self,
         entity: Literal["subscriptions"],
         action: Literal["get"],
-        params: "SubscriptionsGetParams"
+        params: "SubscriptionsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Subscription": ...
 
     @overload
@@ -523,7 +595,11 @@ class StripeConnector:
         self,
         entity: Literal["subscriptions"],
         action: Literal["update"],
-        params: "SubscriptionsUpdateParams"
+        params: "SubscriptionsUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Subscription": ...
 
     @overload
@@ -531,7 +607,11 @@ class StripeConnector:
         self,
         entity: Literal["subscriptions"],
         action: Literal["delete"],
-        params: "SubscriptionsDeleteParams"
+        params: "SubscriptionsDeleteParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Subscription": ...
 
     @overload
@@ -539,7 +619,11 @@ class StripeConnector:
         self,
         entity: Literal["subscriptions"],
         action: Literal["api_search"],
-        params: "SubscriptionsApiSearchParams"
+        params: "SubscriptionsApiSearchParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SubscriptionsApiSearchResult": ...
 
     @overload
@@ -547,7 +631,11 @@ class StripeConnector:
         self,
         entity: Literal["refunds"],
         action: Literal["list"],
-        params: "RefundsListParams"
+        params: "RefundsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "RefundsListResult": ...
 
     @overload
@@ -555,7 +643,11 @@ class StripeConnector:
         self,
         entity: Literal["refunds"],
         action: Literal["create"],
-        params: "RefundsCreateParams"
+        params: "RefundsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Refund": ...
 
     @overload
@@ -563,7 +655,11 @@ class StripeConnector:
         self,
         entity: Literal["refunds"],
         action: Literal["get"],
-        params: "RefundsGetParams"
+        params: "RefundsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Refund": ...
 
     @overload
@@ -571,7 +667,11 @@ class StripeConnector:
         self,
         entity: Literal["products"],
         action: Literal["list"],
-        params: "ProductsListParams"
+        params: "ProductsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ProductsListResult": ...
 
     @overload
@@ -579,7 +679,11 @@ class StripeConnector:
         self,
         entity: Literal["products"],
         action: Literal["create"],
-        params: "ProductsCreateParams"
+        params: "ProductsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Product": ...
 
     @overload
@@ -587,7 +691,11 @@ class StripeConnector:
         self,
         entity: Literal["products"],
         action: Literal["get"],
-        params: "ProductsGetParams"
+        params: "ProductsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Product": ...
 
     @overload
@@ -595,7 +703,11 @@ class StripeConnector:
         self,
         entity: Literal["products"],
         action: Literal["update"],
-        params: "ProductsUpdateParams"
+        params: "ProductsUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Product": ...
 
     @overload
@@ -603,7 +715,11 @@ class StripeConnector:
         self,
         entity: Literal["products"],
         action: Literal["delete"],
-        params: "ProductsDeleteParams"
+        params: "ProductsDeleteParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ProductDeletedResponse": ...
 
     @overload
@@ -611,7 +727,11 @@ class StripeConnector:
         self,
         entity: Literal["products"],
         action: Literal["api_search"],
-        params: "ProductsApiSearchParams"
+        params: "ProductsApiSearchParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ProductsApiSearchResult": ...
 
     @overload
@@ -619,7 +739,11 @@ class StripeConnector:
         self,
         entity: Literal["balance"],
         action: Literal["get"],
-        params: "BalanceGetParams"
+        params: "BalanceGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Balance": ...
 
     @overload
@@ -627,7 +751,11 @@ class StripeConnector:
         self,
         entity: Literal["balance_transactions"],
         action: Literal["list"],
-        params: "BalanceTransactionsListParams"
+        params: "BalanceTransactionsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "BalanceTransactionsListResult": ...
 
     @overload
@@ -635,7 +763,11 @@ class StripeConnector:
         self,
         entity: Literal["balance_transactions"],
         action: Literal["get"],
-        params: "BalanceTransactionsGetParams"
+        params: "BalanceTransactionsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "BalanceTransaction": ...
 
     @overload
@@ -643,7 +775,11 @@ class StripeConnector:
         self,
         entity: Literal["payment_intents"],
         action: Literal["list"],
-        params: "PaymentIntentsListParams"
+        params: "PaymentIntentsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "PaymentIntentsListResult": ...
 
     @overload
@@ -651,7 +787,11 @@ class StripeConnector:
         self,
         entity: Literal["payment_intents"],
         action: Literal["create"],
-        params: "PaymentIntentsCreateParams"
+        params: "PaymentIntentsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "PaymentIntent": ...
 
     @overload
@@ -659,7 +799,11 @@ class StripeConnector:
         self,
         entity: Literal["payment_intents"],
         action: Literal["get"],
-        params: "PaymentIntentsGetParams"
+        params: "PaymentIntentsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "PaymentIntent": ...
 
     @overload
@@ -667,7 +811,11 @@ class StripeConnector:
         self,
         entity: Literal["payment_intents"],
         action: Literal["update"],
-        params: "PaymentIntentsUpdateParams"
+        params: "PaymentIntentsUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "PaymentIntent": ...
 
     @overload
@@ -675,7 +823,11 @@ class StripeConnector:
         self,
         entity: Literal["payment_intent_confirmations"],
         action: Literal["create"],
-        params: "PaymentIntentConfirmationsCreateParams"
+        params: "PaymentIntentConfirmationsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "PaymentIntent": ...
 
     @overload
@@ -683,7 +835,11 @@ class StripeConnector:
         self,
         entity: Literal["payment_intent_cancellations"],
         action: Literal["create"],
-        params: "PaymentIntentCancellationsCreateParams"
+        params: "PaymentIntentCancellationsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "PaymentIntent": ...
 
     @overload
@@ -691,7 +847,11 @@ class StripeConnector:
         self,
         entity: Literal["payment_intents"],
         action: Literal["api_search"],
-        params: "PaymentIntentsApiSearchParams"
+        params: "PaymentIntentsApiSearchParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "PaymentIntentsApiSearchResult": ...
 
     @overload
@@ -699,7 +859,11 @@ class StripeConnector:
         self,
         entity: Literal["prices"],
         action: Literal["create"],
-        params: "PricesCreateParams"
+        params: "PricesCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Price": ...
 
     @overload
@@ -707,7 +871,11 @@ class StripeConnector:
         self,
         entity: Literal["checkout_sessions"],
         action: Literal["create"],
-        params: "CheckoutSessionsCreateParams"
+        params: "CheckoutSessionsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CheckoutSession": ...
 
     @overload
@@ -715,7 +883,11 @@ class StripeConnector:
         self,
         entity: Literal["payment_method_attachments"],
         action: Literal["create"],
-        params: "PaymentMethodAttachmentsCreateParams"
+        params: "PaymentMethodAttachmentsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "PaymentMethod": ...
 
     @overload
@@ -723,7 +895,11 @@ class StripeConnector:
         self,
         entity: Literal["disputes"],
         action: Literal["list"],
-        params: "DisputesListParams"
+        params: "DisputesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "DisputesListResult": ...
 
     @overload
@@ -731,7 +907,11 @@ class StripeConnector:
         self,
         entity: Literal["disputes"],
         action: Literal["get"],
-        params: "DisputesGetParams"
+        params: "DisputesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Dispute": ...
 
     @overload
@@ -739,7 +919,11 @@ class StripeConnector:
         self,
         entity: Literal["payouts"],
         action: Literal["list"],
-        params: "PayoutsListParams"
+        params: "PayoutsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "PayoutsListResult": ...
 
     @overload
@@ -747,7 +931,11 @@ class StripeConnector:
         self,
         entity: Literal["payouts"],
         action: Literal["get"],
-        params: "PayoutsGetParams"
+        params: "PayoutsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Payout": ...
 
 
@@ -756,14 +944,22 @@ class StripeConnector:
         self,
         entity: str,
         action: Literal["list", "create", "get", "update", "delete", "api_search", "context_store_search"],
-        params: Mapping[str, Any]
+        params: Mapping[str, Any],
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> StripeExecuteResult[Any] | StripeExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
         action: Literal["list", "create", "get", "update", "delete", "api_search", "context_store_search"],
-        params: Mapping[str, Any] | None = None
+        params: Mapping[str, Any] | None = None,
+        *,
+        select_fields: list[str] | None = None,
+        exclude_fields: list[str] | None = None,
+        skip_truncation: bool = True
     ) -> Any:
         """
         Execute an entity operation with full type safety.
@@ -777,6 +973,9 @@ class StripeConnector:
             entity: Entity name (e.g., "customers")
             action: Operation action (e.g., "create", "get", "list")
             params: Operation parameters (typed based on entity+action)
+            select_fields: Optional allowlist of dot-notation fields to include
+            exclude_fields: Optional blocklist of dot-notation fields to remove
+            skip_truncation: Disable long-text truncation for collection actions
 
         Returns:
             Typed response based on the operation
@@ -801,7 +1000,10 @@ class StripeConnector:
         config = ExecutionConfig(
             entity=entity,
             action=action,
-            params=resolved_params
+            params=resolved_params,
+            select_fields=select_fields,
+            exclude_fields=exclude_fields,
+            skip_truncation=skip_truncation
         )
 
         result = await self._executor.execute(config)

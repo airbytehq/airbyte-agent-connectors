@@ -122,7 +122,7 @@ class FreshdeskConnector:
 
     connector_name = "freshdesk"
     connector_version = "1.0.3"
-    sdk_version = "0.1.203"
+    sdk_version = "0.1.204"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -283,7 +283,11 @@ class FreshdeskConnector:
         self,
         entity: Literal["tickets"],
         action: Literal["list"],
-        params: "TicketsListParams"
+        params: "TicketsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TicketsListResult": ...
 
     @overload
@@ -291,7 +295,11 @@ class FreshdeskConnector:
         self,
         entity: Literal["tickets"],
         action: Literal["get"],
-        params: "TicketsGetParams"
+        params: "TicketsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Ticket": ...
 
     @overload
@@ -299,7 +307,11 @@ class FreshdeskConnector:
         self,
         entity: Literal["contacts"],
         action: Literal["list"],
-        params: "ContactsListParams"
+        params: "ContactsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ContactsListResult": ...
 
     @overload
@@ -307,7 +319,11 @@ class FreshdeskConnector:
         self,
         entity: Literal["contacts"],
         action: Literal["get"],
-        params: "ContactsGetParams"
+        params: "ContactsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Contact": ...
 
     @overload
@@ -315,7 +331,11 @@ class FreshdeskConnector:
         self,
         entity: Literal["agents"],
         action: Literal["list"],
-        params: "AgentsListParams"
+        params: "AgentsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AgentsListResult": ...
 
     @overload
@@ -323,7 +343,11 @@ class FreshdeskConnector:
         self,
         entity: Literal["agents"],
         action: Literal["get"],
-        params: "AgentsGetParams"
+        params: "AgentsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Agent": ...
 
     @overload
@@ -331,7 +355,11 @@ class FreshdeskConnector:
         self,
         entity: Literal["groups"],
         action: Literal["list"],
-        params: "GroupsListParams"
+        params: "GroupsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "GroupsListResult": ...
 
     @overload
@@ -339,7 +367,11 @@ class FreshdeskConnector:
         self,
         entity: Literal["groups"],
         action: Literal["get"],
-        params: "GroupsGetParams"
+        params: "GroupsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Group": ...
 
     @overload
@@ -347,7 +379,11 @@ class FreshdeskConnector:
         self,
         entity: Literal["companies"],
         action: Literal["list"],
-        params: "CompaniesListParams"
+        params: "CompaniesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CompaniesListResult": ...
 
     @overload
@@ -355,7 +391,11 @@ class FreshdeskConnector:
         self,
         entity: Literal["companies"],
         action: Literal["get"],
-        params: "CompaniesGetParams"
+        params: "CompaniesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Company": ...
 
     @overload
@@ -363,7 +403,11 @@ class FreshdeskConnector:
         self,
         entity: Literal["roles"],
         action: Literal["list"],
-        params: "RolesListParams"
+        params: "RolesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "RolesListResult": ...
 
     @overload
@@ -371,7 +415,11 @@ class FreshdeskConnector:
         self,
         entity: Literal["roles"],
         action: Literal["get"],
-        params: "RolesGetParams"
+        params: "RolesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Role": ...
 
     @overload
@@ -379,7 +427,11 @@ class FreshdeskConnector:
         self,
         entity: Literal["satisfaction_ratings"],
         action: Literal["list"],
-        params: "SatisfactionRatingsListParams"
+        params: "SatisfactionRatingsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SatisfactionRatingsListResult": ...
 
     @overload
@@ -387,7 +439,11 @@ class FreshdeskConnector:
         self,
         entity: Literal["surveys"],
         action: Literal["list"],
-        params: "SurveysListParams"
+        params: "SurveysListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SurveysListResult": ...
 
     @overload
@@ -395,7 +451,11 @@ class FreshdeskConnector:
         self,
         entity: Literal["time_entries"],
         action: Literal["list"],
-        params: "TimeEntriesListParams"
+        params: "TimeEntriesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TimeEntriesListResult": ...
 
     @overload
@@ -403,7 +463,11 @@ class FreshdeskConnector:
         self,
         entity: Literal["ticket_fields"],
         action: Literal["list"],
-        params: "TicketFieldsListParams"
+        params: "TicketFieldsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TicketFieldsListResult": ...
 
 
@@ -412,14 +476,22 @@ class FreshdeskConnector:
         self,
         entity: str,
         action: Literal["list", "get", "context_store_search"],
-        params: Mapping[str, Any]
+        params: Mapping[str, Any],
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> FreshdeskExecuteResult[Any] | FreshdeskExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
         action: Literal["list", "get", "context_store_search"],
-        params: Mapping[str, Any] | None = None
+        params: Mapping[str, Any] | None = None,
+        *,
+        select_fields: list[str] | None = None,
+        exclude_fields: list[str] | None = None,
+        skip_truncation: bool = True
     ) -> Any:
         """
         Execute an entity operation with full type safety.
@@ -433,6 +505,9 @@ class FreshdeskConnector:
             entity: Entity name (e.g., "customers")
             action: Operation action (e.g., "create", "get", "list")
             params: Operation parameters (typed based on entity+action)
+            select_fields: Optional allowlist of dot-notation fields to include
+            exclude_fields: Optional blocklist of dot-notation fields to remove
+            skip_truncation: Disable long-text truncation for collection actions
 
         Returns:
             Typed response based on the operation
@@ -457,7 +532,10 @@ class FreshdeskConnector:
         config = ExecutionConfig(
             entity=entity,
             action=action,
-            params=resolved_params
+            params=resolved_params,
+            select_fields=select_fields,
+            exclude_fields=exclude_fields,
+            skip_truncation=skip_truncation
         )
 
         result = await self._executor.execute(config)

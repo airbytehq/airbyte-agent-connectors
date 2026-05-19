@@ -127,7 +127,7 @@ class CustomerIoConnector:
 
     connector_name = "customer-io"
     connector_version = "1.0.0"
-    sdk_version = "0.1.203"
+    sdk_version = "0.1.204"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -324,7 +324,11 @@ class CustomerIoConnector:
         self,
         entity: Literal["campaigns"],
         action: Literal["list"],
-        params: "CampaignsListParams"
+        params: "CampaignsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CampaignsListResult": ...
 
     @overload
@@ -332,7 +336,11 @@ class CustomerIoConnector:
         self,
         entity: Literal["campaigns"],
         action: Literal["get"],
-        params: "CampaignsGetParams"
+        params: "CampaignsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Campaign": ...
 
     @overload
@@ -340,7 +348,11 @@ class CustomerIoConnector:
         self,
         entity: Literal["campaign_actions"],
         action: Literal["list"],
-        params: "CampaignActionsListParams"
+        params: "CampaignActionsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CampaignActionsListResult": ...
 
     @overload
@@ -348,7 +360,11 @@ class CustomerIoConnector:
         self,
         entity: Literal["campaign_actions"],
         action: Literal["get"],
-        params: "CampaignActionsGetParams"
+        params: "CampaignActionsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CampaignAction": ...
 
     @overload
@@ -356,7 +372,11 @@ class CustomerIoConnector:
         self,
         entity: Literal["newsletters"],
         action: Literal["list"],
-        params: "NewslettersListParams"
+        params: "NewslettersListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "NewslettersListResult": ...
 
     @overload
@@ -364,7 +384,11 @@ class CustomerIoConnector:
         self,
         entity: Literal["newsletters"],
         action: Literal["get"],
-        params: "NewslettersGetParams"
+        params: "NewslettersGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Newsletter": ...
 
     @overload
@@ -372,7 +396,11 @@ class CustomerIoConnector:
         self,
         entity: Literal["segments"],
         action: Literal["list"],
-        params: "SegmentsListParams"
+        params: "SegmentsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SegmentsListResult": ...
 
     @overload
@@ -380,7 +408,11 @@ class CustomerIoConnector:
         self,
         entity: Literal["segments"],
         action: Literal["create"],
-        params: "SegmentsCreateParams"
+        params: "SegmentsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -388,7 +420,11 @@ class CustomerIoConnector:
         self,
         entity: Literal["segments"],
         action: Literal["get"],
-        params: "SegmentsGetParams"
+        params: "SegmentsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Segment": ...
 
     @overload
@@ -396,7 +432,11 @@ class CustomerIoConnector:
         self,
         entity: Literal["messages"],
         action: Literal["list"],
-        params: "MessagesListParams"
+        params: "MessagesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "MessagesListResult": ...
 
     @overload
@@ -404,7 +444,11 @@ class CustomerIoConnector:
         self,
         entity: Literal["messages"],
         action: Literal["get"],
-        params: "MessagesGetParams"
+        params: "MessagesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Message": ...
 
     @overload
@@ -412,7 +456,11 @@ class CustomerIoConnector:
         self,
         entity: Literal["activities"],
         action: Literal["list"],
-        params: "ActivitiesListParams"
+        params: "ActivitiesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ActivitiesListResult": ...
 
     @overload
@@ -420,7 +468,11 @@ class CustomerIoConnector:
         self,
         entity: Literal["sender_identities"],
         action: Literal["list"],
-        params: "SenderIdentitiesListParams"
+        params: "SenderIdentitiesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SenderIdentitiesListResult": ...
 
     @overload
@@ -428,7 +480,11 @@ class CustomerIoConnector:
         self,
         entity: Literal["sender_identities"],
         action: Literal["get"],
-        params: "SenderIdentitiesGetParams"
+        params: "SenderIdentitiesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SenderIdentity": ...
 
     @overload
@@ -436,7 +492,11 @@ class CustomerIoConnector:
         self,
         entity: Literal["snippets"],
         action: Literal["list"],
-        params: "SnippetsListParams"
+        params: "SnippetsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SnippetsListResult": ...
 
     @overload
@@ -444,7 +504,11 @@ class CustomerIoConnector:
         self,
         entity: Literal["snippets"],
         action: Literal["create"],
-        params: "SnippetsCreateParams"
+        params: "SnippetsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -452,7 +516,11 @@ class CustomerIoConnector:
         self,
         entity: Literal["snippets"],
         action: Literal["update"],
-        params: "SnippetsUpdateParams"
+        params: "SnippetsUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -460,7 +528,11 @@ class CustomerIoConnector:
         self,
         entity: Literal["collections"],
         action: Literal["list"],
-        params: "CollectionsListParams"
+        params: "CollectionsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CollectionsListResult": ...
 
     @overload
@@ -468,7 +540,11 @@ class CustomerIoConnector:
         self,
         entity: Literal["collections"],
         action: Literal["create"],
-        params: "CollectionsCreateParams"
+        params: "CollectionsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -476,7 +552,11 @@ class CustomerIoConnector:
         self,
         entity: Literal["collections"],
         action: Literal["get"],
-        params: "CollectionsGetParams"
+        params: "CollectionsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Collection": ...
 
     @overload
@@ -484,7 +564,11 @@ class CustomerIoConnector:
         self,
         entity: Literal["collections"],
         action: Literal["update"],
-        params: "CollectionsUpdateParams"
+        params: "CollectionsUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -492,7 +576,11 @@ class CustomerIoConnector:
         self,
         entity: Literal["reporting_webhooks"],
         action: Literal["list"],
-        params: "ReportingWebhooksListParams"
+        params: "ReportingWebhooksListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ReportingWebhooksListResult": ...
 
     @overload
@@ -500,7 +588,11 @@ class CustomerIoConnector:
         self,
         entity: Literal["reporting_webhooks"],
         action: Literal["create"],
-        params: "ReportingWebhooksCreateParams"
+        params: "ReportingWebhooksCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ReportingWebhook": ...
 
     @overload
@@ -508,7 +600,11 @@ class CustomerIoConnector:
         self,
         entity: Literal["reporting_webhooks"],
         action: Literal["get"],
-        params: "ReportingWebhooksGetParams"
+        params: "ReportingWebhooksGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ReportingWebhook": ...
 
     @overload
@@ -516,7 +612,11 @@ class CustomerIoConnector:
         self,
         entity: Literal["reporting_webhooks"],
         action: Literal["update"],
-        params: "ReportingWebhooksUpdateParams"
+        params: "ReportingWebhooksUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ReportingWebhook": ...
 
     @overload
@@ -524,7 +624,11 @@ class CustomerIoConnector:
         self,
         entity: Literal["exports"],
         action: Literal["list"],
-        params: "ExportsListParams"
+        params: "ExportsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ExportsListResult": ...
 
     @overload
@@ -532,7 +636,11 @@ class CustomerIoConnector:
         self,
         entity: Literal["exports"],
         action: Literal["create"],
-        params: "ExportsCreateParams"
+        params: "ExportsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -540,7 +648,11 @@ class CustomerIoConnector:
         self,
         entity: Literal["exports"],
         action: Literal["get"],
-        params: "ExportsGetParams"
+        params: "ExportsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Export": ...
 
     @overload
@@ -548,7 +660,11 @@ class CustomerIoConnector:
         self,
         entity: Literal["transactional_messages"],
         action: Literal["list"],
-        params: "TransactionalMessagesListParams"
+        params: "TransactionalMessagesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TransactionalMessagesListResult": ...
 
     @overload
@@ -556,7 +672,11 @@ class CustomerIoConnector:
         self,
         entity: Literal["transactional_messages"],
         action: Literal["get"],
-        params: "TransactionalMessagesGetParams"
+        params: "TransactionalMessagesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TransactionalMessage": ...
 
     @overload
@@ -564,7 +684,11 @@ class CustomerIoConnector:
         self,
         entity: Literal["transactional_message_contents"],
         action: Literal["list"],
-        params: "TransactionalMessageContentsListParams"
+        params: "TransactionalMessageContentsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TransactionalMessageContentsListResult": ...
 
     @overload
@@ -572,7 +696,11 @@ class CustomerIoConnector:
         self,
         entity: Literal["transactional_message_contents"],
         action: Literal["update"],
-        params: "TransactionalMessageContentsUpdateParams"
+        params: "TransactionalMessageContentsUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TransactionalMessageContent": ...
 
     @overload
@@ -580,7 +708,11 @@ class CustomerIoConnector:
         self,
         entity: Literal["transactional_email"],
         action: Literal["create"],
-        params: "TransactionalEmailCreateParams"
+        params: "TransactionalEmailCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TransactionalSendResponse": ...
 
     @overload
@@ -588,7 +720,11 @@ class CustomerIoConnector:
         self,
         entity: Literal["transactional_sms"],
         action: Literal["create"],
-        params: "TransactionalSmsCreateParams"
+        params: "TransactionalSmsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TransactionalSendResponse": ...
 
     @overload
@@ -596,7 +732,11 @@ class CustomerIoConnector:
         self,
         entity: Literal["transactional_push"],
         action: Literal["create"],
-        params: "TransactionalPushCreateParams"
+        params: "TransactionalPushCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TransactionalSendResponse": ...
 
     @overload
@@ -604,7 +744,11 @@ class CustomerIoConnector:
         self,
         entity: Literal["transactional_inbox_message"],
         action: Literal["create"],
-        params: "TransactionalInboxMessageCreateParams"
+        params: "TransactionalInboxMessageCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TransactionalSendResponse": ...
 
     @overload
@@ -612,7 +756,11 @@ class CustomerIoConnector:
         self,
         entity: Literal["broadcast_trigger"],
         action: Literal["create"],
-        params: "BroadcastTriggerCreateParams"
+        params: "BroadcastTriggerCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "BroadcastTriggerResponse": ...
 
 
@@ -621,14 +769,22 @@ class CustomerIoConnector:
         self,
         entity: str,
         action: Literal["list", "get", "create", "update", "context_store_search"],
-        params: Mapping[str, Any]
+        params: Mapping[str, Any],
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> CustomerIoExecuteResult[Any] | CustomerIoExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
         action: Literal["list", "get", "create", "update", "context_store_search"],
-        params: Mapping[str, Any] | None = None
+        params: Mapping[str, Any] | None = None,
+        *,
+        select_fields: list[str] | None = None,
+        exclude_fields: list[str] | None = None,
+        skip_truncation: bool = True
     ) -> Any:
         """
         Execute an entity operation with full type safety.
@@ -642,6 +798,9 @@ class CustomerIoConnector:
             entity: Entity name (e.g., "customers")
             action: Operation action (e.g., "create", "get", "list")
             params: Operation parameters (typed based on entity+action)
+            select_fields: Optional allowlist of dot-notation fields to include
+            exclude_fields: Optional blocklist of dot-notation fields to remove
+            skip_truncation: Disable long-text truncation for collection actions
 
         Returns:
             Typed response based on the operation
@@ -666,7 +825,10 @@ class CustomerIoConnector:
         config = ExecutionConfig(
             entity=entity,
             action=action,
-            params=resolved_params
+            params=resolved_params,
+            select_fields=select_fields,
+            exclude_fields=exclude_fields,
+            skip_truncation=skip_truncation
         )
 
         result = await self._executor.execute(config)

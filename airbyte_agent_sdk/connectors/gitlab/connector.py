@@ -159,7 +159,7 @@ class GitlabConnector:
 
     connector_name = "gitlab"
     connector_version = "1.0.4"
-    sdk_version = "0.1.203"
+    sdk_version = "0.1.204"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -357,7 +357,11 @@ class GitlabConnector:
         self,
         entity: Literal["projects"],
         action: Literal["list"],
-        params: "ProjectsListParams"
+        params: "ProjectsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ProjectsListResult": ...
 
     @overload
@@ -365,7 +369,11 @@ class GitlabConnector:
         self,
         entity: Literal["projects"],
         action: Literal["get"],
-        params: "ProjectsGetParams"
+        params: "ProjectsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Project": ...
 
     @overload
@@ -373,7 +381,11 @@ class GitlabConnector:
         self,
         entity: Literal["issues"],
         action: Literal["list"],
-        params: "IssuesListParams"
+        params: "IssuesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "IssuesListResult": ...
 
     @overload
@@ -381,7 +393,11 @@ class GitlabConnector:
         self,
         entity: Literal["issues"],
         action: Literal["get"],
-        params: "IssuesGetParams"
+        params: "IssuesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Issue": ...
 
     @overload
@@ -389,7 +405,11 @@ class GitlabConnector:
         self,
         entity: Literal["merge_requests"],
         action: Literal["list"],
-        params: "MergeRequestsListParams"
+        params: "MergeRequestsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "MergeRequestsListResult": ...
 
     @overload
@@ -397,7 +417,11 @@ class GitlabConnector:
         self,
         entity: Literal["merge_requests"],
         action: Literal["get"],
-        params: "MergeRequestsGetParams"
+        params: "MergeRequestsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "MergeRequest": ...
 
     @overload
@@ -405,7 +429,11 @@ class GitlabConnector:
         self,
         entity: Literal["users"],
         action: Literal["list"],
-        params: "UsersListParams"
+        params: "UsersListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "UsersListResult": ...
 
     @overload
@@ -413,7 +441,11 @@ class GitlabConnector:
         self,
         entity: Literal["users"],
         action: Literal["get"],
-        params: "UsersGetParams"
+        params: "UsersGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "User": ...
 
     @overload
@@ -421,7 +453,11 @@ class GitlabConnector:
         self,
         entity: Literal["commits"],
         action: Literal["list"],
-        params: "CommitsListParams"
+        params: "CommitsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CommitsListResult": ...
 
     @overload
@@ -429,7 +465,11 @@ class GitlabConnector:
         self,
         entity: Literal["commits"],
         action: Literal["get"],
-        params: "CommitsGetParams"
+        params: "CommitsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Commit": ...
 
     @overload
@@ -437,7 +477,11 @@ class GitlabConnector:
         self,
         entity: Literal["groups"],
         action: Literal["list"],
-        params: "GroupsListParams"
+        params: "GroupsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "GroupsListResult": ...
 
     @overload
@@ -445,7 +489,11 @@ class GitlabConnector:
         self,
         entity: Literal["groups"],
         action: Literal["get"],
-        params: "GroupsGetParams"
+        params: "GroupsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Group": ...
 
     @overload
@@ -453,7 +501,11 @@ class GitlabConnector:
         self,
         entity: Literal["branches"],
         action: Literal["list"],
-        params: "BranchesListParams"
+        params: "BranchesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "BranchesListResult": ...
 
     @overload
@@ -461,7 +513,11 @@ class GitlabConnector:
         self,
         entity: Literal["branches"],
         action: Literal["get"],
-        params: "BranchesGetParams"
+        params: "BranchesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Branch": ...
 
     @overload
@@ -469,7 +525,11 @@ class GitlabConnector:
         self,
         entity: Literal["pipelines"],
         action: Literal["list"],
-        params: "PipelinesListParams"
+        params: "PipelinesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "PipelinesListResult": ...
 
     @overload
@@ -477,7 +537,11 @@ class GitlabConnector:
         self,
         entity: Literal["pipelines"],
         action: Literal["get"],
-        params: "PipelinesGetParams"
+        params: "PipelinesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Pipeline": ...
 
     @overload
@@ -485,7 +549,11 @@ class GitlabConnector:
         self,
         entity: Literal["group_members"],
         action: Literal["list"],
-        params: "GroupMembersListParams"
+        params: "GroupMembersListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "GroupMembersListResult": ...
 
     @overload
@@ -493,7 +561,11 @@ class GitlabConnector:
         self,
         entity: Literal["group_members"],
         action: Literal["get"],
-        params: "GroupMembersGetParams"
+        params: "GroupMembersGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Member": ...
 
     @overload
@@ -501,7 +573,11 @@ class GitlabConnector:
         self,
         entity: Literal["project_members"],
         action: Literal["list"],
-        params: "ProjectMembersListParams"
+        params: "ProjectMembersListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ProjectMembersListResult": ...
 
     @overload
@@ -509,7 +585,11 @@ class GitlabConnector:
         self,
         entity: Literal["project_members"],
         action: Literal["get"],
-        params: "ProjectMembersGetParams"
+        params: "ProjectMembersGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Member": ...
 
     @overload
@@ -517,7 +597,11 @@ class GitlabConnector:
         self,
         entity: Literal["releases"],
         action: Literal["list"],
-        params: "ReleasesListParams"
+        params: "ReleasesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ReleasesListResult": ...
 
     @overload
@@ -525,7 +609,11 @@ class GitlabConnector:
         self,
         entity: Literal["releases"],
         action: Literal["get"],
-        params: "ReleasesGetParams"
+        params: "ReleasesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Release": ...
 
     @overload
@@ -533,7 +621,11 @@ class GitlabConnector:
         self,
         entity: Literal["tags"],
         action: Literal["list"],
-        params: "TagsListParams"
+        params: "TagsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TagsListResult": ...
 
     @overload
@@ -541,7 +633,11 @@ class GitlabConnector:
         self,
         entity: Literal["tags"],
         action: Literal["get"],
-        params: "TagsGetParams"
+        params: "TagsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Tag": ...
 
     @overload
@@ -549,7 +645,11 @@ class GitlabConnector:
         self,
         entity: Literal["group_milestones"],
         action: Literal["list"],
-        params: "GroupMilestonesListParams"
+        params: "GroupMilestonesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "GroupMilestonesListResult": ...
 
     @overload
@@ -557,7 +657,11 @@ class GitlabConnector:
         self,
         entity: Literal["group_milestones"],
         action: Literal["get"],
-        params: "GroupMilestonesGetParams"
+        params: "GroupMilestonesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Milestone": ...
 
     @overload
@@ -565,7 +669,11 @@ class GitlabConnector:
         self,
         entity: Literal["project_milestones"],
         action: Literal["list"],
-        params: "ProjectMilestonesListParams"
+        params: "ProjectMilestonesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ProjectMilestonesListResult": ...
 
     @overload
@@ -573,7 +681,11 @@ class GitlabConnector:
         self,
         entity: Literal["project_milestones"],
         action: Literal["get"],
-        params: "ProjectMilestonesGetParams"
+        params: "ProjectMilestonesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Milestone": ...
 
 
@@ -582,14 +694,22 @@ class GitlabConnector:
         self,
         entity: str,
         action: Literal["list", "get", "context_store_search"],
-        params: Mapping[str, Any]
+        params: Mapping[str, Any],
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> GitlabExecuteResult[Any] | GitlabExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
         action: Literal["list", "get", "context_store_search"],
-        params: Mapping[str, Any] | None = None
+        params: Mapping[str, Any] | None = None,
+        *,
+        select_fields: list[str] | None = None,
+        exclude_fields: list[str] | None = None,
+        skip_truncation: bool = True
     ) -> Any:
         """
         Execute an entity operation with full type safety.
@@ -603,6 +723,9 @@ class GitlabConnector:
             entity: Entity name (e.g., "customers")
             action: Operation action (e.g., "create", "get", "list")
             params: Operation parameters (typed based on entity+action)
+            select_fields: Optional allowlist of dot-notation fields to include
+            exclude_fields: Optional blocklist of dot-notation fields to remove
+            skip_truncation: Disable long-text truncation for collection actions
 
         Returns:
             Typed response based on the operation
@@ -627,7 +750,10 @@ class GitlabConnector:
         config = ExecutionConfig(
             entity=entity,
             action=action,
-            params=resolved_params
+            params=resolved_params,
+            select_fields=select_fields,
+            exclude_fields=exclude_fields,
+            skip_truncation=skip_truncation
         )
 
         result = await self._executor.execute(config)

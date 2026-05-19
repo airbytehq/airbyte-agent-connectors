@@ -123,7 +123,7 @@ class GreenhouseConnector:
 
     connector_name = "greenhouse"
     connector_version = "0.1.8"
-    sdk_version = "0.1.203"
+    sdk_version = "0.1.204"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -289,7 +289,11 @@ class GreenhouseConnector:
         self,
         entity: Literal["candidates"],
         action: Literal["list"],
-        params: "CandidatesListParams"
+        params: "CandidatesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CandidatesListResult": ...
 
     @overload
@@ -297,7 +301,11 @@ class GreenhouseConnector:
         self,
         entity: Literal["candidates"],
         action: Literal["get"],
-        params: "CandidatesGetParams"
+        params: "CandidatesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Candidate": ...
 
     @overload
@@ -305,7 +313,11 @@ class GreenhouseConnector:
         self,
         entity: Literal["applications"],
         action: Literal["list"],
-        params: "ApplicationsListParams"
+        params: "ApplicationsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ApplicationsListResult": ...
 
     @overload
@@ -313,7 +325,11 @@ class GreenhouseConnector:
         self,
         entity: Literal["applications"],
         action: Literal["get"],
-        params: "ApplicationsGetParams"
+        params: "ApplicationsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Application": ...
 
     @overload
@@ -321,7 +337,11 @@ class GreenhouseConnector:
         self,
         entity: Literal["jobs"],
         action: Literal["list"],
-        params: "JobsListParams"
+        params: "JobsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "JobsListResult": ...
 
     @overload
@@ -329,7 +349,11 @@ class GreenhouseConnector:
         self,
         entity: Literal["jobs"],
         action: Literal["get"],
-        params: "JobsGetParams"
+        params: "JobsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Job": ...
 
     @overload
@@ -337,7 +361,11 @@ class GreenhouseConnector:
         self,
         entity: Literal["offers"],
         action: Literal["list"],
-        params: "OffersListParams"
+        params: "OffersListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "OffersListResult": ...
 
     @overload
@@ -345,7 +373,11 @@ class GreenhouseConnector:
         self,
         entity: Literal["offers"],
         action: Literal["get"],
-        params: "OffersGetParams"
+        params: "OffersGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Offer": ...
 
     @overload
@@ -353,7 +385,11 @@ class GreenhouseConnector:
         self,
         entity: Literal["users"],
         action: Literal["list"],
-        params: "UsersListParams"
+        params: "UsersListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "UsersListResult": ...
 
     @overload
@@ -361,7 +397,11 @@ class GreenhouseConnector:
         self,
         entity: Literal["users"],
         action: Literal["get"],
-        params: "UsersGetParams"
+        params: "UsersGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "User": ...
 
     @overload
@@ -369,7 +409,11 @@ class GreenhouseConnector:
         self,
         entity: Literal["departments"],
         action: Literal["list"],
-        params: "DepartmentsListParams"
+        params: "DepartmentsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "DepartmentsListResult": ...
 
     @overload
@@ -377,7 +421,11 @@ class GreenhouseConnector:
         self,
         entity: Literal["departments"],
         action: Literal["get"],
-        params: "DepartmentsGetParams"
+        params: "DepartmentsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Department": ...
 
     @overload
@@ -385,7 +433,11 @@ class GreenhouseConnector:
         self,
         entity: Literal["offices"],
         action: Literal["list"],
-        params: "OfficesListParams"
+        params: "OfficesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "OfficesListResult": ...
 
     @overload
@@ -393,7 +445,11 @@ class GreenhouseConnector:
         self,
         entity: Literal["offices"],
         action: Literal["get"],
-        params: "OfficesGetParams"
+        params: "OfficesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Office": ...
 
     @overload
@@ -401,7 +457,11 @@ class GreenhouseConnector:
         self,
         entity: Literal["job_posts"],
         action: Literal["list"],
-        params: "JobPostsListParams"
+        params: "JobPostsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "JobPostsListResult": ...
 
     @overload
@@ -409,7 +469,11 @@ class GreenhouseConnector:
         self,
         entity: Literal["job_posts"],
         action: Literal["get"],
-        params: "JobPostsGetParams"
+        params: "JobPostsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "JobPost": ...
 
     @overload
@@ -417,7 +481,11 @@ class GreenhouseConnector:
         self,
         entity: Literal["sources"],
         action: Literal["list"],
-        params: "SourcesListParams"
+        params: "SourcesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SourcesListResult": ...
 
     @overload
@@ -425,7 +493,11 @@ class GreenhouseConnector:
         self,
         entity: Literal["scheduled_interviews"],
         action: Literal["list"],
-        params: "ScheduledInterviewsListParams"
+        params: "ScheduledInterviewsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ScheduledInterviewsListResult": ...
 
     @overload
@@ -433,7 +505,11 @@ class GreenhouseConnector:
         self,
         entity: Literal["scheduled_interviews"],
         action: Literal["get"],
-        params: "ScheduledInterviewsGetParams"
+        params: "ScheduledInterviewsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ScheduledInterview": ...
 
     @overload
@@ -441,7 +517,11 @@ class GreenhouseConnector:
         self,
         entity: Literal["application_attachment"],
         action: Literal["download"],
-        params: "ApplicationAttachmentDownloadParams"
+        params: "ApplicationAttachmentDownloadParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AsyncIterator[bytes]": ...
 
     @overload
@@ -449,7 +529,11 @@ class GreenhouseConnector:
         self,
         entity: Literal["candidate_attachment"],
         action: Literal["download"],
-        params: "CandidateAttachmentDownloadParams"
+        params: "CandidateAttachmentDownloadParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AsyncIterator[bytes]": ...
 
 
@@ -458,14 +542,22 @@ class GreenhouseConnector:
         self,
         entity: str,
         action: Literal["list", "get", "download", "context_store_search"],
-        params: Mapping[str, Any]
+        params: Mapping[str, Any],
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> GreenhouseExecuteResult[Any] | GreenhouseExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
         action: Literal["list", "get", "download", "context_store_search"],
-        params: Mapping[str, Any] | None = None
+        params: Mapping[str, Any] | None = None,
+        *,
+        select_fields: list[str] | None = None,
+        exclude_fields: list[str] | None = None,
+        skip_truncation: bool = True
     ) -> Any:
         """
         Execute an entity operation with full type safety.
@@ -479,6 +571,9 @@ class GreenhouseConnector:
             entity: Entity name (e.g., "customers")
             action: Operation action (e.g., "create", "get", "list")
             params: Operation parameters (typed based on entity+action)
+            select_fields: Optional allowlist of dot-notation fields to include
+            exclude_fields: Optional blocklist of dot-notation fields to remove
+            skip_truncation: Disable long-text truncation for collection actions
 
         Returns:
             Typed response based on the operation
@@ -503,7 +598,10 @@ class GreenhouseConnector:
         config = ExecutionConfig(
             entity=entity,
             action=action,
-            params=resolved_params
+            params=resolved_params,
+            select_fields=select_fields,
+            exclude_fields=exclude_fields,
+            skip_truncation=skip_truncation
         )
 
         result = await self._executor.execute(config)

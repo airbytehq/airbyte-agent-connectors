@@ -148,7 +148,7 @@ class SendgridConnector:
 
     connector_name = "sendgrid"
     connector_version = "1.0.3"
-    sdk_version = "0.1.203"
+    sdk_version = "0.1.204"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -311,7 +311,11 @@ class SendgridConnector:
         self,
         entity: Literal["contacts"],
         action: Literal["list"],
-        params: "ContactsListParams"
+        params: "ContactsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ContactsListResult": ...
 
     @overload
@@ -319,7 +323,11 @@ class SendgridConnector:
         self,
         entity: Literal["contacts"],
         action: Literal["get"],
-        params: "ContactsGetParams"
+        params: "ContactsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Contact": ...
 
     @overload
@@ -327,7 +335,11 @@ class SendgridConnector:
         self,
         entity: Literal["lists"],
         action: Literal["list"],
-        params: "ListsListParams"
+        params: "ListsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ListsListResult": ...
 
     @overload
@@ -335,7 +347,11 @@ class SendgridConnector:
         self,
         entity: Literal["lists"],
         action: Literal["get"],
-        params: "ListsGetParams"
+        params: "ListsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "List": ...
 
     @overload
@@ -343,7 +359,11 @@ class SendgridConnector:
         self,
         entity: Literal["segments"],
         action: Literal["list"],
-        params: "SegmentsListParams"
+        params: "SegmentsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SegmentsListResult": ...
 
     @overload
@@ -351,7 +371,11 @@ class SendgridConnector:
         self,
         entity: Literal["segments"],
         action: Literal["get"],
-        params: "SegmentsGetParams"
+        params: "SegmentsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Segment": ...
 
     @overload
@@ -359,7 +383,11 @@ class SendgridConnector:
         self,
         entity: Literal["campaigns"],
         action: Literal["list"],
-        params: "CampaignsListParams"
+        params: "CampaignsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CampaignsListResult": ...
 
     @overload
@@ -367,7 +395,11 @@ class SendgridConnector:
         self,
         entity: Literal["singlesends"],
         action: Literal["list"],
-        params: "SinglesendsListParams"
+        params: "SinglesendsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SinglesendsListResult": ...
 
     @overload
@@ -375,7 +407,11 @@ class SendgridConnector:
         self,
         entity: Literal["singlesends"],
         action: Literal["get"],
-        params: "SinglesendsGetParams"
+        params: "SinglesendsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SingleSend": ...
 
     @overload
@@ -383,7 +419,11 @@ class SendgridConnector:
         self,
         entity: Literal["templates"],
         action: Literal["list"],
-        params: "TemplatesListParams"
+        params: "TemplatesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TemplatesListResult": ...
 
     @overload
@@ -391,7 +431,11 @@ class SendgridConnector:
         self,
         entity: Literal["templates"],
         action: Literal["get"],
-        params: "TemplatesGetParams"
+        params: "TemplatesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Template": ...
 
     @overload
@@ -399,7 +443,11 @@ class SendgridConnector:
         self,
         entity: Literal["singlesend_stats"],
         action: Literal["list"],
-        params: "SinglesendStatsListParams"
+        params: "SinglesendStatsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SinglesendStatsListResult": ...
 
     @overload
@@ -407,7 +455,11 @@ class SendgridConnector:
         self,
         entity: Literal["bounces"],
         action: Literal["list"],
-        params: "BouncesListParams"
+        params: "BouncesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "BouncesListResult": ...
 
     @overload
@@ -415,7 +467,11 @@ class SendgridConnector:
         self,
         entity: Literal["blocks"],
         action: Literal["list"],
-        params: "BlocksListParams"
+        params: "BlocksListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "BlocksListResult": ...
 
     @overload
@@ -423,7 +479,11 @@ class SendgridConnector:
         self,
         entity: Literal["spam_reports"],
         action: Literal["list"],
-        params: "SpamReportsListParams"
+        params: "SpamReportsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SpamReportsListResult": ...
 
     @overload
@@ -431,7 +491,11 @@ class SendgridConnector:
         self,
         entity: Literal["invalid_emails"],
         action: Literal["list"],
-        params: "InvalidEmailsListParams"
+        params: "InvalidEmailsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "InvalidEmailsListResult": ...
 
     @overload
@@ -439,7 +503,11 @@ class SendgridConnector:
         self,
         entity: Literal["global_suppressions"],
         action: Literal["list"],
-        params: "GlobalSuppressionsListParams"
+        params: "GlobalSuppressionsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "GlobalSuppressionsListResult": ...
 
     @overload
@@ -447,7 +515,11 @@ class SendgridConnector:
         self,
         entity: Literal["suppression_groups"],
         action: Literal["list"],
-        params: "SuppressionGroupsListParams"
+        params: "SuppressionGroupsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SuppressionGroupsListResult": ...
 
     @overload
@@ -455,7 +527,11 @@ class SendgridConnector:
         self,
         entity: Literal["suppression_groups"],
         action: Literal["get"],
-        params: "SuppressionGroupsGetParams"
+        params: "SuppressionGroupsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SuppressionGroup": ...
 
     @overload
@@ -463,7 +539,11 @@ class SendgridConnector:
         self,
         entity: Literal["suppression_group_members"],
         action: Literal["list"],
-        params: "SuppressionGroupMembersListParams"
+        params: "SuppressionGroupMembersListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SuppressionGroupMembersListResult": ...
 
 
@@ -472,14 +552,22 @@ class SendgridConnector:
         self,
         entity: str,
         action: Literal["list", "get", "context_store_search"],
-        params: Mapping[str, Any]
+        params: Mapping[str, Any],
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> SendgridExecuteResult[Any] | SendgridExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
         action: Literal["list", "get", "context_store_search"],
-        params: Mapping[str, Any] | None = None
+        params: Mapping[str, Any] | None = None,
+        *,
+        select_fields: list[str] | None = None,
+        exclude_fields: list[str] | None = None,
+        skip_truncation: bool = True
     ) -> Any:
         """
         Execute an entity operation with full type safety.
@@ -493,6 +581,9 @@ class SendgridConnector:
             entity: Entity name (e.g., "customers")
             action: Operation action (e.g., "create", "get", "list")
             params: Operation parameters (typed based on entity+action)
+            select_fields: Optional allowlist of dot-notation fields to include
+            exclude_fields: Optional blocklist of dot-notation fields to remove
+            skip_truncation: Disable long-text truncation for collection actions
 
         Returns:
             Typed response based on the operation
@@ -517,7 +608,10 @@ class SendgridConnector:
         config = ExecutionConfig(
             entity=entity,
             action=action,
-            params=resolved_params
+            params=resolved_params,
+            select_fields=select_fields,
+            exclude_fields=exclude_fields,
+            skip_truncation=skip_truncation
         )
 
         result = await self._executor.execute(config)

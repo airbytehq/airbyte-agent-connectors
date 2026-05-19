@@ -136,7 +136,7 @@ class ChargebeeConnector:
 
     connector_name = "chargebee"
     connector_version = "1.0.2"
-    sdk_version = "0.1.203"
+    sdk_version = "0.1.204"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -310,7 +310,11 @@ class ChargebeeConnector:
         self,
         entity: Literal["customer"],
         action: Literal["list"],
-        params: "CustomerListParams"
+        params: "CustomerListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CustomerListResult": ...
 
     @overload
@@ -318,7 +322,11 @@ class ChargebeeConnector:
         self,
         entity: Literal["customer"],
         action: Literal["get"],
-        params: "CustomerGetParams"
+        params: "CustomerGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Customer": ...
 
     @overload
@@ -326,7 +334,11 @@ class ChargebeeConnector:
         self,
         entity: Literal["subscription"],
         action: Literal["list"],
-        params: "SubscriptionListParams"
+        params: "SubscriptionListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SubscriptionListResult": ...
 
     @overload
@@ -334,7 +346,11 @@ class ChargebeeConnector:
         self,
         entity: Literal["subscription"],
         action: Literal["get"],
-        params: "SubscriptionGetParams"
+        params: "SubscriptionGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Subscription": ...
 
     @overload
@@ -342,7 +358,11 @@ class ChargebeeConnector:
         self,
         entity: Literal["invoice"],
         action: Literal["list"],
-        params: "InvoiceListParams"
+        params: "InvoiceListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "InvoiceListResult": ...
 
     @overload
@@ -350,7 +370,11 @@ class ChargebeeConnector:
         self,
         entity: Literal["invoice"],
         action: Literal["get"],
-        params: "InvoiceGetParams"
+        params: "InvoiceGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Invoice": ...
 
     @overload
@@ -358,7 +382,11 @@ class ChargebeeConnector:
         self,
         entity: Literal["credit_note"],
         action: Literal["list"],
-        params: "CreditNoteListParams"
+        params: "CreditNoteListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CreditNoteListResult": ...
 
     @overload
@@ -366,7 +394,11 @@ class ChargebeeConnector:
         self,
         entity: Literal["credit_note"],
         action: Literal["get"],
-        params: "CreditNoteGetParams"
+        params: "CreditNoteGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CreditNote": ...
 
     @overload
@@ -374,7 +406,11 @@ class ChargebeeConnector:
         self,
         entity: Literal["coupon"],
         action: Literal["list"],
-        params: "CouponListParams"
+        params: "CouponListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CouponListResult": ...
 
     @overload
@@ -382,7 +418,11 @@ class ChargebeeConnector:
         self,
         entity: Literal["coupon"],
         action: Literal["get"],
-        params: "CouponGetParams"
+        params: "CouponGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Coupon": ...
 
     @overload
@@ -390,7 +430,11 @@ class ChargebeeConnector:
         self,
         entity: Literal["transaction"],
         action: Literal["list"],
-        params: "TransactionListParams"
+        params: "TransactionListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TransactionListResult": ...
 
     @overload
@@ -398,7 +442,11 @@ class ChargebeeConnector:
         self,
         entity: Literal["transaction"],
         action: Literal["get"],
-        params: "TransactionGetParams"
+        params: "TransactionGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Transaction": ...
 
     @overload
@@ -406,7 +454,11 @@ class ChargebeeConnector:
         self,
         entity: Literal["event"],
         action: Literal["list"],
-        params: "EventListParams"
+        params: "EventListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "EventListResult": ...
 
     @overload
@@ -414,7 +466,11 @@ class ChargebeeConnector:
         self,
         entity: Literal["event"],
         action: Literal["get"],
-        params: "EventGetParams"
+        params: "EventGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Event": ...
 
     @overload
@@ -422,7 +478,11 @@ class ChargebeeConnector:
         self,
         entity: Literal["order"],
         action: Literal["list"],
-        params: "OrderListParams"
+        params: "OrderListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "OrderListResult": ...
 
     @overload
@@ -430,7 +490,11 @@ class ChargebeeConnector:
         self,
         entity: Literal["order"],
         action: Literal["get"],
-        params: "OrderGetParams"
+        params: "OrderGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Order": ...
 
     @overload
@@ -438,7 +502,11 @@ class ChargebeeConnector:
         self,
         entity: Literal["item"],
         action: Literal["list"],
-        params: "ItemListParams"
+        params: "ItemListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ItemListResult": ...
 
     @overload
@@ -446,7 +514,11 @@ class ChargebeeConnector:
         self,
         entity: Literal["item"],
         action: Literal["get"],
-        params: "ItemGetParams"
+        params: "ItemGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Item": ...
 
     @overload
@@ -454,7 +526,11 @@ class ChargebeeConnector:
         self,
         entity: Literal["item_price"],
         action: Literal["list"],
-        params: "ItemPriceListParams"
+        params: "ItemPriceListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ItemPriceListResult": ...
 
     @overload
@@ -462,7 +538,11 @@ class ChargebeeConnector:
         self,
         entity: Literal["item_price"],
         action: Literal["get"],
-        params: "ItemPriceGetParams"
+        params: "ItemPriceGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ItemPrice": ...
 
     @overload
@@ -470,7 +550,11 @@ class ChargebeeConnector:
         self,
         entity: Literal["payment_source"],
         action: Literal["list"],
-        params: "PaymentSourceListParams"
+        params: "PaymentSourceListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "PaymentSourceListResult": ...
 
     @overload
@@ -478,7 +562,11 @@ class ChargebeeConnector:
         self,
         entity: Literal["payment_source"],
         action: Literal["get"],
-        params: "PaymentSourceGetParams"
+        params: "PaymentSourceGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "PaymentSource": ...
 
 
@@ -487,14 +575,22 @@ class ChargebeeConnector:
         self,
         entity: str,
         action: Literal["list", "get", "context_store_search"],
-        params: Mapping[str, Any]
+        params: Mapping[str, Any],
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> ChargebeeExecuteResult[Any] | ChargebeeExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
         action: Literal["list", "get", "context_store_search"],
-        params: Mapping[str, Any] | None = None
+        params: Mapping[str, Any] | None = None,
+        *,
+        select_fields: list[str] | None = None,
+        exclude_fields: list[str] | None = None,
+        skip_truncation: bool = True
     ) -> Any:
         """
         Execute an entity operation with full type safety.
@@ -508,6 +604,9 @@ class ChargebeeConnector:
             entity: Entity name (e.g., "customers")
             action: Operation action (e.g., "create", "get", "list")
             params: Operation parameters (typed based on entity+action)
+            select_fields: Optional allowlist of dot-notation fields to include
+            exclude_fields: Optional blocklist of dot-notation fields to remove
+            skip_truncation: Disable long-text truncation for collection actions
 
         Returns:
             Typed response based on the operation
@@ -532,7 +631,10 @@ class ChargebeeConnector:
         config = ExecutionConfig(
             entity=entity,
             action=action,
-            params=resolved_params
+            params=resolved_params,
+            select_fields=select_fields,
+            exclude_fields=exclude_fields,
+            skip_truncation=skip_truncation
         )
 
         result = await self._executor.execute(config)

@@ -82,7 +82,7 @@ class GoogleDriveConnector:
 
     connector_name = "google-drive"
     connector_version = "0.2.5"
-    sdk_version = "0.1.203"
+    sdk_version = "0.1.204"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -247,7 +247,11 @@ class GoogleDriveConnector:
         self,
         entity: Literal["files"],
         action: Literal["list"],
-        params: "FilesListParams"
+        params: "FilesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "FilesListResult": ...
 
     @overload
@@ -255,7 +259,11 @@ class GoogleDriveConnector:
         self,
         entity: Literal["files"],
         action: Literal["get"],
-        params: "FilesGetParams"
+        params: "FilesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "File": ...
 
     @overload
@@ -263,7 +271,11 @@ class GoogleDriveConnector:
         self,
         entity: Literal["files"],
         action: Literal["create"],
-        params: "FilesCreateParams"
+        params: "FilesCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "File": ...
 
     @overload
@@ -271,7 +283,11 @@ class GoogleDriveConnector:
         self,
         entity: Literal["files"],
         action: Literal["update"],
-        params: "FilesUpdateParams"
+        params: "FilesUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "File": ...
 
     @overload
@@ -279,7 +295,11 @@ class GoogleDriveConnector:
         self,
         entity: Literal["files"],
         action: Literal["delete"],
-        params: "FilesDeleteParams"
+        params: "FilesDeleteParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -287,7 +307,11 @@ class GoogleDriveConnector:
         self,
         entity: Literal["files_upload"],
         action: Literal["create"],
-        params: "FilesUploadCreateParams"
+        params: "FilesUploadCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "File": ...
 
     @overload
@@ -295,7 +319,11 @@ class GoogleDriveConnector:
         self,
         entity: Literal["files"],
         action: Literal["download"],
-        params: "FilesDownloadParams"
+        params: "FilesDownloadParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AsyncIterator[bytes]": ...
 
     @overload
@@ -303,7 +331,11 @@ class GoogleDriveConnector:
         self,
         entity: Literal["files_export"],
         action: Literal["download"],
-        params: "FilesExportDownloadParams"
+        params: "FilesExportDownloadParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AsyncIterator[bytes]": ...
 
     @overload
@@ -311,7 +343,11 @@ class GoogleDriveConnector:
         self,
         entity: Literal["drives"],
         action: Literal["list"],
-        params: "DrivesListParams"
+        params: "DrivesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "DrivesListResult": ...
 
     @overload
@@ -319,7 +355,11 @@ class GoogleDriveConnector:
         self,
         entity: Literal["drives"],
         action: Literal["get"],
-        params: "DrivesGetParams"
+        params: "DrivesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Drive": ...
 
     @overload
@@ -327,7 +367,11 @@ class GoogleDriveConnector:
         self,
         entity: Literal["permissions"],
         action: Literal["list"],
-        params: "PermissionsListParams"
+        params: "PermissionsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "PermissionsListResult": ...
 
     @overload
@@ -335,7 +379,11 @@ class GoogleDriveConnector:
         self,
         entity: Literal["permissions"],
         action: Literal["get"],
-        params: "PermissionsGetParams"
+        params: "PermissionsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Permission": ...
 
     @overload
@@ -343,7 +391,11 @@ class GoogleDriveConnector:
         self,
         entity: Literal["comments"],
         action: Literal["list"],
-        params: "CommentsListParams"
+        params: "CommentsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CommentsListResult": ...
 
     @overload
@@ -351,7 +403,11 @@ class GoogleDriveConnector:
         self,
         entity: Literal["comments"],
         action: Literal["get"],
-        params: "CommentsGetParams"
+        params: "CommentsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Comment": ...
 
     @overload
@@ -359,7 +415,11 @@ class GoogleDriveConnector:
         self,
         entity: Literal["replies"],
         action: Literal["list"],
-        params: "RepliesListParams"
+        params: "RepliesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "RepliesListResult": ...
 
     @overload
@@ -367,7 +427,11 @@ class GoogleDriveConnector:
         self,
         entity: Literal["replies"],
         action: Literal["get"],
-        params: "RepliesGetParams"
+        params: "RepliesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Reply": ...
 
     @overload
@@ -375,7 +439,11 @@ class GoogleDriveConnector:
         self,
         entity: Literal["revisions"],
         action: Literal["list"],
-        params: "RevisionsListParams"
+        params: "RevisionsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "RevisionsListResult": ...
 
     @overload
@@ -383,7 +451,11 @@ class GoogleDriveConnector:
         self,
         entity: Literal["revisions"],
         action: Literal["get"],
-        params: "RevisionsGetParams"
+        params: "RevisionsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Revision": ...
 
     @overload
@@ -391,7 +463,11 @@ class GoogleDriveConnector:
         self,
         entity: Literal["changes"],
         action: Literal["list"],
-        params: "ChangesListParams"
+        params: "ChangesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ChangesListResult": ...
 
     @overload
@@ -399,7 +475,11 @@ class GoogleDriveConnector:
         self,
         entity: Literal["changes_start_page_token"],
         action: Literal["get"],
-        params: "ChangesStartPageTokenGetParams"
+        params: "ChangesStartPageTokenGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "StartPageToken": ...
 
     @overload
@@ -407,7 +487,11 @@ class GoogleDriveConnector:
         self,
         entity: Literal["about"],
         action: Literal["get"],
-        params: "AboutGetParams"
+        params: "AboutGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "About": ...
 
 
@@ -416,14 +500,22 @@ class GoogleDriveConnector:
         self,
         entity: str,
         action: Literal["list", "get", "create", "update", "delete", "download"],
-        params: Mapping[str, Any]
+        params: Mapping[str, Any],
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> GoogleDriveExecuteResult[Any] | GoogleDriveExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
         action: Literal["list", "get", "create", "update", "delete", "download"],
-        params: Mapping[str, Any] | None = None
+        params: Mapping[str, Any] | None = None,
+        *,
+        select_fields: list[str] | None = None,
+        exclude_fields: list[str] | None = None,
+        skip_truncation: bool = True
     ) -> Any:
         """
         Execute an entity operation with full type safety.
@@ -437,6 +529,9 @@ class GoogleDriveConnector:
             entity: Entity name (e.g., "customers")
             action: Operation action (e.g., "create", "get", "list")
             params: Operation parameters (typed based on entity+action)
+            select_fields: Optional allowlist of dot-notation fields to include
+            exclude_fields: Optional blocklist of dot-notation fields to remove
+            skip_truncation: Disable long-text truncation for collection actions
 
         Returns:
             Typed response based on the operation
@@ -461,7 +556,10 @@ class GoogleDriveConnector:
         config = ExecutionConfig(
             entity=entity,
             action=action,
-            params=resolved_params
+            params=resolved_params,
+            select_fields=select_fields,
+            exclude_fields=exclude_fields,
+            skip_truncation=skip_truncation
         )
 
         result = await self._executor.execute(config)

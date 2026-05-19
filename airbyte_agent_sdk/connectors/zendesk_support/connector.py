@@ -230,7 +230,7 @@ class ZendeskSupportConnector:
 
     connector_name = "zendesk-support"
     connector_version = "0.1.20"
-    sdk_version = "0.1.203"
+    sdk_version = "0.1.204"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -475,7 +475,11 @@ class ZendeskSupportConnector:
         self,
         entity: Literal["tickets"],
         action: Literal["list"],
-        params: "TicketsListParams"
+        params: "TicketsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TicketsListResult": ...
 
     @overload
@@ -483,7 +487,11 @@ class ZendeskSupportConnector:
         self,
         entity: Literal["tickets"],
         action: Literal["create"],
-        params: "TicketsCreateParams"
+        params: "TicketsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Ticket": ...
 
     @overload
@@ -491,7 +499,11 @@ class ZendeskSupportConnector:
         self,
         entity: Literal["tickets"],
         action: Literal["get"],
-        params: "TicketsGetParams"
+        params: "TicketsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Ticket": ...
 
     @overload
@@ -499,7 +511,11 @@ class ZendeskSupportConnector:
         self,
         entity: Literal["tickets"],
         action: Literal["update"],
-        params: "TicketsUpdateParams"
+        params: "TicketsUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Ticket": ...
 
     @overload
@@ -507,7 +523,11 @@ class ZendeskSupportConnector:
         self,
         entity: Literal["ticket_comments"],
         action: Literal["create"],
-        params: "TicketCommentsCreateParams"
+        params: "TicketCommentsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Ticket": ...
 
     @overload
@@ -515,7 +535,11 @@ class ZendeskSupportConnector:
         self,
         entity: Literal["ticket_bulk_updates"],
         action: Literal["create"],
-        params: "TicketBulkUpdatesCreateParams"
+        params: "TicketBulkUpdatesCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "JobStatus": ...
 
     @overload
@@ -523,7 +547,11 @@ class ZendeskSupportConnector:
         self,
         entity: Literal["deleted_tickets"],
         action: Literal["list"],
-        params: "DeletedTicketsListParams"
+        params: "DeletedTicketsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "DeletedTicketsListResult": ...
 
     @overload
@@ -531,7 +559,11 @@ class ZendeskSupportConnector:
         self,
         entity: Literal["users"],
         action: Literal["list"],
-        params: "UsersListParams"
+        params: "UsersListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "UsersListResult": ...
 
     @overload
@@ -539,7 +571,11 @@ class ZendeskSupportConnector:
         self,
         entity: Literal["users"],
         action: Literal["create"],
-        params: "UsersCreateParams"
+        params: "UsersCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "User": ...
 
     @overload
@@ -547,7 +583,11 @@ class ZendeskSupportConnector:
         self,
         entity: Literal["users"],
         action: Literal["get"],
-        params: "UsersGetParams"
+        params: "UsersGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "User": ...
 
     @overload
@@ -555,7 +595,11 @@ class ZendeskSupportConnector:
         self,
         entity: Literal["users"],
         action: Literal["update"],
-        params: "UsersUpdateParams"
+        params: "UsersUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "User": ...
 
     @overload
@@ -563,7 +607,11 @@ class ZendeskSupportConnector:
         self,
         entity: Literal["organizations"],
         action: Literal["list"],
-        params: "OrganizationsListParams"
+        params: "OrganizationsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "OrganizationsListResult": ...
 
     @overload
@@ -571,7 +619,11 @@ class ZendeskSupportConnector:
         self,
         entity: Literal["organizations"],
         action: Literal["get"],
-        params: "OrganizationsGetParams"
+        params: "OrganizationsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Organization": ...
 
     @overload
@@ -579,7 +631,11 @@ class ZendeskSupportConnector:
         self,
         entity: Literal["groups"],
         action: Literal["list"],
-        params: "GroupsListParams"
+        params: "GroupsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "GroupsListResult": ...
 
     @overload
@@ -587,7 +643,11 @@ class ZendeskSupportConnector:
         self,
         entity: Literal["groups"],
         action: Literal["get"],
-        params: "GroupsGetParams"
+        params: "GroupsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Group": ...
 
     @overload
@@ -595,7 +655,11 @@ class ZendeskSupportConnector:
         self,
         entity: Literal["ticket_comments"],
         action: Literal["list"],
-        params: "TicketCommentsListParams"
+        params: "TicketCommentsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TicketCommentsListResult": ...
 
     @overload
@@ -603,7 +667,11 @@ class ZendeskSupportConnector:
         self,
         entity: Literal["attachments"],
         action: Literal["get"],
-        params: "AttachmentsGetParams"
+        params: "AttachmentsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Attachment": ...
 
     @overload
@@ -611,7 +679,11 @@ class ZendeskSupportConnector:
         self,
         entity: Literal["attachments"],
         action: Literal["download"],
-        params: "AttachmentsDownloadParams"
+        params: "AttachmentsDownloadParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AsyncIterator[bytes]": ...
 
     @overload
@@ -619,7 +691,11 @@ class ZendeskSupportConnector:
         self,
         entity: Literal["ticket_audits"],
         action: Literal["list"],
-        params: "TicketAuditsListParams"
+        params: "TicketAuditsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TicketAuditsListResult": ...
 
     @overload
@@ -627,7 +703,11 @@ class ZendeskSupportConnector:
         self,
         entity: Literal["ticket_audits"],
         action: Literal["list"],
-        params: "TicketAuditsListParams"
+        params: "TicketAuditsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TicketAuditsListResult": ...
 
     @overload
@@ -635,7 +715,11 @@ class ZendeskSupportConnector:
         self,
         entity: Literal["ticket_metrics"],
         action: Literal["list"],
-        params: "TicketMetricsListParams"
+        params: "TicketMetricsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TicketMetricsListResult": ...
 
     @overload
@@ -643,7 +727,11 @@ class ZendeskSupportConnector:
         self,
         entity: Literal["ticket_fields"],
         action: Literal["list"],
-        params: "TicketFieldsListParams"
+        params: "TicketFieldsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TicketFieldsListResult": ...
 
     @overload
@@ -651,7 +739,11 @@ class ZendeskSupportConnector:
         self,
         entity: Literal["ticket_fields"],
         action: Literal["get"],
-        params: "TicketFieldsGetParams"
+        params: "TicketFieldsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TicketField": ...
 
     @overload
@@ -659,7 +751,11 @@ class ZendeskSupportConnector:
         self,
         entity: Literal["brands"],
         action: Literal["list"],
-        params: "BrandsListParams"
+        params: "BrandsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "BrandsListResult": ...
 
     @overload
@@ -667,7 +763,11 @@ class ZendeskSupportConnector:
         self,
         entity: Literal["brands"],
         action: Literal["get"],
-        params: "BrandsGetParams"
+        params: "BrandsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Brand": ...
 
     @overload
@@ -675,7 +775,11 @@ class ZendeskSupportConnector:
         self,
         entity: Literal["views"],
         action: Literal["list"],
-        params: "ViewsListParams"
+        params: "ViewsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ViewsListResult": ...
 
     @overload
@@ -683,7 +787,11 @@ class ZendeskSupportConnector:
         self,
         entity: Literal["views"],
         action: Literal["get"],
-        params: "ViewsGetParams"
+        params: "ViewsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "View": ...
 
     @overload
@@ -691,7 +799,11 @@ class ZendeskSupportConnector:
         self,
         entity: Literal["macros"],
         action: Literal["get"],
-        params: "MacrosGetParams"
+        params: "MacrosGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Macro": ...
 
     @overload
@@ -699,7 +811,11 @@ class ZendeskSupportConnector:
         self,
         entity: Literal["macros"],
         action: Literal["list"],
-        params: "MacrosListParams"
+        params: "MacrosListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "MacrosListResult": ...
 
     @overload
@@ -707,7 +823,11 @@ class ZendeskSupportConnector:
         self,
         entity: Literal["triggers"],
         action: Literal["list"],
-        params: "TriggersListParams"
+        params: "TriggersListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TriggersListResult": ...
 
     @overload
@@ -715,7 +835,11 @@ class ZendeskSupportConnector:
         self,
         entity: Literal["triggers"],
         action: Literal["get"],
-        params: "TriggersGetParams"
+        params: "TriggersGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Trigger": ...
 
     @overload
@@ -723,7 +847,11 @@ class ZendeskSupportConnector:
         self,
         entity: Literal["automations"],
         action: Literal["list"],
-        params: "AutomationsListParams"
+        params: "AutomationsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AutomationsListResult": ...
 
     @overload
@@ -731,7 +859,11 @@ class ZendeskSupportConnector:
         self,
         entity: Literal["automations"],
         action: Literal["get"],
-        params: "AutomationsGetParams"
+        params: "AutomationsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Automation": ...
 
     @overload
@@ -739,7 +871,11 @@ class ZendeskSupportConnector:
         self,
         entity: Literal["tags"],
         action: Literal["list"],
-        params: "TagsListParams"
+        params: "TagsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TagsListResult": ...
 
     @overload
@@ -747,7 +883,11 @@ class ZendeskSupportConnector:
         self,
         entity: Literal["satisfaction_ratings"],
         action: Literal["list"],
-        params: "SatisfactionRatingsListParams"
+        params: "SatisfactionRatingsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SatisfactionRatingsListResult": ...
 
     @overload
@@ -755,7 +895,11 @@ class ZendeskSupportConnector:
         self,
         entity: Literal["satisfaction_ratings"],
         action: Literal["get"],
-        params: "SatisfactionRatingsGetParams"
+        params: "SatisfactionRatingsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SatisfactionRating": ...
 
     @overload
@@ -763,7 +907,11 @@ class ZendeskSupportConnector:
         self,
         entity: Literal["group_memberships"],
         action: Literal["list"],
-        params: "GroupMembershipsListParams"
+        params: "GroupMembershipsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "GroupMembershipsListResult": ...
 
     @overload
@@ -771,7 +919,11 @@ class ZendeskSupportConnector:
         self,
         entity: Literal["organization_memberships"],
         action: Literal["list"],
-        params: "OrganizationMembershipsListParams"
+        params: "OrganizationMembershipsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "OrganizationMembershipsListResult": ...
 
     @overload
@@ -779,7 +931,11 @@ class ZendeskSupportConnector:
         self,
         entity: Literal["sla_policies"],
         action: Literal["list"],
-        params: "SlaPoliciesListParams"
+        params: "SlaPoliciesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SlaPoliciesListResult": ...
 
     @overload
@@ -787,7 +943,11 @@ class ZendeskSupportConnector:
         self,
         entity: Literal["sla_policies"],
         action: Literal["get"],
-        params: "SlaPoliciesGetParams"
+        params: "SlaPoliciesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SLAPolicy": ...
 
     @overload
@@ -795,7 +955,11 @@ class ZendeskSupportConnector:
         self,
         entity: Literal["ticket_forms"],
         action: Literal["list"],
-        params: "TicketFormsListParams"
+        params: "TicketFormsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TicketFormsListResult": ...
 
     @overload
@@ -803,7 +967,11 @@ class ZendeskSupportConnector:
         self,
         entity: Literal["ticket_forms"],
         action: Literal["get"],
-        params: "TicketFormsGetParams"
+        params: "TicketFormsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TicketForm": ...
 
     @overload
@@ -811,7 +979,11 @@ class ZendeskSupportConnector:
         self,
         entity: Literal["articles"],
         action: Literal["list"],
-        params: "ArticlesListParams"
+        params: "ArticlesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ArticlesListResult": ...
 
     @overload
@@ -819,7 +991,11 @@ class ZendeskSupportConnector:
         self,
         entity: Literal["articles"],
         action: Literal["get"],
-        params: "ArticlesGetParams"
+        params: "ArticlesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Article": ...
 
     @overload
@@ -827,7 +1003,11 @@ class ZendeskSupportConnector:
         self,
         entity: Literal["article_attachments"],
         action: Literal["list"],
-        params: "ArticleAttachmentsListParams"
+        params: "ArticleAttachmentsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ArticleAttachmentsListResult": ...
 
     @overload
@@ -835,7 +1015,11 @@ class ZendeskSupportConnector:
         self,
         entity: Literal["article_attachments"],
         action: Literal["get"],
-        params: "ArticleAttachmentsGetParams"
+        params: "ArticleAttachmentsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ArticleAttachment": ...
 
     @overload
@@ -843,7 +1027,11 @@ class ZendeskSupportConnector:
         self,
         entity: Literal["article_attachments"],
         action: Literal["download"],
-        params: "ArticleAttachmentsDownloadParams"
+        params: "ArticleAttachmentsDownloadParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AsyncIterator[bytes]": ...
 
 
@@ -852,14 +1040,22 @@ class ZendeskSupportConnector:
         self,
         entity: str,
         action: Literal["list", "create", "get", "update", "download", "context_store_search"],
-        params: Mapping[str, Any]
+        params: Mapping[str, Any],
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> ZendeskSupportExecuteResult[Any] | ZendeskSupportExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
         action: Literal["list", "create", "get", "update", "download", "context_store_search"],
-        params: Mapping[str, Any] | None = None
+        params: Mapping[str, Any] | None = None,
+        *,
+        select_fields: list[str] | None = None,
+        exclude_fields: list[str] | None = None,
+        skip_truncation: bool = True
     ) -> Any:
         """
         Execute an entity operation with full type safety.
@@ -873,6 +1069,9 @@ class ZendeskSupportConnector:
             entity: Entity name (e.g., "customers")
             action: Operation action (e.g., "create", "get", "list")
             params: Operation parameters (typed based on entity+action)
+            select_fields: Optional allowlist of dot-notation fields to include
+            exclude_fields: Optional blocklist of dot-notation fields to remove
+            skip_truncation: Disable long-text truncation for collection actions
 
         Returns:
             Typed response based on the operation
@@ -897,7 +1096,10 @@ class ZendeskSupportConnector:
         config = ExecutionConfig(
             entity=entity,
             action=action,
-            params=resolved_params
+            params=resolved_params,
+            select_fields=select_fields,
+            exclude_fields=exclude_fields,
+            skip_truncation=skip_truncation
         )
 
         result = await self._executor.execute(config)

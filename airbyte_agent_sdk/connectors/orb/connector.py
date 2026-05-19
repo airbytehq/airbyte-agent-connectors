@@ -80,7 +80,7 @@ class OrbConnector:
 
     connector_name = "orb"
     connector_version = "0.1.9"
-    sdk_version = "0.1.203"
+    sdk_version = "0.1.204"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -212,7 +212,11 @@ class OrbConnector:
         self,
         entity: Literal["customers"],
         action: Literal["list"],
-        params: "CustomersListParams"
+        params: "CustomersListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CustomersListResult": ...
 
     @overload
@@ -220,7 +224,11 @@ class OrbConnector:
         self,
         entity: Literal["customers"],
         action: Literal["get"],
-        params: "CustomersGetParams"
+        params: "CustomersGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Customer": ...
 
     @overload
@@ -228,7 +236,11 @@ class OrbConnector:
         self,
         entity: Literal["subscriptions"],
         action: Literal["list"],
-        params: "SubscriptionsListParams"
+        params: "SubscriptionsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SubscriptionsListResult": ...
 
     @overload
@@ -236,7 +248,11 @@ class OrbConnector:
         self,
         entity: Literal["subscriptions"],
         action: Literal["get"],
-        params: "SubscriptionsGetParams"
+        params: "SubscriptionsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Subscription": ...
 
     @overload
@@ -244,7 +260,11 @@ class OrbConnector:
         self,
         entity: Literal["plans"],
         action: Literal["list"],
-        params: "PlansListParams"
+        params: "PlansListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "PlansListResult": ...
 
     @overload
@@ -252,7 +272,11 @@ class OrbConnector:
         self,
         entity: Literal["plans"],
         action: Literal["get"],
-        params: "PlansGetParams"
+        params: "PlansGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Plan": ...
 
     @overload
@@ -260,7 +284,11 @@ class OrbConnector:
         self,
         entity: Literal["invoices"],
         action: Literal["list"],
-        params: "InvoicesListParams"
+        params: "InvoicesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "InvoicesListResult": ...
 
     @overload
@@ -268,7 +296,11 @@ class OrbConnector:
         self,
         entity: Literal["invoices"],
         action: Literal["get"],
-        params: "InvoicesGetParams"
+        params: "InvoicesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Invoice": ...
 
 
@@ -277,14 +309,22 @@ class OrbConnector:
         self,
         entity: str,
         action: Literal["list", "get", "context_store_search"],
-        params: Mapping[str, Any]
+        params: Mapping[str, Any],
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> OrbExecuteResult[Any] | OrbExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
         action: Literal["list", "get", "context_store_search"],
-        params: Mapping[str, Any] | None = None
+        params: Mapping[str, Any] | None = None,
+        *,
+        select_fields: list[str] | None = None,
+        exclude_fields: list[str] | None = None,
+        skip_truncation: bool = True
     ) -> Any:
         """
         Execute an entity operation with full type safety.
@@ -298,6 +338,9 @@ class OrbConnector:
             entity: Entity name (e.g., "customers")
             action: Operation action (e.g., "create", "get", "list")
             params: Operation parameters (typed based on entity+action)
+            select_fields: Optional allowlist of dot-notation fields to include
+            exclude_fields: Optional blocklist of dot-notation fields to remove
+            skip_truncation: Disable long-text truncation for collection actions
 
         Returns:
             Typed response based on the operation
@@ -322,7 +365,10 @@ class OrbConnector:
         config = ExecutionConfig(
             entity=entity,
             action=action,
-            params=resolved_params
+            params=resolved_params,
+            select_fields=select_fields,
+            exclude_fields=exclude_fields,
+            skip_truncation=skip_truncation
         )
 
         result = await self._executor.execute(config)

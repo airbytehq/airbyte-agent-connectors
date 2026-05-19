@@ -101,7 +101,7 @@ class IntercomConnector:
 
     connector_name = "intercom"
     connector_version = "0.1.10"
-    sdk_version = "0.1.203"
+    sdk_version = "0.1.204"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -261,7 +261,11 @@ class IntercomConnector:
         self,
         entity: Literal["contacts"],
         action: Literal["list"],
-        params: "ContactsListParams"
+        params: "ContactsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ContactsListResult": ...
 
     @overload
@@ -269,7 +273,11 @@ class IntercomConnector:
         self,
         entity: Literal["contacts"],
         action: Literal["create"],
-        params: "ContactsCreateParams"
+        params: "ContactsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Contact": ...
 
     @overload
@@ -277,7 +285,11 @@ class IntercomConnector:
         self,
         entity: Literal["contacts"],
         action: Literal["get"],
-        params: "ContactsGetParams"
+        params: "ContactsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Contact": ...
 
     @overload
@@ -285,7 +297,11 @@ class IntercomConnector:
         self,
         entity: Literal["contacts"],
         action: Literal["update"],
-        params: "ContactsUpdateParams"
+        params: "ContactsUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Contact": ...
 
     @overload
@@ -293,7 +309,11 @@ class IntercomConnector:
         self,
         entity: Literal["conversations"],
         action: Literal["list"],
-        params: "ConversationsListParams"
+        params: "ConversationsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ConversationsListResult": ...
 
     @overload
@@ -301,7 +321,11 @@ class IntercomConnector:
         self,
         entity: Literal["conversations"],
         action: Literal["get"],
-        params: "ConversationsGetParams"
+        params: "ConversationsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Conversation": ...
 
     @overload
@@ -309,7 +333,11 @@ class IntercomConnector:
         self,
         entity: Literal["companies"],
         action: Literal["list"],
-        params: "CompaniesListParams"
+        params: "CompaniesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CompaniesListResult": ...
 
     @overload
@@ -317,7 +345,11 @@ class IntercomConnector:
         self,
         entity: Literal["companies"],
         action: Literal["create"],
-        params: "CompaniesCreateParams"
+        params: "CompaniesCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Company": ...
 
     @overload
@@ -325,7 +357,11 @@ class IntercomConnector:
         self,
         entity: Literal["companies"],
         action: Literal["get"],
-        params: "CompaniesGetParams"
+        params: "CompaniesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Company": ...
 
     @overload
@@ -333,7 +369,11 @@ class IntercomConnector:
         self,
         entity: Literal["companies"],
         action: Literal["update"],
-        params: "CompaniesUpdateParams"
+        params: "CompaniesUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Company": ...
 
     @overload
@@ -341,7 +381,11 @@ class IntercomConnector:
         self,
         entity: Literal["teams"],
         action: Literal["list"],
-        params: "TeamsListParams"
+        params: "TeamsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TeamsListResult": ...
 
     @overload
@@ -349,7 +393,11 @@ class IntercomConnector:
         self,
         entity: Literal["teams"],
         action: Literal["get"],
-        params: "TeamsGetParams"
+        params: "TeamsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Team": ...
 
     @overload
@@ -357,7 +405,11 @@ class IntercomConnector:
         self,
         entity: Literal["admins"],
         action: Literal["list"],
-        params: "AdminsListParams"
+        params: "AdminsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AdminsListResult": ...
 
     @overload
@@ -365,7 +417,11 @@ class IntercomConnector:
         self,
         entity: Literal["admins"],
         action: Literal["get"],
-        params: "AdminsGetParams"
+        params: "AdminsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Admin": ...
 
     @overload
@@ -373,7 +429,11 @@ class IntercomConnector:
         self,
         entity: Literal["tags"],
         action: Literal["list"],
-        params: "TagsListParams"
+        params: "TagsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TagsListResult": ...
 
     @overload
@@ -381,7 +441,11 @@ class IntercomConnector:
         self,
         entity: Literal["tags"],
         action: Literal["create"],
-        params: "TagsCreateParams"
+        params: "TagsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Tag": ...
 
     @overload
@@ -389,7 +453,11 @@ class IntercomConnector:
         self,
         entity: Literal["tags"],
         action: Literal["get"],
-        params: "TagsGetParams"
+        params: "TagsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Tag": ...
 
     @overload
@@ -397,7 +465,11 @@ class IntercomConnector:
         self,
         entity: Literal["notes"],
         action: Literal["create"],
-        params: "NotesCreateParams"
+        params: "NotesCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Note": ...
 
     @overload
@@ -405,7 +477,11 @@ class IntercomConnector:
         self,
         entity: Literal["segments"],
         action: Literal["list"],
-        params: "SegmentsListParams"
+        params: "SegmentsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SegmentsListResult": ...
 
     @overload
@@ -413,7 +489,11 @@ class IntercomConnector:
         self,
         entity: Literal["segments"],
         action: Literal["get"],
-        params: "SegmentsGetParams"
+        params: "SegmentsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Segment": ...
 
     @overload
@@ -421,7 +501,11 @@ class IntercomConnector:
         self,
         entity: Literal["internal_articles"],
         action: Literal["create"],
-        params: "InternalArticlesCreateParams"
+        params: "InternalArticlesCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "InternalArticle": ...
 
 
@@ -430,14 +514,22 @@ class IntercomConnector:
         self,
         entity: str,
         action: Literal["list", "create", "get", "update", "context_store_search"],
-        params: Mapping[str, Any]
+        params: Mapping[str, Any],
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> IntercomExecuteResult[Any] | IntercomExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
         action: Literal["list", "create", "get", "update", "context_store_search"],
-        params: Mapping[str, Any] | None = None
+        params: Mapping[str, Any] | None = None,
+        *,
+        select_fields: list[str] | None = None,
+        exclude_fields: list[str] | None = None,
+        skip_truncation: bool = True
     ) -> Any:
         """
         Execute an entity operation with full type safety.
@@ -451,6 +543,9 @@ class IntercomConnector:
             entity: Entity name (e.g., "customers")
             action: Operation action (e.g., "create", "get", "list")
             params: Operation parameters (typed based on entity+action)
+            select_fields: Optional allowlist of dot-notation fields to include
+            exclude_fields: Optional blocklist of dot-notation fields to remove
+            skip_truncation: Disable long-text truncation for collection actions
 
         Returns:
             Typed response based on the operation
@@ -475,7 +570,10 @@ class IntercomConnector:
         config = ExecutionConfig(
             entity=entity,
             action=action,
-            params=resolved_params
+            params=resolved_params,
+            select_fields=select_fields,
+            exclude_fields=exclude_fields,
+            skip_truncation=skip_truncation
         )
 
         result = await self._executor.execute(config)

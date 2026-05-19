@@ -97,7 +97,7 @@ class PaypalTransactionConnector:
 
     connector_name = "paypal-transaction"
     connector_version = "1.0.3"
-    sdk_version = "0.1.203"
+    sdk_version = "0.1.204"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -230,7 +230,11 @@ class PaypalTransactionConnector:
         self,
         entity: Literal["balances"],
         action: Literal["list"],
-        params: "BalancesListParams"
+        params: "BalancesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "BalancesListResult": ...
 
     @overload
@@ -238,7 +242,11 @@ class PaypalTransactionConnector:
         self,
         entity: Literal["transactions"],
         action: Literal["list"],
-        params: "TransactionsListParams"
+        params: "TransactionsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TransactionsListResult": ...
 
     @overload
@@ -246,7 +254,11 @@ class PaypalTransactionConnector:
         self,
         entity: Literal["list_payments"],
         action: Literal["list"],
-        params: "ListPaymentsListParams"
+        params: "ListPaymentsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ListPaymentsListResult": ...
 
     @overload
@@ -254,7 +266,11 @@ class PaypalTransactionConnector:
         self,
         entity: Literal["list_disputes"],
         action: Literal["list"],
-        params: "ListDisputesListParams"
+        params: "ListDisputesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ListDisputesListResult": ...
 
     @overload
@@ -262,7 +278,11 @@ class PaypalTransactionConnector:
         self,
         entity: Literal["list_products"],
         action: Literal["list"],
-        params: "ListProductsListParams"
+        params: "ListProductsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ListProductsListResult": ...
 
     @overload
@@ -270,7 +290,11 @@ class PaypalTransactionConnector:
         self,
         entity: Literal["show_product_details"],
         action: Literal["get"],
-        params: "ShowProductDetailsGetParams"
+        params: "ShowProductDetailsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ProductDetails": ...
 
     @overload
@@ -278,7 +302,11 @@ class PaypalTransactionConnector:
         self,
         entity: Literal["search_invoices"],
         action: Literal["list"],
-        params: "SearchInvoicesListParams"
+        params: "SearchInvoicesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SearchInvoicesListResult": ...
 
 
@@ -287,14 +315,22 @@ class PaypalTransactionConnector:
         self,
         entity: str,
         action: Literal["list", "get", "context_store_search"],
-        params: Mapping[str, Any]
+        params: Mapping[str, Any],
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> PaypalTransactionExecuteResult[Any] | PaypalTransactionExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
         action: Literal["list", "get", "context_store_search"],
-        params: Mapping[str, Any] | None = None
+        params: Mapping[str, Any] | None = None,
+        *,
+        select_fields: list[str] | None = None,
+        exclude_fields: list[str] | None = None,
+        skip_truncation: bool = True
     ) -> Any:
         """
         Execute an entity operation with full type safety.
@@ -308,6 +344,9 @@ class PaypalTransactionConnector:
             entity: Entity name (e.g., "customers")
             action: Operation action (e.g., "create", "get", "list")
             params: Operation parameters (typed based on entity+action)
+            select_fields: Optional allowlist of dot-notation fields to include
+            exclude_fields: Optional blocklist of dot-notation fields to remove
+            skip_truncation: Disable long-text truncation for collection actions
 
         Returns:
             Typed response based on the operation
@@ -332,7 +371,10 @@ class PaypalTransactionConnector:
         config = ExecutionConfig(
             entity=entity,
             action=action,
-            params=resolved_params
+            params=resolved_params,
+            select_fields=select_fields,
+            exclude_fields=exclude_fields,
+            skip_truncation=skip_truncation
         )
 
         result = await self._executor.execute(config)

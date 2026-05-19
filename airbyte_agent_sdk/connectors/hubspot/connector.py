@@ -103,7 +103,7 @@ class HubspotConnector:
 
     connector_name = "hubspot"
     connector_version = "0.1.19"
-    sdk_version = "0.1.203"
+    sdk_version = "0.1.204"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -262,7 +262,11 @@ class HubspotConnector:
         self,
         entity: Literal["contacts"],
         action: Literal["list"],
-        params: "ContactsListParams"
+        params: "ContactsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ContactsListResult": ...
 
     @overload
@@ -270,7 +274,11 @@ class HubspotConnector:
         self,
         entity: Literal["contacts"],
         action: Literal["get"],
-        params: "ContactsGetParams"
+        params: "ContactsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Contact": ...
 
     @overload
@@ -278,7 +286,11 @@ class HubspotConnector:
         self,
         entity: Literal["contacts"],
         action: Literal["api_search"],
-        params: "ContactsApiSearchParams"
+        params: "ContactsApiSearchParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ContactsApiSearchResult": ...
 
     @overload
@@ -286,7 +298,11 @@ class HubspotConnector:
         self,
         entity: Literal["companies"],
         action: Literal["list"],
-        params: "CompaniesListParams"
+        params: "CompaniesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CompaniesListResult": ...
 
     @overload
@@ -294,7 +310,11 @@ class HubspotConnector:
         self,
         entity: Literal["companies"],
         action: Literal["get"],
-        params: "CompaniesGetParams"
+        params: "CompaniesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Company": ...
 
     @overload
@@ -302,7 +322,11 @@ class HubspotConnector:
         self,
         entity: Literal["companies"],
         action: Literal["api_search"],
-        params: "CompaniesApiSearchParams"
+        params: "CompaniesApiSearchParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CompaniesApiSearchResult": ...
 
     @overload
@@ -310,7 +334,11 @@ class HubspotConnector:
         self,
         entity: Literal["deals"],
         action: Literal["list"],
-        params: "DealsListParams"
+        params: "DealsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "DealsListResult": ...
 
     @overload
@@ -318,7 +346,11 @@ class HubspotConnector:
         self,
         entity: Literal["deals"],
         action: Literal["get"],
-        params: "DealsGetParams"
+        params: "DealsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Deal": ...
 
     @overload
@@ -326,7 +358,11 @@ class HubspotConnector:
         self,
         entity: Literal["deals"],
         action: Literal["api_search"],
-        params: "DealsApiSearchParams"
+        params: "DealsApiSearchParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "DealsApiSearchResult": ...
 
     @overload
@@ -334,7 +370,11 @@ class HubspotConnector:
         self,
         entity: Literal["tickets"],
         action: Literal["list"],
-        params: "TicketsListParams"
+        params: "TicketsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TicketsListResult": ...
 
     @overload
@@ -342,7 +382,11 @@ class HubspotConnector:
         self,
         entity: Literal["tickets"],
         action: Literal["get"],
-        params: "TicketsGetParams"
+        params: "TicketsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Ticket": ...
 
     @overload
@@ -350,7 +394,11 @@ class HubspotConnector:
         self,
         entity: Literal["tickets"],
         action: Literal["api_search"],
-        params: "TicketsApiSearchParams"
+        params: "TicketsApiSearchParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TicketsApiSearchResult": ...
 
     @overload
@@ -358,7 +406,11 @@ class HubspotConnector:
         self,
         entity: Literal["schemas"],
         action: Literal["list"],
-        params: "SchemasListParams"
+        params: "SchemasListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SchemasListResult": ...
 
     @overload
@@ -366,7 +418,11 @@ class HubspotConnector:
         self,
         entity: Literal["schemas"],
         action: Literal["get"],
-        params: "SchemasGetParams"
+        params: "SchemasGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Schema": ...
 
     @overload
@@ -374,7 +430,11 @@ class HubspotConnector:
         self,
         entity: Literal["objects"],
         action: Literal["list"],
-        params: "ObjectsListParams"
+        params: "ObjectsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ObjectsListResult": ...
 
     @overload
@@ -382,7 +442,11 @@ class HubspotConnector:
         self,
         entity: Literal["objects"],
         action: Literal["get"],
-        params: "ObjectsGetParams"
+        params: "ObjectsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CRMObject": ...
 
 
@@ -391,14 +455,22 @@ class HubspotConnector:
         self,
         entity: str,
         action: Literal["list", "get", "api_search", "context_store_search"],
-        params: Mapping[str, Any]
+        params: Mapping[str, Any],
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> HubspotExecuteResult[Any] | HubspotExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
         action: Literal["list", "get", "api_search", "context_store_search"],
-        params: Mapping[str, Any] | None = None
+        params: Mapping[str, Any] | None = None,
+        *,
+        select_fields: list[str] | None = None,
+        exclude_fields: list[str] | None = None,
+        skip_truncation: bool = True
     ) -> Any:
         """
         Execute an entity operation with full type safety.
@@ -412,6 +484,9 @@ class HubspotConnector:
             entity: Entity name (e.g., "customers")
             action: Operation action (e.g., "create", "get", "list")
             params: Operation parameters (typed based on entity+action)
+            select_fields: Optional allowlist of dot-notation fields to include
+            exclude_fields: Optional blocklist of dot-notation fields to remove
+            skip_truncation: Disable long-text truncation for collection actions
 
         Returns:
             Typed response based on the operation
@@ -436,7 +511,10 @@ class HubspotConnector:
         config = ExecutionConfig(
             entity=entity,
             action=action,
-            params=resolved_params
+            params=resolved_params,
+            select_fields=select_fields,
+            exclude_fields=exclude_fields,
+            skip_truncation=skip_truncation
         )
 
         result = await self._executor.execute(config)

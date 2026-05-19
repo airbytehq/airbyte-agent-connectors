@@ -124,7 +124,7 @@ class GongConnector:
 
     connector_name = "gong"
     connector_version = "0.1.23"
-    sdk_version = "0.1.203"
+    sdk_version = "0.1.204"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -296,7 +296,11 @@ class GongConnector:
         self,
         entity: Literal["users"],
         action: Literal["list"],
-        params: "UsersListParams"
+        params: "UsersListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "UsersListResult": ...
 
     @overload
@@ -304,7 +308,11 @@ class GongConnector:
         self,
         entity: Literal["users"],
         action: Literal["get"],
-        params: "UsersGetParams"
+        params: "UsersGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "User": ...
 
     @overload
@@ -312,7 +320,11 @@ class GongConnector:
         self,
         entity: Literal["calls"],
         action: Literal["list"],
-        params: "CallsListParams"
+        params: "CallsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CallsListResult": ...
 
     @overload
@@ -320,7 +332,11 @@ class GongConnector:
         self,
         entity: Literal["calls"],
         action: Literal["get"],
-        params: "CallsGetParams"
+        params: "CallsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Call": ...
 
     @overload
@@ -328,7 +344,11 @@ class GongConnector:
         self,
         entity: Literal["calls_extensive"],
         action: Literal["list"],
-        params: "CallsExtensiveListParams"
+        params: "CallsExtensiveListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CallsExtensiveListResult": ...
 
     @overload
@@ -336,7 +356,11 @@ class GongConnector:
         self,
         entity: Literal["call_audio"],
         action: Literal["download"],
-        params: "CallAudioDownloadParams"
+        params: "CallAudioDownloadParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AsyncIterator[bytes]": ...
 
     @overload
@@ -344,7 +368,11 @@ class GongConnector:
         self,
         entity: Literal["call_video"],
         action: Literal["download"],
-        params: "CallVideoDownloadParams"
+        params: "CallVideoDownloadParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AsyncIterator[bytes]": ...
 
     @overload
@@ -352,7 +380,11 @@ class GongConnector:
         self,
         entity: Literal["workspaces"],
         action: Literal["list"],
-        params: "WorkspacesListParams"
+        params: "WorkspacesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "WorkspacesListResult": ...
 
     @overload
@@ -360,7 +392,11 @@ class GongConnector:
         self,
         entity: Literal["call_transcripts"],
         action: Literal["list"],
-        params: "CallTranscriptsListParams"
+        params: "CallTranscriptsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CallTranscriptsListResult": ...
 
     @overload
@@ -368,7 +404,11 @@ class GongConnector:
         self,
         entity: Literal["stats_activity_aggregate"],
         action: Literal["list"],
-        params: "StatsActivityAggregateListParams"
+        params: "StatsActivityAggregateListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "StatsActivityAggregateListResult": ...
 
     @overload
@@ -376,7 +416,11 @@ class GongConnector:
         self,
         entity: Literal["stats_activity_day_by_day"],
         action: Literal["list"],
-        params: "StatsActivityDayByDayListParams"
+        params: "StatsActivityDayByDayListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "StatsActivityDayByDayListResult": ...
 
     @overload
@@ -384,7 +428,11 @@ class GongConnector:
         self,
         entity: Literal["stats_interaction"],
         action: Literal["list"],
-        params: "StatsInteractionListParams"
+        params: "StatsInteractionListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "StatsInteractionListResult": ...
 
     @overload
@@ -392,7 +440,11 @@ class GongConnector:
         self,
         entity: Literal["settings_scorecards"],
         action: Literal["list"],
-        params: "SettingsScorecardsListParams"
+        params: "SettingsScorecardsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SettingsScorecardsListResult": ...
 
     @overload
@@ -400,7 +452,11 @@ class GongConnector:
         self,
         entity: Literal["settings_trackers"],
         action: Literal["list"],
-        params: "SettingsTrackersListParams"
+        params: "SettingsTrackersListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SettingsTrackersListResult": ...
 
     @overload
@@ -408,7 +464,11 @@ class GongConnector:
         self,
         entity: Literal["library_folders"],
         action: Literal["list"],
-        params: "LibraryFoldersListParams"
+        params: "LibraryFoldersListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "LibraryFoldersListResult": ...
 
     @overload
@@ -416,7 +476,11 @@ class GongConnector:
         self,
         entity: Literal["library_folder_content"],
         action: Literal["list"],
-        params: "LibraryFolderContentListParams"
+        params: "LibraryFolderContentListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "LibraryFolderContentListResult": ...
 
     @overload
@@ -424,7 +488,11 @@ class GongConnector:
         self,
         entity: Literal["coaching"],
         action: Literal["list"],
-        params: "CoachingListParams"
+        params: "CoachingListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CoachingListResult": ...
 
     @overload
@@ -432,7 +500,11 @@ class GongConnector:
         self,
         entity: Literal["stats_activity_scorecards"],
         action: Literal["list"],
-        params: "StatsActivityScorecardsListParams"
+        params: "StatsActivityScorecardsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "StatsActivityScorecardsListResult": ...
 
 
@@ -441,14 +513,22 @@ class GongConnector:
         self,
         entity: str,
         action: Literal["list", "get", "download", "context_store_search"],
-        params: Mapping[str, Any]
+        params: Mapping[str, Any],
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> GongExecuteResult[Any] | GongExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
         action: Literal["list", "get", "download", "context_store_search"],
-        params: Mapping[str, Any] | None = None
+        params: Mapping[str, Any] | None = None,
+        *,
+        select_fields: list[str] | None = None,
+        exclude_fields: list[str] | None = None,
+        skip_truncation: bool = True
     ) -> Any:
         """
         Execute an entity operation with full type safety.
@@ -462,6 +542,9 @@ class GongConnector:
             entity: Entity name (e.g., "customers")
             action: Operation action (e.g., "create", "get", "list")
             params: Operation parameters (typed based on entity+action)
+            select_fields: Optional allowlist of dot-notation fields to include
+            exclude_fields: Optional blocklist of dot-notation fields to remove
+            skip_truncation: Disable long-text truncation for collection actions
 
         Returns:
             Typed response based on the operation
@@ -486,7 +569,10 @@ class GongConnector:
         config = ExecutionConfig(
             entity=entity,
             action=action,
-            params=resolved_params
+            params=resolved_params,
+            select_fields=select_fields,
+            exclude_fields=exclude_fields,
+            skip_truncation=skip_truncation
         )
 
         result = await self._executor.execute(config)

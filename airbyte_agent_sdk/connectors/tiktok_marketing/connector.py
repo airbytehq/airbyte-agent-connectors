@@ -125,7 +125,7 @@ class TiktokMarketingConnector:
 
     connector_name = "tiktok-marketing"
     connector_version = "1.1.6"
-    sdk_version = "0.1.203"
+    sdk_version = "0.1.204"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -270,7 +270,11 @@ class TiktokMarketingConnector:
         self,
         entity: Literal["advertisers"],
         action: Literal["list"],
-        params: "AdvertisersListParams"
+        params: "AdvertisersListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AdvertisersListResult": ...
 
     @overload
@@ -278,7 +282,11 @@ class TiktokMarketingConnector:
         self,
         entity: Literal["campaigns"],
         action: Literal["list"],
-        params: "CampaignsListParams"
+        params: "CampaignsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CampaignsListResult": ...
 
     @overload
@@ -286,7 +294,11 @@ class TiktokMarketingConnector:
         self,
         entity: Literal["ad_groups"],
         action: Literal["list"],
-        params: "AdGroupsListParams"
+        params: "AdGroupsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AdGroupsListResult": ...
 
     @overload
@@ -294,7 +306,11 @@ class TiktokMarketingConnector:
         self,
         entity: Literal["ads"],
         action: Literal["list"],
-        params: "AdsListParams"
+        params: "AdsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AdsListResult": ...
 
     @overload
@@ -302,7 +318,11 @@ class TiktokMarketingConnector:
         self,
         entity: Literal["audiences"],
         action: Literal["list"],
-        params: "AudiencesListParams"
+        params: "AudiencesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AudiencesListResult": ...
 
     @overload
@@ -310,7 +330,11 @@ class TiktokMarketingConnector:
         self,
         entity: Literal["creative_assets_images"],
         action: Literal["list"],
-        params: "CreativeAssetsImagesListParams"
+        params: "CreativeAssetsImagesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CreativeAssetsImagesListResult": ...
 
     @overload
@@ -318,7 +342,11 @@ class TiktokMarketingConnector:
         self,
         entity: Literal["creative_assets_videos"],
         action: Literal["list"],
-        params: "CreativeAssetsVideosListParams"
+        params: "CreativeAssetsVideosListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CreativeAssetsVideosListResult": ...
 
     @overload
@@ -326,7 +354,11 @@ class TiktokMarketingConnector:
         self,
         entity: Literal["advertisers_reports_daily"],
         action: Literal["list"],
-        params: "AdvertisersReportsDailyListParams"
+        params: "AdvertisersReportsDailyListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AdvertisersReportsDailyListResult": ...
 
     @overload
@@ -334,7 +366,11 @@ class TiktokMarketingConnector:
         self,
         entity: Literal["campaigns_reports_daily"],
         action: Literal["list"],
-        params: "CampaignsReportsDailyListParams"
+        params: "CampaignsReportsDailyListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CampaignsReportsDailyListResult": ...
 
     @overload
@@ -342,7 +378,11 @@ class TiktokMarketingConnector:
         self,
         entity: Literal["ad_groups_reports_daily"],
         action: Literal["list"],
-        params: "AdGroupsReportsDailyListParams"
+        params: "AdGroupsReportsDailyListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AdGroupsReportsDailyListResult": ...
 
     @overload
@@ -350,7 +390,11 @@ class TiktokMarketingConnector:
         self,
         entity: Literal["ads_reports_daily"],
         action: Literal["list"],
-        params: "AdsReportsDailyListParams"
+        params: "AdsReportsDailyListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AdsReportsDailyListResult": ...
 
 
@@ -359,14 +403,22 @@ class TiktokMarketingConnector:
         self,
         entity: str,
         action: Literal["list", "context_store_search"],
-        params: Mapping[str, Any]
+        params: Mapping[str, Any],
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> TiktokMarketingExecuteResult[Any] | TiktokMarketingExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
         action: Literal["list", "context_store_search"],
-        params: Mapping[str, Any] | None = None
+        params: Mapping[str, Any] | None = None,
+        *,
+        select_fields: list[str] | None = None,
+        exclude_fields: list[str] | None = None,
+        skip_truncation: bool = True
     ) -> Any:
         """
         Execute an entity operation with full type safety.
@@ -380,6 +432,9 @@ class TiktokMarketingConnector:
             entity: Entity name (e.g., "customers")
             action: Operation action (e.g., "create", "get", "list")
             params: Operation parameters (typed based on entity+action)
+            select_fields: Optional allowlist of dot-notation fields to include
+            exclude_fields: Optional blocklist of dot-notation fields to remove
+            skip_truncation: Disable long-text truncation for collection actions
 
         Returns:
             Typed response based on the operation
@@ -404,7 +459,10 @@ class TiktokMarketingConnector:
         config = ExecutionConfig(
             entity=entity,
             action=action,
-            params=resolved_params
+            params=resolved_params,
+            select_fields=select_fields,
+            exclude_fields=exclude_fields,
+            skip_truncation=skip_truncation
         )
 
         result = await self._executor.execute(config)

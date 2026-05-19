@@ -91,7 +91,7 @@ class TypeformConnector:
 
     connector_name = "typeform"
     connector_version = "1.0.4"
-    sdk_version = "0.1.203"
+    sdk_version = "0.1.204"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -222,7 +222,11 @@ class TypeformConnector:
         self,
         entity: Literal["forms"],
         action: Literal["list"],
-        params: "FormsListParams"
+        params: "FormsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "FormsListResult": ...
 
     @overload
@@ -230,7 +234,11 @@ class TypeformConnector:
         self,
         entity: Literal["forms"],
         action: Literal["get"],
-        params: "FormsGetParams"
+        params: "FormsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Form": ...
 
     @overload
@@ -238,7 +246,11 @@ class TypeformConnector:
         self,
         entity: Literal["responses"],
         action: Literal["list"],
-        params: "ResponsesListParams"
+        params: "ResponsesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ResponsesListResult": ...
 
     @overload
@@ -246,7 +258,11 @@ class TypeformConnector:
         self,
         entity: Literal["webhooks"],
         action: Literal["list"],
-        params: "WebhooksListParams"
+        params: "WebhooksListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "WebhooksListResult": ...
 
     @overload
@@ -254,7 +270,11 @@ class TypeformConnector:
         self,
         entity: Literal["workspaces"],
         action: Literal["list"],
-        params: "WorkspacesListParams"
+        params: "WorkspacesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "WorkspacesListResult": ...
 
     @overload
@@ -262,7 +282,11 @@ class TypeformConnector:
         self,
         entity: Literal["images"],
         action: Literal["list"],
-        params: "ImagesListParams"
+        params: "ImagesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ImagesListResult": ...
 
     @overload
@@ -270,7 +294,11 @@ class TypeformConnector:
         self,
         entity: Literal["themes"],
         action: Literal["list"],
-        params: "ThemesListParams"
+        params: "ThemesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ThemesListResult": ...
 
 
@@ -279,14 +307,22 @@ class TypeformConnector:
         self,
         entity: str,
         action: Literal["list", "get", "context_store_search"],
-        params: Mapping[str, Any]
+        params: Mapping[str, Any],
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> TypeformExecuteResult[Any] | TypeformExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
         action: Literal["list", "get", "context_store_search"],
-        params: Mapping[str, Any] | None = None
+        params: Mapping[str, Any] | None = None,
+        *,
+        select_fields: list[str] | None = None,
+        exclude_fields: list[str] | None = None,
+        skip_truncation: bool = True
     ) -> Any:
         """
         Execute an entity operation with full type safety.
@@ -300,6 +336,9 @@ class TypeformConnector:
             entity: Entity name (e.g., "customers")
             action: Operation action (e.g., "create", "get", "list")
             params: Operation parameters (typed based on entity+action)
+            select_fields: Optional allowlist of dot-notation fields to include
+            exclude_fields: Optional blocklist of dot-notation fields to remove
+            skip_truncation: Disable long-text truncation for collection actions
 
         Returns:
             Typed response based on the operation
@@ -324,7 +363,10 @@ class TypeformConnector:
         config = ExecutionConfig(
             entity=entity,
             action=action,
-            params=resolved_params
+            params=resolved_params,
+            select_fields=select_fields,
+            exclude_fields=exclude_fields,
+            skip_truncation=skip_truncation
         )
 
         result = await self._executor.execute(config)

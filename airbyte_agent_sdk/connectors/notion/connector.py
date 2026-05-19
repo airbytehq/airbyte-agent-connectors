@@ -90,7 +90,7 @@ class NotionConnector:
 
     connector_name = "notion"
     connector_version = "0.1.12"
-    sdk_version = "0.1.203"
+    sdk_version = "0.1.204"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -234,7 +234,11 @@ class NotionConnector:
         self,
         entity: Literal["users"],
         action: Literal["list"],
-        params: "UsersListParams"
+        params: "UsersListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "UsersListResult": ...
 
     @overload
@@ -242,7 +246,11 @@ class NotionConnector:
         self,
         entity: Literal["users"],
         action: Literal["get"],
-        params: "UsersGetParams"
+        params: "UsersGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "User": ...
 
     @overload
@@ -250,7 +258,11 @@ class NotionConnector:
         self,
         entity: Literal["pages"],
         action: Literal["list"],
-        params: "PagesListParams"
+        params: "PagesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "PagesListResult": ...
 
     @overload
@@ -258,7 +270,11 @@ class NotionConnector:
         self,
         entity: Literal["pages"],
         action: Literal["get"],
-        params: "PagesGetParams"
+        params: "PagesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Page": ...
 
     @overload
@@ -266,7 +282,11 @@ class NotionConnector:
         self,
         entity: Literal["data_sources"],
         action: Literal["list"],
-        params: "DataSourcesListParams"
+        params: "DataSourcesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "DataSourcesListResult": ...
 
     @overload
@@ -274,7 +294,11 @@ class NotionConnector:
         self,
         entity: Literal["data_sources"],
         action: Literal["get"],
-        params: "DataSourcesGetParams"
+        params: "DataSourcesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "DataSource": ...
 
     @overload
@@ -282,7 +306,11 @@ class NotionConnector:
         self,
         entity: Literal["blocks"],
         action: Literal["list"],
-        params: "BlocksListParams"
+        params: "BlocksListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "BlocksListResult": ...
 
     @overload
@@ -290,7 +318,11 @@ class NotionConnector:
         self,
         entity: Literal["blocks"],
         action: Literal["get"],
-        params: "BlocksGetParams"
+        params: "BlocksGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Block": ...
 
     @overload
@@ -298,7 +330,11 @@ class NotionConnector:
         self,
         entity: Literal["comments"],
         action: Literal["list"],
-        params: "CommentsListParams"
+        params: "CommentsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CommentsListResult": ...
 
 
@@ -307,14 +343,22 @@ class NotionConnector:
         self,
         entity: str,
         action: Literal["list", "get", "context_store_search"],
-        params: Mapping[str, Any]
+        params: Mapping[str, Any],
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> NotionExecuteResult[Any] | NotionExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
         action: Literal["list", "get", "context_store_search"],
-        params: Mapping[str, Any] | None = None
+        params: Mapping[str, Any] | None = None,
+        *,
+        select_fields: list[str] | None = None,
+        exclude_fields: list[str] | None = None,
+        skip_truncation: bool = True
     ) -> Any:
         """
         Execute an entity operation with full type safety.
@@ -328,6 +372,9 @@ class NotionConnector:
             entity: Entity name (e.g., "customers")
             action: Operation action (e.g., "create", "get", "list")
             params: Operation parameters (typed based on entity+action)
+            select_fields: Optional allowlist of dot-notation fields to include
+            exclude_fields: Optional blocklist of dot-notation fields to remove
+            skip_truncation: Disable long-text truncation for collection actions
 
         Returns:
             Typed response based on the operation
@@ -352,7 +399,10 @@ class NotionConnector:
         config = ExecutionConfig(
             entity=entity,
             action=action,
-            params=resolved_params
+            params=resolved_params,
+            select_fields=select_fields,
+            exclude_fields=exclude_fields,
+            skip_truncation=skip_truncation
         )
 
         result = await self._executor.execute(config)

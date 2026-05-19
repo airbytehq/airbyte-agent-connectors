@@ -87,7 +87,7 @@ class AmazonAdsConnector:
 
     connector_name = "amazon-ads"
     connector_version = "1.0.10"
-    sdk_version = "0.1.203"
+    sdk_version = "0.1.204"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -249,7 +249,11 @@ class AmazonAdsConnector:
         self,
         entity: Literal["profiles"],
         action: Literal["list"],
-        params: "ProfilesListParams"
+        params: "ProfilesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ProfilesListResult": ...
 
     @overload
@@ -257,7 +261,11 @@ class AmazonAdsConnector:
         self,
         entity: Literal["profiles"],
         action: Literal["get"],
-        params: "ProfilesGetParams"
+        params: "ProfilesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Profile": ...
 
     @overload
@@ -265,7 +273,11 @@ class AmazonAdsConnector:
         self,
         entity: Literal["portfolios"],
         action: Literal["list"],
-        params: "PortfoliosListParams"
+        params: "PortfoliosListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "PortfoliosListResult": ...
 
     @overload
@@ -273,7 +285,11 @@ class AmazonAdsConnector:
         self,
         entity: Literal["portfolios"],
         action: Literal["get"],
-        params: "PortfoliosGetParams"
+        params: "PortfoliosGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Portfolio": ...
 
     @overload
@@ -281,7 +297,11 @@ class AmazonAdsConnector:
         self,
         entity: Literal["sponsored_product_campaigns"],
         action: Literal["list"],
-        params: "SponsoredProductCampaignsListParams"
+        params: "SponsoredProductCampaignsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SponsoredProductCampaignsListResult": ...
 
     @overload
@@ -289,7 +309,11 @@ class AmazonAdsConnector:
         self,
         entity: Literal["sponsored_product_campaigns"],
         action: Literal["get"],
-        params: "SponsoredProductCampaignsGetParams"
+        params: "SponsoredProductCampaignsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SponsoredProductCampaign": ...
 
     @overload
@@ -297,7 +321,11 @@ class AmazonAdsConnector:
         self,
         entity: Literal["sponsored_product_ad_groups"],
         action: Literal["list"],
-        params: "SponsoredProductAdGroupsListParams"
+        params: "SponsoredProductAdGroupsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SponsoredProductAdGroupsListResult": ...
 
     @overload
@@ -305,7 +333,11 @@ class AmazonAdsConnector:
         self,
         entity: Literal["sponsored_product_keywords"],
         action: Literal["list"],
-        params: "SponsoredProductKeywordsListParams"
+        params: "SponsoredProductKeywordsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SponsoredProductKeywordsListResult": ...
 
     @overload
@@ -313,7 +345,11 @@ class AmazonAdsConnector:
         self,
         entity: Literal["sponsored_product_product_ads"],
         action: Literal["list"],
-        params: "SponsoredProductProductAdsListParams"
+        params: "SponsoredProductProductAdsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SponsoredProductProductAdsListResult": ...
 
     @overload
@@ -321,7 +357,11 @@ class AmazonAdsConnector:
         self,
         entity: Literal["sponsored_product_targets"],
         action: Literal["list"],
-        params: "SponsoredProductTargetsListParams"
+        params: "SponsoredProductTargetsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SponsoredProductTargetsListResult": ...
 
     @overload
@@ -329,7 +369,11 @@ class AmazonAdsConnector:
         self,
         entity: Literal["sponsored_product_negative_keywords"],
         action: Literal["list"],
-        params: "SponsoredProductNegativeKeywordsListParams"
+        params: "SponsoredProductNegativeKeywordsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SponsoredProductNegativeKeywordsListResult": ...
 
     @overload
@@ -337,7 +381,11 @@ class AmazonAdsConnector:
         self,
         entity: Literal["sponsored_product_negative_targets"],
         action: Literal["list"],
-        params: "SponsoredProductNegativeTargetsListParams"
+        params: "SponsoredProductNegativeTargetsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SponsoredProductNegativeTargetsListResult": ...
 
     @overload
@@ -345,7 +393,11 @@ class AmazonAdsConnector:
         self,
         entity: Literal["sponsored_brands_campaigns"],
         action: Literal["list"],
-        params: "SponsoredBrandsCampaignsListParams"
+        params: "SponsoredBrandsCampaignsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SponsoredBrandsCampaignsListResult": ...
 
     @overload
@@ -353,7 +405,11 @@ class AmazonAdsConnector:
         self,
         entity: Literal["sponsored_brands_ad_groups"],
         action: Literal["list"],
-        params: "SponsoredBrandsAdGroupsListParams"
+        params: "SponsoredBrandsAdGroupsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SponsoredBrandsAdGroupsListResult": ...
 
 
@@ -362,14 +418,22 @@ class AmazonAdsConnector:
         self,
         entity: str,
         action: Literal["list", "get", "context_store_search"],
-        params: Mapping[str, Any]
+        params: Mapping[str, Any],
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> AmazonAdsExecuteResult[Any] | AmazonAdsExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
         action: Literal["list", "get", "context_store_search"],
-        params: Mapping[str, Any] | None = None
+        params: Mapping[str, Any] | None = None,
+        *,
+        select_fields: list[str] | None = None,
+        exclude_fields: list[str] | None = None,
+        skip_truncation: bool = True
     ) -> Any:
         """
         Execute an entity operation with full type safety.
@@ -383,6 +447,9 @@ class AmazonAdsConnector:
             entity: Entity name (e.g., "customers")
             action: Operation action (e.g., "create", "get", "list")
             params: Operation parameters (typed based on entity+action)
+            select_fields: Optional allowlist of dot-notation fields to include
+            exclude_fields: Optional blocklist of dot-notation fields to remove
+            skip_truncation: Disable long-text truncation for collection actions
 
         Returns:
             Typed response based on the operation
@@ -407,7 +474,10 @@ class AmazonAdsConnector:
         config = ExecutionConfig(
             entity=entity,
             action=action,
-            params=resolved_params
+            params=resolved_params,
+            select_fields=select_fields,
+            exclude_fields=exclude_fields,
+            skip_truncation=skip_truncation
         )
 
         result = await self._executor.execute(config)

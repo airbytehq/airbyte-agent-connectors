@@ -282,7 +282,11 @@ class {{ class_name }}:
         self,
         entity: Literal["{{ op.entity }}"],
         action: Literal["{{ op.action }}"],
-        params: "{{ op.params_type_name }}"
+        params: "{{ op.params_type_name }}",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "{{ op.response_type }}": ...
 
 {% endfor %}
@@ -292,14 +296,22 @@ class {{ class_name }}:
         self,
         entity: str,
         action: {% if action_names %}Literal[{% for action in action_names %}"{{ action }}"{% if not loop.last %}, {% endif %}{% endfor %}]{% else %}str{% endif %},
-        params: Mapping[str, Any]
+        params: Mapping[str, Any],
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> {{ envelope_prefix }}ExecuteResult[Any] | {{ envelope_prefix }}ExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
         action: {% if action_names %}Literal[{% for action in action_names %}"{{ action }}"{% if not loop.last %}, {% endif %}{% endfor %}]{% else %}str{% endif %},
-        params: Mapping[str, Any] | None = None
+        params: Mapping[str, Any] | None = None,
+        *,
+        select_fields: list[str] | None = None,
+        exclude_fields: list[str] | None = None,
+        skip_truncation: bool = True
     ) -> Any:
         """
         Execute an entity operation with full type safety.
@@ -313,6 +325,9 @@ class {{ class_name }}:
             entity: Entity name (e.g., "customers")
             action: Operation action (e.g., "create", "get", "list")
             params: Operation parameters (typed based on entity+action)
+            select_fields: Optional allowlist of dot-notation fields to include
+            exclude_fields: Optional blocklist of dot-notation fields to remove
+            skip_truncation: Disable long-text truncation for collection actions
 
         Returns:
             Typed response based on the operation
@@ -337,7 +352,10 @@ class {{ class_name }}:
         config = ExecutionConfig(
             entity=entity,
             action=action,
-            params=resolved_params
+            params=resolved_params,
+            select_fields=select_fields,
+            exclude_fields=exclude_fields,
+            skip_truncation=skip_truncation
         )
 
         result = await self._executor.execute(config)

@@ -148,7 +148,7 @@ class PinterestConnector:
 
     connector_name = "pinterest"
     connector_version = "0.1.5"
-    sdk_version = "0.1.203"
+    sdk_version = "0.1.204"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -306,7 +306,11 @@ class PinterestConnector:
         self,
         entity: Literal["ad_accounts"],
         action: Literal["list"],
-        params: "AdAccountsListParams"
+        params: "AdAccountsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AdAccountsListResult": ...
 
     @overload
@@ -314,7 +318,11 @@ class PinterestConnector:
         self,
         entity: Literal["ad_accounts"],
         action: Literal["get"],
-        params: "AdAccountsGetParams"
+        params: "AdAccountsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AdAccount": ...
 
     @overload
@@ -322,7 +330,11 @@ class PinterestConnector:
         self,
         entity: Literal["boards"],
         action: Literal["list"],
-        params: "BoardsListParams"
+        params: "BoardsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "BoardsListResult": ...
 
     @overload
@@ -330,7 +342,11 @@ class PinterestConnector:
         self,
         entity: Literal["boards"],
         action: Literal["get"],
-        params: "BoardsGetParams"
+        params: "BoardsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Board": ...
 
     @overload
@@ -338,7 +354,11 @@ class PinterestConnector:
         self,
         entity: Literal["campaigns"],
         action: Literal["list"],
-        params: "CampaignsListParams"
+        params: "CampaignsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CampaignsListResult": ...
 
     @overload
@@ -346,7 +366,11 @@ class PinterestConnector:
         self,
         entity: Literal["ad_groups"],
         action: Literal["list"],
-        params: "AdGroupsListParams"
+        params: "AdGroupsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AdGroupsListResult": ...
 
     @overload
@@ -354,7 +378,11 @@ class PinterestConnector:
         self,
         entity: Literal["ads"],
         action: Literal["list"],
-        params: "AdsListParams"
+        params: "AdsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AdsListResult": ...
 
     @overload
@@ -362,7 +390,11 @@ class PinterestConnector:
         self,
         entity: Literal["board_sections"],
         action: Literal["list"],
-        params: "BoardSectionsListParams"
+        params: "BoardSectionsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "BoardSectionsListResult": ...
 
     @overload
@@ -370,7 +402,11 @@ class PinterestConnector:
         self,
         entity: Literal["board_pins"],
         action: Literal["list"],
-        params: "BoardPinsListParams"
+        params: "BoardPinsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "BoardPinsListResult": ...
 
     @overload
@@ -378,7 +414,11 @@ class PinterestConnector:
         self,
         entity: Literal["catalogs"],
         action: Literal["list"],
-        params: "CatalogsListParams"
+        params: "CatalogsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CatalogsListResult": ...
 
     @overload
@@ -386,7 +426,11 @@ class PinterestConnector:
         self,
         entity: Literal["catalogs_feeds"],
         action: Literal["list"],
-        params: "CatalogsFeedsListParams"
+        params: "CatalogsFeedsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CatalogsFeedsListResult": ...
 
     @overload
@@ -394,7 +438,11 @@ class PinterestConnector:
         self,
         entity: Literal["catalogs_product_groups"],
         action: Literal["list"],
-        params: "CatalogsProductGroupsListParams"
+        params: "CatalogsProductGroupsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CatalogsProductGroupsListResult": ...
 
     @overload
@@ -402,7 +450,11 @@ class PinterestConnector:
         self,
         entity: Literal["audiences"],
         action: Literal["list"],
-        params: "AudiencesListParams"
+        params: "AudiencesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AudiencesListResult": ...
 
     @overload
@@ -410,7 +462,11 @@ class PinterestConnector:
         self,
         entity: Literal["conversion_tags"],
         action: Literal["list"],
-        params: "ConversionTagsListParams"
+        params: "ConversionTagsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ConversionTagsListResult": ...
 
     @overload
@@ -418,7 +474,11 @@ class PinterestConnector:
         self,
         entity: Literal["customer_lists"],
         action: Literal["list"],
-        params: "CustomerListsListParams"
+        params: "CustomerListsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CustomerListsListResult": ...
 
     @overload
@@ -426,7 +486,11 @@ class PinterestConnector:
         self,
         entity: Literal["keywords"],
         action: Literal["list"],
-        params: "KeywordsListParams"
+        params: "KeywordsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "KeywordsListResult": ...
 
 
@@ -435,14 +499,22 @@ class PinterestConnector:
         self,
         entity: str,
         action: Literal["list", "get", "context_store_search"],
-        params: Mapping[str, Any]
+        params: Mapping[str, Any],
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> PinterestExecuteResult[Any] | PinterestExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
         action: Literal["list", "get", "context_store_search"],
-        params: Mapping[str, Any] | None = None
+        params: Mapping[str, Any] | None = None,
+        *,
+        select_fields: list[str] | None = None,
+        exclude_fields: list[str] | None = None,
+        skip_truncation: bool = True
     ) -> Any:
         """
         Execute an entity operation with full type safety.
@@ -456,6 +528,9 @@ class PinterestConnector:
             entity: Entity name (e.g., "customers")
             action: Operation action (e.g., "create", "get", "list")
             params: Operation parameters (typed based on entity+action)
+            select_fields: Optional allowlist of dot-notation fields to include
+            exclude_fields: Optional blocklist of dot-notation fields to remove
+            skip_truncation: Disable long-text truncation for collection actions
 
         Returns:
             Typed response based on the operation
@@ -480,7 +555,10 @@ class PinterestConnector:
         config = ExecutionConfig(
             entity=entity,
             action=action,
-            params=resolved_params
+            params=resolved_params,
+            select_fields=select_fields,
+            exclude_fields=exclude_fields,
+            skip_truncation=skip_truncation
         )
 
         result = await self._executor.execute(config)

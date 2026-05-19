@@ -64,7 +64,7 @@ class AirtableConnector:
 
     connector_name = "airtable"
     connector_version = "1.0.8"
-    sdk_version = "0.1.203"
+    sdk_version = "0.1.204"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -187,7 +187,11 @@ class AirtableConnector:
         self,
         entity: Literal["bases"],
         action: Literal["list"],
-        params: "BasesListParams"
+        params: "BasesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "BasesListResult": ...
 
     @overload
@@ -195,7 +199,11 @@ class AirtableConnector:
         self,
         entity: Literal["tables"],
         action: Literal["list"],
-        params: "TablesListParams"
+        params: "TablesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TablesListResult": ...
 
     @overload
@@ -203,7 +211,11 @@ class AirtableConnector:
         self,
         entity: Literal["records"],
         action: Literal["list"],
-        params: "RecordsListParams"
+        params: "RecordsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "RecordsListResult": ...
 
     @overload
@@ -211,7 +223,11 @@ class AirtableConnector:
         self,
         entity: Literal["records"],
         action: Literal["get"],
-        params: "RecordsGetParams"
+        params: "RecordsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Record": ...
 
 
@@ -220,14 +236,22 @@ class AirtableConnector:
         self,
         entity: str,
         action: Literal["list", "get", "context_store_search"],
-        params: Mapping[str, Any]
+        params: Mapping[str, Any],
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> AirtableExecuteResult[Any] | AirtableExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
         action: Literal["list", "get", "context_store_search"],
-        params: Mapping[str, Any] | None = None
+        params: Mapping[str, Any] | None = None,
+        *,
+        select_fields: list[str] | None = None,
+        exclude_fields: list[str] | None = None,
+        skip_truncation: bool = True
     ) -> Any:
         """
         Execute an entity operation with full type safety.
@@ -241,6 +265,9 @@ class AirtableConnector:
             entity: Entity name (e.g., "customers")
             action: Operation action (e.g., "create", "get", "list")
             params: Operation parameters (typed based on entity+action)
+            select_fields: Optional allowlist of dot-notation fields to include
+            exclude_fields: Optional blocklist of dot-notation fields to remove
+            skip_truncation: Disable long-text truncation for collection actions
 
         Returns:
             Typed response based on the operation
@@ -265,7 +292,10 @@ class AirtableConnector:
         config = ExecutionConfig(
             entity=entity,
             action=action,
-            params=resolved_params
+            params=resolved_params,
+            select_fields=select_fields,
+            exclude_fields=exclude_fields,
+            skip_truncation=skip_truncation
         )
 
         result = await self._executor.execute(config)

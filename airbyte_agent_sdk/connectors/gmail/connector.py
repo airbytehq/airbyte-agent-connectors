@@ -104,7 +104,7 @@ class GmailConnector:
 
     connector_name = "gmail"
     connector_version = "0.1.4"
-    sdk_version = "0.1.203"
+    sdk_version = "0.1.204"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -262,7 +262,11 @@ class GmailConnector:
         self,
         entity: Literal["profile"],
         action: Literal["get"],
-        params: "ProfileGetParams"
+        params: "ProfileGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Profile": ...
 
     @overload
@@ -270,7 +274,11 @@ class GmailConnector:
         self,
         entity: Literal["messages"],
         action: Literal["list"],
-        params: "MessagesListParams"
+        params: "MessagesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "MessagesListResult": ...
 
     @overload
@@ -278,7 +286,11 @@ class GmailConnector:
         self,
         entity: Literal["messages"],
         action: Literal["get"],
-        params: "MessagesGetParams"
+        params: "MessagesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Message": ...
 
     @overload
@@ -286,7 +298,11 @@ class GmailConnector:
         self,
         entity: Literal["labels"],
         action: Literal["list"],
-        params: "LabelsListParams"
+        params: "LabelsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "LabelsListResult": ...
 
     @overload
@@ -294,7 +310,11 @@ class GmailConnector:
         self,
         entity: Literal["labels"],
         action: Literal["create"],
-        params: "LabelsCreateParams"
+        params: "LabelsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Label": ...
 
     @overload
@@ -302,7 +322,11 @@ class GmailConnector:
         self,
         entity: Literal["labels"],
         action: Literal["get"],
-        params: "LabelsGetParams"
+        params: "LabelsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Label": ...
 
     @overload
@@ -310,7 +334,11 @@ class GmailConnector:
         self,
         entity: Literal["labels"],
         action: Literal["update"],
-        params: "LabelsUpdateParams"
+        params: "LabelsUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Label": ...
 
     @overload
@@ -318,7 +346,11 @@ class GmailConnector:
         self,
         entity: Literal["labels"],
         action: Literal["delete"],
-        params: "LabelsDeleteParams"
+        params: "LabelsDeleteParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -326,7 +358,11 @@ class GmailConnector:
         self,
         entity: Literal["drafts"],
         action: Literal["list"],
-        params: "DraftsListParams"
+        params: "DraftsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "DraftsListResult": ...
 
     @overload
@@ -334,7 +370,11 @@ class GmailConnector:
         self,
         entity: Literal["drafts"],
         action: Literal["create"],
-        params: "DraftsCreateParams"
+        params: "DraftsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Draft": ...
 
     @overload
@@ -342,7 +382,11 @@ class GmailConnector:
         self,
         entity: Literal["drafts"],
         action: Literal["get"],
-        params: "DraftsGetParams"
+        params: "DraftsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Draft": ...
 
     @overload
@@ -350,7 +394,11 @@ class GmailConnector:
         self,
         entity: Literal["drafts"],
         action: Literal["update"],
-        params: "DraftsUpdateParams"
+        params: "DraftsUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Draft": ...
 
     @overload
@@ -358,7 +406,11 @@ class GmailConnector:
         self,
         entity: Literal["drafts"],
         action: Literal["delete"],
-        params: "DraftsDeleteParams"
+        params: "DraftsDeleteParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -366,7 +418,11 @@ class GmailConnector:
         self,
         entity: Literal["drafts_send"],
         action: Literal["create"],
-        params: "DraftsSendCreateParams"
+        params: "DraftsSendCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Message": ...
 
     @overload
@@ -374,7 +430,11 @@ class GmailConnector:
         self,
         entity: Literal["threads"],
         action: Literal["list"],
-        params: "ThreadsListParams"
+        params: "ThreadsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ThreadsListResult": ...
 
     @overload
@@ -382,7 +442,11 @@ class GmailConnector:
         self,
         entity: Literal["threads"],
         action: Literal["get"],
-        params: "ThreadsGetParams"
+        params: "ThreadsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Thread": ...
 
     @overload
@@ -390,7 +454,11 @@ class GmailConnector:
         self,
         entity: Literal["messages"],
         action: Literal["create"],
-        params: "MessagesCreateParams"
+        params: "MessagesCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Message": ...
 
     @overload
@@ -398,7 +466,11 @@ class GmailConnector:
         self,
         entity: Literal["messages"],
         action: Literal["update"],
-        params: "MessagesUpdateParams"
+        params: "MessagesUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Message": ...
 
     @overload
@@ -406,7 +478,11 @@ class GmailConnector:
         self,
         entity: Literal["messages_trash"],
         action: Literal["create"],
-        params: "MessagesTrashCreateParams"
+        params: "MessagesTrashCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Message": ...
 
     @overload
@@ -414,7 +490,11 @@ class GmailConnector:
         self,
         entity: Literal["messages_untrash"],
         action: Literal["create"],
-        params: "MessagesUntrashCreateParams"
+        params: "MessagesUntrashCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Message": ...
 
 
@@ -423,14 +503,22 @@ class GmailConnector:
         self,
         entity: str,
         action: Literal["get", "list", "create", "update", "delete", "context_store_search"],
-        params: Mapping[str, Any]
+        params: Mapping[str, Any],
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> GmailExecuteResult[Any] | GmailExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
         action: Literal["get", "list", "create", "update", "delete", "context_store_search"],
-        params: Mapping[str, Any] | None = None
+        params: Mapping[str, Any] | None = None,
+        *,
+        select_fields: list[str] | None = None,
+        exclude_fields: list[str] | None = None,
+        skip_truncation: bool = True
     ) -> Any:
         """
         Execute an entity operation with full type safety.
@@ -444,6 +532,9 @@ class GmailConnector:
             entity: Entity name (e.g., "customers")
             action: Operation action (e.g., "create", "get", "list")
             params: Operation parameters (typed based on entity+action)
+            select_fields: Optional allowlist of dot-notation fields to include
+            exclude_fields: Optional blocklist of dot-notation fields to remove
+            skip_truncation: Disable long-text truncation for collection actions
 
         Returns:
             Typed response based on the operation
@@ -468,7 +559,10 @@ class GmailConnector:
         config = ExecutionConfig(
             entity=entity,
             action=action,
-            params=resolved_params
+            params=resolved_params,
+            select_fields=select_fields,
+            exclude_fields=exclude_fields,
+            skip_truncation=skip_truncation
         )
 
         result = await self._executor.execute(config)

@@ -82,7 +82,7 @@ class SentryConnector:
 
     connector_name = "sentry"
     connector_version = "1.0.4"
-    sdk_version = "0.1.203"
+    sdk_version = "0.1.204"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -224,7 +224,11 @@ class SentryConnector:
         self,
         entity: Literal["projects"],
         action: Literal["list"],
-        params: "ProjectsListParams"
+        params: "ProjectsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ProjectsListResult": ...
 
     @overload
@@ -232,7 +236,11 @@ class SentryConnector:
         self,
         entity: Literal["projects"],
         action: Literal["get"],
-        params: "ProjectsGetParams"
+        params: "ProjectsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ProjectDetail": ...
 
     @overload
@@ -240,7 +248,11 @@ class SentryConnector:
         self,
         entity: Literal["issues"],
         action: Literal["list"],
-        params: "IssuesListParams"
+        params: "IssuesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "IssuesListResult": ...
 
     @overload
@@ -248,7 +260,11 @@ class SentryConnector:
         self,
         entity: Literal["issues"],
         action: Literal["get"],
-        params: "IssuesGetParams"
+        params: "IssuesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Issue": ...
 
     @overload
@@ -256,7 +272,11 @@ class SentryConnector:
         self,
         entity: Literal["events"],
         action: Literal["list"],
-        params: "EventsListParams"
+        params: "EventsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "EventsListResult": ...
 
     @overload
@@ -264,7 +284,11 @@ class SentryConnector:
         self,
         entity: Literal["events"],
         action: Literal["get"],
-        params: "EventsGetParams"
+        params: "EventsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Event": ...
 
     @overload
@@ -272,7 +296,11 @@ class SentryConnector:
         self,
         entity: Literal["releases"],
         action: Literal["list"],
-        params: "ReleasesListParams"
+        params: "ReleasesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ReleasesListResult": ...
 
     @overload
@@ -280,7 +308,11 @@ class SentryConnector:
         self,
         entity: Literal["releases"],
         action: Literal["get"],
-        params: "ReleasesGetParams"
+        params: "ReleasesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Release": ...
 
     @overload
@@ -288,7 +320,11 @@ class SentryConnector:
         self,
         entity: Literal["project_detail"],
         action: Literal["get"],
-        params: "ProjectDetailGetParams"
+        params: "ProjectDetailGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ProjectDetail": ...
 
 
@@ -297,14 +333,22 @@ class SentryConnector:
         self,
         entity: str,
         action: Literal["list", "get", "context_store_search"],
-        params: Mapping[str, Any]
+        params: Mapping[str, Any],
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> SentryExecuteResult[Any] | SentryExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
         action: Literal["list", "get", "context_store_search"],
-        params: Mapping[str, Any] | None = None
+        params: Mapping[str, Any] | None = None,
+        *,
+        select_fields: list[str] | None = None,
+        exclude_fields: list[str] | None = None,
+        skip_truncation: bool = True
     ) -> Any:
         """
         Execute an entity operation with full type safety.
@@ -318,6 +362,9 @@ class SentryConnector:
             entity: Entity name (e.g., "customers")
             action: Operation action (e.g., "create", "get", "list")
             params: Operation parameters (typed based on entity+action)
+            select_fields: Optional allowlist of dot-notation fields to include
+            exclude_fields: Optional blocklist of dot-notation fields to remove
+            skip_truncation: Disable long-text truncation for collection actions
 
         Returns:
             Typed response based on the operation
@@ -342,7 +389,10 @@ class SentryConnector:
         config = ExecutionConfig(
             entity=entity,
             action=action,
-            params=resolved_params
+            params=resolved_params,
+            select_fields=select_fields,
+            exclude_fields=exclude_fields,
+            skip_truncation=skip_truncation
         )
 
         result = await self._executor.execute(config)

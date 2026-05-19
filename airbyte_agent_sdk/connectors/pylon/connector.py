@@ -159,7 +159,7 @@ class PylonConnector:
 
     connector_name = "pylon"
     connector_version = "0.1.10"
-    sdk_version = "0.1.203"
+    sdk_version = "0.1.204"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -377,7 +377,11 @@ class PylonConnector:
         self,
         entity: Literal["issues"],
         action: Literal["list"],
-        params: "IssuesListParams"
+        params: "IssuesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "IssuesListResult": ...
 
     @overload
@@ -385,7 +389,11 @@ class PylonConnector:
         self,
         entity: Literal["issues"],
         action: Literal["create"],
-        params: "IssuesCreateParams"
+        params: "IssuesCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "IssueResponse": ...
 
     @overload
@@ -393,7 +401,11 @@ class PylonConnector:
         self,
         entity: Literal["issues"],
         action: Literal["get"],
-        params: "IssuesGetParams"
+        params: "IssuesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Issue": ...
 
     @overload
@@ -401,7 +413,11 @@ class PylonConnector:
         self,
         entity: Literal["issues"],
         action: Literal["update"],
-        params: "IssuesUpdateParams"
+        params: "IssuesUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "IssueResponse": ...
 
     @overload
@@ -409,7 +425,11 @@ class PylonConnector:
         self,
         entity: Literal["issue_replies"],
         action: Literal["create"],
-        params: "IssueRepliesCreateParams"
+        params: "IssueRepliesCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "IssueReplyResponse": ...
 
     @overload
@@ -417,7 +437,11 @@ class PylonConnector:
         self,
         entity: Literal["issue_assignments"],
         action: Literal["update"],
-        params: "IssueAssignmentsUpdateParams"
+        params: "IssueAssignmentsUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "IssueResponse": ...
 
     @overload
@@ -425,7 +449,11 @@ class PylonConnector:
         self,
         entity: Literal["issue_statuses"],
         action: Literal["update"],
-        params: "IssueStatusesUpdateParams"
+        params: "IssueStatusesUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "IssueResponse": ...
 
     @overload
@@ -433,7 +461,11 @@ class PylonConnector:
         self,
         entity: Literal["issues"],
         action: Literal["delete"],
-        params: "IssuesDeleteParams"
+        params: "IssuesDeleteParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "DeleteIssueResponse": ...
 
     @overload
@@ -441,7 +473,11 @@ class PylonConnector:
         self,
         entity: Literal["messages"],
         action: Literal["list"],
-        params: "MessagesListParams"
+        params: "MessagesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "MessagesListResult": ...
 
     @overload
@@ -449,7 +485,11 @@ class PylonConnector:
         self,
         entity: Literal["issue_notes"],
         action: Literal["create"],
-        params: "IssueNotesCreateParams"
+        params: "IssueNotesCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "IssueNoteResponse": ...
 
     @overload
@@ -457,7 +497,11 @@ class PylonConnector:
         self,
         entity: Literal["issue_threads"],
         action: Literal["create"],
-        params: "IssueThreadsCreateParams"
+        params: "IssueThreadsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "IssueThreadResponse": ...
 
     @overload
@@ -465,7 +509,11 @@ class PylonConnector:
         self,
         entity: Literal["accounts"],
         action: Literal["list"],
-        params: "AccountsListParams"
+        params: "AccountsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AccountsListResult": ...
 
     @overload
@@ -473,7 +521,11 @@ class PylonConnector:
         self,
         entity: Literal["accounts"],
         action: Literal["create"],
-        params: "AccountsCreateParams"
+        params: "AccountsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AccountResponse": ...
 
     @overload
@@ -481,7 +533,11 @@ class PylonConnector:
         self,
         entity: Literal["accounts"],
         action: Literal["get"],
-        params: "AccountsGetParams"
+        params: "AccountsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Account": ...
 
     @overload
@@ -489,7 +545,11 @@ class PylonConnector:
         self,
         entity: Literal["accounts"],
         action: Literal["update"],
-        params: "AccountsUpdateParams"
+        params: "AccountsUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AccountResponse": ...
 
     @overload
@@ -497,7 +557,11 @@ class PylonConnector:
         self,
         entity: Literal["contacts"],
         action: Literal["list"],
-        params: "ContactsListParams"
+        params: "ContactsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ContactsListResult": ...
 
     @overload
@@ -505,7 +569,11 @@ class PylonConnector:
         self,
         entity: Literal["contacts"],
         action: Literal["create"],
-        params: "ContactsCreateParams"
+        params: "ContactsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ContactResponse": ...
 
     @overload
@@ -513,7 +581,11 @@ class PylonConnector:
         self,
         entity: Literal["contacts"],
         action: Literal["get"],
-        params: "ContactsGetParams"
+        params: "ContactsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Contact": ...
 
     @overload
@@ -521,7 +593,11 @@ class PylonConnector:
         self,
         entity: Literal["contacts"],
         action: Literal["update"],
-        params: "ContactsUpdateParams"
+        params: "ContactsUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ContactResponse": ...
 
     @overload
@@ -529,7 +605,11 @@ class PylonConnector:
         self,
         entity: Literal["teams"],
         action: Literal["list"],
-        params: "TeamsListParams"
+        params: "TeamsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TeamsListResult": ...
 
     @overload
@@ -537,7 +617,11 @@ class PylonConnector:
         self,
         entity: Literal["teams"],
         action: Literal["create"],
-        params: "TeamsCreateParams"
+        params: "TeamsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TeamResponse": ...
 
     @overload
@@ -545,7 +629,11 @@ class PylonConnector:
         self,
         entity: Literal["teams"],
         action: Literal["get"],
-        params: "TeamsGetParams"
+        params: "TeamsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Team": ...
 
     @overload
@@ -553,7 +641,11 @@ class PylonConnector:
         self,
         entity: Literal["teams"],
         action: Literal["update"],
-        params: "TeamsUpdateParams"
+        params: "TeamsUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TeamResponse": ...
 
     @overload
@@ -561,7 +653,11 @@ class PylonConnector:
         self,
         entity: Literal["tags"],
         action: Literal["list"],
-        params: "TagsListParams"
+        params: "TagsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TagsListResult": ...
 
     @overload
@@ -569,7 +665,11 @@ class PylonConnector:
         self,
         entity: Literal["tags"],
         action: Literal["create"],
-        params: "TagsCreateParams"
+        params: "TagsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TagResponse": ...
 
     @overload
@@ -577,7 +677,11 @@ class PylonConnector:
         self,
         entity: Literal["tags"],
         action: Literal["get"],
-        params: "TagsGetParams"
+        params: "TagsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Tag": ...
 
     @overload
@@ -585,7 +689,11 @@ class PylonConnector:
         self,
         entity: Literal["tags"],
         action: Literal["update"],
-        params: "TagsUpdateParams"
+        params: "TagsUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TagResponse": ...
 
     @overload
@@ -593,7 +701,11 @@ class PylonConnector:
         self,
         entity: Literal["users"],
         action: Literal["list"],
-        params: "UsersListParams"
+        params: "UsersListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "UsersListResult": ...
 
     @overload
@@ -601,7 +713,11 @@ class PylonConnector:
         self,
         entity: Literal["users"],
         action: Literal["get"],
-        params: "UsersGetParams"
+        params: "UsersGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "User": ...
 
     @overload
@@ -609,7 +725,11 @@ class PylonConnector:
         self,
         entity: Literal["custom_fields"],
         action: Literal["list"],
-        params: "CustomFieldsListParams"
+        params: "CustomFieldsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CustomFieldsListResult": ...
 
     @overload
@@ -617,7 +737,11 @@ class PylonConnector:
         self,
         entity: Literal["custom_fields"],
         action: Literal["get"],
-        params: "CustomFieldsGetParams"
+        params: "CustomFieldsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CustomField": ...
 
     @overload
@@ -625,7 +749,11 @@ class PylonConnector:
         self,
         entity: Literal["ticket_forms"],
         action: Literal["list"],
-        params: "TicketFormsListParams"
+        params: "TicketFormsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TicketFormsListResult": ...
 
     @overload
@@ -633,7 +761,11 @@ class PylonConnector:
         self,
         entity: Literal["user_roles"],
         action: Literal["list"],
-        params: "UserRolesListParams"
+        params: "UserRolesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "UserRolesListResult": ...
 
     @overload
@@ -641,7 +773,11 @@ class PylonConnector:
         self,
         entity: Literal["tasks"],
         action: Literal["create"],
-        params: "TasksCreateParams"
+        params: "TasksCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TaskResponse": ...
 
     @overload
@@ -649,7 +785,11 @@ class PylonConnector:
         self,
         entity: Literal["tasks"],
         action: Literal["update"],
-        params: "TasksUpdateParams"
+        params: "TasksUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TaskResponse": ...
 
     @overload
@@ -657,7 +797,11 @@ class PylonConnector:
         self,
         entity: Literal["projects"],
         action: Literal["create"],
-        params: "ProjectsCreateParams"
+        params: "ProjectsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ProjectResponse": ...
 
     @overload
@@ -665,7 +809,11 @@ class PylonConnector:
         self,
         entity: Literal["projects"],
         action: Literal["update"],
-        params: "ProjectsUpdateParams"
+        params: "ProjectsUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ProjectResponse": ...
 
     @overload
@@ -673,7 +821,11 @@ class PylonConnector:
         self,
         entity: Literal["milestones"],
         action: Literal["create"],
-        params: "MilestonesCreateParams"
+        params: "MilestonesCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "MilestoneResponse": ...
 
     @overload
@@ -681,7 +833,11 @@ class PylonConnector:
         self,
         entity: Literal["milestones"],
         action: Literal["update"],
-        params: "MilestonesUpdateParams"
+        params: "MilestonesUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "MilestoneResponse": ...
 
     @overload
@@ -689,7 +845,11 @@ class PylonConnector:
         self,
         entity: Literal["articles"],
         action: Literal["create"],
-        params: "ArticlesCreateParams"
+        params: "ArticlesCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ArticleResponse": ...
 
     @overload
@@ -697,7 +857,11 @@ class PylonConnector:
         self,
         entity: Literal["articles"],
         action: Literal["update"],
-        params: "ArticlesUpdateParams"
+        params: "ArticlesUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ArticleResponse": ...
 
     @overload
@@ -705,7 +869,11 @@ class PylonConnector:
         self,
         entity: Literal["collections"],
         action: Literal["create"],
-        params: "CollectionsCreateParams"
+        params: "CollectionsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CollectionResponse": ...
 
     @overload
@@ -713,7 +881,11 @@ class PylonConnector:
         self,
         entity: Literal["me"],
         action: Literal["get"],
-        params: "MeGetParams"
+        params: "MeGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "User": ...
 
 
@@ -722,14 +894,22 @@ class PylonConnector:
         self,
         entity: str,
         action: Literal["list", "create", "get", "update", "delete", "context_store_search"],
-        params: Mapping[str, Any]
+        params: Mapping[str, Any],
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> PylonExecuteResult[Any] | PylonExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
         action: Literal["list", "create", "get", "update", "delete", "context_store_search"],
-        params: Mapping[str, Any] | None = None
+        params: Mapping[str, Any] | None = None,
+        *,
+        select_fields: list[str] | None = None,
+        exclude_fields: list[str] | None = None,
+        skip_truncation: bool = True
     ) -> Any:
         """
         Execute an entity operation with full type safety.
@@ -743,6 +923,9 @@ class PylonConnector:
             entity: Entity name (e.g., "customers")
             action: Operation action (e.g., "create", "get", "list")
             params: Operation parameters (typed based on entity+action)
+            select_fields: Optional allowlist of dot-notation fields to include
+            exclude_fields: Optional blocklist of dot-notation fields to remove
+            skip_truncation: Disable long-text truncation for collection actions
 
         Returns:
             Typed response based on the operation
@@ -767,7 +950,10 @@ class PylonConnector:
         config = ExecutionConfig(
             entity=entity,
             action=action,
-            params=resolved_params
+            params=resolved_params,
+            select_fields=select_fields,
+            exclude_fields=exclude_fields,
+            skip_truncation=skip_truncation
         )
 
         result = await self._executor.execute(config)

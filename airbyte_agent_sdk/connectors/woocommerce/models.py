@@ -34,6 +34,14 @@ class WoocommerceReplicationConfig(BaseModel):
 
 # ===== RESPONSE TYPE DEFINITIONS (PYDANTIC) =====
 
+class CustomerMetaDataItem(BaseModel):
+    """Nested schema for Customer.meta_data_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int | None | None = Field(default=None)
+    key: str | None | None = Field(default=None)
+    value: str | None | None = Field(default=None)
+
 class CustomerShipping(BaseModel):
     """List of shipping address data"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -64,14 +72,6 @@ class CustomerBilling(BaseModel):
     email: str | None | None = Field(default=None)
     phone: str | None | None = Field(default=None)
 
-class CustomerMetaDataItem(BaseModel):
-    """Nested schema for Customer.meta_data_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: int | None | None = Field(default=None)
-    key: str | None | None = Field(default=None)
-    value: str | None | None = Field(default=None)
-
 class Customer(BaseModel):
     """Customer type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -91,6 +91,20 @@ class Customer(BaseModel):
     is_paying_customer: bool | None = Field(default=None)
     avatar_url: str | None = Field(default=None)
     meta_data: list[CustomerMetaDataItem] | None = Field(default=None)
+
+class OrderShipping(BaseModel):
+    """Shipping address"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    first_name: str | None | None = Field(default=None)
+    last_name: str | None | None = Field(default=None)
+    company: str | None | None = Field(default=None)
+    address_1: str | None | None = Field(default=None)
+    address_2: str | None | None = Field(default=None)
+    city: str | None | None = Field(default=None)
+    state: str | None | None = Field(default=None)
+    postcode: str | None | None = Field(default=None)
+    country: str | None | None = Field(default=None)
 
 class OrderTaxLinesItemMetaDataItem(BaseModel):
     """Nested schema for OrderTaxLinesItem.meta_data_item"""
@@ -113,13 +127,21 @@ class OrderTaxLinesItem(BaseModel):
     shipping_tax_total: str | None | None = Field(default=None)
     meta_data: list[OrderTaxLinesItemMetaDataItem] | None | None = Field(default=None)
 
-class OrderFeeLinesItemTaxesItem(BaseModel):
-    """Nested schema for OrderFeeLinesItem.taxes_item"""
+class OrderRefundsItem(BaseModel):
+    """Nested schema for Order.refunds_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     id: int | None | None = Field(default=None)
+    reason: str | None | None = Field(default=None)
     total: str | None | None = Field(default=None)
-    subtotal: str | None | None = Field(default=None)
+
+class OrderMetaDataItem(BaseModel):
+    """Nested schema for Order.meta_data_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int | None | None = Field(default=None)
+    key: str | None | None = Field(default=None)
+    value: Any | None = Field(default=None)
 
 class OrderFeeLinesItemMetaDataItem(BaseModel):
     """Nested schema for OrderFeeLinesItem.meta_data_item"""
@@ -128,6 +150,14 @@ class OrderFeeLinesItemMetaDataItem(BaseModel):
     id: int | None | None = Field(default=None)
     key: str | None | None = Field(default=None)
     value: Any | None = Field(default=None)
+
+class OrderFeeLinesItemTaxesItem(BaseModel):
+    """Nested schema for OrderFeeLinesItem.taxes_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int | None | None = Field(default=None)
+    total: str | None | None = Field(default=None)
+    subtotal: str | None | None = Field(default=None)
 
 class OrderFeeLinesItem(BaseModel):
     """Nested schema for Order.fee_lines_item"""
@@ -142,8 +172,26 @@ class OrderFeeLinesItem(BaseModel):
     taxes: list[OrderFeeLinesItemTaxesItem] | None | None = Field(default=None)
     meta_data: list[OrderFeeLinesItemMetaDataItem] | None | None = Field(default=None)
 
-class OrderMetaDataItem(BaseModel):
-    """Nested schema for Order.meta_data_item"""
+class OrderCouponLinesItemMetaDataItem(BaseModel):
+    """Nested schema for OrderCouponLinesItem.meta_data_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int | None | None = Field(default=None)
+    key: str | None | None = Field(default=None)
+    value: Any | None = Field(default=None)
+
+class OrderCouponLinesItem(BaseModel):
+    """Nested schema for Order.coupon_lines_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int | None | None = Field(default=None)
+    code: str | None | None = Field(default=None)
+    discount: str | None | None = Field(default=None)
+    discount_tax: str | None | None = Field(default=None)
+    meta_data: list[OrderCouponLinesItemMetaDataItem] | None | None = Field(default=None)
+
+class OrderShippingLinesItemMetaDataItem(BaseModel):
+    """Nested schema for OrderShippingLinesItem.meta_data_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     id: int | None | None = Field(default=None)
@@ -157,14 +205,6 @@ class OrderShippingLinesItemTaxesItem(BaseModel):
     id: int | None | None = Field(default=None)
     total: str | None | None = Field(default=None)
     subtotal: str | None | None = Field(default=None)
-
-class OrderShippingLinesItemMetaDataItem(BaseModel):
-    """Nested schema for OrderShippingLinesItem.meta_data_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: int | None | None = Field(default=None)
-    key: str | None | None = Field(default=None)
-    value: Any | None = Field(default=None)
 
 class OrderShippingLinesItem(BaseModel):
     """Nested schema for Order.shipping_lines_item"""
@@ -240,46 +280,6 @@ class OrderBilling(BaseModel):
     email: str | None | None = Field(default=None)
     phone: str | None | None = Field(default=None)
 
-class OrderShipping(BaseModel):
-    """Shipping address"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    first_name: str | None | None = Field(default=None)
-    last_name: str | None | None = Field(default=None)
-    company: str | None | None = Field(default=None)
-    address_1: str | None | None = Field(default=None)
-    address_2: str | None | None = Field(default=None)
-    city: str | None | None = Field(default=None)
-    state: str | None | None = Field(default=None)
-    postcode: str | None | None = Field(default=None)
-    country: str | None | None = Field(default=None)
-
-class OrderCouponLinesItemMetaDataItem(BaseModel):
-    """Nested schema for OrderCouponLinesItem.meta_data_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: int | None | None = Field(default=None)
-    key: str | None | None = Field(default=None)
-    value: Any | None = Field(default=None)
-
-class OrderCouponLinesItem(BaseModel):
-    """Nested schema for Order.coupon_lines_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: int | None | None = Field(default=None)
-    code: str | None | None = Field(default=None)
-    discount: str | None | None = Field(default=None)
-    discount_tax: str | None | None = Field(default=None)
-    meta_data: list[OrderCouponLinesItemMetaDataItem] | None | None = Field(default=None)
-
-class OrderRefundsItem(BaseModel):
-    """Nested schema for Order.refunds_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: int | None | None = Field(default=None)
-    reason: str | None | None = Field(default=None)
-    total: str | None | None = Field(default=None)
-
 class Order(BaseModel):
     """Order type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -339,6 +339,14 @@ class ProductDownloadsItem(BaseModel):
     name: str | None | None = Field(default=None)
     file: str | None | None = Field(default=None)
 
+class ProductTagsItem(BaseModel):
+    """Nested schema for Product.tags_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int | None | None = Field(default=None)
+    name: str | None | None = Field(default=None)
+    slug: str | None | None = Field(default=None)
+
 class ProductDimensions(BaseModel):
     """Product dimensions"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -358,19 +366,6 @@ class ProductAttributesItem(BaseModel):
     variation: bool | None | None = Field(default=None)
     options: list[str | None] | None | None = Field(default=None)
 
-class ProductImagesItem(BaseModel):
-    """Nested schema for Product.images_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: int | None | None = Field(default=None)
-    date_created: str | None | None = Field(default=None)
-    date_created_gmt: str | None | None = Field(default=None)
-    date_modified: str | None | None = Field(default=None)
-    date_modified_gmt: str | None | None = Field(default=None)
-    src: str | None | None = Field(default=None)
-    name: str | None | None = Field(default=None)
-    alt: str | None | None = Field(default=None)
-
 class ProductMetaDataItem(BaseModel):
     """Nested schema for Product.meta_data_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -387,13 +382,18 @@ class ProductDefaultAttributesItem(BaseModel):
     name: str | None | None = Field(default=None)
     option: str | None | None = Field(default=None)
 
-class ProductTagsItem(BaseModel):
-    """Nested schema for Product.tags_item"""
+class ProductImagesItem(BaseModel):
+    """Nested schema for Product.images_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     id: int | None | None = Field(default=None)
+    date_created: str | None | None = Field(default=None)
+    date_created_gmt: str | None | None = Field(default=None)
+    date_modified: str | None | None = Field(default=None)
+    date_modified_gmt: str | None | None = Field(default=None)
+    src: str | None | None = Field(default=None)
     name: str | None | None = Field(default=None)
-    slug: str | None | None = Field(default=None)
+    alt: str | None | None = Field(default=None)
 
 class ProductCategoriesItem(BaseModel):
     """Nested schema for Product.categories_item"""
@@ -593,14 +593,6 @@ class ProductVariationDownloadsItem(BaseModel):
     name: str | None | None = Field(default=None)
     file: str | None | None = Field(default=None)
 
-class ProductVariationMetaDataItem(BaseModel):
-    """Nested schema for ProductVariation.meta_data_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: int | None | None = Field(default=None)
-    key: str | None | None = Field(default=None)
-    value: Any | None = Field(default=None)
-
 class ProductVariationImage(BaseModel):
     """Variation image data"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -614,14 +606,6 @@ class ProductVariationImage(BaseModel):
     name: str | None | None = Field(default=None)
     alt: str | None | None = Field(default=None)
 
-class ProductVariationDimensions(BaseModel):
-    """Variation dimensions"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    length: str | None | None = Field(default=None)
-    width: str | None | None = Field(default=None)
-    height: str | None | None = Field(default=None)
-
 class ProductVariationAttributesItem(BaseModel):
     """Nested schema for ProductVariation.attributes_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -629,6 +613,22 @@ class ProductVariationAttributesItem(BaseModel):
     id: int | None | None = Field(default=None)
     name: str | None | None = Field(default=None)
     option: str | None | None = Field(default=None)
+
+class ProductVariationMetaDataItem(BaseModel):
+    """Nested schema for ProductVariation.meta_data_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int | None | None = Field(default=None)
+    key: str | None | None = Field(default=None)
+    value: Any | None = Field(default=None)
+
+class ProductVariationDimensions(BaseModel):
+    """Variation dimensions"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    length: str | None | None = Field(default=None)
+    width: str | None | None = Field(default=None)
+    height: str | None | None = Field(default=None)
 
 class ProductVariation(BaseModel):
     """ProductVariation type definition"""
@@ -690,6 +690,26 @@ class OrderNote(BaseModel):
     note: str | None = Field(default=None)
     customer_note: bool | None = Field(default=None)
 
+class RefundMetaDataItem(BaseModel):
+    """Nested schema for Refund.meta_data_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int | None | None = Field(default=None)
+    key: str | None | None = Field(default=None)
+    value: Any | None = Field(default=None)
+
+class RefundTaxLinesItem(BaseModel):
+    """Nested schema for Refund.tax_lines_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int | None | None = Field(default=None)
+    rate_code: str | None | None = Field(default=None)
+    rate_id: int | None | None = Field(default=None)
+    label: str | None | None = Field(default=None)
+    compound: bool | None | None = Field(default=None)
+    tax_total: str | None | None = Field(default=None)
+    shipping_tax_total: str | None | None = Field(default=None)
+
 class RefundFeeLinesItem(BaseModel):
     """Nested schema for Refund.fee_lines_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -698,6 +718,16 @@ class RefundFeeLinesItem(BaseModel):
     name: str | None | None = Field(default=None)
     tax_class: str | None | None = Field(default=None)
     tax_status: str | None | None = Field(default=None)
+    total: str | None | None = Field(default=None)
+    total_tax: str | None | None = Field(default=None)
+
+class RefundShippingLinesItem(BaseModel):
+    """Nested schema for Refund.shipping_lines_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int | None | None = Field(default=None)
+    method_title: str | None | None = Field(default=None)
+    method_id: str | None | None = Field(default=None)
     total: str | None | None = Field(default=None)
     total_tax: str | None | None = Field(default=None)
 
@@ -735,36 +765,6 @@ class RefundLineItemsItem(BaseModel):
     meta_data: list[RefundLineItemsItemMetaDataItem] | None | None = Field(default=None)
     sku: str | None | None = Field(default=None)
     price: float | None | None = Field(default=None)
-
-class RefundTaxLinesItem(BaseModel):
-    """Nested schema for Refund.tax_lines_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: int | None | None = Field(default=None)
-    rate_code: str | None | None = Field(default=None)
-    rate_id: int | None | None = Field(default=None)
-    label: str | None | None = Field(default=None)
-    compound: bool | None | None = Field(default=None)
-    tax_total: str | None | None = Field(default=None)
-    shipping_tax_total: str | None | None = Field(default=None)
-
-class RefundMetaDataItem(BaseModel):
-    """Nested schema for Refund.meta_data_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: int | None | None = Field(default=None)
-    key: str | None | None = Field(default=None)
-    value: Any | None = Field(default=None)
-
-class RefundShippingLinesItem(BaseModel):
-    """Nested schema for Refund.shipping_lines_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: int | None | None = Field(default=None)
-    method_title: str | None | None = Field(default=None)
-    method_id: str | None | None = Field(default=None)
-    total: str | None | None = Field(default=None)
-    total_tax: str | None | None = Field(default=None)
 
 class Refund(BaseModel):
     """Refund type definition"""

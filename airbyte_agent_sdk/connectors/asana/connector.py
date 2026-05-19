@@ -177,7 +177,7 @@ class AsanaConnector:
 
     connector_name = "asana"
     connector_version = "0.1.21"
-    sdk_version = "0.1.203"
+    sdk_version = "0.1.204"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -419,7 +419,11 @@ class AsanaConnector:
         self,
         entity: Literal["tasks"],
         action: Literal["list"],
-        params: "TasksListParams"
+        params: "TasksListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TasksListResult": ...
 
     @overload
@@ -427,7 +431,11 @@ class AsanaConnector:
         self,
         entity: Literal["tasks"],
         action: Literal["create"],
-        params: "TasksCreateParams"
+        params: "TasksCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Task": ...
 
     @overload
@@ -435,7 +443,11 @@ class AsanaConnector:
         self,
         entity: Literal["project_tasks"],
         action: Literal["list"],
-        params: "ProjectTasksListParams"
+        params: "ProjectTasksListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ProjectTasksListResult": ...
 
     @overload
@@ -443,7 +455,11 @@ class AsanaConnector:
         self,
         entity: Literal["tasks"],
         action: Literal["get"],
-        params: "TasksGetParams"
+        params: "TasksGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Task": ...
 
     @overload
@@ -451,7 +467,11 @@ class AsanaConnector:
         self,
         entity: Literal["tasks"],
         action: Literal["update"],
-        params: "TasksUpdateParams"
+        params: "TasksUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Task": ...
 
     @overload
@@ -459,7 +479,11 @@ class AsanaConnector:
         self,
         entity: Literal["tasks"],
         action: Literal["delete"],
-        params: "TasksDeleteParams"
+        params: "TasksDeleteParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -467,7 +491,11 @@ class AsanaConnector:
         self,
         entity: Literal["workspace_task_search"],
         action: Literal["list"],
-        params: "WorkspaceTaskSearchListParams"
+        params: "WorkspaceTaskSearchListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "WorkspaceTaskSearchListResult": ...
 
     @overload
@@ -475,7 +503,11 @@ class AsanaConnector:
         self,
         entity: Literal["projects"],
         action: Literal["list"],
-        params: "ProjectsListParams"
+        params: "ProjectsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ProjectsListResult": ...
 
     @overload
@@ -483,7 +515,11 @@ class AsanaConnector:
         self,
         entity: Literal["projects"],
         action: Literal["create"],
-        params: "ProjectsCreateParams"
+        params: "ProjectsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Project": ...
 
     @overload
@@ -491,7 +527,11 @@ class AsanaConnector:
         self,
         entity: Literal["projects"],
         action: Literal["get"],
-        params: "ProjectsGetParams"
+        params: "ProjectsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Project": ...
 
     @overload
@@ -499,7 +539,11 @@ class AsanaConnector:
         self,
         entity: Literal["projects"],
         action: Literal["update"],
-        params: "ProjectsUpdateParams"
+        params: "ProjectsUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Project": ...
 
     @overload
@@ -507,7 +551,11 @@ class AsanaConnector:
         self,
         entity: Literal["projects"],
         action: Literal["delete"],
-        params: "ProjectsDeleteParams"
+        params: "ProjectsDeleteParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -515,7 +563,11 @@ class AsanaConnector:
         self,
         entity: Literal["task_projects"],
         action: Literal["list"],
-        params: "TaskProjectsListParams"
+        params: "TaskProjectsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TaskProjectsListResult": ...
 
     @overload
@@ -523,7 +575,11 @@ class AsanaConnector:
         self,
         entity: Literal["team_projects"],
         action: Literal["list"],
-        params: "TeamProjectsListParams"
+        params: "TeamProjectsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TeamProjectsListResult": ...
 
     @overload
@@ -531,7 +587,11 @@ class AsanaConnector:
         self,
         entity: Literal["workspace_projects"],
         action: Literal["list"],
-        params: "WorkspaceProjectsListParams"
+        params: "WorkspaceProjectsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "WorkspaceProjectsListResult": ...
 
     @overload
@@ -539,7 +599,11 @@ class AsanaConnector:
         self,
         entity: Literal["workspaces"],
         action: Literal["list"],
-        params: "WorkspacesListParams"
+        params: "WorkspacesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "WorkspacesListResult": ...
 
     @overload
@@ -547,7 +611,11 @@ class AsanaConnector:
         self,
         entity: Literal["workspaces"],
         action: Literal["get"],
-        params: "WorkspacesGetParams"
+        params: "WorkspacesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Workspace": ...
 
     @overload
@@ -555,7 +623,11 @@ class AsanaConnector:
         self,
         entity: Literal["users"],
         action: Literal["list"],
-        params: "UsersListParams"
+        params: "UsersListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "UsersListResult": ...
 
     @overload
@@ -563,7 +635,11 @@ class AsanaConnector:
         self,
         entity: Literal["users"],
         action: Literal["get"],
-        params: "UsersGetParams"
+        params: "UsersGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "User": ...
 
     @overload
@@ -571,7 +647,11 @@ class AsanaConnector:
         self,
         entity: Literal["workspace_users"],
         action: Literal["list"],
-        params: "WorkspaceUsersListParams"
+        params: "WorkspaceUsersListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "WorkspaceUsersListResult": ...
 
     @overload
@@ -579,7 +659,11 @@ class AsanaConnector:
         self,
         entity: Literal["team_users"],
         action: Literal["list"],
-        params: "TeamUsersListParams"
+        params: "TeamUsersListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TeamUsersListResult": ...
 
     @overload
@@ -587,7 +671,11 @@ class AsanaConnector:
         self,
         entity: Literal["teams"],
         action: Literal["get"],
-        params: "TeamsGetParams"
+        params: "TeamsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Team": ...
 
     @overload
@@ -595,7 +683,11 @@ class AsanaConnector:
         self,
         entity: Literal["workspace_teams"],
         action: Literal["list"],
-        params: "WorkspaceTeamsListParams"
+        params: "WorkspaceTeamsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "WorkspaceTeamsListResult": ...
 
     @overload
@@ -603,7 +695,11 @@ class AsanaConnector:
         self,
         entity: Literal["user_teams"],
         action: Literal["list"],
-        params: "UserTeamsListParams"
+        params: "UserTeamsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "UserTeamsListResult": ...
 
     @overload
@@ -611,7 +707,11 @@ class AsanaConnector:
         self,
         entity: Literal["attachments"],
         action: Literal["list"],
-        params: "AttachmentsListParams"
+        params: "AttachmentsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AttachmentsListResult": ...
 
     @overload
@@ -619,7 +719,11 @@ class AsanaConnector:
         self,
         entity: Literal["attachments"],
         action: Literal["get"],
-        params: "AttachmentsGetParams"
+        params: "AttachmentsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Attachment": ...
 
     @overload
@@ -627,7 +731,11 @@ class AsanaConnector:
         self,
         entity: Literal["attachments"],
         action: Literal["download"],
-        params: "AttachmentsDownloadParams"
+        params: "AttachmentsDownloadParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AsyncIterator[bytes]": ...
 
     @overload
@@ -635,7 +743,11 @@ class AsanaConnector:
         self,
         entity: Literal["workspace_tags"],
         action: Literal["list"],
-        params: "WorkspaceTagsListParams"
+        params: "WorkspaceTagsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "WorkspaceTagsListResult": ...
 
     @overload
@@ -643,7 +755,11 @@ class AsanaConnector:
         self,
         entity: Literal["workspace_tags"],
         action: Literal["create"],
-        params: "WorkspaceTagsCreateParams"
+        params: "WorkspaceTagsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Tag": ...
 
     @overload
@@ -651,7 +767,11 @@ class AsanaConnector:
         self,
         entity: Literal["tags"],
         action: Literal["get"],
-        params: "TagsGetParams"
+        params: "TagsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Tag": ...
 
     @overload
@@ -659,7 +779,11 @@ class AsanaConnector:
         self,
         entity: Literal["tags"],
         action: Literal["update"],
-        params: "TagsUpdateParams"
+        params: "TagsUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Tag": ...
 
     @overload
@@ -667,7 +791,11 @@ class AsanaConnector:
         self,
         entity: Literal["tags"],
         action: Literal["delete"],
-        params: "TagsDeleteParams"
+        params: "TagsDeleteParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -675,7 +803,11 @@ class AsanaConnector:
         self,
         entity: Literal["tag_tasks"],
         action: Literal["list"],
-        params: "TagTasksListParams"
+        params: "TagTasksListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TagTasksListResult": ...
 
     @overload
@@ -683,7 +815,11 @@ class AsanaConnector:
         self,
         entity: Literal["project_sections"],
         action: Literal["list"],
-        params: "ProjectSectionsListParams"
+        params: "ProjectSectionsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ProjectSectionsListResult": ...
 
     @overload
@@ -691,7 +827,11 @@ class AsanaConnector:
         self,
         entity: Literal["project_sections"],
         action: Literal["create"],
-        params: "ProjectSectionsCreateParams"
+        params: "ProjectSectionsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Section": ...
 
     @overload
@@ -699,7 +839,11 @@ class AsanaConnector:
         self,
         entity: Literal["sections"],
         action: Literal["get"],
-        params: "SectionsGetParams"
+        params: "SectionsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Section": ...
 
     @overload
@@ -707,7 +851,11 @@ class AsanaConnector:
         self,
         entity: Literal["sections"],
         action: Literal["update"],
-        params: "SectionsUpdateParams"
+        params: "SectionsUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Section": ...
 
     @overload
@@ -715,7 +863,11 @@ class AsanaConnector:
         self,
         entity: Literal["sections"],
         action: Literal["delete"],
-        params: "SectionsDeleteParams"
+        params: "SectionsDeleteParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -723,7 +875,11 @@ class AsanaConnector:
         self,
         entity: Literal["section_tasks"],
         action: Literal["list"],
-        params: "SectionTasksListParams"
+        params: "SectionTasksListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SectionTasksListResult": ...
 
     @overload
@@ -731,7 +887,11 @@ class AsanaConnector:
         self,
         entity: Literal["section_tasks"],
         action: Literal["create"],
-        params: "SectionTasksCreateParams"
+        params: "SectionTasksCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -739,7 +899,11 @@ class AsanaConnector:
         self,
         entity: Literal["task_subtasks"],
         action: Literal["list"],
-        params: "TaskSubtasksListParams"
+        params: "TaskSubtasksListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TaskSubtasksListResult": ...
 
     @overload
@@ -747,7 +911,11 @@ class AsanaConnector:
         self,
         entity: Literal["task_dependencies"],
         action: Literal["list"],
-        params: "TaskDependenciesListParams"
+        params: "TaskDependenciesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TaskDependenciesListResult": ...
 
     @overload
@@ -755,7 +923,11 @@ class AsanaConnector:
         self,
         entity: Literal["task_dependents"],
         action: Literal["list"],
-        params: "TaskDependentsListParams"
+        params: "TaskDependentsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TaskDependentsListResult": ...
 
     @overload
@@ -763,7 +935,11 @@ class AsanaConnector:
         self,
         entity: Literal["task_stories"],
         action: Literal["create"],
-        params: "TaskStoriesCreateParams"
+        params: "TaskStoriesCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Story": ...
 
     @overload
@@ -771,7 +947,11 @@ class AsanaConnector:
         self,
         entity: Literal["task_tags"],
         action: Literal["create"],
-        params: "TaskTagsCreateParams"
+        params: "TaskTagsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -779,7 +959,11 @@ class AsanaConnector:
         self,
         entity: Literal["task_tags"],
         action: Literal["delete"],
-        params: "TaskTagsDeleteParams"
+        params: "TaskTagsDeleteParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -787,7 +971,11 @@ class AsanaConnector:
         self,
         entity: Literal["workspace_memberships"],
         action: Literal["create"],
-        params: "WorkspaceMembershipsCreateParams"
+        params: "WorkspaceMembershipsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "User": ...
 
 
@@ -796,14 +984,22 @@ class AsanaConnector:
         self,
         entity: str,
         action: Literal["list", "create", "get", "update", "delete", "download", "context_store_search"],
-        params: Mapping[str, Any]
+        params: Mapping[str, Any],
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> AsanaExecuteResult[Any] | AsanaExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
         action: Literal["list", "create", "get", "update", "delete", "download", "context_store_search"],
-        params: Mapping[str, Any] | None = None
+        params: Mapping[str, Any] | None = None,
+        *,
+        select_fields: list[str] | None = None,
+        exclude_fields: list[str] | None = None,
+        skip_truncation: bool = True
     ) -> Any:
         """
         Execute an entity operation with full type safety.
@@ -817,6 +1013,9 @@ class AsanaConnector:
             entity: Entity name (e.g., "customers")
             action: Operation action (e.g., "create", "get", "list")
             params: Operation parameters (typed based on entity+action)
+            select_fields: Optional allowlist of dot-notation fields to include
+            exclude_fields: Optional blocklist of dot-notation fields to remove
+            skip_truncation: Disable long-text truncation for collection actions
 
         Returns:
             Typed response based on the operation
@@ -841,7 +1040,10 @@ class AsanaConnector:
         config = ExecutionConfig(
             entity=entity,
             action=action,
-            params=resolved_params
+            params=resolved_params,
+            select_fields=select_fields,
+            exclude_fields=exclude_fields,
+            skip_truncation=skip_truncation
         )
 
         result = await self._executor.execute(config)

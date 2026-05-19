@@ -139,7 +139,7 @@ class FacebookMarketingConnector:
 
     connector_name = "facebook-marketing"
     connector_version = "1.0.24"
-    sdk_version = "0.1.203"
+    sdk_version = "0.1.204"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -321,7 +321,11 @@ class FacebookMarketingConnector:
         self,
         entity: Literal["current_user"],
         action: Literal["get"],
-        params: "CurrentUserGetParams"
+        params: "CurrentUserGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CurrentUser": ...
 
     @overload
@@ -329,7 +333,11 @@ class FacebookMarketingConnector:
         self,
         entity: Literal["ad_accounts"],
         action: Literal["list"],
-        params: "AdAccountsListParams"
+        params: "AdAccountsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AdAccountsListResult": ...
 
     @overload
@@ -337,7 +345,11 @@ class FacebookMarketingConnector:
         self,
         entity: Literal["campaigns"],
         action: Literal["list"],
-        params: "CampaignsListParams"
+        params: "CampaignsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CampaignsListResult": ...
 
     @overload
@@ -345,7 +357,11 @@ class FacebookMarketingConnector:
         self,
         entity: Literal["campaigns"],
         action: Literal["create"],
-        params: "CampaignsCreateParams"
+        params: "CampaignsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CampaignCreateResponse": ...
 
     @overload
@@ -353,7 +369,11 @@ class FacebookMarketingConnector:
         self,
         entity: Literal["ad_sets"],
         action: Literal["list"],
-        params: "AdSetsListParams"
+        params: "AdSetsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AdSetsListResult": ...
 
     @overload
@@ -361,7 +381,11 @@ class FacebookMarketingConnector:
         self,
         entity: Literal["ad_sets"],
         action: Literal["create"],
-        params: "AdSetsCreateParams"
+        params: "AdSetsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AdSetCreateResponse": ...
 
     @overload
@@ -369,7 +393,11 @@ class FacebookMarketingConnector:
         self,
         entity: Literal["ads"],
         action: Literal["list"],
-        params: "AdsListParams"
+        params: "AdsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AdsListResult": ...
 
     @overload
@@ -377,7 +405,11 @@ class FacebookMarketingConnector:
         self,
         entity: Literal["ads"],
         action: Literal["create"],
-        params: "AdsCreateParams"
+        params: "AdsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AdCreateResponse": ...
 
     @overload
@@ -385,7 +417,11 @@ class FacebookMarketingConnector:
         self,
         entity: Literal["ad_creatives"],
         action: Literal["list"],
-        params: "AdCreativesListParams"
+        params: "AdCreativesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AdCreativesListResult": ...
 
     @overload
@@ -393,7 +429,11 @@ class FacebookMarketingConnector:
         self,
         entity: Literal["ads_insights"],
         action: Literal["list"],
-        params: "AdsInsightsListParams"
+        params: "AdsInsightsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AdsInsightsListResult": ...
 
     @overload
@@ -401,7 +441,11 @@ class FacebookMarketingConnector:
         self,
         entity: Literal["ad_accounts"],
         action: Literal["get"],
-        params: "AdAccountsGetParams"
+        params: "AdAccountsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AdAccount": ...
 
     @overload
@@ -409,7 +453,11 @@ class FacebookMarketingConnector:
         self,
         entity: Literal["custom_conversions"],
         action: Literal["list"],
-        params: "CustomConversionsListParams"
+        params: "CustomConversionsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CustomConversionsListResult": ...
 
     @overload
@@ -417,7 +465,11 @@ class FacebookMarketingConnector:
         self,
         entity: Literal["images"],
         action: Literal["list"],
-        params: "ImagesListParams"
+        params: "ImagesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ImagesListResult": ...
 
     @overload
@@ -425,7 +477,11 @@ class FacebookMarketingConnector:
         self,
         entity: Literal["videos"],
         action: Literal["list"],
-        params: "VideosListParams"
+        params: "VideosListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "VideosListResult": ...
 
     @overload
@@ -433,7 +489,11 @@ class FacebookMarketingConnector:
         self,
         entity: Literal["pixels"],
         action: Literal["list"],
-        params: "PixelsListParams"
+        params: "PixelsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "PixelsListResult": ...
 
     @overload
@@ -441,7 +501,11 @@ class FacebookMarketingConnector:
         self,
         entity: Literal["pixels"],
         action: Literal["get"],
-        params: "PixelsGetParams"
+        params: "PixelsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Pixel": ...
 
     @overload
@@ -449,7 +513,11 @@ class FacebookMarketingConnector:
         self,
         entity: Literal["pixel_stats"],
         action: Literal["list"],
-        params: "PixelStatsListParams"
+        params: "PixelStatsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "PixelStatsListResult": ...
 
     @overload
@@ -457,7 +525,11 @@ class FacebookMarketingConnector:
         self,
         entity: Literal["campaigns"],
         action: Literal["get"],
-        params: "CampaignsGetParams"
+        params: "CampaignsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Campaign": ...
 
     @overload
@@ -465,7 +537,11 @@ class FacebookMarketingConnector:
         self,
         entity: Literal["campaigns"],
         action: Literal["update"],
-        params: "CampaignsUpdateParams"
+        params: "CampaignsUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "UpdateResponse": ...
 
     @overload
@@ -473,7 +549,11 @@ class FacebookMarketingConnector:
         self,
         entity: Literal["ad_sets"],
         action: Literal["get"],
-        params: "AdSetsGetParams"
+        params: "AdSetsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AdSet": ...
 
     @overload
@@ -481,7 +561,11 @@ class FacebookMarketingConnector:
         self,
         entity: Literal["ad_sets"],
         action: Literal["update"],
-        params: "AdSetsUpdateParams"
+        params: "AdSetsUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "UpdateResponse": ...
 
     @overload
@@ -489,7 +573,11 @@ class FacebookMarketingConnector:
         self,
         entity: Literal["ads"],
         action: Literal["get"],
-        params: "AdsGetParams"
+        params: "AdsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Ad": ...
 
     @overload
@@ -497,7 +585,11 @@ class FacebookMarketingConnector:
         self,
         entity: Literal["ads"],
         action: Literal["update"],
-        params: "AdsUpdateParams"
+        params: "AdsUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "UpdateResponse": ...
 
     @overload
@@ -505,7 +597,11 @@ class FacebookMarketingConnector:
         self,
         entity: Literal["ad_library"],
         action: Literal["list"],
-        params: "AdLibraryListParams"
+        params: "AdLibraryListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AdLibraryListResult": ...
 
 
@@ -514,14 +610,22 @@ class FacebookMarketingConnector:
         self,
         entity: str,
         action: Literal["get", "list", "create", "update", "context_store_search"],
-        params: Mapping[str, Any]
+        params: Mapping[str, Any],
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> FacebookMarketingExecuteResult[Any] | FacebookMarketingExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
         action: Literal["get", "list", "create", "update", "context_store_search"],
-        params: Mapping[str, Any] | None = None
+        params: Mapping[str, Any] | None = None,
+        *,
+        select_fields: list[str] | None = None,
+        exclude_fields: list[str] | None = None,
+        skip_truncation: bool = True
     ) -> Any:
         """
         Execute an entity operation with full type safety.
@@ -535,6 +639,9 @@ class FacebookMarketingConnector:
             entity: Entity name (e.g., "customers")
             action: Operation action (e.g., "create", "get", "list")
             params: Operation parameters (typed based on entity+action)
+            select_fields: Optional allowlist of dot-notation fields to include
+            exclude_fields: Optional blocklist of dot-notation fields to remove
+            skip_truncation: Disable long-text truncation for collection actions
 
         Returns:
             Typed response based on the operation
@@ -559,7 +666,10 @@ class FacebookMarketingConnector:
         config = ExecutionConfig(
             entity=entity,
             action=action,
-            params=resolved_params
+            params=resolved_params,
+            select_fields=select_fields,
+            exclude_fields=exclude_fields,
+            skip_truncation=skip_truncation
         )
 
         result = await self._executor.execute(config)

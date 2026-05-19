@@ -141,7 +141,7 @@ class IncidentIoConnector:
 
     connector_name = "incident-io"
     connector_version = "1.0.4"
-    sdk_version = "0.1.203"
+    sdk_version = "0.1.204"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -305,7 +305,11 @@ class IncidentIoConnector:
         self,
         entity: Literal["incidents"],
         action: Literal["list"],
-        params: "IncidentsListParams"
+        params: "IncidentsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "IncidentsListResult": ...
 
     @overload
@@ -313,7 +317,11 @@ class IncidentIoConnector:
         self,
         entity: Literal["incidents"],
         action: Literal["get"],
-        params: "IncidentsGetParams"
+        params: "IncidentsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Incident": ...
 
     @overload
@@ -321,7 +329,11 @@ class IncidentIoConnector:
         self,
         entity: Literal["alerts"],
         action: Literal["list"],
-        params: "AlertsListParams"
+        params: "AlertsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AlertsListResult": ...
 
     @overload
@@ -329,7 +341,11 @@ class IncidentIoConnector:
         self,
         entity: Literal["alerts"],
         action: Literal["get"],
-        params: "AlertsGetParams"
+        params: "AlertsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Alert": ...
 
     @overload
@@ -337,7 +353,11 @@ class IncidentIoConnector:
         self,
         entity: Literal["escalations"],
         action: Literal["list"],
-        params: "EscalationsListParams"
+        params: "EscalationsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "EscalationsListResult": ...
 
     @overload
@@ -345,7 +365,11 @@ class IncidentIoConnector:
         self,
         entity: Literal["escalations"],
         action: Literal["get"],
-        params: "EscalationsGetParams"
+        params: "EscalationsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Escalation": ...
 
     @overload
@@ -353,7 +377,11 @@ class IncidentIoConnector:
         self,
         entity: Literal["users"],
         action: Literal["list"],
-        params: "UsersListParams"
+        params: "UsersListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "UsersListResult": ...
 
     @overload
@@ -361,7 +389,11 @@ class IncidentIoConnector:
         self,
         entity: Literal["users"],
         action: Literal["get"],
-        params: "UsersGetParams"
+        params: "UsersGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "User": ...
 
     @overload
@@ -369,7 +401,11 @@ class IncidentIoConnector:
         self,
         entity: Literal["incident_updates"],
         action: Literal["list"],
-        params: "IncidentUpdatesListParams"
+        params: "IncidentUpdatesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "IncidentUpdatesListResult": ...
 
     @overload
@@ -377,7 +413,11 @@ class IncidentIoConnector:
         self,
         entity: Literal["incident_roles"],
         action: Literal["list"],
-        params: "IncidentRolesListParams"
+        params: "IncidentRolesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "IncidentRolesListResult": ...
 
     @overload
@@ -385,7 +425,11 @@ class IncidentIoConnector:
         self,
         entity: Literal["incident_roles"],
         action: Literal["get"],
-        params: "IncidentRolesGetParams"
+        params: "IncidentRolesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "IncidentRole": ...
 
     @overload
@@ -393,7 +437,11 @@ class IncidentIoConnector:
         self,
         entity: Literal["incident_statuses"],
         action: Literal["list"],
-        params: "IncidentStatusesListParams"
+        params: "IncidentStatusesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "IncidentStatusesListResult": ...
 
     @overload
@@ -401,7 +449,11 @@ class IncidentIoConnector:
         self,
         entity: Literal["incident_statuses"],
         action: Literal["get"],
-        params: "IncidentStatusesGetParams"
+        params: "IncidentStatusesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "IncidentStatus": ...
 
     @overload
@@ -409,7 +461,11 @@ class IncidentIoConnector:
         self,
         entity: Literal["incident_timestamps"],
         action: Literal["list"],
-        params: "IncidentTimestampsListParams"
+        params: "IncidentTimestampsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "IncidentTimestampsListResult": ...
 
     @overload
@@ -417,7 +473,11 @@ class IncidentIoConnector:
         self,
         entity: Literal["incident_timestamps"],
         action: Literal["get"],
-        params: "IncidentTimestampsGetParams"
+        params: "IncidentTimestampsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "IncidentTimestamp": ...
 
     @overload
@@ -425,7 +485,11 @@ class IncidentIoConnector:
         self,
         entity: Literal["severities"],
         action: Literal["list"],
-        params: "SeveritiesListParams"
+        params: "SeveritiesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SeveritiesListResult": ...
 
     @overload
@@ -433,7 +497,11 @@ class IncidentIoConnector:
         self,
         entity: Literal["severities"],
         action: Literal["get"],
-        params: "SeveritiesGetParams"
+        params: "SeveritiesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Severity": ...
 
     @overload
@@ -441,7 +509,11 @@ class IncidentIoConnector:
         self,
         entity: Literal["custom_fields"],
         action: Literal["list"],
-        params: "CustomFieldsListParams"
+        params: "CustomFieldsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CustomFieldsListResult": ...
 
     @overload
@@ -449,7 +521,11 @@ class IncidentIoConnector:
         self,
         entity: Literal["custom_fields"],
         action: Literal["get"],
-        params: "CustomFieldsGetParams"
+        params: "CustomFieldsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CustomField": ...
 
     @overload
@@ -457,7 +533,11 @@ class IncidentIoConnector:
         self,
         entity: Literal["catalog_types"],
         action: Literal["list"],
-        params: "CatalogTypesListParams"
+        params: "CatalogTypesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CatalogTypesListResult": ...
 
     @overload
@@ -465,7 +545,11 @@ class IncidentIoConnector:
         self,
         entity: Literal["catalog_types"],
         action: Literal["get"],
-        params: "CatalogTypesGetParams"
+        params: "CatalogTypesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CatalogType": ...
 
     @overload
@@ -473,7 +557,11 @@ class IncidentIoConnector:
         self,
         entity: Literal["schedules"],
         action: Literal["list"],
-        params: "SchedulesListParams"
+        params: "SchedulesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SchedulesListResult": ...
 
     @overload
@@ -481,7 +569,11 @@ class IncidentIoConnector:
         self,
         entity: Literal["schedules"],
         action: Literal["get"],
-        params: "SchedulesGetParams"
+        params: "SchedulesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Schedule": ...
 
 
@@ -490,14 +582,22 @@ class IncidentIoConnector:
         self,
         entity: str,
         action: Literal["list", "get", "context_store_search"],
-        params: Mapping[str, Any]
+        params: Mapping[str, Any],
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> IncidentIoExecuteResult[Any] | IncidentIoExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
         action: Literal["list", "get", "context_store_search"],
-        params: Mapping[str, Any] | None = None
+        params: Mapping[str, Any] | None = None,
+        *,
+        select_fields: list[str] | None = None,
+        exclude_fields: list[str] | None = None,
+        skip_truncation: bool = True
     ) -> Any:
         """
         Execute an entity operation with full type safety.
@@ -511,6 +611,9 @@ class IncidentIoConnector:
             entity: Entity name (e.g., "customers")
             action: Operation action (e.g., "create", "get", "list")
             params: Operation parameters (typed based on entity+action)
+            select_fields: Optional allowlist of dot-notation fields to include
+            exclude_fields: Optional blocklist of dot-notation fields to remove
+            skip_truncation: Disable long-text truncation for collection actions
 
         Returns:
             Typed response based on the operation
@@ -535,7 +638,10 @@ class IncidentIoConnector:
         config = ExecutionConfig(
             entity=entity,
             action=action,
-            params=resolved_params
+            params=resolved_params,
+            select_fields=select_fields,
+            exclude_fields=exclude_fields,
+            skip_truncation=skip_truncation
         )
 
         result = await self._executor.execute(config)

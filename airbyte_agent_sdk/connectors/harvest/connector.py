@@ -187,7 +187,7 @@ class HarvestConnector:
 
     connector_name = "harvest"
     connector_version = "1.0.5"
-    sdk_version = "0.1.203"
+    sdk_version = "0.1.204"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -387,7 +387,11 @@ class HarvestConnector:
         self,
         entity: Literal["users"],
         action: Literal["list"],
-        params: "UsersListParams"
+        params: "UsersListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "UsersListResult": ...
 
     @overload
@@ -395,7 +399,11 @@ class HarvestConnector:
         self,
         entity: Literal["users"],
         action: Literal["get"],
-        params: "UsersGetParams"
+        params: "UsersGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "User": ...
 
     @overload
@@ -403,7 +411,11 @@ class HarvestConnector:
         self,
         entity: Literal["clients"],
         action: Literal["list"],
-        params: "ClientsListParams"
+        params: "ClientsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ClientsListResult": ...
 
     @overload
@@ -411,7 +423,11 @@ class HarvestConnector:
         self,
         entity: Literal["clients"],
         action: Literal["get"],
-        params: "ClientsGetParams"
+        params: "ClientsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Client": ...
 
     @overload
@@ -419,7 +435,11 @@ class HarvestConnector:
         self,
         entity: Literal["contacts"],
         action: Literal["list"],
-        params: "ContactsListParams"
+        params: "ContactsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ContactsListResult": ...
 
     @overload
@@ -427,7 +447,11 @@ class HarvestConnector:
         self,
         entity: Literal["contacts"],
         action: Literal["get"],
-        params: "ContactsGetParams"
+        params: "ContactsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Contact": ...
 
     @overload
@@ -435,7 +459,11 @@ class HarvestConnector:
         self,
         entity: Literal["company"],
         action: Literal["get"],
-        params: "CompanyGetParams"
+        params: "CompanyGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Company": ...
 
     @overload
@@ -443,7 +471,11 @@ class HarvestConnector:
         self,
         entity: Literal["projects"],
         action: Literal["list"],
-        params: "ProjectsListParams"
+        params: "ProjectsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ProjectsListResult": ...
 
     @overload
@@ -451,7 +483,11 @@ class HarvestConnector:
         self,
         entity: Literal["projects"],
         action: Literal["get"],
-        params: "ProjectsGetParams"
+        params: "ProjectsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Project": ...
 
     @overload
@@ -459,7 +495,11 @@ class HarvestConnector:
         self,
         entity: Literal["tasks"],
         action: Literal["list"],
-        params: "TasksListParams"
+        params: "TasksListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TasksListResult": ...
 
     @overload
@@ -467,7 +507,11 @@ class HarvestConnector:
         self,
         entity: Literal["tasks"],
         action: Literal["get"],
-        params: "TasksGetParams"
+        params: "TasksGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Task": ...
 
     @overload
@@ -475,7 +519,11 @@ class HarvestConnector:
         self,
         entity: Literal["time_entries"],
         action: Literal["list"],
-        params: "TimeEntriesListParams"
+        params: "TimeEntriesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TimeEntriesListResult": ...
 
     @overload
@@ -483,7 +531,11 @@ class HarvestConnector:
         self,
         entity: Literal["time_entries"],
         action: Literal["get"],
-        params: "TimeEntriesGetParams"
+        params: "TimeEntriesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TimeEntry": ...
 
     @overload
@@ -491,7 +543,11 @@ class HarvestConnector:
         self,
         entity: Literal["invoices"],
         action: Literal["list"],
-        params: "InvoicesListParams"
+        params: "InvoicesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "InvoicesListResult": ...
 
     @overload
@@ -499,7 +555,11 @@ class HarvestConnector:
         self,
         entity: Literal["invoices"],
         action: Literal["get"],
-        params: "InvoicesGetParams"
+        params: "InvoicesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Invoice": ...
 
     @overload
@@ -507,7 +567,11 @@ class HarvestConnector:
         self,
         entity: Literal["invoice_item_categories"],
         action: Literal["list"],
-        params: "InvoiceItemCategoriesListParams"
+        params: "InvoiceItemCategoriesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "InvoiceItemCategoriesListResult": ...
 
     @overload
@@ -515,7 +579,11 @@ class HarvestConnector:
         self,
         entity: Literal["invoice_item_categories"],
         action: Literal["get"],
-        params: "InvoiceItemCategoriesGetParams"
+        params: "InvoiceItemCategoriesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "InvoiceItemCategory": ...
 
     @overload
@@ -523,7 +591,11 @@ class HarvestConnector:
         self,
         entity: Literal["estimates"],
         action: Literal["list"],
-        params: "EstimatesListParams"
+        params: "EstimatesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "EstimatesListResult": ...
 
     @overload
@@ -531,7 +603,11 @@ class HarvestConnector:
         self,
         entity: Literal["estimates"],
         action: Literal["get"],
-        params: "EstimatesGetParams"
+        params: "EstimatesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Estimate": ...
 
     @overload
@@ -539,7 +615,11 @@ class HarvestConnector:
         self,
         entity: Literal["estimate_item_categories"],
         action: Literal["list"],
-        params: "EstimateItemCategoriesListParams"
+        params: "EstimateItemCategoriesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "EstimateItemCategoriesListResult": ...
 
     @overload
@@ -547,7 +627,11 @@ class HarvestConnector:
         self,
         entity: Literal["estimate_item_categories"],
         action: Literal["get"],
-        params: "EstimateItemCategoriesGetParams"
+        params: "EstimateItemCategoriesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "EstimateItemCategory": ...
 
     @overload
@@ -555,7 +639,11 @@ class HarvestConnector:
         self,
         entity: Literal["expenses"],
         action: Literal["list"],
-        params: "ExpensesListParams"
+        params: "ExpensesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ExpensesListResult": ...
 
     @overload
@@ -563,7 +651,11 @@ class HarvestConnector:
         self,
         entity: Literal["expenses"],
         action: Literal["get"],
-        params: "ExpensesGetParams"
+        params: "ExpensesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Expense": ...
 
     @overload
@@ -571,7 +663,11 @@ class HarvestConnector:
         self,
         entity: Literal["expense_categories"],
         action: Literal["list"],
-        params: "ExpenseCategoriesListParams"
+        params: "ExpenseCategoriesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ExpenseCategoriesListResult": ...
 
     @overload
@@ -579,7 +675,11 @@ class HarvestConnector:
         self,
         entity: Literal["expense_categories"],
         action: Literal["get"],
-        params: "ExpenseCategoriesGetParams"
+        params: "ExpenseCategoriesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ExpenseCategory": ...
 
     @overload
@@ -587,7 +687,11 @@ class HarvestConnector:
         self,
         entity: Literal["roles"],
         action: Literal["list"],
-        params: "RolesListParams"
+        params: "RolesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "RolesListResult": ...
 
     @overload
@@ -595,7 +699,11 @@ class HarvestConnector:
         self,
         entity: Literal["roles"],
         action: Literal["get"],
-        params: "RolesGetParams"
+        params: "RolesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "Role": ...
 
     @overload
@@ -603,7 +711,11 @@ class HarvestConnector:
         self,
         entity: Literal["user_assignments"],
         action: Literal["list"],
-        params: "UserAssignmentsListParams"
+        params: "UserAssignmentsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "UserAssignmentsListResult": ...
 
     @overload
@@ -611,7 +723,11 @@ class HarvestConnector:
         self,
         entity: Literal["task_assignments"],
         action: Literal["list"],
-        params: "TaskAssignmentsListParams"
+        params: "TaskAssignmentsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TaskAssignmentsListResult": ...
 
     @overload
@@ -619,7 +735,11 @@ class HarvestConnector:
         self,
         entity: Literal["time_projects"],
         action: Literal["list"],
-        params: "TimeProjectsListParams"
+        params: "TimeProjectsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TimeProjectsListResult": ...
 
     @overload
@@ -627,7 +747,11 @@ class HarvestConnector:
         self,
         entity: Literal["time_tasks"],
         action: Literal["list"],
-        params: "TimeTasksListParams"
+        params: "TimeTasksListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TimeTasksListResult": ...
 
 
@@ -636,14 +760,22 @@ class HarvestConnector:
         self,
         entity: str,
         action: Literal["list", "get", "context_store_search"],
-        params: Mapping[str, Any]
+        params: Mapping[str, Any],
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> HarvestExecuteResult[Any] | HarvestExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
         action: Literal["list", "get", "context_store_search"],
-        params: Mapping[str, Any] | None = None
+        params: Mapping[str, Any] | None = None,
+        *,
+        select_fields: list[str] | None = None,
+        exclude_fields: list[str] | None = None,
+        skip_truncation: bool = True
     ) -> Any:
         """
         Execute an entity operation with full type safety.
@@ -657,6 +789,9 @@ class HarvestConnector:
             entity: Entity name (e.g., "customers")
             action: Operation action (e.g., "create", "get", "list")
             params: Operation parameters (typed based on entity+action)
+            select_fields: Optional allowlist of dot-notation fields to include
+            exclude_fields: Optional blocklist of dot-notation fields to remove
+            skip_truncation: Disable long-text truncation for collection actions
 
         Returns:
             Typed response based on the operation
@@ -681,7 +816,10 @@ class HarvestConnector:
         config = ExecutionConfig(
             entity=entity,
             action=action,
-            params=resolved_params
+            params=resolved_params,
+            select_fields=select_fields,
+            exclude_fields=exclude_fields,
+            skip_truncation=skip_truncation
         )
 
         result = await self._executor.execute(config)

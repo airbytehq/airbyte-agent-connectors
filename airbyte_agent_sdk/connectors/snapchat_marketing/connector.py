@@ -112,7 +112,7 @@ class SnapchatMarketingConnector:
 
     connector_name = "snapchat-marketing"
     connector_version = "1.0.5"
-    sdk_version = "0.1.203"
+    sdk_version = "0.1.204"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -263,7 +263,11 @@ class SnapchatMarketingConnector:
         self,
         entity: Literal["organizations"],
         action: Literal["list"],
-        params: "OrganizationsListParams"
+        params: "OrganizationsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "OrganizationsListResult": ...
 
     @overload
@@ -271,7 +275,11 @@ class SnapchatMarketingConnector:
         self,
         entity: Literal["organizations"],
         action: Literal["get"],
-        params: "OrganizationsGetParams"
+        params: "OrganizationsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -279,7 +287,11 @@ class SnapchatMarketingConnector:
         self,
         entity: Literal["adaccounts"],
         action: Literal["list"],
-        params: "AdaccountsListParams"
+        params: "AdaccountsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AdaccountsListResult": ...
 
     @overload
@@ -287,7 +299,11 @@ class SnapchatMarketingConnector:
         self,
         entity: Literal["adaccounts"],
         action: Literal["get"],
-        params: "AdaccountsGetParams"
+        params: "AdaccountsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -295,7 +311,11 @@ class SnapchatMarketingConnector:
         self,
         entity: Literal["campaigns"],
         action: Literal["list"],
-        params: "CampaignsListParams"
+        params: "CampaignsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CampaignsListResult": ...
 
     @overload
@@ -303,7 +323,11 @@ class SnapchatMarketingConnector:
         self,
         entity: Literal["campaigns"],
         action: Literal["get"],
-        params: "CampaignsGetParams"
+        params: "CampaignsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -311,7 +335,11 @@ class SnapchatMarketingConnector:
         self,
         entity: Literal["adsquads"],
         action: Literal["list"],
-        params: "AdsquadsListParams"
+        params: "AdsquadsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AdsquadsListResult": ...
 
     @overload
@@ -319,7 +347,11 @@ class SnapchatMarketingConnector:
         self,
         entity: Literal["adsquads"],
         action: Literal["get"],
-        params: "AdsquadsGetParams"
+        params: "AdsquadsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -327,7 +359,11 @@ class SnapchatMarketingConnector:
         self,
         entity: Literal["ads"],
         action: Literal["list"],
-        params: "AdsListParams"
+        params: "AdsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "AdsListResult": ...
 
     @overload
@@ -335,7 +371,11 @@ class SnapchatMarketingConnector:
         self,
         entity: Literal["ads"],
         action: Literal["get"],
-        params: "AdsGetParams"
+        params: "AdsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -343,7 +383,11 @@ class SnapchatMarketingConnector:
         self,
         entity: Literal["creatives"],
         action: Literal["list"],
-        params: "CreativesListParams"
+        params: "CreativesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CreativesListResult": ...
 
     @overload
@@ -351,7 +395,11 @@ class SnapchatMarketingConnector:
         self,
         entity: Literal["creatives"],
         action: Literal["get"],
-        params: "CreativesGetParams"
+        params: "CreativesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -359,7 +407,11 @@ class SnapchatMarketingConnector:
         self,
         entity: Literal["media"],
         action: Literal["list"],
-        params: "MediaListParams"
+        params: "MediaListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "MediaListResult": ...
 
     @overload
@@ -367,7 +419,11 @@ class SnapchatMarketingConnector:
         self,
         entity: Literal["media"],
         action: Literal["get"],
-        params: "MediaGetParams"
+        params: "MediaGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -375,7 +431,11 @@ class SnapchatMarketingConnector:
         self,
         entity: Literal["segments"],
         action: Literal["list"],
-        params: "SegmentsListParams"
+        params: "SegmentsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "SegmentsListResult": ...
 
     @overload
@@ -383,7 +443,11 @@ class SnapchatMarketingConnector:
         self,
         entity: Literal["segments"],
         action: Literal["get"],
-        params: "SegmentsGetParams"
+        params: "SegmentsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
 
@@ -392,14 +456,22 @@ class SnapchatMarketingConnector:
         self,
         entity: str,
         action: Literal["list", "get", "context_store_search"],
-        params: Mapping[str, Any]
+        params: Mapping[str, Any],
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> SnapchatMarketingExecuteResult[Any] | SnapchatMarketingExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
         action: Literal["list", "get", "context_store_search"],
-        params: Mapping[str, Any] | None = None
+        params: Mapping[str, Any] | None = None,
+        *,
+        select_fields: list[str] | None = None,
+        exclude_fields: list[str] | None = None,
+        skip_truncation: bool = True
     ) -> Any:
         """
         Execute an entity operation with full type safety.
@@ -413,6 +485,9 @@ class SnapchatMarketingConnector:
             entity: Entity name (e.g., "customers")
             action: Operation action (e.g., "create", "get", "list")
             params: Operation parameters (typed based on entity+action)
+            select_fields: Optional allowlist of dot-notation fields to include
+            exclude_fields: Optional blocklist of dot-notation fields to remove
+            skip_truncation: Disable long-text truncation for collection actions
 
         Returns:
             Typed response based on the operation
@@ -437,7 +512,10 @@ class SnapchatMarketingConnector:
         config = ExecutionConfig(
             entity=entity,
             action=action,
-            params=resolved_params
+            params=resolved_params,
+            select_fields=select_fields,
+            exclude_fields=exclude_fields,
+            skip_truncation=skip_truncation
         )
 
         result = await self._executor.execute(config)

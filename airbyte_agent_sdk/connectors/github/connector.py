@@ -224,7 +224,7 @@ class GithubConnector:
 
     connector_name = "github"
     connector_version = "0.1.19"
-    sdk_version = "0.1.203"
+    sdk_version = "0.1.204"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -467,7 +467,11 @@ class GithubConnector:
         self,
         entity: Literal["repositories"],
         action: Literal["get"],
-        params: "RepositoriesGetParams"
+        params: "RepositoriesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -475,7 +479,11 @@ class GithubConnector:
         self,
         entity: Literal["repositories"],
         action: Literal["list"],
-        params: "RepositoriesListParams"
+        params: "RepositoriesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "RepositoriesListResult": ...
 
     @overload
@@ -483,7 +491,11 @@ class GithubConnector:
         self,
         entity: Literal["repositories"],
         action: Literal["api_search"],
-        params: "RepositoriesApiSearchParams"
+        params: "RepositoriesApiSearchParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "RepositoriesApiSearchResult": ...
 
     @overload
@@ -491,7 +503,11 @@ class GithubConnector:
         self,
         entity: Literal["org_repositories"],
         action: Literal["list"],
-        params: "OrgRepositoriesListParams"
+        params: "OrgRepositoriesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "OrgRepositoriesListResult": ...
 
     @overload
@@ -499,7 +515,11 @@ class GithubConnector:
         self,
         entity: Literal["branches"],
         action: Literal["list"],
-        params: "BranchesListParams"
+        params: "BranchesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "BranchesListResult": ...
 
     @overload
@@ -507,7 +527,11 @@ class GithubConnector:
         self,
         entity: Literal["branches"],
         action: Literal["get"],
-        params: "BranchesGetParams"
+        params: "BranchesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -515,7 +539,11 @@ class GithubConnector:
         self,
         entity: Literal["commits"],
         action: Literal["list"],
-        params: "CommitsListParams"
+        params: "CommitsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CommitsListResult": ...
 
     @overload
@@ -523,7 +551,11 @@ class GithubConnector:
         self,
         entity: Literal["commits"],
         action: Literal["get"],
-        params: "CommitsGetParams"
+        params: "CommitsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -531,7 +563,11 @@ class GithubConnector:
         self,
         entity: Literal["releases"],
         action: Literal["list"],
-        params: "ReleasesListParams"
+        params: "ReleasesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ReleasesListResult": ...
 
     @overload
@@ -539,7 +575,11 @@ class GithubConnector:
         self,
         entity: Literal["releases"],
         action: Literal["get"],
-        params: "ReleasesGetParams"
+        params: "ReleasesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -547,7 +587,11 @@ class GithubConnector:
         self,
         entity: Literal["issues"],
         action: Literal["list"],
-        params: "IssuesListParams"
+        params: "IssuesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "IssuesListResult": ...
 
     @overload
@@ -555,7 +599,11 @@ class GithubConnector:
         self,
         entity: Literal["issues"],
         action: Literal["get"],
-        params: "IssuesGetParams"
+        params: "IssuesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -563,7 +611,11 @@ class GithubConnector:
         self,
         entity: Literal["issues"],
         action: Literal["api_search"],
-        params: "IssuesApiSearchParams"
+        params: "IssuesApiSearchParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "IssuesApiSearchResult": ...
 
     @overload
@@ -571,7 +623,11 @@ class GithubConnector:
         self,
         entity: Literal["issues"],
         action: Literal["create"],
-        params: "IssuesCreateParams"
+        params: "IssuesCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "IssueResponse": ...
 
     @overload
@@ -579,7 +635,11 @@ class GithubConnector:
         self,
         entity: Literal["issues"],
         action: Literal["update"],
-        params: "IssuesUpdateParams"
+        params: "IssuesUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "IssueResponse": ...
 
     @overload
@@ -587,7 +647,11 @@ class GithubConnector:
         self,
         entity: Literal["comments"],
         action: Literal["create"],
-        params: "CommentsCreateParams"
+        params: "CommentsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CommentResponse": ...
 
     @overload
@@ -595,7 +659,11 @@ class GithubConnector:
         self,
         entity: Literal["pull_requests"],
         action: Literal["create"],
-        params: "PullRequestsCreateParams"
+        params: "PullRequestsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "PullRequestResponse": ...
 
     @overload
@@ -603,7 +671,11 @@ class GithubConnector:
         self,
         entity: Literal["pull_requests"],
         action: Literal["list"],
-        params: "PullRequestsListParams"
+        params: "PullRequestsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "PullRequestsListResult": ...
 
     @overload
@@ -611,7 +683,11 @@ class GithubConnector:
         self,
         entity: Literal["pull_requests"],
         action: Literal["get"],
-        params: "PullRequestsGetParams"
+        params: "PullRequestsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -619,7 +695,11 @@ class GithubConnector:
         self,
         entity: Literal["pull_requests"],
         action: Literal["api_search"],
-        params: "PullRequestsApiSearchParams"
+        params: "PullRequestsApiSearchParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "PullRequestsApiSearchResult": ...
 
     @overload
@@ -627,7 +707,11 @@ class GithubConnector:
         self,
         entity: Literal["reviews"],
         action: Literal["list"],
-        params: "ReviewsListParams"
+        params: "ReviewsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ReviewsListResult": ...
 
     @overload
@@ -635,7 +719,11 @@ class GithubConnector:
         self,
         entity: Literal["comments"],
         action: Literal["list"],
-        params: "CommentsListParams"
+        params: "CommentsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "CommentsListResult": ...
 
     @overload
@@ -643,7 +731,11 @@ class GithubConnector:
         self,
         entity: Literal["comments"],
         action: Literal["get"],
-        params: "CommentsGetParams"
+        params: "CommentsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -651,7 +743,11 @@ class GithubConnector:
         self,
         entity: Literal["pr_comments"],
         action: Literal["list"],
-        params: "PrCommentsListParams"
+        params: "PrCommentsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "PrCommentsListResult": ...
 
     @overload
@@ -659,7 +755,11 @@ class GithubConnector:
         self,
         entity: Literal["pr_comments"],
         action: Literal["get"],
-        params: "PrCommentsGetParams"
+        params: "PrCommentsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -667,7 +767,11 @@ class GithubConnector:
         self,
         entity: Literal["labels"],
         action: Literal["list"],
-        params: "LabelsListParams"
+        params: "LabelsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "LabelsListResult": ...
 
     @overload
@@ -675,7 +779,11 @@ class GithubConnector:
         self,
         entity: Literal["labels"],
         action: Literal["get"],
-        params: "LabelsGetParams"
+        params: "LabelsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -683,7 +791,11 @@ class GithubConnector:
         self,
         entity: Literal["milestones"],
         action: Literal["list"],
-        params: "MilestonesListParams"
+        params: "MilestonesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "MilestonesListResult": ...
 
     @overload
@@ -691,7 +803,11 @@ class GithubConnector:
         self,
         entity: Literal["milestones"],
         action: Literal["get"],
-        params: "MilestonesGetParams"
+        params: "MilestonesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -699,7 +815,11 @@ class GithubConnector:
         self,
         entity: Literal["organizations"],
         action: Literal["get"],
-        params: "OrganizationsGetParams"
+        params: "OrganizationsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -707,7 +827,11 @@ class GithubConnector:
         self,
         entity: Literal["organizations"],
         action: Literal["list"],
-        params: "OrganizationsListParams"
+        params: "OrganizationsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "OrganizationsListResult": ...
 
     @overload
@@ -715,7 +839,11 @@ class GithubConnector:
         self,
         entity: Literal["users"],
         action: Literal["get"],
-        params: "UsersGetParams"
+        params: "UsersGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -723,7 +851,11 @@ class GithubConnector:
         self,
         entity: Literal["users"],
         action: Literal["list"],
-        params: "UsersListParams"
+        params: "UsersListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "UsersListResult": ...
 
     @overload
@@ -731,7 +863,11 @@ class GithubConnector:
         self,
         entity: Literal["users"],
         action: Literal["api_search"],
-        params: "UsersApiSearchParams"
+        params: "UsersApiSearchParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "UsersApiSearchResult": ...
 
     @overload
@@ -739,7 +875,11 @@ class GithubConnector:
         self,
         entity: Literal["teams"],
         action: Literal["list"],
-        params: "TeamsListParams"
+        params: "TeamsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TeamsListResult": ...
 
     @overload
@@ -747,7 +887,11 @@ class GithubConnector:
         self,
         entity: Literal["teams"],
         action: Literal["get"],
-        params: "TeamsGetParams"
+        params: "TeamsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -755,7 +899,11 @@ class GithubConnector:
         self,
         entity: Literal["tags"],
         action: Literal["list"],
-        params: "TagsListParams"
+        params: "TagsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "TagsListResult": ...
 
     @overload
@@ -763,7 +911,11 @@ class GithubConnector:
         self,
         entity: Literal["tags"],
         action: Literal["get"],
-        params: "TagsGetParams"
+        params: "TagsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -771,7 +923,11 @@ class GithubConnector:
         self,
         entity: Literal["stargazers"],
         action: Literal["list"],
-        params: "StargazersListParams"
+        params: "StargazersListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "StargazersListResult": ...
 
     @overload
@@ -779,7 +935,11 @@ class GithubConnector:
         self,
         entity: Literal["viewer"],
         action: Literal["get"],
-        params: "ViewerGetParams"
+        params: "ViewerGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -787,7 +947,11 @@ class GithubConnector:
         self,
         entity: Literal["viewer_repositories"],
         action: Literal["list"],
-        params: "ViewerRepositoriesListParams"
+        params: "ViewerRepositoriesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ViewerRepositoriesListResult": ...
 
     @overload
@@ -795,7 +959,11 @@ class GithubConnector:
         self,
         entity: Literal["projects"],
         action: Literal["list"],
-        params: "ProjectsListParams"
+        params: "ProjectsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ProjectsListResult": ...
 
     @overload
@@ -803,7 +971,11 @@ class GithubConnector:
         self,
         entity: Literal["projects"],
         action: Literal["get"],
-        params: "ProjectsGetParams"
+        params: "ProjectsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -811,7 +983,11 @@ class GithubConnector:
         self,
         entity: Literal["project_items"],
         action: Literal["list"],
-        params: "ProjectItemsListParams"
+        params: "ProjectItemsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "ProjectItemsListResult": ...
 
     @overload
@@ -819,7 +995,11 @@ class GithubConnector:
         self,
         entity: Literal["discussions"],
         action: Literal["list"],
-        params: "DiscussionsListParams"
+        params: "DiscussionsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "DiscussionsListResult": ...
 
     @overload
@@ -827,7 +1007,11 @@ class GithubConnector:
         self,
         entity: Literal["discussions"],
         action: Literal["get"],
-        params: "DiscussionsGetParams"
+        params: "DiscussionsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -835,7 +1019,11 @@ class GithubConnector:
         self,
         entity: Literal["discussions"],
         action: Literal["api_search"],
-        params: "DiscussionsApiSearchParams"
+        params: "DiscussionsApiSearchParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "DiscussionsApiSearchResult": ...
 
     @overload
@@ -843,7 +1031,11 @@ class GithubConnector:
         self,
         entity: Literal["file_content"],
         action: Literal["get"],
-        params: "FileContentGetParams"
+        params: "FileContentGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -851,7 +1043,11 @@ class GithubConnector:
         self,
         entity: Literal["directory_content"],
         action: Literal["list"],
-        params: "DirectoryContentListParams"
+        params: "DirectoryContentListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> "DirectoryContentListResult": ...
 
 
@@ -860,14 +1056,22 @@ class GithubConnector:
         self,
         entity: str,
         action: Literal["get", "list", "api_search", "create", "update", "context_store_search"],
-        params: Mapping[str, Any]
+        params: Mapping[str, Any],
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
     ) -> GithubExecuteResult[Any] | GithubExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
         action: Literal["get", "list", "api_search", "create", "update", "context_store_search"],
-        params: Mapping[str, Any] | None = None
+        params: Mapping[str, Any] | None = None,
+        *,
+        select_fields: list[str] | None = None,
+        exclude_fields: list[str] | None = None,
+        skip_truncation: bool = True
     ) -> Any:
         """
         Execute an entity operation with full type safety.
@@ -881,6 +1085,9 @@ class GithubConnector:
             entity: Entity name (e.g., "customers")
             action: Operation action (e.g., "create", "get", "list")
             params: Operation parameters (typed based on entity+action)
+            select_fields: Optional allowlist of dot-notation fields to include
+            exclude_fields: Optional blocklist of dot-notation fields to remove
+            skip_truncation: Disable long-text truncation for collection actions
 
         Returns:
             Typed response based on the operation
@@ -905,7 +1112,10 @@ class GithubConnector:
         config = ExecutionConfig(
             entity=entity,
             action=action,
-            params=resolved_params
+            params=resolved_params,
+            select_fields=select_fields,
+            exclude_fields=exclude_fields,
+            skip_truncation=skip_truncation
         )
 
         result = await self._executor.execute(config)
