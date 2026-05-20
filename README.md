@@ -14,7 +14,7 @@ uv pip install airbyte-agent-sdk
 
 ## Documentation
 
-Full documentation is available at [docs.airbyte.com/ai-agents/about/](https://docs.airbyte.com/ai-agents/about/).
+Full documentation is available at [docs.airbyte.com/ai-agents/](https://docs.airbyte.com/ai-agents/).
 
 ## Tool integration
 
@@ -133,4 +133,4 @@ git clone https://github.com/airbytehq/airbyte-agent-sdk ~/.codex/skills/airbyte
 ln -s ~/.codex/skills/airbyte-agent-sdk-src/connector-sdk/.claude/skills/* ~/.codex/skills/
 ```
 
-See [docs.airbyte.com/ai-agents/about/](https://docs.airbyte.com/ai-agents/about/) for full documentation.
+See [docs.airbyte.com/ai-agents/](https://docs.airbyte.com/ai-agents/) for full documentation.
