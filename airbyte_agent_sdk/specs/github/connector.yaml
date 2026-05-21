@@ -116,6 +116,7 @@ info:
       target_key: number
       cardinality: many_to_one
   x-airbyte-context-store:
+    flush_batch_size_mb: 10
     disable_compaction: false
     entities:
       - entity: branches

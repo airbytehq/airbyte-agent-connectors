@@ -4794,6 +4794,7 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                 x_airbyte_skip_searchable_fields='Identity-scoped subset of `repositories` returning only repos owned by the authenticated viewer; the `repositories` context-store entity already covers cached search.',
             ),
         ],
+        flush_batch_size_mb=10,
     ),
     search_field_paths={
         'branches': ['name', 'prefix'],
