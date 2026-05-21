@@ -19,6 +19,11 @@ from airbyte_agent_sdk.schema.security import (
     AuthConfigFieldSpec,
     AuthConfigSpec,
 )
+from airbyte_agent_sdk.schema.extensions import (
+    CacheConfig,
+    CacheEntityConfig,
+    CacheFieldConfig,
+)
 from airbyte_agent_sdk.schema.base import (
     ExampleQuestions,
 )
@@ -1216,6 +1221,285 @@ AmplitudeConnectorModel: ConnectorModel = ConnectorModel(
             },
         ),
     ],
+    context_store=CacheConfig(
+        entities=[
+            CacheEntityConfig(
+                entity='annotations',
+                x_airbyte_name='annotations',
+                fields=[
+                    CacheFieldConfig(
+                        name='date',
+                        type=['null', 'string'],
+                        description='The date when the annotation was made',
+                    ),
+                    CacheFieldConfig(
+                        name='details',
+                        type=['null', 'string'],
+                        description='Additional details or information related to the annotation',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='The unique identifier for the annotation',
+                    ),
+                    CacheFieldConfig(
+                        name='label',
+                        type=['null', 'string'],
+                        description='The label assigned to the annotation',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='cohorts',
+                suggested=True,
+                x_airbyte_name='cohorts',
+                fields=[
+                    CacheFieldConfig(
+                        name='appId',
+                        type=['null', 'integer'],
+                        description='The unique identifier of the application',
+                    ),
+                    CacheFieldConfig(
+                        name='archived',
+                        type=['null', 'boolean'],
+                        description='Indicates if the cohort data is archived',
+                    ),
+                    CacheFieldConfig(
+                        name='chart_id',
+                        type=['null', 'string'],
+                        description='The identifier of the chart associated with the cohort',
+                    ),
+                    CacheFieldConfig(
+                        name='createdAt',
+                        type=['null', 'integer'],
+                        description='The timestamp when the cohort was created',
+                    ),
+                    CacheFieldConfig(
+                        name='definition',
+                        type=['null', 'object'],
+                        description='The specific definition or criteria for the cohort',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='A brief explanation or summary of the cohort',
+                    ),
+                    CacheFieldConfig(
+                        name='edit_id',
+                        type=['null', 'string'],
+                        description='The ID for editing purposes or version control',
+                    ),
+                    CacheFieldConfig(
+                        name='finished',
+                        type=['null', 'boolean'],
+                        description='Indicates if the cohort data has been finalized',
+                    ),
+                    CacheFieldConfig(
+                        name='hidden',
+                        type=['null', 'boolean'],
+                        description='Flag to determine if the cohort is hidden from view',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='The unique identifier for the cohort',
+                    ),
+                    CacheFieldConfig(
+                        name='is_official_content',
+                        type=['null', 'boolean'],
+                        description='Indicates if the cohort data is official content',
+                    ),
+                    CacheFieldConfig(
+                        name='is_predictive',
+                        type=['null', 'boolean'],
+                        description='Flag to indicate if the cohort is predictive',
+                    ),
+                    CacheFieldConfig(
+                        name='lastComputed',
+                        type=['null', 'integer'],
+                        description='Timestamp of the last computation of cohort data',
+                    ),
+                    CacheFieldConfig(
+                        name='lastMod',
+                        type=['null', 'integer'],
+                        description='Timestamp of the last modification made to the cohort',
+                    ),
+                    CacheFieldConfig(
+                        name='last_viewed',
+                        type=['null', 'integer'],
+                        description='Timestamp when the cohort was last viewed',
+                    ),
+                    CacheFieldConfig(
+                        name='location_id',
+                        type=['null', 'string'],
+                        description='Identifier of the location associated with the cohort',
+                    ),
+                    CacheFieldConfig(
+                        name='metadata',
+                        type=['null', 'array'],
+                        description='Additional information or data related to the cohort',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='The name or title of the cohort',
+                    ),
+                    CacheFieldConfig(
+                        name='owners',
+                        type=['null', 'array'],
+                        description='The owners or administrators of the cohort',
+                    ),
+                    CacheFieldConfig(
+                        name='popularity',
+                        type=['null', 'integer'],
+                        description='Popularity rank or score of the cohort',
+                    ),
+                    CacheFieldConfig(
+                        name='published',
+                        type=['null', 'boolean'],
+                        description='Status indicating if the cohort data is published',
+                    ),
+                    CacheFieldConfig(
+                        name='shortcut_ids',
+                        type=['null', 'array'],
+                        description='Identifiers of any shortcuts associated with the cohort',
+                    ),
+                    CacheFieldConfig(
+                        name='size',
+                        type=['null', 'integer'],
+                        description='Size or scale of the cohort data',
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description='The type or category of the cohort',
+                    ),
+                    CacheFieldConfig(
+                        name='view_count',
+                        type=['null', 'integer'],
+                        description='The total count of views on the cohort data',
+                    ),
+                    CacheFieldConfig(
+                        name='viewers',
+                        type=['null', 'array'],
+                        description='Users or viewers who have access to the cohort data',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='events_list',
+                suggested=True,
+                x_airbyte_name='events_list',
+                fields=[
+                    CacheFieldConfig(
+                        name='autohidden',
+                        type=['null', 'boolean'],
+                        description='Whether the event is auto-hidden',
+                    ),
+                    CacheFieldConfig(
+                        name='clusters_hidden',
+                        type=['null', 'boolean'],
+                        description='Whether the event is hidden from clusters',
+                    ),
+                    CacheFieldConfig(
+                        name='deleted',
+                        type=['null', 'boolean'],
+                        description='Whether the event is deleted',
+                    ),
+                    CacheFieldConfig(
+                        name='display',
+                        type=['null', 'string'],
+                        description='Display name of the event',
+                    ),
+                    CacheFieldConfig(
+                        name='flow_hidden',
+                        type=['null', 'boolean'],
+                        description='Whether the event is hidden from Pathfinder',
+                    ),
+                    CacheFieldConfig(
+                        name='hidden',
+                        type=['null', 'boolean'],
+                        description='Whether the event is hidden',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'number'],
+                        description='Unique identifier for the event type',
+                    ),
+                    CacheFieldConfig(
+                        name='in_waitroom',
+                        type=['null', 'boolean'],
+                        description='Whether the event is in the waitroom',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Name of the event type',
+                    ),
+                    CacheFieldConfig(
+                        name='non_active',
+                        type=['null', 'boolean'],
+                        description='Whether the event is marked as inactive',
+                    ),
+                    CacheFieldConfig(
+                        name='timeline_hidden',
+                        type=['null', 'boolean', 'number'],
+                        description='Whether the event is hidden from the timeline',
+                    ),
+                    CacheFieldConfig(
+                        name='totals',
+                        type=['null', 'number'],
+                        description='Total number of times the event occurred this week',
+                    ),
+                    CacheFieldConfig(
+                        name='totals_delta',
+                        type=['null', 'number'],
+                        description='Change in totals from the previous period',
+                    ),
+                    CacheFieldConfig(
+                        name='value',
+                        type=['null', 'string'],
+                        description='Raw event name in the data',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='active_users',
+                suggested=True,
+                x_airbyte_name='active_users',
+                fields=[
+                    CacheFieldConfig(
+                        name='date',
+                        type=['null', 'string'],
+                        description='The date for which the active user data is reported',
+                    ),
+                    CacheFieldConfig(
+                        name='statistics',
+                        type=['null', 'object'],
+                        description='The statistics related to the active users for the given date',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='average_session_length',
+                suggested=True,
+                x_airbyte_name='average_session_length',
+                fields=[
+                    CacheFieldConfig(
+                        name='date',
+                        type=['null', 'string'],
+                        description='The date on which the session occurred',
+                    ),
+                    CacheFieldConfig(
+                        name='length',
+                        type=['null', 'number'],
+                        description='The duration of the session in seconds',
+                    ),
+                ],
+            ),
+        ],
+        disable_compaction=True,
+    ),
     search_field_paths={
         'annotations': [
             'date',

@@ -21,6 +21,10 @@ from airbyte_agent_sdk.schema.security import (
     AuthConfigSpec,
 )
 from airbyte_agent_sdk.schema.extensions import (
+    CacheConfig,
+    CacheEntityConfig,
+    CacheFieldConfig,
+    CacheFieldProperty,
     EntityRelationshipConfig,
 )
 from airbyte_agent_sdk.schema.base import (
@@ -2943,6 +2947,609 @@ MondayConnectorModel: ConnectorModel = ConnectorModel(
             ],
         ),
     ],
+    context_store=CacheConfig(
+        entities=[
+            CacheEntityConfig(
+                entity='activity_logs',
+                x_airbyte_name='activity_logs',
+                fields=[
+                    CacheFieldConfig(
+                        name='board_id',
+                        type=['null', 'integer'],
+                        description='Board ID the activity belongs to',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='When the activity occurred',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at_int',
+                        type=['null', 'integer'],
+                        description='When the activity occurred (Unix timestamp)',
+                    ),
+                    CacheFieldConfig(
+                        name='data',
+                        type=['null', 'string'],
+                        description='Event data (JSON string)',
+                    ),
+                    CacheFieldConfig(
+                        name='entity',
+                        type=['null', 'string'],
+                        description='Entity type that was affected',
+                    ),
+                    CacheFieldConfig(
+                        name='event',
+                        type=['null', 'string'],
+                        description='Event type',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique activity log identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='pulse_id',
+                        type=['null', 'integer'],
+                        description='Item (pulse) ID the activity belongs to',
+                    ),
+                    CacheFieldConfig(
+                        name='user_id',
+                        type=['null', 'string'],
+                        description='ID of the user who performed the action',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='boards',
+                suggested=True,
+                x_airbyte_name='boards',
+                fields=[
+                    CacheFieldConfig(
+                        name='board_kind',
+                        type=['null', 'string'],
+                        description='Board kind (public, private, share)',
+                    ),
+                    CacheFieldConfig(
+                        name='columns',
+                        type=['null', 'array'],
+                        description='Board columns',
+                    ),
+                    CacheFieldConfig(
+                        name='communication',
+                        type=['null', 'string'],
+                        description='Board communication value',
+                    ),
+                    CacheFieldConfig(
+                        name='creator',
+                        type=['null', 'object'],
+                        description='Board creator',
+                        properties={
+                            'id': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='Board description',
+                    ),
+                    CacheFieldConfig(
+                        name='groups',
+                        type=['null', 'array'],
+                        description='Board groups',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique board identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Board name',
+                    ),
+                    CacheFieldConfig(
+                        name='owners',
+                        type=['null', 'array'],
+                        description='Board owners',
+                    ),
+                    CacheFieldConfig(
+                        name='permissions',
+                        type=['null', 'string'],
+                        description='Board permissions',
+                    ),
+                    CacheFieldConfig(
+                        name='state',
+                        type=['null', 'string'],
+                        description='Board state (active, archived, deleted)',
+                    ),
+                    CacheFieldConfig(
+                        name='subscribers',
+                        type=['null', 'array'],
+                        description='Board subscribers',
+                    ),
+                    CacheFieldConfig(
+                        name='tags',
+                        type=['null', 'array'],
+                        description='Board tags',
+                    ),
+                    CacheFieldConfig(
+                        name='top_group',
+                        type=['null', 'object'],
+                        description='Top group on the board',
+                        properties={
+                            'id': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description='Board type',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='When the board was last updated',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at_int',
+                        type=['null', 'integer'],
+                        description='When the board was last updated (Unix timestamp)',
+                    ),
+                    CacheFieldConfig(
+                        name='updates',
+                        type=['null', 'array'],
+                        description='Board updates',
+                    ),
+                    CacheFieldConfig(
+                        name='views',
+                        type=['null', 'array'],
+                        description='Board views',
+                    ),
+                    CacheFieldConfig(
+                        name='workspace',
+                        type=['null', 'object'],
+                        description='Workspace the board belongs to',
+                        properties={
+                            'id': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'kind': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'description': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='items',
+                suggested=True,
+                x_airbyte_name='items',
+                fields=[
+                    CacheFieldConfig(
+                        name='assets',
+                        type=['null', 'array'],
+                        description='Files attached to the item',
+                    ),
+                    CacheFieldConfig(
+                        name='board',
+                        type=['null', 'object'],
+                        description='Board the item belongs to',
+                        properties={
+                            'id': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='column_values',
+                        type=['null', 'array'],
+                        description='Item column values',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='When the item was created',
+                    ),
+                    CacheFieldConfig(
+                        name='creator_id',
+                        type=['null', 'string'],
+                        description='ID of the user who created the item',
+                    ),
+                    CacheFieldConfig(
+                        name='group',
+                        type=['null', 'object'],
+                        description='Group the item belongs to',
+                        properties={
+                            'id': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique item identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Item name',
+                    ),
+                    CacheFieldConfig(
+                        name='parent_item',
+                        type=['null', 'object'],
+                        description='Parent item (for subitems)',
+                        properties={
+                            'id': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='state',
+                        type=['null', 'string'],
+                        description='Item state (active, archived, deleted)',
+                    ),
+                    CacheFieldConfig(
+                        name='subscribers',
+                        type=['null', 'array'],
+                        description='Item subscribers',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='When the item was last updated',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at_int',
+                        type=['null', 'integer'],
+                        description='When the item was last updated (Unix timestamp)',
+                    ),
+                    CacheFieldConfig(
+                        name='updates',
+                        type=['null', 'array'],
+                        description='Item updates',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='tags',
+                suggested=True,
+                x_airbyte_name='tags',
+                fields=[
+                    CacheFieldConfig(
+                        name='color',
+                        type=['null', 'string'],
+                        description='Tag color',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique tag identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Tag name',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='teams',
+                suggested=True,
+                x_airbyte_name='teams',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique team identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Team name',
+                    ),
+                    CacheFieldConfig(
+                        name='picture_url',
+                        type=['null', 'string'],
+                        description='Team picture URL',
+                    ),
+                    CacheFieldConfig(
+                        name='users',
+                        type=['null', 'array'],
+                        description='Team members',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='updates',
+                suggested=True,
+                x_airbyte_name='updates',
+                fields=[
+                    CacheFieldConfig(
+                        name='assets',
+                        type=['null', 'array'],
+                        description='Files attached to this update',
+                    ),
+                    CacheFieldConfig(
+                        name='body',
+                        type=['null', 'string'],
+                        description='Update body (HTML)',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='When the update was created',
+                    ),
+                    CacheFieldConfig(
+                        name='creator_id',
+                        type=['null', 'string'],
+                        description='ID of the user who created the update',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique update identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='item_id',
+                        type=['null', 'string'],
+                        description='ID of the item this update belongs to',
+                    ),
+                    CacheFieldConfig(
+                        name='replies',
+                        type=['null', 'array'],
+                        description='Replies to this update',
+                    ),
+                    CacheFieldConfig(
+                        name='text_body',
+                        type=['null', 'string'],
+                        description='Update body (plain text)',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='When the update was last modified',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='users',
+                suggested=True,
+                x_airbyte_name='users',
+                fields=[
+                    CacheFieldConfig(
+                        name='birthday',
+                        type=['null', 'string'],
+                        description="User's birthday",
+                    ),
+                    CacheFieldConfig(
+                        name='country_code',
+                        type=['null', 'string'],
+                        description="User's country code",
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='When the user was created',
+                    ),
+                    CacheFieldConfig(
+                        name='email',
+                        type=['null', 'string'],
+                        description="User's email address",
+                    ),
+                    CacheFieldConfig(
+                        name='enabled',
+                        type=['null', 'boolean'],
+                        description='Whether the user account is enabled',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique user identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='is_admin',
+                        type=['null', 'boolean'],
+                        description='Whether the user is an admin',
+                    ),
+                    CacheFieldConfig(
+                        name='is_guest',
+                        type=['null', 'boolean'],
+                        description='Whether the user is a guest',
+                    ),
+                    CacheFieldConfig(
+                        name='is_pending',
+                        type=['null', 'boolean'],
+                        description='Whether the user is pending',
+                    ),
+                    CacheFieldConfig(
+                        name='is_view_only',
+                        type=['null', 'boolean'],
+                        description='Whether the user is view-only',
+                    ),
+                    CacheFieldConfig(
+                        name='is_verified',
+                        type=['null', 'boolean'],
+                        description='Whether the user is verified',
+                    ),
+                    CacheFieldConfig(
+                        name='join_date',
+                        type=['null', 'string'],
+                        description='When the user joined',
+                    ),
+                    CacheFieldConfig(
+                        name='location',
+                        type=['null', 'string'],
+                        description="User's location",
+                    ),
+                    CacheFieldConfig(
+                        name='mobile_phone',
+                        type=['null', 'string'],
+                        description="User's mobile phone number",
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description="User's display name",
+                    ),
+                    CacheFieldConfig(
+                        name='phone',
+                        type=['null', 'string'],
+                        description="User's phone number",
+                    ),
+                    CacheFieldConfig(
+                        name='photo_original',
+                        type=['null', 'string'],
+                        description='URL to original size photo',
+                    ),
+                    CacheFieldConfig(
+                        name='photo_small',
+                        type=['null', 'string'],
+                        description='URL to small photo',
+                    ),
+                    CacheFieldConfig(
+                        name='photo_thumb',
+                        type=['null', 'string'],
+                        description='URL to thumbnail photo',
+                    ),
+                    CacheFieldConfig(
+                        name='photo_thumb_small',
+                        type=['null', 'string'],
+                        description='URL to small thumbnail photo',
+                    ),
+                    CacheFieldConfig(
+                        name='photo_tiny',
+                        type=['null', 'string'],
+                        description='URL to tiny photo',
+                    ),
+                    CacheFieldConfig(
+                        name='time_zone_identifier',
+                        type=['null', 'string'],
+                        description="User's timezone identifier",
+                    ),
+                    CacheFieldConfig(
+                        name='title',
+                        type=['null', 'string'],
+                        description="User's job title",
+                    ),
+                    CacheFieldConfig(
+                        name='url',
+                        type=['null', 'string'],
+                        description="User's Monday.com profile URL",
+                    ),
+                    CacheFieldConfig(
+                        name='utc_hours_diff',
+                        type=['null', 'integer'],
+                        description="UTC hours difference for the user's timezone",
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='workspaces',
+                suggested=True,
+                x_airbyte_name='workspaces',
+                fields=[
+                    CacheFieldConfig(
+                        name='account_product',
+                        type=['null', 'object'],
+                        description='Account product info',
+                        properties={
+                            'id': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'kind': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='When the workspace was created',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='Workspace description',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique workspace identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='kind',
+                        type=['null', 'string'],
+                        description='Workspace kind (open, closed)',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Workspace name',
+                    ),
+                    CacheFieldConfig(
+                        name='owners_subscribers',
+                        type=['null', 'array'],
+                        description='Owner subscribers',
+                    ),
+                    CacheFieldConfig(
+                        name='settings',
+                        type=['null', 'object'],
+                        description='Workspace settings',
+                        properties={
+                            'icon': CacheFieldProperty(
+                                type=['null', 'object'],
+                                properties={
+                                    'color': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                    'image': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                },
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='state',
+                        type=['null', 'string'],
+                        description='Workspace state',
+                    ),
+                    CacheFieldConfig(
+                        name='team_owners_subscribers',
+                        type=['null', 'array'],
+                        description='Team owner subscribers',
+                    ),
+                    CacheFieldConfig(
+                        name='teams_subscribers',
+                        type=['null', 'array'],
+                        description='Team subscribers',
+                    ),
+                    CacheFieldConfig(
+                        name='users_subscribers',
+                        type=['null', 'array'],
+                        description='User subscribers',
+                    ),
+                ],
+            ),
+        ],
+        disable_compaction=True,
+    ),
     search_field_paths={
         'activity_logs': [
             'board_id',

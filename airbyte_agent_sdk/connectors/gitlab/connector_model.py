@@ -21,6 +21,9 @@ from airbyte_agent_sdk.schema.security import (
     AuthConfigSpec,
 )
 from airbyte_agent_sdk.schema.extensions import (
+    CacheConfig,
+    CacheEntityConfig,
+    CacheFieldConfig,
     EntityRelationshipConfig,
 )
 from airbyte_agent_sdk.schema.base import (
@@ -5689,6 +5692,1655 @@ GitlabConnectorModel: ConnectorModel = ConnectorModel(
             ],
         ),
     ],
+    context_store=CacheConfig(
+        entities=[
+            CacheEntityConfig(
+                entity='projects',
+                suggested=True,
+                x_airbyte_name='projects',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='ID of the project',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='Description of the project',
+                    ),
+                    CacheFieldConfig(
+                        name='description_html',
+                        type=['null', 'string'],
+                        description='HTML-rendered description of the project',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Name of the project',
+                    ),
+                    CacheFieldConfig(
+                        name='name_with_namespace',
+                        type=['null', 'string'],
+                        description='Full name including namespace',
+                    ),
+                    CacheFieldConfig(
+                        name='path',
+                        type=['null', 'string'],
+                        description='URL path of the project',
+                    ),
+                    CacheFieldConfig(
+                        name='path_with_namespace',
+                        type=['null', 'string'],
+                        description='Full path including namespace',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='Timestamp when the project was created',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='Timestamp when the project was last updated',
+                    ),
+                    CacheFieldConfig(
+                        name='default_branch',
+                        type=['null', 'string'],
+                        description='Default branch of the project',
+                    ),
+                    CacheFieldConfig(
+                        name='tag_list',
+                        type=['null', 'array'],
+                        description='List of tags for the project',
+                    ),
+                    CacheFieldConfig(
+                        name='topics',
+                        type=['null', 'array'],
+                        description='List of topics for the project',
+                    ),
+                    CacheFieldConfig(
+                        name='ssh_url_to_repo',
+                        type=['null', 'string'],
+                        description='SSH URL to the repository',
+                    ),
+                    CacheFieldConfig(
+                        name='http_url_to_repo',
+                        type=['null', 'string'],
+                        description='HTTP URL to the repository',
+                    ),
+                    CacheFieldConfig(
+                        name='web_url',
+                        type=['null', 'string'],
+                        description='Web URL of the project',
+                    ),
+                    CacheFieldConfig(
+                        name='readme_url',
+                        type=['null', 'string'],
+                        description='URL to the project README',
+                    ),
+                    CacheFieldConfig(
+                        name='avatar_url',
+                        type=['null', 'string'],
+                        description='URL of the project avatar',
+                    ),
+                    CacheFieldConfig(
+                        name='forks_count',
+                        type=['null', 'integer'],
+                        description='Number of forks',
+                    ),
+                    CacheFieldConfig(
+                        name='star_count',
+                        type=['null', 'integer'],
+                        description='Number of stars',
+                    ),
+                    CacheFieldConfig(
+                        name='last_activity_at',
+                        type=['null', 'string'],
+                        description='Timestamp of last activity',
+                    ),
+                    CacheFieldConfig(
+                        name='namespace',
+                        type=['null', 'object'],
+                        description='Namespace the project belongs to',
+                    ),
+                    CacheFieldConfig(
+                        name='container_registry_image_prefix',
+                        type=['null', 'string'],
+                        description='Prefix for container registry images',
+                    ),
+                    CacheFieldConfig(
+                        name='_links',
+                        type=['null', 'object'],
+                        description='Related resource links',
+                    ),
+                    CacheFieldConfig(
+                        name='packages_enabled',
+                        type=['null', 'boolean'],
+                        description='Whether packages are enabled',
+                    ),
+                    CacheFieldConfig(
+                        name='empty_repo',
+                        type=['null', 'boolean'],
+                        description='Whether the repository is empty',
+                    ),
+                    CacheFieldConfig(
+                        name='archived',
+                        type=['null', 'boolean'],
+                        description='Whether the project is archived',
+                    ),
+                    CacheFieldConfig(
+                        name='visibility',
+                        type=['null', 'string'],
+                        description='Visibility level of the project',
+                    ),
+                    CacheFieldConfig(
+                        name='resolve_outdated_diff_discussions',
+                        type=['null', 'boolean'],
+                        description='Whether outdated diff discussions are auto-resolved',
+                    ),
+                    CacheFieldConfig(
+                        name='container_registry_enabled',
+                        type=['null', 'boolean'],
+                        description='Whether container registry is enabled',
+                    ),
+                    CacheFieldConfig(
+                        name='container_expiration_policy',
+                        type=['null', 'object'],
+                        description='Container expiration policy settings',
+                    ),
+                    CacheFieldConfig(
+                        name='issues_enabled',
+                        type=['null', 'boolean'],
+                        description='Whether issues are enabled',
+                    ),
+                    CacheFieldConfig(
+                        name='merge_requests_enabled',
+                        type=['null', 'boolean'],
+                        description='Whether merge requests are enabled',
+                    ),
+                    CacheFieldConfig(
+                        name='wiki_enabled',
+                        type=['null', 'boolean'],
+                        description='Whether wiki is enabled',
+                    ),
+                    CacheFieldConfig(
+                        name='jobs_enabled',
+                        type=['null', 'boolean'],
+                        description='Whether jobs are enabled',
+                    ),
+                    CacheFieldConfig(
+                        name='snippets_enabled',
+                        type=['null', 'boolean'],
+                        description='Whether snippets are enabled',
+                    ),
+                    CacheFieldConfig(
+                        name='service_desk_enabled',
+                        type=['null', 'boolean'],
+                        description='Whether service desk is enabled',
+                    ),
+                    CacheFieldConfig(
+                        name='service_desk_address',
+                        type=['null', 'string'],
+                        description='Email address for the service desk',
+                    ),
+                    CacheFieldConfig(
+                        name='can_create_merge_request_in',
+                        type=['null', 'boolean'],
+                        description='Whether user can create merge requests',
+                    ),
+                    CacheFieldConfig(
+                        name='issues_access_level',
+                        type=['null', 'string'],
+                        description='Access level for issues',
+                    ),
+                    CacheFieldConfig(
+                        name='repository_access_level',
+                        type=['null', 'string'],
+                        description='Access level for the repository',
+                    ),
+                    CacheFieldConfig(
+                        name='merge_requests_access_level',
+                        type=['null', 'string'],
+                        description='Access level for merge requests',
+                    ),
+                    CacheFieldConfig(
+                        name='forking_access_level',
+                        type=['null', 'string'],
+                        description='Access level for forking',
+                    ),
+                    CacheFieldConfig(
+                        name='wiki_access_level',
+                        type=['null', 'string'],
+                        description='Access level for the wiki',
+                    ),
+                    CacheFieldConfig(
+                        name='builds_access_level',
+                        type=['null', 'string'],
+                        description='Access level for builds',
+                    ),
+                    CacheFieldConfig(
+                        name='snippets_access_level',
+                        type=['null', 'string'],
+                        description='Access level for snippets',
+                    ),
+                    CacheFieldConfig(
+                        name='pages_access_level',
+                        type=['null', 'string'],
+                        description='Access level for pages',
+                    ),
+                    CacheFieldConfig(
+                        name='operations_access_level',
+                        type=['null', 'string'],
+                        description='Access level for operations',
+                    ),
+                    CacheFieldConfig(
+                        name='analytics_access_level',
+                        type=['null', 'string'],
+                        description='Access level for analytics',
+                    ),
+                    CacheFieldConfig(
+                        name='emails_disabled',
+                        type=['null', 'boolean'],
+                        description='Whether emails are disabled',
+                    ),
+                    CacheFieldConfig(
+                        name='shared_runners_enabled',
+                        type=['null', 'boolean'],
+                        description='Whether shared runners are enabled',
+                    ),
+                    CacheFieldConfig(
+                        name='lfs_enabled',
+                        type=['null', 'boolean'],
+                        description='Whether Git LFS is enabled',
+                    ),
+                    CacheFieldConfig(
+                        name='creator_id',
+                        type=['null', 'integer'],
+                        description='ID of the project creator',
+                    ),
+                    CacheFieldConfig(
+                        name='import_status',
+                        type=['null', 'string'],
+                        description='Import status of the project',
+                    ),
+                    CacheFieldConfig(
+                        name='open_issues_count',
+                        type=['null', 'integer'],
+                        description='Number of open issues',
+                    ),
+                    CacheFieldConfig(
+                        name='ci_default_git_depth',
+                        type=['null', 'integer'],
+                        description='Default git depth for CI pipelines',
+                    ),
+                    CacheFieldConfig(
+                        name='ci_forward_deployment_enabled',
+                        type=['null', 'boolean'],
+                        description='Whether CI forward deployment is enabled',
+                    ),
+                    CacheFieldConfig(
+                        name='public_jobs',
+                        type=['null', 'boolean'],
+                        description='Whether jobs are public',
+                    ),
+                    CacheFieldConfig(
+                        name='build_timeout',
+                        type=['null', 'integer'],
+                        description='Build timeout in seconds',
+                    ),
+                    CacheFieldConfig(
+                        name='auto_cancel_pending_pipelines',
+                        type=['null', 'string'],
+                        description='Auto-cancel pending pipelines setting',
+                    ),
+                    CacheFieldConfig(
+                        name='ci_config_path',
+                        type=['null', 'string'],
+                        description='Path to the CI configuration file',
+                    ),
+                    CacheFieldConfig(
+                        name='shared_with_groups',
+                        type=['null', 'array'],
+                        description='Groups the project is shared with',
+                    ),
+                    CacheFieldConfig(
+                        name='only_allow_merge_if_pipeline_succeeds',
+                        type=['null', 'boolean'],
+                        description='Whether merge requires pipeline success',
+                    ),
+                    CacheFieldConfig(
+                        name='allow_merge_on_skipped_pipeline',
+                        type=['null', 'boolean'],
+                        description='Whether merge is allowed on skipped pipeline',
+                    ),
+                    CacheFieldConfig(
+                        name='restrict_user_defined_variables',
+                        type=['null', 'boolean'],
+                        description='Whether user-defined variables are restricted',
+                    ),
+                    CacheFieldConfig(
+                        name='request_access_enabled',
+                        type=['null', 'boolean'],
+                        description='Whether access requests are enabled',
+                    ),
+                    CacheFieldConfig(
+                        name='only_allow_merge_if_all_discussions_are_resolved',
+                        type=['null', 'boolean'],
+                        description='Whether merge requires all discussions resolved',
+                    ),
+                    CacheFieldConfig(
+                        name='remove_source_branch_after_merge',
+                        type=['null', 'boolean'],
+                        description='Whether source branch is removed after merge',
+                    ),
+                    CacheFieldConfig(
+                        name='printing_merge_request_link_enabled',
+                        type=['null', 'boolean'],
+                        description='Whether MR link printing is enabled',
+                    ),
+                    CacheFieldConfig(
+                        name='merge_method',
+                        type=['null', 'string'],
+                        description='Merge method used for the project',
+                    ),
+                    CacheFieldConfig(
+                        name='statistics',
+                        type=['null', 'object'],
+                        description='Project statistics',
+                    ),
+                    CacheFieldConfig(
+                        name='auto_devops_enabled',
+                        type=['null', 'boolean'],
+                        description='Whether Auto DevOps is enabled',
+                    ),
+                    CacheFieldConfig(
+                        name='auto_devops_deploy_strategy',
+                        type=['null', 'string'],
+                        description='Auto DevOps deployment strategy',
+                    ),
+                    CacheFieldConfig(
+                        name='autoclose_referenced_issues',
+                        type=['null', 'boolean'],
+                        description='Whether referenced issues are auto-closed',
+                    ),
+                    CacheFieldConfig(
+                        name='external_authorization_classification_label',
+                        type=['null', 'string'],
+                        description='External authorization classification label',
+                    ),
+                    CacheFieldConfig(
+                        name='requirements_enabled',
+                        type=['null', 'boolean'],
+                        description='Whether requirements are enabled',
+                    ),
+                    CacheFieldConfig(
+                        name='security_and_compliance_enabled',
+                        type=['null', 'boolean'],
+                        description='Whether security and compliance is enabled',
+                    ),
+                    CacheFieldConfig(
+                        name='compliance_frameworks',
+                        type=['null', 'array'],
+                        description='Compliance frameworks for the project',
+                    ),
+                    CacheFieldConfig(
+                        name='permissions',
+                        type=['null', 'object'],
+                        description='User permissions for the project',
+                    ),
+                    CacheFieldConfig(
+                        name='keep_latest_artifact',
+                        type=['null', 'boolean'],
+                        description='Whether the latest artifact is kept',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='issues',
+                suggested=True,
+                x_airbyte_name='issues',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='ID of the issue',
+                    ),
+                    CacheFieldConfig(
+                        name='iid',
+                        type=['null', 'integer'],
+                        description='Internal ID of the issue within the project',
+                    ),
+                    CacheFieldConfig(
+                        name='project_id',
+                        type=['null', 'integer'],
+                        description='ID of the project the issue belongs to',
+                    ),
+                    CacheFieldConfig(
+                        name='title',
+                        type=['null', 'string'],
+                        description='Title of the issue',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='Description of the issue',
+                    ),
+                    CacheFieldConfig(
+                        name='state',
+                        type=['null', 'string'],
+                        description='State of the issue',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='Timestamp when the issue was created',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='Timestamp when the issue was last updated',
+                    ),
+                    CacheFieldConfig(
+                        name='closed_at',
+                        type=['null', 'string'],
+                        description='Timestamp when the issue was closed',
+                    ),
+                    CacheFieldConfig(
+                        name='labels',
+                        type=['null', 'array'],
+                        description='Labels assigned to the issue',
+                    ),
+                    CacheFieldConfig(
+                        name='assignees',
+                        type=['null', 'array'],
+                        description='Users assigned to the issue',
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description='Type of the issue',
+                    ),
+                    CacheFieldConfig(
+                        name='user_notes_count',
+                        type=['null', 'integer'],
+                        description='Number of user notes on the issue',
+                    ),
+                    CacheFieldConfig(
+                        name='merge_requests_count',
+                        type=['null', 'integer'],
+                        description='Number of related merge requests',
+                    ),
+                    CacheFieldConfig(
+                        name='upvotes',
+                        type=['null', 'integer'],
+                        description='Number of upvotes',
+                    ),
+                    CacheFieldConfig(
+                        name='downvotes',
+                        type=['null', 'integer'],
+                        description='Number of downvotes',
+                    ),
+                    CacheFieldConfig(
+                        name='due_date',
+                        type=['null', 'string'],
+                        description='Due date for the issue',
+                    ),
+                    CacheFieldConfig(
+                        name='confidential',
+                        type=['null', 'boolean'],
+                        description='Whether the issue is confidential',
+                    ),
+                    CacheFieldConfig(
+                        name='discussion_locked',
+                        type=['null', 'boolean'],
+                        description='Whether discussion is locked',
+                    ),
+                    CacheFieldConfig(
+                        name='issue_type',
+                        type=['null', 'string'],
+                        description='Type classification of the issue',
+                    ),
+                    CacheFieldConfig(
+                        name='web_url',
+                        type=['null', 'string'],
+                        description='Web URL of the issue',
+                    ),
+                    CacheFieldConfig(
+                        name='time_stats',
+                        type=['null', 'object'],
+                        description='Time tracking statistics',
+                    ),
+                    CacheFieldConfig(
+                        name='task_completion_status',
+                        type=['null', 'object'],
+                        description='Task completion status',
+                    ),
+                    CacheFieldConfig(
+                        name='blocking_issues_count',
+                        type=['null', 'integer'],
+                        description='Number of blocking issues',
+                    ),
+                    CacheFieldConfig(
+                        name='has_tasks',
+                        type=['null', 'boolean'],
+                        description='Whether the issue has tasks',
+                    ),
+                    CacheFieldConfig(
+                        name='_links',
+                        type=['null', 'object'],
+                        description='Related resource links',
+                    ),
+                    CacheFieldConfig(
+                        name='references',
+                        type=['null', 'object'],
+                        description='Issue references',
+                    ),
+                    CacheFieldConfig(
+                        name='author',
+                        type=['null', 'object'],
+                        description='Author of the issue',
+                    ),
+                    CacheFieldConfig(
+                        name='author_id',
+                        type=['null', 'integer'],
+                        description='ID of the author',
+                    ),
+                    CacheFieldConfig(
+                        name='assignee',
+                        type=['null', 'object'],
+                        description='Primary assignee of the issue',
+                    ),
+                    CacheFieldConfig(
+                        name='assignee_id',
+                        type=['null', 'integer'],
+                        description='ID of the primary assignee',
+                    ),
+                    CacheFieldConfig(
+                        name='closed_by',
+                        type=['null', 'object'],
+                        description='User who closed the issue',
+                    ),
+                    CacheFieldConfig(
+                        name='closed_by_id',
+                        type=['null', 'integer'],
+                        description='ID of the user who closed the issue',
+                    ),
+                    CacheFieldConfig(
+                        name='milestone',
+                        type=['null', 'object'],
+                        description='Milestone the issue belongs to',
+                    ),
+                    CacheFieldConfig(
+                        name='milestone_id',
+                        type=['null', 'integer'],
+                        description='ID of the milestone',
+                    ),
+                    CacheFieldConfig(
+                        name='weight',
+                        type=['null', 'integer'],
+                        description='Weight of the issue',
+                    ),
+                    CacheFieldConfig(
+                        name='severity',
+                        type=['null', 'string'],
+                        description='Severity level of the issue',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='merge_requests',
+                suggested=True,
+                x_airbyte_name='merge_requests',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='ID of the merge request',
+                    ),
+                    CacheFieldConfig(
+                        name='iid',
+                        type=['null', 'integer'],
+                        description='Internal ID of the merge request within the project',
+                    ),
+                    CacheFieldConfig(
+                        name='project_id',
+                        type=['null', 'integer'],
+                        description='ID of the project',
+                    ),
+                    CacheFieldConfig(
+                        name='title',
+                        type=['null', 'string'],
+                        description='Title of the merge request',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='Description of the merge request',
+                    ),
+                    CacheFieldConfig(
+                        name='state',
+                        type=['null', 'string'],
+                        description='State of the merge request',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='Timestamp when the merge request was created',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='Timestamp when the merge request was last updated',
+                    ),
+                    CacheFieldConfig(
+                        name='merged_at',
+                        type=['null', 'string'],
+                        description='Timestamp when the merge request was merged',
+                    ),
+                    CacheFieldConfig(
+                        name='closed_at',
+                        type=['null', 'string'],
+                        description='Timestamp when the merge request was closed',
+                    ),
+                    CacheFieldConfig(
+                        name='target_branch',
+                        type=['null', 'string'],
+                        description='Target branch for the merge request',
+                    ),
+                    CacheFieldConfig(
+                        name='source_branch',
+                        type=['null', 'string'],
+                        description='Source branch for the merge request',
+                    ),
+                    CacheFieldConfig(
+                        name='user_notes_count',
+                        type=['null', 'integer'],
+                        description='Number of user notes',
+                    ),
+                    CacheFieldConfig(
+                        name='upvotes',
+                        type=['null', 'integer'],
+                        description='Number of upvotes',
+                    ),
+                    CacheFieldConfig(
+                        name='downvotes',
+                        type=['null', 'integer'],
+                        description='Number of downvotes',
+                    ),
+                    CacheFieldConfig(
+                        name='assignees',
+                        type=['null', 'array'],
+                        description='Users assigned to the merge request',
+                    ),
+                    CacheFieldConfig(
+                        name='reviewers',
+                        type=['null', 'array'],
+                        description='Users assigned as reviewers',
+                    ),
+                    CacheFieldConfig(
+                        name='source_project_id',
+                        type=['null', 'integer'],
+                        description='ID of the source project',
+                    ),
+                    CacheFieldConfig(
+                        name='target_project_id',
+                        type=['null', 'integer'],
+                        description='ID of the target project',
+                    ),
+                    CacheFieldConfig(
+                        name='labels',
+                        type=['null', 'array'],
+                        description='Labels assigned to the merge request',
+                    ),
+                    CacheFieldConfig(
+                        name='work_in_progress',
+                        type=['null', 'boolean'],
+                        description='Whether the merge request is a work in progress',
+                    ),
+                    CacheFieldConfig(
+                        name='merge_when_pipeline_succeeds',
+                        type=['null', 'boolean'],
+                        description='Whether to merge when pipeline succeeds',
+                    ),
+                    CacheFieldConfig(
+                        name='merge_status',
+                        type=['null', 'string'],
+                        description='Merge status of the merge request',
+                    ),
+                    CacheFieldConfig(
+                        name='sha',
+                        type=['null', 'string'],
+                        description='SHA of the head commit',
+                    ),
+                    CacheFieldConfig(
+                        name='merge_commit_sha',
+                        type=['null', 'string'],
+                        description='SHA of the merge commit',
+                    ),
+                    CacheFieldConfig(
+                        name='squash_commit_sha',
+                        type=['null', 'string'],
+                        description='SHA of the squash commit',
+                    ),
+                    CacheFieldConfig(
+                        name='discussion_locked',
+                        type=['null', 'boolean'],
+                        description='Whether discussion is locked',
+                    ),
+                    CacheFieldConfig(
+                        name='should_remove_source_branch',
+                        type=['null', 'boolean'],
+                        description='Whether source branch should be removed',
+                    ),
+                    CacheFieldConfig(
+                        name='force_remove_source_branch',
+                        type=['null', 'boolean'],
+                        description='Whether to force remove source branch',
+                    ),
+                    CacheFieldConfig(
+                        name='reference',
+                        type=['null', 'string'],
+                        description='Short reference for the merge request',
+                    ),
+                    CacheFieldConfig(
+                        name='references',
+                        type=['null', 'object'],
+                        description='Merge request references',
+                    ),
+                    CacheFieldConfig(
+                        name='web_url',
+                        type=['null', 'string'],
+                        description='Web URL of the merge request',
+                    ),
+                    CacheFieldConfig(
+                        name='time_stats',
+                        type=['null', 'object'],
+                        description='Time tracking statistics',
+                    ),
+                    CacheFieldConfig(
+                        name='squash',
+                        type=['null', 'boolean'],
+                        description='Whether to squash commits on merge',
+                    ),
+                    CacheFieldConfig(
+                        name='task_completion_status',
+                        type=['null', 'object'],
+                        description='Task completion status',
+                    ),
+                    CacheFieldConfig(
+                        name='has_conflicts',
+                        type=['null', 'boolean'],
+                        description='Whether the merge request has conflicts',
+                    ),
+                    CacheFieldConfig(
+                        name='blocking_discussions_resolved',
+                        type=['null', 'boolean'],
+                        description='Whether blocking discussions are resolved',
+                    ),
+                    CacheFieldConfig(
+                        name='author',
+                        type=['null', 'object'],
+                        description='Author of the merge request',
+                    ),
+                    CacheFieldConfig(
+                        name='author_id',
+                        type=['null', 'integer'],
+                        description='ID of the author',
+                    ),
+                    CacheFieldConfig(
+                        name='assignee',
+                        type=['null', 'object'],
+                        description='Primary assignee of the merge request',
+                    ),
+                    CacheFieldConfig(
+                        name='assignee_id',
+                        type=['null', 'integer'],
+                        description='ID of the primary assignee',
+                    ),
+                    CacheFieldConfig(
+                        name='closed_by',
+                        type=['null', 'object'],
+                        description='User who closed the merge request',
+                    ),
+                    CacheFieldConfig(
+                        name='closed_by_id',
+                        type=['null', 'integer'],
+                        description='ID of the user who closed it',
+                    ),
+                    CacheFieldConfig(
+                        name='milestone',
+                        type=['null', 'object'],
+                        description='Milestone the merge request belongs to',
+                    ),
+                    CacheFieldConfig(
+                        name='milestone_id',
+                        type=['null', 'integer'],
+                        description='ID of the milestone',
+                    ),
+                    CacheFieldConfig(
+                        name='merged_by',
+                        type=['null', 'object'],
+                        description='User who merged the merge request',
+                    ),
+                    CacheFieldConfig(
+                        name='merged_by_id',
+                        type=['null', 'integer'],
+                        description='ID of the user who merged it',
+                    ),
+                    CacheFieldConfig(
+                        name='draft',
+                        type=['null', 'boolean'],
+                        description='Whether the merge request is a draft',
+                    ),
+                    CacheFieldConfig(
+                        name='detailed_merge_status',
+                        type=['null', 'string'],
+                        description='Detailed merge status',
+                    ),
+                    CacheFieldConfig(
+                        name='merge_user',
+                        type=['null', 'object'],
+                        description='User who performed the merge',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='users',
+                suggested=True,
+                x_airbyte_name='users',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='ID of the user',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Full name of the user',
+                    ),
+                    CacheFieldConfig(
+                        name='username',
+                        type=['null', 'string'],
+                        description='Username of the user',
+                    ),
+                    CacheFieldConfig(
+                        name='state',
+                        type=['null', 'string'],
+                        description='State of the user account',
+                    ),
+                    CacheFieldConfig(
+                        name='avatar_url',
+                        type=['null', 'string'],
+                        description='URL of the user avatar',
+                    ),
+                    CacheFieldConfig(
+                        name='web_url',
+                        type=['null', 'string'],
+                        description='Web URL of the user profile',
+                    ),
+                    CacheFieldConfig(
+                        name='locked',
+                        type=['null', 'boolean'],
+                        description='Whether the user account is locked',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='commits',
+                suggested=True,
+                x_airbyte_name='commits',
+                fields=[
+                    CacheFieldConfig(
+                        name='project_id',
+                        type=['null', 'integer'],
+                        description='ID of the project the commit belongs to',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='SHA of the commit',
+                    ),
+                    CacheFieldConfig(
+                        name='short_id',
+                        type=['null', 'string'],
+                        description='Short SHA of the commit',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='Timestamp when the commit was created',
+                    ),
+                    CacheFieldConfig(
+                        name='parent_ids',
+                        type=['null', 'array'],
+                        description='SHAs of parent commits',
+                    ),
+                    CacheFieldConfig(
+                        name='title',
+                        type=['null', 'string'],
+                        description='Title of the commit',
+                    ),
+                    CacheFieldConfig(
+                        name='message',
+                        type=['null', 'string'],
+                        description='Full commit message',
+                    ),
+                    CacheFieldConfig(
+                        name='author_name',
+                        type=['null', 'string'],
+                        description='Name of the commit author',
+                    ),
+                    CacheFieldConfig(
+                        name='author_email',
+                        type=['null', 'string'],
+                        description='Email of the commit author',
+                    ),
+                    CacheFieldConfig(
+                        name='authored_date',
+                        type=['null', 'string'],
+                        description='Date the commit was authored',
+                    ),
+                    CacheFieldConfig(
+                        name='committer_name',
+                        type=['null', 'string'],
+                        description='Name of the committer',
+                    ),
+                    CacheFieldConfig(
+                        name='committer_email',
+                        type=['null', 'string'],
+                        description='Email of the committer',
+                    ),
+                    CacheFieldConfig(
+                        name='committed_date',
+                        type=['null', 'string'],
+                        description='Date the commit was committed',
+                    ),
+                    CacheFieldConfig(
+                        name='trailers',
+                        type=['null', 'object'],
+                        description='Git trailers for the commit',
+                    ),
+                    CacheFieldConfig(
+                        name='web_url',
+                        type=['null', 'string'],
+                        description='Web URL of the commit',
+                    ),
+                    CacheFieldConfig(
+                        name='stats',
+                        type=['null', 'object'],
+                        description='Commit statistics',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='groups',
+                x_airbyte_name='groups',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='ID of the group',
+                    ),
+                    CacheFieldConfig(
+                        name='web_url',
+                        type=['null', 'string'],
+                        description='Web URL of the group',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Name of the group',
+                    ),
+                    CacheFieldConfig(
+                        name='path',
+                        type=['null', 'string'],
+                        description='URL path of the group',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='Description of the group',
+                    ),
+                    CacheFieldConfig(
+                        name='visibility',
+                        type=['null', 'string'],
+                        description='Visibility level of the group',
+                    ),
+                    CacheFieldConfig(
+                        name='share_with_group_lock',
+                        type=['null', 'boolean'],
+                        description='Whether sharing with other groups is locked',
+                    ),
+                    CacheFieldConfig(
+                        name='require_two_factor_authentication',
+                        type=['null', 'boolean'],
+                        description='Whether two-factor authentication is required',
+                    ),
+                    CacheFieldConfig(
+                        name='two_factor_grace_period',
+                        type=['null', 'integer'],
+                        description='Grace period for two-factor authentication',
+                    ),
+                    CacheFieldConfig(
+                        name='project_creation_level',
+                        type=['null', 'string'],
+                        description='Level required to create projects',
+                    ),
+                    CacheFieldConfig(
+                        name='auto_devops_enabled',
+                        type=['null', 'boolean'],
+                        description='Whether Auto DevOps is enabled',
+                    ),
+                    CacheFieldConfig(
+                        name='subgroup_creation_level',
+                        type=['null', 'string'],
+                        description='Level required to create subgroups',
+                    ),
+                    CacheFieldConfig(
+                        name='emails_disabled',
+                        type=['null', 'boolean'],
+                        description='Whether emails are disabled',
+                    ),
+                    CacheFieldConfig(
+                        name='emails_enabled',
+                        type=['null', 'boolean'],
+                        description='Whether emails are enabled',
+                    ),
+                    CacheFieldConfig(
+                        name='mentions_disabled',
+                        type=['null', 'boolean'],
+                        description='Whether mentions are disabled',
+                    ),
+                    CacheFieldConfig(
+                        name='lfs_enabled',
+                        type=['null', 'boolean'],
+                        description='Whether Git LFS is enabled',
+                    ),
+                    CacheFieldConfig(
+                        name='default_branch_protection',
+                        type=['null', 'integer'],
+                        description='Default branch protection level',
+                    ),
+                    CacheFieldConfig(
+                        name='avatar_url',
+                        type=['null', 'string'],
+                        description='URL of the group avatar',
+                    ),
+                    CacheFieldConfig(
+                        name='request_access_enabled',
+                        type=['null', 'boolean'],
+                        description='Whether access requests are enabled',
+                    ),
+                    CacheFieldConfig(
+                        name='full_name',
+                        type=['null', 'string'],
+                        description='Full name of the group',
+                    ),
+                    CacheFieldConfig(
+                        name='full_path',
+                        type=['null', 'string'],
+                        description='Full path of the group',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='Timestamp when the group was created',
+                    ),
+                    CacheFieldConfig(
+                        name='parent_id',
+                        type=['null', 'integer'],
+                        description='ID of the parent group',
+                    ),
+                    CacheFieldConfig(
+                        name='shared_with_groups',
+                        type=['null', 'array'],
+                        description='Groups this group is shared with',
+                    ),
+                    CacheFieldConfig(
+                        name='projects',
+                        type=['null', 'array'],
+                        description='Projects in the group',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='branches',
+                x_airbyte_name='branches',
+                fields=[
+                    CacheFieldConfig(
+                        name='project_id',
+                        type=['null', 'integer'],
+                        description='ID of the project the branch belongs to',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Name of the branch',
+                    ),
+                    CacheFieldConfig(
+                        name='merged',
+                        type=['null', 'boolean'],
+                        description='Whether the branch is merged',
+                    ),
+                    CacheFieldConfig(
+                        name='protected',
+                        type=['null', 'boolean'],
+                        description='Whether the branch is protected',
+                    ),
+                    CacheFieldConfig(
+                        name='developers_can_push',
+                        type=['null', 'boolean'],
+                        description='Whether developers can push to the branch',
+                    ),
+                    CacheFieldConfig(
+                        name='developers_can_merge',
+                        type=['null', 'boolean'],
+                        description='Whether developers can merge into the branch',
+                    ),
+                    CacheFieldConfig(
+                        name='can_push',
+                        type=['null', 'boolean'],
+                        description='Whether the current user can push',
+                    ),
+                    CacheFieldConfig(
+                        name='default',
+                        type=['null', 'boolean'],
+                        description='Whether this is the default branch',
+                    ),
+                    CacheFieldConfig(
+                        name='web_url',
+                        type=['null', 'string'],
+                        description='Web URL of the branch',
+                    ),
+                    CacheFieldConfig(
+                        name='commit_id',
+                        type=['null', 'string'],
+                        description='SHA of the head commit',
+                    ),
+                    CacheFieldConfig(
+                        name='commit',
+                        type=['null', 'object'],
+                        description='Head commit details',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='pipelines',
+                x_airbyte_name='pipelines',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='ID of the pipeline',
+                    ),
+                    CacheFieldConfig(
+                        name='iid',
+                        type=['null', 'integer'],
+                        description='Internal ID of the pipeline within the project',
+                    ),
+                    CacheFieldConfig(
+                        name='project_id',
+                        type=['null', 'integer'],
+                        description='ID of the project',
+                    ),
+                    CacheFieldConfig(
+                        name='sha',
+                        type=['null', 'string'],
+                        description='SHA of the commit that triggered the pipeline',
+                    ),
+                    CacheFieldConfig(
+                        name='source',
+                        type=['null', 'string'],
+                        description='Source that triggered the pipeline',
+                    ),
+                    CacheFieldConfig(
+                        name='ref',
+                        type=['null', 'string'],
+                        description='Branch or tag that triggered the pipeline',
+                    ),
+                    CacheFieldConfig(
+                        name='status',
+                        type=['null', 'string'],
+                        description='Status of the pipeline',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='Timestamp when the pipeline was created',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='Timestamp when the pipeline was last updated',
+                    ),
+                    CacheFieldConfig(
+                        name='web_url',
+                        type=['null', 'string'],
+                        description='Web URL of the pipeline',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Name of the pipeline',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='group_members',
+                x_airbyte_name='group_members',
+                fields=[
+                    CacheFieldConfig(
+                        name='group_id',
+                        type=['null', 'integer'],
+                        description='ID of the group',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='ID of the member',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Full name of the member',
+                    ),
+                    CacheFieldConfig(
+                        name='username',
+                        type=['null', 'string'],
+                        description='Username of the member',
+                    ),
+                    CacheFieldConfig(
+                        name='state',
+                        type=['null', 'string'],
+                        description='State of the member account',
+                    ),
+                    CacheFieldConfig(
+                        name='membership_state',
+                        type=['null', 'string'],
+                        description='State of the membership',
+                    ),
+                    CacheFieldConfig(
+                        name='avatar_url',
+                        type=['null', 'string'],
+                        description='URL of the member avatar',
+                    ),
+                    CacheFieldConfig(
+                        name='web_url',
+                        type=['null', 'string'],
+                        description='Web URL of the member profile',
+                    ),
+                    CacheFieldConfig(
+                        name='access_level',
+                        type=['null', 'integer'],
+                        description='Access level of the member',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='Timestamp when the member was added',
+                    ),
+                    CacheFieldConfig(
+                        name='expires_at',
+                        type=['null', 'string'],
+                        description='Expiration date of the membership',
+                    ),
+                    CacheFieldConfig(
+                        name='created_by',
+                        type=['null', 'object'],
+                        description='User who added the member',
+                    ),
+                    CacheFieldConfig(
+                        name='locked',
+                        type=['null', 'boolean'],
+                        description='Whether the member account is locked',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='project_members',
+                x_airbyte_name='project_members',
+                fields=[
+                    CacheFieldConfig(
+                        name='project_id',
+                        type=['null', 'integer'],
+                        description='ID of the project',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='ID of the member',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Full name of the member',
+                    ),
+                    CacheFieldConfig(
+                        name='username',
+                        type=['null', 'string'],
+                        description='Username of the member',
+                    ),
+                    CacheFieldConfig(
+                        name='state',
+                        type=['null', 'string'],
+                        description='State of the member account',
+                    ),
+                    CacheFieldConfig(
+                        name='membership_state',
+                        type=['null', 'string'],
+                        description='State of the membership',
+                    ),
+                    CacheFieldConfig(
+                        name='avatar_url',
+                        type=['null', 'string'],
+                        description='URL of the member avatar',
+                    ),
+                    CacheFieldConfig(
+                        name='web_url',
+                        type=['null', 'string'],
+                        description='Web URL of the member profile',
+                    ),
+                    CacheFieldConfig(
+                        name='access_level',
+                        type=['null', 'integer'],
+                        description='Access level of the member',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='Timestamp when the member was added',
+                    ),
+                    CacheFieldConfig(
+                        name='expires_at',
+                        type=['null', 'string'],
+                        description='Expiration date of the membership',
+                    ),
+                    CacheFieldConfig(
+                        name='created_by',
+                        type=['null', 'object'],
+                        description='User who added the member',
+                    ),
+                    CacheFieldConfig(
+                        name='locked',
+                        type=['null', 'boolean'],
+                        description='Whether the member account is locked',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='releases',
+                x_airbyte_name='releases',
+                fields=[
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Name of the release',
+                    ),
+                    CacheFieldConfig(
+                        name='tag_name',
+                        type=['null', 'string'],
+                        description='Tag name associated with the release',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='Description of the release',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='Timestamp when the release was created',
+                    ),
+                    CacheFieldConfig(
+                        name='released_at',
+                        type=['null', 'string'],
+                        description='Timestamp when the release was published',
+                    ),
+                    CacheFieldConfig(
+                        name='upcoming_release',
+                        type=['null', 'boolean'],
+                        description='Whether this is an upcoming release',
+                    ),
+                    CacheFieldConfig(
+                        name='milestones',
+                        type=['null', 'array'],
+                        description='Milestones associated with the release',
+                    ),
+                    CacheFieldConfig(
+                        name='commit_path',
+                        type=['null', 'string'],
+                        description='Path to the release commit',
+                    ),
+                    CacheFieldConfig(
+                        name='tag_path',
+                        type=['null', 'string'],
+                        description='Path to the release tag',
+                    ),
+                    CacheFieldConfig(
+                        name='assets',
+                        type=['null', 'object'],
+                        description='Assets attached to the release',
+                    ),
+                    CacheFieldConfig(
+                        name='evidences',
+                        type=['null', 'array'],
+                        description='Evidences collected for the release',
+                    ),
+                    CacheFieldConfig(
+                        name='_links',
+                        type=['null', 'object'],
+                        description='Related resource links',
+                    ),
+                    CacheFieldConfig(
+                        name='author',
+                        type=['null', 'object'],
+                        description='Author of the release',
+                    ),
+                    CacheFieldConfig(
+                        name='author_id',
+                        type=['null', 'integer'],
+                        description='ID of the author',
+                    ),
+                    CacheFieldConfig(
+                        name='commit',
+                        type=['null', 'object'],
+                        description='Commit associated with the release',
+                    ),
+                    CacheFieldConfig(
+                        name='commit_id',
+                        type=['null', 'string'],
+                        description='SHA of the associated commit',
+                    ),
+                    CacheFieldConfig(
+                        name='project_id',
+                        type=['null', 'integer'],
+                        description='ID of the project',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='tags',
+                x_airbyte_name='tags',
+                fields=[
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Name of the tag',
+                    ),
+                    CacheFieldConfig(
+                        name='message',
+                        type=['null', 'string'],
+                        description='Annotation message of the tag',
+                    ),
+                    CacheFieldConfig(
+                        name='target',
+                        type=['null', 'string'],
+                        description='SHA the tag points to',
+                    ),
+                    CacheFieldConfig(
+                        name='release',
+                        type=['null', 'object'],
+                        description='Release associated with the tag',
+                    ),
+                    CacheFieldConfig(
+                        name='protected',
+                        type=['null', 'boolean'],
+                        description='Whether the tag is protected',
+                    ),
+                    CacheFieldConfig(
+                        name='commit',
+                        type=['null', 'object'],
+                        description='Commit the tag points to',
+                    ),
+                    CacheFieldConfig(
+                        name='commit_id',
+                        type=['null', 'string'],
+                        description='SHA of the tagged commit',
+                    ),
+                    CacheFieldConfig(
+                        name='project_id',
+                        type=['null', 'integer'],
+                        description='ID of the project',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='group_milestones',
+                x_airbyte_name='group_milestones',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='ID of the milestone',
+                    ),
+                    CacheFieldConfig(
+                        name='iid',
+                        type=['null', 'integer'],
+                        description='Internal ID of the milestone within the group',
+                    ),
+                    CacheFieldConfig(
+                        name='group_id',
+                        type=['null', 'integer'],
+                        description='ID of the group',
+                    ),
+                    CacheFieldConfig(
+                        name='title',
+                        type=['null', 'string'],
+                        description='Title of the milestone',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='Description of the milestone',
+                    ),
+                    CacheFieldConfig(
+                        name='state',
+                        type=['null', 'string'],
+                        description='State of the milestone',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='Timestamp when the milestone was created',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='Timestamp when the milestone was last updated',
+                    ),
+                    CacheFieldConfig(
+                        name='due_date',
+                        type=['null', 'string'],
+                        description='Due date of the milestone',
+                    ),
+                    CacheFieldConfig(
+                        name='start_date',
+                        type=['null', 'string'],
+                        description='Start date of the milestone',
+                    ),
+                    CacheFieldConfig(
+                        name='expired',
+                        type=['null', 'boolean'],
+                        description='Whether the milestone is expired',
+                    ),
+                    CacheFieldConfig(
+                        name='web_url',
+                        type=['null', 'string'],
+                        description='Web URL of the milestone',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='project_milestones',
+                x_airbyte_name='project_milestones',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='ID of the milestone',
+                    ),
+                    CacheFieldConfig(
+                        name='iid',
+                        type=['null', 'integer'],
+                        description='Internal ID of the milestone within the project',
+                    ),
+                    CacheFieldConfig(
+                        name='project_id',
+                        type=['null', 'integer'],
+                        description='ID of the project',
+                    ),
+                    CacheFieldConfig(
+                        name='title',
+                        type=['null', 'string'],
+                        description='Title of the milestone',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='Description of the milestone',
+                    ),
+                    CacheFieldConfig(
+                        name='state',
+                        type=['null', 'string'],
+                        description='State of the milestone',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='Timestamp when the milestone was created',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='Timestamp when the milestone was last updated',
+                    ),
+                    CacheFieldConfig(
+                        name='due_date',
+                        type=['null', 'string'],
+                        description='Due date of the milestone',
+                    ),
+                    CacheFieldConfig(
+                        name='start_date',
+                        type=['null', 'string'],
+                        description='Start date of the milestone',
+                    ),
+                    CacheFieldConfig(
+                        name='expired',
+                        type=['null', 'boolean'],
+                        description='Whether the milestone is expired',
+                    ),
+                    CacheFieldConfig(
+                        name='web_url',
+                        type=['null', 'string'],
+                        description='Web URL of the milestone',
+                    ),
+                ],
+            ),
+        ],
+        disable_compaction=True,
+    ),
     search_field_paths={
         'projects': [
             'id',

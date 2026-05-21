@@ -19,6 +19,12 @@ from airbyte_agent_sdk.schema.security import (
     AuthConfigFieldSpec,
     AuthConfigSpec,
 )
+from airbyte_agent_sdk.schema.extensions import (
+    CacheConfig,
+    CacheEntityConfig,
+    CacheFieldConfig,
+    CacheFieldProperty,
+)
 from airbyte_agent_sdk.schema.base import (
     ExampleQuestions,
 )
@@ -599,6 +605,148 @@ GranolaConnectorModel: ConnectorModel = ConnectorModel(
             },
         ),
     ],
+    context_store=CacheConfig(
+        entities=[
+            CacheEntityConfig(
+                entity='notes',
+                x_airbyte_name='detailed_notes',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='The unique identifier of the note.',
+                    ),
+                    CacheFieldConfig(
+                        name='object',
+                        type=['null', 'string'],
+                        description='The object type, always "note".',
+                    ),
+                    CacheFieldConfig(
+                        name='title',
+                        type=['null', 'string'],
+                        description='The title of the note.',
+                    ),
+                    CacheFieldConfig(
+                        name='owner',
+                        type=['null', 'object'],
+                        description='The owner of the note.',
+                        properties={
+                            'name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'email': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='The creation time of the note in ISO 8601 format.',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='The last update time of the note in ISO 8601 format.',
+                    ),
+                    CacheFieldConfig(
+                        name='summary_text',
+                        type=['null', 'string'],
+                        description='Plain text summary of the note.',
+                    ),
+                    CacheFieldConfig(
+                        name='summary_markdown',
+                        type=['null', 'string'],
+                        description='Markdown formatted summary of the note.',
+                    ),
+                    CacheFieldConfig(
+                        name='attendees',
+                        type=['null', 'array'],
+                        description='The attendees of the meeting.',
+                        properties={
+                            'name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'email': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='calendar_event',
+                        type=['null', 'object'],
+                        description='Associated calendar event details.',
+                        properties={
+                            'calendar_event_id': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'event_title': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'organiser': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'invitees': CacheFieldProperty(
+                                type=['null', 'array'],
+                                properties={
+                                    'email': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                },
+                            ),
+                            'scheduled_start_time': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'scheduled_end_time': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='folder_membership',
+                        type=['null', 'array'],
+                        description='The folder membership of the note.',
+                        properties={
+                            'id': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'object': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='transcript',
+                        type=['null', 'array'],
+                        description='Transcript of the meeting.',
+                        properties={
+                            'text': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'speaker': CacheFieldProperty(
+                                type=['null', 'object'],
+                                properties={
+                                    'source': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                },
+                            ),
+                            'start_time': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'end_time': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                ],
+            ),
+        ],
+        disable_compaction=True,
+    ),
     search_field_paths={
         'notes': [
             'id',

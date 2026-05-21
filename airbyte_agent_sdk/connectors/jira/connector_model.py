@@ -20,6 +20,9 @@ from airbyte_agent_sdk.schema.security import (
     AuthConfigSpec,
 )
 from airbyte_agent_sdk.schema.extensions import (
+    CacheConfig,
+    CacheEntityConfig,
+    CacheFieldConfig,
     EntityRelationshipConfig,
 )
 from airbyte_agent_sdk.schema.base import (
@@ -4575,6 +4578,567 @@ JiraConnectorModel: ConnectorModel = ConnectorModel(
             },
         ),
     ],
+    context_store=CacheConfig(
+        entities=[
+            CacheEntityConfig(
+                entity='issues',
+                suggested=True,
+                x_airbyte_name='issues',
+                fields=[
+                    CacheFieldConfig(
+                        name='changelog',
+                        type=['null', 'object'],
+                        description='Details of changelogs associated with the issue',
+                    ),
+                    CacheFieldConfig(
+                        name='created',
+                        type=['null', 'string'],
+                        description='The timestamp when the issue was created',
+                    ),
+                    CacheFieldConfig(
+                        name='editmeta',
+                        type=['null', 'object'],
+                        description='The metadata for the fields on the issue that can be amended',
+                    ),
+                    CacheFieldConfig(
+                        name='expand',
+                        type=['string'],
+                        description='Expand options that include additional issue details in the response',
+                    ),
+                    CacheFieldConfig(
+                        name='fields',
+                        type=['object'],
+                        description='Details of various fields associated with the issue',
+                    ),
+                    CacheFieldConfig(
+                        name='fieldsToInclude',
+                        type=['object'],
+                        description='Specify the fields to include in the fetched issues data',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['string'],
+                        description='The unique ID of the issue',
+                    ),
+                    CacheFieldConfig(
+                        name='key',
+                        type=['string'],
+                        description='The unique key of the issue',
+                    ),
+                    CacheFieldConfig(
+                        name='names',
+                        type=['object'],
+                        description='The ID and name of each field present on the issue',
+                    ),
+                    CacheFieldConfig(
+                        name='operations',
+                        type=['null', 'object'],
+                        description='The operations that can be performed on the issue',
+                    ),
+                    CacheFieldConfig(
+                        name='projectId',
+                        type=['string'],
+                        description='The ID of the project containing the issue',
+                    ),
+                    CacheFieldConfig(
+                        name='projectKey',
+                        type=['string'],
+                        description='The key of the project containing the issue',
+                    ),
+                    CacheFieldConfig(
+                        name='properties',
+                        type=['object'],
+                        description='Details of the issue properties identified in the request',
+                    ),
+                    CacheFieldConfig(
+                        name='renderedFields',
+                        type=['object'],
+                        description='The rendered value of each field present on the issue',
+                    ),
+                    CacheFieldConfig(
+                        name='schema',
+                        type=['object'],
+                        description='The schema describing each field present on the issue',
+                    ),
+                    CacheFieldConfig(
+                        name='self',
+                        type=['string'],
+                        description='The URL of the issue details',
+                    ),
+                    CacheFieldConfig(
+                        name='transitions',
+                        type=['array'],
+                        description='The transitions that can be performed on the issue',
+                    ),
+                    CacheFieldConfig(
+                        name='updated',
+                        type=['null', 'string'],
+                        description='The timestamp when the issue was last updated',
+                    ),
+                    CacheFieldConfig(
+                        name='versionedRepresentations',
+                        type=['object'],
+                        description='The versions of each field on the issue',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='projects',
+                suggested=True,
+                x_airbyte_name='projects',
+                fields=[
+                    CacheFieldConfig(
+                        name='archived',
+                        type=['boolean'],
+                        description='Whether the project is archived',
+                    ),
+                    CacheFieldConfig(
+                        name='archivedBy',
+                        type=['null', 'object'],
+                        description='The user who archived the project',
+                    ),
+                    CacheFieldConfig(
+                        name='archivedDate',
+                        type=['null', 'string'],
+                        description='The date when the project was archived',
+                    ),
+                    CacheFieldConfig(
+                        name='assigneeType',
+                        type=['null', 'string'],
+                        description='The default assignee when creating issues for this project',
+                    ),
+                    CacheFieldConfig(
+                        name='avatarUrls',
+                        type=['object'],
+                        description="The URLs of the project's avatars",
+                    ),
+                    CacheFieldConfig(
+                        name='components',
+                        type=['array'],
+                        description='List of the components contained in the project',
+                    ),
+                    CacheFieldConfig(
+                        name='deleted',
+                        type=['boolean'],
+                        description='Whether the project is marked as deleted',
+                    ),
+                    CacheFieldConfig(
+                        name='deletedBy',
+                        type=['null', 'object'],
+                        description='The user who marked the project as deleted',
+                    ),
+                    CacheFieldConfig(
+                        name='deletedDate',
+                        type=['null', 'string'],
+                        description='The date when the project was marked as deleted',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='A brief description of the project',
+                    ),
+                    CacheFieldConfig(
+                        name='email',
+                        type=['null', 'string'],
+                        description='An email address associated with the project',
+                    ),
+                    CacheFieldConfig(
+                        name='entityId',
+                        type=['null', 'string'],
+                        description='The unique identifier of the project entity',
+                    ),
+                    CacheFieldConfig(
+                        name='expand',
+                        type=['null', 'string'],
+                        description='Expand options that include additional project details in the response',
+                    ),
+                    CacheFieldConfig(
+                        name='favourite',
+                        type=['boolean'],
+                        description='Whether the project is selected as a favorite',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['string'],
+                        description='The ID of the project',
+                    ),
+                    CacheFieldConfig(
+                        name='insight',
+                        type=['null', 'object'],
+                        description='Insights about the project',
+                    ),
+                    CacheFieldConfig(
+                        name='isPrivate',
+                        type=['boolean'],
+                        description='Whether the project is private',
+                    ),
+                    CacheFieldConfig(
+                        name='issueTypeHierarchy',
+                        type=['null', 'object'],
+                        description='The issue type hierarchy for the project',
+                    ),
+                    CacheFieldConfig(
+                        name='issueTypes',
+                        type=['array'],
+                        description='List of the issue types available in the project',
+                    ),
+                    CacheFieldConfig(
+                        name='key',
+                        type=['string'],
+                        description='The key of the project',
+                    ),
+                    CacheFieldConfig(
+                        name='lead',
+                        type=['null', 'object'],
+                        description='The username of the project lead',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['string'],
+                        description='The name of the project',
+                    ),
+                    CacheFieldConfig(
+                        name='permissions',
+                        type=['null', 'object'],
+                        description='User permissions on the project',
+                    ),
+                    CacheFieldConfig(
+                        name='projectCategory',
+                        type=['null', 'object'],
+                        description='The category the project belongs to',
+                    ),
+                    CacheFieldConfig(
+                        name='projectTypeKey',
+                        type=['null', 'string'],
+                        description='The project type of the project',
+                    ),
+                    CacheFieldConfig(
+                        name='properties',
+                        type=['object'],
+                        description='Map of project properties',
+                    ),
+                    CacheFieldConfig(
+                        name='retentionTillDate',
+                        type=['null', 'string'],
+                        description='The date when the project is deleted permanently',
+                    ),
+                    CacheFieldConfig(
+                        name='roles',
+                        type=['object'],
+                        description='The name and self URL for each role defined in the project',
+                    ),
+                    CacheFieldConfig(
+                        name='self',
+                        type=['string'],
+                        description='The URL of the project details',
+                    ),
+                    CacheFieldConfig(
+                        name='simplified',
+                        type=['boolean'],
+                        description='Whether the project is simplified',
+                    ),
+                    CacheFieldConfig(
+                        name='style',
+                        type=['null', 'string'],
+                        description='The type of the project',
+                    ),
+                    CacheFieldConfig(
+                        name='url',
+                        type=['null', 'string'],
+                        description='A link to information about this project',
+                    ),
+                    CacheFieldConfig(
+                        name='uuid',
+                        type=['null', 'string'],
+                        description='Unique ID for next-gen projects',
+                    ),
+                    CacheFieldConfig(
+                        name='versions',
+                        type=['array'],
+                        description='The versions defined in the project',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='users',
+                suggested=True,
+                x_airbyte_name='users',
+                fields=[
+                    CacheFieldConfig(
+                        name='accountId',
+                        type=['string'],
+                        description='The account ID of the user, uniquely identifying the user across all Atlassian products',
+                    ),
+                    CacheFieldConfig(
+                        name='accountType',
+                        type=['null', 'string'],
+                        description='The user account type (atlassian, app, or customer)',
+                    ),
+                    CacheFieldConfig(
+                        name='active',
+                        type=['boolean'],
+                        description='Indicates whether the user is active',
+                    ),
+                    CacheFieldConfig(
+                        name='applicationRoles',
+                        type=['null', 'object'],
+                        description='The application roles assigned to the user',
+                    ),
+                    CacheFieldConfig(
+                        name='avatarUrls',
+                        type=['object'],
+                        description='The avatars of the user',
+                    ),
+                    CacheFieldConfig(
+                        name='displayName',
+                        type=['null', 'string'],
+                        description='The display name of the user',
+                    ),
+                    CacheFieldConfig(
+                        name='emailAddress',
+                        type=['null', 'string'],
+                        description='The email address of the user',
+                    ),
+                    CacheFieldConfig(
+                        name='expand',
+                        type=['null', 'string'],
+                        description='Options to include additional user details in the response',
+                    ),
+                    CacheFieldConfig(
+                        name='groups',
+                        type=['null', 'object'],
+                        description='The groups to which the user belongs',
+                    ),
+                    CacheFieldConfig(
+                        name='key',
+                        type=['null', 'string'],
+                        description='Deprecated property',
+                    ),
+                    CacheFieldConfig(
+                        name='locale',
+                        type=['null', 'string'],
+                        description='The locale of the user',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Deprecated property',
+                    ),
+                    CacheFieldConfig(
+                        name='self',
+                        type=['string'],
+                        description='The URL of the user',
+                    ),
+                    CacheFieldConfig(
+                        name='timeZone',
+                        type=['null', 'string'],
+                        description="The time zone specified in the user's profile",
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='issue_comments',
+                suggested=True,
+                x_airbyte_name='issue_comments',
+                fields=[
+                    CacheFieldConfig(
+                        name='author',
+                        type=['null', 'object'],
+                        description='The ID of the user who created the comment',
+                    ),
+                    CacheFieldConfig(
+                        name='body',
+                        type=['object'],
+                        description='The comment text in Atlassian Document Format',
+                    ),
+                    CacheFieldConfig(
+                        name='created',
+                        type=['string'],
+                        description='The date and time at which the comment was created',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['string'],
+                        description='The ID of the comment',
+                    ),
+                    CacheFieldConfig(
+                        name='issueId',
+                        type=['null', 'string'],
+                        description='Id of the related issue',
+                    ),
+                    CacheFieldConfig(
+                        name='jsdPublic',
+                        type=['boolean'],
+                        description='Whether the comment is visible in Jira Service Desk',
+                    ),
+                    CacheFieldConfig(
+                        name='properties',
+                        type=['array'],
+                        description='A list of comment properties',
+                    ),
+                    CacheFieldConfig(
+                        name='renderedBody',
+                        type=['null', 'string'],
+                        description='The rendered version of the comment',
+                    ),
+                    CacheFieldConfig(
+                        name='self',
+                        type=['string'],
+                        description='The URL of the comment',
+                    ),
+                    CacheFieldConfig(
+                        name='updateAuthor',
+                        type=['null', 'object'],
+                        description='The ID of the user who updated the comment last',
+                    ),
+                    CacheFieldConfig(
+                        name='updated',
+                        type=['string'],
+                        description='The date and time at which the comment was updated last',
+                    ),
+                    CacheFieldConfig(
+                        name='visibility',
+                        type=['null', 'object'],
+                        description='The group or role to which this item is visible',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='issue_fields',
+                suggested=True,
+                x_airbyte_name='issue_fields',
+                fields=[
+                    CacheFieldConfig(
+                        name='clauseNames',
+                        type=['array'],
+                        description='The names that can be used to reference the field in an advanced search',
+                    ),
+                    CacheFieldConfig(
+                        name='custom',
+                        type=['boolean'],
+                        description='Whether the field is a custom field',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['string'],
+                        description='The ID of the field',
+                    ),
+                    CacheFieldConfig(
+                        name='key',
+                        type=['null', 'string'],
+                        description='The key of the field',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['string'],
+                        description='The name of the field',
+                    ),
+                    CacheFieldConfig(
+                        name='navigable',
+                        type=['boolean'],
+                        description='Whether the field can be used as a column on the issue navigator',
+                    ),
+                    CacheFieldConfig(
+                        name='orderable',
+                        type=['boolean'],
+                        description='Whether the content of the field can be used to order lists',
+                    ),
+                    CacheFieldConfig(
+                        name='schema',
+                        type=['null', 'object'],
+                        description='The data schema for the field',
+                    ),
+                    CacheFieldConfig(
+                        name='scope',
+                        type=['null', 'object'],
+                        description='The scope of the field',
+                    ),
+                    CacheFieldConfig(
+                        name='searchable',
+                        type=['boolean'],
+                        description='Whether the content of the field can be searched',
+                    ),
+                    CacheFieldConfig(
+                        name='untranslatedName',
+                        type=['null', 'string'],
+                        description='The untranslated name of the field',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='issue_worklogs',
+                suggested=True,
+                x_airbyte_name='issue_worklogs',
+                fields=[
+                    CacheFieldConfig(
+                        name='author',
+                        type=['object'],
+                        description='Details of the user who created the worklog',
+                    ),
+                    CacheFieldConfig(
+                        name='comment',
+                        type=['null', 'object'],
+                        description='A comment about the worklog in Atlassian Document Format',
+                    ),
+                    CacheFieldConfig(
+                        name='created',
+                        type=['string'],
+                        description='The datetime on which the worklog was created',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['string'],
+                        description='The ID of the worklog record',
+                    ),
+                    CacheFieldConfig(
+                        name='issueId',
+                        type=['string'],
+                        description='The ID of the issue this worklog is for',
+                    ),
+                    CacheFieldConfig(
+                        name='properties',
+                        type=['array'],
+                        description='Details of properties for the worklog',
+                    ),
+                    CacheFieldConfig(
+                        name='self',
+                        type=['string'],
+                        description='The URL of the worklog item',
+                    ),
+                    CacheFieldConfig(
+                        name='started',
+                        type=['string'],
+                        description='The datetime on which the worklog effort was started',
+                    ),
+                    CacheFieldConfig(
+                        name='timeSpent',
+                        type=['null', 'string'],
+                        description='The time spent working on the issue as days, hours, or minutes',
+                    ),
+                    CacheFieldConfig(
+                        name='timeSpentSeconds',
+                        type=['integer'],
+                        description='The time in seconds spent working on the issue',
+                    ),
+                    CacheFieldConfig(
+                        name='updateAuthor',
+                        type=['null', 'object'],
+                        description='Details of the user who last updated the worklog',
+                    ),
+                    CacheFieldConfig(
+                        name='updated',
+                        type=['string'],
+                        description='The datetime on which the worklog was last updated',
+                    ),
+                    CacheFieldConfig(
+                        name='visibility',
+                        type=['null', 'object'],
+                        description='Details about any restrictions in the visibility of the worklog',
+                    ),
+                ],
+            ),
+        ],
+    ),
     search_field_paths={
         'issues': [
             'changelog',

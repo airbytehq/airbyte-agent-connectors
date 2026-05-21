@@ -21,6 +21,10 @@ from airbyte_agent_sdk.schema.security import (
     AuthConfigSpec,
 )
 from airbyte_agent_sdk.schema.extensions import (
+    CacheConfig,
+    CacheEntityConfig,
+    CacheFieldConfig,
+    CacheFieldProperty,
     EntityRelationshipConfig,
 )
 from airbyte_agent_sdk.schema.base import (
@@ -3972,6 +3976,765 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
             ],
         ),
     ],
+    context_store=CacheConfig(
+        entities=[
+            CacheEntityConfig(
+                entity='attachments',
+                x_airbyte_name='attachments',
+                fields=[
+                    CacheFieldConfig(
+                        name='connected_to_app',
+                        type=['null', 'boolean'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='download_url',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='gid',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='host',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='parent',
+                        type=['null', 'object'],
+                        description='',
+                        properties={
+                            'created_by': CacheFieldProperty(
+                                type=['null', 'object'],
+                            ),
+                            'gid': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'resource_subtype': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'resource_type': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='permanent_url',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='resource_subtype',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='resource_type',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='size',
+                        type=['null', 'integer'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='view_url',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='projects',
+                suggested=True,
+                x_airbyte_name='projects',
+                fields=[
+                    CacheFieldConfig(
+                        name='archived',
+                        type=['null', 'boolean'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='color',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='current_status',
+                        type=['null', 'object'],
+                        description='',
+                        properties={
+                            'author': CacheFieldProperty(
+                                type=['null', 'object'],
+                            ),
+                            'color': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'created_at': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'created_by': CacheFieldProperty(
+                                type=['null', 'object'],
+                            ),
+                            'gid': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'html_text': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'modified_at': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'resource_type': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'text': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'title': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='custom_field_settings',
+                        type=['null', 'array'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='custom_fields',
+                        type=['null', 'array'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='default_view',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='due_date',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='due_on',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='followers',
+                        type=['null', 'array'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='gid',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='html_notes',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='icon',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='is_template',
+                        type=['null', 'boolean'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='members',
+                        type=['null', 'array'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='modified_at',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='notes',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='owner',
+                        type=['null', 'object'],
+                        description='',
+                        properties={
+                            'gid': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'resource_type': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='permalink_url',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='public',
+                        type=['null', 'boolean'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='resource_type',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='start_on',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='team',
+                        type=['null', 'object'],
+                        description='',
+                        properties={
+                            'gid': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'resource_type': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='workspace',
+                        type=['null', 'object'],
+                        description='',
+                        properties={
+                            'gid': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'resource_type': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='sections',
+                suggested=True,
+                x_airbyte_name='sections',
+                fields=[
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='gid',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='project',
+                        type=['null', 'object'],
+                        description='',
+                        properties={
+                            'gid': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'resource_type': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='resource_type',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='tags',
+                suggested=True,
+                x_airbyte_name='tags',
+                fields=[
+                    CacheFieldConfig(
+                        name='color',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='followers',
+                        type=['null', 'array'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='gid',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='permalink_url',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='resource_type',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='workspace',
+                        type=['null', 'object'],
+                        description='',
+                        properties={
+                            'gid': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'resource_type': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='tasks',
+                suggested=True,
+                x_airbyte_name='tasks',
+                fields=[
+                    CacheFieldConfig(
+                        name='actual_time_minutes',
+                        type=['null', 'integer'],
+                        description='The actual time spent on the task in minutes',
+                    ),
+                    CacheFieldConfig(
+                        name='approval_status',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='assignee',
+                        type=['null', 'object'],
+                        description='',
+                        properties={
+                            'gid': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'resource_type': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='completed',
+                        type=['null', 'boolean'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='completed_at',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='completed_by',
+                        type=['null', 'object'],
+                        description='',
+                        properties={
+                            'gid': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'resource_type': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='custom_fields',
+                        type=['null', 'array'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='dependencies',
+                        type=['null', 'array'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='dependents',
+                        type=['null', 'array'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='due_at',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='due_on',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='external',
+                        type=['null', 'object'],
+                        description='',
+                        properties={
+                            'data': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'gid': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='followers',
+                        type=['null', 'array'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='gid',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='hearted',
+                        type=['null', 'boolean'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='hearts',
+                        type=['null', 'array'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='html_notes',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='is_rendered_as_separator',
+                        type=['null', 'boolean'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='liked',
+                        type=['null', 'boolean'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='likes',
+                        type=['null', 'array'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='memberships',
+                        type=['null', 'array'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='modified_at',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='notes',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='num_hearts',
+                        type=['null', 'integer'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='num_likes',
+                        type=['null', 'integer'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='num_subtasks',
+                        type=['null', 'integer'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='parent',
+                        type=['null', 'object'],
+                        description='',
+                        properties={
+                            'gid': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'resource_type': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='permalink_url',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='projects',
+                        type=['null', 'array'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='resource_subtype',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='resource_type',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='start_on',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='tags',
+                        type=['null', 'array'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='workspace',
+                        type=['null', 'object'],
+                        description='',
+                        properties={
+                            'gid': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'resource_type': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='teams',
+                suggested=True,
+                x_airbyte_name='teams',
+                fields=[
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='gid',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='html_description',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='organization',
+                        type=['null', 'object'],
+                        description='',
+                        properties={
+                            'gid': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'resource_type': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='permalink_url',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='resource_type',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='users',
+                suggested=True,
+                x_airbyte_name='users',
+                fields=[
+                    CacheFieldConfig(
+                        name='email',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='gid',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='photo',
+                        type=['null', 'object'],
+                        description='',
+                        properties={
+                            'image_128x128': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'image_21x21': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'image_27x27': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'image_36x36': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'image_60x60': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='resource_type',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='workspaces',
+                        type=['null', 'array'],
+                        description='',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='workspaces',
+                suggested=True,
+                x_airbyte_name='workspaces',
+                fields=[
+                    CacheFieldConfig(
+                        name='email_domains',
+                        type=['null', 'array'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='gid',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='is_organization',
+                        type=['null', 'boolean'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='resource_type',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                ],
+            ),
+        ],
+        disable_compaction=True,
+    ),
     search_field_paths={
         'attachments': [
             'connected_to_app',

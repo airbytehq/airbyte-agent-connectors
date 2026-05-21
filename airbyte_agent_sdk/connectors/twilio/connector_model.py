@@ -21,6 +21,9 @@ from airbyte_agent_sdk.schema.security import (
     AuthConfigSpec,
 )
 from airbyte_agent_sdk.schema.extensions import (
+    CacheConfig,
+    CacheEntityConfig,
+    CacheFieldConfig,
     EntityRelationshipConfig,
 )
 from airbyte_agent_sdk.schema.base import (
@@ -4435,6 +4438,610 @@ TwilioConnectorModel: ConnectorModel = ConnectorModel(
             ],
         ),
     ],
+    context_store=CacheConfig(
+        entities=[
+            CacheEntityConfig(
+                entity='accounts',
+                suggested=True,
+                x_airbyte_name='accounts',
+                fields=[
+                    CacheFieldConfig(
+                        name='sid',
+                        type=['null', 'string'],
+                        description='The unique identifier for the account',
+                    ),
+                    CacheFieldConfig(
+                        name='friendly_name',
+                        type=['null', 'string'],
+                        description='A user-defined friendly name for the account',
+                    ),
+                    CacheFieldConfig(
+                        name='status',
+                        type=['null', 'string'],
+                        description='The current status of the account',
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description='The type of the account',
+                    ),
+                    CacheFieldConfig(
+                        name='owner_account_sid',
+                        type=['null', 'string'],
+                        description='The SID of the owner account',
+                    ),
+                    CacheFieldConfig(
+                        name='date_created',
+                        type=['null', 'string'],
+                        description='The timestamp when the account was created',
+                    ),
+                    CacheFieldConfig(
+                        name='date_updated',
+                        type=['null', 'string'],
+                        description='The timestamp when the account was last updated',
+                    ),
+                    CacheFieldConfig(
+                        name='uri',
+                        type=['null', 'string'],
+                        description='The URI for accessing the account resource',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='calls',
+                suggested=True,
+                x_airbyte_name='calls',
+                fields=[
+                    CacheFieldConfig(
+                        name='sid',
+                        type=['null', 'string'],
+                        description='The unique identifier for the call',
+                    ),
+                    CacheFieldConfig(
+                        name='account_sid',
+                        type=['null', 'string'],
+                        description='The unique identifier for the account associated with the call',
+                    ),
+                    CacheFieldConfig(
+                        name='to',
+                        type=['null', 'string'],
+                        description='The phone number that received the call',
+                    ),
+                    CacheFieldConfig(
+                        name='from',
+                        type=['null', 'string'],
+                        description='The phone number that made the call',
+                    ),
+                    CacheFieldConfig(
+                        name='status',
+                        type=['null', 'string'],
+                        description='The current status of the call',
+                    ),
+                    CacheFieldConfig(
+                        name='direction',
+                        type=['null', 'string'],
+                        description='The direction of the call (inbound or outbound)',
+                    ),
+                    CacheFieldConfig(
+                        name='duration',
+                        type=['null', 'string'],
+                        description='The duration of the call in seconds',
+                    ),
+                    CacheFieldConfig(
+                        name='price',
+                        type=['null', 'string'],
+                        description='The cost of the call',
+                    ),
+                    CacheFieldConfig(
+                        name='price_unit',
+                        type=['null', 'string'],
+                        description='The currency unit of the call cost',
+                    ),
+                    CacheFieldConfig(
+                        name='start_time',
+                        type=['null', 'string'],
+                        description='The date and time when the call started',
+                    ),
+                    CacheFieldConfig(
+                        name='end_time',
+                        type=['null', 'string'],
+                        description='The date and time when the call ended',
+                    ),
+                    CacheFieldConfig(
+                        name='date_created',
+                        type=['null', 'string'],
+                        description='The date and time when the call record was created',
+                    ),
+                    CacheFieldConfig(
+                        name='date_updated',
+                        type=['null', 'string'],
+                        description='The date and time when the call record was last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='messages',
+                suggested=True,
+                x_airbyte_name='messages',
+                fields=[
+                    CacheFieldConfig(
+                        name='sid',
+                        type=['null', 'string'],
+                        description='The unique identifier for this message',
+                    ),
+                    CacheFieldConfig(
+                        name='account_sid',
+                        type=['null', 'string'],
+                        description='The unique identifier for the account associated with this message',
+                    ),
+                    CacheFieldConfig(
+                        name='to',
+                        type=['null', 'string'],
+                        description='The phone number or recipient ID the message was sent to',
+                    ),
+                    CacheFieldConfig(
+                        name='from',
+                        type=['null', 'string'],
+                        description='The phone number or sender ID that sent the message',
+                    ),
+                    CacheFieldConfig(
+                        name='body',
+                        type=['null', 'string'],
+                        description='The text body of the message',
+                    ),
+                    CacheFieldConfig(
+                        name='status',
+                        type=['null', 'string'],
+                        description='The status of the message',
+                    ),
+                    CacheFieldConfig(
+                        name='direction',
+                        type=['null', 'string'],
+                        description='The direction of the message',
+                    ),
+                    CacheFieldConfig(
+                        name='price',
+                        type=['null', 'string'],
+                        description='The cost of the message',
+                    ),
+                    CacheFieldConfig(
+                        name='price_unit',
+                        type=['null', 'string'],
+                        description='The currency unit used for pricing',
+                    ),
+                    CacheFieldConfig(
+                        name='date_created',
+                        type=['null', 'string'],
+                        description='The date and time when the message was created',
+                    ),
+                    CacheFieldConfig(
+                        name='date_sent',
+                        type=['null', 'string'],
+                        description='The date and time when the message was sent',
+                    ),
+                    CacheFieldConfig(
+                        name='error_code',
+                        type=['null', 'string'],
+                        description='The error code associated with the message if any',
+                    ),
+                    CacheFieldConfig(
+                        name='error_message',
+                        type=['null', 'string'],
+                        description='The error message description if the message failed',
+                    ),
+                    CacheFieldConfig(
+                        name='num_segments',
+                        type=['null', 'string'],
+                        description='The number of message segments',
+                    ),
+                    CacheFieldConfig(
+                        name='num_media',
+                        type=['null', 'string'],
+                        description='The number of media files included in the message',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='incoming_phone_numbers',
+                x_airbyte_name='incoming_phone_numbers',
+                fields=[
+                    CacheFieldConfig(
+                        name='sid',
+                        type=['null', 'string'],
+                        description='The SID of this phone number',
+                    ),
+                    CacheFieldConfig(
+                        name='account_sid',
+                        type=['null', 'string'],
+                        description='The SID of the account that owns this phone number',
+                    ),
+                    CacheFieldConfig(
+                        name='phone_number',
+                        type=['null', 'string'],
+                        description='The phone number in E.164 format',
+                    ),
+                    CacheFieldConfig(
+                        name='friendly_name',
+                        type=['null', 'string'],
+                        description='A user-assigned friendly name for this phone number',
+                    ),
+                    CacheFieldConfig(
+                        name='status',
+                        type=['null', 'string'],
+                        description='Status of the phone number',
+                    ),
+                    CacheFieldConfig(
+                        name='capabilities',
+                        type=['null', 'object'],
+                        description='Capabilities of this phone number',
+                    ),
+                    CacheFieldConfig(
+                        name='date_created',
+                        type=['null', 'string'],
+                        description='When the phone number was created',
+                    ),
+                    CacheFieldConfig(
+                        name='date_updated',
+                        type=['null', 'string'],
+                        description='When the phone number was last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='recordings',
+                x_airbyte_name='recordings',
+                fields=[
+                    CacheFieldConfig(
+                        name='sid',
+                        type=['null', 'string'],
+                        description='The unique identifier of the recording',
+                    ),
+                    CacheFieldConfig(
+                        name='account_sid',
+                        type=['null', 'string'],
+                        description='The account SID that owns the recording',
+                    ),
+                    CacheFieldConfig(
+                        name='call_sid',
+                        type=['null', 'string'],
+                        description='The SID of the associated call',
+                    ),
+                    CacheFieldConfig(
+                        name='duration',
+                        type=['null', 'string'],
+                        description='Duration in seconds',
+                    ),
+                    CacheFieldConfig(
+                        name='status',
+                        type=['null', 'string'],
+                        description='The status of the recording',
+                    ),
+                    CacheFieldConfig(
+                        name='channels',
+                        type=['null', 'integer'],
+                        description='Number of audio channels',
+                    ),
+                    CacheFieldConfig(
+                        name='price',
+                        type=['null', 'string'],
+                        description='The cost of storing the recording',
+                    ),
+                    CacheFieldConfig(
+                        name='price_unit',
+                        type=['null', 'string'],
+                        description='The currency unit',
+                    ),
+                    CacheFieldConfig(
+                        name='date_created',
+                        type=['null', 'string'],
+                        description='When the recording was created',
+                    ),
+                    CacheFieldConfig(
+                        name='start_time',
+                        type=['null', 'string'],
+                        description='When the recording started',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='conferences',
+                x_airbyte_name='conferences',
+                fields=[
+                    CacheFieldConfig(
+                        name='sid',
+                        type=['null', 'string'],
+                        description='The unique identifier of the conference',
+                    ),
+                    CacheFieldConfig(
+                        name='account_sid',
+                        type=['null', 'string'],
+                        description='The account SID associated with the conference',
+                    ),
+                    CacheFieldConfig(
+                        name='friendly_name',
+                        type=['null', 'string'],
+                        description='A friendly name for the conference',
+                    ),
+                    CacheFieldConfig(
+                        name='status',
+                        type=['null', 'string'],
+                        description='The current status of the conference',
+                    ),
+                    CacheFieldConfig(
+                        name='region',
+                        type=['null', 'string'],
+                        description='The region where the conference is hosted',
+                    ),
+                    CacheFieldConfig(
+                        name='date_created',
+                        type=['null', 'string'],
+                        description='When the conference was created',
+                    ),
+                    CacheFieldConfig(
+                        name='date_updated',
+                        type=['null', 'string'],
+                        description='When the conference was last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='usage_records',
+                x_airbyte_name='usage_records',
+                fields=[
+                    CacheFieldConfig(
+                        name='account_sid',
+                        type=['null', 'string'],
+                        description='The account SID associated with this usage record',
+                    ),
+                    CacheFieldConfig(
+                        name='category',
+                        type=['null', 'string'],
+                        description='The usage category (calls, SMS, recordings, etc.)',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='A description of the usage record',
+                    ),
+                    CacheFieldConfig(
+                        name='usage',
+                        type=['null', 'string'],
+                        description='The total usage value',
+                    ),
+                    CacheFieldConfig(
+                        name='usage_unit',
+                        type=['null', 'string'],
+                        description='The unit of measurement for usage',
+                    ),
+                    CacheFieldConfig(
+                        name='count',
+                        type=['null', 'string'],
+                        description='The number of units consumed',
+                    ),
+                    CacheFieldConfig(
+                        name='count_unit',
+                        type=['null', 'string'],
+                        description='The unit of measurement for count',
+                    ),
+                    CacheFieldConfig(
+                        name='price',
+                        type=['null', 'string'],
+                        description='The total price for consumed units',
+                    ),
+                    CacheFieldConfig(
+                        name='price_unit',
+                        type=['null', 'string'],
+                        description='The currency unit',
+                    ),
+                    CacheFieldConfig(
+                        name='start_date',
+                        type=['null', 'string'],
+                        description='The start date of the usage period',
+                    ),
+                    CacheFieldConfig(
+                        name='end_date',
+                        type=['null', 'string'],
+                        description='The end date of the usage period',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='addresses',
+                x_airbyte_name='addresses',
+                fields=[
+                    CacheFieldConfig(
+                        name='sid',
+                        type=['null', 'string'],
+                        description='The unique identifier of the address',
+                    ),
+                    CacheFieldConfig(
+                        name='account_sid',
+                        type=['null', 'string'],
+                        description='The account SID associated with this address',
+                    ),
+                    CacheFieldConfig(
+                        name='customer_name',
+                        type=['null', 'string'],
+                        description='The customer name associated with this address',
+                    ),
+                    CacheFieldConfig(
+                        name='friendly_name',
+                        type=['null', 'string'],
+                        description='A friendly name for the address',
+                    ),
+                    CacheFieldConfig(
+                        name='street',
+                        type=['null', 'string'],
+                        description='The street address',
+                    ),
+                    CacheFieldConfig(
+                        name='city',
+                        type=['null', 'string'],
+                        description='The city of the address',
+                    ),
+                    CacheFieldConfig(
+                        name='region',
+                        type=['null', 'string'],
+                        description='The region or state',
+                    ),
+                    CacheFieldConfig(
+                        name='postal_code',
+                        type=['null', 'string'],
+                        description='The postal code',
+                    ),
+                    CacheFieldConfig(
+                        name='iso_country',
+                        type=['null', 'string'],
+                        description='The ISO 3166-1 alpha-2 country code',
+                    ),
+                    CacheFieldConfig(
+                        name='validated',
+                        type=['null', 'boolean'],
+                        description='Whether the address has been validated',
+                    ),
+                    CacheFieldConfig(
+                        name='verified',
+                        type=['null', 'boolean'],
+                        description='Whether the address has been verified',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='queues',
+                x_airbyte_name='queues',
+                fields=[
+                    CacheFieldConfig(
+                        name='sid',
+                        type=['null', 'string'],
+                        description='The unique identifier for the queue',
+                    ),
+                    CacheFieldConfig(
+                        name='account_sid',
+                        type=['null', 'string'],
+                        description='The account SID that owns this queue',
+                    ),
+                    CacheFieldConfig(
+                        name='friendly_name',
+                        type=['null', 'string'],
+                        description='A friendly name for the queue',
+                    ),
+                    CacheFieldConfig(
+                        name='current_size',
+                        type=['null', 'integer'],
+                        description='Current number of callers waiting',
+                    ),
+                    CacheFieldConfig(
+                        name='max_size',
+                        type=['null', 'integer'],
+                        description='Maximum number of callers allowed',
+                    ),
+                    CacheFieldConfig(
+                        name='average_wait_time',
+                        type=['null', 'integer'],
+                        description='Average wait time in seconds',
+                    ),
+                    CacheFieldConfig(
+                        name='date_created',
+                        type=['null', 'string'],
+                        description='When the queue was created',
+                    ),
+                    CacheFieldConfig(
+                        name='date_updated',
+                        type=['null', 'string'],
+                        description='When the queue was last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='transcriptions',
+                x_airbyte_name='transcriptions',
+                fields=[
+                    CacheFieldConfig(
+                        name='sid',
+                        type=['null', 'string'],
+                        description='The unique identifier for the transcription',
+                    ),
+                    CacheFieldConfig(
+                        name='account_sid',
+                        type=['null', 'string'],
+                        description='The account SID',
+                    ),
+                    CacheFieldConfig(
+                        name='recording_sid',
+                        type=['null', 'string'],
+                        description='The SID of the associated recording',
+                    ),
+                    CacheFieldConfig(
+                        name='status',
+                        type=['null', 'string'],
+                        description='The status of the transcription',
+                    ),
+                    CacheFieldConfig(
+                        name='duration',
+                        type=['null', 'string'],
+                        description='Duration of the audio recording in seconds',
+                    ),
+                    CacheFieldConfig(
+                        name='price',
+                        type=['null', 'string'],
+                        description='The cost of the transcription',
+                    ),
+                    CacheFieldConfig(
+                        name='price_unit',
+                        type=['null', 'string'],
+                        description='The currency unit',
+                    ),
+                    CacheFieldConfig(
+                        name='date_created',
+                        type=['null', 'string'],
+                        description='When the transcription was created',
+                    ),
+                    CacheFieldConfig(
+                        name='date_updated',
+                        type=['null', 'string'],
+                        description='When the transcription was last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='outgoing_caller_ids',
+                x_airbyte_name='outgoing_caller_ids',
+                fields=[
+                    CacheFieldConfig(
+                        name='sid',
+                        type=['null', 'string'],
+                        description='The unique identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='account_sid',
+                        type=['null', 'string'],
+                        description='The account SID',
+                    ),
+                    CacheFieldConfig(
+                        name='phone_number',
+                        type=['null', 'string'],
+                        description='The phone number',
+                    ),
+                    CacheFieldConfig(
+                        name='friendly_name',
+                        type=['null', 'string'],
+                        description='A friendly name',
+                    ),
+                    CacheFieldConfig(
+                        name='date_created',
+                        type=['null', 'string'],
+                        description='When the outgoing caller ID was created',
+                    ),
+                    CacheFieldConfig(
+                        name='date_updated',
+                        type=['null', 'string'],
+                        description='When the outgoing caller ID was last updated',
+                    ),
+                ],
+            ),
+        ],
+        disable_compaction=True,
+    ),
     search_field_paths={
         'accounts': [
             'sid',

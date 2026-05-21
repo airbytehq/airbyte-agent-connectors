@@ -20,6 +20,10 @@ from airbyte_agent_sdk.schema.security import (
     AuthConfigSpec,
 )
 from airbyte_agent_sdk.schema.extensions import (
+    CacheConfig,
+    CacheEntityConfig,
+    CacheFieldConfig,
+    CacheFieldProperty,
     EntityRelationshipConfig,
 )
 from airbyte_agent_sdk.schema.base import (
@@ -3237,6 +3241,580 @@ TypeformConnectorModel: ConnectorModel = ConnectorModel(
             },
         ),
     ],
+    context_store=CacheConfig(
+        entities=[
+            CacheEntityConfig(
+                entity='forms',
+                suggested=True,
+                x_airbyte_name='forms',
+                fields=[
+                    CacheFieldConfig(
+                        name='_links',
+                        type=['null', 'object'],
+                        description='Links to related resources',
+                        properties={
+                            'display': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='Date and time when the form was created',
+                    ),
+                    CacheFieldConfig(
+                        name='fields',
+                        type=['null', 'array'],
+                        description='List of fields within the form',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique identifier of the form',
+                    ),
+                    CacheFieldConfig(
+                        name='last_updated_at',
+                        type=['null', 'string'],
+                        description='Date and time when the form was last updated',
+                    ),
+                    CacheFieldConfig(
+                        name='logic',
+                        type=['null', 'array'],
+                        description='Logic rules or conditions applied to the form fields',
+                    ),
+                    CacheFieldConfig(
+                        name='published_at',
+                        type=['null', 'string'],
+                        description='Date and time when the form was published',
+                    ),
+                    CacheFieldConfig(
+                        name='settings',
+                        type=['null', 'object'],
+                        description='Settings and configurations for the form',
+                        properties={
+                            'language': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'progress_bar': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'meta': CacheFieldProperty(
+                                type=['null', 'object'],
+                                properties={
+                                    'allow_indexing': CacheFieldProperty(
+                                        type=['null', 'boolean'],
+                                    ),
+                                    'title': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                    'description': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                    'image': CacheFieldProperty(
+                                        type=['null', 'object'],
+                                        properties={
+                                            'href': CacheFieldProperty(
+                                                type=['null', 'string'],
+                                            ),
+                                        },
+                                    ),
+                                },
+                            ),
+                            'hide_navigation': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                            'is_public': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                            'is_trial': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                            'show_progress_bar': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                            'show_typeform_branding': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                            'are_uploads_public': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                            'show_time_to_complete': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                            'redirect_after_submit_url': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'google_analytics': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'facebook_pixel': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'google_tag_manager': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'capabilities': CacheFieldProperty(
+                                type=['null', 'object'],
+                                properties={
+                                    'e2e_encryption': CacheFieldProperty(
+                                        type=['null', 'object'],
+                                        properties={
+                                            'enabled': CacheFieldProperty(
+                                                type=['null', 'boolean'],
+                                            ),
+                                            'modifiable': CacheFieldProperty(
+                                                type=['null', 'boolean'],
+                                            ),
+                                        },
+                                    ),
+                                },
+                            ),
+                            'notifications': CacheFieldProperty(
+                                type=['null', 'object'],
+                                properties={
+                                    'self': CacheFieldProperty(
+                                        type=['null', 'object'],
+                                        properties={
+                                            'enabled': CacheFieldProperty(
+                                                type=['null', 'boolean'],
+                                            ),
+                                            'recipients': CacheFieldProperty(
+                                                type=['null', 'array'],
+                                            ),
+                                            'subject': CacheFieldProperty(
+                                                type=['null', 'string'],
+                                            ),
+                                            'message': CacheFieldProperty(
+                                                type=['null', 'string'],
+                                            ),
+                                            'reply_to': CacheFieldProperty(
+                                                type=['null', 'string'],
+                                            ),
+                                        },
+                                    ),
+                                    'respondent': CacheFieldProperty(
+                                        type=['null', 'object'],
+                                        properties={
+                                            'enabled': CacheFieldProperty(
+                                                type=['null', 'boolean'],
+                                            ),
+                                            'recipients': CacheFieldProperty(
+                                                type=['null', 'array'],
+                                            ),
+                                            'subject': CacheFieldProperty(
+                                                type=['null', 'string'],
+                                            ),
+                                            'message': CacheFieldProperty(
+                                                type=['null', 'string'],
+                                            ),
+                                            'reply_to': CacheFieldProperty(
+                                                type=['null', 'string'],
+                                            ),
+                                        },
+                                    ),
+                                },
+                            ),
+                            'cui_settings': CacheFieldProperty(
+                                type=['null', 'object'],
+                                properties={
+                                    'avatar': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                    'is_typing_emulation_disabled': CacheFieldProperty(
+                                        type=['null', 'boolean'],
+                                    ),
+                                    'typing_emulation_speed': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                },
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='thankyou_screens',
+                        type=['null', 'array'],
+                        description='Thank you screen configurations',
+                    ),
+                    CacheFieldConfig(
+                        name='theme',
+                        type=['null', 'object'],
+                        description='Theme settings for the form',
+                        properties={
+                            'href': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='title',
+                        type=['null', 'string'],
+                        description='Title of the form',
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description='Type of the form',
+                    ),
+                    CacheFieldConfig(
+                        name='welcome_screens',
+                        type=['null', 'array'],
+                        description='Welcome screen configurations',
+                    ),
+                    CacheFieldConfig(
+                        name='workspace',
+                        type=['null', 'object'],
+                        description='Workspace details where the form belongs',
+                        properties={
+                            'href': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='responses',
+                suggested=True,
+                x_airbyte_name='responses',
+                fields=[
+                    CacheFieldConfig(
+                        name='answers',
+                        type=['null', 'array'],
+                        description='Response data for each question in the form',
+                    ),
+                    CacheFieldConfig(
+                        name='calculated',
+                        type=['null', 'object'],
+                        description='Calculated data related to the response',
+                        properties={
+                            'score': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='form_id',
+                        type=['null', 'string'],
+                        description='ID of the form',
+                    ),
+                    CacheFieldConfig(
+                        name='hidden',
+                        type=['null', 'object'],
+                        description='Hidden fields in the response',
+                    ),
+                    CacheFieldConfig(
+                        name='landed_at',
+                        type=['null', 'string'],
+                        description='Timestamp when the respondent landed on the form',
+                    ),
+                    CacheFieldConfig(
+                        name='landing_id',
+                        type=['null', 'string'],
+                        description='ID of the landing page',
+                    ),
+                    CacheFieldConfig(
+                        name='metadata',
+                        type=['null', 'object'],
+                        description='Metadata related to the response',
+                        properties={
+                            'user_agent': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'platform': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'referer': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'network_id': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='response_id',
+                        type=['null', 'string'],
+                        description='ID of the response',
+                    ),
+                    CacheFieldConfig(
+                        name='response_type',
+                        type=['null', 'string'],
+                        description='Type of the response',
+                    ),
+                    CacheFieldConfig(
+                        name='submitted_at',
+                        type=['null', 'string'],
+                        description='Timestamp when the response was submitted',
+                    ),
+                    CacheFieldConfig(
+                        name='token',
+                        type=['null', 'string'],
+                        description='Token associated with the response',
+                    ),
+                    CacheFieldConfig(
+                        name='variables',
+                        type=['null', 'array'],
+                        description='Variables associated with the response',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='webhooks',
+                x_airbyte_name='webhooks',
+                fields=[
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='Timestamp when the webhook was created',
+                    ),
+                    CacheFieldConfig(
+                        name='enabled',
+                        type=['null', 'boolean'],
+                        description='Whether the webhook is currently enabled',
+                    ),
+                    CacheFieldConfig(
+                        name='form_id',
+                        type=['null', 'string'],
+                        description='ID of the form associated with the webhook',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique identifier of the webhook',
+                    ),
+                    CacheFieldConfig(
+                        name='tag',
+                        type=['null', 'string'],
+                        description='Tag to categorize or label the webhook',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='Timestamp when the webhook was last updated',
+                    ),
+                    CacheFieldConfig(
+                        name='url',
+                        type=['null', 'string'],
+                        description='URL where webhook data is sent',
+                    ),
+                    CacheFieldConfig(
+                        name='verify_ssl',
+                        type=['null', 'boolean'],
+                        description='Whether SSL verification is enforced',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='workspaces',
+                x_airbyte_name='workspaces',
+                fields=[
+                    CacheFieldConfig(
+                        name='account_id',
+                        type=['null', 'string'],
+                        description='Account ID associated with the workspace',
+                    ),
+                    CacheFieldConfig(
+                        name='default',
+                        type=['null', 'boolean'],
+                        description='Whether this is the default workspace',
+                    ),
+                    CacheFieldConfig(
+                        name='forms',
+                        type=['null', 'object'],
+                        description='Information about forms in the workspace',
+                        properties={
+                            'count': CacheFieldProperty(
+                                type=['null', 'number'],
+                            ),
+                            'href': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique identifier of the workspace',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Name of the workspace',
+                    ),
+                    CacheFieldConfig(
+                        name='self',
+                        type=['null', 'object'],
+                        description='Self-referential link',
+                        properties={
+                            'href': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='shared',
+                        type=['null', 'boolean'],
+                        description='Whether this workspace is shared',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='images',
+                x_airbyte_name='images',
+                fields=[
+                    CacheFieldConfig(
+                        name='avg_color',
+                        type=['null', 'string'],
+                        description='Average color of the image',
+                    ),
+                    CacheFieldConfig(
+                        name='file_name',
+                        type=['null', 'string'],
+                        description='Name of the image file',
+                    ),
+                    CacheFieldConfig(
+                        name='has_alpha',
+                        type=['null', 'boolean'],
+                        description='Whether the image has an alpha channel',
+                    ),
+                    CacheFieldConfig(
+                        name='height',
+                        type=['null', 'integer'],
+                        description='Height of the image in pixels',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique identifier of the image',
+                    ),
+                    CacheFieldConfig(
+                        name='media_type',
+                        type=['null', 'string'],
+                        description='MIME type of the image',
+                    ),
+                    CacheFieldConfig(
+                        name='src',
+                        type=['null', 'string'],
+                        description='URL to access the image',
+                    ),
+                    CacheFieldConfig(
+                        name='width',
+                        type=['null', 'integer'],
+                        description='Width of the image in pixels',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='themes',
+                x_airbyte_name='themes',
+                fields=[
+                    CacheFieldConfig(
+                        name='background',
+                        type=['null', 'object'],
+                        description='Background settings for the theme',
+                        properties={
+                            'brightness': CacheFieldProperty(
+                                type=['null', 'number'],
+                            ),
+                            'href': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'layout': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='colors',
+                        type=['null', 'object'],
+                        description='Color settings',
+                        properties={
+                            'answer': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'background': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'button': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'question': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='Timestamp when the theme was created',
+                    ),
+                    CacheFieldConfig(
+                        name='fields',
+                        type=['null', 'object'],
+                        description='Field display settings',
+                        properties={
+                            'alignment': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'font_size': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='font',
+                        type=['null', 'string'],
+                        description='Font used in the theme',
+                    ),
+                    CacheFieldConfig(
+                        name='has_transparent_button',
+                        type=['null', 'boolean'],
+                        description='Whether the theme has a transparent button',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique identifier of the theme',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Name of the theme',
+                    ),
+                    CacheFieldConfig(
+                        name='rounded_corners',
+                        type=['null', 'string'],
+                        description='Rounded corners setting',
+                    ),
+                    CacheFieldConfig(
+                        name='screens',
+                        type=['null', 'object'],
+                        description='Screen display settings',
+                        properties={
+                            'alignment': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'font_size': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='Timestamp when the theme was last updated',
+                    ),
+                    CacheFieldConfig(
+                        name='visibility',
+                        type=['null', 'string'],
+                        description='Visibility setting of the theme',
+                    ),
+                ],
+            ),
+        ],
+        disable_compaction=True,
+    ),
     search_field_paths={
         'forms': [
             '_links',

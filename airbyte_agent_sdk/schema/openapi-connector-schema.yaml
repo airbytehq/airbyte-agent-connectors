@@ -239,12 +239,13 @@ $defs:
       enabling bidirectional mapping between user-facing names and cache storage names.\n\
       \nThis extension is added to the Info model and provides field-level mapping\
       \ for\nsearch operations that use cached data.\n\nExample YAML usage:\n    info:\n\
-      \      title: Stripe API\n      x-airbyte-context-store:\n        entities:\n\
-      \          - entity: customers\n            stream: customers\n            fields:\n\
-      \              - name: email\n                type: [\"null\", \"string\"]\n\
-      \                description: \"Customer email address\"\n              - name:\
-      \ customer_name\n                x-airbyte-name: name\n                type:\
-      \ [\"null\", \"string\"]\n                description: \"Customer full name\""
+      \      title: Stripe API\n      x-airbyte-context-store:\n        flush_batch_size_mb:\
+      \ 200\n        entities:\n          - entity: customers\n            stream:\
+      \ customers\n            fields:\n              - name: email\n            \
+      \    type: [\"null\", \"string\"]\n                description: \"Customer email\
+      \ address\"\n              - name: customer_name\n                x-airbyte-name:\
+      \ name\n                type: [\"null\", \"string\"]\n                description:\
+      \ \"Customer full name\""
     properties:
       entities:
         items:
@@ -257,6 +258,16 @@ $defs:
           this connector type.
         title: Disable Compaction
         type: boolean
+      flush_batch_size_mb:
+        anyOf:
+        - maximum: 500
+          minimum: 1
+          type: integer
+        - type: 'null'
+        default: null
+        description: Optional flush batch size, in MB, for Airbyte-hosted Context
+          Store destination writes.
+        title: Flush Batch Size Mb
     required:
     - entities
     title: CacheConfig

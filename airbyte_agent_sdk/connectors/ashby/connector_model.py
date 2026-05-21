@@ -19,6 +19,11 @@ from airbyte_agent_sdk.schema.security import (
     AuthConfigFieldSpec,
     AuthConfigSpec,
 )
+from airbyte_agent_sdk.schema.extensions import (
+    CacheConfig,
+    CacheEntityConfig,
+    CacheFieldConfig,
+)
 from airbyte_agent_sdk.schema.base import (
     ExampleQuestions,
 )
@@ -3755,6 +3760,165 @@ AshbyConnectorModel: ConnectorModel = ConnectorModel(
             },
         ),
     ],
+    context_store=CacheConfig(
+        entities=[
+            CacheEntityConfig(
+                entity='applications',
+                suggested=True,
+                x_airbyte_name='applications',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique identifier for the application',
+                    ),
+                    CacheFieldConfig(
+                        name='status',
+                        type=['null', 'string'],
+                        description='Current application status (e.g. active, archived, hired)',
+                    ),
+                    CacheFieldConfig(
+                        name='archiveReason',
+                        type=['null', 'string'],
+                        description='Reason the application was archived, if applicable',
+                    ),
+                    CacheFieldConfig(
+                        name='createdAt',
+                        type=['null', 'string'],
+                        description='Timestamp when the application was created, in ISO 8601 format',
+                    ),
+                    CacheFieldConfig(
+                        name='updatedAt',
+                        type=['null', 'string'],
+                        description='Timestamp when the application was last updated, in ISO 8601 format',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='candidates',
+                suggested=True,
+                x_airbyte_name='candidates',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique identifier for the candidate',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Full name of the candidate',
+                    ),
+                    CacheFieldConfig(
+                        name='company',
+                        type=['null', 'string'],
+                        description="Candidate's current company",
+                    ),
+                    CacheFieldConfig(
+                        name='position',
+                        type=['null', 'string'],
+                        description="Candidate's current position or title",
+                    ),
+                    CacheFieldConfig(
+                        name='school',
+                        type=['null', 'string'],
+                        description="School associated with the candidate's education",
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='job_postings',
+                suggested=True,
+                x_airbyte_name='job_postings',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique identifier for the job posting',
+                    ),
+                    CacheFieldConfig(
+                        name='title',
+                        type=['null', 'string'],
+                        description='Title of the job posting',
+                    ),
+                    CacheFieldConfig(
+                        name='isListed',
+                        type=['null', 'boolean'],
+                        description='Whether the job posting is currently published/listed',
+                    ),
+                    CacheFieldConfig(
+                        name='jobId',
+                        type=['null', 'string'],
+                        description='Identifier of the job this posting belongs to',
+                    ),
+                    CacheFieldConfig(
+                        name='locationName',
+                        type=['null', 'string'],
+                        description='Name of the location associated with the posting',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='jobs',
+                suggested=True,
+                x_airbyte_name='jobs',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique identifier for the job',
+                    ),
+                    CacheFieldConfig(
+                        name='title',
+                        type=['null', 'string'],
+                        description='Title of the job',
+                    ),
+                    CacheFieldConfig(
+                        name='status',
+                        type=['null', 'string'],
+                        description='Current status of the job (e.g. open, closed, draft)',
+                    ),
+                    CacheFieldConfig(
+                        name='departmentId',
+                        type=['null', 'string'],
+                        description='Identifier of the department the job belongs to',
+                    ),
+                    CacheFieldConfig(
+                        name='locationId',
+                        type=['null', 'string'],
+                        description='Identifier of the primary location of the job',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='users',
+                suggested=True,
+                x_airbyte_name='users',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique identifier for the user',
+                    ),
+                    CacheFieldConfig(
+                        name='firstName',
+                        type=['null', 'string'],
+                        description='First name of the user',
+                    ),
+                    CacheFieldConfig(
+                        name='lastName',
+                        type=['null', 'string'],
+                        description='Last name of the user',
+                    ),
+                    CacheFieldConfig(
+                        name='email',
+                        type=['null', 'string'],
+                        description='Primary email address of the user',
+                    ),
+                ],
+            ),
+        ],
+    ),
     search_field_paths={
         'applications': [
             'id',

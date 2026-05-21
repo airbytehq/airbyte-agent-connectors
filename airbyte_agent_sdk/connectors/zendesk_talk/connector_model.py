@@ -20,6 +20,12 @@ from airbyte_agent_sdk.schema.security import (
     AuthConfigFieldSpec,
     AuthConfigSpec,
 )
+from airbyte_agent_sdk.schema.extensions import (
+    CacheConfig,
+    CacheEntityConfig,
+    CacheFieldConfig,
+    CacheFieldProperty,
+)
 from airbyte_agent_sdk.schema.base import (
     ExampleQuestions,
 )
@@ -3193,6 +3199,1118 @@ ZendeskTalkConnectorModel: ConnectorModel = ConnectorModel(
             },
         ),
     ],
+    context_store=CacheConfig(
+        entities=[
+            CacheEntityConfig(
+                entity='addresses',
+                x_airbyte_name='addresses',
+                fields=[
+                    CacheFieldConfig(
+                        name='city',
+                        type=['null', 'string'],
+                        description='City of the address',
+                    ),
+                    CacheFieldConfig(
+                        name='country_code',
+                        type=['null', 'string'],
+                        description='ISO country code',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique address identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Name of the address',
+                    ),
+                    CacheFieldConfig(
+                        name='provider_reference',
+                        type=['null', 'string'],
+                        description='Provider reference of the address',
+                    ),
+                    CacheFieldConfig(
+                        name='province',
+                        type=['null', 'string'],
+                        description='Province of the address',
+                    ),
+                    CacheFieldConfig(
+                        name='state',
+                        type=['null', 'string'],
+                        description='State of the address',
+                    ),
+                    CacheFieldConfig(
+                        name='street',
+                        type=['null', 'string'],
+                        description='Street of the address',
+                    ),
+                    CacheFieldConfig(
+                        name='zip',
+                        type=['null', 'string'],
+                        description='Zip code of the address',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='agents_activity',
+                suggested=True,
+                x_airbyte_name='agents_activity',
+                fields=[
+                    CacheFieldConfig(
+                        name='accepted_third_party_conferences',
+                        type=['null', 'integer'],
+                        description='Accepted third party conferences',
+                    ),
+                    CacheFieldConfig(
+                        name='accepted_transfers',
+                        type=['null', 'integer'],
+                        description='Total transfers accepted',
+                    ),
+                    CacheFieldConfig(
+                        name='agent_id',
+                        type=['null', 'integer'],
+                        description='Agent ID',
+                    ),
+                    CacheFieldConfig(
+                        name='agent_state',
+                        type=['null', 'string'],
+                        description='Agent state: online, offline, away, or transfers_only',
+                    ),
+                    CacheFieldConfig(
+                        name='available_time',
+                        type=['null', 'integer'],
+                        description='Total time agent was available to answer calls',
+                    ),
+                    CacheFieldConfig(
+                        name='avatar_url',
+                        type=['null', 'string'],
+                        description='URL to agent avatar',
+                    ),
+                    CacheFieldConfig(
+                        name='average_hold_time',
+                        type=['null', 'integer'],
+                        description='Average hold time per call',
+                    ),
+                    CacheFieldConfig(
+                        name='average_talk_time',
+                        type=['null', 'integer'],
+                        description='Average talk time per call',
+                    ),
+                    CacheFieldConfig(
+                        name='average_wrap_up_time',
+                        type=['null', 'integer'],
+                        description='Average wrap-up time per call',
+                    ),
+                    CacheFieldConfig(
+                        name='away_time',
+                        type=['null', 'integer'],
+                        description='Total time agent was set to away',
+                    ),
+                    CacheFieldConfig(
+                        name='call_status',
+                        type=['null', 'string'],
+                        description='Agent call status: on_call, wrap_up, or null',
+                    ),
+                    CacheFieldConfig(
+                        name='calls_accepted',
+                        type=['null', 'integer'],
+                        description='Total calls accepted',
+                    ),
+                    CacheFieldConfig(
+                        name='calls_denied',
+                        type=['null', 'integer'],
+                        description='Total calls denied',
+                    ),
+                    CacheFieldConfig(
+                        name='calls_missed',
+                        type=['null', 'integer'],
+                        description='Total calls missed',
+                    ),
+                    CacheFieldConfig(
+                        name='calls_put_on_hold',
+                        type=['null', 'integer'],
+                        description='Total calls placed on hold',
+                    ),
+                    CacheFieldConfig(
+                        name='forwarding_number',
+                        type=['null', 'string'],
+                        description='Forwarding number set by the agent',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Agent name',
+                    ),
+                    CacheFieldConfig(
+                        name='online_time',
+                        type=['null', 'integer'],
+                        description='Total online time',
+                    ),
+                    CacheFieldConfig(
+                        name='started_third_party_conferences',
+                        type=['null', 'integer'],
+                        description='Started third party conferences',
+                    ),
+                    CacheFieldConfig(
+                        name='started_transfers',
+                        type=['null', 'integer'],
+                        description='Total transfers started',
+                    ),
+                    CacheFieldConfig(
+                        name='total_call_duration',
+                        type=['null', 'integer'],
+                        description='Total call duration',
+                    ),
+                    CacheFieldConfig(
+                        name='total_hold_time',
+                        type=['null', 'integer'],
+                        description='Total hold time across all calls',
+                    ),
+                    CacheFieldConfig(
+                        name='total_talk_time',
+                        type=['null', 'integer'],
+                        description='Total talk time (excludes hold)',
+                    ),
+                    CacheFieldConfig(
+                        name='total_wrap_up_time',
+                        type=['null', 'integer'],
+                        description='Total wrap-up time',
+                    ),
+                    CacheFieldConfig(
+                        name='transfers_only_time',
+                        type=['null', 'integer'],
+                        description='Total time in transfers-only mode',
+                    ),
+                    CacheFieldConfig(
+                        name='via',
+                        type=['null', 'string'],
+                        description='Channel the agent is registered on',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='agents_overview',
+                suggested=True,
+                x_airbyte_name='agents_overview',
+                fields=[
+                    CacheFieldConfig(
+                        name='average_accepted_transfers',
+                        type=['null', 'integer'],
+                        description='Average accepted transfers',
+                    ),
+                    CacheFieldConfig(
+                        name='average_available_time',
+                        type=['null', 'integer'],
+                        description='Average available time',
+                    ),
+                    CacheFieldConfig(
+                        name='average_away_time',
+                        type=['null', 'integer'],
+                        description='Average away time',
+                    ),
+                    CacheFieldConfig(
+                        name='average_calls_accepted',
+                        type=['null', 'integer'],
+                        description='Average calls accepted',
+                    ),
+                    CacheFieldConfig(
+                        name='average_calls_denied',
+                        type=['null', 'integer'],
+                        description='Average calls denied',
+                    ),
+                    CacheFieldConfig(
+                        name='average_calls_missed',
+                        type=['null', 'integer'],
+                        description='Average calls missed',
+                    ),
+                    CacheFieldConfig(
+                        name='average_calls_put_on_hold',
+                        type=['null', 'integer'],
+                        description='Average calls put on hold',
+                    ),
+                    CacheFieldConfig(
+                        name='average_hold_time',
+                        type=['null', 'integer'],
+                        description='Average hold time',
+                    ),
+                    CacheFieldConfig(
+                        name='average_online_time',
+                        type=['null', 'integer'],
+                        description='Average online time',
+                    ),
+                    CacheFieldConfig(
+                        name='average_started_transfers',
+                        type=['null', 'integer'],
+                        description='Average started transfers',
+                    ),
+                    CacheFieldConfig(
+                        name='average_talk_time',
+                        type=['null', 'integer'],
+                        description='Average talk time',
+                    ),
+                    CacheFieldConfig(
+                        name='average_transfers_only_time',
+                        type=['null', 'integer'],
+                        description='Average transfers-only time',
+                    ),
+                    CacheFieldConfig(
+                        name='average_wrap_up_time',
+                        type=['null', 'integer'],
+                        description='Average wrap-up time',
+                    ),
+                    CacheFieldConfig(
+                        name='current_timestamp',
+                        type=['null', 'integer'],
+                        description='Current timestamp',
+                    ),
+                    CacheFieldConfig(
+                        name='total_accepted_transfers',
+                        type=['null', 'integer'],
+                        description='Total accepted transfers',
+                    ),
+                    CacheFieldConfig(
+                        name='total_calls_accepted',
+                        type=['null', 'integer'],
+                        description='Total calls accepted',
+                    ),
+                    CacheFieldConfig(
+                        name='total_calls_denied',
+                        type=['null', 'integer'],
+                        description='Total calls denied',
+                    ),
+                    CacheFieldConfig(
+                        name='total_calls_missed',
+                        type=['null', 'integer'],
+                        description='Total calls missed',
+                    ),
+                    CacheFieldConfig(
+                        name='total_calls_put_on_hold',
+                        type=['null', 'integer'],
+                        description='Total calls put on hold',
+                    ),
+                    CacheFieldConfig(
+                        name='total_hold_time',
+                        type=['null', 'integer'],
+                        description='Total hold time',
+                    ),
+                    CacheFieldConfig(
+                        name='total_started_transfers',
+                        type=['null', 'integer'],
+                        description='Total started transfers',
+                    ),
+                    CacheFieldConfig(
+                        name='total_talk_time',
+                        type=['null', 'integer'],
+                        description='Total talk time',
+                    ),
+                    CacheFieldConfig(
+                        name='total_wrap_up_time',
+                        type=['null', 'integer'],
+                        description='Total wrap-up time',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='greeting_categories',
+                x_airbyte_name='greeting_categories',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Greeting category ID',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Name of the greeting category',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='greetings',
+                x_airbyte_name='greetings',
+                fields=[
+                    CacheFieldConfig(
+                        name='active',
+                        type=['null', 'boolean'],
+                        description='Whether the greeting is associated with phone numbers',
+                    ),
+                    CacheFieldConfig(
+                        name='audio_name',
+                        type=['null', 'string'],
+                        description='Audio file name',
+                    ),
+                    CacheFieldConfig(
+                        name='audio_url',
+                        type=['null', 'string'],
+                        description='Path to the greeting sound file',
+                    ),
+                    CacheFieldConfig(
+                        name='category_id',
+                        type=['null', 'integer'],
+                        description='ID of the greeting category',
+                    ),
+                    CacheFieldConfig(
+                        name='default',
+                        type=['null', 'boolean'],
+                        description='Whether this is a system default greeting',
+                    ),
+                    CacheFieldConfig(
+                        name='default_lang',
+                        type=['null', 'boolean'],
+                        description='Whether the greeting has a default language',
+                    ),
+                    CacheFieldConfig(
+                        name='has_sub_settings',
+                        type=['null', 'boolean'],
+                        description='Sub-settings for categorized greetings',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Greeting ID',
+                    ),
+                    CacheFieldConfig(
+                        name='ivr_ids',
+                        type=['null', 'array'],
+                        description='IDs of IVRs associated with the greeting',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Name of the greeting',
+                    ),
+                    CacheFieldConfig(
+                        name='pending',
+                        type=['null', 'boolean'],
+                        description='Whether the greeting is pending',
+                    ),
+                    CacheFieldConfig(
+                        name='phone_number_ids',
+                        type=['null', 'array'],
+                        description='IDs of phone numbers associated with the greeting',
+                    ),
+                    CacheFieldConfig(
+                        name='upload_id',
+                        type=['null', 'integer'],
+                        description='Upload ID associated with the greeting',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='phone_numbers',
+                suggested=True,
+                x_airbyte_name='phone_numbers',
+                fields=[
+                    CacheFieldConfig(
+                        name='call_recording_consent',
+                        type=['null', 'string'],
+                        description='What call recording consent is set to',
+                    ),
+                    CacheFieldConfig(
+                        name='capabilities',
+                        type=['null', 'object'],
+                        description='Phone number capabilities (sms, mms, voice)',
+                        properties={
+                            'emergency_address': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                            'mms': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                            'sms': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                            'voice': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='categorised_greetings',
+                        type=['null', 'object'],
+                        description='Greeting category IDs and names',
+                    ),
+                    CacheFieldConfig(
+                        name='categorised_greetings_with_sub_settings',
+                        type=['null', 'object'],
+                        description='Greeting categories with associated settings',
+                    ),
+                    CacheFieldConfig(
+                        name='country_code',
+                        type=['null', 'string'],
+                        description='ISO country code for the number',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='Date and time the phone number was created',
+                    ),
+                    CacheFieldConfig(
+                        name='default_greeting_ids',
+                        type=['null', 'array'],
+                        description='Names of default system greetings',
+                    ),
+                    CacheFieldConfig(
+                        name='default_group_id',
+                        type=['null', 'integer'],
+                        description='Default group ID',
+                    ),
+                    CacheFieldConfig(
+                        name='display_number',
+                        type=['null', 'string'],
+                        description='Formatted phone number',
+                    ),
+                    CacheFieldConfig(
+                        name='external',
+                        type=['null', 'boolean'],
+                        description='Whether this is an external caller ID number',
+                    ),
+                    CacheFieldConfig(
+                        name='failover_number',
+                        type=['null', 'string'],
+                        description='Failover number associated with the phone number',
+                    ),
+                    CacheFieldConfig(
+                        name='greeting_ids',
+                        type=['null', 'array'],
+                        description='Custom greeting IDs associated with the phone number',
+                    ),
+                    CacheFieldConfig(
+                        name='group_ids',
+                        type=['null', 'array'],
+                        description='Array of associated group IDs',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique phone number identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='ivr_id',
+                        type=['null', 'integer'],
+                        description='ID of IVR associated with the phone number',
+                    ),
+                    CacheFieldConfig(
+                        name='line_type',
+                        type=['null', 'string'],
+                        description='Type of line (phone or digital)',
+                    ),
+                    CacheFieldConfig(
+                        name='location',
+                        type=['null', 'string'],
+                        description='Geographical location of the number',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Nickname if set, otherwise the display number',
+                    ),
+                    CacheFieldConfig(
+                        name='nickname',
+                        type=['null', 'string'],
+                        description='Nickname of the phone number',
+                    ),
+                    CacheFieldConfig(
+                        name='number',
+                        type=['null', 'string'],
+                        description='Phone number digits',
+                    ),
+                    CacheFieldConfig(
+                        name='outbound_enabled',
+                        type=['null', 'boolean'],
+                        description='Whether outbound calls are enabled',
+                    ),
+                    CacheFieldConfig(
+                        name='priority',
+                        type=['null', 'integer'],
+                        description='Priority level of the phone number',
+                    ),
+                    CacheFieldConfig(
+                        name='recorded',
+                        type=['null', 'boolean'],
+                        description='Whether calls are recorded',
+                    ),
+                    CacheFieldConfig(
+                        name='schedule_id',
+                        type=['null', 'integer'],
+                        description='ID of schedule associated with the phone number',
+                    ),
+                    CacheFieldConfig(
+                        name='sms_enabled',
+                        type=['null', 'boolean'],
+                        description='Whether SMS is enabled',
+                    ),
+                    CacheFieldConfig(
+                        name='sms_group_id',
+                        type=['null', 'integer'],
+                        description='Group associated with SMS',
+                    ),
+                    CacheFieldConfig(
+                        name='token',
+                        type=['null', 'string'],
+                        description='Generated token unique for the phone number',
+                    ),
+                    CacheFieldConfig(
+                        name='toll_free',
+                        type=['null', 'boolean'],
+                        description='Whether the number is toll-free',
+                    ),
+                    CacheFieldConfig(
+                        name='transcription',
+                        type=['null', 'boolean'],
+                        description='Whether voicemail transcription is enabled',
+                    ),
+                    CacheFieldConfig(
+                        name='voice_enabled',
+                        type=['null', 'boolean'],
+                        description='Whether voice is enabled',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='call_legs',
+                suggested=True,
+                x_airbyte_name='call_legs',
+                fields=[
+                    CacheFieldConfig(
+                        name='agent_id',
+                        type=['null', 'integer'],
+                        description='Agent ID',
+                    ),
+                    CacheFieldConfig(
+                        name='available_via',
+                        type=['null', 'string'],
+                        description='Channel agent was available through',
+                    ),
+                    CacheFieldConfig(
+                        name='call_charge',
+                        type=['null', 'string'],
+                        description='Call charge amount',
+                    ),
+                    CacheFieldConfig(
+                        name='call_id',
+                        type=['null', 'integer'],
+                        description='Associated call ID',
+                    ),
+                    CacheFieldConfig(
+                        name='completion_status',
+                        type=['null', 'string'],
+                        description='Completion status',
+                    ),
+                    CacheFieldConfig(
+                        name='conference_from',
+                        type=['null', 'integer'],
+                        description='Conference from time',
+                    ),
+                    CacheFieldConfig(
+                        name='conference_time',
+                        type=['null', 'integer'],
+                        description='Conference duration',
+                    ),
+                    CacheFieldConfig(
+                        name='conference_to',
+                        type=['null', 'integer'],
+                        description='Conference to time',
+                    ),
+                    CacheFieldConfig(
+                        name='consultation_from',
+                        type=['null', 'integer'],
+                        description='Consultation from time',
+                    ),
+                    CacheFieldConfig(
+                        name='consultation_time',
+                        type=['null', 'integer'],
+                        description='Consultation duration',
+                    ),
+                    CacheFieldConfig(
+                        name='consultation_to',
+                        type=['null', 'integer'],
+                        description='Consultation to time',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='Creation timestamp',
+                    ),
+                    CacheFieldConfig(
+                        name='duration',
+                        type=['null', 'integer'],
+                        description='Duration in seconds',
+                    ),
+                    CacheFieldConfig(
+                        name='forwarded_to',
+                        type=['null', 'string'],
+                        description='Number forwarded to',
+                    ),
+                    CacheFieldConfig(
+                        name='hold_time',
+                        type=['null', 'integer'],
+                        description='Hold time in seconds',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Call leg ID',
+                    ),
+                    CacheFieldConfig(
+                        name='minutes_billed',
+                        type=['null', 'integer'],
+                        description='Minutes billed',
+                    ),
+                    CacheFieldConfig(
+                        name='quality_issues',
+                        type=['null', 'array'],
+                        description='Quality issues detected',
+                    ),
+                    CacheFieldConfig(
+                        name='talk_time',
+                        type=['null', 'integer'],
+                        description='Talk time in seconds',
+                    ),
+                    CacheFieldConfig(
+                        name='transferred_from',
+                        type=['null', 'integer'],
+                        description='Transferred from agent ID',
+                    ),
+                    CacheFieldConfig(
+                        name='transferred_to',
+                        type=['null', 'integer'],
+                        description='Transferred to agent ID',
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description='Type of call leg',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='Last update timestamp',
+                    ),
+                    CacheFieldConfig(
+                        name='user_id',
+                        type=['null', 'integer'],
+                        description='User ID',
+                    ),
+                    CacheFieldConfig(
+                        name='wrap_up_time',
+                        type=['null', 'integer'],
+                        description='Wrap-up time in seconds',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='calls',
+                suggested=True,
+                x_airbyte_name='calls',
+                fields=[
+                    CacheFieldConfig(
+                        name='agent_id',
+                        type=['null', 'integer'],
+                        description='Agent ID',
+                    ),
+                    CacheFieldConfig(
+                        name='call_charge',
+                        type=['null', 'string'],
+                        description='Call charge amount',
+                    ),
+                    CacheFieldConfig(
+                        name='call_group_id',
+                        type=['null', 'integer'],
+                        description='Call group ID',
+                    ),
+                    CacheFieldConfig(
+                        name='call_recording_consent',
+                        type=['null', 'string'],
+                        description='Call recording consent status',
+                    ),
+                    CacheFieldConfig(
+                        name='call_recording_consent_action',
+                        type=['null', 'string'],
+                        description='Recording consent action',
+                    ),
+                    CacheFieldConfig(
+                        name='call_recording_consent_keypress',
+                        type=['null', 'string'],
+                        description='Recording consent keypress',
+                    ),
+                    CacheFieldConfig(
+                        name='callback',
+                        type=['null', 'boolean'],
+                        description='Whether this was a callback',
+                    ),
+                    CacheFieldConfig(
+                        name='callback_source',
+                        type=['null', 'string'],
+                        description='Source of the callback',
+                    ),
+                    CacheFieldConfig(
+                        name='completion_status',
+                        type=['null', 'string'],
+                        description='Call completion status',
+                    ),
+                    CacheFieldConfig(
+                        name='consultation_time',
+                        type=['null', 'integer'],
+                        description='Consultation time',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='Creation timestamp',
+                    ),
+                    CacheFieldConfig(
+                        name='customer_requested_voicemail',
+                        type=['null', 'boolean'],
+                        description='Whether customer requested voicemail',
+                    ),
+                    CacheFieldConfig(
+                        name='default_group',
+                        type=['null', 'boolean'],
+                        description='Whether default group was used',
+                    ),
+                    CacheFieldConfig(
+                        name='direction',
+                        type=['null', 'string'],
+                        description='Call direction (inbound/outbound)',
+                    ),
+                    CacheFieldConfig(
+                        name='duration',
+                        type=['null', 'integer'],
+                        description='Call duration in seconds',
+                    ),
+                    CacheFieldConfig(
+                        name='exceeded_queue_time',
+                        type=['null', 'boolean'],
+                        description='Whether queue time was exceeded',
+                    ),
+                    CacheFieldConfig(
+                        name='exceeded_queue_wait_time',
+                        type=['null', 'boolean'],
+                        description='Whether max queue wait time was exceeded',
+                    ),
+                    CacheFieldConfig(
+                        name='hold_time',
+                        type=['null', 'integer'],
+                        description='Hold time in seconds',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Call ID',
+                    ),
+                    CacheFieldConfig(
+                        name='ivr_action',
+                        type=['null', 'string'],
+                        description='IVR action taken',
+                    ),
+                    CacheFieldConfig(
+                        name='ivr_destination_group_name',
+                        type=['null', 'string'],
+                        description='IVR destination group name',
+                    ),
+                    CacheFieldConfig(
+                        name='ivr_hops',
+                        type=['null', 'integer'],
+                        description='Number of IVR hops',
+                    ),
+                    CacheFieldConfig(
+                        name='ivr_routed_to',
+                        type=['null', 'string'],
+                        description='Where IVR routed the call',
+                    ),
+                    CacheFieldConfig(
+                        name='ivr_time_spent',
+                        type=['null', 'integer'],
+                        description='Time spent in IVR',
+                    ),
+                    CacheFieldConfig(
+                        name='minutes_billed',
+                        type=['null', 'integer'],
+                        description='Minutes billed',
+                    ),
+                    CacheFieldConfig(
+                        name='not_recording_time',
+                        type=['null', 'integer'],
+                        description='Time not recording',
+                    ),
+                    CacheFieldConfig(
+                        name='outside_business_hours',
+                        type=['null', 'boolean'],
+                        description='Whether call was outside business hours',
+                    ),
+                    CacheFieldConfig(
+                        name='overflowed',
+                        type=['null', 'boolean'],
+                        description='Whether call overflowed',
+                    ),
+                    CacheFieldConfig(
+                        name='overflowed_to',
+                        type=['null', 'string'],
+                        description='Where call overflowed to',
+                    ),
+                    CacheFieldConfig(
+                        name='phone_number',
+                        type=['null', 'string'],
+                        description='Phone number used',
+                    ),
+                    CacheFieldConfig(
+                        name='phone_number_id',
+                        type=['null', 'integer'],
+                        description='Phone number ID',
+                    ),
+                    CacheFieldConfig(
+                        name='quality_issues',
+                        type=['null', 'array'],
+                        description='Quality issues detected',
+                    ),
+                    CacheFieldConfig(
+                        name='recording_control_interactions',
+                        type=['null', 'integer'],
+                        description='Recording control interactions count',
+                    ),
+                    CacheFieldConfig(
+                        name='recording_time',
+                        type=['null', 'integer'],
+                        description='Recording time',
+                    ),
+                    CacheFieldConfig(
+                        name='talk_time',
+                        type=['null', 'integer'],
+                        description='Talk time in seconds',
+                    ),
+                    CacheFieldConfig(
+                        name='ticket_id',
+                        type=['null', 'integer'],
+                        description='Associated ticket ID',
+                    ),
+                    CacheFieldConfig(
+                        name='time_to_answer',
+                        type=['null', 'integer'],
+                        description='Time to answer in seconds',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='Last update timestamp',
+                    ),
+                    CacheFieldConfig(
+                        name='voicemail',
+                        type=['null', 'boolean'],
+                        description='Whether it was a voicemail',
+                    ),
+                    CacheFieldConfig(
+                        name='wait_time',
+                        type=['null', 'integer'],
+                        description='Wait time in seconds',
+                    ),
+                    CacheFieldConfig(
+                        name='wrap_up_time',
+                        type=['null', 'integer'],
+                        description='Wrap-up time in seconds',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='current_queue_activity',
+                suggested=True,
+                x_airbyte_name='current_queue_activity',
+                fields=[
+                    CacheFieldConfig(
+                        name='agents_online',
+                        type=['null', 'integer'],
+                        description='Current number of agents online',
+                    ),
+                    CacheFieldConfig(
+                        name='average_wait_time',
+                        type=['null', 'integer'],
+                        description='Average wait time for callers in queue (seconds)',
+                    ),
+                    CacheFieldConfig(
+                        name='callbacks_waiting',
+                        type=['null', 'integer'],
+                        description='Number of callers in callback queue',
+                    ),
+                    CacheFieldConfig(
+                        name='calls_waiting',
+                        type=['null', 'integer'],
+                        description='Number of callers waiting in queue',
+                    ),
+                    CacheFieldConfig(
+                        name='current_timestamp',
+                        type=['null', 'integer'],
+                        description='Current timestamp',
+                    ),
+                    CacheFieldConfig(
+                        name='embeddable_callbacks_waiting',
+                        type=['null', 'integer'],
+                        description='Number of Web Widget callback requests waiting',
+                    ),
+                    CacheFieldConfig(
+                        name='longest_wait_time',
+                        type=['null', 'integer'],
+                        description='Longest wait time for any caller (seconds)',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='account_overview',
+                x_airbyte_name='account_overview',
+                fields=[
+                    CacheFieldConfig(
+                        name='average_call_duration',
+                        type=['null', 'integer'],
+                        description='Average call duration',
+                    ),
+                    CacheFieldConfig(
+                        name='average_callback_wait_time',
+                        type=['null', 'integer'],
+                        description='Average callback wait time',
+                    ),
+                    CacheFieldConfig(
+                        name='average_hold_time',
+                        type=['null', 'integer'],
+                        description='Average hold time per call',
+                    ),
+                    CacheFieldConfig(
+                        name='average_queue_wait_time',
+                        type=['null', 'integer'],
+                        description='Average queue wait time',
+                    ),
+                    CacheFieldConfig(
+                        name='average_time_to_answer',
+                        type=['null', 'integer'],
+                        description='Average time to answer',
+                    ),
+                    CacheFieldConfig(
+                        name='average_wrap_up_time',
+                        type=['null', 'integer'],
+                        description='Average wrap-up time',
+                    ),
+                    CacheFieldConfig(
+                        name='current_timestamp',
+                        type=['null', 'integer'],
+                        description='Current timestamp',
+                    ),
+                    CacheFieldConfig(
+                        name='max_calls_waiting',
+                        type=['null', 'integer'],
+                        description='Max calls waiting in queue',
+                    ),
+                    CacheFieldConfig(
+                        name='max_queue_wait_time',
+                        type=['null', 'integer'],
+                        description='Max queue wait time',
+                    ),
+                    CacheFieldConfig(
+                        name='total_call_duration',
+                        type=['null', 'integer'],
+                        description='Total call duration',
+                    ),
+                    CacheFieldConfig(
+                        name='total_callback_calls',
+                        type=['null', 'integer'],
+                        description='Total callback calls',
+                    ),
+                    CacheFieldConfig(
+                        name='total_calls',
+                        type=['null', 'integer'],
+                        description='Total calls',
+                    ),
+                    CacheFieldConfig(
+                        name='total_calls_abandoned_in_queue',
+                        type=['null', 'integer'],
+                        description='Total calls abandoned in queue',
+                    ),
+                    CacheFieldConfig(
+                        name='total_calls_outside_business_hours',
+                        type=['null', 'integer'],
+                        description='Total calls outside business hours',
+                    ),
+                    CacheFieldConfig(
+                        name='total_calls_with_exceeded_queue_wait_time',
+                        type=['null', 'integer'],
+                        description='Total calls exceeding max queue wait time',
+                    ),
+                    CacheFieldConfig(
+                        name='total_calls_with_requested_voicemail',
+                        type=['null', 'integer'],
+                        description='Total calls requesting voicemail',
+                    ),
+                    CacheFieldConfig(
+                        name='total_embeddable_callback_calls',
+                        type=['null', 'integer'],
+                        description='Total embeddable callback calls',
+                    ),
+                    CacheFieldConfig(
+                        name='total_hold_time',
+                        type=['null', 'integer'],
+                        description='Total hold time',
+                    ),
+                    CacheFieldConfig(
+                        name='total_inbound_calls',
+                        type=['null', 'integer'],
+                        description='Total inbound calls',
+                    ),
+                    CacheFieldConfig(
+                        name='total_outbound_calls',
+                        type=['null', 'integer'],
+                        description='Total outbound calls',
+                    ),
+                    CacheFieldConfig(
+                        name='total_textback_requests',
+                        type=['null', 'integer'],
+                        description='Total textback requests',
+                    ),
+                    CacheFieldConfig(
+                        name='total_voicemails',
+                        type=['null', 'integer'],
+                        description='Total voicemails',
+                    ),
+                    CacheFieldConfig(
+                        name='total_wrap_up_time',
+                        type=['null', 'integer'],
+                        description='Total wrap-up time',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='ivrs',
+                suggested=True,
+                x_airbyte_name='ivrs',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='IVR ID',
+                    ),
+                    CacheFieldConfig(
+                        name='menus',
+                        type=['null', 'array'],
+                        description='List of IVR menus',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Name of the IVR',
+                    ),
+                    CacheFieldConfig(
+                        name='phone_number_ids',
+                        type=['null', 'array'],
+                        description='IDs of phone numbers configured with this IVR',
+                    ),
+                    CacheFieldConfig(
+                        name='phone_number_names',
+                        type=['null', 'array'],
+                        description='Names of phone numbers configured with this IVR',
+                    ),
+                ],
+            ),
+        ],
+        disable_compaction=True,
+    ),
     search_field_paths={
         'addresses': [
             'city',

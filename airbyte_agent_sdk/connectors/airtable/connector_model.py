@@ -20,6 +20,9 @@ from airbyte_agent_sdk.schema.security import (
     AuthConfigSpec,
 )
 from airbyte_agent_sdk.schema.extensions import (
+    CacheConfig,
+    CacheEntityConfig,
+    CacheFieldConfig,
     EntityRelationshipConfig,
 )
 from airbyte_agent_sdk.schema.base import (
@@ -517,6 +520,65 @@ AirtableConnectorModel: ConnectorModel = ConnectorModel(
             ],
         ),
     ],
+    context_store=CacheConfig(
+        entities=[
+            CacheEntityConfig(
+                entity='bases',
+                suggested=True,
+                x_airbyte_name='bases',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique identifier for the base',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Name of the base',
+                    ),
+                    CacheFieldConfig(
+                        name='permissionLevel',
+                        type=['null', 'string'],
+                        description='Permission level for the base',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='tables',
+                suggested=True,
+                x_airbyte_name='tables',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique identifier for the table',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Name of the table',
+                    ),
+                    CacheFieldConfig(
+                        name='primaryFieldId',
+                        type=['null', 'string'],
+                        description='ID of the primary field',
+                    ),
+                    CacheFieldConfig(
+                        name='fields',
+                        type=['null', 'array'],
+                        description='List of fields in the table',
+                    ),
+                    CacheFieldConfig(
+                        name='views',
+                        type=['null', 'array'],
+                        description='List of views in the table',
+                    ),
+                ],
+            ),
+        ],
+        disable_compaction=True,
+    ),
     search_field_paths={
         'bases': ['id', 'name', 'permissionLevel'],
         'tables': [

@@ -20,6 +20,10 @@ from airbyte_agent_sdk.schema.security import (
     AuthConfigSpec,
 )
 from airbyte_agent_sdk.schema.extensions import (
+    CacheConfig,
+    CacheEntityConfig,
+    CacheFieldConfig,
+    CacheFieldProperty,
     EntityRelationshipConfig,
 )
 from airbyte_agent_sdk.schema.base import (
@@ -8070,6 +8074,1482 @@ WoocommerceConnectorModel: ConnectorModel = ConnectorModel(
             },
         ),
     ],
+    context_store=CacheConfig(
+        entities=[
+            CacheEntityConfig(
+                entity='customers',
+                suggested=True,
+                x_airbyte_name='customers',
+                fields=[
+                    CacheFieldConfig(
+                        name='avatar_url',
+                        type=['null', 'string'],
+                        description='Avatar URL',
+                    ),
+                    CacheFieldConfig(
+                        name='billing',
+                        type=['null', 'object'],
+                        description='List of billing address data',
+                        properties={
+                            'address_1': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'address_2': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'city': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'company': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'country': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'email': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'first_name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'last_name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'phone': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'postcode': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'state': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='date_created',
+                        type=['null', 'string'],
+                        description="The date the customer was created, in the site's timezone",
+                    ),
+                    CacheFieldConfig(
+                        name='date_created_gmt',
+                        type=['null', 'string'],
+                        description='The date the customer was created, as GMT',
+                    ),
+                    CacheFieldConfig(
+                        name='date_modified',
+                        type=['null', 'string'],
+                        description="The date the customer was last modified, in the site's timezone",
+                    ),
+                    CacheFieldConfig(
+                        name='date_modified_gmt',
+                        type=['null', 'string'],
+                        description='The date the customer was last modified, as GMT',
+                    ),
+                    CacheFieldConfig(
+                        name='email',
+                        type=['null', 'string'],
+                        description='The email address for the customer',
+                    ),
+                    CacheFieldConfig(
+                        name='first_name',
+                        type=['null', 'string'],
+                        description='Customer first name',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the resource',
+                    ),
+                    CacheFieldConfig(
+                        name='is_paying_customer',
+                        type=['null', 'boolean'],
+                        description='Is the customer a paying customer',
+                    ),
+                    CacheFieldConfig(
+                        name='last_name',
+                        type=['null', 'string'],
+                        description='Customer last name',
+                    ),
+                    CacheFieldConfig(
+                        name='meta_data',
+                        type=['null', 'array'],
+                        description='Meta data',
+                    ),
+                    CacheFieldConfig(
+                        name='role',
+                        type=['null', 'string'],
+                        description='Customer role',
+                    ),
+                    CacheFieldConfig(
+                        name='shipping',
+                        type=['null', 'object'],
+                        description='List of shipping address data',
+                        properties={
+                            'address_1': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'address_2': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'city': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'company': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'country': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'first_name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'last_name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'postcode': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'state': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='username',
+                        type=['null', 'string'],
+                        description='Customer login name',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='orders',
+                suggested=True,
+                x_airbyte_name='orders',
+                fields=[
+                    CacheFieldConfig(
+                        name='billing',
+                        type=['null', 'object'],
+                        description='Billing address',
+                    ),
+                    CacheFieldConfig(
+                        name='cart_hash',
+                        type=['null', 'string'],
+                        description='MD5 hash of cart items to ensure orders are not modified',
+                    ),
+                    CacheFieldConfig(
+                        name='cart_tax',
+                        type=['null', 'string'],
+                        description='Sum of line item taxes only',
+                    ),
+                    CacheFieldConfig(
+                        name='coupon_lines',
+                        type=['null', 'array'],
+                        description='Coupons line data',
+                    ),
+                    CacheFieldConfig(
+                        name='created_via',
+                        type=['null', 'string'],
+                        description='Shows where the order was created',
+                    ),
+                    CacheFieldConfig(
+                        name='currency',
+                        type=['null', 'string'],
+                        description='Currency the order was created with, in ISO format',
+                    ),
+                    CacheFieldConfig(
+                        name='customer_id',
+                        type=['null', 'integer'],
+                        description='User ID who owns the order (0 for guests)',
+                    ),
+                    CacheFieldConfig(
+                        name='customer_ip_address',
+                        type=['null', 'string'],
+                        description="Customer's IP address",
+                    ),
+                    CacheFieldConfig(
+                        name='customer_note',
+                        type=['null', 'string'],
+                        description='Note left by the customer during checkout',
+                    ),
+                    CacheFieldConfig(
+                        name='customer_user_agent',
+                        type=['null', 'string'],
+                        description='User agent of the customer',
+                    ),
+                    CacheFieldConfig(
+                        name='date_completed',
+                        type=['null', 'string'],
+                        description="The date the order was completed, in the site's timezone",
+                    ),
+                    CacheFieldConfig(
+                        name='date_completed_gmt',
+                        type=['null', 'string'],
+                        description='The date the order was completed, as GMT',
+                    ),
+                    CacheFieldConfig(
+                        name='date_created',
+                        type=['null', 'string'],
+                        description="The date the order was created, in the site's timezone",
+                    ),
+                    CacheFieldConfig(
+                        name='date_created_gmt',
+                        type=['null', 'string'],
+                        description='The date the order was created, as GMT',
+                    ),
+                    CacheFieldConfig(
+                        name='date_modified',
+                        type=['null', 'string'],
+                        description="The date the order was last modified, in the site's timezone",
+                    ),
+                    CacheFieldConfig(
+                        name='date_modified_gmt',
+                        type=['null', 'string'],
+                        description='The date the order was last modified, as GMT',
+                    ),
+                    CacheFieldConfig(
+                        name='date_paid',
+                        type=['null', 'string'],
+                        description="The date the order was paid, in the site's timezone",
+                    ),
+                    CacheFieldConfig(
+                        name='date_paid_gmt',
+                        type=['null', 'string'],
+                        description='The date the order was paid, as GMT',
+                    ),
+                    CacheFieldConfig(
+                        name='discount_tax',
+                        type=['null', 'string'],
+                        description='Total discount tax amount for the order',
+                    ),
+                    CacheFieldConfig(
+                        name='discount_total',
+                        type=['null', 'string'],
+                        description='Total discount amount for the order',
+                    ),
+                    CacheFieldConfig(
+                        name='fee_lines',
+                        type=['null', 'array'],
+                        description='Fee lines data',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the resource',
+                    ),
+                    CacheFieldConfig(
+                        name='line_items',
+                        type=['null', 'array'],
+                        description='Line items data',
+                    ),
+                    CacheFieldConfig(
+                        name='meta_data',
+                        type=['null', 'array'],
+                        description='Meta data',
+                    ),
+                    CacheFieldConfig(
+                        name='number',
+                        type=['null', 'string'],
+                        description='Order number',
+                    ),
+                    CacheFieldConfig(
+                        name='order_key',
+                        type=['null', 'string'],
+                        description='Order key',
+                    ),
+                    CacheFieldConfig(
+                        name='parent_id',
+                        type=['null', 'integer'],
+                        description='Parent order ID',
+                    ),
+                    CacheFieldConfig(
+                        name='payment_method',
+                        type=['null', 'string'],
+                        description='Payment method ID',
+                    ),
+                    CacheFieldConfig(
+                        name='payment_method_title',
+                        type=['null', 'string'],
+                        description='Payment method title',
+                    ),
+                    CacheFieldConfig(
+                        name='prices_include_tax',
+                        type=['null', 'boolean'],
+                        description='True if the prices included tax during checkout',
+                    ),
+                    CacheFieldConfig(
+                        name='refunds',
+                        type=['null', 'array'],
+                        description='List of refunds',
+                    ),
+                    CacheFieldConfig(
+                        name='shipping',
+                        type=['null', 'object'],
+                        description='Shipping address',
+                    ),
+                    CacheFieldConfig(
+                        name='shipping_lines',
+                        type=['null', 'array'],
+                        description='Shipping lines data',
+                    ),
+                    CacheFieldConfig(
+                        name='shipping_tax',
+                        type=['null', 'string'],
+                        description='Total shipping tax amount for the order',
+                    ),
+                    CacheFieldConfig(
+                        name='shipping_total',
+                        type=['null', 'string'],
+                        description='Total shipping amount for the order',
+                    ),
+                    CacheFieldConfig(
+                        name='status',
+                        type=['null', 'string'],
+                        description='Order status',
+                    ),
+                    CacheFieldConfig(
+                        name='tax_lines',
+                        type=['null', 'array'],
+                        description='Tax lines data',
+                    ),
+                    CacheFieldConfig(
+                        name='total',
+                        type=['null', 'string'],
+                        description='Grand total',
+                    ),
+                    CacheFieldConfig(
+                        name='total_tax',
+                        type=['null', 'string'],
+                        description='Sum of all taxes',
+                    ),
+                    CacheFieldConfig(
+                        name='transaction_id',
+                        type=['null', 'string'],
+                        description='Unique transaction ID',
+                    ),
+                    CacheFieldConfig(
+                        name='version',
+                        type=['null', 'string'],
+                        description='Version of WooCommerce which last updated the order',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='products',
+                suggested=True,
+                x_airbyte_name='products',
+                fields=[
+                    CacheFieldConfig(
+                        name='attributes',
+                        type=['null', 'array'],
+                        description='List of attributes',
+                    ),
+                    CacheFieldConfig(
+                        name='average_rating',
+                        type=['null', 'string'],
+                        description='Reviews average rating',
+                    ),
+                    CacheFieldConfig(
+                        name='backordered',
+                        type=['null', 'boolean'],
+                        description='Shows if the product is on backordered',
+                    ),
+                    CacheFieldConfig(
+                        name='backorders',
+                        type=['null', 'string'],
+                        description='If managing stock, this controls if backorders are allowed',
+                    ),
+                    CacheFieldConfig(
+                        name='backorders_allowed',
+                        type=['null', 'boolean'],
+                        description='Shows if backorders are allowed',
+                    ),
+                    CacheFieldConfig(
+                        name='button_text',
+                        type=['null', 'string'],
+                        description='Product external button text',
+                    ),
+                    CacheFieldConfig(
+                        name='catalog_visibility',
+                        type=['null', 'string'],
+                        description='Catalog visibility',
+                    ),
+                    CacheFieldConfig(
+                        name='categories',
+                        type=['null', 'array'],
+                        description='List of categories',
+                    ),
+                    CacheFieldConfig(
+                        name='cross_sell_ids',
+                        type=['null', 'array'],
+                        description='List of cross-sell products IDs',
+                    ),
+                    CacheFieldConfig(
+                        name='date_created',
+                        type=['null', 'string'],
+                        description='The date the product was created',
+                    ),
+                    CacheFieldConfig(
+                        name='date_created_gmt',
+                        type=['null', 'string'],
+                        description='The date the product was created, as GMT',
+                    ),
+                    CacheFieldConfig(
+                        name='date_modified',
+                        type=['null', 'string'],
+                        description='The date the product was last modified',
+                    ),
+                    CacheFieldConfig(
+                        name='date_modified_gmt',
+                        type=['null', 'string'],
+                        description='The date the product was last modified, as GMT',
+                    ),
+                    CacheFieldConfig(
+                        name='date_on_sale_from',
+                        type=['null', 'string'],
+                        description='Start date of sale price',
+                    ),
+                    CacheFieldConfig(
+                        name='date_on_sale_from_gmt',
+                        type=['null', 'string'],
+                        description='Start date of sale price, as GMT',
+                    ),
+                    CacheFieldConfig(
+                        name='date_on_sale_to',
+                        type=['null', 'string'],
+                        description='End date of sale price',
+                    ),
+                    CacheFieldConfig(
+                        name='date_on_sale_to_gmt',
+                        type=['null', 'string'],
+                        description='End date of sale price, as GMT',
+                    ),
+                    CacheFieldConfig(
+                        name='default_attributes',
+                        type=['null', 'array'],
+                        description='Defaults variation attributes',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='Product description',
+                    ),
+                    CacheFieldConfig(
+                        name='dimensions',
+                        type=['null', 'object'],
+                        description='Product dimensions',
+                    ),
+                    CacheFieldConfig(
+                        name='download_expiry',
+                        type=['null', 'integer'],
+                        description='Number of days until access to downloadable files expires',
+                    ),
+                    CacheFieldConfig(
+                        name='download_limit',
+                        type=['null', 'integer'],
+                        description='Number of times downloadable files can be downloaded',
+                    ),
+                    CacheFieldConfig(
+                        name='downloadable',
+                        type=['null', 'boolean'],
+                        description='If the product is downloadable',
+                    ),
+                    CacheFieldConfig(
+                        name='downloads',
+                        type=['null', 'array'],
+                        description='List of downloadable files',
+                    ),
+                    CacheFieldConfig(
+                        name='external_url',
+                        type=['null', 'string'],
+                        description='Product external URL',
+                    ),
+                    CacheFieldConfig(
+                        name='grouped_products',
+                        type=['null', 'array'],
+                        description='List of grouped products ID',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the resource',
+                    ),
+                    CacheFieldConfig(
+                        name='images',
+                        type=['null', 'array'],
+                        description='List of images',
+                    ),
+                    CacheFieldConfig(
+                        name='manage_stock',
+                        type=['null', 'boolean'],
+                        description='Stock management at product level',
+                    ),
+                    CacheFieldConfig(
+                        name='menu_order',
+                        type=['null', 'integer'],
+                        description='Menu order',
+                    ),
+                    CacheFieldConfig(
+                        name='meta_data',
+                        type=['null', 'array'],
+                        description='Meta data',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Product name',
+                    ),
+                    CacheFieldConfig(
+                        name='on_sale',
+                        type=['null', 'boolean'],
+                        description='Shows if the product is on sale',
+                    ),
+                    CacheFieldConfig(
+                        name='parent_id',
+                        type=['null', 'integer'],
+                        description='Product parent ID',
+                    ),
+                    CacheFieldConfig(
+                        name='permalink',
+                        type=['null', 'string'],
+                        description='Product URL',
+                    ),
+                    CacheFieldConfig(
+                        name='price',
+                        type=['null', 'string'],
+                        description='Current product price',
+                    ),
+                    CacheFieldConfig(
+                        name='price_html',
+                        type=['null', 'string'],
+                        description='Price formatted in HTML',
+                    ),
+                    CacheFieldConfig(
+                        name='purchasable',
+                        type=['null', 'boolean'],
+                        description='Shows if the product can be bought',
+                    ),
+                    CacheFieldConfig(
+                        name='purchase_note',
+                        type=['null', 'string'],
+                        description='Note to send customer after purchase',
+                    ),
+                    CacheFieldConfig(
+                        name='rating_count',
+                        type=['null', 'integer'],
+                        description='Amount of reviews',
+                    ),
+                    CacheFieldConfig(
+                        name='regular_price',
+                        type=['null', 'string'],
+                        description='Product regular price',
+                    ),
+                    CacheFieldConfig(
+                        name='related_ids',
+                        type=['null', 'array'],
+                        description='List of related products IDs',
+                    ),
+                    CacheFieldConfig(
+                        name='reviews_allowed',
+                        type=['null', 'boolean'],
+                        description='Allow reviews',
+                    ),
+                    CacheFieldConfig(
+                        name='sale_price',
+                        type=['null', 'string'],
+                        description='Product sale price',
+                    ),
+                    CacheFieldConfig(
+                        name='shipping_class',
+                        type=['null', 'string'],
+                        description='Shipping class slug',
+                    ),
+                    CacheFieldConfig(
+                        name='shipping_class_id',
+                        type=['null', 'integer'],
+                        description='Shipping class ID',
+                    ),
+                    CacheFieldConfig(
+                        name='shipping_required',
+                        type=['null', 'boolean'],
+                        description='Shows if the product needs to be shipped',
+                    ),
+                    CacheFieldConfig(
+                        name='shipping_taxable',
+                        type=['null', 'boolean'],
+                        description='Shows if product shipping is taxable',
+                    ),
+                    CacheFieldConfig(
+                        name='short_description',
+                        type=['null', 'string'],
+                        description='Product short description',
+                    ),
+                    CacheFieldConfig(
+                        name='sku',
+                        type=['null', 'string'],
+                        description='Unique identifier (SKU)',
+                    ),
+                    CacheFieldConfig(
+                        name='slug',
+                        type=['null', 'string'],
+                        description='Product slug',
+                    ),
+                    CacheFieldConfig(
+                        name='sold_individually',
+                        type=['null', 'boolean'],
+                        description='Allow one item per order',
+                    ),
+                    CacheFieldConfig(
+                        name='status',
+                        type=['null', 'string'],
+                        description='Product status',
+                    ),
+                    CacheFieldConfig(
+                        name='stock_quantity',
+                        type=['null', 'integer'],
+                        description='Stock quantity',
+                    ),
+                    CacheFieldConfig(
+                        name='stock_status',
+                        type=['null', 'string'],
+                        description='Controls the stock status',
+                    ),
+                    CacheFieldConfig(
+                        name='tags',
+                        type=['null', 'array'],
+                        description='List of tags',
+                    ),
+                    CacheFieldConfig(
+                        name='tax_class',
+                        type=['null', 'string'],
+                        description='Tax class',
+                    ),
+                    CacheFieldConfig(
+                        name='tax_status',
+                        type=['null', 'string'],
+                        description='Tax status',
+                    ),
+                    CacheFieldConfig(
+                        name='total_sales',
+                        type=['null', 'integer'],
+                        description='Amount of sales',
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description='Product type',
+                    ),
+                    CacheFieldConfig(
+                        name='upsell_ids',
+                        type=['null', 'array'],
+                        description='List of up-sell products IDs',
+                    ),
+                    CacheFieldConfig(
+                        name='variations',
+                        type=['null', 'array'],
+                        description='List of variations IDs',
+                    ),
+                    CacheFieldConfig(
+                        name='virtual',
+                        type=['null', 'boolean'],
+                        description='If the product is virtual',
+                    ),
+                    CacheFieldConfig(
+                        name='weight',
+                        type=['null', 'string'],
+                        description='Product weight',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='coupons',
+                suggested=True,
+                x_airbyte_name='coupons',
+                fields=[
+                    CacheFieldConfig(
+                        name='amount',
+                        type=['null', 'string'],
+                        description='The amount of discount',
+                    ),
+                    CacheFieldConfig(
+                        name='code',
+                        type=['null', 'string'],
+                        description='Coupon code',
+                    ),
+                    CacheFieldConfig(
+                        name='date_created',
+                        type=['null', 'string'],
+                        description='The date the coupon was created',
+                    ),
+                    CacheFieldConfig(
+                        name='date_created_gmt',
+                        type=['null', 'string'],
+                        description='The date the coupon was created, as GMT',
+                    ),
+                    CacheFieldConfig(
+                        name='date_expires',
+                        type=['null', 'string'],
+                        description='The date the coupon expires',
+                    ),
+                    CacheFieldConfig(
+                        name='date_expires_gmt',
+                        type=['null', 'string'],
+                        description='The date the coupon expires, as GMT',
+                    ),
+                    CacheFieldConfig(
+                        name='date_modified',
+                        type=['null', 'string'],
+                        description='The date the coupon was last modified',
+                    ),
+                    CacheFieldConfig(
+                        name='date_modified_gmt',
+                        type=['null', 'string'],
+                        description='The date the coupon was last modified, as GMT',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='Coupon description',
+                    ),
+                    CacheFieldConfig(
+                        name='discount_type',
+                        type=['null', 'string'],
+                        description='Determines the type of discount',
+                    ),
+                    CacheFieldConfig(
+                        name='email_restrictions',
+                        type=['null', 'array'],
+                        description='List of email addresses that can use this coupon',
+                    ),
+                    CacheFieldConfig(
+                        name='exclude_sale_items',
+                        type=['null', 'boolean'],
+                        description='If true, not applied to sale items',
+                    ),
+                    CacheFieldConfig(
+                        name='excluded_product_categories',
+                        type=['null', 'array'],
+                        description='Excluded category IDs',
+                    ),
+                    CacheFieldConfig(
+                        name='excluded_product_ids',
+                        type=['null', 'array'],
+                        description='Excluded product IDs',
+                    ),
+                    CacheFieldConfig(
+                        name='free_shipping',
+                        type=['null', 'boolean'],
+                        description='Enables free shipping',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='individual_use',
+                        type=['null', 'boolean'],
+                        description='Can only be used individually',
+                    ),
+                    CacheFieldConfig(
+                        name='limit_usage_to_x_items',
+                        type=['null', 'integer'],
+                        description='Max cart items coupon applies to',
+                    ),
+                    CacheFieldConfig(
+                        name='maximum_amount',
+                        type=['null', 'string'],
+                        description='Maximum order amount',
+                    ),
+                    CacheFieldConfig(
+                        name='meta_data',
+                        type=['null', 'array'],
+                        description='Meta data',
+                    ),
+                    CacheFieldConfig(
+                        name='minimum_amount',
+                        type=['null', 'string'],
+                        description='Minimum order amount',
+                    ),
+                    CacheFieldConfig(
+                        name='product_categories',
+                        type=['null', 'array'],
+                        description='Applicable category IDs',
+                    ),
+                    CacheFieldConfig(
+                        name='product_ids',
+                        type=['null', 'array'],
+                        description='Applicable product IDs',
+                    ),
+                    CacheFieldConfig(
+                        name='usage_count',
+                        type=['null', 'integer'],
+                        description='Times used',
+                    ),
+                    CacheFieldConfig(
+                        name='usage_limit',
+                        type=['null', 'integer'],
+                        description='Total usage limit',
+                    ),
+                    CacheFieldConfig(
+                        name='usage_limit_per_user',
+                        type=['null', 'integer'],
+                        description='Per-customer usage limit',
+                    ),
+                    CacheFieldConfig(
+                        name='used_by',
+                        type=['null', 'array'],
+                        description='Users who have used the coupon',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='product_categories',
+                x_airbyte_name='product_categories',
+                fields=[
+                    CacheFieldConfig(
+                        name='count',
+                        type=['null', 'integer'],
+                        description='Number of published products for the resource',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='HTML description of the resource',
+                    ),
+                    CacheFieldConfig(
+                        name='display',
+                        type=['null', 'string'],
+                        description='Category archive display type',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the resource',
+                    ),
+                    CacheFieldConfig(
+                        name='image',
+                        type=['null', 'array'],
+                        description='Image data',
+                    ),
+                    CacheFieldConfig(
+                        name='menu_order',
+                        type=['null', 'integer'],
+                        description='Menu order',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Category name',
+                    ),
+                    CacheFieldConfig(
+                        name='parent',
+                        type=['null', 'integer'],
+                        description='The ID for the parent of the resource',
+                    ),
+                    CacheFieldConfig(
+                        name='slug',
+                        type=['null', 'string'],
+                        description='An alphanumeric identifier',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='product_tags',
+                x_airbyte_name='product_tags',
+                fields=[
+                    CacheFieldConfig(
+                        name='count',
+                        type=['null', 'integer'],
+                        description='Number of published products',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='HTML description',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Tag name',
+                    ),
+                    CacheFieldConfig(
+                        name='slug',
+                        type=['null', 'string'],
+                        description='Alphanumeric identifier',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='product_reviews',
+                x_airbyte_name='product_reviews',
+                fields=[
+                    CacheFieldConfig(
+                        name='date_created',
+                        type=['null', 'string'],
+                        description='The date the review was created',
+                    ),
+                    CacheFieldConfig(
+                        name='date_created_gmt',
+                        type=['null', 'string'],
+                        description='The date the review was created, as GMT',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='product_id',
+                        type=['null', 'integer'],
+                        description='Product the review belongs to',
+                    ),
+                    CacheFieldConfig(
+                        name='rating',
+                        type=['null', 'integer'],
+                        description='Review rating (0 to 5)',
+                    ),
+                    CacheFieldConfig(
+                        name='review',
+                        type=['null', 'string'],
+                        description='The content of the review',
+                    ),
+                    CacheFieldConfig(
+                        name='reviewer',
+                        type=['null', 'string'],
+                        description='Reviewer name',
+                    ),
+                    CacheFieldConfig(
+                        name='reviewer_email',
+                        type=['null', 'string'],
+                        description='Reviewer email',
+                    ),
+                    CacheFieldConfig(
+                        name='status',
+                        type=['null', 'string'],
+                        description='Status of the review',
+                    ),
+                    CacheFieldConfig(
+                        name='verified',
+                        type=['null', 'boolean'],
+                        description='Shows if the reviewer bought the product',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='product_attributes',
+                x_airbyte_name='product_attributes',
+                fields=[
+                    CacheFieldConfig(
+                        name='has_archives',
+                        type=['null', 'boolean'],
+                        description='Enable/Disable attribute archives',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Attribute name',
+                    ),
+                    CacheFieldConfig(
+                        name='order_by',
+                        type=['null', 'string'],
+                        description='Default sort order',
+                    ),
+                    CacheFieldConfig(
+                        name='slug',
+                        type=['null', 'string'],
+                        description='Alphanumeric identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description='Type of attribute',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='product_variations',
+                suggested=True,
+                x_airbyte_name='product_variations',
+                fields=[
+                    CacheFieldConfig(
+                        name='attributes',
+                        type=['null', 'array'],
+                        description='List of attributes',
+                    ),
+                    CacheFieldConfig(
+                        name='backordered',
+                        type=['null', 'boolean'],
+                        description='On backordered',
+                    ),
+                    CacheFieldConfig(
+                        name='backorders',
+                        type=['null', 'string'],
+                        description='Backorders allowed setting',
+                    ),
+                    CacheFieldConfig(
+                        name='backorders_allowed',
+                        type=['null', 'boolean'],
+                        description='Shows if backorders are allowed',
+                    ),
+                    CacheFieldConfig(
+                        name='date_created',
+                        type=['null', 'string'],
+                        description='The date the variation was created',
+                    ),
+                    CacheFieldConfig(
+                        name='date_created_gmt',
+                        type=['null', 'string'],
+                        description='The date the variation was created, as GMT',
+                    ),
+                    CacheFieldConfig(
+                        name='date_modified',
+                        type=['null', 'string'],
+                        description='The date the variation was last modified',
+                    ),
+                    CacheFieldConfig(
+                        name='date_modified_gmt',
+                        type=['null', 'string'],
+                        description='The date the variation was last modified, as GMT',
+                    ),
+                    CacheFieldConfig(
+                        name='date_on_sale_from',
+                        type=['null', 'string'],
+                        description='Start date of sale price',
+                    ),
+                    CacheFieldConfig(
+                        name='date_on_sale_from_gmt',
+                        type=['null', 'string'],
+                        description='Start date of sale price, as GMT',
+                    ),
+                    CacheFieldConfig(
+                        name='date_on_sale_to',
+                        type=['null', 'string'],
+                        description='End date of sale price',
+                    ),
+                    CacheFieldConfig(
+                        name='date_on_sale_to_gmt',
+                        type=['null', 'string'],
+                        description='End date of sale price, as GMT',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='Variation description',
+                    ),
+                    CacheFieldConfig(
+                        name='dimensions',
+                        type=['null', 'object'],
+                        description='Variation dimensions',
+                    ),
+                    CacheFieldConfig(
+                        name='download_expiry',
+                        type=['null', 'integer'],
+                        description='Days until access expires',
+                    ),
+                    CacheFieldConfig(
+                        name='download_limit',
+                        type=['null', 'integer'],
+                        description='Download limit',
+                    ),
+                    CacheFieldConfig(
+                        name='downloadable',
+                        type=['null', 'boolean'],
+                        description='If downloadable',
+                    ),
+                    CacheFieldConfig(
+                        name='downloads',
+                        type=['null', 'array'],
+                        description='Downloadable files',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='image',
+                        type=['null', 'array'],
+                        description='Variation image data',
+                    ),
+                    CacheFieldConfig(
+                        name='manage_stock',
+                        type=['null', 'string'],
+                        description='Stock management at variation level',
+                    ),
+                    CacheFieldConfig(
+                        name='menu_order',
+                        type=['null', 'integer'],
+                        description='Menu order',
+                    ),
+                    CacheFieldConfig(
+                        name='meta_data',
+                        type=['null', 'array'],
+                        description='Meta data',
+                    ),
+                    CacheFieldConfig(
+                        name='on_sale',
+                        type=['null', 'boolean'],
+                        description='Shows if on sale',
+                    ),
+                    CacheFieldConfig(
+                        name='permalink',
+                        type=['null', 'string'],
+                        description='Variation URL',
+                    ),
+                    CacheFieldConfig(
+                        name='price',
+                        type=['null', 'string'],
+                        description='Current variation price',
+                    ),
+                    CacheFieldConfig(
+                        name='purchasable',
+                        type=['null', 'boolean'],
+                        description='Can be bought',
+                    ),
+                    CacheFieldConfig(
+                        name='regular_price',
+                        type=['null', 'string'],
+                        description='Variation regular price',
+                    ),
+                    CacheFieldConfig(
+                        name='sale_price',
+                        type=['null', 'string'],
+                        description='Variation sale price',
+                    ),
+                    CacheFieldConfig(
+                        name='shipping_class',
+                        type=['null', 'string'],
+                        description='Shipping class slug',
+                    ),
+                    CacheFieldConfig(
+                        name='shipping_class_id',
+                        type=['null', 'integer'],
+                        description='Shipping class ID',
+                    ),
+                    CacheFieldConfig(
+                        name='sku',
+                        type=['null', 'string'],
+                        description='Unique identifier (SKU)',
+                    ),
+                    CacheFieldConfig(
+                        name='status',
+                        type=['null', 'string'],
+                        description='Variation status',
+                    ),
+                    CacheFieldConfig(
+                        name='stock_quantity',
+                        type=['null', 'integer'],
+                        description='Stock quantity',
+                    ),
+                    CacheFieldConfig(
+                        name='stock_status',
+                        type=['null', 'string'],
+                        description='Controls the stock status',
+                    ),
+                    CacheFieldConfig(
+                        name='tax_class',
+                        type=['null', 'string'],
+                        description='Tax class',
+                    ),
+                    CacheFieldConfig(
+                        name='tax_status',
+                        type=['null', 'string'],
+                        description='Tax status',
+                    ),
+                    CacheFieldConfig(
+                        name='virtual',
+                        type=['null', 'boolean'],
+                        description='If virtual',
+                    ),
+                    CacheFieldConfig(
+                        name='weight',
+                        type=['null', 'string'],
+                        description='Variation weight',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='order_notes',
+                x_airbyte_name='order_notes',
+                fields=[
+                    CacheFieldConfig(
+                        name='author',
+                        type=['null', 'string'],
+                        description='Order note author',
+                    ),
+                    CacheFieldConfig(
+                        name='date_created',
+                        type=['null', 'string'],
+                        description='The date the order note was created',
+                    ),
+                    CacheFieldConfig(
+                        name='date_created_gmt',
+                        type=['null', 'string'],
+                        description='The date the order note was created, as GMT',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='note',
+                        type=['null', 'string'],
+                        description='Order note content',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='refunds',
+                suggested=True,
+                x_airbyte_name='refunds',
+                fields=[
+                    CacheFieldConfig(
+                        name='amount',
+                        type=['null', 'string'],
+                        description='Refund amount',
+                    ),
+                    CacheFieldConfig(
+                        name='date_created',
+                        type=['null', 'string'],
+                        description='The date the refund was created',
+                    ),
+                    CacheFieldConfig(
+                        name='date_created_gmt',
+                        type=['null', 'string'],
+                        description='The date the refund was created, as GMT',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='line_items',
+                        type=['null', 'array'],
+                        description='Line items data',
+                    ),
+                    CacheFieldConfig(
+                        name='meta_data',
+                        type=['null', 'array'],
+                        description='Meta data',
+                    ),
+                    CacheFieldConfig(
+                        name='reason',
+                        type=['null', 'string'],
+                        description='Reason for refund',
+                    ),
+                    CacheFieldConfig(
+                        name='refunded_by',
+                        type=['null', 'integer'],
+                        description='User ID of user who created the refund',
+                    ),
+                    CacheFieldConfig(
+                        name='refunded_payment',
+                        type=['null', 'boolean'],
+                        description='If the payment was refunded via the API',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='payment_gateways',
+                x_airbyte_name='payment_gateways',
+                fields=[
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='Payment gateway description on checkout',
+                    ),
+                    CacheFieldConfig(
+                        name='enabled',
+                        type=['null', 'boolean'],
+                        description='Payment gateway enabled status',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Payment gateway ID',
+                    ),
+                    CacheFieldConfig(
+                        name='method_description',
+                        type=['null', 'string'],
+                        description='Payment gateway method description',
+                    ),
+                    CacheFieldConfig(
+                        name='method_supports',
+                        type=['null', 'array'],
+                        description='Supported features',
+                    ),
+                    CacheFieldConfig(
+                        name='method_title',
+                        type=['null', 'string'],
+                        description='Payment gateway method title',
+                    ),
+                    CacheFieldConfig(
+                        name='order',
+                        type=['null', 'string', 'integer'],
+                        description='Payment gateway sort order',
+                    ),
+                    CacheFieldConfig(
+                        name='settings',
+                        type=['null', 'object'],
+                        description='Payment gateway settings',
+                    ),
+                    CacheFieldConfig(
+                        name='title',
+                        type=['null', 'string'],
+                        description='Payment gateway title on checkout',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='shipping_methods',
+                x_airbyte_name='shipping_methods',
+                fields=[
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='Shipping method description',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Method ID',
+                    ),
+                    CacheFieldConfig(
+                        name='title',
+                        type=['null', 'string'],
+                        description='Shipping method title',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='shipping_zones',
+                x_airbyte_name='shipping_zones',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Shipping zone name',
+                    ),
+                    CacheFieldConfig(
+                        name='order',
+                        type=['null', 'integer'],
+                        description='Shipping zone order',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='tax_rates',
+                x_airbyte_name='tax_rates',
+                fields=[
+                    CacheFieldConfig(
+                        name='cities',
+                        type=['null', 'array'],
+                        description='City names',
+                    ),
+                    CacheFieldConfig(
+                        name='city',
+                        type=['null', 'string'],
+                        description='City name',
+                    ),
+                    CacheFieldConfig(
+                        name='class',
+                        type=['null', 'string'],
+                        description='Tax class',
+                    ),
+                    CacheFieldConfig(
+                        name='compound',
+                        type=['null', 'boolean'],
+                        description='Whether this is a compound rate',
+                    ),
+                    CacheFieldConfig(
+                        name='country',
+                        type=['null', 'string'],
+                        description='Country ISO 3166 code',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Tax rate name',
+                    ),
+                    CacheFieldConfig(
+                        name='order',
+                        type=['null', 'integer'],
+                        description='Order in queries',
+                    ),
+                    CacheFieldConfig(
+                        name='postcode',
+                        type=['null', 'string'],
+                        description='Postcode/ZIP',
+                    ),
+                    CacheFieldConfig(
+                        name='postcodes',
+                        type=['null', 'array'],
+                        description='Postcodes/ZIPs',
+                    ),
+                    CacheFieldConfig(
+                        name='priority',
+                        type=['null', 'integer'],
+                        description='Tax priority',
+                    ),
+                    CacheFieldConfig(
+                        name='rate',
+                        type=['null', 'string'],
+                        description='Tax rate',
+                    ),
+                    CacheFieldConfig(
+                        name='shipping',
+                        type=['null', 'boolean'],
+                        description='Applied to shipping',
+                    ),
+                    CacheFieldConfig(
+                        name='state',
+                        type=['null', 'string'],
+                        description='State code',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='tax_classes',
+                x_airbyte_name='tax_classes',
+                fields=[
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Tax class name',
+                    ),
+                    CacheFieldConfig(
+                        name='slug',
+                        type=['null', 'string'],
+                        description='Unique identifier',
+                    ),
+                ],
+            ),
+        ],
+        disable_compaction=True,
+    ),
     search_field_paths={
         'customers': [
             'avatar_url',

@@ -20,6 +20,10 @@ from airbyte_agent_sdk.schema.security import (
     AuthConfigSpec,
 )
 from airbyte_agent_sdk.schema.extensions import (
+    CacheConfig,
+    CacheEntityConfig,
+    CacheFieldConfig,
+    CacheFieldProperty,
     EntityRelationshipConfig,
 )
 from airbyte_agent_sdk.schema.base import (
@@ -3263,6 +3267,920 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
             },
         ),
     ],
+    context_store=CacheConfig(
+        entities=[
+            CacheEntityConfig(
+                entity='accounts',
+                suggested=True,
+                x_airbyte_name='accounts',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique account identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Account name',
+                    ),
+                    CacheFieldConfig(
+                        name='currency',
+                        type=['null', 'string'],
+                        description='Currency code used by the account',
+                    ),
+                    CacheFieldConfig(
+                        name='status',
+                        type=['null', 'string'],
+                        description='Account status',
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description='Account type',
+                    ),
+                    CacheFieldConfig(
+                        name='reference',
+                        type=['null', 'string'],
+                        description='Reference organization URN',
+                    ),
+                    CacheFieldConfig(
+                        name='test',
+                        type=['null', 'boolean'],
+                        description='Whether this is a test account',
+                    ),
+                    CacheFieldConfig(
+                        name='notifiedOnCampaignOptimization',
+                        type=['null', 'boolean'],
+                        description='Flag for notifications on campaign optimization',
+                    ),
+                    CacheFieldConfig(
+                        name='notifiedOnCreativeApproval',
+                        type=['null', 'boolean'],
+                        description='Flag for notifications on creative approval',
+                    ),
+                    CacheFieldConfig(
+                        name='notifiedOnCreativeRejection',
+                        type=['null', 'boolean'],
+                        description='Flag for notifications on creative rejection',
+                    ),
+                    CacheFieldConfig(
+                        name='notifiedOnEndOfCampaign',
+                        type=['null', 'boolean'],
+                        description='Flag for notifications on end of campaign',
+                    ),
+                    CacheFieldConfig(
+                        name='notifiedOnNewFeaturesEnabled',
+                        type=['null', 'boolean'],
+                        description='Flag for notifications on new features',
+                    ),
+                    CacheFieldConfig(
+                        name='servingStatuses',
+                        type=['null', 'array'],
+                        description='List of serving statuses',
+                    ),
+                    CacheFieldConfig(
+                        name='version',
+                        type=['null', 'object'],
+                        description='Version information',
+                        properties={
+                            'versionTag': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='account_users',
+                suggested=True,
+                x_airbyte_name='account_users',
+                fields=[
+                    CacheFieldConfig(
+                        name='account',
+                        type=['null', 'string'],
+                        description='Associated account URN',
+                    ),
+                    CacheFieldConfig(
+                        name='user',
+                        type=['null', 'string'],
+                        description='User URN',
+                    ),
+                    CacheFieldConfig(
+                        name='role',
+                        type=['null', 'string'],
+                        description='User role in the account',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='campaigns',
+                suggested=True,
+                x_airbyte_name='campaigns',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique campaign identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Campaign name',
+                    ),
+                    CacheFieldConfig(
+                        name='account',
+                        type=['null', 'string'],
+                        description='Associated account URN',
+                    ),
+                    CacheFieldConfig(
+                        name='campaignGroup',
+                        type=['null', 'string'],
+                        description='Parent campaign group URN',
+                    ),
+                    CacheFieldConfig(
+                        name='status',
+                        type=['null', 'string'],
+                        description='Campaign status',
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description='Campaign type',
+                    ),
+                    CacheFieldConfig(
+                        name='costType',
+                        type=['null', 'string'],
+                        description='Cost type (CPC CPM etc)',
+                    ),
+                    CacheFieldConfig(
+                        name='format',
+                        type=['null', 'string'],
+                        description='Campaign ad format',
+                    ),
+                    CacheFieldConfig(
+                        name='objectiveType',
+                        type=['null', 'string'],
+                        description='Campaign objective type',
+                    ),
+                    CacheFieldConfig(
+                        name='optimizationTargetType',
+                        type=['null', 'string'],
+                        description='Optimization target type',
+                    ),
+                    CacheFieldConfig(
+                        name='creativeSelection',
+                        type=['null', 'string'],
+                        description='Creative selection mode',
+                    ),
+                    CacheFieldConfig(
+                        name='pacingStrategy',
+                        type=['null', 'string'],
+                        description='Budget pacing strategy',
+                    ),
+                    CacheFieldConfig(
+                        name='audienceExpansionEnabled',
+                        type=['null', 'boolean'],
+                        description='Whether audience expansion is enabled',
+                    ),
+                    CacheFieldConfig(
+                        name='offsiteDeliveryEnabled',
+                        type=['null', 'boolean'],
+                        description='Whether offsite delivery is enabled',
+                    ),
+                    CacheFieldConfig(
+                        name='storyDeliveryEnabled',
+                        type=['null', 'boolean'],
+                        description='Whether story delivery is enabled',
+                    ),
+                    CacheFieldConfig(
+                        name='test',
+                        type=['null', 'boolean'],
+                        description='Whether this is a test campaign',
+                    ),
+                    CacheFieldConfig(
+                        name='associatedEntity',
+                        type=['null', 'string'],
+                        description='Associated entity URN',
+                    ),
+                    CacheFieldConfig(
+                        name='dailyBudget',
+                        type=['null', 'object'],
+                        description='Daily budget configuration',
+                        properties={
+                            'amount': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'currencyCode': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='totalBudget',
+                        type=['null', 'object'],
+                        description='Total budget configuration',
+                        properties={
+                            'amount': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'currencyCode': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='unitCost',
+                        type=['null', 'object'],
+                        description='Cost per unit (bid amount)',
+                        properties={
+                            'amount': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'currencyCode': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='runSchedule',
+                        type=['null', 'object'],
+                        description='Campaign run schedule',
+                        properties={
+                            'start': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'end': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='locale',
+                        type=['null', 'object'],
+                        description='Campaign locale settings',
+                        properties={
+                            'country': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'language': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='servingStatuses',
+                        type=['null', 'array'],
+                        description='List of serving statuses',
+                    ),
+                    CacheFieldConfig(
+                        name='version',
+                        type=['null', 'object'],
+                        description='Version information',
+                        properties={
+                            'versionTag': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='campaign_groups',
+                suggested=True,
+                x_airbyte_name='campaign_groups',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique campaign group identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Campaign group name',
+                    ),
+                    CacheFieldConfig(
+                        name='account',
+                        type=['null', 'string'],
+                        description='Associated account URN',
+                    ),
+                    CacheFieldConfig(
+                        name='status',
+                        type=['null', 'string'],
+                        description='Campaign group status',
+                    ),
+                    CacheFieldConfig(
+                        name='test',
+                        type=['null', 'boolean'],
+                        description='Whether this is a test campaign group',
+                    ),
+                    CacheFieldConfig(
+                        name='backfilled',
+                        type=['null', 'boolean'],
+                        description='Whether the campaign group is backfilled',
+                    ),
+                    CacheFieldConfig(
+                        name='totalBudget',
+                        type=['null', 'object'],
+                        description='Total budget for the campaign group',
+                        properties={
+                            'amount': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'currencyCode': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='runSchedule',
+                        type=['null', 'object'],
+                        description='Campaign group run schedule',
+                        properties={
+                            'start': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'end': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='servingStatuses',
+                        type=['null', 'array'],
+                        description='List of serving statuses',
+                    ),
+                    CacheFieldConfig(
+                        name='allowedCampaignTypes',
+                        type=['null', 'array'],
+                        description='Types of campaigns allowed in this group',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='creatives',
+                suggested=True,
+                x_airbyte_name='creatives',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique creative identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Creative name',
+                    ),
+                    CacheFieldConfig(
+                        name='account',
+                        type=['null', 'string'],
+                        description='Associated account URN',
+                    ),
+                    CacheFieldConfig(
+                        name='campaign',
+                        type=['null', 'string'],
+                        description='Parent campaign URN',
+                    ),
+                    CacheFieldConfig(
+                        name='intendedStatus',
+                        type=['null', 'string'],
+                        description='Intended creative status',
+                    ),
+                    CacheFieldConfig(
+                        name='isServing',
+                        type=['null', 'boolean'],
+                        description='Whether the creative is currently serving',
+                    ),
+                    CacheFieldConfig(
+                        name='isTest',
+                        type=['null', 'boolean'],
+                        description='Whether this is a test creative',
+                    ),
+                    CacheFieldConfig(
+                        name='createdAt',
+                        type=['null', 'integer'],
+                        description='Creation timestamp (epoch milliseconds)',
+                    ),
+                    CacheFieldConfig(
+                        name='createdBy',
+                        type=['null', 'string'],
+                        description='URN of the user who created the creative',
+                    ),
+                    CacheFieldConfig(
+                        name='lastModifiedAt',
+                        type=['null', 'integer'],
+                        description='Last modification timestamp (epoch milliseconds)',
+                    ),
+                    CacheFieldConfig(
+                        name='lastModifiedBy',
+                        type=['null', 'string'],
+                        description='URN of the user who last modified the creative',
+                    ),
+                    CacheFieldConfig(
+                        name='content',
+                        type=['null', 'object'],
+                        description='Creative content configuration',
+                    ),
+                    CacheFieldConfig(
+                        name='servingHoldReasons',
+                        type=['null', 'array'],
+                        description='Reasons for holding creative from serving',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='conversions',
+                x_airbyte_name='conversions',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique conversion identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Conversion name',
+                    ),
+                    CacheFieldConfig(
+                        name='account',
+                        type=['null', 'string'],
+                        description='Associated account URN',
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description='Conversion type',
+                    ),
+                    CacheFieldConfig(
+                        name='attributionType',
+                        type=['null', 'string'],
+                        description='Attribution type for the conversion',
+                    ),
+                    CacheFieldConfig(
+                        name='enabled',
+                        type=['null', 'boolean'],
+                        description='Whether the conversion tracking is enabled',
+                    ),
+                    CacheFieldConfig(
+                        name='created',
+                        type=['null', 'integer'],
+                        description='Creation timestamp (epoch milliseconds)',
+                    ),
+                    CacheFieldConfig(
+                        name='lastModified',
+                        type=['null', 'integer'],
+                        description='Last modification timestamp (epoch milliseconds)',
+                    ),
+                    CacheFieldConfig(
+                        name='postClickAttributionWindowSize',
+                        type=['null', 'integer'],
+                        description='Post-click attribution window size in days',
+                    ),
+                    CacheFieldConfig(
+                        name='viewThroughAttributionWindowSize',
+                        type=['null', 'integer'],
+                        description='View-through attribution window size in days',
+                    ),
+                    CacheFieldConfig(
+                        name='campaigns',
+                        type=['null', 'array'],
+                        description='Related campaign URNs',
+                    ),
+                    CacheFieldConfig(
+                        name='associatedCampaigns',
+                        type=['null', 'array'],
+                        description='Associated campaigns',
+                    ),
+                    CacheFieldConfig(
+                        name='imagePixelTag',
+                        type=['null', 'string'],
+                        description='Image pixel tracking tag',
+                    ),
+                    CacheFieldConfig(
+                        name='value',
+                        type=['null', 'object'],
+                        description='Conversion value',
+                        properties={
+                            'amount': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'currencyCode': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='ad_campaign_analytics',
+                suggested=True,
+                x_airbyte_name='ad_campaign_analytics',
+                fields=[
+                    CacheFieldConfig(
+                        name='impressions',
+                        type=['null', 'number'],
+                        description='Number of times the ad was shown',
+                    ),
+                    CacheFieldConfig(
+                        name='clicks',
+                        type=['null', 'number'],
+                        description='Number of clicks on the ad',
+                    ),
+                    CacheFieldConfig(
+                        name='costInLocalCurrency',
+                        type=['null', 'number'],
+                        description='Total cost in the accounts local currency',
+                    ),
+                    CacheFieldConfig(
+                        name='costInUsd',
+                        type=['null', 'number'],
+                        description='Total cost in USD',
+                    ),
+                    CacheFieldConfig(
+                        name='likes',
+                        type=['null', 'number'],
+                        description='Number of likes',
+                    ),
+                    CacheFieldConfig(
+                        name='shares',
+                        type=['null', 'number'],
+                        description='Number of shares',
+                    ),
+                    CacheFieldConfig(
+                        name='comments',
+                        type=['null', 'number'],
+                        description='Number of comments',
+                    ),
+                    CacheFieldConfig(
+                        name='reactions',
+                        type=['null', 'number'],
+                        description='Number of reactions',
+                    ),
+                    CacheFieldConfig(
+                        name='follows',
+                        type=['null', 'number'],
+                        description='Number of follows',
+                    ),
+                    CacheFieldConfig(
+                        name='totalEngagements',
+                        type=['null', 'number'],
+                        description='Total number of engagements',
+                    ),
+                    CacheFieldConfig(
+                        name='landingPageClicks',
+                        type=['null', 'number'],
+                        description='Number of landing page clicks',
+                    ),
+                    CacheFieldConfig(
+                        name='companyPageClicks',
+                        type=['null', 'number'],
+                        description='Number of company page clicks',
+                    ),
+                    CacheFieldConfig(
+                        name='externalWebsiteConversions',
+                        type=['null', 'number'],
+                        description='Number of conversions on external websites',
+                    ),
+                    CacheFieldConfig(
+                        name='externalWebsitePostClickConversions',
+                        type=['null', 'number'],
+                        description='Post-click conversions on external websites',
+                    ),
+                    CacheFieldConfig(
+                        name='externalWebsitePostViewConversions',
+                        type=['null', 'number'],
+                        description='Post-view conversions on external websites',
+                    ),
+                    CacheFieldConfig(
+                        name='conversionValueInLocalCurrency',
+                        type=['null', 'number'],
+                        description='Conversion value in local currency',
+                    ),
+                    CacheFieldConfig(
+                        name='approximateMemberReach',
+                        type=['null', 'number'],
+                        description='Approximate unique member reach',
+                    ),
+                    CacheFieldConfig(
+                        name='cardClicks',
+                        type=['null', 'number'],
+                        description='Number of carousel card clicks',
+                    ),
+                    CacheFieldConfig(
+                        name='cardImpressions',
+                        type=['null', 'number'],
+                        description='Number of carousel card impressions',
+                    ),
+                    CacheFieldConfig(
+                        name='videoStarts',
+                        type=['null', 'number'],
+                        description='Number of video starts',
+                    ),
+                    CacheFieldConfig(
+                        name='videoViews',
+                        type=['null', 'number'],
+                        description='Number of video views',
+                    ),
+                    CacheFieldConfig(
+                        name='videoFirstQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Number of times video played to 25%',
+                    ),
+                    CacheFieldConfig(
+                        name='videoMidpointCompletions',
+                        type=['null', 'number'],
+                        description='Number of times video played to 50%',
+                    ),
+                    CacheFieldConfig(
+                        name='videoThirdQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Number of times video played to 75%',
+                    ),
+                    CacheFieldConfig(
+                        name='videoCompletions',
+                        type=['null', 'number'],
+                        description='Number of times video played to 100%',
+                    ),
+                    CacheFieldConfig(
+                        name='fullScreenPlays',
+                        type=['null', 'number'],
+                        description='Number of full screen video plays',
+                    ),
+                    CacheFieldConfig(
+                        name='oneClickLeads',
+                        type=['null', 'number'],
+                        description='Number of one-click leads',
+                    ),
+                    CacheFieldConfig(
+                        name='oneClickLeadFormOpens',
+                        type=['null', 'number'],
+                        description='Number of one-click lead form opens',
+                    ),
+                    CacheFieldConfig(
+                        name='otherEngagements',
+                        type=['null', 'number'],
+                        description='Number of other engagements',
+                    ),
+                    CacheFieldConfig(
+                        name='adUnitClicks',
+                        type=['null', 'number'],
+                        description='Number of ad unit clicks',
+                    ),
+                    CacheFieldConfig(
+                        name='actionClicks',
+                        type=['null', 'number'],
+                        description='Number of action clicks',
+                    ),
+                    CacheFieldConfig(
+                        name='textUrlClicks',
+                        type=['null', 'number'],
+                        description='Number of text URL clicks',
+                    ),
+                    CacheFieldConfig(
+                        name='commentLikes',
+                        type=['null', 'number'],
+                        description='Number of comment likes',
+                    ),
+                    CacheFieldConfig(
+                        name='sends',
+                        type=['null', 'number'],
+                        description='Number of sends (InMail)',
+                    ),
+                    CacheFieldConfig(
+                        name='opens',
+                        type=['null', 'number'],
+                        description='Number of opens (InMail)',
+                    ),
+                    CacheFieldConfig(
+                        name='downloadClicks',
+                        type=['null', 'number'],
+                        description='Number of download clicks',
+                    ),
+                    CacheFieldConfig(
+                        name='pivotValues',
+                        type=['null', 'array'],
+                        description='Pivot values (URNs) for this analytics record',
+                    ),
+                    CacheFieldConfig(
+                        name='start_date',
+                        type=['null', 'string'],
+                        description='Start date of the ad analytics data',
+                    ),
+                    CacheFieldConfig(
+                        name='end_date',
+                        type=['null', 'string'],
+                        description='End date of the ad analytics data',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='ad_creative_analytics',
+                suggested=True,
+                x_airbyte_name='ad_creative_analytics',
+                fields=[
+                    CacheFieldConfig(
+                        name='impressions',
+                        type=['null', 'number'],
+                        description='Number of times the ad was shown',
+                    ),
+                    CacheFieldConfig(
+                        name='clicks',
+                        type=['null', 'number'],
+                        description='Number of clicks on the ad',
+                    ),
+                    CacheFieldConfig(
+                        name='costInLocalCurrency',
+                        type=['null', 'number'],
+                        description='Total cost in the accounts local currency',
+                    ),
+                    CacheFieldConfig(
+                        name='costInUsd',
+                        type=['null', 'number'],
+                        description='Total cost in USD',
+                    ),
+                    CacheFieldConfig(
+                        name='likes',
+                        type=['null', 'number'],
+                        description='Number of likes',
+                    ),
+                    CacheFieldConfig(
+                        name='shares',
+                        type=['null', 'number'],
+                        description='Number of shares',
+                    ),
+                    CacheFieldConfig(
+                        name='comments',
+                        type=['null', 'number'],
+                        description='Number of comments',
+                    ),
+                    CacheFieldConfig(
+                        name='reactions',
+                        type=['null', 'number'],
+                        description='Number of reactions',
+                    ),
+                    CacheFieldConfig(
+                        name='follows',
+                        type=['null', 'number'],
+                        description='Number of follows',
+                    ),
+                    CacheFieldConfig(
+                        name='totalEngagements',
+                        type=['null', 'number'],
+                        description='Total number of engagements',
+                    ),
+                    CacheFieldConfig(
+                        name='landingPageClicks',
+                        type=['null', 'number'],
+                        description='Number of landing page clicks',
+                    ),
+                    CacheFieldConfig(
+                        name='companyPageClicks',
+                        type=['null', 'number'],
+                        description='Number of company page clicks',
+                    ),
+                    CacheFieldConfig(
+                        name='externalWebsiteConversions',
+                        type=['null', 'number'],
+                        description='Number of conversions on external websites',
+                    ),
+                    CacheFieldConfig(
+                        name='externalWebsitePostClickConversions',
+                        type=['null', 'number'],
+                        description='Post-click conversions on external websites',
+                    ),
+                    CacheFieldConfig(
+                        name='externalWebsitePostViewConversions',
+                        type=['null', 'number'],
+                        description='Post-view conversions on external websites',
+                    ),
+                    CacheFieldConfig(
+                        name='conversionValueInLocalCurrency',
+                        type=['null', 'number'],
+                        description='Conversion value in local currency',
+                    ),
+                    CacheFieldConfig(
+                        name='approximateMemberReach',
+                        type=['null', 'number'],
+                        description='Approximate unique member reach',
+                    ),
+                    CacheFieldConfig(
+                        name='cardClicks',
+                        type=['null', 'number'],
+                        description='Number of carousel card clicks',
+                    ),
+                    CacheFieldConfig(
+                        name='cardImpressions',
+                        type=['null', 'number'],
+                        description='Number of carousel card impressions',
+                    ),
+                    CacheFieldConfig(
+                        name='videoStarts',
+                        type=['null', 'number'],
+                        description='Number of video starts',
+                    ),
+                    CacheFieldConfig(
+                        name='videoViews',
+                        type=['null', 'number'],
+                        description='Number of video views',
+                    ),
+                    CacheFieldConfig(
+                        name='videoFirstQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Number of times video played to 25%',
+                    ),
+                    CacheFieldConfig(
+                        name='videoMidpointCompletions',
+                        type=['null', 'number'],
+                        description='Number of times video played to 50%',
+                    ),
+                    CacheFieldConfig(
+                        name='videoThirdQuartileCompletions',
+                        type=['null', 'number'],
+                        description='Number of times video played to 75%',
+                    ),
+                    CacheFieldConfig(
+                        name='videoCompletions',
+                        type=['null', 'number'],
+                        description='Number of times video played to 100%',
+                    ),
+                    CacheFieldConfig(
+                        name='fullScreenPlays',
+                        type=['null', 'number'],
+                        description='Number of full screen video plays',
+                    ),
+                    CacheFieldConfig(
+                        name='oneClickLeads',
+                        type=['null', 'number'],
+                        description='Number of one-click leads',
+                    ),
+                    CacheFieldConfig(
+                        name='oneClickLeadFormOpens',
+                        type=['null', 'number'],
+                        description='Number of one-click lead form opens',
+                    ),
+                    CacheFieldConfig(
+                        name='otherEngagements',
+                        type=['null', 'number'],
+                        description='Number of other engagements',
+                    ),
+                    CacheFieldConfig(
+                        name='adUnitClicks',
+                        type=['null', 'number'],
+                        description='Number of ad unit clicks',
+                    ),
+                    CacheFieldConfig(
+                        name='actionClicks',
+                        type=['null', 'number'],
+                        description='Number of action clicks',
+                    ),
+                    CacheFieldConfig(
+                        name='textUrlClicks',
+                        type=['null', 'number'],
+                        description='Number of text URL clicks',
+                    ),
+                    CacheFieldConfig(
+                        name='commentLikes',
+                        type=['null', 'number'],
+                        description='Number of comment likes',
+                    ),
+                    CacheFieldConfig(
+                        name='sends',
+                        type=['null', 'number'],
+                        description='Number of sends (InMail)',
+                    ),
+                    CacheFieldConfig(
+                        name='opens',
+                        type=['null', 'number'],
+                        description='Number of opens (InMail)',
+                    ),
+                    CacheFieldConfig(
+                        name='downloadClicks',
+                        type=['null', 'number'],
+                        description='Number of download clicks',
+                    ),
+                    CacheFieldConfig(
+                        name='pivotValues',
+                        type=['null', 'array'],
+                        description='Pivot values (URNs) for this analytics record',
+                    ),
+                    CacheFieldConfig(
+                        name='start_date',
+                        type=['null', 'string'],
+                        description='Start date of the ad analytics data',
+                    ),
+                    CacheFieldConfig(
+                        name='end_date',
+                        type=['null', 'string'],
+                        description='End date of the ad analytics data',
+                    ),
+                ],
+            ),
+        ],
+        disable_compaction=True,
+    ),
     search_field_paths={
         'accounts': [
             'id',

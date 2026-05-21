@@ -19,6 +19,12 @@ from airbyte_agent_sdk.schema.security import (
     AuthConfigFieldSpec,
     AuthConfigSpec,
 )
+from airbyte_agent_sdk.schema.extensions import (
+    CacheConfig,
+    CacheEntityConfig,
+    CacheFieldConfig,
+    CacheFieldProperty,
+)
 from airbyte_agent_sdk.schema.base import (
     ExampleQuestions,
 )
@@ -4448,6 +4454,911 @@ IncidentIoConnectorModel: ConnectorModel = ConnectorModel(
             },
         ),
     ],
+    context_store=CacheConfig(
+        entities=[
+            CacheEntityConfig(
+                entity='incidents',
+                suggested=True,
+                x_airbyte_name='incidents',
+                fields=[
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='When the incident was created',
+                    ),
+                    CacheFieldConfig(
+                        name='creator',
+                        type=['null', 'object'],
+                        description='The user who created the incident',
+                        properties={
+                            'user': CacheFieldProperty(
+                                type=['null', 'object'],
+                                properties={
+                                    'email': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                    'id': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                    'name': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                    'role': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                    'slack_user_id': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                },
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='custom_field_entries',
+                        type=['null', 'array'],
+                        description='Custom field values for the incident',
+                    ),
+                    CacheFieldConfig(
+                        name='duration_metrics',
+                        type=['null', 'array'],
+                        description='Duration metrics associated with the incident',
+                    ),
+                    CacheFieldConfig(
+                        name='has_debrief',
+                        type=['null', 'boolean'],
+                        description='Whether the incident has had a debrief',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique identifier for the incident',
+                    ),
+                    CacheFieldConfig(
+                        name='incident_role_assignments',
+                        type=['null', 'array'],
+                        description='Role assignments for the incident',
+                    ),
+                    CacheFieldConfig(
+                        name='incident_status',
+                        type=['null', 'object'],
+                        description='Current status of the incident',
+                        properties={
+                            'category': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'created_at': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'description': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'id': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'rank': CacheFieldProperty(
+                                type=['null', 'number'],
+                            ),
+                            'updated_at': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='incident_timestamp_values',
+                        type=['null', 'array'],
+                        description='Timestamp values for the incident',
+                    ),
+                    CacheFieldConfig(
+                        name='incident_type',
+                        type=['null', 'object'],
+                        description='Type of the incident',
+                        properties={
+                            'create_in_triage': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'created_at': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'description': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'id': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'is_default': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                            'name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'private_incidents_only': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                            'updated_at': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='mode',
+                        type=['null', 'string'],
+                        description='Mode of the incident: standard, retrospective, test, or tutorial',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Name/title of the incident',
+                    ),
+                    CacheFieldConfig(
+                        name='permalink',
+                        type=['null', 'string'],
+                        description='Link to the incident in the dashboard',
+                    ),
+                    CacheFieldConfig(
+                        name='reference',
+                        type=['null', 'string'],
+                        description='Human-readable reference (e.g. INC-123)',
+                    ),
+                    CacheFieldConfig(
+                        name='severity',
+                        type=['null', 'object'],
+                        description='Severity of the incident',
+                        properties={
+                            'created_at': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'description': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'id': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'rank': CacheFieldProperty(
+                                type=['null', 'number'],
+                            ),
+                            'updated_at': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='slack_channel_id',
+                        type=['null', 'string'],
+                        description='Slack channel ID for the incident',
+                    ),
+                    CacheFieldConfig(
+                        name='slack_channel_name',
+                        type=['null', 'string'],
+                        description='Slack channel name for the incident',
+                    ),
+                    CacheFieldConfig(
+                        name='slack_team_id',
+                        type=['null', 'string'],
+                        description='Slack team/workspace ID',
+                    ),
+                    CacheFieldConfig(
+                        name='summary',
+                        type=['null', 'string'],
+                        description='Detailed summary of the incident',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='When the incident was last updated',
+                    ),
+                    CacheFieldConfig(
+                        name='visibility',
+                        type=['null', 'string'],
+                        description='Whether the incident is public or private',
+                    ),
+                    CacheFieldConfig(
+                        name='workload_minutes_late',
+                        type=['null', 'number'],
+                        description='Minutes of workload classified as late',
+                    ),
+                    CacheFieldConfig(
+                        name='workload_minutes_sleeping',
+                        type=['null', 'number'],
+                        description='Minutes of workload classified as sleeping',
+                    ),
+                    CacheFieldConfig(
+                        name='workload_minutes_total',
+                        type=['null', 'number'],
+                        description='Total workload minutes',
+                    ),
+                    CacheFieldConfig(
+                        name='workload_minutes_working',
+                        type=['null', 'number'],
+                        description='Minutes of workload classified as working',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='alerts',
+                suggested=True,
+                x_airbyte_name='alerts',
+                fields=[
+                    CacheFieldConfig(
+                        name='alert_source_id',
+                        type=['null', 'string'],
+                        description='ID of the alert source that generated this alert',
+                    ),
+                    CacheFieldConfig(
+                        name='attributes',
+                        type=['null', 'array'],
+                        description='Structured alert attributes',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='When the alert was created',
+                    ),
+                    CacheFieldConfig(
+                        name='deduplication_key',
+                        type=['null', 'string'],
+                        description='Deduplication key uniquely referencing this alert',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='Description of the alert',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique identifier for the alert',
+                    ),
+                    CacheFieldConfig(
+                        name='resolved_at',
+                        type=['null', 'string'],
+                        description='When the alert was resolved',
+                    ),
+                    CacheFieldConfig(
+                        name='source_url',
+                        type=['null', 'string'],
+                        description='Link to the alert in the upstream system',
+                    ),
+                    CacheFieldConfig(
+                        name='status',
+                        type=['null', 'string'],
+                        description='Status of the alert: firing or resolved',
+                    ),
+                    CacheFieldConfig(
+                        name='title',
+                        type=['null', 'string'],
+                        description='Title of the alert',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='When the alert was last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='users',
+                suggested=True,
+                x_airbyte_name='users',
+                fields=[
+                    CacheFieldConfig(
+                        name='base_role',
+                        type=['null', 'object'],
+                        description='Base role assigned to the user',
+                        properties={
+                            'description': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'id': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'slug': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='custom_roles',
+                        type=['null', 'array'],
+                        description='Custom roles assigned to the user',
+                    ),
+                    CacheFieldConfig(
+                        name='email',
+                        type=['null', 'string'],
+                        description='Email address of the user',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique identifier for the user',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Full name of the user',
+                    ),
+                    CacheFieldConfig(
+                        name='role',
+                        type=['null', 'string'],
+                        description='Deprecated role field',
+                    ),
+                    CacheFieldConfig(
+                        name='slack_user_id',
+                        type=['null', 'string'],
+                        description='Slack user ID',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='incident_updates',
+                suggested=True,
+                x_airbyte_name='incident_updates',
+                fields=[
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='When the update was created',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique identifier for the incident update',
+                    ),
+                    CacheFieldConfig(
+                        name='incident_id',
+                        type=['null', 'string'],
+                        description='ID of the incident this update belongs to',
+                    ),
+                    CacheFieldConfig(
+                        name='message',
+                        type=['null', 'string'],
+                        description='Update message content',
+                    ),
+                    CacheFieldConfig(
+                        name='new_incident_status',
+                        type=['null', 'object'],
+                        description='New incident status set by this update',
+                        properties={
+                            'category': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'created_at': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'description': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'id': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'rank': CacheFieldProperty(
+                                type=['null', 'number'],
+                            ),
+                            'updated_at': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='new_severity',
+                        type=['null', 'object'],
+                        description='New severity set by this update',
+                        properties={
+                            'created_at': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'description': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'id': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'rank': CacheFieldProperty(
+                                type=['null', 'number'],
+                            ),
+                            'updated_at': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='updater',
+                        type=['null', 'object'],
+                        description='Who made this update',
+                        properties={
+                            'user': CacheFieldProperty(
+                                type=['null', 'object'],
+                                properties={
+                                    'email': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                    'id': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                    'name': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                    'role': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                    'slack_user_id': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                },
+                            ),
+                        },
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='incident_roles',
+                suggested=True,
+                x_airbyte_name='incident_roles',
+                fields=[
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='When the role was created',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='Description of the role',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique identifier for the incident role',
+                    ),
+                    CacheFieldConfig(
+                        name='instructions',
+                        type=['null', 'string'],
+                        description='Instructions for the role holder',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Name of the role',
+                    ),
+                    CacheFieldConfig(
+                        name='required',
+                        type=['null', 'boolean'],
+                        description='Whether this role must be assigned',
+                    ),
+                    CacheFieldConfig(
+                        name='role_type',
+                        type=['null', 'string'],
+                        description='Type of role',
+                    ),
+                    CacheFieldConfig(
+                        name='shortform',
+                        type=['null', 'string'],
+                        description='Short form label for the role',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='When the role was last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='incident_statuses',
+                suggested=True,
+                x_airbyte_name='incident_statuses',
+                fields=[
+                    CacheFieldConfig(
+                        name='category',
+                        type=['null', 'string'],
+                        description='Category: triage, active, post-incident, closed, etc.',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='When the status was created',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='Description of the status',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique identifier for the status',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Name of the status',
+                    ),
+                    CacheFieldConfig(
+                        name='rank',
+                        type=['null', 'number'],
+                        description='Rank for ordering',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='When the status was last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='incident_timestamps',
+                suggested=True,
+                x_airbyte_name='incident_timestamps',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique identifier for the timestamp',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Name of the timestamp',
+                    ),
+                    CacheFieldConfig(
+                        name='rank',
+                        type=['null', 'number'],
+                        description='Rank for ordering',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='severities',
+                suggested=True,
+                x_airbyte_name='severities',
+                fields=[
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='When the severity was created',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='Description of the severity',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique identifier for the severity',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Name of the severity',
+                    ),
+                    CacheFieldConfig(
+                        name='rank',
+                        type=['null', 'number'],
+                        description='Rank for ordering',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='When the severity was last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='custom_fields',
+                suggested=True,
+                x_airbyte_name='custom_fields',
+                fields=[
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='When the custom field was created',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='Description of the custom field',
+                    ),
+                    CacheFieldConfig(
+                        name='field_type',
+                        type=['null', 'string'],
+                        description='Type of field',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique identifier for the custom field',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Name of the custom field',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='When the custom field was last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='catalog_types',
+                x_airbyte_name='catalog_types',
+                fields=[
+                    CacheFieldConfig(
+                        name='annotations',
+                        type=['null', 'object'],
+                        description='Annotations metadata',
+                    ),
+                    CacheFieldConfig(
+                        name='categories',
+                        type=['null', 'array'],
+                        description='Categories this type belongs to',
+                    ),
+                    CacheFieldConfig(
+                        name='color',
+                        type=['null', 'string'],
+                        description='Display color',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='When the catalog type was created',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='Description of the catalog type',
+                    ),
+                    CacheFieldConfig(
+                        name='icon',
+                        type=['null', 'string'],
+                        description='Display icon',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique identifier for the catalog type',
+                    ),
+                    CacheFieldConfig(
+                        name='is_editable',
+                        type=['null', 'boolean'],
+                        description='Whether entries can be edited',
+                    ),
+                    CacheFieldConfig(
+                        name='last_synced_at',
+                        type=['null', 'string'],
+                        description='When the catalog type was last synced',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Name of the catalog type',
+                    ),
+                    CacheFieldConfig(
+                        name='ranked',
+                        type=['null', 'boolean'],
+                        description='Whether entries are ranked',
+                    ),
+                    CacheFieldConfig(
+                        name='registry_type',
+                        type=['null', 'string'],
+                        description='Registry type if synced from an integration',
+                    ),
+                    CacheFieldConfig(
+                        name='required_integrations',
+                        type=['null', 'array'],
+                        description='Integrations required for this type',
+                    ),
+                    CacheFieldConfig(
+                        name='schema',
+                        type=['null', 'object'],
+                        description='Schema definition for the catalog type',
+                        properties={
+                            'attributes': CacheFieldProperty(
+                                type=['null', 'array'],
+                            ),
+                            'version': CacheFieldProperty(
+                                type=['null', 'number'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='semantic_type',
+                        type=['null', 'string'],
+                        description='Semantic type for special behavior',
+                    ),
+                    CacheFieldConfig(
+                        name='type_name',
+                        type=['null', 'string'],
+                        description='Programmatic type name',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='When the catalog type was last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='schedules',
+                suggested=True,
+                x_airbyte_name='schedules',
+                fields=[
+                    CacheFieldConfig(
+                        name='annotations',
+                        type=['null', 'object'],
+                        description='Annotations metadata',
+                    ),
+                    CacheFieldConfig(
+                        name='config',
+                        type=['null', 'object'],
+                        description='Schedule configuration with rotations',
+                        properties={
+                            'rotations': CacheFieldProperty(
+                                type=['null', 'array'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='When the schedule was created',
+                    ),
+                    CacheFieldConfig(
+                        name='current_shifts',
+                        type=['null', 'array'],
+                        description='Currently active shifts',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique identifier for the schedule',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Name of the schedule',
+                    ),
+                    CacheFieldConfig(
+                        name='timezone',
+                        type=['null', 'string'],
+                        description='Timezone for the schedule',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='When the schedule was last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='escalations',
+                suggested=True,
+                x_airbyte_name='escalations',
+                fields=[
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='When the escalation was created',
+                    ),
+                    CacheFieldConfig(
+                        name='creator',
+                        type=['null', 'object'],
+                        description='The creator of this escalation',
+                        properties={
+                            'alert': CacheFieldProperty(
+                                type=['null', 'object'],
+                                properties={
+                                    'id': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                    'title': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                },
+                            ),
+                            'user': CacheFieldProperty(
+                                type=['null', 'object'],
+                                properties={
+                                    'email': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                    'id': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                    'name': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                    'role': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                    'slack_user_id': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                },
+                            ),
+                            'workflow': CacheFieldProperty(
+                                type=['null', 'object'],
+                                properties={
+                                    'id': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                    'name': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                },
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='escalation_path_id',
+                        type=['null', 'string'],
+                        description='ID of the escalation path used',
+                    ),
+                    CacheFieldConfig(
+                        name='events',
+                        type=['null', 'array'],
+                        description='History of escalation events',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique identifier for the escalation',
+                    ),
+                    CacheFieldConfig(
+                        name='priority',
+                        type=['null', 'object'],
+                        description='Priority of the escalation',
+                        properties={
+                            'name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='related_alerts',
+                        type=['null', 'array'],
+                        description='Alerts related to this escalation',
+                    ),
+                    CacheFieldConfig(
+                        name='related_incidents',
+                        type=['null', 'array'],
+                        description='Incidents related to this escalation',
+                    ),
+                    CacheFieldConfig(
+                        name='status',
+                        type=['null', 'string'],
+                        description='Status: pending, triggered, acked, resolved, expired, cancelled',
+                    ),
+                    CacheFieldConfig(
+                        name='title',
+                        type=['null', 'string'],
+                        description='Title of the escalation',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='When the escalation was last updated',
+                    ),
+                ],
+            ),
+        ],
+        disable_compaction=True,
+    ),
     search_field_paths={
         'incidents': [
             'created_at',

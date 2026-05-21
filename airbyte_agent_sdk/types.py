@@ -12,7 +12,7 @@ from airbyte_agent_sdk.constants import OPENAPI_DEFAULT_VERSION
 from airbyte_agent_sdk.extensions import AIRBYTE_FILE_URL_DESCRIPTION
 from airbyte_agent_sdk.schema.base import ResponseErrorCheck
 from airbyte_agent_sdk.schema.components import PathOverrideConfig
-from airbyte_agent_sdk.schema.extensions import EntityRelationshipConfig, RetryConfig, ScopingParamConfig
+from airbyte_agent_sdk.schema.extensions import CacheConfig, EntityRelationshipConfig, RetryConfig, ScopingParamConfig
 from airbyte_agent_sdk.schema.security import AuthConfigSpec
 
 
@@ -394,6 +394,7 @@ class ConnectorModel(BaseModel):
     entities: list[EntityDefinition]
     openapi_spec: Any | None = None  # Optional reference to OpenAPIConnector
     retry_config: RetryConfig | None = None  # Optional retry configuration
+    context_store: CacheConfig | None = None
     search_field_paths: dict[str, list[str]] | None = None
     example_questions: Any | None = None  # ExampleQuestions from x-airbyte-example-questions
     scoping: list[ScopingParamConfig] = Field(

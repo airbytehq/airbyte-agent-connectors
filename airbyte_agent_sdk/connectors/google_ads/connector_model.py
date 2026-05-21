@@ -20,6 +20,9 @@ from airbyte_agent_sdk.schema.security import (
     AuthConfigSpec,
 )
 from airbyte_agent_sdk.schema.extensions import (
+    CacheConfig,
+    CacheEntityConfig,
+    CacheFieldConfig,
     EntityRelationshipConfig,
     ScopingParamConfig,
 )
@@ -1701,6 +1704,589 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
             ],
         ),
     ],
+    context_store=CacheConfig(
+        entities=[
+            CacheEntityConfig(
+                entity='accounts',
+                suggested=True,
+                x_airbyte_name='customer',
+                fields=[
+                    CacheFieldConfig(
+                        name='customer.auto_tagging_enabled',
+                        type=['null', 'boolean'],
+                        description='Whether auto-tagging is enabled for the account',
+                    ),
+                    CacheFieldConfig(
+                        name='customer.call_reporting_setting.call_conversion_action',
+                        type=['null', 'string'],
+                        description='Call conversion action resource name',
+                    ),
+                    CacheFieldConfig(
+                        name='customer.call_reporting_setting.call_conversion_reporting_enabled',
+                        type=['null', 'boolean'],
+                        description='Whether call conversion reporting is enabled',
+                    ),
+                    CacheFieldConfig(
+                        name='customer.call_reporting_setting.call_reporting_enabled',
+                        type=['null', 'boolean'],
+                        description='Whether call reporting is enabled',
+                    ),
+                    CacheFieldConfig(
+                        name='customer.conversion_tracking_setting.conversion_tracking_id',
+                        type=['null', 'integer'],
+                        description='Conversion tracking ID',
+                    ),
+                    CacheFieldConfig(
+                        name='customer.conversion_tracking_setting.cross_account_conversion_tracking_id',
+                        type=['null', 'integer'],
+                        description='Cross-account conversion tracking ID',
+                    ),
+                    CacheFieldConfig(
+                        name='customer.currency_code',
+                        type=['null', 'string'],
+                        description='Currency code for the account (e.g., USD)',
+                    ),
+                    CacheFieldConfig(
+                        name='customer.descriptive_name',
+                        type=['null', 'string'],
+                        description='Descriptive name of the customer account',
+                    ),
+                    CacheFieldConfig(
+                        name='customer.final_url_suffix',
+                        type=['null', 'string'],
+                        description='URL suffix appended to final URLs',
+                    ),
+                    CacheFieldConfig(
+                        name='customer.has_partners_badge',
+                        type=['null', 'boolean'],
+                        description='Whether the account has a Google Partners badge',
+                    ),
+                    CacheFieldConfig(
+                        name='customer.id',
+                        type=['null', 'integer'],
+                        description='Unique customer account ID',
+                    ),
+                    CacheFieldConfig(
+                        name='customer.manager',
+                        type=['null', 'boolean'],
+                        description='Whether this is a manager (MCC) account',
+                    ),
+                    CacheFieldConfig(
+                        name='customer.optimization_score',
+                        type=['null', 'number'],
+                        description='Optimization score for the account (0.0 to 1.0)',
+                    ),
+                    CacheFieldConfig(
+                        name='customer.optimization_score_weight',
+                        type=['null', 'number'],
+                        description='Weight of the optimization score',
+                    ),
+                    CacheFieldConfig(
+                        name='customer.pay_per_conversion_eligibility_failure_reasons',
+                        type=['null', 'array'],
+                        description='Reasons why pay-per-conversion is not eligible',
+                    ),
+                    CacheFieldConfig(
+                        name='customer.remarketing_setting.google_global_site_tag',
+                        type=['null', 'string'],
+                        description='Google global site tag snippet',
+                    ),
+                    CacheFieldConfig(
+                        name='customer.resource_name',
+                        type=['null', 'string'],
+                        description='Resource name of the customer',
+                    ),
+                    CacheFieldConfig(
+                        name='customer.test_account',
+                        type=['null', 'boolean'],
+                        description='Whether this is a test account',
+                    ),
+                    CacheFieldConfig(
+                        name='customer.time_zone',
+                        type=['null', 'string'],
+                        description='Time zone of the account',
+                    ),
+                    CacheFieldConfig(
+                        name='customer.tracking_url_template',
+                        type=['null', 'string'],
+                        description='Tracking URL template for the account',
+                    ),
+                    CacheFieldConfig(
+                        name='segments.date',
+                        type=['null', 'string'],
+                        description='Date segment for the report row',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='campaigns',
+                suggested=True,
+                x_airbyte_name='campaign',
+                fields=[
+                    CacheFieldConfig(
+                        name='campaign.id',
+                        type=['null', 'integer'],
+                        description='Campaign ID',
+                    ),
+                    CacheFieldConfig(
+                        name='campaign.name',
+                        type=['null', 'string'],
+                        description='Campaign name',
+                    ),
+                    CacheFieldConfig(
+                        name='campaign.status',
+                        type=['null', 'string'],
+                        description='Campaign status (ENABLED, PAUSED, REMOVED)',
+                    ),
+                    CacheFieldConfig(
+                        name='campaign.advertising_channel_type',
+                        type=['null', 'string'],
+                        description='Advertising channel type (SEARCH, DISPLAY, etc.)',
+                    ),
+                    CacheFieldConfig(
+                        name='campaign.advertising_channel_sub_type',
+                        type=['null', 'string'],
+                        description='Advertising channel sub-type',
+                    ),
+                    CacheFieldConfig(
+                        name='campaign.bidding_strategy',
+                        type=['null', 'string'],
+                        description='Bidding strategy resource name',
+                    ),
+                    CacheFieldConfig(
+                        name='campaign.bidding_strategy_type',
+                        type=['null', 'string'],
+                        description='Bidding strategy type',
+                    ),
+                    CacheFieldConfig(
+                        name='campaign.campaign_budget',
+                        type=['null', 'string'],
+                        description='Campaign budget resource name',
+                    ),
+                    CacheFieldConfig(
+                        name='campaign_budget.amount_micros',
+                        type=['null', 'integer'],
+                        description='Campaign budget amount in micros',
+                    ),
+                    CacheFieldConfig(
+                        name='campaign.start_date',
+                        type=['null', 'string'],
+                        description='Campaign start date',
+                    ),
+                    CacheFieldConfig(
+                        name='campaign.end_date',
+                        type=['null', 'string'],
+                        description='Campaign end date',
+                    ),
+                    CacheFieldConfig(
+                        name='campaign.serving_status',
+                        type=['null', 'string'],
+                        description='Campaign serving status',
+                    ),
+                    CacheFieldConfig(
+                        name='campaign.resource_name',
+                        type=['null', 'string'],
+                        description='Resource name of the campaign',
+                    ),
+                    CacheFieldConfig(
+                        name='campaign.labels',
+                        type=['null', 'array'],
+                        description='Labels applied to the campaign',
+                    ),
+                    CacheFieldConfig(
+                        name='campaign.network_settings.target_google_search',
+                        type=['null', 'boolean'],
+                        description='Whether targeting Google Search',
+                    ),
+                    CacheFieldConfig(
+                        name='campaign.network_settings.target_search_network',
+                        type=['null', 'boolean'],
+                        description='Whether targeting search network',
+                    ),
+                    CacheFieldConfig(
+                        name='campaign.network_settings.target_content_network',
+                        type=['null', 'boolean'],
+                        description='Whether targeting content network',
+                    ),
+                    CacheFieldConfig(
+                        name='campaign.network_settings.target_partner_search_network',
+                        type=['null', 'boolean'],
+                        description='Whether targeting partner search network',
+                    ),
+                    CacheFieldConfig(
+                        name='metrics.clicks',
+                        type=['null', 'integer'],
+                        description='Number of clicks',
+                    ),
+                    CacheFieldConfig(
+                        name='metrics.ctr',
+                        type=['null', 'number'],
+                        description='Click-through rate',
+                    ),
+                    CacheFieldConfig(
+                        name='metrics.conversions',
+                        type=['null', 'number'],
+                        description='Number of conversions',
+                    ),
+                    CacheFieldConfig(
+                        name='metrics.conversions_value',
+                        type=['null', 'number'],
+                        description='Total conversions value',
+                    ),
+                    CacheFieldConfig(
+                        name='metrics.cost_micros',
+                        type=['null', 'integer'],
+                        description='Cost in micros',
+                    ),
+                    CacheFieldConfig(
+                        name='metrics.impressions',
+                        type=['null', 'integer'],
+                        description='Number of impressions',
+                    ),
+                    CacheFieldConfig(
+                        name='metrics.average_cpc',
+                        type=['null', 'number'],
+                        description='Average cost per click',
+                    ),
+                    CacheFieldConfig(
+                        name='metrics.average_cpm',
+                        type=['null', 'number'],
+                        description='Average cost per thousand impressions',
+                    ),
+                    CacheFieldConfig(
+                        name='metrics.interactions',
+                        type=['null', 'integer'],
+                        description='Number of interactions',
+                    ),
+                    CacheFieldConfig(
+                        name='segments.date',
+                        type=['null', 'string'],
+                        description='Date segment for the report row',
+                    ),
+                    CacheFieldConfig(
+                        name='segments.hour',
+                        type=['null', 'integer'],
+                        description='Hour segment',
+                    ),
+                    CacheFieldConfig(
+                        name='segments.ad_network_type',
+                        type=['null', 'string'],
+                        description='Ad network type segment',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='ad_groups',
+                suggested=True,
+                x_airbyte_name='ad_group',
+                fields=[
+                    CacheFieldConfig(
+                        name='campaign.id',
+                        type=['null', 'integer'],
+                        description='Parent campaign ID',
+                    ),
+                    CacheFieldConfig(
+                        name='ad_group.id',
+                        type=['null', 'integer'],
+                        description='Ad group ID',
+                    ),
+                    CacheFieldConfig(
+                        name='ad_group.name',
+                        type=['null', 'string'],
+                        description='Ad group name',
+                    ),
+                    CacheFieldConfig(
+                        name='ad_group.status',
+                        type=['null', 'string'],
+                        description='Ad group status (ENABLED, PAUSED, REMOVED)',
+                    ),
+                    CacheFieldConfig(
+                        name='ad_group.type',
+                        type=['null', 'string'],
+                        description='Ad group type',
+                    ),
+                    CacheFieldConfig(
+                        name='ad_group.ad_rotation_mode',
+                        type=['null', 'string'],
+                        description='Ad rotation mode',
+                    ),
+                    CacheFieldConfig(
+                        name='ad_group.base_ad_group',
+                        type=['null', 'string'],
+                        description='Base ad group resource name',
+                    ),
+                    CacheFieldConfig(
+                        name='ad_group.campaign',
+                        type=['null', 'string'],
+                        description='Parent campaign resource name',
+                    ),
+                    CacheFieldConfig(
+                        name='ad_group.cpc_bid_micros',
+                        type=['null', 'integer'],
+                        description='CPC bid in micros',
+                    ),
+                    CacheFieldConfig(
+                        name='ad_group.cpm_bid_micros',
+                        type=['null', 'integer'],
+                        description='CPM bid in micros',
+                    ),
+                    CacheFieldConfig(
+                        name='ad_group.cpv_bid_micros',
+                        type=['null', 'integer'],
+                        description='CPV bid in micros',
+                    ),
+                    CacheFieldConfig(
+                        name='ad_group.effective_target_cpa_micros',
+                        type=['null', 'integer'],
+                        description='Effective target CPA in micros',
+                    ),
+                    CacheFieldConfig(
+                        name='ad_group.effective_target_cpa_source',
+                        type=['null', 'string'],
+                        description='Source of the effective target CPA',
+                    ),
+                    CacheFieldConfig(
+                        name='ad_group.effective_target_roas',
+                        type=['null', 'number'],
+                        description='Effective target ROAS',
+                    ),
+                    CacheFieldConfig(
+                        name='ad_group.effective_target_roas_source',
+                        type=['null', 'string'],
+                        description='Source of the effective target ROAS',
+                    ),
+                    CacheFieldConfig(
+                        name='ad_group.labels',
+                        type=['null', 'array'],
+                        description='Labels applied to the ad group',
+                    ),
+                    CacheFieldConfig(
+                        name='ad_group.resource_name',
+                        type=['null', 'string'],
+                        description='Resource name of the ad group',
+                    ),
+                    CacheFieldConfig(
+                        name='ad_group.target_cpa_micros',
+                        type=['null', 'integer'],
+                        description='Target CPA in micros',
+                    ),
+                    CacheFieldConfig(
+                        name='ad_group.target_roas',
+                        type=['null', 'number'],
+                        description='Target ROAS',
+                    ),
+                    CacheFieldConfig(
+                        name='ad_group.tracking_url_template',
+                        type=['null', 'string'],
+                        description='Tracking URL template',
+                    ),
+                    CacheFieldConfig(
+                        name='metrics.cost_micros',
+                        type=['null', 'integer'],
+                        description='Cost in micros',
+                    ),
+                    CacheFieldConfig(
+                        name='segments.date',
+                        type=['null', 'string'],
+                        description='Date segment for the report row',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='ad_group_ads',
+                suggested=True,
+                x_airbyte_name='ad_group_ad',
+                fields=[
+                    CacheFieldConfig(
+                        name='ad_group.id',
+                        type=['null', 'integer'],
+                        description='Parent ad group ID',
+                    ),
+                    CacheFieldConfig(
+                        name='ad_group_ad.ad.id',
+                        type=['null', 'integer'],
+                        description='Ad ID',
+                    ),
+                    CacheFieldConfig(
+                        name='ad_group_ad.ad.name',
+                        type=['null', 'string'],
+                        description='Ad name',
+                    ),
+                    CacheFieldConfig(
+                        name='ad_group_ad.ad.type',
+                        type=['null', 'string'],
+                        description='Ad type',
+                    ),
+                    CacheFieldConfig(
+                        name='ad_group_ad.status',
+                        type=['null', 'string'],
+                        description='Ad group ad status (ENABLED, PAUSED, REMOVED)',
+                    ),
+                    CacheFieldConfig(
+                        name='ad_group_ad.ad_strength',
+                        type=['null', 'string'],
+                        description='Ad strength rating',
+                    ),
+                    CacheFieldConfig(
+                        name='ad_group_ad.ad.display_url',
+                        type=['null', 'string'],
+                        description='Display URL of the ad',
+                    ),
+                    CacheFieldConfig(
+                        name='ad_group_ad.ad.final_urls',
+                        type=['null', 'array'],
+                        description='Final URLs for the ad',
+                    ),
+                    CacheFieldConfig(
+                        name='ad_group_ad.ad.final_mobile_urls',
+                        type=['null', 'array'],
+                        description='Final mobile URLs for the ad',
+                    ),
+                    CacheFieldConfig(
+                        name='ad_group_ad.ad.final_url_suffix',
+                        type=['null', 'string'],
+                        description='Final URL suffix',
+                    ),
+                    CacheFieldConfig(
+                        name='ad_group_ad.ad.tracking_url_template',
+                        type=['null', 'string'],
+                        description='Tracking URL template',
+                    ),
+                    CacheFieldConfig(
+                        name='ad_group_ad.ad.resource_name',
+                        type=['null', 'string'],
+                        description='Resource name of the ad',
+                    ),
+                    CacheFieldConfig(
+                        name='ad_group_ad.ad_group',
+                        type=['null', 'string'],
+                        description='Ad group resource name',
+                    ),
+                    CacheFieldConfig(
+                        name='ad_group_ad.resource_name',
+                        type=['null', 'string'],
+                        description='Resource name of the ad group ad',
+                    ),
+                    CacheFieldConfig(
+                        name='ad_group_ad.labels',
+                        type=['null', 'array'],
+                        description='Labels applied to the ad group ad',
+                    ),
+                    CacheFieldConfig(
+                        name='ad_group_ad.policy_summary.approval_status',
+                        type=['null', 'string'],
+                        description='Policy approval status',
+                    ),
+                    CacheFieldConfig(
+                        name='ad_group_ad.policy_summary.review_status',
+                        type=['null', 'string'],
+                        description='Policy review status',
+                    ),
+                    CacheFieldConfig(
+                        name='segments.date',
+                        type=['null', 'string'],
+                        description='Date segment for the report row',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='campaign_labels',
+                suggested=True,
+                x_airbyte_name='campaign_label',
+                fields=[
+                    CacheFieldConfig(
+                        name='campaign.id',
+                        type=['null', 'integer'],
+                        description='Campaign ID',
+                    ),
+                    CacheFieldConfig(
+                        name='campaign_label.resource_name',
+                        type=['null', 'string'],
+                        description='Resource name of the campaign label',
+                    ),
+                    CacheFieldConfig(
+                        name='label.id',
+                        type=['null', 'integer'],
+                        description='Label ID',
+                    ),
+                    CacheFieldConfig(
+                        name='label.name',
+                        type=['null', 'string'],
+                        description='Label name',
+                    ),
+                    CacheFieldConfig(
+                        name='label.resource_name',
+                        type=['null', 'string'],
+                        description='Resource name of the label',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='ad_group_labels',
+                suggested=True,
+                x_airbyte_name='ad_group_label',
+                fields=[
+                    CacheFieldConfig(
+                        name='ad_group.id',
+                        type=['null', 'integer'],
+                        description='Ad group ID',
+                    ),
+                    CacheFieldConfig(
+                        name='ad_group_label.resource_name',
+                        type=['null', 'string'],
+                        description='Resource name of the ad group label',
+                    ),
+                    CacheFieldConfig(
+                        name='label.id',
+                        type=['null', 'integer'],
+                        description='Label ID',
+                    ),
+                    CacheFieldConfig(
+                        name='label.name',
+                        type=['null', 'string'],
+                        description='Label name',
+                    ),
+                    CacheFieldConfig(
+                        name='label.resource_name',
+                        type=['null', 'string'],
+                        description='Resource name of the label',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='ad_group_ad_labels',
+                suggested=True,
+                x_airbyte_name='ad_group_ad_label',
+                fields=[
+                    CacheFieldConfig(
+                        name='ad_group_ad.ad.id',
+                        type=['null', 'integer'],
+                        description='Ad ID',
+                    ),
+                    CacheFieldConfig(
+                        name='ad_group_ad_label.resource_name',
+                        type=['null', 'string'],
+                        description='Resource name of the ad group ad label',
+                    ),
+                    CacheFieldConfig(
+                        name='label.id',
+                        type=['null', 'integer'],
+                        description='Label ID',
+                    ),
+                    CacheFieldConfig(
+                        name='label.name',
+                        type=['null', 'string'],
+                        description='Label name',
+                    ),
+                    CacheFieldConfig(
+                        name='label.resource_name',
+                        type=['null', 'string'],
+                        description='Resource name of the label',
+                    ),
+                ],
+            ),
+        ],
+    ),
     search_field_paths={
         'accounts': [
             'customer.auto_tagging_enabled',

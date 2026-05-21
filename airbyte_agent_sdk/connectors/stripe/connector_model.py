@@ -20,6 +20,11 @@ from airbyte_agent_sdk.schema.security import (
     AuthConfigFieldSpec,
     AuthConfigSpec,
 )
+from airbyte_agent_sdk.schema.extensions import (
+    CacheConfig,
+    CacheEntityConfig,
+    CacheFieldConfig,
+)
 from airbyte_agent_sdk.schema.base import (
     ExampleQuestions,
 )
@@ -24478,6 +24483,1240 @@ StripeConnectorModel: ConnectorModel = ConnectorModel(
             },
         ),
     ],
+    context_store=CacheConfig(
+        entities=[
+            CacheEntityConfig(
+                entity='charges',
+                suggested=True,
+                x_airbyte_name='charges',
+                fields=[
+                    CacheFieldConfig(
+                        name='amount',
+                        type=['null', 'integer'],
+                        description='Amount intended to be collected by this payment in the smallest currency unit (e.g., 100 cents for $1.00), supporting up to eight digits.',
+                    ),
+                    CacheFieldConfig(
+                        name='amount_captured',
+                        type=['null', 'integer'],
+                        description='Amount that was actually captured from this charge.',
+                    ),
+                    CacheFieldConfig(
+                        name='amount_refunded',
+                        type=['null', 'integer'],
+                        description='Amount that has been refunded back to the customer.',
+                    ),
+                    CacheFieldConfig(
+                        name='amount_updates',
+                        type=['null', 'array'],
+                        description='Updates to the amount that have been made during the charge lifecycle.',
+                    ),
+                    CacheFieldConfig(
+                        name='application',
+                        type=['null', 'string'],
+                        description='ID of the application that created this charge (Connect only).',
+                    ),
+                    CacheFieldConfig(
+                        name='application_fee',
+                        type=['null', 'string'],
+                        description='ID of the application fee associated with this charge (Connect only).',
+                    ),
+                    CacheFieldConfig(
+                        name='application_fee_amount',
+                        type=['null', 'integer'],
+                        description='The amount of the application fee deducted from this charge (Connect only).',
+                    ),
+                    CacheFieldConfig(
+                        name='balance_transaction',
+                        type=['null', 'string'],
+                        description='ID of the balance transaction that describes the impact of this charge on your account balance (excluding refunds or disputes).',
+                    ),
+                    CacheFieldConfig(
+                        name='billing_details',
+                        type=['null', 'object'],
+                        description='Billing information associated with the payment method at the time of the transaction, including name, email, phone, and address.',
+                    ),
+                    CacheFieldConfig(
+                        name='calculated_statement_descriptor',
+                        type=['null', 'string'],
+                        description="The full statement descriptor that appears on the customer's credit card statement, combining prefix and suffix.",
+                    ),
+                    CacheFieldConfig(
+                        name='captured',
+                        type=['null', 'boolean'],
+                        description='Whether the charge has been captured and funds transferred to your account.',
+                    ),
+                    CacheFieldConfig(
+                        name='card',
+                        type=['null', 'object'],
+                        description='Deprecated card object containing payment card details if a card was used.',
+                    ),
+                    CacheFieldConfig(
+                        name='created',
+                        type=['null', 'integer'],
+                        description='Timestamp indicating when the charge was created.',
+                    ),
+                    CacheFieldConfig(
+                        name='currency',
+                        type=['null', 'string'],
+                        description="Three-letter ISO currency code in lowercase (e.g., 'usd', 'eur') for the charge amount.",
+                    ),
+                    CacheFieldConfig(
+                        name='customer',
+                        type=['null', 'string'],
+                        description='ID of the customer this charge is for, if one exists.',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='An arbitrary string attached to the charge, often useful for displaying to users or internal reference.',
+                    ),
+                    CacheFieldConfig(
+                        name='destination',
+                        type=['null', 'string'],
+                        description='ID of the destination account where funds are transferred (Connect only).',
+                    ),
+                    CacheFieldConfig(
+                        name='dispute',
+                        type=['null', 'string'],
+                        description='ID of the dispute object if the charge has been disputed.',
+                    ),
+                    CacheFieldConfig(
+                        name='disputed',
+                        type=['null', 'boolean'],
+                        description='Whether the charge has been disputed by the customer with their card issuer.',
+                    ),
+                    CacheFieldConfig(
+                        name='failure_balance_transaction',
+                        type=['null', 'string'],
+                        description='ID of the balance transaction that describes the reversal of funds if the charge failed.',
+                    ),
+                    CacheFieldConfig(
+                        name='failure_code',
+                        type=['null', 'string'],
+                        description='Error code explaining the reason for charge failure, if applicable.',
+                    ),
+                    CacheFieldConfig(
+                        name='failure_message',
+                        type=['null', 'string'],
+                        description='Human-readable message providing more details about why the charge failed.',
+                    ),
+                    CacheFieldConfig(
+                        name='fraud_details',
+                        type=['null', 'object'],
+                        description='Information about fraud assessments and user reports related to this charge.',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['string'],
+                        description='Unique identifier for the charge, used to link transactions across other records.',
+                    ),
+                    CacheFieldConfig(
+                        name='invoice',
+                        type=['null', 'string'],
+                        description='ID of the invoice this charge is for, if the charge was created by invoicing.',
+                    ),
+                    CacheFieldConfig(
+                        name='livemode',
+                        type=['null', 'boolean'],
+                        description='Whether the charge occurred in live mode (true) or test mode (false).',
+                    ),
+                    CacheFieldConfig(
+                        name='metadata',
+                        type=['null', 'object'],
+                        description='Key-value pairs for storing additional structured information about the charge, useful for internal tracking.',
+                    ),
+                    CacheFieldConfig(
+                        name='object',
+                        type=['null', 'string'],
+                        description="String representing the object type, always 'charge' for charge objects.",
+                    ),
+                    CacheFieldConfig(
+                        name='on_behalf_of',
+                        type=['null', 'string'],
+                        description='ID of the account on whose behalf the charge was made (Connect only).',
+                    ),
+                    CacheFieldConfig(
+                        name='order',
+                        type=['null', 'string'],
+                        description='Deprecated field for order information associated with this charge.',
+                    ),
+                    CacheFieldConfig(
+                        name='outcome',
+                        type=['null', 'object'],
+                        description='Details about the outcome of the charge, including network status, risk assessment, and reason codes.',
+                    ),
+                    CacheFieldConfig(
+                        name='paid',
+                        type=['null', 'boolean'],
+                        description='Whether the charge succeeded and funds were successfully collected.',
+                    ),
+                    CacheFieldConfig(
+                        name='payment_intent',
+                        type=['null', 'string'],
+                        description='ID of the PaymentIntent associated with this charge, if one exists.',
+                    ),
+                    CacheFieldConfig(
+                        name='payment_method',
+                        type=['null', 'string'],
+                        description='ID of the payment method used for this charge.',
+                    ),
+                    CacheFieldConfig(
+                        name='payment_method_details',
+                        type=['null', 'object'],
+                        description='Details about the payment method at the time of the transaction, including card brand, network, and authentication results.',
+                    ),
+                    CacheFieldConfig(
+                        name='receipt_email',
+                        type=['null', 'string'],
+                        description='Email address to which the receipt for this charge was sent.',
+                    ),
+                    CacheFieldConfig(
+                        name='receipt_number',
+                        type=['null', 'string'],
+                        description='Receipt number that appears on email receipts sent for this charge.',
+                    ),
+                    CacheFieldConfig(
+                        name='receipt_url',
+                        type=['null', 'string'],
+                        description='URL to a hosted receipt page for this charge, viewable by the customer.',
+                    ),
+                    CacheFieldConfig(
+                        name='refunded',
+                        type=['null', 'boolean'],
+                        description='Whether the charge has been fully refunded (partial refunds will still show as false).',
+                    ),
+                    CacheFieldConfig(
+                        name='refunds',
+                        type=['null', 'object'],
+                        description='List of refunds that have been applied to this charge.',
+                    ),
+                    CacheFieldConfig(
+                        name='review',
+                        type=['null', 'string'],
+                        description='ID of the review object associated with this charge, if it was flagged for manual review.',
+                    ),
+                    CacheFieldConfig(
+                        name='shipping',
+                        type=['null', 'object'],
+                        description='Shipping information for the charge, including recipient name, address, and tracking details.',
+                    ),
+                    CacheFieldConfig(
+                        name='source',
+                        type=['null', 'object'],
+                        description='Deprecated payment source object used to create this charge.',
+                    ),
+                    CacheFieldConfig(
+                        name='source_transfer',
+                        type=['null', 'string'],
+                        description='ID of the transfer from a source account if funds came from another Stripe account (Connect only).',
+                    ),
+                    CacheFieldConfig(
+                        name='statement_description',
+                        type=['null', 'string'],
+                        description='Deprecated alias for statement_descriptor.',
+                    ),
+                    CacheFieldConfig(
+                        name='statement_descriptor',
+                        type=['null', 'string'],
+                        description="Statement descriptor that overrides the account default for card charges, appearing on the customer's statement.",
+                    ),
+                    CacheFieldConfig(
+                        name='statement_descriptor_suffix',
+                        type=['null', 'string'],
+                        description="Suffix concatenated to the account's statement descriptor prefix to form the complete descriptor on customer statements.",
+                    ),
+                    CacheFieldConfig(
+                        name='status',
+                        type=['null', 'string'],
+                        description="Current status of the payment: 'succeeded' (completed), 'pending' (processing), or 'failed' (unsuccessful).",
+                    ),
+                    CacheFieldConfig(
+                        name='transfer_data',
+                        type=['null', 'object'],
+                        description='Object containing destination and amount for transfers to connected accounts (Connect only).',
+                    ),
+                    CacheFieldConfig(
+                        name='transfer_group',
+                        type=['null', 'string'],
+                        description='String identifier for grouping related charges and transfers together (Connect only).',
+                    ),
+                    CacheFieldConfig(
+                        name='updated',
+                        type=['null', 'integer'],
+                        description='Timestamp of the last update to this charge object.',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='customers',
+                suggested=True,
+                x_airbyte_name='customers',
+                fields=[
+                    CacheFieldConfig(
+                        name='account_balance',
+                        type=['null', 'integer'],
+                        description='Current balance value representing funds owed by or to the customer.',
+                    ),
+                    CacheFieldConfig(
+                        name='address',
+                        type=['null', 'object'],
+                        description="The customer's address information including line1, line2, city, state, postal code, and country.",
+                    ),
+                    CacheFieldConfig(
+                        name='balance',
+                        type=['null', 'integer'],
+                        description="Current balance (positive or negative) that is automatically applied to the customer's next invoice.",
+                    ),
+                    CacheFieldConfig(
+                        name='cards',
+                        type=['null', 'array'],
+                        description='Card payment methods associated with the customer account.',
+                    ),
+                    CacheFieldConfig(
+                        name='created',
+                        type=['null', 'integer'],
+                        description='Timestamp indicating when the customer object was created.',
+                    ),
+                    CacheFieldConfig(
+                        name='currency',
+                        type=['null', 'string'],
+                        description="Three-letter ISO currency code representing the customer's default currency.",
+                    ),
+                    CacheFieldConfig(
+                        name='default_card',
+                        type=['null', 'string'],
+                        description='The default card to be used for charges when no specific payment method is provided.',
+                    ),
+                    CacheFieldConfig(
+                        name='default_source',
+                        type=['null', 'string'],
+                        description='The default payment source (card or bank account) for the customer.',
+                    ),
+                    CacheFieldConfig(
+                        name='delinquent',
+                        type=['null', 'boolean'],
+                        description='Boolean indicating whether the customer is currently delinquent on payments.',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='An arbitrary string attached to the customer, often useful for displaying to users.',
+                    ),
+                    CacheFieldConfig(
+                        name='discount',
+                        type=['null', 'object'],
+                        description='Discount object describing any active discount applied to the customer.',
+                    ),
+                    CacheFieldConfig(
+                        name='email',
+                        type=['null', 'string'],
+                        description="The customer's email address for communication and tracking purposes.",
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique identifier for the customer object.',
+                    ),
+                    CacheFieldConfig(
+                        name='invoice_prefix',
+                        type=['null', 'string'],
+                        description='The prefix for invoice numbers generated for this customer.',
+                    ),
+                    CacheFieldConfig(
+                        name='invoice_settings',
+                        type=['null', 'object'],
+                        description="Customer's invoice-related settings including default payment method and custom fields.",
+                    ),
+                    CacheFieldConfig(
+                        name='is_deleted',
+                        type=['null', 'boolean'],
+                        description='Boolean indicating whether the customer has been deleted.',
+                    ),
+                    CacheFieldConfig(
+                        name='livemode',
+                        type=['null', 'boolean'],
+                        description='Boolean indicating whether the object exists in live mode or test mode.',
+                    ),
+                    CacheFieldConfig(
+                        name='metadata',
+                        type=['null', 'object'],
+                        description='Set of key-value pairs for storing additional structured information about the customer.',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description="The customer's full name or business name.",
+                    ),
+                    CacheFieldConfig(
+                        name='next_invoice_sequence',
+                        type=['null', 'integer'],
+                        description='The sequence number for the next invoice generated for this customer.',
+                    ),
+                    CacheFieldConfig(
+                        name='object',
+                        type=['null', 'string'],
+                        description="String representing the object type, always 'customer'.",
+                    ),
+                    CacheFieldConfig(
+                        name='phone',
+                        type=['null', 'string'],
+                        description="The customer's phone number.",
+                    ),
+                    CacheFieldConfig(
+                        name='preferred_locales',
+                        type=['null', 'array'],
+                        description='Array of preferred locales for the customer, used for invoice and receipt localization.',
+                    ),
+                    CacheFieldConfig(
+                        name='shipping',
+                        type=['null', 'object'],
+                        description='Mailing and shipping address for the customer, appears on invoices emailed to the customer.',
+                    ),
+                    CacheFieldConfig(
+                        name='sources',
+                        type='string',
+                        description='Payment sources (cards, bank accounts) attached to the customer for making payments.',
+                    ),
+                    CacheFieldConfig(
+                        name='subscriptions',
+                        type=['null', 'object'],
+                        description='List of active subscriptions associated with the customer.',
+                    ),
+                    CacheFieldConfig(
+                        name='tax_exempt',
+                        type=['null', 'string'],
+                        description="Describes the customer's tax exemption status (none, exempt, or reverse).",
+                    ),
+                    CacheFieldConfig(
+                        name='tax_info',
+                        type=['null', 'string'],
+                        description='Tax identification information for the customer.',
+                    ),
+                    CacheFieldConfig(
+                        name='tax_info_verification',
+                        type=['null', 'string'],
+                        description="Verification status of the customer's tax information.",
+                    ),
+                    CacheFieldConfig(
+                        name='test_clock',
+                        type=['null', 'string'],
+                        description='ID of the test clock associated with this customer for testing time-dependent scenarios.',
+                    ),
+                    CacheFieldConfig(
+                        name='updated',
+                        type=['null', 'integer'],
+                        description='Timestamp indicating when the customer object was last updated.',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='invoices',
+                suggested=True,
+                x_airbyte_name='invoices',
+                fields=[
+                    CacheFieldConfig(
+                        name='account_country',
+                        type=['null', 'string'],
+                        description='The country of the business associated with this invoice, commonly used to display localized content.',
+                    ),
+                    CacheFieldConfig(
+                        name='account_name',
+                        type=['null', 'string'],
+                        description='The public name of the business associated with this invoice.',
+                    ),
+                    CacheFieldConfig(
+                        name='account_tax_ids',
+                        type=['null', 'array'],
+                        description='Tax IDs of the account associated with this invoice.',
+                    ),
+                    CacheFieldConfig(
+                        name='amount_due',
+                        type=['null', 'integer'],
+                        description='Total amount, in smallest currency unit, that is due and owed by the customer.',
+                    ),
+                    CacheFieldConfig(
+                        name='amount_paid',
+                        type=['null', 'integer'],
+                        description='Total amount, in smallest currency unit, that has been paid by the customer.',
+                    ),
+                    CacheFieldConfig(
+                        name='amount_remaining',
+                        type=['null', 'integer'],
+                        description='The difference between amount_due and amount_paid, representing the outstanding balance.',
+                    ),
+                    CacheFieldConfig(
+                        name='amount_shipping',
+                        type=['null', 'integer'],
+                        description='Total amount of shipping costs on the invoice.',
+                    ),
+                    CacheFieldConfig(
+                        name='application',
+                        type=['null', 'string'],
+                        description='ID of the Connect application that created this invoice.',
+                    ),
+                    CacheFieldConfig(
+                        name='application_fee',
+                        type=['null', 'integer'],
+                        description='Amount of application fee charged for this invoice in a Connect scenario.',
+                    ),
+                    CacheFieldConfig(
+                        name='application_fee_amount',
+                        type=['null', 'integer'],
+                        description='The fee in smallest currency unit that is collected by the application in a Connect scenario.',
+                    ),
+                    CacheFieldConfig(
+                        name='attempt_count',
+                        type=['null', 'integer'],
+                        description='Number of payment attempts made for this invoice.',
+                    ),
+                    CacheFieldConfig(
+                        name='attempted',
+                        type=['null', 'boolean'],
+                        description='Whether an attempt has been made to pay the invoice.',
+                    ),
+                    CacheFieldConfig(
+                        name='auto_advance',
+                        type=['null', 'boolean'],
+                        description='Controls whether Stripe performs automatic collection of the invoice.',
+                    ),
+                    CacheFieldConfig(
+                        name='automatic_tax',
+                        type=['null', 'object'],
+                        description='Settings and status for automatic tax calculation on this invoice.',
+                    ),
+                    CacheFieldConfig(
+                        name='billing',
+                        type=['null', 'string'],
+                        description='Billing method used for the invoice (charge_automatically or send_invoice).',
+                    ),
+                    CacheFieldConfig(
+                        name='billing_reason',
+                        type=['null', 'string'],
+                        description='Indicates the reason why the invoice was created (subscription_cycle, manual, etc.).',
+                    ),
+                    CacheFieldConfig(
+                        name='charge',
+                        type=['null', 'string'],
+                        description='ID of the latest charge generated for this invoice, if any.',
+                    ),
+                    CacheFieldConfig(
+                        name='closed',
+                        type=['null', 'boolean'],
+                        description='Whether the invoice has been marked as closed and no longer open for collection.',
+                    ),
+                    CacheFieldConfig(
+                        name='collection_method',
+                        type=['null', 'string'],
+                        description='Method by which the invoice is collected: charge_automatically or send_invoice.',
+                    ),
+                    CacheFieldConfig(
+                        name='created',
+                        type=['null', 'integer'],
+                        description='Timestamp indicating when the invoice was created.',
+                    ),
+                    CacheFieldConfig(
+                        name='currency',
+                        type=['null', 'string'],
+                        description='Three-letter ISO currency code in which the invoice is denominated.',
+                    ),
+                    CacheFieldConfig(
+                        name='custom_fields',
+                        type=['null', 'array'],
+                        description='Custom fields displayed on the invoice as specified by the account.',
+                    ),
+                    CacheFieldConfig(
+                        name='customer',
+                        type=['null', 'string'],
+                        description='The customer object or ID associated with this invoice.',
+                    ),
+                    CacheFieldConfig(
+                        name='customer_address',
+                        type=['null', 'object'],
+                        description="The customer's address at the time the invoice was finalized.",
+                    ),
+                    CacheFieldConfig(
+                        name='customer_email',
+                        type=['null', 'string'],
+                        description="The customer's email address at the time the invoice was finalized.",
+                    ),
+                    CacheFieldConfig(
+                        name='customer_name',
+                        type=['null', 'string'],
+                        description="The customer's name at the time the invoice was finalized.",
+                    ),
+                    CacheFieldConfig(
+                        name='customer_phone',
+                        type=['null', 'string'],
+                        description="The customer's phone number at the time the invoice was finalized.",
+                    ),
+                    CacheFieldConfig(
+                        name='customer_shipping',
+                        type=['null', 'object'],
+                        description="The customer's shipping information at the time the invoice was finalized.",
+                    ),
+                    CacheFieldConfig(
+                        name='customer_tax_exempt',
+                        type=['null', 'string'],
+                        description="The customer's tax exempt status at the time the invoice was finalized.",
+                    ),
+                    CacheFieldConfig(
+                        name='customer_tax_ids',
+                        type=['null', 'array'],
+                        description="The customer's tax IDs at the time the invoice was finalized.",
+                    ),
+                    CacheFieldConfig(
+                        name='default_payment_method',
+                        type=['null', 'string'],
+                        description='Default payment method for the invoice, used if no other method is specified.',
+                    ),
+                    CacheFieldConfig(
+                        name='default_source',
+                        type=['null', 'string'],
+                        description='Default payment source for the invoice if no payment method is set.',
+                    ),
+                    CacheFieldConfig(
+                        name='default_tax_rates',
+                        type=['null', 'array'],
+                        description='The tax rates applied to the invoice by default.',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='An arbitrary string attached to the invoice, often displayed to customers.',
+                    ),
+                    CacheFieldConfig(
+                        name='discount',
+                        type=['null', 'object'],
+                        description='The discount object applied to the invoice, if any.',
+                    ),
+                    CacheFieldConfig(
+                        name='discounts',
+                        type=['null', 'array'],
+                        description='Array of discount IDs or objects currently applied to this invoice.',
+                    ),
+                    CacheFieldConfig(
+                        name='due_date',
+                        type=['null', 'number'],
+                        description='The date by which payment on this invoice is due, if the invoice is not auto-collected.',
+                    ),
+                    CacheFieldConfig(
+                        name='effective_at',
+                        type=['null', 'integer'],
+                        description='Timestamp when the invoice becomes effective and finalized for payment.',
+                    ),
+                    CacheFieldConfig(
+                        name='ending_balance',
+                        type=['null', 'integer'],
+                        description="The customer's ending account balance after this invoice is finalized.",
+                    ),
+                    CacheFieldConfig(
+                        name='footer',
+                        type=['null', 'string'],
+                        description='Footer text displayed on the invoice.',
+                    ),
+                    CacheFieldConfig(
+                        name='forgiven',
+                        type=['null', 'boolean'],
+                        description='Whether the invoice has been forgiven and is considered paid without actual payment.',
+                    ),
+                    CacheFieldConfig(
+                        name='from_invoice',
+                        type=['null', 'object'],
+                        description='Details about the invoice this invoice was created from, if applicable.',
+                    ),
+                    CacheFieldConfig(
+                        name='hosted_invoice_url',
+                        type=['null', 'string'],
+                        description='URL for the hosted invoice page where customers can view and pay the invoice.',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique identifier for the invoice object.',
+                    ),
+                    CacheFieldConfig(
+                        name='invoice_pdf',
+                        type=['null', 'string'],
+                        description='URL for the PDF version of the invoice.',
+                    ),
+                    CacheFieldConfig(
+                        name='is_deleted',
+                        type=['null', 'boolean'],
+                        description='Indicates whether this invoice has been deleted.',
+                    ),
+                    CacheFieldConfig(
+                        name='issuer',
+                        type=['null', 'object'],
+                        description='Details about the entity issuing the invoice.',
+                    ),
+                    CacheFieldConfig(
+                        name='last_finalization_error',
+                        type=['null', 'object'],
+                        description='The error encountered during the last finalization attempt, if any.',
+                    ),
+                    CacheFieldConfig(
+                        name='latest_revision',
+                        type=['null', 'string'],
+                        description='The latest revision of the invoice, if revisions are enabled.',
+                    ),
+                    CacheFieldConfig(
+                        name='lines',
+                        type=['null', 'object'],
+                        description='The individual line items that make up the invoice, representing products, services, or fees.',
+                    ),
+                    CacheFieldConfig(
+                        name='livemode',
+                        type=['null', 'boolean'],
+                        description='Indicates whether the invoice exists in live mode (true) or test mode (false).',
+                    ),
+                    CacheFieldConfig(
+                        name='metadata',
+                        type=['null', 'object'],
+                        description='Key-value pairs for storing additional structured information about the invoice.',
+                    ),
+                    CacheFieldConfig(
+                        name='next_payment_attempt',
+                        type=['null', 'number'],
+                        description='Timestamp of the next automatic payment attempt for this invoice, if applicable.',
+                    ),
+                    CacheFieldConfig(
+                        name='number',
+                        type=['null', 'string'],
+                        description='A unique, human-readable identifier for this invoice, often shown to customers.',
+                    ),
+                    CacheFieldConfig(
+                        name='object',
+                        type=['null', 'string'],
+                        description="String representing the object type, always 'invoice'.",
+                    ),
+                    CacheFieldConfig(
+                        name='on_behalf_of',
+                        type=['null', 'string'],
+                        description='The account on behalf of which the invoice is being created, used in Connect scenarios.',
+                    ),
+                    CacheFieldConfig(
+                        name='paid',
+                        type=['null', 'boolean'],
+                        description='Whether the invoice has been paid in full.',
+                    ),
+                    CacheFieldConfig(
+                        name='paid_out_of_band',
+                        type=['null', 'boolean'],
+                        description='Whether payment was made outside of Stripe and manually marked as paid.',
+                    ),
+                    CacheFieldConfig(
+                        name='payment',
+                        type=['null', 'string'],
+                        description='ID of the payment associated with this invoice, if any.',
+                    ),
+                    CacheFieldConfig(
+                        name='payment_intent',
+                        type=['null', 'string'],
+                        description='The PaymentIntent associated with this invoice for processing payment.',
+                    ),
+                    CacheFieldConfig(
+                        name='payment_settings',
+                        type=['null', 'object'],
+                        description='Configuration settings for how payment should be collected on this invoice.',
+                    ),
+                    CacheFieldConfig(
+                        name='period_end',
+                        type=['null', 'number'],
+                        description='End date of the billing period covered by this invoice.',
+                    ),
+                    CacheFieldConfig(
+                        name='period_start',
+                        type=['null', 'number'],
+                        description='Start date of the billing period covered by this invoice.',
+                    ),
+                    CacheFieldConfig(
+                        name='post_payment_credit_notes_amount',
+                        type=['null', 'integer'],
+                        description='Total amount of credit notes issued after the invoice was paid.',
+                    ),
+                    CacheFieldConfig(
+                        name='pre_payment_credit_notes_amount',
+                        type=['null', 'integer'],
+                        description='Total amount of credit notes applied before payment was attempted.',
+                    ),
+                    CacheFieldConfig(
+                        name='quote',
+                        type=['null', 'string'],
+                        description='The quote from which this invoice was generated, if applicable.',
+                    ),
+                    CacheFieldConfig(
+                        name='receipt_number',
+                        type=['null', 'string'],
+                        description='The receipt number displayed on the invoice, if available.',
+                    ),
+                    CacheFieldConfig(
+                        name='rendering',
+                        type=['object', 'null'],
+                        description='Settings that control how the invoice is rendered for display.',
+                    ),
+                    CacheFieldConfig(
+                        name='rendering_options',
+                        type=['null', 'object'],
+                        description='Options for customizing the visual rendering of the invoice.',
+                    ),
+                    CacheFieldConfig(
+                        name='shipping_cost',
+                        type=['null', 'object'],
+                        description='Total cost of shipping charges included in the invoice.',
+                    ),
+                    CacheFieldConfig(
+                        name='shipping_details',
+                        type=['null', 'object'],
+                        description='Detailed shipping information for the invoice, including address and carrier.',
+                    ),
+                    CacheFieldConfig(
+                        name='starting_balance',
+                        type=['null', 'integer'],
+                        description="The customer's starting account balance at the beginning of the billing period.",
+                    ),
+                    CacheFieldConfig(
+                        name='statement_description',
+                        type=['null', 'string'],
+                        description="Extra information about the invoice that appears on the customer's credit card statement.",
+                    ),
+                    CacheFieldConfig(
+                        name='statement_descriptor',
+                        type=['null', 'string'],
+                        description="A dynamic descriptor that appears on the customer's credit card statement for this invoice.",
+                    ),
+                    CacheFieldConfig(
+                        name='status',
+                        type=['null', 'string'],
+                        description='The status of the invoice: draft, open, paid, void, or uncollectible.',
+                    ),
+                    CacheFieldConfig(
+                        name='status_transitions',
+                        type='object',
+                        description='Timestamps tracking when the invoice transitioned between different statuses.',
+                    ),
+                    CacheFieldConfig(
+                        name='subscription',
+                        type=['null', 'string'],
+                        description='The subscription this invoice was generated for, if applicable.',
+                    ),
+                    CacheFieldConfig(
+                        name='subscription_details',
+                        type=['null', 'object'],
+                        description='Additional details about the subscription associated with this invoice.',
+                    ),
+                    CacheFieldConfig(
+                        name='subtotal',
+                        type=['null', 'integer'],
+                        description='Total of all line items before discounts or tax are applied.',
+                    ),
+                    CacheFieldConfig(
+                        name='subtotal_excluding_tax',
+                        type=['null', 'integer'],
+                        description='The subtotal amount excluding any tax calculations.',
+                    ),
+                    CacheFieldConfig(
+                        name='tax',
+                        type=['null', 'integer'],
+                        description='Total tax amount applied to the invoice.',
+                    ),
+                    CacheFieldConfig(
+                        name='tax_percent',
+                        type=['null', 'number'],
+                        description='The percentage of tax applied to the invoice (deprecated, use total_tax_amounts instead).',
+                    ),
+                    CacheFieldConfig(
+                        name='test_clock',
+                        type=['null', 'string'],
+                        description='ID of the test clock this invoice belongs to, used for testing time-dependent billing.',
+                    ),
+                    CacheFieldConfig(
+                        name='total',
+                        type=['null', 'integer'],
+                        description='Total amount of the invoice after all line items, discounts, and taxes are calculated.',
+                    ),
+                    CacheFieldConfig(
+                        name='total_discount_amounts',
+                        type=['null', 'array'],
+                        description='Array of the total discount amounts applied, broken down by discount.',
+                    ),
+                    CacheFieldConfig(
+                        name='total_excluding_tax',
+                        type=['null', 'integer'],
+                        description='Total amount of the invoice excluding all tax calculations.',
+                    ),
+                    CacheFieldConfig(
+                        name='total_tax_amounts',
+                        type=['null', 'array'],
+                        description='Array of tax amounts applied to the invoice, broken down by tax rate.',
+                    ),
+                    CacheFieldConfig(
+                        name='transfer_data',
+                        type=['null', 'object'],
+                        description='Information about the transfer of funds associated with this invoice in Connect scenarios.',
+                    ),
+                    CacheFieldConfig(
+                        name='updated',
+                        type=['null', 'integer'],
+                        description='Timestamp indicating when the invoice was last updated.',
+                    ),
+                    CacheFieldConfig(
+                        name='webhooks_delivered_at',
+                        type=['null', 'number'],
+                        description='Timestamp indicating when webhooks for this invoice were successfully delivered.',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='refunds',
+                suggested=True,
+                x_airbyte_name='refunds',
+                fields=[
+                    CacheFieldConfig(
+                        name='amount',
+                        type=['null', 'integer'],
+                        description='Amount refunded, in cents (the smallest currency unit).',
+                    ),
+                    CacheFieldConfig(
+                        name='balance_transaction',
+                        type=['null', 'string'],
+                        description='ID of the balance transaction that describes the impact of this refund on your account balance.',
+                    ),
+                    CacheFieldConfig(
+                        name='charge',
+                        type=['null', 'string'],
+                        description='ID of the charge that was refunded.',
+                    ),
+                    CacheFieldConfig(
+                        name='created',
+                        type=['null', 'integer'],
+                        description='Timestamp indicating when the refund was created.',
+                    ),
+                    CacheFieldConfig(
+                        name='currency',
+                        type=['null', 'string'],
+                        description='Three-letter ISO currency code in lowercase representing the currency of the refund.',
+                    ),
+                    CacheFieldConfig(
+                        name='destination_details',
+                        type=['null', 'object'],
+                        description='Details about the destination where the refunded funds should be sent.',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique identifier for the refund object.',
+                    ),
+                    CacheFieldConfig(
+                        name='metadata',
+                        type=['null', 'object'],
+                        description='Set of key-value pairs that you can attach to an object for storing additional structured information.',
+                    ),
+                    CacheFieldConfig(
+                        name='object',
+                        type=['null', 'string'],
+                        description="String representing the object type, always 'refund'.",
+                    ),
+                    CacheFieldConfig(
+                        name='payment_intent',
+                        type=['null', 'string'],
+                        description='ID of the PaymentIntent that was refunded.',
+                    ),
+                    CacheFieldConfig(
+                        name='reason',
+                        type=['null', 'string'],
+                        description='Reason for the refund, either user-provided (duplicate, fraudulent, or requested_by_customer) or generated by Stripe internally (expired_uncaptured_charge).',
+                    ),
+                    CacheFieldConfig(
+                        name='receipt_number',
+                        type=['null', 'string'],
+                        description='The transaction number that appears on email receipts sent for this refund.',
+                    ),
+                    CacheFieldConfig(
+                        name='source_transfer_reversal',
+                        type=['null', 'string'],
+                        description='ID of the transfer reversal that was created as a result of refunding a transfer (Connect only).',
+                    ),
+                    CacheFieldConfig(
+                        name='status',
+                        type=['null', 'string'],
+                        description='Status of the refund (pending, requires_action, succeeded, failed, or canceled).',
+                    ),
+                    CacheFieldConfig(
+                        name='transfer_reversal',
+                        type=['null', 'string'],
+                        description='ID of the reversal of the transfer that funded the charge being refunded (Connect only).',
+                    ),
+                    CacheFieldConfig(
+                        name='updated',
+                        type=['null', 'integer'],
+                        description='Timestamp indicating when the refund was last updated.',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='subscriptions',
+                suggested=True,
+                x_airbyte_name='subscriptions',
+                fields=[
+                    CacheFieldConfig(
+                        name='application',
+                        type=['null', 'string'],
+                        description='For Connect platforms, the application associated with the subscription.',
+                    ),
+                    CacheFieldConfig(
+                        name='application_fee_percent',
+                        type=['null', 'number'],
+                        description='For Connect platforms, the percentage of the subscription amount taken as an application fee.',
+                    ),
+                    CacheFieldConfig(
+                        name='automatic_tax',
+                        type=['null', 'object'],
+                        description='Automatic tax calculation settings for the subscription.',
+                    ),
+                    CacheFieldConfig(
+                        name='billing',
+                        type=['null', 'string'],
+                        description='Billing mode configuration for the subscription.',
+                    ),
+                    CacheFieldConfig(
+                        name='billing_cycle_anchor',
+                        type=['null', 'number'],
+                        description='Timestamp determining when the billing cycle for the subscription starts.',
+                    ),
+                    CacheFieldConfig(
+                        name='billing_cycle_anchor_config',
+                        type=['null', 'object'],
+                        description="Configuration for the subscription's billing cycle anchor behavior.",
+                    ),
+                    CacheFieldConfig(
+                        name='billing_thresholds',
+                        type=['null', 'object'],
+                        description='Defines thresholds at which an invoice will be sent, controlling billing timing based on usage.',
+                    ),
+                    CacheFieldConfig(
+                        name='cancel_at',
+                        type=['null', 'number'],
+                        description='Timestamp indicating when the subscription is scheduled to be canceled.',
+                    ),
+                    CacheFieldConfig(
+                        name='cancel_at_period_end',
+                        type=['null', 'boolean'],
+                        description='Boolean indicating whether the subscription will be canceled at the end of the current billing period.',
+                    ),
+                    CacheFieldConfig(
+                        name='canceled_at',
+                        type=['null', 'number'],
+                        description='Timestamp indicating when the subscription was canceled, if applicable.',
+                    ),
+                    CacheFieldConfig(
+                        name='cancellation_details',
+                        type=['null', 'object'],
+                        description='Details about why and how the subscription was canceled.',
+                    ),
+                    CacheFieldConfig(
+                        name='collection_method',
+                        type=['null', 'string'],
+                        description='How invoices are collected (charge_automatically or send_invoice).',
+                    ),
+                    CacheFieldConfig(
+                        name='created',
+                        type=['null', 'integer'],
+                        description='Timestamp indicating when the subscription was created.',
+                    ),
+                    CacheFieldConfig(
+                        name='currency',
+                        type=['null', 'string'],
+                        description='Three-letter ISO currency code in lowercase indicating the currency for the subscription.',
+                    ),
+                    CacheFieldConfig(
+                        name='current_period_end',
+                        type=['null', 'number'],
+                        description='Timestamp marking the end of the current billing period.',
+                    ),
+                    CacheFieldConfig(
+                        name='current_period_start',
+                        type=['null', 'integer'],
+                        description='Timestamp marking the start of the current billing period.',
+                    ),
+                    CacheFieldConfig(
+                        name='customer',
+                        type=['null', 'string'],
+                        description='ID of the customer who owns the subscription, expandable to full customer object.',
+                    ),
+                    CacheFieldConfig(
+                        name='days_until_due',
+                        type=['null', 'integer'],
+                        description='Number of days until the invoice is due for subscriptions using send_invoice collection method.',
+                    ),
+                    CacheFieldConfig(
+                        name='default_payment_method',
+                        type=['null', 'string'],
+                        description='ID of the default payment method for the subscription, taking precedence over default_source.',
+                    ),
+                    CacheFieldConfig(
+                        name='default_source',
+                        type=['null', 'string'],
+                        description='ID of the default payment source for the subscription.',
+                    ),
+                    CacheFieldConfig(
+                        name='default_tax_rates',
+                        type=['null', 'array'],
+                        description='Tax rates that apply to the subscription by default.',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='Human-readable description of the subscription, displayable to the customer.',
+                    ),
+                    CacheFieldConfig(
+                        name='discount',
+                        type=['null', 'object'],
+                        description='Describes any discount currently applied to the subscription.',
+                    ),
+                    CacheFieldConfig(
+                        name='ended_at',
+                        type=['null', 'number'],
+                        description='Timestamp indicating when the subscription ended, if applicable.',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique identifier for the subscription object.',
+                    ),
+                    CacheFieldConfig(
+                        name='invoice_settings',
+                        type=['null', 'object'],
+                        description='Settings for invoices generated by this subscription, such as custom fields and footer.',
+                    ),
+                    CacheFieldConfig(
+                        name='is_deleted',
+                        type=['null', 'boolean'],
+                        description='Indicates whether the subscription has been deleted.',
+                    ),
+                    CacheFieldConfig(
+                        name='items',
+                        type=['null', 'object'],
+                        description='List of subscription items, each with an attached price defining what the customer is subscribed to.',
+                    ),
+                    CacheFieldConfig(
+                        name='latest_invoice',
+                        type=['null', 'string'],
+                        description='The most recent invoice this subscription has generated, expandable to full invoice object.',
+                    ),
+                    CacheFieldConfig(
+                        name='livemode',
+                        type=['null', 'boolean'],
+                        description='Indicates whether the subscription exists in live mode (true) or test mode (false).',
+                    ),
+                    CacheFieldConfig(
+                        name='metadata',
+                        type=['null', 'object'],
+                        description='Set of key-value pairs that you can attach to the subscription for storing additional structured information.',
+                    ),
+                    CacheFieldConfig(
+                        name='next_pending_invoice_item_invoice',
+                        type=['null', 'integer'],
+                        description='Timestamp when the next invoice for pending invoice items will be created.',
+                    ),
+                    CacheFieldConfig(
+                        name='object',
+                        type=['null', 'string'],
+                        description="String representing the object type, always 'subscription'.",
+                    ),
+                    CacheFieldConfig(
+                        name='on_behalf_of',
+                        type=['null', 'string'],
+                        description='For Connect platforms, the account for which the subscription is being created or managed.',
+                    ),
+                    CacheFieldConfig(
+                        name='pause_collection',
+                        type=['null', 'object'],
+                        description='Configuration for pausing collection on the subscription while retaining the subscription structure.',
+                    ),
+                    CacheFieldConfig(
+                        name='payment_settings',
+                        type=['null', 'object'],
+                        description='Payment settings for invoices generated by this subscription.',
+                    ),
+                    CacheFieldConfig(
+                        name='pending_invoice_item_interval',
+                        type=['null', 'object'],
+                        description='Specifies an interval for aggregating usage records into pending invoice items.',
+                    ),
+                    CacheFieldConfig(
+                        name='pending_setup_intent',
+                        type=['null', 'string'],
+                        description='SetupIntent used for collecting user authentication when updating payment methods without immediate payment.',
+                    ),
+                    CacheFieldConfig(
+                        name='pending_update',
+                        type=['null', 'object'],
+                        description='If specified, pending updates that will be applied to the subscription once the latest_invoice has been paid.',
+                    ),
+                    CacheFieldConfig(
+                        name='plan',
+                        type=['null', 'object'],
+                        description='The plan associated with the subscription (deprecated, use items instead).',
+                    ),
+                    CacheFieldConfig(
+                        name='quantity',
+                        type=['null', 'integer'],
+                        description='Quantity of the plan subscribed to (deprecated, use items instead).',
+                    ),
+                    CacheFieldConfig(
+                        name='schedule',
+                        type=['null', 'string'],
+                        description="ID of the subscription schedule managing this subscription's lifecycle, if applicable.",
+                    ),
+                    CacheFieldConfig(
+                        name='start_date',
+                        type=['null', 'integer'],
+                        description='Timestamp indicating when the subscription started.',
+                    ),
+                    CacheFieldConfig(
+                        name='status',
+                        type=['null', 'string'],
+                        description='Current status of the subscription (incomplete, incomplete_expired, trialing, active, past_due, canceled, unpaid, or paused).',
+                    ),
+                    CacheFieldConfig(
+                        name='tax_percent',
+                        type=['null', 'number'],
+                        description='The percentage of tax applied to the subscription (deprecated, use default_tax_rates instead).',
+                    ),
+                    CacheFieldConfig(
+                        name='test_clock',
+                        type=['null', 'string'],
+                        description='ID of the test clock associated with this subscription for simulating time-based scenarios.',
+                    ),
+                    CacheFieldConfig(
+                        name='transfer_data',
+                        type=['null', 'object'],
+                        description='For Connect platforms, the account receiving funds from the subscription and optional percentage transferred.',
+                    ),
+                    CacheFieldConfig(
+                        name='trial_end',
+                        type=['null', 'number'],
+                        description='Timestamp indicating when the trial period ends, if applicable.',
+                    ),
+                    CacheFieldConfig(
+                        name='trial_settings',
+                        type=['null', 'object'],
+                        description='Settings related to trial periods, including conditions for ending trials.',
+                    ),
+                    CacheFieldConfig(
+                        name='trial_start',
+                        type=['null', 'integer'],
+                        description='Timestamp indicating when the trial period began, if applicable.',
+                    ),
+                    CacheFieldConfig(
+                        name='updated',
+                        type=['null', 'integer'],
+                        description='Timestamp indicating when the subscription was last updated.',
+                    ),
+                ],
+            ),
+        ],
+    ),
     search_field_paths={
         'charges': [
             'amount',

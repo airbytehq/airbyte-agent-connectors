@@ -21,6 +21,9 @@ from airbyte_agent_sdk.schema.security import (
     AuthConfigSpec,
 )
 from airbyte_agent_sdk.schema.extensions import (
+    CacheConfig,
+    CacheEntityConfig,
+    CacheFieldConfig,
     EntityRelationshipConfig,
 )
 from airbyte_agent_sdk.schema.base import (
@@ -9721,6 +9724,483 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
             ],
         ),
     ],
+    context_store=CacheConfig(
+        entities=[
+            CacheEntityConfig(
+                entity='pages',
+                suggested=True,
+                x_airbyte_name='pages',
+                fields=[
+                    CacheFieldConfig(
+                        name='archived',
+                        type=['null', 'boolean'],
+                        description='Indicates whether the page is archived or not.',
+                    ),
+                    CacheFieldConfig(
+                        name='cover',
+                        type=['null', 'object'],
+                        description='URL or reference to the page cover image.',
+                    ),
+                    CacheFieldConfig(
+                        name='created_by',
+                        type=['null', 'object'],
+                        description='User ID or name of the creator of the page.',
+                    ),
+                    CacheFieldConfig(
+                        name='created_time',
+                        type=['null', 'string'],
+                        description='Date and time when the page was created.',
+                    ),
+                    CacheFieldConfig(
+                        name='icon',
+                        type=['null', 'object'],
+                        description='URL or reference to the page icon.',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique identifier of the page.',
+                    ),
+                    CacheFieldConfig(
+                        name='in_trash',
+                        type=['null', 'boolean'],
+                        description='Indicates whether the page is in trash or not.',
+                    ),
+                    CacheFieldConfig(
+                        name='last_edited_by',
+                        type=['null', 'object'],
+                        description='User ID or name of the last editor of the page.',
+                    ),
+                    CacheFieldConfig(
+                        name='last_edited_time',
+                        type=['null', 'string'],
+                        description='Date and time when the page was last edited.',
+                    ),
+                    CacheFieldConfig(
+                        name='object',
+                        type=['null', 'object'],
+                        description='Type or category of the page object.',
+                    ),
+                    CacheFieldConfig(
+                        name='parent',
+                        type=['null', 'object'],
+                        description='ID or reference to the parent page.',
+                    ),
+                    CacheFieldConfig(
+                        name='properties',
+                        type=['null', 'array'],
+                        description='Custom properties associated with the page.',
+                    ),
+                    CacheFieldConfig(
+                        name='public_url',
+                        type=['null', 'string'],
+                        description='Publicly accessible URL of the page.',
+                    ),
+                    CacheFieldConfig(
+                        name='url',
+                        type=['null', 'string'],
+                        description='URL of the page within the service.',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='users',
+                x_airbyte_name='users',
+                fields=[
+                    CacheFieldConfig(
+                        name='avatar_url',
+                        type=['null', 'string'],
+                        description="URL of the user's avatar",
+                    ),
+                    CacheFieldConfig(
+                        name='bot',
+                        type=['null', 'object'],
+                        description='Bot-specific data',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique identifier for the user',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description="User's display name",
+                    ),
+                    CacheFieldConfig(
+                        name='object',
+                        type=['null', 'object'],
+                        description='Always user',
+                    ),
+                    CacheFieldConfig(
+                        name='person',
+                        type=['null', 'object'],
+                        description='Person-specific data',
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'object'],
+                        description='Type of user (person or bot)',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='data_sources',
+                suggested=True,
+                x_airbyte_name='data_sources',
+                fields=[
+                    CacheFieldConfig(
+                        name='archived',
+                        type=['null', 'boolean'],
+                        description='Indicates if the data source is archived or not.',
+                    ),
+                    CacheFieldConfig(
+                        name='cover',
+                        type=['null', 'object'],
+                        description='URL or reference to the cover image of the data source.',
+                    ),
+                    CacheFieldConfig(
+                        name='created_by',
+                        type=['null', 'object'],
+                        description='The user who created the data source.',
+                    ),
+                    CacheFieldConfig(
+                        name='created_time',
+                        type=['null', 'string'],
+                        description='The timestamp when the data source was created.',
+                    ),
+                    CacheFieldConfig(
+                        name='database_parent',
+                        type=['null', 'object'],
+                        description='The grandparent of the data source (parent of the database).',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'array'],
+                        description='Description text associated with the data source.',
+                    ),
+                    CacheFieldConfig(
+                        name='icon',
+                        type=['null', 'object'],
+                        description='URL or reference to the icon of the data source.',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique identifier of the data source.',
+                    ),
+                    CacheFieldConfig(
+                        name='is_inline',
+                        type=['null', 'boolean'],
+                        description='Indicates if the data source is displayed inline.',
+                    ),
+                    CacheFieldConfig(
+                        name='last_edited_by',
+                        type=['null', 'object'],
+                        description='The user who last edited the data source.',
+                    ),
+                    CacheFieldConfig(
+                        name='last_edited_time',
+                        type=['null', 'string'],
+                        description='The timestamp when the data source was last edited.',
+                    ),
+                    CacheFieldConfig(
+                        name='object',
+                        type=['null', 'object'],
+                        description='The type of object (data_source).',
+                    ),
+                    CacheFieldConfig(
+                        name='parent',
+                        type=['null', 'object'],
+                        description='The parent database of the data source.',
+                    ),
+                    CacheFieldConfig(
+                        name='properties',
+                        type=['null', 'array'],
+                        description='Schema of properties for the data source.',
+                    ),
+                    CacheFieldConfig(
+                        name='public_url',
+                        type=['null', 'string'],
+                        description='Public URL to access the data source.',
+                    ),
+                    CacheFieldConfig(
+                        name='title',
+                        type=['null', 'array'],
+                        description='Title or name of the data source.',
+                    ),
+                    CacheFieldConfig(
+                        name='url',
+                        type=['null', 'string'],
+                        description='URL or reference to access the data source.',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='blocks',
+                suggested=True,
+                x_airbyte_name='blocks',
+                fields=[
+                    CacheFieldConfig(
+                        name='archived',
+                        type=['null', 'boolean'],
+                        description='Indicates if the block is archived or not.',
+                    ),
+                    CacheFieldConfig(
+                        name='bookmark',
+                        type=['null', 'object'],
+                        description='Represents a bookmark within the block',
+                    ),
+                    CacheFieldConfig(
+                        name='breadcrumb',
+                        type=['null', 'object'],
+                        description='Represents a breadcrumb block.',
+                    ),
+                    CacheFieldConfig(
+                        name='bulleted_list_item',
+                        type=['null', 'object'],
+                        description='Represents an item in a bulleted list.',
+                    ),
+                    CacheFieldConfig(
+                        name='callout',
+                        type=['null', 'object'],
+                        description='Describes a callout message or content in the block',
+                    ),
+                    CacheFieldConfig(
+                        name='child_database',
+                        type=['null', 'object'],
+                        description='Represents a child database block.',
+                    ),
+                    CacheFieldConfig(
+                        name='child_page',
+                        type=['null', 'object'],
+                        description='Represents a child page block.',
+                    ),
+                    CacheFieldConfig(
+                        name='code',
+                        type=['null', 'object'],
+                        description='Contains code snippets or blocks in the block content',
+                    ),
+                    CacheFieldConfig(
+                        name='column',
+                        type=['null', 'object'],
+                        description='Represents a column block.',
+                    ),
+                    CacheFieldConfig(
+                        name='column_list',
+                        type=['null', 'object'],
+                        description='Represents a list of columns.',
+                    ),
+                    CacheFieldConfig(
+                        name='created_by',
+                        type=['null', 'object'],
+                        description='The user who created the block.',
+                    ),
+                    CacheFieldConfig(
+                        name='created_time',
+                        type=['null', 'string'],
+                        description='The timestamp when the block was created.',
+                    ),
+                    CacheFieldConfig(
+                        name='divider',
+                        type=['null', 'object'],
+                        description='Represents a divider block.',
+                    ),
+                    CacheFieldConfig(
+                        name='embed',
+                        type=['null', 'object'],
+                        description='Contains embedded content such as videos, tweets, etc.',
+                    ),
+                    CacheFieldConfig(
+                        name='equation',
+                        type=['null', 'object'],
+                        description='Represents an equation or mathematical formula in the block',
+                    ),
+                    CacheFieldConfig(
+                        name='file',
+                        type=['null', 'object'],
+                        description='Represents a file block.',
+                    ),
+                    CacheFieldConfig(
+                        name='has_children',
+                        type=['null', 'boolean'],
+                        description='Indicates if the block has children or not.',
+                    ),
+                    CacheFieldConfig(
+                        name='heading_1',
+                        type=['null', 'object'],
+                        description='Represents a level 1 heading.',
+                    ),
+                    CacheFieldConfig(
+                        name='heading_2',
+                        type=['null', 'object'],
+                        description='Represents a level 2 heading.',
+                    ),
+                    CacheFieldConfig(
+                        name='heading_3',
+                        type=['null', 'object'],
+                        description='Represents a level 3 heading.',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='The unique identifier of the block.',
+                    ),
+                    CacheFieldConfig(
+                        name='image',
+                        type=['null', 'object'],
+                        description='Represents an image block.',
+                    ),
+                    CacheFieldConfig(
+                        name='last_edited_by',
+                        type=['null', 'object'],
+                        description='The user who last edited the block.',
+                    ),
+                    CacheFieldConfig(
+                        name='last_edited_time',
+                        type=['null', 'string'],
+                        description='The timestamp when the block was last edited.',
+                    ),
+                    CacheFieldConfig(
+                        name='link_preview',
+                        type=['null', 'object'],
+                        description='Displays a preview of an external link within the block',
+                    ),
+                    CacheFieldConfig(
+                        name='link_to_page',
+                        type=['null', 'object'],
+                        description='Provides a link to another page within the block',
+                    ),
+                    CacheFieldConfig(
+                        name='numbered_list_item',
+                        type=['null', 'object'],
+                        description='Represents an item in a numbered list.',
+                    ),
+                    CacheFieldConfig(
+                        name='object',
+                        type=['null', 'object'],
+                        description='Represents an object block.',
+                    ),
+                    CacheFieldConfig(
+                        name='paragraph',
+                        type=['null', 'object'],
+                        description='Represents a paragraph block.',
+                    ),
+                    CacheFieldConfig(
+                        name='parent',
+                        type=['null', 'object'],
+                        description='The parent block of the current block.',
+                    ),
+                    CacheFieldConfig(
+                        name='pdf',
+                        type=['null', 'object'],
+                        description='Represents a PDF document block.',
+                    ),
+                    CacheFieldConfig(
+                        name='quote',
+                        type=['null', 'object'],
+                        description='Represents a quote block.',
+                    ),
+                    CacheFieldConfig(
+                        name='synced_block',
+                        type=['null', 'object'],
+                        description='Represents a block synced from another source',
+                    ),
+                    CacheFieldConfig(
+                        name='table',
+                        type=['null', 'object'],
+                        description='Represents a table within the block',
+                    ),
+                    CacheFieldConfig(
+                        name='table_of_contents',
+                        type=['null', 'object'],
+                        description='Contains information regarding the table of contents',
+                    ),
+                    CacheFieldConfig(
+                        name='table_row',
+                        type=['null', 'object'],
+                        description='Represents a row in a table within the block',
+                    ),
+                    CacheFieldConfig(
+                        name='template',
+                        type=['null', 'object'],
+                        description='Specifies a template used within the block',
+                    ),
+                    CacheFieldConfig(
+                        name='to_do',
+                        type=['null', 'object'],
+                        description='Represents a to-do list or task content',
+                    ),
+                    CacheFieldConfig(
+                        name='toggle',
+                        type=['null', 'object'],
+                        description='Represents a toggle block.',
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'object'],
+                        description='The type of the block.',
+                    ),
+                    CacheFieldConfig(
+                        name='unsupported',
+                        type=['null', 'object'],
+                        description='Represents an unsupported block.',
+                    ),
+                    CacheFieldConfig(
+                        name='video',
+                        type=['null', 'object'],
+                        description='Represents a video block.',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='comments',
+                x_airbyte_name='comments',
+                fields=[
+                    CacheFieldConfig(
+                        name='created_by',
+                        type=['null', 'object'],
+                        description='User who created the comment.',
+                    ),
+                    CacheFieldConfig(
+                        name='created_time',
+                        type=['null', 'string'],
+                        description='Date and time when the comment was created.',
+                    ),
+                    CacheFieldConfig(
+                        name='discussion_id',
+                        type=['null', 'string'],
+                        description='Discussion thread ID.',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique identifier for the comment.',
+                    ),
+                    CacheFieldConfig(
+                        name='last_edited_time',
+                        type=['null', 'string'],
+                        description='Date and time when the comment was last edited.',
+                    ),
+                    CacheFieldConfig(
+                        name='object',
+                        type=['null', 'string'],
+                        description='Always comment.',
+                    ),
+                    CacheFieldConfig(
+                        name='parent',
+                        type=['null', 'object'],
+                        description='Parent of the comment.',
+                    ),
+                    CacheFieldConfig(
+                        name='rich_text',
+                        type=['null', 'array'],
+                        description='Content of the comment as rich text.',
+                    ),
+                ],
+            ),
+        ],
+    ),
     search_field_paths={
         'pages': [
             'archived',

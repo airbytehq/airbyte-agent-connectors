@@ -20,6 +20,9 @@ from airbyte_agent_sdk.schema.security import (
     AuthConfigSpec,
 )
 from airbyte_agent_sdk.schema.extensions import (
+    CacheConfig,
+    CacheEntityConfig,
+    CacheFieldConfig,
     EntityRelationshipConfig,
 )
 from airbyte_agent_sdk.schema.base import (
@@ -2905,6 +2908,999 @@ SalesforceConnectorModel: ConnectorModel = ConnectorModel(
             },
         ),
     ],
+    context_store=CacheConfig(
+        entities=[
+            CacheEntityConfig(
+                entity='accounts',
+                suggested=True,
+                x_airbyte_name='Account',
+                fields=[
+                    CacheFieldConfig(
+                        name='Id',
+                        type=['string'],
+                        description='Unique identifier for the account record',
+                    ),
+                    CacheFieldConfig(
+                        name='Name',
+                        type=['null', 'string'],
+                        description='Name of the account or company',
+                    ),
+                    CacheFieldConfig(
+                        name='AccountSource',
+                        type=['null', 'string'],
+                        description='Source of the account record (e.g., Web, Referral)',
+                    ),
+                    CacheFieldConfig(
+                        name='BillingAddress',
+                        type=['null', 'object'],
+                        description='Complete billing address as a compound field',
+                    ),
+                    CacheFieldConfig(
+                        name='BillingCity',
+                        type=['null', 'string'],
+                        description='City portion of the billing address',
+                    ),
+                    CacheFieldConfig(
+                        name='BillingCountry',
+                        type=['null', 'string'],
+                        description='Country portion of the billing address',
+                    ),
+                    CacheFieldConfig(
+                        name='BillingPostalCode',
+                        type=['null', 'string'],
+                        description='Postal code portion of the billing address',
+                    ),
+                    CacheFieldConfig(
+                        name='BillingState',
+                        type=['null', 'string'],
+                        description='State or province portion of the billing address',
+                    ),
+                    CacheFieldConfig(
+                        name='BillingStreet',
+                        type=['null', 'string'],
+                        description='Street address portion of the billing address',
+                    ),
+                    CacheFieldConfig(
+                        name='CreatedById',
+                        type=['null', 'string'],
+                        description='ID of the user who created this account',
+                    ),
+                    CacheFieldConfig(
+                        name='CreatedDate',
+                        type=['null', 'string'],
+                        description='Date and time when the account was created',
+                    ),
+                    CacheFieldConfig(
+                        name='Description',
+                        type=['null', 'string'],
+                        description='Text description of the account',
+                    ),
+                    CacheFieldConfig(
+                        name='Industry',
+                        type=['null', 'string'],
+                        description='Primary business industry of the account',
+                    ),
+                    CacheFieldConfig(
+                        name='IsDeleted',
+                        type=['null', 'boolean'],
+                        description='Whether the account has been moved to the Recycle Bin',
+                    ),
+                    CacheFieldConfig(
+                        name='LastActivityDate',
+                        type=['null', 'string'],
+                        description='Date of the last activity associated with this account',
+                    ),
+                    CacheFieldConfig(
+                        name='LastModifiedById',
+                        type=['null', 'string'],
+                        description='ID of the user who last modified this account',
+                    ),
+                    CacheFieldConfig(
+                        name='LastModifiedDate',
+                        type=['null', 'string'],
+                        description='Date and time when the account was last modified',
+                    ),
+                    CacheFieldConfig(
+                        name='NumberOfEmployees',
+                        type=['null', 'integer'],
+                        description='Number of employees at the account',
+                    ),
+                    CacheFieldConfig(
+                        name='OwnerId',
+                        type=['null', 'string'],
+                        description='ID of the user who owns this account',
+                    ),
+                    CacheFieldConfig(
+                        name='ParentId',
+                        type=['null', 'string'],
+                        description='ID of the parent account, if this is a subsidiary',
+                    ),
+                    CacheFieldConfig(
+                        name='Phone',
+                        type=['null', 'string'],
+                        description='Primary phone number for the account',
+                    ),
+                    CacheFieldConfig(
+                        name='ShippingAddress',
+                        type=['null', 'object'],
+                        description='Complete shipping address as a compound field',
+                    ),
+                    CacheFieldConfig(
+                        name='ShippingCity',
+                        type=['null', 'string'],
+                        description='City portion of the shipping address',
+                    ),
+                    CacheFieldConfig(
+                        name='ShippingCountry',
+                        type=['null', 'string'],
+                        description='Country portion of the shipping address',
+                    ),
+                    CacheFieldConfig(
+                        name='ShippingPostalCode',
+                        type=['null', 'string'],
+                        description='Postal code portion of the shipping address',
+                    ),
+                    CacheFieldConfig(
+                        name='ShippingState',
+                        type=['null', 'string'],
+                        description='State or province portion of the shipping address',
+                    ),
+                    CacheFieldConfig(
+                        name='ShippingStreet',
+                        type=['null', 'string'],
+                        description='Street address portion of the shipping address',
+                    ),
+                    CacheFieldConfig(
+                        name='Type',
+                        type=['null', 'string'],
+                        description='Type of account (e.g., Customer, Partner, Competitor)',
+                    ),
+                    CacheFieldConfig(
+                        name='Website',
+                        type=['null', 'string'],
+                        description='Website URL for the account',
+                    ),
+                    CacheFieldConfig(
+                        name='SystemModstamp',
+                        type=['null', 'string'],
+                        description='System timestamp when the record was last modified',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='contacts',
+                suggested=True,
+                x_airbyte_name='Contact',
+                fields=[
+                    CacheFieldConfig(
+                        name='Id',
+                        type=['string'],
+                        description='Unique identifier for the contact record',
+                    ),
+                    CacheFieldConfig(
+                        name='AccountId',
+                        type=['null', 'string'],
+                        description='ID of the account this contact is associated with',
+                    ),
+                    CacheFieldConfig(
+                        name='CreatedById',
+                        type=['null', 'string'],
+                        description='ID of the user who created this contact',
+                    ),
+                    CacheFieldConfig(
+                        name='CreatedDate',
+                        type=['null', 'string'],
+                        description='Date and time when the contact was created',
+                    ),
+                    CacheFieldConfig(
+                        name='Department',
+                        type=['null', 'string'],
+                        description='Department within the account where the contact works',
+                    ),
+                    CacheFieldConfig(
+                        name='Email',
+                        type=['null', 'string'],
+                        description='Email address of the contact',
+                    ),
+                    CacheFieldConfig(
+                        name='FirstName',
+                        type=['null', 'string'],
+                        description='First name of the contact',
+                    ),
+                    CacheFieldConfig(
+                        name='IsDeleted',
+                        type=['null', 'boolean'],
+                        description='Whether the contact has been moved to the Recycle Bin',
+                    ),
+                    CacheFieldConfig(
+                        name='LastActivityDate',
+                        type=['null', 'string'],
+                        description='Date of the last activity associated with this contact',
+                    ),
+                    CacheFieldConfig(
+                        name='LastModifiedById',
+                        type=['null', 'string'],
+                        description='ID of the user who last modified this contact',
+                    ),
+                    CacheFieldConfig(
+                        name='LastModifiedDate',
+                        type=['null', 'string'],
+                        description='Date and time when the contact was last modified',
+                    ),
+                    CacheFieldConfig(
+                        name='LastName',
+                        type=['null', 'string'],
+                        description='Last name of the contact',
+                    ),
+                    CacheFieldConfig(
+                        name='LeadSource',
+                        type=['null', 'string'],
+                        description='Source from which this contact originated',
+                    ),
+                    CacheFieldConfig(
+                        name='MailingAddress',
+                        type=['null', 'object'],
+                        description='Complete mailing address as a compound field',
+                    ),
+                    CacheFieldConfig(
+                        name='MailingCity',
+                        type=['null', 'string'],
+                        description='City portion of the mailing address',
+                    ),
+                    CacheFieldConfig(
+                        name='MailingCountry',
+                        type=['null', 'string'],
+                        description='Country portion of the mailing address',
+                    ),
+                    CacheFieldConfig(
+                        name='MailingPostalCode',
+                        type=['null', 'string'],
+                        description='Postal code portion of the mailing address',
+                    ),
+                    CacheFieldConfig(
+                        name='MailingState',
+                        type=['null', 'string'],
+                        description='State or province portion of the mailing address',
+                    ),
+                    CacheFieldConfig(
+                        name='MailingStreet',
+                        type=['null', 'string'],
+                        description='Street address portion of the mailing address',
+                    ),
+                    CacheFieldConfig(
+                        name='MobilePhone',
+                        type=['null', 'string'],
+                        description='Mobile phone number of the contact',
+                    ),
+                    CacheFieldConfig(
+                        name='Name',
+                        type=['null', 'string'],
+                        description='Full name of the contact (read-only, concatenation of first and last name)',
+                    ),
+                    CacheFieldConfig(
+                        name='OwnerId',
+                        type=['null', 'string'],
+                        description='ID of the user who owns this contact',
+                    ),
+                    CacheFieldConfig(
+                        name='Phone',
+                        type=['null', 'string'],
+                        description='Business phone number of the contact',
+                    ),
+                    CacheFieldConfig(
+                        name='ReportsToId',
+                        type=['null', 'string'],
+                        description='ID of the contact this contact reports to',
+                    ),
+                    CacheFieldConfig(
+                        name='Title',
+                        type=['null', 'string'],
+                        description='Job title of the contact',
+                    ),
+                    CacheFieldConfig(
+                        name='SystemModstamp',
+                        type=['null', 'string'],
+                        description='System timestamp when the record was last modified',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='leads',
+                suggested=True,
+                x_airbyte_name='Lead',
+                fields=[
+                    CacheFieldConfig(
+                        name='Id',
+                        type=['string'],
+                        description='Unique identifier for the lead record',
+                    ),
+                    CacheFieldConfig(
+                        name='Address',
+                        type=['null', 'object'],
+                        description='Complete address as a compound field',
+                    ),
+                    CacheFieldConfig(
+                        name='City',
+                        type=['null', 'string'],
+                        description='City portion of the address',
+                    ),
+                    CacheFieldConfig(
+                        name='Company',
+                        type=['null', 'string'],
+                        description='Company or organization the lead works for',
+                    ),
+                    CacheFieldConfig(
+                        name='ConvertedAccountId',
+                        type=['null', 'string'],
+                        description='ID of the account created when lead was converted',
+                    ),
+                    CacheFieldConfig(
+                        name='ConvertedContactId',
+                        type=['null', 'string'],
+                        description='ID of the contact created when lead was converted',
+                    ),
+                    CacheFieldConfig(
+                        name='ConvertedDate',
+                        type=['null', 'string'],
+                        description='Date when the lead was converted',
+                    ),
+                    CacheFieldConfig(
+                        name='ConvertedOpportunityId',
+                        type=['null', 'string'],
+                        description='ID of the opportunity created when lead was converted',
+                    ),
+                    CacheFieldConfig(
+                        name='Country',
+                        type=['null', 'string'],
+                        description='Country portion of the address',
+                    ),
+                    CacheFieldConfig(
+                        name='CreatedById',
+                        type=['null', 'string'],
+                        description='ID of the user who created this lead',
+                    ),
+                    CacheFieldConfig(
+                        name='CreatedDate',
+                        type=['null', 'string'],
+                        description='Date and time when the lead was created',
+                    ),
+                    CacheFieldConfig(
+                        name='Email',
+                        type=['null', 'string'],
+                        description='Email address of the lead',
+                    ),
+                    CacheFieldConfig(
+                        name='FirstName',
+                        type=['null', 'string'],
+                        description='First name of the lead',
+                    ),
+                    CacheFieldConfig(
+                        name='Industry',
+                        type=['null', 'string'],
+                        description="Industry the lead's company operates in",
+                    ),
+                    CacheFieldConfig(
+                        name='IsConverted',
+                        type=['null', 'boolean'],
+                        description='Whether the lead has been converted to an account, contact, and opportunity',
+                    ),
+                    CacheFieldConfig(
+                        name='IsDeleted',
+                        type=['null', 'boolean'],
+                        description='Whether the lead has been moved to the Recycle Bin',
+                    ),
+                    CacheFieldConfig(
+                        name='LastActivityDate',
+                        type=['null', 'string'],
+                        description='Date of the last activity associated with this lead',
+                    ),
+                    CacheFieldConfig(
+                        name='LastModifiedById',
+                        type=['null', 'string'],
+                        description='ID of the user who last modified this lead',
+                    ),
+                    CacheFieldConfig(
+                        name='LastModifiedDate',
+                        type=['null', 'string'],
+                        description='Date and time when the lead was last modified',
+                    ),
+                    CacheFieldConfig(
+                        name='LastName',
+                        type=['null', 'string'],
+                        description='Last name of the lead',
+                    ),
+                    CacheFieldConfig(
+                        name='LeadSource',
+                        type=['null', 'string'],
+                        description='Source from which this lead originated',
+                    ),
+                    CacheFieldConfig(
+                        name='MobilePhone',
+                        type=['null', 'string'],
+                        description='Mobile phone number of the lead',
+                    ),
+                    CacheFieldConfig(
+                        name='Name',
+                        type=['null', 'string'],
+                        description='Full name of the lead (read-only, concatenation of first and last name)',
+                    ),
+                    CacheFieldConfig(
+                        name='NumberOfEmployees',
+                        type=['null', 'integer'],
+                        description="Number of employees at the lead's company",
+                    ),
+                    CacheFieldConfig(
+                        name='OwnerId',
+                        type=['null', 'string'],
+                        description='ID of the user who owns this lead',
+                    ),
+                    CacheFieldConfig(
+                        name='Phone',
+                        type=['null', 'string'],
+                        description='Phone number of the lead',
+                    ),
+                    CacheFieldConfig(
+                        name='PostalCode',
+                        type=['null', 'string'],
+                        description='Postal code portion of the address',
+                    ),
+                    CacheFieldConfig(
+                        name='Rating',
+                        type=['null', 'string'],
+                        description='Rating of the lead (e.g., Hot, Warm, Cold)',
+                    ),
+                    CacheFieldConfig(
+                        name='State',
+                        type=['null', 'string'],
+                        description='State or province portion of the address',
+                    ),
+                    CacheFieldConfig(
+                        name='Status',
+                        type=['null', 'string'],
+                        description='Current status of the lead in the sales process',
+                    ),
+                    CacheFieldConfig(
+                        name='Street',
+                        type=['null', 'string'],
+                        description='Street address portion of the address',
+                    ),
+                    CacheFieldConfig(
+                        name='Title',
+                        type=['null', 'string'],
+                        description='Job title of the lead',
+                    ),
+                    CacheFieldConfig(
+                        name='Website',
+                        type=['null', 'string'],
+                        description="Website URL for the lead's company",
+                    ),
+                    CacheFieldConfig(
+                        name='SystemModstamp',
+                        type=['null', 'string'],
+                        description='System timestamp when the record was last modified',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='opportunities',
+                suggested=True,
+                x_airbyte_name='Opportunity',
+                fields=[
+                    CacheFieldConfig(
+                        name='Id',
+                        type=['string'],
+                        description='Unique identifier for the opportunity record',
+                    ),
+                    CacheFieldConfig(
+                        name='AccountId',
+                        type=['null', 'string'],
+                        description='ID of the account associated with this opportunity',
+                    ),
+                    CacheFieldConfig(
+                        name='Amount',
+                        type=['null', 'number'],
+                        description='Estimated total sale amount',
+                    ),
+                    CacheFieldConfig(
+                        name='CampaignId',
+                        type=['null', 'string'],
+                        description='ID of the campaign that generated this opportunity',
+                    ),
+                    CacheFieldConfig(
+                        name='CloseDate',
+                        type=['null', 'string'],
+                        description='Expected close date for the opportunity',
+                    ),
+                    CacheFieldConfig(
+                        name='ContactId',
+                        type=['null', 'string'],
+                        description='ID of the primary contact for this opportunity',
+                    ),
+                    CacheFieldConfig(
+                        name='CreatedById',
+                        type=['null', 'string'],
+                        description='ID of the user who created this opportunity',
+                    ),
+                    CacheFieldConfig(
+                        name='CreatedDate',
+                        type=['null', 'string'],
+                        description='Date and time when the opportunity was created',
+                    ),
+                    CacheFieldConfig(
+                        name='Description',
+                        type=['null', 'string'],
+                        description='Text description of the opportunity',
+                    ),
+                    CacheFieldConfig(
+                        name='ExpectedRevenue',
+                        type=['null', 'number'],
+                        description='Expected revenue based on amount and probability',
+                    ),
+                    CacheFieldConfig(
+                        name='ForecastCategory',
+                        type=['null', 'string'],
+                        description='Forecast category for this opportunity',
+                    ),
+                    CacheFieldConfig(
+                        name='ForecastCategoryName',
+                        type=['null', 'string'],
+                        description='Name of the forecast category',
+                    ),
+                    CacheFieldConfig(
+                        name='IsClosed',
+                        type=['null', 'boolean'],
+                        description='Whether the opportunity is closed',
+                    ),
+                    CacheFieldConfig(
+                        name='IsDeleted',
+                        type=['null', 'boolean'],
+                        description='Whether the opportunity has been moved to the Recycle Bin',
+                    ),
+                    CacheFieldConfig(
+                        name='IsWon',
+                        type=['null', 'boolean'],
+                        description='Whether the opportunity was won',
+                    ),
+                    CacheFieldConfig(
+                        name='LastActivityDate',
+                        type=['null', 'string'],
+                        description='Date of the last activity associated with this opportunity',
+                    ),
+                    CacheFieldConfig(
+                        name='LastModifiedById',
+                        type=['null', 'string'],
+                        description='ID of the user who last modified this opportunity',
+                    ),
+                    CacheFieldConfig(
+                        name='LastModifiedDate',
+                        type=['null', 'string'],
+                        description='Date and time when the opportunity was last modified',
+                    ),
+                    CacheFieldConfig(
+                        name='LeadSource',
+                        type=['null', 'string'],
+                        description='Source from which this opportunity originated',
+                    ),
+                    CacheFieldConfig(
+                        name='Name',
+                        type=['null', 'string'],
+                        description='Name of the opportunity',
+                    ),
+                    CacheFieldConfig(
+                        name='NextStep',
+                        type=['null', 'string'],
+                        description='Description of the next step in closing the opportunity',
+                    ),
+                    CacheFieldConfig(
+                        name='OwnerId',
+                        type=['null', 'string'],
+                        description='ID of the user who owns this opportunity',
+                    ),
+                    CacheFieldConfig(
+                        name='Probability',
+                        type=['null', 'number'],
+                        description='Likelihood of closing the opportunity (percentage)',
+                    ),
+                    CacheFieldConfig(
+                        name='StageName',
+                        type=['null', 'string'],
+                        description='Current stage of the opportunity in the sales process',
+                    ),
+                    CacheFieldConfig(
+                        name='Type',
+                        type=['null', 'string'],
+                        description='Type of opportunity (e.g., New Business, Existing Business)',
+                    ),
+                    CacheFieldConfig(
+                        name='SystemModstamp',
+                        type=['null', 'string'],
+                        description='System timestamp when the record was last modified',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='tasks',
+                suggested=True,
+                x_airbyte_name='Task',
+                fields=[
+                    CacheFieldConfig(
+                        name='Id',
+                        type=['string'],
+                        description='Unique identifier for the task record',
+                    ),
+                    CacheFieldConfig(
+                        name='AccountId',
+                        type=['null', 'string'],
+                        description='ID of the account associated with this task',
+                    ),
+                    CacheFieldConfig(
+                        name='ActivityDate',
+                        type=['null', 'string'],
+                        description='Due date for the task',
+                    ),
+                    CacheFieldConfig(
+                        name='CallDisposition',
+                        type=['null', 'string'],
+                        description='Result of the call, if this task represents a call',
+                    ),
+                    CacheFieldConfig(
+                        name='CallDurationInSeconds',
+                        type=['null', 'integer'],
+                        description='Duration of the call in seconds',
+                    ),
+                    CacheFieldConfig(
+                        name='CallType',
+                        type=['null', 'string'],
+                        description='Type of call (Inbound, Outbound, Internal)',
+                    ),
+                    CacheFieldConfig(
+                        name='CompletedDateTime',
+                        type=['null', 'string'],
+                        description='Date and time when the task was completed',
+                    ),
+                    CacheFieldConfig(
+                        name='CreatedById',
+                        type=['null', 'string'],
+                        description='ID of the user who created this task',
+                    ),
+                    CacheFieldConfig(
+                        name='CreatedDate',
+                        type=['null', 'string'],
+                        description='Date and time when the task was created',
+                    ),
+                    CacheFieldConfig(
+                        name='Description',
+                        type=['null', 'string'],
+                        description='Text description or notes about the task',
+                    ),
+                    CacheFieldConfig(
+                        name='IsClosed',
+                        type=['null', 'boolean'],
+                        description='Whether the task has been completed',
+                    ),
+                    CacheFieldConfig(
+                        name='IsDeleted',
+                        type=['null', 'boolean'],
+                        description='Whether the task has been moved to the Recycle Bin',
+                    ),
+                    CacheFieldConfig(
+                        name='IsHighPriority',
+                        type=['null', 'boolean'],
+                        description='Whether the task is marked as high priority',
+                    ),
+                    CacheFieldConfig(
+                        name='LastModifiedById',
+                        type=['null', 'string'],
+                        description='ID of the user who last modified this task',
+                    ),
+                    CacheFieldConfig(
+                        name='LastModifiedDate',
+                        type=['null', 'string'],
+                        description='Date and time when the task was last modified',
+                    ),
+                    CacheFieldConfig(
+                        name='OwnerId',
+                        type=['null', 'string'],
+                        description='ID of the user who owns this task',
+                    ),
+                    CacheFieldConfig(
+                        name='Priority',
+                        type=['null', 'string'],
+                        description='Priority level of the task (High, Normal, Low)',
+                    ),
+                    CacheFieldConfig(
+                        name='Status',
+                        type=['null', 'string'],
+                        description='Current status of the task',
+                    ),
+                    CacheFieldConfig(
+                        name='Subject',
+                        type=['null', 'string'],
+                        description='Subject or title of the task',
+                    ),
+                    CacheFieldConfig(
+                        name='TaskSubtype',
+                        type=['null', 'string'],
+                        description='Subtype of the task (e.g., Call, Email, Task)',
+                    ),
+                    CacheFieldConfig(
+                        name='Type',
+                        type=['null', 'string'],
+                        description='Type of task',
+                    ),
+                    CacheFieldConfig(
+                        name='WhatId',
+                        type=['null', 'string'],
+                        description='ID of the related object (Account, Opportunity, etc.)',
+                    ),
+                    CacheFieldConfig(
+                        name='WhoId',
+                        type=['null', 'string'],
+                        description='ID of the related person (Contact or Lead)',
+                    ),
+                    CacheFieldConfig(
+                        name='SystemModstamp',
+                        type=['null', 'string'],
+                        description='System timestamp when the record was last modified',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='users',
+                suggested=True,
+                x_airbyte_name='User',
+                fields=[
+                    CacheFieldConfig(
+                        name='Id',
+                        type=['string'],
+                        description='Unique identifier for the user record',
+                    ),
+                    CacheFieldConfig(
+                        name='AccountId',
+                        type=['null', 'string'],
+                        description='ID of the account associated with this user (for portal users)',
+                    ),
+                    CacheFieldConfig(
+                        name='Alias',
+                        type=['null', 'string'],
+                        description='Short name used to identify the user in list views and reports',
+                    ),
+                    CacheFieldConfig(
+                        name='City',
+                        type=['null', 'string'],
+                        description="City portion of the user's address",
+                    ),
+                    CacheFieldConfig(
+                        name='CompanyName',
+                        type=['null', 'string'],
+                        description="Name of the user's company",
+                    ),
+                    CacheFieldConfig(
+                        name='ContactId',
+                        type=['null', 'string'],
+                        description='ID of the contact associated with this user (for portal users)',
+                    ),
+                    CacheFieldConfig(
+                        name='Country',
+                        type=['null', 'string'],
+                        description="Country portion of the user's address",
+                    ),
+                    CacheFieldConfig(
+                        name='CreatedById',
+                        type=['null', 'string'],
+                        description='ID of the user who created this user record',
+                    ),
+                    CacheFieldConfig(
+                        name='CreatedDate',
+                        type=['null', 'string'],
+                        description='Date and time when the user was created',
+                    ),
+                    CacheFieldConfig(
+                        name='Department',
+                        type=['null', 'string'],
+                        description='Department within the organization',
+                    ),
+                    CacheFieldConfig(
+                        name='Division',
+                        type=['null', 'string'],
+                        description='Division within the organization',
+                    ),
+                    CacheFieldConfig(
+                        name='Email',
+                        type=['null', 'string'],
+                        description='Email address of the user',
+                    ),
+                    CacheFieldConfig(
+                        name='EmployeeNumber',
+                        type=['null', 'string'],
+                        description='Employee number or ID assigned by the organization',
+                    ),
+                    CacheFieldConfig(
+                        name='FirstName',
+                        type=['null', 'string'],
+                        description='First name of the user',
+                    ),
+                    CacheFieldConfig(
+                        name='IsActive',
+                        type=['null', 'boolean'],
+                        description='Whether the user is active and can log in',
+                    ),
+                    CacheFieldConfig(
+                        name='LastLoginDate',
+                        type=['null', 'string'],
+                        description="Date and time of the user's most recent login",
+                    ),
+                    CacheFieldConfig(
+                        name='LastModifiedById',
+                        type=['null', 'string'],
+                        description='ID of the user who last modified this user record',
+                    ),
+                    CacheFieldConfig(
+                        name='LastModifiedDate',
+                        type=['null', 'string'],
+                        description='Date and time when the user was last modified',
+                    ),
+                    CacheFieldConfig(
+                        name='LastName',
+                        type=['null', 'string'],
+                        description='Last name of the user',
+                    ),
+                    CacheFieldConfig(
+                        name='ManagerId',
+                        type=['null', 'string'],
+                        description="ID of the user's manager",
+                    ),
+                    CacheFieldConfig(
+                        name='MobilePhone',
+                        type=['null', 'string'],
+                        description='Mobile phone number of the user',
+                    ),
+                    CacheFieldConfig(
+                        name='Name',
+                        type=['null', 'string'],
+                        description='Full name of the user',
+                    ),
+                    CacheFieldConfig(
+                        name='Phone',
+                        type=['null', 'string'],
+                        description='Business phone number of the user',
+                    ),
+                    CacheFieldConfig(
+                        name='PostalCode',
+                        type=['null', 'string'],
+                        description="Postal code portion of the user's address",
+                    ),
+                    CacheFieldConfig(
+                        name='ProfileId',
+                        type=['null', 'string'],
+                        description="ID of the user's profile",
+                    ),
+                    CacheFieldConfig(
+                        name='State',
+                        type=['null', 'string'],
+                        description="State or province portion of the user's address",
+                    ),
+                    CacheFieldConfig(
+                        name='Street',
+                        type=['null', 'string'],
+                        description='Street address of the user',
+                    ),
+                    CacheFieldConfig(
+                        name='Title',
+                        type=['null', 'string'],
+                        description='Job title of the user',
+                    ),
+                    CacheFieldConfig(
+                        name='UserRoleId',
+                        type=['null', 'string'],
+                        description="ID of the user's role in the organization",
+                    ),
+                    CacheFieldConfig(
+                        name='UserType',
+                        type=['null', 'string'],
+                        description='Type of user license (e.g., Standard, PowerPartner)',
+                    ),
+                    CacheFieldConfig(
+                        name='Username',
+                        type=['null', 'string'],
+                        description='Username for logging into Salesforce (unique across all orgs)',
+                    ),
+                    CacheFieldConfig(
+                        name='SystemModstamp',
+                        type=['null', 'string'],
+                        description='System timestamp when the record was last modified',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='opportunity_stages',
+                suggested=True,
+                x_airbyte_name='OpportunityStage',
+                fields=[
+                    CacheFieldConfig(
+                        name='Id',
+                        type=['string'],
+                        description='Unique identifier for the opportunity stage record',
+                    ),
+                    CacheFieldConfig(
+                        name='ApiName',
+                        type=['null', 'string'],
+                        description='API name of the stage used in code and integrations',
+                    ),
+                    CacheFieldConfig(
+                        name='CreatedById',
+                        type=['null', 'string'],
+                        description='ID of the user who created this stage',
+                    ),
+                    CacheFieldConfig(
+                        name='CreatedDate',
+                        type=['null', 'string'],
+                        description='Date and time when the stage was created',
+                    ),
+                    CacheFieldConfig(
+                        name='DefaultProbability',
+                        type=['null', 'number'],
+                        description='Default probability percentage for opportunities at this stage',
+                    ),
+                    CacheFieldConfig(
+                        name='Description',
+                        type=['null', 'string'],
+                        description='Description of the stage',
+                    ),
+                    CacheFieldConfig(
+                        name='ForecastCategory',
+                        type=['null', 'string'],
+                        description='Forecast category for opportunities at this stage',
+                    ),
+                    CacheFieldConfig(
+                        name='ForecastCategoryName',
+                        type=['null', 'string'],
+                        description='Display name of the forecast category',
+                    ),
+                    CacheFieldConfig(
+                        name='IsActive',
+                        type=['null', 'boolean'],
+                        description='Whether the stage is currently active and can be used',
+                    ),
+                    CacheFieldConfig(
+                        name='IsClosed',
+                        type=['null', 'boolean'],
+                        description='Whether opportunities at this stage are considered closed',
+                    ),
+                    CacheFieldConfig(
+                        name='IsWon',
+                        type=['null', 'boolean'],
+                        description='Whether opportunities at this stage are considered won',
+                    ),
+                    CacheFieldConfig(
+                        name='LastModifiedById',
+                        type=['null', 'string'],
+                        description='ID of the user who last modified this stage',
+                    ),
+                    CacheFieldConfig(
+                        name='LastModifiedDate',
+                        type=['null', 'string'],
+                        description='Date and time when the stage was last modified',
+                    ),
+                    CacheFieldConfig(
+                        name='MasterLabel',
+                        type=['null', 'string'],
+                        description='Display label for the stage',
+                    ),
+                    CacheFieldConfig(
+                        name='SortOrder',
+                        type=['null', 'integer'],
+                        description='Order in which the stage appears in the sales process',
+                    ),
+                    CacheFieldConfig(
+                        name='SystemModstamp',
+                        type=['null', 'string'],
+                        description='System timestamp when the record was last modified',
+                    ),
+                ],
+            ),
+        ],
+    ),
     search_field_paths={
         'accounts': [
             'Id',

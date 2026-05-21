@@ -19,6 +19,12 @@ from airbyte_agent_sdk.schema.security import (
     AuthConfigFieldSpec,
     AuthConfigSpec,
 )
+from airbyte_agent_sdk.schema.extensions import (
+    CacheConfig,
+    CacheEntityConfig,
+    CacheFieldConfig,
+    CacheFieldProperty,
+)
 from airbyte_agent_sdk.schema.base import (
     ExampleQuestions,
 )
@@ -2678,6 +2684,227 @@ GmailConnectorModel: ConnectorModel = ConnectorModel(
             },
         ),
     ],
+    context_store=CacheConfig(
+        entities=[
+            CacheEntityConfig(
+                entity='profile',
+                x_airbyte_name='profile',
+                fields=[
+                    CacheFieldConfig(
+                        name='emailAddress',
+                        type=['string', 'null'],
+                        description='Email address of the authenticated Gmail account',
+                    ),
+                    CacheFieldConfig(
+                        name='historyId',
+                        type=['string', 'null'],
+                        description='Mailbox history record identifier used for incremental sync',
+                    ),
+                    CacheFieldConfig(
+                        name='messagesTotal',
+                        type=['number', 'null'],
+                        description='Total number of messages currently in the mailbox',
+                    ),
+                    CacheFieldConfig(
+                        name='threadsTotal',
+                        type=['number', 'null'],
+                        description='Total number of threads currently in the mailbox',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='messages',
+                suggested=True,
+                x_airbyte_name='messages_details',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type='string',
+                        description='Unique identifier for the message',
+                    ),
+                    CacheFieldConfig(
+                        name='threadId',
+                        type=['string', 'null'],
+                        description='Identifier of the thread this message belongs to',
+                    ),
+                    CacheFieldConfig(
+                        name='labelIds',
+                        type=['array', 'null'],
+                        description='Labels applied to the message',
+                    ),
+                    CacheFieldConfig(
+                        name='snippet',
+                        type=['string', 'null'],
+                        description='Short snippet of the message text',
+                    ),
+                    CacheFieldConfig(
+                        name='historyId',
+                        type=['string', 'null'],
+                        description='Mailbox history record identifier for the message',
+                    ),
+                    CacheFieldConfig(
+                        name='internalDate',
+                        type=['string', 'null'],
+                        description='Internal message creation timestamp in epoch milliseconds',
+                    ),
+                    CacheFieldConfig(
+                        name='sizeEstimate',
+                        type=['integer', 'null'],
+                        description='Estimated size of the message in bytes',
+                    ),
+                    CacheFieldConfig(
+                        name='payload',
+                        type=['object', 'null'],
+                        description='Parsed MIME payload including headers, body, nested MIME parts, and attachment metadata. Use payload.headers for sender, recipients, subject, date, and other email headers.',
+                        properties={
+                            'partId': CacheFieldProperty(
+                                type=['string', 'null'],
+                            ),
+                            'mimeType': CacheFieldProperty(
+                                type=['string', 'null'],
+                            ),
+                            'filename': CacheFieldProperty(
+                                type=['string', 'null'],
+                            ),
+                            'headers': CacheFieldProperty(
+                                type=['array', 'null'],
+                                properties={
+                                    'name': CacheFieldProperty(
+                                        type=['string', 'null'],
+                                    ),
+                                    'value': CacheFieldProperty(
+                                        type=['string', 'null'],
+                                    ),
+                                },
+                            ),
+                            'body': CacheFieldProperty(
+                                type=['object', 'null'],
+                                properties={
+                                    'attachmentId': CacheFieldProperty(
+                                        type=['string', 'null'],
+                                    ),
+                                    'size': CacheFieldProperty(
+                                        type=['integer', 'null'],
+                                    ),
+                                    'data': CacheFieldProperty(
+                                        type=['string', 'null'],
+                                    ),
+                                },
+                            ),
+                            'parts': CacheFieldProperty(
+                                type=['array', 'null'],
+                                properties={
+                                    'partId': CacheFieldProperty(
+                                        type=['string', 'null'],
+                                    ),
+                                    'mimeType': CacheFieldProperty(
+                                        type=['string', 'null'],
+                                    ),
+                                    'filename': CacheFieldProperty(
+                                        type=['string', 'null'],
+                                    ),
+                                    'headers': CacheFieldProperty(
+                                        type=['array', 'null'],
+                                        properties={
+                                            'name': CacheFieldProperty(
+                                                type=['string', 'null'],
+                                            ),
+                                            'value': CacheFieldProperty(
+                                                type=['string', 'null'],
+                                            ),
+                                        },
+                                    ),
+                                    'body': CacheFieldProperty(
+                                        type=['object', 'null'],
+                                        properties={
+                                            'attachmentId': CacheFieldProperty(
+                                                type=['string', 'null'],
+                                            ),
+                                            'size': CacheFieldProperty(
+                                                type=['integer', 'null'],
+                                            ),
+                                            'data': CacheFieldProperty(
+                                                type=['string', 'null'],
+                                            ),
+                                        },
+                                    ),
+                                },
+                            ),
+                        },
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='labels',
+                x_airbyte_name='labels',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type='string',
+                        description='Unique identifier for the label',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['string', 'null'],
+                        description='Display name of the label',
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['string', 'null'],
+                        description='Label type: `system` or `user`',
+                    ),
+                    CacheFieldConfig(
+                        name='labelListVisibility',
+                        type=['string', 'null'],
+                        description='Visibility of the label in the label list',
+                    ),
+                    CacheFieldConfig(
+                        name='messageListVisibility',
+                        type=['string', 'null'],
+                        description='Visibility of the label when viewing a message list',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='drafts',
+                x_airbyte_name='drafts',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type='string',
+                        description='Unique identifier for the draft',
+                    ),
+                    CacheFieldConfig(
+                        name='message',
+                        type=['object', 'null'],
+                        description='Draft message payload (headers, body, and metadata)',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='threads',
+                suggested=True,
+                x_airbyte_name='threads',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type='string',
+                        description='Unique identifier for the thread',
+                    ),
+                    CacheFieldConfig(
+                        name='historyId',
+                        type=['string', 'null'],
+                        description='Mailbox history record identifier for the thread',
+                    ),
+                    CacheFieldConfig(
+                        name='snippet',
+                        type=['string', 'null'],
+                        description="Short snippet of the thread's most recent message",
+                    ),
+                ],
+            ),
+        ],
+    ),
     search_field_paths={
         'profile': [
             'emailAddress',

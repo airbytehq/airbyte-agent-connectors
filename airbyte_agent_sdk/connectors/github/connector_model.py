@@ -21,6 +21,9 @@ from airbyte_agent_sdk.schema.security import (
     AuthConfigSpec,
 )
 from airbyte_agent_sdk.schema.extensions import (
+    CacheConfig,
+    CacheEntityConfig,
+    CacheFieldConfig,
     EntityRelationshipConfig,
     ScopingParamConfig,
 )
@@ -3995,6 +3998,803 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
             },
         ),
     ],
+    context_store=CacheConfig(
+        entities=[
+            CacheEntityConfig(
+                entity='branches',
+                x_airbyte_name='branches',
+                fields=[
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Branch name (e.g. `main`, `feature/foo`)',
+                    ),
+                    CacheFieldConfig(
+                        name='prefix',
+                        type=['null', 'string'],
+                        description='Git ref prefix for the branch (typically `refs/heads/`)',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='comments',
+                suggested=True,
+                x_airbyte_name='comments',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='GraphQL node ID of the comment',
+                    ),
+                    CacheFieldConfig(
+                        name='databaseId',
+                        type=['null', 'integer'],
+                        description='REST API numeric identifier for the comment',
+                    ),
+                    CacheFieldConfig(
+                        name='body',
+                        type=['null', 'string'],
+                        description='Markdown body of the comment',
+                    ),
+                    CacheFieldConfig(
+                        name='createdAt',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the comment was created',
+                    ),
+                    CacheFieldConfig(
+                        name='updatedAt',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the comment was last updated',
+                    ),
+                    CacheFieldConfig(
+                        name='url',
+                        type=['null', 'string'],
+                        description='Permalink to the comment on GitHub',
+                    ),
+                    CacheFieldConfig(
+                        name='isMinimized',
+                        type=['null', 'boolean'],
+                        description='Whether the comment has been hidden/collapsed',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='commits',
+                x_airbyte_name='commits',
+                fields=[
+                    CacheFieldConfig(
+                        name='oid',
+                        type=['null', 'string'],
+                        description='Full Git commit SHA',
+                    ),
+                    CacheFieldConfig(
+                        name='abbreviatedOid',
+                        type=['null', 'string'],
+                        description='Abbreviated Git commit SHA (typically 7 characters)',
+                    ),
+                    CacheFieldConfig(
+                        name='messageHeadline',
+                        type=['null', 'string'],
+                        description='First line of the commit message',
+                    ),
+                    CacheFieldConfig(
+                        name='message',
+                        type=['null', 'string'],
+                        description='Full commit message',
+                    ),
+                    CacheFieldConfig(
+                        name='committedDate',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the commit was applied to its tree',
+                    ),
+                    CacheFieldConfig(
+                        name='authoredDate',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the commit was originally authored',
+                    ),
+                    CacheFieldConfig(
+                        name='additions',
+                        type=['null', 'integer'],
+                        description='Number of lines added across all files in the commit',
+                    ),
+                    CacheFieldConfig(
+                        name='deletions',
+                        type=['null', 'integer'],
+                        description='Number of lines deleted across all files in the commit',
+                    ),
+                    CacheFieldConfig(
+                        name='changedFiles',
+                        type=['null', 'integer'],
+                        description='Number of files changed in the commit',
+                    ),
+                    CacheFieldConfig(
+                        name='url',
+                        type=['null', 'string'],
+                        description='Permalink to the commit on GitHub',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='directory_content',
+                x_airbyte_skip_searchable_fields='Directory listing endpoint returns tree entries for a specific path, not a record stream with a stable schema; no upstream source-github replication stream exists.',
+            ),
+            CacheEntityConfig(
+                entity='discussions',
+                x_airbyte_skip_searchable_fields='Upstream source-github replication does not include a discussions stream; only reachable via direct GraphQL calls (list, get, api_search).',
+            ),
+            CacheEntityConfig(
+                entity='file_content',
+                x_airbyte_skip_searchable_fields='File payload retrieval endpoint returns a single blob (text or binary) for a specific path, not a record stream; no upstream source-github replication equivalent.',
+            ),
+            CacheEntityConfig(
+                entity='issues',
+                suggested=True,
+                x_airbyte_name='issues',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='GraphQL node ID of the issue',
+                    ),
+                    CacheFieldConfig(
+                        name='databaseId',
+                        type=['null', 'integer'],
+                        description='REST API numeric identifier for the issue',
+                    ),
+                    CacheFieldConfig(
+                        name='number',
+                        type=['null', 'integer'],
+                        description='Repository-scoped issue number',
+                    ),
+                    CacheFieldConfig(
+                        name='title',
+                        type=['null', 'string'],
+                        description='Issue title',
+                    ),
+                    CacheFieldConfig(
+                        name='state',
+                        type=['null', 'string'],
+                        description='Issue state: `OPEN` or `CLOSED`',
+                    ),
+                    CacheFieldConfig(
+                        name='stateReason',
+                        type=['null', 'string'],
+                        description='Reason the issue is in its current state (e.g. `COMPLETED`, `NOT_PLANNED`)',
+                    ),
+                    CacheFieldConfig(
+                        name='createdAt',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the issue was created',
+                    ),
+                    CacheFieldConfig(
+                        name='updatedAt',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the issue was last updated',
+                    ),
+                    CacheFieldConfig(
+                        name='closedAt',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the issue was closed, if applicable',
+                    ),
+                    CacheFieldConfig(
+                        name='locked',
+                        type=['null', 'boolean'],
+                        description='Whether the conversation on the issue is locked',
+                    ),
+                    CacheFieldConfig(
+                        name='url',
+                        type=['null', 'string'],
+                        description='Permalink to the issue on GitHub',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='labels',
+                x_airbyte_name='issue_labels',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='GraphQL node ID of the label',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Label name',
+                    ),
+                    CacheFieldConfig(
+                        name='color',
+                        type=['null', 'string'],
+                        description='Label color as a 6-character hex string without a leading `#`',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='Short description of what the label is used for',
+                    ),
+                    CacheFieldConfig(
+                        name='createdAt',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the label was created',
+                    ),
+                    CacheFieldConfig(
+                        name='url',
+                        type=['null', 'string'],
+                        description='Permalink to the label on GitHub',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='milestones',
+                x_airbyte_name='issue_milestones',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='GraphQL node ID of the milestone',
+                    ),
+                    CacheFieldConfig(
+                        name='number',
+                        type=['null', 'integer'],
+                        description='Repository-scoped milestone number',
+                    ),
+                    CacheFieldConfig(
+                        name='title',
+                        type=['null', 'string'],
+                        description='Milestone title',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='Milestone description',
+                    ),
+                    CacheFieldConfig(
+                        name='state',
+                        type=['null', 'string'],
+                        description='Milestone state: `OPEN` or `CLOSED`',
+                    ),
+                    CacheFieldConfig(
+                        name='dueOn',
+                        type=['null', 'string'],
+                        description="ISO 8601 timestamp for the milestone's due date, if set",
+                    ),
+                    CacheFieldConfig(
+                        name='closedAt',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the milestone was closed, if applicable',
+                    ),
+                    CacheFieldConfig(
+                        name='createdAt',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the milestone was created',
+                    ),
+                    CacheFieldConfig(
+                        name='updatedAt',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the milestone was last updated',
+                    ),
+                    CacheFieldConfig(
+                        name='progressPercentage',
+                        type=['null', 'number'],
+                        description='Percentage of associated issues/PRs that are closed',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='organizations',
+                x_airbyte_name='organizations',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='GraphQL node ID of the organization',
+                    ),
+                    CacheFieldConfig(
+                        name='databaseId',
+                        type=['null', 'integer'],
+                        description='REST API numeric identifier for the organization',
+                    ),
+                    CacheFieldConfig(
+                        name='login',
+                        type=['null', 'string'],
+                        description='Organization login/handle (unique URL slug)',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Display name of the organization',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='Short public description of the organization',
+                    ),
+                    CacheFieldConfig(
+                        name='email',
+                        type=['null', 'string'],
+                        description='Public contact email for the organization, if set',
+                    ),
+                    CacheFieldConfig(
+                        name='location',
+                        type=['null', 'string'],
+                        description='Public location of the organization, if set',
+                    ),
+                    CacheFieldConfig(
+                        name='isVerified',
+                        type=['null', 'boolean'],
+                        description='Whether the organization has a verified domain',
+                    ),
+                    CacheFieldConfig(
+                        name='createdAt',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the organization was created',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='org_repositories',
+                x_airbyte_skip_searchable_fields='Scope-variant of repositories that returns the same underlying records filtered to an organization owner; the `repositories` context-store entity already covers cached search against the upstream source-github `repositories` stream.',
+            ),
+            CacheEntityConfig(
+                entity='pr_comments',
+                x_airbyte_skip_searchable_fields="Top-level pull request comments are stored in the same upstream source-github `comments` stream as issue comments (pull requests are issues in GitHub's data model); the `comments` context-store entity already covers cached search against that data.",
+            ),
+            CacheEntityConfig(
+                entity='project_items',
+                x_airbyte_skip_searchable_fields='Projects V2 items are derived from issues and pull requests already present in the cache; no dedicated upstream source-github replication stream exists for project items.',
+            ),
+            CacheEntityConfig(
+                entity='projects',
+                x_airbyte_name='projects_v2',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='GraphQL node ID of the project',
+                    ),
+                    CacheFieldConfig(
+                        name='number',
+                        type=['null', 'integer'],
+                        description='Organization- or user-scoped project number',
+                    ),
+                    CacheFieldConfig(
+                        name='title',
+                        type=['null', 'string'],
+                        description='Project title',
+                    ),
+                    CacheFieldConfig(
+                        name='shortDescription',
+                        type=['null', 'string'],
+                        description='Short description displayed on the project summary',
+                    ),
+                    CacheFieldConfig(
+                        name='url',
+                        type=['null', 'string'],
+                        description='Permalink to the project on GitHub',
+                    ),
+                    CacheFieldConfig(
+                        name='closed',
+                        type=['null', 'boolean'],
+                        description='Whether the project has been closed',
+                    ),
+                    CacheFieldConfig(
+                        name='public',
+                        type=['null', 'boolean'],
+                        description='Whether the project is publicly visible',
+                    ),
+                    CacheFieldConfig(
+                        name='createdAt',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the project was created',
+                    ),
+                    CacheFieldConfig(
+                        name='updatedAt',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the project was last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='pull_requests',
+                suggested=True,
+                x_airbyte_name='pull_requests',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='GraphQL node ID of the pull request',
+                    ),
+                    CacheFieldConfig(
+                        name='databaseId',
+                        type=['null', 'integer'],
+                        description='REST API numeric identifier for the pull request',
+                    ),
+                    CacheFieldConfig(
+                        name='number',
+                        type=['null', 'integer'],
+                        description='Repository-scoped pull request number',
+                    ),
+                    CacheFieldConfig(
+                        name='title',
+                        type=['null', 'string'],
+                        description='Pull request title',
+                    ),
+                    CacheFieldConfig(
+                        name='state',
+                        type=['null', 'string'],
+                        description='Pull request state: `OPEN`, `CLOSED`, or `MERGED`',
+                    ),
+                    CacheFieldConfig(
+                        name='isDraft',
+                        type=['null', 'boolean'],
+                        description='Whether the pull request is still a draft',
+                    ),
+                    CacheFieldConfig(
+                        name='merged',
+                        type=['null', 'boolean'],
+                        description='Whether the pull request has been merged',
+                    ),
+                    CacheFieldConfig(
+                        name='createdAt',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the pull request was created',
+                    ),
+                    CacheFieldConfig(
+                        name='updatedAt',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the pull request was last updated',
+                    ),
+                    CacheFieldConfig(
+                        name='closedAt',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the pull request was closed, if applicable',
+                    ),
+                    CacheFieldConfig(
+                        name='mergedAt',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the pull request was merged, if applicable',
+                    ),
+                    CacheFieldConfig(
+                        name='baseRefName',
+                        type=['null', 'string'],
+                        description='Name of the branch being merged into',
+                    ),
+                    CacheFieldConfig(
+                        name='headRefName',
+                        type=['null', 'string'],
+                        description='Name of the branch with the proposed changes',
+                    ),
+                    CacheFieldConfig(
+                        name='url',
+                        type=['null', 'string'],
+                        description='Permalink to the pull request on GitHub',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='releases',
+                x_airbyte_name='releases',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='GraphQL node ID of the release',
+                    ),
+                    CacheFieldConfig(
+                        name='databaseId',
+                        type=['null', 'integer'],
+                        description='REST API numeric identifier for the release',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Display name of the release',
+                    ),
+                    CacheFieldConfig(
+                        name='tagName',
+                        type=['null', 'string'],
+                        description='Git tag the release points at (e.g. `v1.2.3`)',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='Markdown body / release notes',
+                    ),
+                    CacheFieldConfig(
+                        name='publishedAt',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the release was published',
+                    ),
+                    CacheFieldConfig(
+                        name='createdAt',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the release was created',
+                    ),
+                    CacheFieldConfig(
+                        name='isPrerelease',
+                        type=['null', 'boolean'],
+                        description='Whether the release is marked as a pre-release',
+                    ),
+                    CacheFieldConfig(
+                        name='isDraft',
+                        type=['null', 'boolean'],
+                        description='Whether the release is still a draft and not published',
+                    ),
+                    CacheFieldConfig(
+                        name='url',
+                        type=['null', 'string'],
+                        description='Permalink to the release on GitHub',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='repositories',
+                suggested=True,
+                x_airbyte_name='repositories',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='GraphQL node ID of the repository',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Short repository name (without owner)',
+                    ),
+                    CacheFieldConfig(
+                        name='nameWithOwner',
+                        type=['null', 'string'],
+                        description='Fully-qualified `owner/name` identifier for the repository',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='Short description of the repository',
+                    ),
+                    CacheFieldConfig(
+                        name='url',
+                        type=['null', 'string'],
+                        description='Canonical GitHub URL for the repository',
+                    ),
+                    CacheFieldConfig(
+                        name='createdAt',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the repository was created',
+                    ),
+                    CacheFieldConfig(
+                        name='updatedAt',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the repository was last updated',
+                    ),
+                    CacheFieldConfig(
+                        name='pushedAt',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp of the most recent push to the repository',
+                    ),
+                    CacheFieldConfig(
+                        name='forkCount',
+                        type=['null', 'integer'],
+                        description='Number of forks of the repository',
+                    ),
+                    CacheFieldConfig(
+                        name='stargazerCount',
+                        type=['null', 'integer'],
+                        description='Number of users who have starred the repository',
+                    ),
+                    CacheFieldConfig(
+                        name='isPrivate',
+                        type=['null', 'boolean'],
+                        description='Whether the repository is private',
+                    ),
+                    CacheFieldConfig(
+                        name='isFork',
+                        type=['null', 'boolean'],
+                        description='Whether the repository is a fork of another repository',
+                    ),
+                    CacheFieldConfig(
+                        name='isArchived',
+                        type=['null', 'boolean'],
+                        description='Whether the repository has been archived',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='reviews',
+                x_airbyte_name='reviews',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='GraphQL node ID of the review',
+                    ),
+                    CacheFieldConfig(
+                        name='databaseId',
+                        type=['null', 'integer'],
+                        description='REST API numeric identifier for the review',
+                    ),
+                    CacheFieldConfig(
+                        name='state',
+                        type=['null', 'string'],
+                        description='Review state: `PENDING`, `COMMENTED`, `APPROVED`, `CHANGES_REQUESTED`, or `DISMISSED`',
+                    ),
+                    CacheFieldConfig(
+                        name='body',
+                        type=['null', 'string'],
+                        description='Review body text',
+                    ),
+                    CacheFieldConfig(
+                        name='submittedAt',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the review was submitted',
+                    ),
+                    CacheFieldConfig(
+                        name='createdAt',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the review was created',
+                    ),
+                    CacheFieldConfig(
+                        name='updatedAt',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the review was last updated',
+                    ),
+                    CacheFieldConfig(
+                        name='url',
+                        type=['null', 'string'],
+                        description='Permalink to the review on GitHub',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='stargazers',
+                x_airbyte_name='stargazers',
+                fields=[
+                    CacheFieldConfig(
+                        name='starredAt',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the user starred the repository',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='tags',
+                x_airbyte_name='tags',
+                fields=[
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Tag name (e.g. `v1.2.3`)',
+                    ),
+                    CacheFieldConfig(
+                        name='prefix',
+                        type=['null', 'string'],
+                        description='Git ref prefix for the tag (typically `refs/tags/`)',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='teams',
+                x_airbyte_name='teams',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='GraphQL node ID of the team',
+                    ),
+                    CacheFieldConfig(
+                        name='databaseId',
+                        type=['null', 'integer'],
+                        description='REST API numeric identifier for the team',
+                    ),
+                    CacheFieldConfig(
+                        name='slug',
+                        type=['null', 'string'],
+                        description='URL-friendly slug for the team within its organization',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Display name of the team',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='Short description of the team',
+                    ),
+                    CacheFieldConfig(
+                        name='privacy',
+                        type=['null', 'string'],
+                        description='Team visibility: `SECRET` or `VISIBLE`',
+                    ),
+                    CacheFieldConfig(
+                        name='url',
+                        type=['null', 'string'],
+                        description='Permalink to the team on GitHub',
+                    ),
+                    CacheFieldConfig(
+                        name='createdAt',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the team was created',
+                    ),
+                    CacheFieldConfig(
+                        name='updatedAt',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the team was last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='users',
+                suggested=True,
+                x_airbyte_name='users',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='GraphQL node ID of the user',
+                    ),
+                    CacheFieldConfig(
+                        name='databaseId',
+                        type=['null', 'integer'],
+                        description='REST API numeric identifier for the user',
+                    ),
+                    CacheFieldConfig(
+                        name='login',
+                        type=['null', 'string'],
+                        description='User login/handle',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Public display name of the user, if set',
+                    ),
+                    CacheFieldConfig(
+                        name='email',
+                        type=['null', 'string'],
+                        description='Public email address of the user, if set',
+                    ),
+                    CacheFieldConfig(
+                        name='company',
+                        type=['null', 'string'],
+                        description='Public company affiliation of the user, if set',
+                    ),
+                    CacheFieldConfig(
+                        name='location',
+                        type=['null', 'string'],
+                        description='Public location of the user, if set',
+                    ),
+                    CacheFieldConfig(
+                        name='twitterUsername',
+                        type=['null', 'string'],
+                        description='Public Twitter/X username of the user, if set',
+                    ),
+                    CacheFieldConfig(
+                        name='url',
+                        type=['null', 'string'],
+                        description="Permalink to the user's profile on GitHub",
+                    ),
+                    CacheFieldConfig(
+                        name='createdAt',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the user account was created',
+                    ),
+                    CacheFieldConfig(
+                        name='isHireable',
+                        type=['null', 'boolean'],
+                        description='Whether the user has marked themselves as available for hire',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='viewer',
+                x_airbyte_skip_searchable_fields="Singleton endpoint returning the authenticated user's own profile; not a record stream and has no upstream source-github replication equivalent.",
+            ),
+            CacheEntityConfig(
+                entity='viewer_repositories',
+                x_airbyte_skip_searchable_fields='Identity-scoped subset of `repositories` returning only repos owned by the authenticated viewer; the `repositories` context-store entity already covers cached search.',
+            ),
+        ],
+    ),
     search_field_paths={
         'branches': ['name', 'prefix'],
         'comments': [

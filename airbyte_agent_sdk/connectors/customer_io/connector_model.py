@@ -20,6 +20,9 @@ from airbyte_agent_sdk.schema.security import (
     AuthConfigSpec,
 )
 from airbyte_agent_sdk.schema.extensions import (
+    CacheConfig,
+    CacheEntityConfig,
+    CacheFieldConfig,
     EntityRelationshipConfig,
 )
 from airbyte_agent_sdk.schema.base import (
@@ -4692,6 +4695,316 @@ CustomerIoConnectorModel: ConnectorModel = ConnectorModel(
             },
         ),
     ],
+    context_store=CacheConfig(
+        entities=[
+            CacheEntityConfig(
+                entity='campaigns',
+                suggested=True,
+                x_airbyte_name='campaigns',
+                fields=[
+                    CacheFieldConfig(
+                        name='actions',
+                        type=['null', 'array'],
+                        description='Actions defined in this campaign',
+                    ),
+                    CacheFieldConfig(
+                        name='active',
+                        type=['null', 'boolean'],
+                        description='Whether the campaign is active',
+                    ),
+                    CacheFieldConfig(
+                        name='created',
+                        type=['null', 'integer'],
+                        description='Creation timestamp (Unix)',
+                    ),
+                    CacheFieldConfig(
+                        name='created_by',
+                        type=['null', 'string'],
+                        description='Who created the campaign',
+                    ),
+                    CacheFieldConfig(
+                        name='date_attribute',
+                        type=['null', 'string'],
+                        description='Date attribute used for date-triggered campaigns',
+                    ),
+                    CacheFieldConfig(
+                        name='deduplicate_id',
+                        type=['null', 'string'],
+                        description='Deduplication identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='event_name',
+                        type=['null', 'string'],
+                        description='Event name that triggers the campaign',
+                    ),
+                    CacheFieldConfig(
+                        name='first_started',
+                        type=['null', 'integer'],
+                        description='When the campaign was first started (Unix)',
+                    ),
+                    CacheFieldConfig(
+                        name='frequency',
+                        type=['null', 'string'],
+                        description='How frequently a person can receive this campaign',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique campaign identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='msg_templates',
+                        type=['null', 'array'],
+                        description='Message templates used in the campaign',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Campaign name',
+                    ),
+                    CacheFieldConfig(
+                        name='start_hour',
+                        type=['null', 'integer'],
+                        description='Hour of the day to trigger',
+                    ),
+                    CacheFieldConfig(
+                        name='start_minutes',
+                        type=['null', 'integer'],
+                        description='Minute of the hour to trigger',
+                    ),
+                    CacheFieldConfig(
+                        name='state',
+                        type=['null', 'string'],
+                        description='Campaign status (draft, active, stopped)',
+                    ),
+                    CacheFieldConfig(
+                        name='tags',
+                        type=['null', 'array'],
+                        description='Tags associated with the campaign',
+                    ),
+                    CacheFieldConfig(
+                        name='timezone',
+                        type=['null', 'string'],
+                        description='Timezone for trigger scheduling',
+                    ),
+                    CacheFieldConfig(
+                        name='trigger_segment_ids',
+                        type=['null', 'array'],
+                        description='Segment IDs that trigger this campaign',
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description='Campaign trigger type',
+                    ),
+                    CacheFieldConfig(
+                        name='updated',
+                        type=['null', 'integer'],
+                        description='Last update timestamp (Unix)',
+                    ),
+                    CacheFieldConfig(
+                        name='use_customer_timezone',
+                        type=['null', 'boolean'],
+                        description="Whether to use the customer's timezone",
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='campaign_actions',
+                suggested=True,
+                x_airbyte_name='campaigns_actions',
+                fields=[
+                    CacheFieldConfig(
+                        name='bcc',
+                        type=['null', 'string'],
+                        description='BCC addresses',
+                    ),
+                    CacheFieldConfig(
+                        name='body',
+                        type=['null', 'string'],
+                        description='Action body content (HTML for emails)',
+                    ),
+                    CacheFieldConfig(
+                        name='campaign_id',
+                        type=['null', 'integer'],
+                        description='Parent campaign ID',
+                    ),
+                    CacheFieldConfig(
+                        name='created',
+                        type=['null', 'integer'],
+                        description='Creation timestamp (Unix)',
+                    ),
+                    CacheFieldConfig(
+                        name='deduplicate_id',
+                        type=['null', 'string'],
+                        description='Deduplication identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='editor',
+                        type=['null', 'string'],
+                        description='Editor used to create the action',
+                    ),
+                    CacheFieldConfig(
+                        name='fake_bcc',
+                        type=['null', 'boolean'],
+                        description='Whether to use fake BCC',
+                    ),
+                    CacheFieldConfig(
+                        name='from',
+                        type=['null', 'string'],
+                        description='From address',
+                    ),
+                    CacheFieldConfig(
+                        name='from_id',
+                        type=['null', 'string'],
+                        description='Sender identity ID',
+                    ),
+                    CacheFieldConfig(
+                        name='headers',
+                        type=['null', 'string'],
+                        description='Custom email headers as JSON',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique action identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='language',
+                        type=['null', 'string'],
+                        description='Language variant',
+                    ),
+                    CacheFieldConfig(
+                        name='layout',
+                        type=['null', 'string'],
+                        description='Layout template used',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Action name',
+                    ),
+                    CacheFieldConfig(
+                        name='parent_action_id',
+                        type=['null', 'integer'],
+                        description='Parent action ID for language variants',
+                    ),
+                    CacheFieldConfig(
+                        name='preheader_text',
+                        type=['null', 'string'],
+                        description='Email preheader/preview text',
+                    ),
+                    CacheFieldConfig(
+                        name='preprocessor',
+                        type=['null', 'string'],
+                        description='CSS preprocessor setting',
+                    ),
+                    CacheFieldConfig(
+                        name='recipient',
+                        type=['null', 'string'],
+                        description='Recipient address',
+                    ),
+                    CacheFieldConfig(
+                        name='recipient_environment_id',
+                        type=['null', 'integer'],
+                        description='Recipient environment ID',
+                    ),
+                    CacheFieldConfig(
+                        name='reply_to',
+                        type=['null', 'string'],
+                        description='Reply-to address',
+                    ),
+                    CacheFieldConfig(
+                        name='reply_to_id',
+                        type=['null', 'string'],
+                        description='Reply-to sender identity ID',
+                    ),
+                    CacheFieldConfig(
+                        name='request_method',
+                        type=['null', 'string'],
+                        description='HTTP request method for webhook actions',
+                    ),
+                    CacheFieldConfig(
+                        name='sending_state',
+                        type=['null', 'string'],
+                        description='Sending behavior (automatic or draft)',
+                    ),
+                    CacheFieldConfig(
+                        name='subject',
+                        type=['null', 'string'],
+                        description='Email subject line',
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description='Action type (email, webhook, twilio, push, slack, in_app, whatsapp)',
+                    ),
+                    CacheFieldConfig(
+                        name='updated',
+                        type=['null', 'integer'],
+                        description='Last update timestamp (Unix)',
+                    ),
+                    CacheFieldConfig(
+                        name='url',
+                        type=['null', 'string'],
+                        description='Webhook URL (for webhook actions)',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='newsletters',
+                suggested=True,
+                x_airbyte_name='newsletters',
+                fields=[
+                    CacheFieldConfig(
+                        name='content_ids',
+                        type=['null', 'array'],
+                        description='Content variant IDs for this newsletter',
+                    ),
+                    CacheFieldConfig(
+                        name='created',
+                        type=['null', 'integer'],
+                        description='Creation timestamp (Unix)',
+                    ),
+                    CacheFieldConfig(
+                        name='deduplicate_id',
+                        type=['null', 'string'],
+                        description='Deduplication identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique newsletter identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Newsletter name',
+                    ),
+                    CacheFieldConfig(
+                        name='sent_at',
+                        type=['null', 'integer'],
+                        description='When the newsletter was last sent (Unix)',
+                    ),
+                    CacheFieldConfig(
+                        name='tags',
+                        type=['null', 'array'],
+                        description='Tags associated with the newsletter',
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description='Channel type (email, webhook, twilio, push, in_app, inbox)',
+                    ),
+                    CacheFieldConfig(
+                        name='updated',
+                        type=['null', 'integer'],
+                        description='Last update timestamp (Unix)',
+                    ),
+                ],
+            ),
+        ],
+    ),
     search_field_paths={
         'campaigns': [
             'actions',

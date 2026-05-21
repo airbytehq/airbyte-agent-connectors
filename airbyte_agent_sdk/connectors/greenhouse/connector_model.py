@@ -19,6 +19,12 @@ from airbyte_agent_sdk.schema.security import (
     AuthConfigFieldSpec,
     AuthConfigSpec,
 )
+from airbyte_agent_sdk.schema.extensions import (
+    CacheConfig,
+    CacheEntityConfig,
+    CacheFieldConfig,
+    CacheFieldProperty,
+)
 from airbyte_agent_sdk.schema.base import (
     ExampleQuestions,
 )
@@ -2831,6 +2837,847 @@ GreenhouseConnectorModel: ConnectorModel = ConnectorModel(
             },
         ),
     ],
+    context_store=CacheConfig(
+        entities=[
+            CacheEntityConfig(
+                entity='applications',
+                suggested=True,
+                x_airbyte_name='applications',
+                fields=[
+                    CacheFieldConfig(
+                        name='answers',
+                        type=['null', 'array'],
+                        description='Answers provided in the application.',
+                    ),
+                    CacheFieldConfig(
+                        name='applied_at',
+                        type=['null', 'string'],
+                        description='Timestamp when the candidate applied.',
+                    ),
+                    CacheFieldConfig(
+                        name='attachments',
+                        type=['null', 'array'],
+                        description='Attachments uploaded with the application.',
+                    ),
+                    CacheFieldConfig(
+                        name='candidate_id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the candidate.',
+                    ),
+                    CacheFieldConfig(
+                        name='credited_to',
+                        type=['null', 'object'],
+                        description='Information about the employee who credited the application.',
+                        properties={
+                            'employee_id': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'first_name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'id': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'last_name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='current_stage',
+                        type=['null', 'object'],
+                        description='Current stage of the application process.',
+                        properties={
+                            'id': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the application.',
+                    ),
+                    CacheFieldConfig(
+                        name='job_post_id',
+                        type=['integer', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='jobs',
+                        type=['null', 'array'],
+                        description='Jobs applied for by the candidate.',
+                    ),
+                    CacheFieldConfig(
+                        name='last_activity_at',
+                        type=['null', 'string'],
+                        description='Timestamp of the last activity on the application.',
+                    ),
+                    CacheFieldConfig(
+                        name='location',
+                        type=['null', 'string'],
+                        description='Location related to the application.',
+                    ),
+                    CacheFieldConfig(
+                        name='prospect',
+                        type=['null', 'boolean'],
+                        description='Status of the application prospect.',
+                    ),
+                    CacheFieldConfig(
+                        name='prospect_detail',
+                        type=['null', 'object'],
+                        description='Details related to the application prospect.',
+                        properties={
+                            'prospect_owner': CacheFieldProperty(
+                                type=['null', 'object'],
+                            ),
+                            'prospect_pool': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'prospect_stage': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='prospective_department',
+                        type=['null', 'string'],
+                        description='Prospective department for the candidate.',
+                    ),
+                    CacheFieldConfig(
+                        name='prospective_office',
+                        type=['null', 'string'],
+                        description='Prospective office for the candidate.',
+                    ),
+                    CacheFieldConfig(
+                        name='rejected_at',
+                        type=['null', 'string'],
+                        description='Timestamp when the application was rejected.',
+                    ),
+                    CacheFieldConfig(
+                        name='rejection_details',
+                        type=['null', 'object'],
+                        description='Details related to the application rejection.',
+                        properties={
+                            'custom_fields': CacheFieldProperty(
+                                type=['null', 'object'],
+                            ),
+                            'keyed_custom_fields': CacheFieldProperty(
+                                type=['null', 'object'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='rejection_reason',
+                        type=['null', 'object'],
+                        description='Reason for the application rejection.',
+                        properties={
+                            'id': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'type': CacheFieldProperty(
+                                type=['null', 'object'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='source',
+                        type=['null', 'object'],
+                        description='Source of the application.',
+                        properties={
+                            'id': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'public_name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='status',
+                        type=['null', 'string'],
+                        description='Status of the application.',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='candidates',
+                suggested=True,
+                x_airbyte_name='candidates',
+                fields=[
+                    CacheFieldConfig(
+                        name='addresses',
+                        type=['null', 'array'],
+                        description="Candidate's addresses",
+                    ),
+                    CacheFieldConfig(
+                        name='application_ids',
+                        type=['null', 'array'],
+                        description='List of application IDs',
+                    ),
+                    CacheFieldConfig(
+                        name='applications',
+                        type=['null', 'array'],
+                        description='An array of all applications made by candidates.',
+                    ),
+                    CacheFieldConfig(
+                        name='attachments',
+                        type=['null', 'array'],
+                        description='Attachments related to the candidate',
+                    ),
+                    CacheFieldConfig(
+                        name='can_email',
+                        type=['null', 'boolean'],
+                        description='Indicates if candidate can be emailed',
+                    ),
+                    CacheFieldConfig(
+                        name='company',
+                        type=['null', 'string'],
+                        description='Company where the candidate is associated',
+                    ),
+                    CacheFieldConfig(
+                        name='coordinator',
+                        type=['null', 'string'],
+                        description='Coordinator assigned to the candidate',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='Date and time of creation',
+                    ),
+                    CacheFieldConfig(
+                        name='custom_fields',
+                        type=['null', 'object'],
+                        description='Custom fields associated with the candidate',
+                    ),
+                    CacheFieldConfig(
+                        name='educations',
+                        type=['null', 'array'],
+                        description="List of candidate's educations",
+                    ),
+                    CacheFieldConfig(
+                        name='email_addresses',
+                        type=['null', 'array'],
+                        description="Candidate's email addresses",
+                    ),
+                    CacheFieldConfig(
+                        name='employments',
+                        type=['null', 'array'],
+                        description="List of candidate's employments",
+                    ),
+                    CacheFieldConfig(
+                        name='first_name',
+                        type=['null', 'string'],
+                        description="Candidate's first name",
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description="Candidate's ID",
+                    ),
+                    CacheFieldConfig(
+                        name='is_private',
+                        type=['null', 'boolean'],
+                        description="Indicates if the candidate's data is private",
+                    ),
+                    CacheFieldConfig(
+                        name='keyed_custom_fields',
+                        type=['null', 'object'],
+                        description='Keyed custom fields associated with the candidate',
+                    ),
+                    CacheFieldConfig(
+                        name='last_activity',
+                        type=['null', 'string'],
+                        description='Details of the last activity related to the candidate',
+                    ),
+                    CacheFieldConfig(
+                        name='last_name',
+                        type=['null', 'string'],
+                        description="Candidate's last name",
+                    ),
+                    CacheFieldConfig(
+                        name='phone_numbers',
+                        type=['null', 'array'],
+                        description="Candidate's phone numbers",
+                    ),
+                    CacheFieldConfig(
+                        name='photo_url',
+                        type=['null', 'string'],
+                        description="URL of the candidate's profile photo",
+                    ),
+                    CacheFieldConfig(
+                        name='recruiter',
+                        type=['null', 'string'],
+                        description='Recruiter assigned to the candidate',
+                    ),
+                    CacheFieldConfig(
+                        name='social_media_addresses',
+                        type=['null', 'array'],
+                        description="Candidate's social media addresses",
+                    ),
+                    CacheFieldConfig(
+                        name='tags',
+                        type=['null', 'array'],
+                        description='Tags associated with the candidate',
+                    ),
+                    CacheFieldConfig(
+                        name='title',
+                        type=['null', 'string'],
+                        description="Candidate's title (e.g., Mr., Mrs., Dr.)",
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='Date and time of last update',
+                    ),
+                    CacheFieldConfig(
+                        name='website_addresses',
+                        type=['null', 'array'],
+                        description="List of candidate's website addresses",
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='departments',
+                x_airbyte_name='departments',
+                fields=[
+                    CacheFieldConfig(
+                        name='child_department_external_ids',
+                        type=['null', 'array'],
+                        description='External IDs of child departments associated with this department.',
+                    ),
+                    CacheFieldConfig(
+                        name='child_ids',
+                        type=['null', 'array'],
+                        description='Unique IDs of child departments associated with this department.',
+                    ),
+                    CacheFieldConfig(
+                        name='external_id',
+                        type=['null', 'string'],
+                        description='External ID of this department.',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique ID of this department.',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Name of the department.',
+                    ),
+                    CacheFieldConfig(
+                        name='parent_department_external_id',
+                        type=['null', 'string'],
+                        description='External ID of the parent department of this department.',
+                    ),
+                    CacheFieldConfig(
+                        name='parent_id',
+                        type=['null', 'integer'],
+                        description='Unique ID of the parent department of this department.',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='job_posts',
+                suggested=True,
+                x_airbyte_name='job_posts',
+                fields=[
+                    CacheFieldConfig(
+                        name='active',
+                        type=['null', 'boolean'],
+                        description='Flag indicating if the job post is active or not.',
+                    ),
+                    CacheFieldConfig(
+                        name='content',
+                        type=['null', 'string'],
+                        description='Content or description of the job post.',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='Date and time when the job post was created.',
+                    ),
+                    CacheFieldConfig(
+                        name='demographic_question_set_id',
+                        type=['null', 'integer'],
+                        description='ID of the demographic question set associated with the job post.',
+                    ),
+                    CacheFieldConfig(
+                        name='external',
+                        type=['null', 'boolean'],
+                        description='Flag indicating if the job post is external or not.',
+                    ),
+                    CacheFieldConfig(
+                        name='first_published_at',
+                        type=['null', 'string'],
+                        description='Date and time when the job post was first published.',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier of the job post.',
+                    ),
+                    CacheFieldConfig(
+                        name='internal',
+                        type=['null', 'boolean'],
+                        description='Flag indicating if the job post is internal or not.',
+                    ),
+                    CacheFieldConfig(
+                        name='internal_content',
+                        type=['null', 'string'],
+                        description='Internal content or description of the job post.',
+                    ),
+                    CacheFieldConfig(
+                        name='job_id',
+                        type=['null', 'integer'],
+                        description='ID of the job associated with the job post.',
+                    ),
+                    CacheFieldConfig(
+                        name='live',
+                        type=['null', 'boolean'],
+                        description='Flag indicating if the job post is live or not.',
+                    ),
+                    CacheFieldConfig(
+                        name='location',
+                        type=['null', 'object'],
+                        description='Details about the job post location.',
+                        properties={
+                            'id': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'job_post_location_type': CacheFieldProperty(
+                                type=['null', 'object'],
+                            ),
+                            'name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'office_id': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='questions',
+                        type=['null', 'array'],
+                        description='List of questions related to the job post.',
+                    ),
+                    CacheFieldConfig(
+                        name='title',
+                        type=['null', 'string'],
+                        description='Title or headline of the job post.',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='Date and time when the job post was last updated.',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='jobs',
+                suggested=True,
+                x_airbyte_name='jobs',
+                fields=[
+                    CacheFieldConfig(
+                        name='closed_at',
+                        type=['null', 'string'],
+                        description='The date and time the job was closed',
+                    ),
+                    CacheFieldConfig(
+                        name='confidential',
+                        type=['null', 'boolean'],
+                        description='Indicates if the job details are confidential',
+                    ),
+                    CacheFieldConfig(
+                        name='copied_from_id',
+                        type=['null', 'integer'],
+                        description='The ID of the job from which this job was copied',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='The date and time the job was created',
+                    ),
+                    CacheFieldConfig(
+                        name='custom_fields',
+                        type=['null', 'object'],
+                        description='Custom fields related to the job',
+                        properties={
+                            'employment_type': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='departments',
+                        type=['null', 'array'],
+                        description='Departments associated with the job',
+                    ),
+                    CacheFieldConfig(
+                        name='hiring_team',
+                        type=['null', 'object'],
+                        description='Members of the hiring team for the job',
+                        properties={
+                            'coordinators': CacheFieldProperty(
+                                type=['null', 'array'],
+                            ),
+                            'hiring_managers': CacheFieldProperty(
+                                type=['null', 'array'],
+                            ),
+                            'recruiters': CacheFieldProperty(
+                                type=['null', 'array'],
+                            ),
+                            'sourcers': CacheFieldProperty(
+                                type=['null', 'array'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique ID of the job',
+                    ),
+                    CacheFieldConfig(
+                        name='is_template',
+                        type=['null', 'boolean'],
+                        description='Indicates if the job is a template',
+                    ),
+                    CacheFieldConfig(
+                        name='keyed_custom_fields',
+                        type=['null', 'object'],
+                        description='Keyed custom fields related to the job',
+                        properties={
+                            'employment_type': CacheFieldProperty(
+                                type=['null', 'object'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Name of the job',
+                    ),
+                    CacheFieldConfig(
+                        name='notes',
+                        type=['null', 'string'],
+                        description='Additional notes or comments about the job',
+                    ),
+                    CacheFieldConfig(
+                        name='offices',
+                        type=['null', 'array'],
+                        description='Offices associated with the job',
+                    ),
+                    CacheFieldConfig(
+                        name='opened_at',
+                        type=['null', 'string'],
+                        description='The date and time the job was opened',
+                    ),
+                    CacheFieldConfig(
+                        name='openings',
+                        type=['null', 'array'],
+                        description='Openings associated with the job',
+                    ),
+                    CacheFieldConfig(
+                        name='requisition_id',
+                        type=['null', 'string'],
+                        description='ID associated with the job requisition',
+                    ),
+                    CacheFieldConfig(
+                        name='status',
+                        type=['null', 'string'],
+                        description='Current status of the job',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='The date and time the job was last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='offers',
+                suggested=True,
+                x_airbyte_name='offers',
+                fields=[
+                    CacheFieldConfig(
+                        name='application_id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the application associated with the offer',
+                    ),
+                    CacheFieldConfig(
+                        name='candidate_id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the candidate associated with the offer',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='Timestamp indicating when the offer was created',
+                    ),
+                    CacheFieldConfig(
+                        name='custom_fields',
+                        type=['null', 'object'],
+                        description='Additional custom fields related to the offer',
+                        properties={
+                            'employment_type': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the offer',
+                    ),
+                    CacheFieldConfig(
+                        name='job_id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the job associated with the offer',
+                    ),
+                    CacheFieldConfig(
+                        name='keyed_custom_fields',
+                        type=['null', 'object'],
+                        description='Keyed custom fields associated with the offer',
+                        properties={
+                            'employment_type': CacheFieldProperty(
+                                type=['null', 'object'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='opening',
+                        type=['null', 'object'],
+                        description='Details about the job opening',
+                        properties={
+                            'application_id': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'close_reason': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'closed_at': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'id': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'opened_at': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'opening_id': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'status': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='resolved_at',
+                        type=['null', 'string'],
+                        description='Timestamp indicating when the offer was resolved',
+                    ),
+                    CacheFieldConfig(
+                        name='sent_at',
+                        type=['null', 'string'],
+                        description='Timestamp indicating when the offer was sent',
+                    ),
+                    CacheFieldConfig(
+                        name='starts_at',
+                        type=['null', 'string'],
+                        description='Timestamp indicating when the offer starts',
+                    ),
+                    CacheFieldConfig(
+                        name='status',
+                        type=['null', 'string'],
+                        description='Status of the offer',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='Timestamp indicating when the offer was last updated',
+                    ),
+                    CacheFieldConfig(
+                        name='version',
+                        type=['null', 'integer'],
+                        description='Version of the offer data',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='offices',
+                x_airbyte_name='offices',
+                fields=[
+                    CacheFieldConfig(
+                        name='child_ids',
+                        type=['null', 'array'],
+                        description='IDs of child offices associated with this office',
+                    ),
+                    CacheFieldConfig(
+                        name='child_office_external_ids',
+                        type=['null', 'array'],
+                        description='External IDs of child offices associated with this office',
+                    ),
+                    CacheFieldConfig(
+                        name='external_id',
+                        type=['null', 'string'],
+                        description='Unique identifier for this office in the external system',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for this office in the API system',
+                    ),
+                    CacheFieldConfig(
+                        name='location',
+                        type=['null', 'object'],
+                        description='Location details of this office',
+                        properties={
+                            'name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Name of the office',
+                    ),
+                    CacheFieldConfig(
+                        name='parent_id',
+                        type=['null', 'integer'],
+                        description='ID of the parent office, if this office is a branch office',
+                    ),
+                    CacheFieldConfig(
+                        name='parent_office_external_id',
+                        type=['null', 'string'],
+                        description='External ID of the parent office in the external system',
+                    ),
+                    CacheFieldConfig(
+                        name='primary_contact_user_id',
+                        type=['null', 'integer'],
+                        description='User ID of the primary contact person for this office',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='sources',
+                x_airbyte_name='sources',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='The unique identifier for the source.',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='The name of the source.',
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'object'],
+                        description='Type of the data source',
+                        properties={
+                            'id': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='users',
+                x_airbyte_name='users',
+                fields=[
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='The date and time when the user account was created.',
+                    ),
+                    CacheFieldConfig(
+                        name='departments',
+                        type=['null', 'array'],
+                        description='List of departments associated with users',
+                    ),
+                    CacheFieldConfig(
+                        name='disabled',
+                        type=['null', 'boolean'],
+                        description='Indicates whether the user account is disabled.',
+                    ),
+                    CacheFieldConfig(
+                        name='emails',
+                        type=['null', 'array'],
+                        description='Email addresses of the users',
+                    ),
+                    CacheFieldConfig(
+                        name='employee_id',
+                        type=['null', 'string'],
+                        description='Employee identifier for the user.',
+                    ),
+                    CacheFieldConfig(
+                        name='first_name',
+                        type=['null', 'string'],
+                        description='The first name of the user.',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the user.',
+                    ),
+                    CacheFieldConfig(
+                        name='last_name',
+                        type=['null', 'string'],
+                        description='The last name of the user.',
+                    ),
+                    CacheFieldConfig(
+                        name='linked_candidate_ids',
+                        type=['null', 'array'],
+                        description='IDs of candidates linked to the user.',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='The full name of the user.',
+                    ),
+                    CacheFieldConfig(
+                        name='offices',
+                        type=['null', 'array'],
+                        description='List of office locations where users are based',
+                    ),
+                    CacheFieldConfig(
+                        name='primary_email_address',
+                        type=['null', 'string'],
+                        description='The primary email address of the user.',
+                    ),
+                    CacheFieldConfig(
+                        name='site_admin',
+                        type=['null', 'boolean'],
+                        description='Indicates whether the user is a site administrator.',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='The date and time when the user account was last updated.',
+                    ),
+                ],
+            ),
+        ],
+        disable_compaction=True,
+    ),
     search_field_paths={
         'applications': [
             'answers',

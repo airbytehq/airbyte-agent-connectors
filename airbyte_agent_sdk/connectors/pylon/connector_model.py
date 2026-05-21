@@ -20,6 +20,9 @@ from airbyte_agent_sdk.schema.security import (
     AuthConfigSpec,
 )
 from airbyte_agent_sdk.schema.extensions import (
+    CacheConfig,
+    CacheEntityConfig,
+    CacheFieldConfig,
     EntityRelationshipConfig,
 )
 from airbyte_agent_sdk.schema.base import (
@@ -5826,6 +5829,312 @@ PylonConnectorModel: ConnectorModel = ConnectorModel(
             },
         ),
     ],
+    context_store=CacheConfig(
+        entities=[
+            CacheEntityConfig(
+                entity='issues',
+                suggested=True,
+                x_airbyte_name='issues',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type='string',
+                        description='Unique identifier for the issue',
+                    ),
+                    CacheFieldConfig(
+                        name='title',
+                        type=['null', 'string'],
+                        description='Title of the issue',
+                    ),
+                    CacheFieldConfig(
+                        name='state',
+                        type=['null', 'string'],
+                        description='Current state of the issue (e.g. new, in_progress, closed)',
+                    ),
+                    CacheFieldConfig(
+                        name='source',
+                        type=['null', 'string'],
+                        description='Channel the issue originated from (e.g. email, slack)',
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description='Type classification of the issue',
+                    ),
+                    CacheFieldConfig(
+                        name='number',
+                        type=['null', 'integer'],
+                        description='Human-readable issue number within the workspace',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='Timestamp when the issue was created, in ISO 8601 format',
+                    ),
+                    CacheFieldConfig(
+                        name='latest_message_time',
+                        type=['null', 'string'],
+                        description='Timestamp of the most recent message on the issue, in ISO 8601 format',
+                    ),
+                    CacheFieldConfig(
+                        name='resolution_time',
+                        type=['null', 'string'],
+                        description='Timestamp when the issue was resolved, in ISO 8601 format',
+                    ),
+                    CacheFieldConfig(
+                        name='snoozed_until_time',
+                        type=['null', 'string'],
+                        description='Timestamp the issue is snoozed until, in ISO 8601 format',
+                    ),
+                    CacheFieldConfig(
+                        name='customer_portal_visible',
+                        type=['null', 'boolean'],
+                        description='Whether the issue is visible in the customer portal',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='accounts',
+                suggested=True,
+                x_airbyte_name='accounts',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type='string',
+                        description='Unique identifier for the account',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Name of the account (customer organization)',
+                    ),
+                    CacheFieldConfig(
+                        name='domain',
+                        type=['null', 'string'],
+                        description='Primary domain associated with the account',
+                    ),
+                    CacheFieldConfig(
+                        name='primary_domain',
+                        type=['null', 'string'],
+                        description='Canonical primary domain for the account',
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description='Classification of the account (e.g. customer, prospect)',
+                    ),
+                    CacheFieldConfig(
+                        name='is_disabled',
+                        type=['null', 'boolean'],
+                        description='Whether the account has been disabled',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='Timestamp when the account was created, in ISO 8601 format',
+                    ),
+                    CacheFieldConfig(
+                        name='latest_customer_activity_time',
+                        type=['null', 'string'],
+                        description='Timestamp of the most recent activity from this account, in ISO 8601 format',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='contacts',
+                suggested=True,
+                x_airbyte_name='contacts',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type='string',
+                        description='Unique identifier for the contact',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Full name of the contact',
+                    ),
+                    CacheFieldConfig(
+                        name='email',
+                        type=['null', 'string'],
+                        description='Primary email address of the contact',
+                    ),
+                    CacheFieldConfig(
+                        name='primary_phone_number',
+                        type=['null', 'string'],
+                        description='Primary phone number of the contact',
+                    ),
+                    CacheFieldConfig(
+                        name='portal_role',
+                        type=['null', 'string'],
+                        description='Role the contact has in the customer portal',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='teams',
+                suggested=True,
+                x_airbyte_name='teams',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type='string',
+                        description='Unique identifier for the team',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Name of the team',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='tags',
+                suggested=True,
+                x_airbyte_name='tags',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type='string',
+                        description='Unique identifier for the tag',
+                    ),
+                    CacheFieldConfig(
+                        name='value',
+                        type=['null', 'string'],
+                        description='Display value of the tag',
+                    ),
+                    CacheFieldConfig(
+                        name='object_type',
+                        type=['null', 'string'],
+                        description='Type of object this tag applies to (e.g. issue, account)',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='users',
+                suggested=True,
+                x_airbyte_name='users',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type='string',
+                        description='Unique identifier for the user',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Full name of the user',
+                    ),
+                    CacheFieldConfig(
+                        name='email',
+                        type=['null', 'string'],
+                        description='Primary email address of the user',
+                    ),
+                    CacheFieldConfig(
+                        name='role_id',
+                        type=['null', 'string'],
+                        description="Identifier of the user's role",
+                    ),
+                    CacheFieldConfig(
+                        name='status',
+                        type=['null', 'string'],
+                        description='Current status of the user (e.g. active, disabled)',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='custom_fields',
+                suggested=True,
+                x_airbyte_name='custom_fields',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type='string',
+                        description='Unique identifier for the custom field',
+                    ),
+                    CacheFieldConfig(
+                        name='label',
+                        type=['null', 'string'],
+                        description='Display label of the custom field',
+                    ),
+                    CacheFieldConfig(
+                        name='slug',
+                        type=['null', 'string'],
+                        description='URL-safe identifier for the custom field',
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description='Data type of the custom field (e.g. text, select)',
+                    ),
+                    CacheFieldConfig(
+                        name='object_type',
+                        type=['null', 'string'],
+                        description='Type of object this custom field applies to (e.g. issue, account)',
+                    ),
+                    CacheFieldConfig(
+                        name='is_read_only',
+                        type=['null', 'boolean'],
+                        description='Whether the custom field is read-only',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='Timestamp when the custom field was created, in ISO 8601 format',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='ticket_forms',
+                suggested=True,
+                x_airbyte_name='ticket_forms',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type='string',
+                        description='Unique identifier for the ticket form',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Display name of the ticket form',
+                    ),
+                    CacheFieldConfig(
+                        name='slug',
+                        type=['null', 'string'],
+                        description='URL-safe identifier for the ticket form',
+                    ),
+                    CacheFieldConfig(
+                        name='is_public',
+                        type=['null', 'boolean'],
+                        description='Whether the ticket form is publicly accessible',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='user_roles',
+                x_airbyte_name='user_roles',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type='string',
+                        description='Unique identifier for the user role',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Display name of the user role',
+                    ),
+                    CacheFieldConfig(
+                        name='slug',
+                        type=['null', 'string'],
+                        description='URL-safe identifier for the user role',
+                    ),
+                ],
+            ),
+        ],
+    ),
     search_field_paths={
         'issues': [
             'id',

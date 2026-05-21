@@ -19,6 +19,11 @@ from airbyte_agent_sdk.schema.security import (
     AuthConfigFieldSpec,
     AuthConfigSpec,
 )
+from airbyte_agent_sdk.schema.extensions import (
+    CacheConfig,
+    CacheEntityConfig,
+    CacheFieldConfig,
+)
 from airbyte_agent_sdk.schema.base import (
     ExampleQuestions,
 )
@@ -2842,6 +2847,189 @@ ZendeskChatConnectorModel: ConnectorModel = ConnectorModel(
             },
         ),
     ],
+    context_store=CacheConfig(
+        entities=[
+            CacheEntityConfig(
+                entity='agents',
+                suggested=True,
+                x_airbyte_name='agents',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type='integer',
+                        description='Unique agent identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='email',
+                        type=['null', 'string'],
+                        description='Agent email address',
+                    ),
+                    CacheFieldConfig(
+                        name='display_name',
+                        type=['null', 'string'],
+                        description='Agent display name',
+                    ),
+                    CacheFieldConfig(
+                        name='first_name',
+                        type=['null', 'string'],
+                        description='Agent first name',
+                    ),
+                    CacheFieldConfig(
+                        name='last_name',
+                        type=['null', 'string'],
+                        description='Agent last name',
+                    ),
+                    CacheFieldConfig(
+                        name='enabled',
+                        type=['null', 'boolean'],
+                        description='Whether agent is enabled',
+                    ),
+                    CacheFieldConfig(
+                        name='role_id',
+                        type=['null', 'integer'],
+                        description='Agent role ID',
+                    ),
+                    CacheFieldConfig(
+                        name='departments',
+                        type=['null', 'array'],
+                        description='Department IDs agent belongs to',
+                    ),
+                    CacheFieldConfig(
+                        name='create_date',
+                        type=['null', 'string'],
+                        description='When agent was created',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='chats',
+                suggested=True,
+                x_airbyte_name='chats',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type='string',
+                        description='Unique chat identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='timestamp',
+                        type=['null', 'string'],
+                        description='Chat start timestamp',
+                    ),
+                    CacheFieldConfig(
+                        name='update_timestamp',
+                        type=['null', 'string'],
+                        description='Last update timestamp',
+                    ),
+                    CacheFieldConfig(
+                        name='department_id',
+                        type=['null', 'integer'],
+                        description='Department ID',
+                    ),
+                    CacheFieldConfig(
+                        name='department_name',
+                        type=['null', 'string'],
+                        description='Department name',
+                    ),
+                    CacheFieldConfig(
+                        name='duration',
+                        type=['null', 'integer'],
+                        description='Chat duration in seconds',
+                    ),
+                    CacheFieldConfig(
+                        name='rating',
+                        type=['null', 'string'],
+                        description='Satisfaction rating',
+                    ),
+                    CacheFieldConfig(
+                        name='missed',
+                        type=['null', 'boolean'],
+                        description='Whether chat was missed',
+                    ),
+                    CacheFieldConfig(
+                        name='agent_ids',
+                        type=['null', 'array'],
+                        description='IDs of agents in chat',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='departments',
+                suggested=True,
+                x_airbyte_name='departments',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type='integer',
+                        description='Department ID',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Department name',
+                    ),
+                    CacheFieldConfig(
+                        name='enabled',
+                        type=['null', 'boolean'],
+                        description='Whether department is enabled',
+                    ),
+                    CacheFieldConfig(
+                        name='members',
+                        type=['null', 'array'],
+                        description='Agent IDs in department',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='shortcuts',
+                x_airbyte_name='shortcuts',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type='integer',
+                        description='Shortcut ID',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Shortcut name/trigger',
+                    ),
+                    CacheFieldConfig(
+                        name='message',
+                        type=['null', 'string'],
+                        description='Shortcut message content',
+                    ),
+                    CacheFieldConfig(
+                        name='tags',
+                        type=['null', 'array'],
+                        description='Tags applied when shortcut is used',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='triggers',
+                x_airbyte_name='triggers',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type='integer',
+                        description='Trigger ID',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Trigger name',
+                    ),
+                    CacheFieldConfig(
+                        name='enabled',
+                        type=['null', 'boolean'],
+                        description='Whether trigger is enabled',
+                    ),
+                ],
+            ),
+        ],
+        disable_compaction=True,
+    ),
     search_field_paths={
         'agents': [
             'id',

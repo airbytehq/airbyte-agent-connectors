@@ -20,6 +20,9 @@ from airbyte_agent_sdk.schema.security import (
     AuthConfigSpec,
 )
 from airbyte_agent_sdk.schema.extensions import (
+    CacheConfig,
+    CacheEntityConfig,
+    CacheFieldConfig,
     EntityRelationshipConfig,
 )
 from airbyte_agent_sdk.schema.base import (
@@ -1305,6 +1308,371 @@ GoogleSearchConsoleConnectorModel: ConnectorModel = ConnectorModel(
             ],
         ),
     ],
+    context_store=CacheConfig(
+        entities=[
+            CacheEntityConfig(
+                entity='sites',
+                suggested=True,
+                x_airbyte_name='sites',
+                fields=[
+                    CacheFieldConfig(
+                        name='permissionLevel',
+                        type=['null', 'string'],
+                        description="The user's permission level for the site (owner, full, restricted, etc.)",
+                    ),
+                    CacheFieldConfig(
+                        name='siteUrl',
+                        type=['null', 'string'],
+                        description='The URL of the site data being fetched',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='sitemaps',
+                x_airbyte_name='sitemaps',
+                fields=[
+                    CacheFieldConfig(
+                        name='contents',
+                        type=['null', 'array'],
+                        description='Data related to the sitemap contents',
+                    ),
+                    CacheFieldConfig(
+                        name='errors',
+                        type=['null', 'string'],
+                        description='Errors encountered while processing the sitemaps',
+                    ),
+                    CacheFieldConfig(
+                        name='isPending',
+                        type=['null', 'boolean'],
+                        description='Flag indicating if the sitemap is pending for processing',
+                    ),
+                    CacheFieldConfig(
+                        name='isSitemapsIndex',
+                        type=['null', 'boolean'],
+                        description='Flag indicating if the data represents a sitemap index',
+                    ),
+                    CacheFieldConfig(
+                        name='lastDownloaded',
+                        type=['null', 'string'],
+                        description='Timestamp when the sitemap was last downloaded',
+                    ),
+                    CacheFieldConfig(
+                        name='lastSubmitted',
+                        type=['null', 'string'],
+                        description='Timestamp when the sitemap was last submitted',
+                    ),
+                    CacheFieldConfig(
+                        name='path',
+                        type=['null', 'string'],
+                        description='Path to the sitemap file',
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description='Type of the sitemap',
+                    ),
+                    CacheFieldConfig(
+                        name='warnings',
+                        type=['null', 'string'],
+                        description='Warnings encountered while processing the sitemaps',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='search_analytics_all_fields',
+                suggested=True,
+                x_airbyte_name='search_analytics_all_fields',
+                fields=[
+                    CacheFieldConfig(
+                        name='clicks',
+                        type=['null', 'integer'],
+                        description='The number of times users clicked on the search result for a specific query',
+                    ),
+                    CacheFieldConfig(
+                        name='country',
+                        type=['null', 'string'],
+                        description='The country from which the search query originated',
+                    ),
+                    CacheFieldConfig(
+                        name='ctr',
+                        type=['null', 'number'],
+                        description='Click-through rate, calculated as clicks divided by impressions',
+                    ),
+                    CacheFieldConfig(
+                        name='date',
+                        type=['null', 'string'],
+                        description='The date when the search query occurred',
+                    ),
+                    CacheFieldConfig(
+                        name='device',
+                        type=['null', 'string'],
+                        description='The type of device used by the user (e.g., desktop, mobile)',
+                    ),
+                    CacheFieldConfig(
+                        name='impressions',
+                        type=['null', 'integer'],
+                        description='The number of times a search result appeared in response to a query',
+                    ),
+                    CacheFieldConfig(
+                        name='page',
+                        type=['null', 'string'],
+                        description='The page URL that appeared in the search results',
+                    ),
+                    CacheFieldConfig(
+                        name='position',
+                        type=['null', 'number'],
+                        description='The average position of the search result on the search engine results page',
+                    ),
+                    CacheFieldConfig(
+                        name='query',
+                        type=['null', 'string'],
+                        description='The search query entered by the user',
+                    ),
+                    CacheFieldConfig(
+                        name='search_type',
+                        type=['null', 'string'],
+                        description='The type of search (e.g., web, image, video) that triggered the search result',
+                    ),
+                    CacheFieldConfig(
+                        name='site_url',
+                        type=['null', 'string'],
+                        description='The URL of the site from which the data originates',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='search_analytics_by_country',
+                suggested=True,
+                x_airbyte_name='search_analytics_by_country',
+                fields=[
+                    CacheFieldConfig(
+                        name='clicks',
+                        type=['null', 'integer'],
+                        description='The number of times users clicked on the search result for a specific country',
+                    ),
+                    CacheFieldConfig(
+                        name='country',
+                        type=['null', 'string'],
+                        description='The country for which the search analytics data is being reported',
+                    ),
+                    CacheFieldConfig(
+                        name='ctr',
+                        type=['null', 'number'],
+                        description='The click-through rate for a specific country',
+                    ),
+                    CacheFieldConfig(
+                        name='date',
+                        type=['null', 'string'],
+                        description='The date for which the search analytics data is being reported',
+                    ),
+                    CacheFieldConfig(
+                        name='impressions',
+                        type=['null', 'integer'],
+                        description='The total number of times a search result was shown for a specific country',
+                    ),
+                    CacheFieldConfig(
+                        name='position',
+                        type=['null', 'number'],
+                        description="The average position at which the site's search result appeared for a specific country",
+                    ),
+                    CacheFieldConfig(
+                        name='search_type',
+                        type=['null', 'string'],
+                        description='The type of search for which the data is being reported',
+                    ),
+                    CacheFieldConfig(
+                        name='site_url',
+                        type=['null', 'string'],
+                        description='The URL of the site for which the search analytics data is being reported',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='search_analytics_by_date',
+                suggested=True,
+                x_airbyte_name='search_analytics_by_date',
+                fields=[
+                    CacheFieldConfig(
+                        name='clicks',
+                        type=['null', 'integer'],
+                        description='The total number of clicks on the specific date',
+                    ),
+                    CacheFieldConfig(
+                        name='ctr',
+                        type=['null', 'number'],
+                        description='The click-through rate for the specific date',
+                    ),
+                    CacheFieldConfig(
+                        name='date',
+                        type=['null', 'string'],
+                        description='The date for which the search analytics data is being reported',
+                    ),
+                    CacheFieldConfig(
+                        name='impressions',
+                        type=['null', 'integer'],
+                        description='The number of impressions on the specific date',
+                    ),
+                    CacheFieldConfig(
+                        name='position',
+                        type=['null', 'number'],
+                        description='The average position in search results for the specific date',
+                    ),
+                    CacheFieldConfig(
+                        name='search_type',
+                        type=['null', 'string'],
+                        description='The type of search query that generated the data',
+                    ),
+                    CacheFieldConfig(
+                        name='site_url',
+                        type=['null', 'string'],
+                        description='The URL of the site for which the search analytics data is being reported',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='search_analytics_by_device',
+                suggested=True,
+                x_airbyte_name='search_analytics_by_device',
+                fields=[
+                    CacheFieldConfig(
+                        name='clicks',
+                        type=['null', 'integer'],
+                        description='The total number of clicks by device type',
+                    ),
+                    CacheFieldConfig(
+                        name='ctr',
+                        type=['null', 'number'],
+                        description='Click-through rate by device type',
+                    ),
+                    CacheFieldConfig(
+                        name='date',
+                        type=['null', 'string'],
+                        description='The date for which the search analytics data is provided',
+                    ),
+                    CacheFieldConfig(
+                        name='device',
+                        type=['null', 'string'],
+                        description='The type of device used by the user (e.g., desktop, mobile)',
+                    ),
+                    CacheFieldConfig(
+                        name='impressions',
+                        type=['null', 'integer'],
+                        description='The total number of impressions by device type',
+                    ),
+                    CacheFieldConfig(
+                        name='position',
+                        type=['null', 'number'],
+                        description='The average position in search results by device type',
+                    ),
+                    CacheFieldConfig(
+                        name='search_type',
+                        type=['null', 'string'],
+                        description='The type of search performed',
+                    ),
+                    CacheFieldConfig(
+                        name='site_url',
+                        type=['null', 'string'],
+                        description='The URL of the site for which search analytics data is being provided',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='search_analytics_by_page',
+                suggested=True,
+                x_airbyte_name='search_analytics_by_page',
+                fields=[
+                    CacheFieldConfig(
+                        name='clicks',
+                        type=['null', 'integer'],
+                        description='The number of clicks for a specific page',
+                    ),
+                    CacheFieldConfig(
+                        name='ctr',
+                        type=['null', 'number'],
+                        description='Click-through rate for the page',
+                    ),
+                    CacheFieldConfig(
+                        name='date',
+                        type=['null', 'string'],
+                        description='The date for which the search analytics data is reported',
+                    ),
+                    CacheFieldConfig(
+                        name='impressions',
+                        type=['null', 'integer'],
+                        description='The number of impressions for the page',
+                    ),
+                    CacheFieldConfig(
+                        name='page',
+                        type=['null', 'string'],
+                        description='The URL of the specific page being analyzed',
+                    ),
+                    CacheFieldConfig(
+                        name='position',
+                        type=['null', 'number'],
+                        description='The average position at which the page appeared in search results',
+                    ),
+                    CacheFieldConfig(
+                        name='search_type',
+                        type=['null', 'string'],
+                        description='The type of search query that led to the page being displayed',
+                    ),
+                    CacheFieldConfig(
+                        name='site_url',
+                        type=['null', 'string'],
+                        description='The URL of the site for which the search analytics data is being reported',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='search_analytics_by_query',
+                suggested=True,
+                x_airbyte_name='search_analytics_by_query',
+                fields=[
+                    CacheFieldConfig(
+                        name='clicks',
+                        type=['null', 'integer'],
+                        description='The number of clicks for the specific query',
+                    ),
+                    CacheFieldConfig(
+                        name='ctr',
+                        type=['null', 'number'],
+                        description='The click-through rate for the specific query',
+                    ),
+                    CacheFieldConfig(
+                        name='date',
+                        type=['null', 'string'],
+                        description='The date for which the search analytics data is recorded',
+                    ),
+                    CacheFieldConfig(
+                        name='impressions',
+                        type=['null', 'integer'],
+                        description='The number of impressions for the specific query',
+                    ),
+                    CacheFieldConfig(
+                        name='position',
+                        type=['null', 'number'],
+                        description='The average position for the specific query',
+                    ),
+                    CacheFieldConfig(
+                        name='query',
+                        type=['null', 'string'],
+                        description='The search query for which the data is recorded',
+                    ),
+                    CacheFieldConfig(
+                        name='search_type',
+                        type=['null', 'string'],
+                        description='The type of search result for the specific query',
+                    ),
+                    CacheFieldConfig(
+                        name='site_url',
+                        type=['null', 'string'],
+                        description='The URL of the site for which the search analytics data is captured',
+                    ),
+                ],
+            ),
+        ],
+        disable_compaction=True,
+    ),
     search_field_paths={
         'sites': ['permissionLevel', 'siteUrl'],
         'sitemaps': [

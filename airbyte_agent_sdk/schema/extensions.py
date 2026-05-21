@@ -11,7 +11,7 @@ Provides Pydantic models for OpenAPI x-airbyte-* extensions:
 
 from typing import Any, Literal
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, model_validator
 
 from airbyte_agent_sdk.schema.interpolation import resolve_interpolated_constants
 
@@ -272,6 +272,7 @@ class CacheConfig(BaseModel):
         info:
           title: Stripe API
           x-airbyte-context-store:
+            flush_batch_size_mb: 200
             entities:
               - entity: customers
                 stream: customers
@@ -292,6 +293,12 @@ class CacheConfig(BaseModel):
         default=False,
         alias="disable_compaction",
         description="When true, Athena compaction (OPTIMIZE + VACUUM) is skipped for this connector type.",
+    )
+    flush_batch_size_mb: StrictInt | None = Field(
+        default=None,
+        ge=1,
+        le=500,
+        description="Optional flush batch size, in MB, for Airbyte-hosted Context Store destination writes.",
     )
 
     def get_entity_mapping(self, user_entity: str) -> CacheEntityConfig | None:

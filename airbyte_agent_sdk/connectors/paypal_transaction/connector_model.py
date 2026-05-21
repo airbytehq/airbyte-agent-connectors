@@ -19,6 +19,12 @@ from airbyte_agent_sdk.schema.security import (
     AuthConfigFieldSpec,
     AuthConfigSpec,
 )
+from airbyte_agent_sdk.schema.extensions import (
+    CacheConfig,
+    CacheEntityConfig,
+    CacheFieldConfig,
+    CacheFieldProperty,
+)
 from airbyte_agent_sdk.schema.base import (
     ExampleQuestions,
 )
@@ -1892,6 +1898,631 @@ PaypalTransactionConnectorModel: ConnectorModel = ConnectorModel(
             },
         ),
     ],
+    context_store=CacheConfig(
+        entities=[
+            CacheEntityConfig(
+                entity='transactions',
+                suggested=True,
+                x_airbyte_name='transactions',
+                fields=[
+                    CacheFieldConfig(
+                        name='auction_info',
+                        type=['null', 'object'],
+                        description='Information related to an auction',
+                        properties={
+                            'auction_buyer_id': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'auction_closing_date': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'auction_item_site': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'auction_site': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='cart_info',
+                        type=['null', 'object'],
+                        description='Details of items in the cart',
+                        properties={
+                            'item_details': CacheFieldProperty(
+                                type=['null', 'array'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='incentive_info',
+                        type=['null', 'object'],
+                        description='Details of any incentives applied',
+                        properties={
+                            'incentive_details': CacheFieldProperty(
+                                type=['null', 'array'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='payer_info',
+                        type=['null', 'object'],
+                        description='Information about the payer',
+                        properties={
+                            'account_id': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'address_status': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'country_code': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'email_address': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'payer_name': CacheFieldProperty(
+                                type=['null', 'object'],
+                                properties={
+                                    'alternate_full_name': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                    'given_name': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                    'surname': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                },
+                            ),
+                            'payer_status': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='shipping_info',
+                        type=['null', 'object'],
+                        description='Shipping information',
+                        properties={
+                            'address': CacheFieldProperty(
+                                type=['null', 'object'],
+                                properties={
+                                    'city': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                    'country_code': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                    'line1': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                    'line2': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                    'postal_code': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                },
+                            ),
+                            'name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='store_info',
+                        type=['null', 'object'],
+                        description='Information about the store',
+                        properties={
+                            'store_id': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'terminal_id': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='transaction_id',
+                        type=['null', 'string'],
+                        description='Unique ID of the transaction',
+                    ),
+                    CacheFieldConfig(
+                        name='transaction_info',
+                        type=['null', 'object'],
+                        description='Detailed information about the transaction',
+                        properties={
+                            'custom_field': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'fee_amount': CacheFieldProperty(
+                                type=['null', 'object'],
+                                properties={
+                                    'currency_code': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                    'value': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                },
+                            ),
+                            'insurance_amount': CacheFieldProperty(
+                                type=['null', 'object'],
+                                properties={
+                                    'currency_code': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                    'value': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                },
+                            ),
+                            'invoice_id': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'paypal_account_id': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'paypal_reference_id': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'paypal_reference_id_type': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'protection_eligibility': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'shipping_amount': CacheFieldProperty(
+                                type=['null', 'object'],
+                                properties={
+                                    'currency_code': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                    'value': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                },
+                            ),
+                            'shipping_discount_amount': CacheFieldProperty(
+                                type=['null', 'object'],
+                                properties={
+                                    'currency_code': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                    'value': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                },
+                            ),
+                            'transaction_amount': CacheFieldProperty(
+                                type=['null', 'object'],
+                                properties={
+                                    'currency_code': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                    'value': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                },
+                            ),
+                            'transaction_event_code': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'transaction_id': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'transaction_initiation_date': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'transaction_note': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'transaction_status': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'transaction_subject': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'transaction_updated_date': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='transaction_initiation_date',
+                        type=['null', 'string'],
+                        description='Date and time when the transaction was initiated',
+                    ),
+                    CacheFieldConfig(
+                        name='transaction_updated_date',
+                        type=['null', 'string'],
+                        description='Date and time when the transaction was last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='balances',
+                suggested=True,
+                x_airbyte_name='balances',
+                fields=[
+                    CacheFieldConfig(
+                        name='account_id',
+                        type=['null', 'string'],
+                        description='The unique identifier of the account.',
+                    ),
+                    CacheFieldConfig(
+                        name='as_of_time',
+                        type=['null', 'string'],
+                        description='The timestamp when the balances data was reported.',
+                    ),
+                    CacheFieldConfig(
+                        name='balances',
+                        type=['null', 'array'],
+                        description='Object containing information about the account balances.',
+                    ),
+                    CacheFieldConfig(
+                        name='last_refresh_time',
+                        type=['null', 'string'],
+                        description='The timestamp when the balances data was last refreshed.',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='list_products',
+                suggested=True,
+                x_airbyte_name='list_products',
+                fields=[
+                    CacheFieldConfig(
+                        name='create_time',
+                        type=['null', 'string'],
+                        description='The time when the product was created',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='Detailed information or features of the product',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique identifier for the product',
+                    ),
+                    CacheFieldConfig(
+                        name='links',
+                        type=['null', 'array'],
+                        description='List of links related to the fetched products.',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='The name or title of the product',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='show_product_details',
+                x_airbyte_name='show_product_details',
+                fields=[
+                    CacheFieldConfig(
+                        name='category',
+                        type=['null', 'string'],
+                        description='The category to which the product belongs',
+                    ),
+                    CacheFieldConfig(
+                        name='create_time',
+                        type=['null', 'string'],
+                        description='The date and time when the product was created',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='The detailed description of the product',
+                    ),
+                    CacheFieldConfig(
+                        name='home_url',
+                        type=['null', 'string'],
+                        description='The URL for the home page of the product',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='The unique identifier for the product',
+                    ),
+                    CacheFieldConfig(
+                        name='image_url',
+                        type=['null', 'string'],
+                        description='The URL to the image representing the product',
+                    ),
+                    CacheFieldConfig(
+                        name='links',
+                        type=['null', 'array'],
+                        description='Contains links related to the product details.',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='The name of the product',
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description='The type or category of the product',
+                    ),
+                    CacheFieldConfig(
+                        name='update_time',
+                        type=['null', 'string'],
+                        description='The date and time when the product was last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='list_disputes',
+                suggested=True,
+                x_airbyte_name='list_disputes',
+                fields=[
+                    CacheFieldConfig(
+                        name='create_time',
+                        type=['null', 'string'],
+                        description='The timestamp when the dispute was created.',
+                    ),
+                    CacheFieldConfig(
+                        name='dispute_amount',
+                        type=['null', 'object'],
+                        description='Details about the disputed amount.',
+                        properties={
+                            'currency_code': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'value': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='dispute_channel',
+                        type=['null', 'string'],
+                        description='The channel through which the dispute was initiated.',
+                    ),
+                    CacheFieldConfig(
+                        name='dispute_id',
+                        type=['null', 'string'],
+                        description='The unique identifier for the dispute.',
+                    ),
+                    CacheFieldConfig(
+                        name='dispute_life_cycle_stage',
+                        type=['null', 'string'],
+                        description='The stage in the life cycle of the dispute.',
+                    ),
+                    CacheFieldConfig(
+                        name='dispute_state',
+                        type=['null', 'string'],
+                        description='The current state of the dispute.',
+                    ),
+                    CacheFieldConfig(
+                        name='disputed_transactions',
+                        type=['null', 'array'],
+                        description='Details of transactions involved in the dispute.',
+                    ),
+                    CacheFieldConfig(
+                        name='links',
+                        type=['null', 'array'],
+                        description='Links related to the dispute.',
+                    ),
+                    CacheFieldConfig(
+                        name='outcome',
+                        type=['null', 'string'],
+                        description='The outcome of the dispute resolution.',
+                    ),
+                    CacheFieldConfig(
+                        name='reason',
+                        type=['null', 'string'],
+                        description='The reason for the dispute.',
+                    ),
+                    CacheFieldConfig(
+                        name='status',
+                        type=['null', 'string'],
+                        description='The current status of the dispute.',
+                    ),
+                    CacheFieldConfig(
+                        name='update_time',
+                        type=['null', 'string'],
+                        description='The timestamp when the dispute was last updated.',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_time_cut',
+                        type=['null', 'string'],
+                        description='The cut-off timestamp for the last update.',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='search_invoices',
+                suggested=True,
+                x_airbyte_name='search_invoices',
+                fields=[
+                    CacheFieldConfig(
+                        name='additional_recipients',
+                        type=['null', 'array'],
+                        description='List of additional recipients associated with the invoice',
+                    ),
+                    CacheFieldConfig(
+                        name='amount',
+                        type=['null', 'object'],
+                        description='Detailed breakdown of the invoice amount',
+                        properties={
+                            'breakdown': CacheFieldProperty(
+                                type=['null', 'object'],
+                            ),
+                            'currency_code': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'value': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='configuration',
+                        type=['null', 'object'],
+                        description='Configuration settings related to the invoice',
+                    ),
+                    CacheFieldConfig(
+                        name='detail',
+                        type=['null', 'object'],
+                        description='Detailed information about the invoice',
+                    ),
+                    CacheFieldConfig(
+                        name='due_amount',
+                        type=['null', 'object'],
+                        description='Due amount remaining to be paid for the invoice',
+                        properties={
+                            'currency_code': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'value': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='gratuity',
+                        type=['null', 'object'],
+                        description='Gratuity amount included in the invoice',
+                        properties={
+                            'currency_code': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'value': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique identifier of the invoice',
+                    ),
+                    CacheFieldConfig(
+                        name='invoicer',
+                        type=['null', 'object'],
+                        description='Information about the invoicer associated with the invoice',
+                    ),
+                    CacheFieldConfig(
+                        name='last_update_time',
+                        type=['null', 'string'],
+                        description='Date and time of the last update made to the invoice',
+                    ),
+                    CacheFieldConfig(
+                        name='links',
+                        type=['null', 'array'],
+                        description='Links associated with the invoice',
+                    ),
+                    CacheFieldConfig(
+                        name='payments',
+                        type=['null', 'object'],
+                        description='Payment transactions associated with the invoice',
+                    ),
+                    CacheFieldConfig(
+                        name='primary_recipients',
+                        type=['null', 'array'],
+                        description='Primary recipients associated with the invoice',
+                    ),
+                    CacheFieldConfig(
+                        name='refunds',
+                        type=['null', 'object'],
+                        description='Refund transactions associated with the invoice',
+                    ),
+                    CacheFieldConfig(
+                        name='status',
+                        type=['null', 'string'],
+                        description='Current status of the invoice',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='list_payments',
+                suggested=True,
+                x_airbyte_name='list_payments',
+                fields=[
+                    CacheFieldConfig(
+                        name='cart',
+                        type=['null', 'string'],
+                        description='Details of the cart associated with the payment.',
+                    ),
+                    CacheFieldConfig(
+                        name='create_time',
+                        type=['null', 'string'],
+                        description='The date and time when the payment was created.',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique identifier for the payment.',
+                    ),
+                    CacheFieldConfig(
+                        name='intent',
+                        type=['null', 'string'],
+                        description='The intention or purpose behind the payment.',
+                    ),
+                    CacheFieldConfig(
+                        name='links',
+                        type=['null', 'array'],
+                        description='Collection of links related to the payment',
+                    ),
+                    CacheFieldConfig(
+                        name='payer',
+                        type=['null', 'object'],
+                        description='Details of the payer who made the payment',
+                        properties={
+                            'payer_info': CacheFieldProperty(
+                                type=['null', 'object'],
+                                properties={
+                                    'country_code': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                    'email': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                    'first_name': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                    'last_name': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                    'payer_id': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                },
+                            ),
+                            'payment_method': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'status': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='state',
+                        type=['null', 'string'],
+                        description='The state of the payment.',
+                    ),
+                    CacheFieldConfig(
+                        name='transactions',
+                        type=['null', 'array'],
+                        description='List of transactions associated with the payment',
+                    ),
+                    CacheFieldConfig(
+                        name='update_time',
+                        type=['null', 'string'],
+                        description='The date and time when the payment was last updated.',
+                    ),
+                ],
+            ),
+        ],
+        disable_compaction=True,
+    ),
     search_field_paths={
         'transactions': [
             'auction_info',

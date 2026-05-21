@@ -676,6 +676,7 @@ def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel
         entities=entities,
         openapi_spec=spec,
         retry_config=retry_config,
+        context_store=spec.info.x_airbyte_context_store,
         search_field_paths=search_field_paths,
         example_questions=example_questions,
         server_variable_defaults=server_variable_defaults,
@@ -1139,6 +1140,18 @@ def _parse_security_scheme_to_option(scheme_name: str, scheme: Any) -> AuthOptio
     )
 
 
+def parse_connector_model(raw_definition: dict[str, Any]) -> ConnectorModel:
+    """Parse connector model from a loaded connector definition."""
+    if not raw_definition:
+        raise ValueError("Invalid connector.yaml: empty file")
+
+    if "openapi" not in raw_definition:
+        raise ValueError("Invalid connector.yaml: missing 'openapi' key. Only OpenAPI 3.1 format is supported.")
+
+    spec = parse_openapi_spec(raw_definition)
+    return convert_openapi_to_connector_model(spec)
+
+
 def load_connector_model(definition_path: str | Path) -> ConnectorModel:
     """Load connector model from YAML definition file.
 
@@ -1168,11 +1181,4 @@ def load_connector_model(definition_path: str | Path) -> ConnectorModel:
     except Exception as e:
         raise ConnectorModelLoaderError(f"Error reading definition file {definition_path}: {e}")
 
-    if not raw_definition:
-        raise ValueError("Invalid connector.yaml: empty file")
-
-    if "openapi" not in raw_definition:
-        raise ValueError("Invalid connector.yaml: missing 'openapi' key. Only OpenAPI 3.1 format is supported.")
-
-    spec = parse_openapi_spec(raw_definition)
-    return convert_openapi_to_connector_model(spec)
+    return parse_connector_model(raw_definition)

@@ -21,6 +21,9 @@ from airbyte_agent_sdk.schema.security import (
     AuthConfigSpec,
 )
 from airbyte_agent_sdk.schema.extensions import (
+    CacheConfig,
+    CacheEntityConfig,
+    CacheFieldConfig,
     EntityRelationshipConfig,
 )
 from airbyte_agent_sdk.schema.base import (
@@ -6496,6 +6499,1766 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
             ],
         ),
     ],
+    context_store=CacheConfig(
+        entities=[
+            CacheEntityConfig(
+                entity='brands',
+                suggested=True,
+                x_airbyte_name='brands',
+                fields=[
+                    CacheFieldConfig(
+                        name='active',
+                        type=['null', 'boolean'],
+                        description='Indicates whether the brand is set as active',
+                    ),
+                    CacheFieldConfig(
+                        name='brand_url',
+                        type=['null', 'string'],
+                        description='The public URL of the brand',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='Timestamp when the brand was created',
+                    ),
+                    CacheFieldConfig(
+                        name='default',
+                        type=['null', 'boolean'],
+                        description='Indicates whether the brand is the default brand for tickets generated from non-branded channels',
+                    ),
+                    CacheFieldConfig(
+                        name='has_help_center',
+                        type=['null', 'boolean'],
+                        description='Indicates whether the brand has a Help Center enabled',
+                    ),
+                    CacheFieldConfig(
+                        name='help_center_state',
+                        type=['null', 'string'],
+                        description='The state of the Help Center, with allowed values of enabled, disabled, or restricted',
+                    ),
+                    CacheFieldConfig(
+                        name='host_mapping',
+                        type=['null', 'string'],
+                        description='The host mapping configuration for the brand, visible only to administrators',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier automatically assigned when the brand is created',
+                    ),
+                    CacheFieldConfig(
+                        name='is_deleted',
+                        type=['null', 'boolean'],
+                        description='Indicates whether the brand has been deleted',
+                    ),
+                    CacheFieldConfig(
+                        name='logo',
+                        type=['null', 'string'],
+                        description='Brand logo image file represented as an Attachment object',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='The name of the brand',
+                    ),
+                    CacheFieldConfig(
+                        name='signature_template',
+                        type=['null', 'string'],
+                        description='The signature template used for the brand',
+                    ),
+                    CacheFieldConfig(
+                        name='subdomain',
+                        type=['null', 'string'],
+                        description='The subdomain associated with the brand',
+                    ),
+                    CacheFieldConfig(
+                        name='ticket_form_ids',
+                        type=['null', 'array'],
+                        description='Array of ticket form IDs that are available for use by this brand',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='Timestamp when the brand was last updated',
+                    ),
+                    CacheFieldConfig(
+                        name='url',
+                        type=['null', 'string'],
+                        description='The API URL for accessing this brand resource',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='groups',
+                suggested=True,
+                x_airbyte_name='groups',
+                fields=[
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='Timestamp indicating when the group was created',
+                    ),
+                    CacheFieldConfig(
+                        name='default',
+                        type=['null', 'boolean'],
+                        description='Indicates if the group is the default one for the account',
+                    ),
+                    CacheFieldConfig(
+                        name='deleted',
+                        type=['null', 'boolean'],
+                        description='Indicates whether the group has been deleted',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='The description of the group',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier automatically assigned when creating groups',
+                    ),
+                    CacheFieldConfig(
+                        name='is_public',
+                        type=['null', 'boolean'],
+                        description='Indicates if the group is public (true) or private (false)',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='The name of the group',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='Timestamp indicating when the group was last updated',
+                    ),
+                    CacheFieldConfig(
+                        name='url',
+                        type=['null', 'string'],
+                        description='The API URL of the group',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='organizations',
+                suggested=True,
+                x_airbyte_name='organizations',
+                fields=[
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='Timestamp when the organization was created',
+                    ),
+                    CacheFieldConfig(
+                        name='deleted_at',
+                        type=['null', 'string'],
+                        description='Timestamp when the organization was deleted',
+                    ),
+                    CacheFieldConfig(
+                        name='details',
+                        type=['null', 'string'],
+                        description='Details about the organization, such as the address',
+                    ),
+                    CacheFieldConfig(
+                        name='domain_names',
+                        type=['null', 'array'],
+                        description='Array of domain names associated with this organization for automatic user assignment',
+                    ),
+                    CacheFieldConfig(
+                        name='external_id',
+                        type=['null', 'string'],
+                        description='Unique external identifier to associate the organization to an external record (case-insensitive)',
+                    ),
+                    CacheFieldConfig(
+                        name='group_id',
+                        type=['null', 'integer'],
+                        description='ID of the group where new tickets from users in this organization are automatically assigned',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier automatically assigned when the organization is created',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Unique name for the organization (mandatory field)',
+                    ),
+                    CacheFieldConfig(
+                        name='notes',
+                        type=['null', 'string'],
+                        description='Notes about the organization',
+                    ),
+                    CacheFieldConfig(
+                        name='organization_fields',
+                        type=['null', 'object'],
+                        description='Key-value object for custom organization fields',
+                    ),
+                    CacheFieldConfig(
+                        name='shared_comments',
+                        type=['null', 'boolean'],
+                        description="Boolean indicating whether end users in this organization can comment on each other's tickets",
+                    ),
+                    CacheFieldConfig(
+                        name='shared_tickets',
+                        type=['null', 'boolean'],
+                        description="Boolean indicating whether end users in this organization can see each other's tickets",
+                    ),
+                    CacheFieldConfig(
+                        name='tags',
+                        type=['null', 'array'],
+                        description='Array of tags associated with the organization',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='Timestamp of the last update to the organization',
+                    ),
+                    CacheFieldConfig(
+                        name='url',
+                        type=['null', 'string'],
+                        description='The API URL of this organization',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='satisfaction_ratings',
+                suggested=True,
+                x_airbyte_name='satisfaction_ratings',
+                fields=[
+                    CacheFieldConfig(
+                        name='assignee_id',
+                        type=['null', 'integer'],
+                        description='The identifier of the agent assigned to the ticket at the time the rating was submitted',
+                    ),
+                    CacheFieldConfig(
+                        name='comment',
+                        type=['null', 'string'],
+                        description='Optional comment provided by the requester with the rating',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='Timestamp indicating when the satisfaction rating was created',
+                    ),
+                    CacheFieldConfig(
+                        name='group_id',
+                        type=['null', 'integer'],
+                        description='The identifier of the group assigned to the ticket at the time the rating was submitted',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the satisfaction rating, automatically assigned upon creation',
+                    ),
+                    CacheFieldConfig(
+                        name='reason',
+                        type=['null', 'string'],
+                        description='Free-text reason for a bad rating provided by the requester in a follow-up question',
+                    ),
+                    CacheFieldConfig(
+                        name='reason_id',
+                        type=['null', 'integer'],
+                        description='Identifier for the predefined reason given for a negative rating',
+                    ),
+                    CacheFieldConfig(
+                        name='requester_id',
+                        type=['null', 'integer'],
+                        description='The identifier of the ticket requester who submitted the satisfaction rating',
+                    ),
+                    CacheFieldConfig(
+                        name='score',
+                        type=['null', 'string'],
+                        description="The satisfaction rating value: 'offered', 'unoffered', 'good', or 'bad'",
+                    ),
+                    CacheFieldConfig(
+                        name='ticket_id',
+                        type=['null', 'integer'],
+                        description='The identifier of the ticket being rated',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='Timestamp indicating when the satisfaction rating was last updated',
+                    ),
+                    CacheFieldConfig(
+                        name='url',
+                        type=['null', 'string'],
+                        description='The API URL of this satisfaction rating resource',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='tags',
+                suggested=True,
+                x_airbyte_name='tags',
+                fields=[
+                    CacheFieldConfig(
+                        name='count',
+                        type=['null', 'integer'],
+                        description='The number of times this tag has been used across resources',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='The tag name string used to label and categorize resources',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='ticket_audits',
+                suggested=True,
+                x_airbyte_name='ticket_audits',
+                fields=[
+                    CacheFieldConfig(
+                        name='attachments',
+                        type=['null', 'array'],
+                        description='Files or documents attached to the audit',
+                    ),
+                    CacheFieldConfig(
+                        name='author_id',
+                        type=['null', 'integer'],
+                        description='The unique identifier of the user who created the audit',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='Timestamp indicating when the audit was created',
+                    ),
+                    CacheFieldConfig(
+                        name='events',
+                        type=['null', 'array'],
+                        description='Array of events that occurred in this audit, such as field changes, comments, or tag updates',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the audit record, automatically assigned when the audit is created',
+                    ),
+                    CacheFieldConfig(
+                        name='metadata',
+                        type=['null', 'object'],
+                        description='Custom and system data associated with the audit',
+                    ),
+                    CacheFieldConfig(
+                        name='ticket_id',
+                        type=['null', 'integer'],
+                        description='The unique identifier of the ticket associated with this audit',
+                    ),
+                    CacheFieldConfig(
+                        name='via',
+                        type=['null', 'object'],
+                        description='Describes how the audit was created, providing context about the creation source',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='ticket_comments',
+                suggested=True,
+                x_airbyte_name='ticket_comments',
+                fields=[
+                    CacheFieldConfig(
+                        name='attachments',
+                        type=['null', 'array'],
+                        description='List of files or media attached to the comment',
+                    ),
+                    CacheFieldConfig(
+                        name='audit_id',
+                        type=['null', 'integer'],
+                        description='Identifier of the audit record associated with this comment event',
+                    ),
+                    CacheFieldConfig(
+                        name='author_id',
+                        type=['null', 'integer'],
+                        description='Identifier of the user who created the comment',
+                    ),
+                    CacheFieldConfig(
+                        name='body',
+                        type=['null', 'string'],
+                        description='Content of the comment in its original format',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='Timestamp when the comment was created',
+                    ),
+                    CacheFieldConfig(
+                        name='event_type',
+                        type=['null', 'string'],
+                        description='Specific classification of the event within the ticket event stream',
+                    ),
+                    CacheFieldConfig(
+                        name='html_body',
+                        type=['null', 'string'],
+                        description='HTML-formatted content of the comment',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the comment event',
+                    ),
+                    CacheFieldConfig(
+                        name='metadata',
+                        type=['null', 'object'],
+                        description='Additional structured information about the comment not covered by standard fields',
+                    ),
+                    CacheFieldConfig(
+                        name='plain_body',
+                        type=['null', 'string'],
+                        description='Plain text content of the comment without formatting',
+                    ),
+                    CacheFieldConfig(
+                        name='public',
+                        type=['null', 'boolean'],
+                        description='Boolean indicating whether the comment is visible to end users or is an internal note',
+                    ),
+                    CacheFieldConfig(
+                        name='ticket_id',
+                        type=['null', 'integer'],
+                        description='Identifier of the ticket to which this comment belongs',
+                    ),
+                    CacheFieldConfig(
+                        name='timestamp',
+                        type=['null', 'integer'],
+                        description='Timestamp of when the event occurred in the incremental export stream',
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description='Type of event, typically indicating this is a comment event',
+                    ),
+                    CacheFieldConfig(
+                        name='uploads',
+                        type=['null', 'array'],
+                        description='Array of upload tokens or identifiers for files being attached to the comment',
+                    ),
+                    CacheFieldConfig(
+                        name='via',
+                        type=['null', 'object'],
+                        description='Channel or method through which the comment was submitted',
+                    ),
+                    CacheFieldConfig(
+                        name='via_reference_id',
+                        type=['null', 'integer'],
+                        description='Reference identifier for the channel through which the comment was created',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='ticket_fields',
+                suggested=True,
+                x_airbyte_name='ticket_fields',
+                fields=[
+                    CacheFieldConfig(
+                        name='active',
+                        type=['null', 'boolean'],
+                        description='Whether this field is currently available for use',
+                    ),
+                    CacheFieldConfig(
+                        name='agent_description',
+                        type=['null', 'string'],
+                        description='A description of the ticket field that only agents can see',
+                    ),
+                    CacheFieldConfig(
+                        name='collapsed_for_agents',
+                        type=['null', 'boolean'],
+                        description='If true, the field is shown to agents by default; if false, it is hidden alongside infrequently used fields',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='Timestamp when the custom ticket field was created',
+                    ),
+                    CacheFieldConfig(
+                        name='custom_field_options',
+                        type=['null', 'array'],
+                        description='Array of option objects for custom ticket fields of type multiselect or tagger',
+                    ),
+                    CacheFieldConfig(
+                        name='custom_statuses',
+                        type=['null', 'array'],
+                        description='List of customized ticket statuses, only present for system ticket fields of type custom_status',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='Text describing the purpose of the ticket field to users',
+                    ),
+                    CacheFieldConfig(
+                        name='editable_in_portal',
+                        type=['null', 'boolean'],
+                        description='Whether this field is editable by end users in Help Center',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the ticket field, automatically assigned when created',
+                    ),
+                    CacheFieldConfig(
+                        name='key',
+                        type=['null', 'string'],
+                        description='Internal identifier or reference key for the field',
+                    ),
+                    CacheFieldConfig(
+                        name='position',
+                        type=['null', 'integer'],
+                        description='The relative position of the ticket field on a ticket, controlling display order',
+                    ),
+                    CacheFieldConfig(
+                        name='raw_description',
+                        type=['null', 'string'],
+                        description='The dynamic content placeholder if present, or the description value if not',
+                    ),
+                    CacheFieldConfig(
+                        name='raw_title',
+                        type=['null', 'string'],
+                        description='The dynamic content placeholder if present, or the title value if not',
+                    ),
+                    CacheFieldConfig(
+                        name='raw_title_in_portal',
+                        type=['null', 'string'],
+                        description='The dynamic content placeholder if present, or the title_in_portal value if not',
+                    ),
+                    CacheFieldConfig(
+                        name='regexp_for_validation',
+                        type=['null', 'string'],
+                        description='For regexp fields only, the validation pattern for a field value to be deemed valid',
+                    ),
+                    CacheFieldConfig(
+                        name='removable',
+                        type=['null', 'boolean'],
+                        description='If false, this field is a system field that must be present on all tickets',
+                    ),
+                    CacheFieldConfig(
+                        name='required',
+                        type=['null', 'boolean'],
+                        description='If true, agents must enter a value in the field to change the ticket status to solved',
+                    ),
+                    CacheFieldConfig(
+                        name='required_in_portal',
+                        type=['null', 'boolean'],
+                        description='If true, end users must enter a value in the field to create a request',
+                    ),
+                    CacheFieldConfig(
+                        name='sub_type_id',
+                        type=['null', 'integer'],
+                        description='For system ticket fields of type priority and status, controlling available options',
+                    ),
+                    CacheFieldConfig(
+                        name='system_field_options',
+                        type=['null', 'array'],
+                        description='Array of options for system ticket fields of type tickettype, priority, or status',
+                    ),
+                    CacheFieldConfig(
+                        name='tag',
+                        type=['null', 'string'],
+                        description='For checkbox fields only, a tag added to tickets when the checkbox field is selected',
+                    ),
+                    CacheFieldConfig(
+                        name='title',
+                        type=['null', 'string'],
+                        description='The title of the ticket field displayed to agents',
+                    ),
+                    CacheFieldConfig(
+                        name='title_in_portal',
+                        type=['null', 'string'],
+                        description='The title of the ticket field displayed to end users in Help Center',
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description='Field type such as text, textarea, checkbox, date, integer, decimal, regexp, multiselect, or tagger',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='Timestamp when the custom ticket field was last updated',
+                    ),
+                    CacheFieldConfig(
+                        name='url',
+                        type=['null', 'string'],
+                        description='The API URL for this ticket field resource',
+                    ),
+                    CacheFieldConfig(
+                        name='visible_in_portal',
+                        type=['null', 'boolean'],
+                        description='Whether this field is visible to end users in Help Center',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='ticket_forms',
+                suggested=True,
+                x_airbyte_name='ticket_forms',
+                fields=[
+                    CacheFieldConfig(
+                        name='active',
+                        type=['null', 'boolean'],
+                        description='Indicates if the form is set as active',
+                    ),
+                    CacheFieldConfig(
+                        name='agent_conditions',
+                        type=['null', 'array'],
+                        description='Array of condition sets for agent workspaces',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='Timestamp when the ticket form was created',
+                    ),
+                    CacheFieldConfig(
+                        name='default',
+                        type=['null', 'boolean'],
+                        description='Indicates if the form is the default form for this account',
+                    ),
+                    CacheFieldConfig(
+                        name='display_name',
+                        type=['null', 'string'],
+                        description='The name of the form that is displayed to an end user',
+                    ),
+                    CacheFieldConfig(
+                        name='end_user_conditions',
+                        type=['null', 'array'],
+                        description='Array of condition sets for end user products',
+                    ),
+                    CacheFieldConfig(
+                        name='end_user_visible',
+                        type=['null', 'boolean'],
+                        description='Indicates if the form is visible to the end user',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the ticket form, automatically assigned when creating the form',
+                    ),
+                    CacheFieldConfig(
+                        name='in_all_brands',
+                        type=['null', 'boolean'],
+                        description='Indicates if the form is available for use in all brands on this account',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='The name of the ticket form',
+                    ),
+                    CacheFieldConfig(
+                        name='position',
+                        type=['null', 'integer'],
+                        description='The position of this form among other forms in the account, such as in a dropdown',
+                    ),
+                    CacheFieldConfig(
+                        name='raw_display_name',
+                        type=['null', 'string'],
+                        description='The dynamic content placeholder if present, or the display_name value if not',
+                    ),
+                    CacheFieldConfig(
+                        name='raw_name',
+                        type=['null', 'string'],
+                        description='The dynamic content placeholder if present, or the name value if not',
+                    ),
+                    CacheFieldConfig(
+                        name='restricted_brand_ids',
+                        type=['null', 'array'],
+                        description='IDs of all brands that this ticket form is restricted to',
+                    ),
+                    CacheFieldConfig(
+                        name='ticket_field_ids',
+                        type=['null', 'array'],
+                        description='IDs of all ticket fields included in this ticket form',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='Timestamp of the last update to the ticket form',
+                    ),
+                    CacheFieldConfig(
+                        name='url',
+                        type=['null', 'string'],
+                        description='URL of the ticket form',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='ticket_metrics',
+                suggested=True,
+                x_airbyte_name='ticket_metrics',
+                fields=[
+                    CacheFieldConfig(
+                        name='agent_wait_time_in_minutes',
+                        type=['null', 'object'],
+                        description='Number of minutes the agent spent waiting during calendar and business hours',
+                    ),
+                    CacheFieldConfig(
+                        name='assigned_at',
+                        type=['null', 'string'],
+                        description='Timestamp when the ticket was assigned',
+                    ),
+                    CacheFieldConfig(
+                        name='assignee_stations',
+                        type=['null', 'integer'],
+                        description='Number of assignees the ticket had',
+                    ),
+                    CacheFieldConfig(
+                        name='assignee_updated_at',
+                        type=['null', 'string'],
+                        description='Timestamp when the assignee last updated the ticket',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='Timestamp when the metric record was created',
+                    ),
+                    CacheFieldConfig(
+                        name='custom_status_updated_at',
+                        type=['null', 'string'],
+                        description="Timestamp when the ticket's custom status was last updated",
+                    ),
+                    CacheFieldConfig(
+                        name='first_resolution_time_in_minutes',
+                        type=['null', 'object'],
+                        description='Number of minutes to the first resolution time during calendar and business hours',
+                    ),
+                    CacheFieldConfig(
+                        name='full_resolution_time_in_minutes',
+                        type=['null', 'object'],
+                        description='Number of minutes to the full resolution during calendar and business hours',
+                    ),
+                    CacheFieldConfig(
+                        name='generated_timestamp',
+                        type=['null', 'integer'],
+                        description='Timestamp of when record was last updated',
+                    ),
+                    CacheFieldConfig(
+                        name='group_stations',
+                        type=['null', 'integer'],
+                        description='Number of groups the ticket passed through',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the ticket metric record',
+                    ),
+                    CacheFieldConfig(
+                        name='initially_assigned_at',
+                        type=['null', 'string'],
+                        description='Timestamp when the ticket was initially assigned',
+                    ),
+                    CacheFieldConfig(
+                        name='instance_id',
+                        type=['null', 'integer'],
+                        description='ID of the Zendesk instance associated with the ticket',
+                    ),
+                    CacheFieldConfig(
+                        name='latest_comment_added_at',
+                        type=['null', 'string'],
+                        description='Timestamp when the latest comment was added',
+                    ),
+                    CacheFieldConfig(
+                        name='metric',
+                        type=['null', 'string'],
+                        description='Ticket metrics data',
+                    ),
+                    CacheFieldConfig(
+                        name='on_hold_time_in_minutes',
+                        type=['null', 'object'],
+                        description='Number of minutes on hold',
+                    ),
+                    CacheFieldConfig(
+                        name='reopens',
+                        type=['null', 'integer'],
+                        description='Total number of times the ticket was reopened',
+                    ),
+                    CacheFieldConfig(
+                        name='replies',
+                        type=['null', 'integer'],
+                        description='The number of public replies added to a ticket by an agent',
+                    ),
+                    CacheFieldConfig(
+                        name='reply_time_in_minutes',
+                        type=['null', 'object'],
+                        description='Number of minutes to the first reply during calendar and business hours',
+                    ),
+                    CacheFieldConfig(
+                        name='reply_time_in_seconds',
+                        type=['null', 'object'],
+                        description='Number of seconds to the first reply during calendar hours, only available for Messaging tickets',
+                    ),
+                    CacheFieldConfig(
+                        name='requester_updated_at',
+                        type=['null', 'string'],
+                        description='Timestamp when the requester last updated the ticket',
+                    ),
+                    CacheFieldConfig(
+                        name='requester_wait_time_in_minutes',
+                        type=['null', 'object'],
+                        description='Number of minutes the requester spent waiting during calendar and business hours',
+                    ),
+                    CacheFieldConfig(
+                        name='solved_at',
+                        type=['null', 'string'],
+                        description='Timestamp when the ticket was solved',
+                    ),
+                    CacheFieldConfig(
+                        name='status',
+                        type=['null', 'object'],
+                        description='The current status of the ticket (open, pending, solved, etc.).',
+                    ),
+                    CacheFieldConfig(
+                        name='status_updated_at',
+                        type=['null', 'string'],
+                        description='Timestamp when the status of the ticket was last updated',
+                    ),
+                    CacheFieldConfig(
+                        name='ticket_id',
+                        type=['null', 'integer'],
+                        description='Identifier of the associated ticket',
+                    ),
+                    CacheFieldConfig(
+                        name='time',
+                        type=['null', 'string'],
+                        description='Time related to the ticket',
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description='Type of ticket',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='Timestamp when the metric record was last updated',
+                    ),
+                    CacheFieldConfig(
+                        name='url',
+                        type=['null', 'string'],
+                        description='The API url of the ticket metric',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='tickets',
+                suggested=True,
+                x_airbyte_name='tickets',
+                fields=[
+                    CacheFieldConfig(
+                        name='allow_attachments',
+                        type=['null', 'boolean'],
+                        description='Boolean indicating whether attachments are allowed on the ticket',
+                    ),
+                    CacheFieldConfig(
+                        name='allow_channelback',
+                        type=['null', 'boolean'],
+                        description='Boolean indicating whether agents can reply to the ticket through the original channel',
+                    ),
+                    CacheFieldConfig(
+                        name='assignee_id',
+                        type=['null', 'integer'],
+                        description='Unique identifier of the agent currently assigned to the ticket',
+                    ),
+                    CacheFieldConfig(
+                        name='brand_id',
+                        type=['null', 'integer'],
+                        description='Unique identifier of the brand associated with the ticket in multi-brand accounts',
+                    ),
+                    CacheFieldConfig(
+                        name='collaborator_ids',
+                        type=['null', 'array'],
+                        description='Array of user identifiers who are collaborating on the ticket',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='Timestamp indicating when the ticket was created',
+                    ),
+                    CacheFieldConfig(
+                        name='custom_fields',
+                        type=['null', 'array'],
+                        description="Array of custom field values specific to the account's ticket configuration",
+                    ),
+                    CacheFieldConfig(
+                        name='custom_status_id',
+                        type=['null', 'integer'],
+                        description='Unique identifier of the custom status applied to the ticket',
+                    ),
+                    CacheFieldConfig(
+                        name='deleted_ticket_form_id',
+                        type=['null', 'integer'],
+                        description='The ID of the ticket form that was previously associated with this ticket but has since been deleted',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='Initial description or content of the ticket when it was created',
+                    ),
+                    CacheFieldConfig(
+                        name='due_at',
+                        type=['null', 'string'],
+                        description='Timestamp indicating when the ticket is due for completion or resolution',
+                    ),
+                    CacheFieldConfig(
+                        name='email_cc_ids',
+                        type=['null', 'array'],
+                        description="Array of user identifiers who are CC'd on ticket email notifications",
+                    ),
+                    CacheFieldConfig(
+                        name='external_id',
+                        type=['null', 'string'],
+                        description='External identifier for the ticket, used for integrations with other systems',
+                    ),
+                    CacheFieldConfig(
+                        name='fields',
+                        type=['null', 'array'],
+                        description='Array of ticket field values including both system and custom fields',
+                    ),
+                    CacheFieldConfig(
+                        name='follower_ids',
+                        type=['null', 'array'],
+                        description='Array of user identifiers who are following the ticket for updates',
+                    ),
+                    CacheFieldConfig(
+                        name='followup_ids',
+                        type=['null', 'array'],
+                        description='Array of identifiers for follow-up tickets related to this ticket',
+                    ),
+                    CacheFieldConfig(
+                        name='forum_topic_id',
+                        type=['null', 'integer'],
+                        description='Unique identifier linking the ticket to a forum topic if applicable',
+                    ),
+                    CacheFieldConfig(
+                        name='from_messaging_channel',
+                        type=['null', 'boolean'],
+                        description='Boolean indicating whether the ticket originated from a messaging channel',
+                    ),
+                    CacheFieldConfig(
+                        name='generated_timestamp',
+                        type=['null', 'integer'],
+                        description='Timestamp updated for all ticket updates including system changes, used for incremental export',
+                    ),
+                    CacheFieldConfig(
+                        name='group_id',
+                        type=['null', 'integer'],
+                        description='Unique identifier of the agent group assigned to handle the ticket',
+                    ),
+                    CacheFieldConfig(
+                        name='has_incidents',
+                        type=['null', 'boolean'],
+                        description='Boolean indicating whether this problem ticket has related incident tickets',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the ticket',
+                    ),
+                    CacheFieldConfig(
+                        name='is_public',
+                        type=['null', 'boolean'],
+                        description='Boolean indicating whether the ticket is publicly visible',
+                    ),
+                    CacheFieldConfig(
+                        name='organization_id',
+                        type=['null', 'integer'],
+                        description='Unique identifier of the organization associated with the ticket',
+                    ),
+                    CacheFieldConfig(
+                        name='priority',
+                        type=['null', 'string'],
+                        description='Priority level assigned to the ticket (e.g., urgent, high, normal, low)',
+                    ),
+                    CacheFieldConfig(
+                        name='problem_id',
+                        type=['null', 'integer'],
+                        description='Unique identifier of the problem ticket if this is an incident ticket',
+                    ),
+                    CacheFieldConfig(
+                        name='raw_subject',
+                        type=['null', 'string'],
+                        description='Original unprocessed subject line before any system modifications',
+                    ),
+                    CacheFieldConfig(
+                        name='recipient',
+                        type=['null', 'string'],
+                        description='Email address or identifier of the ticket recipient',
+                    ),
+                    CacheFieldConfig(
+                        name='requester_id',
+                        type=['null', 'integer'],
+                        description='Unique identifier of the user who requested or created the ticket',
+                    ),
+                    CacheFieldConfig(
+                        name='satisfaction_rating',
+                        type=['null', 'object', 'string'],
+                        description='Object containing customer satisfaction rating data for the ticket',
+                    ),
+                    CacheFieldConfig(
+                        name='sharing_agreement_ids',
+                        type=['null', 'array'],
+                        description='Array of sharing agreement identifiers if the ticket is shared across Zendesk instances',
+                    ),
+                    CacheFieldConfig(
+                        name='status',
+                        type=['null', 'string'],
+                        description='Current status of the ticket (e.g., new, open, pending, solved, closed)',
+                    ),
+                    CacheFieldConfig(
+                        name='subject',
+                        type=['null', 'string'],
+                        description='Subject line of the ticket describing the issue or request',
+                    ),
+                    CacheFieldConfig(
+                        name='submitter_id',
+                        type=['null', 'integer'],
+                        description='Unique identifier of the user who submitted the ticket on behalf of the requester',
+                    ),
+                    CacheFieldConfig(
+                        name='tags',
+                        type=['null', 'array'],
+                        description='Array of tags applied to the ticket for categorization and filtering',
+                    ),
+                    CacheFieldConfig(
+                        name='ticket_form_id',
+                        type=['null', 'integer'],
+                        description='Unique identifier of the ticket form used when creating the ticket',
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description='Type of ticket (e.g., problem, incident, question, task)',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='Timestamp indicating when the ticket was last updated with a ticket event',
+                    ),
+                    CacheFieldConfig(
+                        name='url',
+                        type=['null', 'string'],
+                        description='API URL to access the full ticket resource',
+                    ),
+                    CacheFieldConfig(
+                        name='result_type',
+                        type=['null', 'string'],
+                        description='The type of the search result (e.g. ticket) when returned from search endpoints',
+                    ),
+                    CacheFieldConfig(
+                        name='via',
+                        type=['null', 'object'],
+                        description='Object describing the channel and method through which the ticket was created',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='deleted_tickets',
+                x_airbyte_name='deleted_tickets',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='The unique identifier of the deleted ticket',
+                    ),
+                    CacheFieldConfig(
+                        name='subject',
+                        type=['null', 'string'],
+                        description='The subject or title of the deleted ticket',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='Additional details or comments about the deleted ticket',
+                    ),
+                    CacheFieldConfig(
+                        name='deleted_at',
+                        type=['null', 'string'],
+                        description='The timestamp when the ticket was deleted',
+                    ),
+                    CacheFieldConfig(
+                        name='previous_state',
+                        type=['null', 'string'],
+                        description='The state of the ticket before it was deleted',
+                    ),
+                    CacheFieldConfig(
+                        name='actor',
+                        type=['null', 'object'],
+                        description='The user who performed the deletion action',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='users',
+                suggested=True,
+                x_airbyte_name='users',
+                fields=[
+                    CacheFieldConfig(
+                        name='active',
+                        type=['null', 'boolean'],
+                        description='Indicates if the user account is currently active',
+                    ),
+                    CacheFieldConfig(
+                        name='alias',
+                        type=['null', 'string'],
+                        description='Alternative name or nickname for the user',
+                    ),
+                    CacheFieldConfig(
+                        name='chat_only',
+                        type=['null', 'boolean'],
+                        description='Indicates if the user can only interact via chat',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='Timestamp indicating when the user was created',
+                    ),
+                    CacheFieldConfig(
+                        name='custom_role_id',
+                        type=['null', 'integer'],
+                        description='Identifier for a custom role assigned to the user',
+                    ),
+                    CacheFieldConfig(
+                        name='default_group_id',
+                        type=['null', 'integer'],
+                        description='Identifier of the default group assigned to the user',
+                    ),
+                    CacheFieldConfig(
+                        name='details',
+                        type=['null', 'string'],
+                        description='Additional descriptive information about the user',
+                    ),
+                    CacheFieldConfig(
+                        name='email',
+                        type=['null', 'string'],
+                        description='Email address of the user',
+                    ),
+                    CacheFieldConfig(
+                        name='external_id',
+                        type=['null', 'string'],
+                        description='External system identifier for the user, used for integrations',
+                    ),
+                    CacheFieldConfig(
+                        name='iana_time_zone',
+                        type=['null', 'string'],
+                        description='IANA standard time zone identifier for the user',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the user',
+                    ),
+                    CacheFieldConfig(
+                        name='last_login_at',
+                        type=['null', 'string'],
+                        description="Timestamp of the user's most recent login",
+                    ),
+                    CacheFieldConfig(
+                        name='locale',
+                        type=['null', 'string'],
+                        description='Locale setting determining language and regional format preferences',
+                    ),
+                    CacheFieldConfig(
+                        name='locale_id',
+                        type=['null', 'integer'],
+                        description="Identifier for the user's locale preference",
+                    ),
+                    CacheFieldConfig(
+                        name='moderator',
+                        type=['null', 'boolean'],
+                        description='Indicates if the user has moderator privileges',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Display name of the user',
+                    ),
+                    CacheFieldConfig(
+                        name='notes',
+                        type=['null', 'string'],
+                        description='Internal notes about the user, visible only to agents',
+                    ),
+                    CacheFieldConfig(
+                        name='only_private_comments',
+                        type=['null', 'boolean'],
+                        description='Indicates if the user can only make private comments on tickets',
+                    ),
+                    CacheFieldConfig(
+                        name='organization_id',
+                        type=['null', 'integer'],
+                        description='Identifier of the organization the user belongs to',
+                    ),
+                    CacheFieldConfig(
+                        name='permanently_deleted',
+                        type=['null', 'boolean'],
+                        description='Indicates if the user has been permanently deleted from the system',
+                    ),
+                    CacheFieldConfig(
+                        name='phone',
+                        type=['null', 'string'],
+                        description='Phone number of the user',
+                    ),
+                    CacheFieldConfig(
+                        name='photo',
+                        type=['null', 'object'],
+                        description='Profile photo or avatar of the user',
+                    ),
+                    CacheFieldConfig(
+                        name='report_csv',
+                        type=['null', 'boolean'],
+                        description='Indicates if the user receives reports in CSV format',
+                    ),
+                    CacheFieldConfig(
+                        name='restricted_agent',
+                        type=['null', 'boolean'],
+                        description='Indicates if the agent has restricted access permissions',
+                    ),
+                    CacheFieldConfig(
+                        name='role',
+                        type=['null', 'string'],
+                        description='Role assigned to the user defining their permissions level',
+                    ),
+                    CacheFieldConfig(
+                        name='role_type',
+                        type=['null', 'integer'],
+                        description="Type classification of the user's role",
+                    ),
+                    CacheFieldConfig(
+                        name='shared',
+                        type=['null', 'boolean'],
+                        description='Indicates if the user is shared across multiple accounts',
+                    ),
+                    CacheFieldConfig(
+                        name='shared_agent',
+                        type=['null', 'boolean'],
+                        description='Indicates if the user is a shared agent across multiple brands or accounts',
+                    ),
+                    CacheFieldConfig(
+                        name='shared_phone_number',
+                        type=['null', 'boolean'],
+                        description='Indicates if the phone number is shared with other users',
+                    ),
+                    CacheFieldConfig(
+                        name='signature',
+                        type=['null', 'string'],
+                        description='Email signature text for the user',
+                    ),
+                    CacheFieldConfig(
+                        name='suspended',
+                        type=['null', 'boolean'],
+                        description='Indicates if the user account is suspended',
+                    ),
+                    CacheFieldConfig(
+                        name='tags',
+                        type=['null', 'array'],
+                        description='Labels or tags associated with the user for categorization',
+                    ),
+                    CacheFieldConfig(
+                        name='ticket_restriction',
+                        type=['null', 'string'],
+                        description='Defines which tickets the user can access based on restrictions',
+                    ),
+                    CacheFieldConfig(
+                        name='time_zone',
+                        type=['null', 'string'],
+                        description='Time zone setting for the user',
+                    ),
+                    CacheFieldConfig(
+                        name='two_factor_auth_enabled',
+                        type=['null', 'boolean'],
+                        description='Indicates if two-factor authentication is enabled for the user',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='Timestamp indicating when the user was last updated',
+                    ),
+                    CacheFieldConfig(
+                        name='url',
+                        type=['null', 'string'],
+                        description="API endpoint URL for accessing the user's detailed information",
+                    ),
+                    CacheFieldConfig(
+                        name='user_fields',
+                        type=['null', 'object'],
+                        description='Custom field values specific to the user, stored as key-value pairs',
+                    ),
+                    CacheFieldConfig(
+                        name='verified',
+                        type=['null', 'boolean'],
+                        description="Indicates if the user's identity has been verified",
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='articles',
+                suggested=True,
+                x_airbyte_name='articles',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='The unique ID of the article',
+                    ),
+                    CacheFieldConfig(
+                        name='url',
+                        type=['null', 'string'],
+                        description='The API URL of the article',
+                    ),
+                    CacheFieldConfig(
+                        name='html_url',
+                        type=['null', 'string'],
+                        description='The public URL of the article',
+                    ),
+                    CacheFieldConfig(
+                        name='title',
+                        type=['null', 'string'],
+                        description='The title of the article',
+                    ),
+                    CacheFieldConfig(
+                        name='body',
+                        type=['null', 'string'],
+                        description='The body content of the article (HTML)',
+                    ),
+                    CacheFieldConfig(
+                        name='locale',
+                        type=['null', 'string'],
+                        description='The locale of the article',
+                    ),
+                    CacheFieldConfig(
+                        name='author_id',
+                        type=['null', 'integer'],
+                        description='The ID of the user who created the article',
+                    ),
+                    CacheFieldConfig(
+                        name='section_id',
+                        type=['null', 'integer'],
+                        description='The ID of the section the article belongs to',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='The time the article was created',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='The time the article was last updated',
+                    ),
+                    CacheFieldConfig(
+                        name='vote_sum',
+                        type=['null', 'integer'],
+                        description='Sum of upvotes and downvotes',
+                    ),
+                    CacheFieldConfig(
+                        name='vote_count',
+                        type=['null', 'integer'],
+                        description='Number of votes',
+                    ),
+                    CacheFieldConfig(
+                        name='label_names',
+                        type=['null', 'array'],
+                        description='List of label names associated with the article',
+                    ),
+                    CacheFieldConfig(
+                        name='draft',
+                        type=['null', 'boolean'],
+                        description='Whether the article is a draft',
+                    ),
+                    CacheFieldConfig(
+                        name='promoted',
+                        type=['null', 'boolean'],
+                        description='Whether the article is promoted',
+                    ),
+                    CacheFieldConfig(
+                        name='position',
+                        type=['null', 'integer'],
+                        description='Position of the article in the section',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='article_attachments',
+                suggested=True,
+                x_airbyte_name='article_attachments',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='The unique ID of the attachment',
+                    ),
+                    CacheFieldConfig(
+                        name='url',
+                        type=['null', 'string'],
+                        description='The API URL of the attachment',
+                    ),
+                    CacheFieldConfig(
+                        name='article_id',
+                        type=['null', 'integer'],
+                        description='The ID of the article this attachment belongs to',
+                    ),
+                    CacheFieldConfig(
+                        name='file_name',
+                        type=['null', 'string'],
+                        description='The name of the attached file',
+                    ),
+                    CacheFieldConfig(
+                        name='content_type',
+                        type=['null', 'string'],
+                        description='The MIME type of the attachment',
+                    ),
+                    CacheFieldConfig(
+                        name='content_url',
+                        type=['null', 'string'],
+                        description='The URL to download the attachment',
+                    ),
+                    CacheFieldConfig(
+                        name='size',
+                        type=['null', 'integer'],
+                        description='The size of the attachment in bytes',
+                    ),
+                    CacheFieldConfig(
+                        name='inline',
+                        type=['null', 'boolean'],
+                        description='Whether the attachment is displayed inline',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='The time the attachment was created',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='The time the attachment was last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='automations',
+                suggested=True,
+                x_airbyte_name='automations',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Automatically assigned when created',
+                    ),
+                    CacheFieldConfig(
+                        name='title',
+                        type=['null', 'string'],
+                        description='The title of the automation',
+                    ),
+                    CacheFieldConfig(
+                        name='active',
+                        type=['null', 'boolean'],
+                        description='Whether the automation is active',
+                    ),
+                    CacheFieldConfig(
+                        name='position',
+                        type=['null', 'integer'],
+                        description='The position of the automation',
+                    ),
+                    CacheFieldConfig(
+                        name='conditions',
+                        type=['null', 'object'],
+                        description='An object that describes the conditions under which the automation will execute',
+                    ),
+                    CacheFieldConfig(
+                        name='actions',
+                        type=['null', 'array'],
+                        description='An array of actions',
+                    ),
+                    CacheFieldConfig(
+                        name='raw_title',
+                        type=['null', 'string'],
+                        description='The dynamic content placeholder for title',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='The time the automation was created',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='The time the automation was last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='group_memberships',
+                suggested=True,
+                x_airbyte_name='group_memberships',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Automatically assigned upon creation',
+                    ),
+                    CacheFieldConfig(
+                        name='url',
+                        type=['null', 'string'],
+                        description='The API url of this record',
+                    ),
+                    CacheFieldConfig(
+                        name='user_id',
+                        type=['null', 'integer'],
+                        description='The id of an agent',
+                    ),
+                    CacheFieldConfig(
+                        name='group_id',
+                        type=['null', 'integer'],
+                        description='The id of a group',
+                    ),
+                    CacheFieldConfig(
+                        name='default',
+                        type=['null', 'boolean'],
+                        description="If true, tickets assigned directly to the agent will assume this membership's group",
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='When the group membership was created',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='When the group membership was last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='macros',
+                suggested=True,
+                x_airbyte_name='macros',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Automatically assigned when the macro is created',
+                    ),
+                    CacheFieldConfig(
+                        name='url',
+                        type=['null', 'string'],
+                        description="A URL to access the macro's details",
+                    ),
+                    CacheFieldConfig(
+                        name='title',
+                        type=['null', 'string'],
+                        description='The title of the macro',
+                    ),
+                    CacheFieldConfig(
+                        name='active',
+                        type=['null', 'boolean'],
+                        description='Useful for determining if the macro should be displayed',
+                    ),
+                    CacheFieldConfig(
+                        name='position',
+                        type=['null', 'integer'],
+                        description='The position of the macro',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='The description of the macro',
+                    ),
+                    CacheFieldConfig(
+                        name='actions',
+                        type=['null', 'array'],
+                        description='Actions to perform when macro is applied',
+                    ),
+                    CacheFieldConfig(
+                        name='restriction',
+                        type=['null', 'object'],
+                        description='Who may access this macro',
+                    ),
+                    CacheFieldConfig(
+                        name='raw_title',
+                        type=['null', 'string'],
+                        description='The dynamic content placeholder for title',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='The time the macro was created',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='The time the macro was last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='organization_memberships',
+                suggested=True,
+                x_airbyte_name='organization_memberships',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Automatically assigned when the membership is created',
+                    ),
+                    CacheFieldConfig(
+                        name='url',
+                        type=['null', 'string'],
+                        description='The API url of this membership',
+                    ),
+                    CacheFieldConfig(
+                        name='user_id',
+                        type=['null', 'integer'],
+                        description='The ID of the user for whom this memberships belongs',
+                    ),
+                    CacheFieldConfig(
+                        name='organization_id',
+                        type=['null', 'integer'],
+                        description='The ID of the organization associated with this user',
+                    ),
+                    CacheFieldConfig(
+                        name='default',
+                        type=['null', 'boolean'],
+                        description='If true, this is the default organization for the user',
+                    ),
+                    CacheFieldConfig(
+                        name='organization_name',
+                        type=['null', 'string'],
+                        description='The name of the organization',
+                    ),
+                    CacheFieldConfig(
+                        name='view_tickets',
+                        type=['null', 'boolean'],
+                        description='If true, this user can view tickets from this organization',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='When the membership was created',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='When the membership was last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='sla_policies',
+                suggested=True,
+                x_airbyte_name='sla_policies',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Automatically assigned when the SLA policy is created',
+                    ),
+                    CacheFieldConfig(
+                        name='url',
+                        type=['null', 'string'],
+                        description='URL of the SLA policy',
+                    ),
+                    CacheFieldConfig(
+                        name='title',
+                        type=['null', 'string'],
+                        description='The title of the SLA policy',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='The description of the SLA policy',
+                    ),
+                    CacheFieldConfig(
+                        name='position',
+                        type=['null', 'integer'],
+                        description='Position of the SLA policy',
+                    ),
+                    CacheFieldConfig(
+                        name='filter',
+                        type=['null', 'object'],
+                        description='Filter for the SLA policy',
+                    ),
+                    CacheFieldConfig(
+                        name='policy_metrics',
+                        type=['null', 'array'],
+                        description='Array of policy metrics',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='When the SLA policy was created',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='When the SLA policy was last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='triggers',
+                suggested=True,
+                x_airbyte_name='triggers',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Automatically assigned when created',
+                    ),
+                    CacheFieldConfig(
+                        name='url',
+                        type=['null', 'string'],
+                        description='The URL of the trigger',
+                    ),
+                    CacheFieldConfig(
+                        name='title',
+                        type=['null', 'string'],
+                        description='The title of the trigger',
+                    ),
+                    CacheFieldConfig(
+                        name='active',
+                        type=['null', 'boolean'],
+                        description='Whether the trigger is active',
+                    ),
+                    CacheFieldConfig(
+                        name='position',
+                        type=['null', 'integer'],
+                        description='Position of the trigger',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='The description of the trigger',
+                    ),
+                    CacheFieldConfig(
+                        name='conditions',
+                        type=['null', 'object'],
+                        description='An object that describes the conditions under which the trigger will execute',
+                    ),
+                    CacheFieldConfig(
+                        name='actions',
+                        type=['null', 'array'],
+                        description='An array of actions',
+                    ),
+                    CacheFieldConfig(
+                        name='raw_title',
+                        type=['null', 'string'],
+                        description='The dynamic content placeholder for title',
+                    ),
+                    CacheFieldConfig(
+                        name='category_id',
+                        type=['null', 'string'],
+                        description='The ID of the category the trigger belongs to',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='The time the trigger was created',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='The time the trigger was last updated',
+                    ),
+                ],
+            ),
+        ],
+    ),
     search_field_paths={
         'brands': [
             'active',

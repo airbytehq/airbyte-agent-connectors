@@ -21,6 +21,9 @@ from airbyte_agent_sdk.schema.security import (
     AuthConfigSpec,
 )
 from airbyte_agent_sdk.schema.extensions import (
+    CacheConfig,
+    CacheEntityConfig,
+    CacheFieldConfig,
     EntityRelationshipConfig,
 )
 from airbyte_agent_sdk.schema.base import (
@@ -3042,6 +3045,365 @@ HubspotConnectorModel: ConnectorModel = ConnectorModel(
             ],
         ),
     ],
+    context_store=CacheConfig(
+        entities=[
+            CacheEntityConfig(
+                entity='companies',
+                suggested=True,
+                x_airbyte_name='companies',
+                fields=[
+                    CacheFieldConfig(
+                        name='archived',
+                        type=['null', 'boolean'],
+                        description='Indicates whether the company has been deleted and moved to the recycling bin',
+                    ),
+                    CacheFieldConfig(
+                        name='contacts',
+                        type=['null', 'array'],
+                        description='Associated contact records linked to this company',
+                    ),
+                    CacheFieldConfig(
+                        name='createdAt',
+                        type=['null', 'string'],
+                        description='Timestamp when the company record was created',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique identifier for the company record',
+                    ),
+                    CacheFieldConfig(
+                        name='properties',
+                        type=['object'],
+                        description='Object containing all property values for the company',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.createdate',
+                        x_airbyte_name='properties_createdate',
+                        type=['null', 'string'],
+                        description='Date the company was created',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.domain',
+                        x_airbyte_name='properties_domain',
+                        type=['null', 'string'],
+                        description='Company domain name',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hs_lastmodifieddate',
+                        x_airbyte_name='properties_hs_lastmodifieddate',
+                        type=['null', 'string'],
+                        description='Last modified date of the company',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hs_object_id',
+                        x_airbyte_name='properties_hs_object_id',
+                        type=['null', 'string'],
+                        description='HubSpot object ID',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hubspot_owner_id',
+                        x_airbyte_name='properties_hubspot_owner_id',
+                        type=['null', 'string'],
+                        description='ID of the HubSpot owner assigned to this company',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.name',
+                        x_airbyte_name='properties_name',
+                        type=['null', 'string'],
+                        description='Company name',
+                    ),
+                    CacheFieldConfig(
+                        name='updatedAt',
+                        type=['null', 'string'],
+                        description='Timestamp when the company record was last modified',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='contacts',
+                suggested=True,
+                x_airbyte_name='contacts',
+                fields=[
+                    CacheFieldConfig(
+                        name='archived',
+                        type=['null', 'boolean'],
+                        description='Boolean flag indicating whether the contact has been archived or deleted',
+                    ),
+                    CacheFieldConfig(
+                        name='companies',
+                        type=['null', 'array'],
+                        description='Associated company records linked to this contact',
+                    ),
+                    CacheFieldConfig(
+                        name='createdAt',
+                        type=['null', 'string'],
+                        description='Timestamp indicating when the contact was first created in the system',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique identifier for the contact record',
+                    ),
+                    CacheFieldConfig(
+                        name='properties',
+                        type=['object'],
+                        description='Key-value object storing all contact properties and their values.',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.associatedcompanyid',
+                        x_airbyte_name='properties_associatedcompanyid',
+                        type=['null', 'string'],
+                        description='ID of the associated company',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.createdate',
+                        x_airbyte_name='properties_createdate',
+                        type=['null', 'string'],
+                        description='Date the contact was created',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.email',
+                        x_airbyte_name='properties_email',
+                        type=['null', 'string'],
+                        description='Contact email address',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.firstname',
+                        x_airbyte_name='properties_firstname',
+                        type=['null', 'string'],
+                        description='Contact first name',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hs_object_id',
+                        x_airbyte_name='properties_hs_object_id',
+                        type=['null', 'string'],
+                        description='HubSpot object ID',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hubspot_owner_id',
+                        x_airbyte_name='properties_hubspot_owner_id',
+                        type=['null', 'string'],
+                        description='ID of the HubSpot owner assigned to this contact',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.lastmodifieddate',
+                        x_airbyte_name='properties_lastmodifieddate',
+                        type=['null', 'string'],
+                        description='Last modified date of the contact',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.lastname',
+                        x_airbyte_name='properties_lastname',
+                        type=['null', 'string'],
+                        description='Contact last name',
+                    ),
+                    CacheFieldConfig(
+                        name='updatedAt',
+                        type=['null', 'string'],
+                        description='Timestamp indicating when the contact record was last modified',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='deals',
+                suggested=True,
+                x_airbyte_name='deals',
+                fields=[
+                    CacheFieldConfig(
+                        name='archived',
+                        type=['null', 'boolean'],
+                        description='Indicates whether the deal has been deleted and moved to the recycling bin',
+                    ),
+                    CacheFieldConfig(
+                        name='companies',
+                        type=['null', 'array'],
+                        description='Collection of company records associated with the deal',
+                    ),
+                    CacheFieldConfig(
+                        name='contacts',
+                        type=['null', 'array'],
+                        description='Collection of contact records associated with the deal',
+                    ),
+                    CacheFieldConfig(
+                        name='createdAt',
+                        type=['null', 'string'],
+                        description='Timestamp when the deal record was originally created',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique identifier for the deal record',
+                    ),
+                    CacheFieldConfig(
+                        name='line_items',
+                        type=['null', 'array'],
+                        description='Collection of product line items associated with the deal',
+                    ),
+                    CacheFieldConfig(
+                        name='properties',
+                        type=['object'],
+                        description='Key-value object containing all deal properties and custom fields',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.amount',
+                        x_airbyte_name='properties_amount',
+                        type=['null', 'string'],
+                        description='Deal amount',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.closedate',
+                        x_airbyte_name='properties_closedate',
+                        type=['null', 'string'],
+                        description='Expected close date of the deal',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.createdate',
+                        x_airbyte_name='properties_createdate',
+                        type=['null', 'string'],
+                        description='Date the deal was created',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.dealname',
+                        x_airbyte_name='properties_dealname',
+                        type=['null', 'string'],
+                        description='Deal name',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.dealstage',
+                        x_airbyte_name='properties_dealstage',
+                        type=['null', 'string'],
+                        description='Current deal stage',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hs_lastmodifieddate',
+                        x_airbyte_name='properties_hs_lastmodifieddate',
+                        type=['null', 'string'],
+                        description='Last modified date of the deal',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hs_object_id',
+                        x_airbyte_name='properties_hs_object_id',
+                        type=['null', 'string'],
+                        description='HubSpot object ID',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hubspot_owner_id',
+                        x_airbyte_name='properties_hubspot_owner_id',
+                        type=['null', 'string'],
+                        description='ID of the HubSpot owner assigned to this deal',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.pipeline',
+                        x_airbyte_name='properties_pipeline',
+                        type=['null', 'string'],
+                        description='Deal pipeline',
+                    ),
+                    CacheFieldConfig(
+                        name='updatedAt',
+                        type=['null', 'string'],
+                        description='Timestamp when the deal record was last modified',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='tickets',
+                suggested=True,
+                x_airbyte_name='tickets',
+                fields=[
+                    CacheFieldConfig(
+                        name='archived',
+                        type=['null', 'boolean'],
+                        description='Indicates whether the ticket has been deleted and moved to the recycling bin',
+                    ),
+                    CacheFieldConfig(
+                        name='companies',
+                        type=['null', 'array'],
+                        description='Collection of company records associated with the ticket',
+                    ),
+                    CacheFieldConfig(
+                        name='contacts',
+                        type=['null', 'array'],
+                        description='Collection of contact records associated with the ticket',
+                    ),
+                    CacheFieldConfig(
+                        name='createdAt',
+                        type=['null', 'string'],
+                        description='Timestamp when the ticket record was originally created',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique identifier for the ticket record',
+                    ),
+                    CacheFieldConfig(
+                        name='properties',
+                        type=['object'],
+                        description='Object containing all property values for the ticket',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.content',
+                        x_airbyte_name='properties_content',
+                        type=['null', 'string'],
+                        description='Ticket content/description',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.createdate',
+                        x_airbyte_name='properties_createdate',
+                        type=['null', 'string'],
+                        description='Date the ticket was created',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hs_lastmodifieddate',
+                        x_airbyte_name='properties_hs_lastmodifieddate',
+                        type=['null', 'string'],
+                        description='Last modified date of the ticket',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hs_object_id',
+                        x_airbyte_name='properties_hs_object_id',
+                        type=['null', 'string'],
+                        description='HubSpot object ID',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hs_pipeline',
+                        x_airbyte_name='properties_hs_pipeline',
+                        type=['null', 'string'],
+                        description='Ticket pipeline',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hs_pipeline_stage',
+                        x_airbyte_name='properties_hs_pipeline_stage',
+                        type=['null', 'string'],
+                        description='Current pipeline stage of the ticket',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hs_ticket_category',
+                        x_airbyte_name='properties_hs_ticket_category',
+                        type=['null', 'string'],
+                        description='Ticket category',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hs_ticket_priority',
+                        x_airbyte_name='properties_hs_ticket_priority',
+                        type=['null', 'string'],
+                        description='Ticket priority level',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.subject',
+                        x_airbyte_name='properties_subject',
+                        type=['null', 'string'],
+                        description='Ticket subject line',
+                    ),
+                    CacheFieldConfig(
+                        name='updatedAt',
+                        type=['null', 'string'],
+                        description='Timestamp when the ticket record was last modified',
+                    ),
+                ],
+            ),
+        ],
+    ),
     search_field_paths={
         'companies': [
             'archived',

@@ -19,6 +19,12 @@ from airbyte_agent_sdk.schema.security import (
     AuthConfigFieldSpec,
     AuthConfigSpec,
 )
+from airbyte_agent_sdk.schema.extensions import (
+    CacheConfig,
+    CacheEntityConfig,
+    CacheFieldConfig,
+    CacheFieldProperty,
+)
 from airbyte_agent_sdk.schema.base import (
     ExampleQuestions,
 )
@@ -3140,6 +3146,68 @@ AmazonAdsConnectorModel: ConnectorModel = ConnectorModel(
             },
         ),
     ],
+    context_store=CacheConfig(
+        entities=[
+            CacheEntityConfig(
+                entity='profiles',
+                suggested=True,
+                x_airbyte_name='profiles',
+                fields=[
+                    CacheFieldConfig(
+                        name='accountInfo',
+                        type=['object', 'null'],
+                        description='',
+                        properties={
+                            'id': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'marketplaceStringId': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'subType': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'type': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'validPaymentMethod': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='countryCode',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='currencyCode',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='dailyBudget',
+                        type=['null', 'number'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='profileId',
+                        type=['null', 'integer'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='timezone',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                ],
+            ),
+        ],
+        disable_compaction=True,
+    ),
     search_field_paths={
         'profiles': [
             'accountInfo',

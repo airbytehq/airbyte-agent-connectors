@@ -21,6 +21,9 @@ from airbyte_agent_sdk.schema.security import (
     AuthConfigSpec,
 )
 from airbyte_agent_sdk.schema.extensions import (
+    CacheConfig,
+    CacheEntityConfig,
+    CacheFieldConfig,
     EntityRelationshipConfig,
 )
 from airbyte_agent_sdk.schema.base import (
@@ -2573,6 +2576,947 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
             ],
         ),
     ],
+    context_store=CacheConfig(
+        entities=[
+            CacheEntityConfig(
+                entity='comments',
+                suggested=True,
+                x_airbyte_name='comments',
+                fields=[
+                    CacheFieldConfig(
+                        name='body',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='bodyData',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='createdAt',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='editedAt',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='issue',
+                        type=['object', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='issueId',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='parent',
+                        type=['object', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='parentCommentId',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='resolvingCommentId',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='resolvingUserId',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='updatedAt',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='url',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='user',
+                        type=['object', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='userId',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='issues',
+                suggested=True,
+                x_airbyte_name='issues',
+                fields=[
+                    CacheFieldConfig(
+                        name='addedToCycleAt',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='addedToProjectAt',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='addedToTeamAt',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='assignee',
+                        type=['object', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='assigneeId',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='attachmentIds',
+                        type=['array', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='attachments',
+                        type=['object', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='branchName',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='canceledAt',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='completedAt',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='createdAt',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='creator',
+                        type=['object', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='creatorId',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='customerTicketCount',
+                        type=['number', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='cycle',
+                        type=['object', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='cycleId',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='descriptionState',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='dueDate',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='estimate',
+                        type=['number', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='identifier',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='integrationSourceType',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='labelIds',
+                        type=['array', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='labels',
+                        type=['object', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='milestoneId',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='number',
+                        type=['number', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='parent',
+                        type=['object', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='parentId',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='previousIdentifiers',
+                        type=['array', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='priority',
+                        type=['number', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='priorityLabel',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='prioritySortOrder',
+                        type=['number', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='project',
+                        type=['object', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='projectId',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='projectMilestone',
+                        type=['object', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='reactionData',
+                        type=['array', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='relationIds',
+                        type=['array', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='relations',
+                        type=['object', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='slaType',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='sortOrder',
+                        type=['number', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='sourceCommentId',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='startedAt',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='state',
+                        type=['object', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='stateId',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='subIssueSortOrder',
+                        type=['number', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='subscriberIds',
+                        type=['array', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='subscribers',
+                        type=['object', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='team',
+                        type=['object', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='teamId',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='title',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='updatedAt',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='url',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='projects',
+                suggested=True,
+                x_airbyte_name='projects',
+                fields=[
+                    CacheFieldConfig(
+                        name='canceledAt',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='color',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='completedAt',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='completedIssueCountHistory',
+                        type=['array', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='completedScopeHistory',
+                        type=['array', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='content',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='contentState',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='convertedFromIssue',
+                        type=['object', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='convertedFromIssueId',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='createdAt',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='creator',
+                        type=['object', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='creatorId',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='health',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='healthUpdatedAt',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='icon',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='inProgressScopeHistory',
+                        type=['array', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='issueCountHistory',
+                        type=['array', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='lead',
+                        type=['object', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='leadId',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='priority',
+                        type=['number', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='prioritySortOrder',
+                        type=['number', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='progress',
+                        type=['number', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='scope',
+                        type=['number', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='scopeHistory',
+                        type=['array', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='slugId',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='sortOrder',
+                        type=['number', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='startDate',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='startedAt',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='status',
+                        type=['object', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='statusId',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='targetDate',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='teamIds',
+                        type=['array', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='teams',
+                        type=['object', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='updateRemindersDay',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='updateRemindersHour',
+                        type=['number', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='updatedAt',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='url',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='teams',
+                suggested=True,
+                x_airbyte_name='teams',
+                fields=[
+                    CacheFieldConfig(
+                        name='activeCycle',
+                        type=['object', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='activeCycleId',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='autoArchivePeriod',
+                        type=['number', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='autoClosePeriod',
+                        type=['number', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='autoCloseStateId',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='color',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='createdAt',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='cycleCalenderUrl',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='cycleCooldownTime',
+                        type=['number', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='cycleDuration',
+                        type=['number', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='cycleIssueAutoAssignCompleted',
+                        type=['boolean', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='cycleIssueAutoAssignStarted',
+                        type=['boolean', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='cycleLockToActive',
+                        type=['boolean', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='cycleStartDay',
+                        type=['number', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='cyclesEnabled',
+                        type=['boolean', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='defaultIssueEstimate',
+                        type=['number', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='defaultIssueState',
+                        type=['object', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='defaultIssueStateId',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='groupIssueHistory',
+                        type=['boolean', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='icon',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='inviteHash',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='issueCount',
+                        type=['number', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='issueEstimationAllowZero',
+                        type=['boolean', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='issueEstimationExtended',
+                        type=['boolean', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='issueEstimationType',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='key',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='markedAsDuplicateWorkflowState',
+                        type=['object', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='markedAsDuplicateWorkflowStateId',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='parentTeamId',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='private',
+                        type=['boolean', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='requirePriorityToLeaveTriage',
+                        type=['boolean', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='scimManaged',
+                        type=['boolean', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='setIssueSortOrderOnStateChange',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='timezone',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='triageEnabled',
+                        type=['boolean', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='triageIssueStateId',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='upcomingCycleCount',
+                        type=['number', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='updatedAt',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='users',
+                suggested=True,
+                x_airbyte_name='users',
+                fields=[
+                    CacheFieldConfig(
+                        name='active',
+                        type=['boolean', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='admin',
+                        type=['boolean', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='avatarBackgroundColor',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='avatarUrl',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='createdAt',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='createdIssueCount',
+                        type=['number', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='displayName',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='email',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='guest',
+                        type=['boolean', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='initials',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='inviteHash',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='isMe',
+                        type=['boolean', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='lastSeen',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='teamIds',
+                        type=['array', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='teams',
+                        type=['object', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='timezone',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='updatedAt',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='url',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='workflow_states',
+                x_airbyte_name='workflow_states',
+                fields=[
+                    CacheFieldConfig(
+                        name='color',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='createdAt',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='inheritedFromId',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='position',
+                        type=['number', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='team',
+                        type=['object', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='teamId',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='updatedAt',
+                        type=['string', 'null'],
+                        description='',
+                    ),
+                ],
+            ),
+        ],
+        disable_compaction=True,
+    ),
     search_field_paths={
         'comments': [
             'body',

@@ -19,14 +19,17 @@ from airbyte_agent_sdk.schema.security import (
     AuthConfigFieldSpec,
     AuthConfigSpec,
 )
+from airbyte_agent_sdk.schema.extensions import (
+    CacheConfig,
+    CacheEntityConfig,
+    CacheFieldConfig,
+    ScopingParamConfig,
+)
 from airbyte_agent_sdk.schema.base import (
     ExampleQuestions,
 )
 from airbyte_agent_sdk.schema.components import (
     PathOverrideConfig,
-)
-from airbyte_agent_sdk.schema.extensions import (
-    ScopingParamConfig,
 )
 from uuid import (
     UUID,
@@ -1835,6 +1838,460 @@ GoogleAnalyticsDataApiConnectorModel: ConnectorModel = ConnectorModel(
             },
         ),
     ],
+    context_store=CacheConfig(
+        entities=[
+            CacheEntityConfig(
+                entity='website_overview',
+                suggested=True,
+                x_airbyte_name='website_overview',
+                fields=[
+                    CacheFieldConfig(
+                        name='averageSessionDuration',
+                        type=['null', 'number'],
+                        description='Average duration of sessions in seconds',
+                    ),
+                    CacheFieldConfig(
+                        name='bounceRate',
+                        type=['null', 'number'],
+                        description='Percentage of sessions that were single-page with no interaction',
+                    ),
+                    CacheFieldConfig(
+                        name='date',
+                        type=['null', 'string'],
+                        description='Date of the report row in YYYYMMDD format',
+                    ),
+                    CacheFieldConfig(
+                        name='endDate',
+                        type=['null', 'string'],
+                        description='End date of the reporting period',
+                    ),
+                    CacheFieldConfig(
+                        name='newUsers',
+                        type=['null', 'integer'],
+                        description='Number of first-time users',
+                    ),
+                    CacheFieldConfig(
+                        name='property_id',
+                        type=['string'],
+                        description='GA4 property ID',
+                    ),
+                    CacheFieldConfig(
+                        name='screenPageViews',
+                        type=['null', 'integer'],
+                        description='Total number of screen or page views',
+                    ),
+                    CacheFieldConfig(
+                        name='screenPageViewsPerSession',
+                        type=['null', 'number'],
+                        description='Average page views per session',
+                    ),
+                    CacheFieldConfig(
+                        name='sessions',
+                        type=['null', 'integer'],
+                        description='Total number of sessions',
+                    ),
+                    CacheFieldConfig(
+                        name='sessionsPerUser',
+                        type=['null', 'number'],
+                        description='Average number of sessions per user',
+                    ),
+                    CacheFieldConfig(
+                        name='startDate',
+                        type=['null', 'string'],
+                        description='Start date of the reporting period',
+                    ),
+                    CacheFieldConfig(
+                        name='totalUsers',
+                        type=['null', 'integer'],
+                        description='Total number of unique users',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='daily_active_users',
+                suggested=True,
+                x_airbyte_name='daily_active_users',
+                fields=[
+                    CacheFieldConfig(
+                        name='active1DayUsers',
+                        type=['null', 'integer'],
+                        description='Number of distinct users active in the last 1 day',
+                    ),
+                    CacheFieldConfig(
+                        name='date',
+                        type=['null', 'string'],
+                        description='Date of the report row in YYYYMMDD format',
+                    ),
+                    CacheFieldConfig(
+                        name='endDate',
+                        type=['null', 'string'],
+                        description='End date of the reporting period',
+                    ),
+                    CacheFieldConfig(
+                        name='property_id',
+                        type=['string'],
+                        description='GA4 property ID',
+                    ),
+                    CacheFieldConfig(
+                        name='startDate',
+                        type=['null', 'string'],
+                        description='Start date of the reporting period',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='weekly_active_users',
+                x_airbyte_name='weekly_active_users',
+                fields=[
+                    CacheFieldConfig(
+                        name='active7DayUsers',
+                        type=['null', 'integer'],
+                        description='Number of distinct users active in the last 7 days',
+                    ),
+                    CacheFieldConfig(
+                        name='date',
+                        type=['null', 'string'],
+                        description='Date of the report row in YYYYMMDD format',
+                    ),
+                    CacheFieldConfig(
+                        name='endDate',
+                        type=['null', 'string'],
+                        description='End date of the reporting period',
+                    ),
+                    CacheFieldConfig(
+                        name='property_id',
+                        type=['string'],
+                        description='GA4 property ID',
+                    ),
+                    CacheFieldConfig(
+                        name='startDate',
+                        type=['null', 'string'],
+                        description='Start date of the reporting period',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='four_weekly_active_users',
+                x_airbyte_name='four_weekly_active_users',
+                fields=[
+                    CacheFieldConfig(
+                        name='active28DayUsers',
+                        type=['null', 'integer'],
+                        description='Number of distinct users active in the last 28 days',
+                    ),
+                    CacheFieldConfig(
+                        name='date',
+                        type=['null', 'string'],
+                        description='Date of the report row in YYYYMMDD format',
+                    ),
+                    CacheFieldConfig(
+                        name='endDate',
+                        type=['null', 'string'],
+                        description='End date of the reporting period',
+                    ),
+                    CacheFieldConfig(
+                        name='property_id',
+                        type=['string'],
+                        description='GA4 property ID',
+                    ),
+                    CacheFieldConfig(
+                        name='startDate',
+                        type=['null', 'string'],
+                        description='Start date of the reporting period',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='traffic_sources',
+                suggested=True,
+                x_airbyte_name='traffic_sources',
+                fields=[
+                    CacheFieldConfig(
+                        name='averageSessionDuration',
+                        type=['null', 'number'],
+                        description='Average duration of sessions in seconds',
+                    ),
+                    CacheFieldConfig(
+                        name='bounceRate',
+                        type=['null', 'number'],
+                        description='Percentage of sessions that were single-page with no interaction',
+                    ),
+                    CacheFieldConfig(
+                        name='date',
+                        type=['null', 'string'],
+                        description='Date of the report row in YYYYMMDD format',
+                    ),
+                    CacheFieldConfig(
+                        name='endDate',
+                        type=['null', 'string'],
+                        description='End date of the reporting period',
+                    ),
+                    CacheFieldConfig(
+                        name='newUsers',
+                        type=['null', 'integer'],
+                        description='Number of first-time users',
+                    ),
+                    CacheFieldConfig(
+                        name='property_id',
+                        type=['string'],
+                        description='GA4 property ID',
+                    ),
+                    CacheFieldConfig(
+                        name='screenPageViews',
+                        type=['null', 'integer'],
+                        description='Total number of screen or page views',
+                    ),
+                    CacheFieldConfig(
+                        name='screenPageViewsPerSession',
+                        type=['null', 'number'],
+                        description='Average page views per session',
+                    ),
+                    CacheFieldConfig(
+                        name='sessionMedium',
+                        type=['null', 'string'],
+                        description='The medium of the traffic source (e.g., organic, cpc, referral)',
+                    ),
+                    CacheFieldConfig(
+                        name='sessionSource',
+                        type=['null', 'string'],
+                        description='The source of the traffic (e.g., google, direct)',
+                    ),
+                    CacheFieldConfig(
+                        name='sessions',
+                        type=['null', 'integer'],
+                        description='Total number of sessions',
+                    ),
+                    CacheFieldConfig(
+                        name='sessionsPerUser',
+                        type=['null', 'number'],
+                        description='Average number of sessions per user',
+                    ),
+                    CacheFieldConfig(
+                        name='startDate',
+                        type=['null', 'string'],
+                        description='Start date of the reporting period',
+                    ),
+                    CacheFieldConfig(
+                        name='totalUsers',
+                        type=['null', 'integer'],
+                        description='Total number of unique users',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='pages',
+                suggested=True,
+                x_airbyte_name='pages',
+                fields=[
+                    CacheFieldConfig(
+                        name='bounceRate',
+                        type=['null', 'number'],
+                        description='Percentage of sessions that were single-page with no interaction',
+                    ),
+                    CacheFieldConfig(
+                        name='date',
+                        type=['null', 'string'],
+                        description='Date of the report row in YYYYMMDD format',
+                    ),
+                    CacheFieldConfig(
+                        name='endDate',
+                        type=['null', 'string'],
+                        description='End date of the reporting period',
+                    ),
+                    CacheFieldConfig(
+                        name='hostName',
+                        type=['null', 'string'],
+                        description='The hostname of the page',
+                    ),
+                    CacheFieldConfig(
+                        name='pagePathPlusQueryString',
+                        type=['null', 'string'],
+                        description='The page path and query string',
+                    ),
+                    CacheFieldConfig(
+                        name='property_id',
+                        type=['string'],
+                        description='GA4 property ID',
+                    ),
+                    CacheFieldConfig(
+                        name='screenPageViews',
+                        type=['null', 'integer'],
+                        description='Total number of screen or page views',
+                    ),
+                    CacheFieldConfig(
+                        name='startDate',
+                        type=['null', 'string'],
+                        description='Start date of the reporting period',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='devices',
+                suggested=True,
+                x_airbyte_name='devices',
+                fields=[
+                    CacheFieldConfig(
+                        name='averageSessionDuration',
+                        type=['null', 'number'],
+                        description='Average duration of sessions in seconds',
+                    ),
+                    CacheFieldConfig(
+                        name='bounceRate',
+                        type=['null', 'number'],
+                        description='Percentage of sessions that were single-page with no interaction',
+                    ),
+                    CacheFieldConfig(
+                        name='browser',
+                        type=['null', 'string'],
+                        description='The web browser used (e.g., Chrome, Safari, Firefox)',
+                    ),
+                    CacheFieldConfig(
+                        name='date',
+                        type=['null', 'string'],
+                        description='Date of the report row in YYYYMMDD format',
+                    ),
+                    CacheFieldConfig(
+                        name='deviceCategory',
+                        type=['null', 'string'],
+                        description='The device category (desktop, mobile, tablet)',
+                    ),
+                    CacheFieldConfig(
+                        name='endDate',
+                        type=['null', 'string'],
+                        description='End date of the reporting period',
+                    ),
+                    CacheFieldConfig(
+                        name='newUsers',
+                        type=['null', 'integer'],
+                        description='Number of first-time users',
+                    ),
+                    CacheFieldConfig(
+                        name='operatingSystem',
+                        type=['null', 'string'],
+                        description='The operating system used (e.g., Windows, iOS, Android)',
+                    ),
+                    CacheFieldConfig(
+                        name='property_id',
+                        type=['string'],
+                        description='GA4 property ID',
+                    ),
+                    CacheFieldConfig(
+                        name='screenPageViews',
+                        type=['null', 'integer'],
+                        description='Total number of screen or page views',
+                    ),
+                    CacheFieldConfig(
+                        name='screenPageViewsPerSession',
+                        type=['null', 'number'],
+                        description='Average page views per session',
+                    ),
+                    CacheFieldConfig(
+                        name='sessions',
+                        type=['null', 'integer'],
+                        description='Total number of sessions',
+                    ),
+                    CacheFieldConfig(
+                        name='sessionsPerUser',
+                        type=['null', 'number'],
+                        description='Average number of sessions per user',
+                    ),
+                    CacheFieldConfig(
+                        name='startDate',
+                        type=['null', 'string'],
+                        description='Start date of the reporting period',
+                    ),
+                    CacheFieldConfig(
+                        name='totalUsers',
+                        type=['null', 'integer'],
+                        description='Total number of unique users',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='locations',
+                suggested=True,
+                x_airbyte_name='locations',
+                fields=[
+                    CacheFieldConfig(
+                        name='averageSessionDuration',
+                        type=['null', 'number'],
+                        description='Average duration of sessions in seconds',
+                    ),
+                    CacheFieldConfig(
+                        name='bounceRate',
+                        type=['null', 'number'],
+                        description='Percentage of sessions that were single-page with no interaction',
+                    ),
+                    CacheFieldConfig(
+                        name='city',
+                        type=['null', 'string'],
+                        description='The city of the user',
+                    ),
+                    CacheFieldConfig(
+                        name='country',
+                        type=['null', 'string'],
+                        description='The country of the user',
+                    ),
+                    CacheFieldConfig(
+                        name='date',
+                        type=['null', 'string'],
+                        description='Date of the report row in YYYYMMDD format',
+                    ),
+                    CacheFieldConfig(
+                        name='endDate',
+                        type=['null', 'string'],
+                        description='End date of the reporting period',
+                    ),
+                    CacheFieldConfig(
+                        name='newUsers',
+                        type=['null', 'integer'],
+                        description='Number of first-time users',
+                    ),
+                    CacheFieldConfig(
+                        name='property_id',
+                        type=['string'],
+                        description='GA4 property ID',
+                    ),
+                    CacheFieldConfig(
+                        name='region',
+                        type=['null', 'string'],
+                        description='The region (state/province) of the user',
+                    ),
+                    CacheFieldConfig(
+                        name='screenPageViews',
+                        type=['null', 'integer'],
+                        description='Total number of screen or page views',
+                    ),
+                    CacheFieldConfig(
+                        name='screenPageViewsPerSession',
+                        type=['null', 'number'],
+                        description='Average page views per session',
+                    ),
+                    CacheFieldConfig(
+                        name='sessions',
+                        type=['null', 'integer'],
+                        description='Total number of sessions',
+                    ),
+                    CacheFieldConfig(
+                        name='sessionsPerUser',
+                        type=['null', 'number'],
+                        description='Average number of sessions per user',
+                    ),
+                    CacheFieldConfig(
+                        name='startDate',
+                        type=['null', 'string'],
+                        description='Start date of the reporting period',
+                    ),
+                    CacheFieldConfig(
+                        name='totalUsers',
+                        type=['null', 'integer'],
+                        description='Total number of unique users',
+                    ),
+                ],
+            ),
+        ],
+        disable_compaction=True,
+    ),
     search_field_paths={
         'website_overview': [
             'averageSessionDuration',

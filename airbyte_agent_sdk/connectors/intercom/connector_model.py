@@ -19,6 +19,12 @@ from airbyte_agent_sdk.schema.security import (
     AuthConfigFieldSpec,
     AuthConfigSpec,
 )
+from airbyte_agent_sdk.schema.extensions import (
+    CacheConfig,
+    CacheEntityConfig,
+    CacheFieldConfig,
+    CacheFieldProperty,
+)
 from airbyte_agent_sdk.schema.base import (
     ExampleQuestions,
 )
@@ -5873,6 +5879,1072 @@ IntercomConnectorModel: ConnectorModel = ConnectorModel(
             },
         ),
     ],
+    context_store=CacheConfig(
+        entities=[
+            CacheEntityConfig(
+                entity='companies',
+                suggested=True,
+                x_airbyte_name='companies',
+                fields=[
+                    CacheFieldConfig(
+                        name='app_id',
+                        type=['null', 'string'],
+                        description='The ID of the application associated with the company',
+                    ),
+                    CacheFieldConfig(
+                        name='company_id',
+                        type=['null', 'string'],
+                        description='The unique identifier of the company',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'integer'],
+                        description='The date and time when the company was created',
+                    ),
+                    CacheFieldConfig(
+                        name='custom_attributes',
+                        type=['null', 'object'],
+                        description='Custom attributes specific to the company',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='The ID of the company',
+                    ),
+                    CacheFieldConfig(
+                        name='industry',
+                        type=['null', 'string'],
+                        description='The industry in which the company operates',
+                    ),
+                    CacheFieldConfig(
+                        name='monthly_spend',
+                        type=['null', 'number'],
+                        description='The monthly spend of the company',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='The name of the company',
+                    ),
+                    CacheFieldConfig(
+                        name='plan',
+                        type=['null', 'object'],
+                        description="Details of the company's subscription plan",
+                        properties={
+                            'id': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'type': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='remote_created_at',
+                        type=['null', 'integer'],
+                        description='The remote date and time when the company was created',
+                    ),
+                    CacheFieldConfig(
+                        name='segments',
+                        type=['null', 'object'],
+                        description='Segments associated with the company',
+                        properties={
+                            'segments': CacheFieldProperty(
+                                type=['null', 'array'],
+                            ),
+                            'type': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='session_count',
+                        type=['null', 'integer'],
+                        description='The number of sessions related to the company',
+                    ),
+                    CacheFieldConfig(
+                        name='size',
+                        type=['null', 'integer'],
+                        description='The size of the company',
+                    ),
+                    CacheFieldConfig(
+                        name='tags',
+                        type=['null', 'object'],
+                        description='Tags associated with the company',
+                        properties={
+                            'tags': CacheFieldProperty(
+                                type=['null', 'array'],
+                            ),
+                            'type': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description='The type of the company',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'integer'],
+                        description='The date and time when the company was last updated',
+                    ),
+                    CacheFieldConfig(
+                        name='user_count',
+                        type=['null', 'integer'],
+                        description='The number of users associated with the company',
+                    ),
+                    CacheFieldConfig(
+                        name='website',
+                        type=['null', 'string'],
+                        description='The website of the company',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='contacts',
+                suggested=True,
+                x_airbyte_name='contacts',
+                fields=[
+                    CacheFieldConfig(
+                        name='android_app_name',
+                        type=['null', 'string'],
+                        description='The name of the Android app associated with the contact.',
+                    ),
+                    CacheFieldConfig(
+                        name='android_app_version',
+                        type=['null', 'string'],
+                        description='The version of the Android app associated with the contact.',
+                    ),
+                    CacheFieldConfig(
+                        name='android_device',
+                        type=['null', 'string'],
+                        description='The device used by the contact for Android.',
+                    ),
+                    CacheFieldConfig(
+                        name='android_last_seen_at',
+                        type=['null', 'string'],
+                        description='The date and time when the contact was last seen on Android.',
+                    ),
+                    CacheFieldConfig(
+                        name='android_os_version',
+                        type=['null', 'string'],
+                        description='The operating system version of the Android device.',
+                    ),
+                    CacheFieldConfig(
+                        name='android_sdk_version',
+                        type=['null', 'string'],
+                        description='The SDK version of the Android device.',
+                    ),
+                    CacheFieldConfig(
+                        name='avatar',
+                        type=['null', 'string'],
+                        description="URL pointing to the contact's avatar image.",
+                    ),
+                    CacheFieldConfig(
+                        name='browser',
+                        type=['null', 'string'],
+                        description='The browser used by the contact.',
+                    ),
+                    CacheFieldConfig(
+                        name='browser_language',
+                        type=['null', 'string'],
+                        description="The language preference set in the contact's browser.",
+                    ),
+                    CacheFieldConfig(
+                        name='browser_version',
+                        type=['null', 'string'],
+                        description='The version of the browser used by the contact.',
+                    ),
+                    CacheFieldConfig(
+                        name='companies',
+                        type=['null', 'object'],
+                        description='Companies associated with the contact.',
+                        properties={
+                            'data': CacheFieldProperty(
+                                type=['null', 'array'],
+                            ),
+                            'has_more': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                            'total_count': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'type': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'url': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'integer'],
+                        description='The date and time when the contact was created.',
+                    ),
+                    CacheFieldConfig(
+                        name='custom_attributes',
+                        type=['null', 'object'],
+                        description='Custom attributes defined for the contact.',
+                    ),
+                    CacheFieldConfig(
+                        name='email',
+                        type=['null', 'string'],
+                        description='The email address of the contact.',
+                    ),
+                    CacheFieldConfig(
+                        name='external_id',
+                        type=['null', 'string'],
+                        description='External identifier for the contact.',
+                    ),
+                    CacheFieldConfig(
+                        name='has_hard_bounced',
+                        type=['null', 'boolean'],
+                        description='Flag indicating if the contact has hard bounced.',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='The unique identifier of the contact.',
+                    ),
+                    CacheFieldConfig(
+                        name='ios_app_name',
+                        type=['null', 'string'],
+                        description='The name of the iOS app associated with the contact.',
+                    ),
+                    CacheFieldConfig(
+                        name='ios_app_version',
+                        type=['null', 'string'],
+                        description='The version of the iOS app associated with the contact.',
+                    ),
+                    CacheFieldConfig(
+                        name='ios_device',
+                        type=['null', 'string'],
+                        description='The device used by the contact for iOS.',
+                    ),
+                    CacheFieldConfig(
+                        name='ios_last_seen_at',
+                        type=['null', 'integer'],
+                        description='The date and time when the contact was last seen on iOS.',
+                    ),
+                    CacheFieldConfig(
+                        name='ios_os_version',
+                        type=['null', 'string'],
+                        description='The operating system version of the iOS device.',
+                    ),
+                    CacheFieldConfig(
+                        name='ios_sdk_version',
+                        type=['null', 'string'],
+                        description='The SDK version of the iOS device.',
+                    ),
+                    CacheFieldConfig(
+                        name='language_override',
+                        type=['null', 'string'],
+                        description='Language override set for the contact.',
+                    ),
+                    CacheFieldConfig(
+                        name='last_contacted_at',
+                        type=['null', 'integer'],
+                        description='The date and time when the contact was last contacted.',
+                    ),
+                    CacheFieldConfig(
+                        name='last_email_clicked_at',
+                        type=['null', 'integer'],
+                        description='The date and time when the contact last clicked an email.',
+                    ),
+                    CacheFieldConfig(
+                        name='last_email_opened_at',
+                        type=['null', 'integer'],
+                        description='The date and time when the contact last opened an email.',
+                    ),
+                    CacheFieldConfig(
+                        name='last_replied_at',
+                        type=['null', 'integer'],
+                        description='The date and time when the contact last replied.',
+                    ),
+                    CacheFieldConfig(
+                        name='last_seen_at',
+                        type=['null', 'integer'],
+                        description='The date and time when the contact was last seen overall.',
+                    ),
+                    CacheFieldConfig(
+                        name='location',
+                        type=['null', 'object'],
+                        description='Location details of the contact.',
+                        properties={
+                            'city': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'continent_code': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'country': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'country_code': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'region': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'type': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='marked_email_as_spam',
+                        type=['null', 'boolean'],
+                        description="Flag indicating if the contact's email was marked as spam.",
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='The name of the contact.',
+                    ),
+                    CacheFieldConfig(
+                        name='notes',
+                        type=['null', 'object'],
+                        description='Notes associated with the contact.',
+                        properties={
+                            'data': CacheFieldProperty(
+                                type=['null', 'array'],
+                            ),
+                            'has_more': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                            'total_count': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'type': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'url': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='opted_in_subscription_types',
+                        type=['null', 'object'],
+                        description='Subscription types the contact opted into.',
+                        properties={
+                            'data': CacheFieldProperty(
+                                type=['null', 'array'],
+                            ),
+                            'has_more': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                            'total_count': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'type': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'url': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='opted_out_subscription_types',
+                        type=['null', 'object'],
+                        description='Subscription types the contact opted out from.',
+                        properties={
+                            'data': CacheFieldProperty(
+                                type=['null', 'array'],
+                            ),
+                            'has_more': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                            'total_count': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'type': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'url': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='os',
+                        type=['null', 'string'],
+                        description="Operating system of the contact's device.",
+                    ),
+                    CacheFieldConfig(
+                        name='owner_id',
+                        type=['null', 'integer'],
+                        description="The unique identifier of the contact's owner.",
+                    ),
+                    CacheFieldConfig(
+                        name='phone',
+                        type=['null', 'string'],
+                        description='The phone number of the contact.',
+                    ),
+                    CacheFieldConfig(
+                        name='referrer',
+                        type=['null', 'string'],
+                        description='Referrer information related to the contact.',
+                    ),
+                    CacheFieldConfig(
+                        name='role',
+                        type=['null', 'string'],
+                        description='Role or position of the contact.',
+                    ),
+                    CacheFieldConfig(
+                        name='signed_up_at',
+                        type=['null', 'integer'],
+                        description='The date and time when the contact signed up.',
+                    ),
+                    CacheFieldConfig(
+                        name='sms_consent',
+                        type=['null', 'boolean'],
+                        description='Consent status for SMS communication.',
+                    ),
+                    CacheFieldConfig(
+                        name='social_profiles',
+                        type=['null', 'object'],
+                        description='Social profiles associated with the contact.',
+                        properties={
+                            'data': CacheFieldProperty(
+                                type=['null', 'array'],
+                            ),
+                            'type': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='tags',
+                        type=['null', 'object'],
+                        description='Tags associated with the contact.',
+                        properties={
+                            'data': CacheFieldProperty(
+                                type=['null', 'array'],
+                            ),
+                            'has_more': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                            'total_count': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'type': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'url': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description='Type of contact.',
+                    ),
+                    CacheFieldConfig(
+                        name='unsubscribed_from_emails',
+                        type=['null', 'boolean'],
+                        description='Flag indicating if the contact unsubscribed from emails.',
+                    ),
+                    CacheFieldConfig(
+                        name='unsubscribed_from_sms',
+                        type=['null', 'boolean'],
+                        description='Flag indicating if the contact unsubscribed from SMS.',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'integer'],
+                        description='The date and time when the contact was last updated.',
+                    ),
+                    CacheFieldConfig(
+                        name='utm_campaign',
+                        type=['null', 'string'],
+                        description='Campaign data from UTM parameters.',
+                    ),
+                    CacheFieldConfig(
+                        name='utm_content',
+                        type=['null', 'string'],
+                        description='Content data from UTM parameters.',
+                    ),
+                    CacheFieldConfig(
+                        name='utm_medium',
+                        type=['null', 'string'],
+                        description='Medium data from UTM parameters.',
+                    ),
+                    CacheFieldConfig(
+                        name='utm_source',
+                        type=['null', 'string'],
+                        description='Source data from UTM parameters.',
+                    ),
+                    CacheFieldConfig(
+                        name='utm_term',
+                        type=['null', 'string'],
+                        description='Term data from UTM parameters.',
+                    ),
+                    CacheFieldConfig(
+                        name='workspace_id',
+                        type=['null', 'string'],
+                        description='The unique identifier of the workspace associated with the contact.',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='conversation_parts',
+                x_airbyte_name='conversation_parts',
+                fields=[
+                    CacheFieldConfig(
+                        name='assigned_to',
+                        type=['object', 'string', 'null'],
+                        description='The user or team member who is assigned to handle this conversation part.',
+                    ),
+                    CacheFieldConfig(
+                        name='attachments',
+                        type=['null', 'array'],
+                        description='Represents the attachments associated with the conversation part.',
+                    ),
+                    CacheFieldConfig(
+                        name='author',
+                        type=['null', 'object'],
+                        description='Represents the author of the conversation part.',
+                        properties={
+                            'email': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'id': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'type': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='body',
+                        type=['null', 'string'],
+                        description='The main content or message body of the conversation part.',
+                    ),
+                    CacheFieldConfig(
+                        name='conversation_created_at',
+                        type=['null', 'integer'],
+                        description='The date and time when the conversation was created.',
+                    ),
+                    CacheFieldConfig(
+                        name='conversation_id',
+                        type=['null', 'integer'],
+                        description='The unique identifier of the conversation.',
+                    ),
+                    CacheFieldConfig(
+                        name='conversation_total_parts',
+                        type=['null', 'integer'],
+                        description='The total number of parts in the conversation.',
+                    ),
+                    CacheFieldConfig(
+                        name='conversation_updated_at',
+                        type=['null', 'integer'],
+                        description='The date and time when the conversation was last updated.',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'integer'],
+                        description='The date and time when the conversation part was created.',
+                    ),
+                    CacheFieldConfig(
+                        name='external_id',
+                        type=['null', 'string'],
+                        description='An external identifier associated with the conversation part.',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='The unique identifier of the conversation part.',
+                    ),
+                    CacheFieldConfig(
+                        name='notified_at',
+                        type=['null', 'integer'],
+                        description='The date and time when the conversation part was last notified.',
+                    ),
+                    CacheFieldConfig(
+                        name='part_type',
+                        type=['null', 'string'],
+                        description='The type or category of the conversation part.',
+                    ),
+                    CacheFieldConfig(
+                        name='redacted',
+                        type=['null', 'boolean'],
+                        description='Indicates if the conversation part has been redacted or censored.',
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description='The type of conversation part, such as message or note.',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'integer'],
+                        description='The date and time when the conversation part was last updated.',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='conversations',
+                suggested=True,
+                x_airbyte_name='conversations',
+                fields=[
+                    CacheFieldConfig(
+                        name='admin_assignee_id',
+                        type=['null', 'integer'],
+                        description='The ID of the administrator assigned to the conversation',
+                    ),
+                    CacheFieldConfig(
+                        name='ai_agent',
+                        type=['null', 'object'],
+                        description='Data related to AI Agent involvement in the conversation',
+                        properties={
+                            'content_sources': CacheFieldProperty(
+                                type=['null', 'object'],
+                            ),
+                            'last_answer_type': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'rating': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'rating_remark': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'resolution_state': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'source_id': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'source_title': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'source_type': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'triggered_at': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='ai_agent_participated',
+                        type=['null', 'boolean'],
+                        description='Indicates whether AI Agent participated in the conversation',
+                    ),
+                    CacheFieldConfig(
+                        name='assignee',
+                        type=['null', 'object'],
+                        description='The assigned user responsible for the conversation.',
+                        properties={
+                            'email': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'id': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'type': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='contacts',
+                        type=['null', 'object'],
+                        description='List of contacts involved in the conversation.',
+                    ),
+                    CacheFieldConfig(
+                        name='conversation_message',
+                        type=['null', 'object'],
+                        description='The main message content of the conversation.',
+                        properties={
+                            'attachments': CacheFieldProperty(
+                                type=['array', 'null'],
+                            ),
+                            'author': CacheFieldProperty(
+                                type=['null', 'object'],
+                            ),
+                            'body': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'delivered_as': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'id': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'subject': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'type': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'url': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='conversation_rating',
+                        type=['null', 'object'],
+                        description='Ratings given to the conversation by the customer and teammate.',
+                        properties={
+                            'created_at': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'customer': CacheFieldProperty(
+                                type=['null', 'object'],
+                            ),
+                            'rating': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'remark': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'teammate': CacheFieldProperty(
+                                type=['null', 'object'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'integer'],
+                        description='The timestamp when the conversation was created',
+                    ),
+                    CacheFieldConfig(
+                        name='custom_attributes',
+                        type=['null', 'object'],
+                        description='Custom attributes associated with the conversation',
+                    ),
+                    CacheFieldConfig(
+                        name='customer_first_reply',
+                        type=['null', 'object'],
+                        description='Timestamp indicating when the customer first replied.',
+                        properties={
+                            'created_at': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'type': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'url': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='customers',
+                        type=['array', 'null'],
+                        description='List of customers involved in the conversation',
+                    ),
+                    CacheFieldConfig(
+                        name='first_contact_reply',
+                        type=['null', 'object'],
+                        description='Timestamp indicating when the first contact replied.',
+                        properties={
+                            'created_at': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'type': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'url': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='The unique ID of the conversation',
+                    ),
+                    CacheFieldConfig(
+                        name='linked_objects',
+                        type=['null', 'object'],
+                        description='Linked objects associated with the conversation',
+                        properties={
+                            'data': CacheFieldProperty(
+                                type=['null', 'array'],
+                            ),
+                            'has_more': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                            'total_count': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'type': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'url': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='open',
+                        type=['null', 'boolean'],
+                        description='Indicates if the conversation is open or closed',
+                    ),
+                    CacheFieldConfig(
+                        name='priority',
+                        type=['null', 'string'],
+                        description='The priority level of the conversation',
+                    ),
+                    CacheFieldConfig(
+                        name='read',
+                        type=['null', 'boolean'],
+                        description='Indicates if the conversation has been read',
+                    ),
+                    CacheFieldConfig(
+                        name='redacted',
+                        type=['null', 'boolean'],
+                        description='Indicates if the conversation is redacted',
+                    ),
+                    CacheFieldConfig(
+                        name='sent_at',
+                        type=['null', 'integer'],
+                        description='The timestamp when the conversation was sent',
+                    ),
+                    CacheFieldConfig(
+                        name='sla_applied',
+                        type=['null', 'object'],
+                        description='Service Level Agreement details applied to the conversation.',
+                        properties={
+                            'sla_name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'sla_status': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='snoozed_until',
+                        type=['null', 'integer'],
+                        description='Timestamp until the conversation is snoozed',
+                    ),
+                    CacheFieldConfig(
+                        name='source',
+                        type=['null', 'object'],
+                        description='Source details of the conversation.',
+                        properties={
+                            'attachments': CacheFieldProperty(
+                                type=['null', 'array'],
+                            ),
+                            'author': CacheFieldProperty(
+                                type=['null', 'object'],
+                            ),
+                            'body': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'delivered_as': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'id': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'redacted': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                            'subject': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'type': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'url': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='state',
+                        type=['null', 'string'],
+                        description='The state of the conversation (e.g., new, in progress)',
+                    ),
+                    CacheFieldConfig(
+                        name='statistics',
+                        type=['null', 'object'],
+                        description='Statistics related to the conversation.',
+                        properties={
+                            'count_assignments': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'count_conversation_parts': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'count_reopens': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'first_admin_reply_at': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'first_assignment_at': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'first_close_at': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'first_contact_reply_at': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'last_admin_reply_at': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'last_assignment_admin_reply_at': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'last_assignment_at': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'last_close_at': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'last_closed_by_id': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'last_contact_reply_at': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'median_time_to_reply': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'time_to_admin_reply': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'time_to_assignment': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'time_to_first_close': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'time_to_last_close': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'type': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='tags',
+                        type=['null', 'object'],
+                        description='Tags applied to the conversation.',
+                    ),
+                    CacheFieldConfig(
+                        name='team_assignee_id',
+                        type=['null', 'integer'],
+                        description='The ID of the team assigned to the conversation',
+                    ),
+                    CacheFieldConfig(
+                        name='teammates',
+                        type=['null', 'object'],
+                        description='List of teammates involved in the conversation.',
+                        properties={
+                            'admins': CacheFieldProperty(
+                                type=['null', 'array'],
+                            ),
+                            'type': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='title',
+                        type=['null', 'string'],
+                        description='The title of the conversation',
+                    ),
+                    CacheFieldConfig(
+                        name='topics',
+                        type=['null', 'object'],
+                        description='Topics associated with the conversation.',
+                        properties={
+                            'topics': CacheFieldProperty(
+                                type=['null', 'array'],
+                            ),
+                            'total_count': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'type': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description='The type of the conversation',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'integer'],
+                        description='The timestamp when the conversation was last updated',
+                    ),
+                    CacheFieldConfig(
+                        name='user',
+                        type=['null', 'object'],
+                        description='The user related to the conversation.',
+                        properties={
+                            'id': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'type': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='waiting_since',
+                        type=['null', 'integer'],
+                        description='Timestamp since waiting for a response',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='teams',
+                suggested=True,
+                x_airbyte_name='teams',
+                fields=[
+                    CacheFieldConfig(
+                        name='admin_ids',
+                        type=['array', 'null'],
+                        description='Array of user IDs representing the admins of the team.',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique identifier for the team.',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Name of the team.',
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description="Type of team (e.g., 'internal', 'external').",
+                    ),
+                ],
+            ),
+        ],
+        disable_compaction=True,
+    ),
     search_field_paths={
         'companies': [
             'app_id',

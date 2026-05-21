@@ -21,6 +21,10 @@ from airbyte_agent_sdk.schema.security import (
     AuthConfigSpec,
 )
 from airbyte_agent_sdk.schema.extensions import (
+    CacheConfig,
+    CacheEntityConfig,
+    CacheFieldConfig,
+    CacheFieldProperty,
     EntityRelationshipConfig,
 )
 from airbyte_agent_sdk.schema.base import (
@@ -3425,6 +3429,491 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
             },
         ),
     ],
+    context_store=CacheConfig(
+        entities=[
+            CacheEntityConfig(
+                entity='users',
+                suggested=True,
+                x_airbyte_name='users',
+                fields=[
+                    CacheFieldConfig(
+                        name='active',
+                        type=['null', 'boolean'],
+                        description='Indicates if the user is currently active or not',
+                    ),
+                    CacheFieldConfig(
+                        name='created',
+                        type=['null', 'string'],
+                        description='The timestamp denoting when the user account was created',
+                    ),
+                    CacheFieldConfig(
+                        name='emailAddress',
+                        type=['null', 'string'],
+                        description='The primary email address associated with the user',
+                    ),
+                    CacheFieldConfig(
+                        name='emailAliases',
+                        type=['null', 'array'],
+                        description='Additional email addresses that can be used to reach the user',
+                    ),
+                    CacheFieldConfig(
+                        name='extension',
+                        type=['null', 'string'],
+                        description='The phone extension number for the user',
+                    ),
+                    CacheFieldConfig(
+                        name='firstName',
+                        type=['null', 'string'],
+                        description='The first name of the user',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique identifier for the user',
+                    ),
+                    CacheFieldConfig(
+                        name='lastName',
+                        type=['null', 'string'],
+                        description='The last name of the user',
+                    ),
+                    CacheFieldConfig(
+                        name='managerId',
+                        type=['null', 'string'],
+                        description="The ID of the user's manager",
+                    ),
+                    CacheFieldConfig(
+                        name='meetingConsentPageUrl',
+                        type=['null', 'string'],
+                        description='URL for the consent page related to meetings',
+                    ),
+                    CacheFieldConfig(
+                        name='personalMeetingUrls',
+                        type=['null', 'array'],
+                        description='URLs for personal meeting rooms assigned to the user',
+                    ),
+                    CacheFieldConfig(
+                        name='phoneNumber',
+                        type=['null', 'string'],
+                        description='The phone number associated with the user',
+                    ),
+                    CacheFieldConfig(
+                        name='settings',
+                        type=['null', 'object'],
+                        description='User-specific settings and configurations',
+                    ),
+                    CacheFieldConfig(
+                        name='spokenLanguages',
+                        type=['null', 'array'],
+                        description='Languages spoken by the user',
+                    ),
+                    CacheFieldConfig(
+                        name='title',
+                        type=['null', 'string'],
+                        description='The job title or position of the user',
+                    ),
+                    CacheFieldConfig(
+                        name='trustedEmailAddress',
+                        type=['null', 'string'],
+                        description='An email address that is considered trusted for the user',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='calls',
+                suggested=True,
+                x_airbyte_name='calls',
+                fields=[
+                    CacheFieldConfig(
+                        name='calendarEventId',
+                        type=['null', 'string'],
+                        description='Unique identifier for the calendar event associated with the call.',
+                    ),
+                    CacheFieldConfig(
+                        name='clientUniqueId',
+                        type=['null', 'string'],
+                        description='Unique identifier for the client related to the call.',
+                    ),
+                    CacheFieldConfig(
+                        name='customData',
+                        type=['null', 'string'],
+                        description='Custom data associated with the call.',
+                    ),
+                    CacheFieldConfig(
+                        name='direction',
+                        type=['null', 'string'],
+                        description='Direction of the call (inbound/outbound).',
+                    ),
+                    CacheFieldConfig(
+                        name='duration',
+                        type=['null', 'integer'],
+                        description='Duration of the call in seconds.',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique identifier for the call.',
+                    ),
+                    CacheFieldConfig(
+                        name='isPrivate',
+                        type=['null', 'boolean'],
+                        description='Indicates if the call is private or not.',
+                    ),
+                    CacheFieldConfig(
+                        name='language',
+                        type=['null', 'string'],
+                        description='Language used in the call.',
+                    ),
+                    CacheFieldConfig(
+                        name='media',
+                        type=['null', 'string'],
+                        description='Media type used for communication (voice, video, etc.).',
+                    ),
+                    CacheFieldConfig(
+                        name='meetingUrl',
+                        type=['null', 'string'],
+                        description='URL for accessing the meeting associated with the call.',
+                    ),
+                    CacheFieldConfig(
+                        name='primaryUserId',
+                        type=['null', 'string'],
+                        description='Unique identifier for the primary user involved in the call.',
+                    ),
+                    CacheFieldConfig(
+                        name='purpose',
+                        type=['null', 'string'],
+                        description='Purpose or topic of the call.',
+                    ),
+                    CacheFieldConfig(
+                        name='scheduled',
+                        type=['null', 'string'],
+                        description='Scheduled date and time of the call.',
+                    ),
+                    CacheFieldConfig(
+                        name='scope',
+                        type=['null', 'string'],
+                        description='Scope or extent of the call.',
+                    ),
+                    CacheFieldConfig(
+                        name='sdrDisposition',
+                        type=['null', 'string'],
+                        description='Disposition set by the sales development representative.',
+                    ),
+                    CacheFieldConfig(
+                        name='started',
+                        type=['null', 'string'],
+                        description='Start date and time of the call.',
+                    ),
+                    CacheFieldConfig(
+                        name='system',
+                        type=['null', 'string'],
+                        description='System information related to the call.',
+                    ),
+                    CacheFieldConfig(
+                        name='title',
+                        type=['null', 'string'],
+                        description='Title or headline of the call.',
+                    ),
+                    CacheFieldConfig(
+                        name='url',
+                        type=['null', 'string'],
+                        description='URL associated with the call.',
+                    ),
+                    CacheFieldConfig(
+                        name='workspaceId',
+                        type=['null', 'string'],
+                        description='Identifier for the workspace to which the call belongs.',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='calls_extensive',
+                suggested=True,
+                x_airbyte_name='extensiveCalls',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the call (from metaData.id).',
+                    ),
+                    CacheFieldConfig(
+                        name='startdatetime',
+                        type=['null', 'string'],
+                        description='Datetime for extensive calls.',
+                    ),
+                    CacheFieldConfig(
+                        name='collaboration',
+                        type=['null', 'object'],
+                        description='Collaboration information added to the call',
+                        properties={
+                            'brief': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='content',
+                        type=['null', 'object'],
+                        description='Analysis of the interaction content.',
+                        properties={
+                            'brief': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'highlights': CacheFieldProperty(
+                                type=['null', 'array'],
+                            ),
+                            'keyPoints': CacheFieldProperty(
+                                type=['null', 'array'],
+                            ),
+                            'outline': CacheFieldProperty(
+                                type=['null', 'array'],
+                            ),
+                            'pointsOfInterest': CacheFieldProperty(
+                                type=['null', 'object'],
+                                properties={
+                                    'actionItems': CacheFieldProperty(
+                                        type=['null', 'array'],
+                                    ),
+                                },
+                            ),
+                            'topics': CacheFieldProperty(
+                                type=['null', 'array'],
+                            ),
+                            'trackers': CacheFieldProperty(
+                                type=['null', 'array'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='context',
+                        type=['null', 'object'],
+                        description='A list of the agenda of each part of the call.',
+                        properties={
+                            'objects': CacheFieldProperty(
+                                type=['null', 'array'],
+                            ),
+                            'system': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='interaction',
+                        type=['null', 'object'],
+                        description='Metrics collected around the interaction during the call.',
+                        properties={
+                            'interactionStats': CacheFieldProperty(
+                                type=['null', 'array'],
+                            ),
+                            'questions': CacheFieldProperty(
+                                type=['null', 'object'],
+                                properties={
+                                    'companyCount': CacheFieldProperty(
+                                        type=['null', 'number'],
+                                    ),
+                                    'nonCompanyCount': CacheFieldProperty(
+                                        type=['null', 'number'],
+                                    ),
+                                },
+                            ),
+                            'speakers': CacheFieldProperty(
+                                type=['null', 'array'],
+                            ),
+                            'video': CacheFieldProperty(
+                                type=['null', 'array'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='media',
+                        type=['null', 'object'],
+                        description='The media urls of the call.',
+                        properties={
+                            'audioUrl': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'videoUrl': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='metaData',
+                        type=['null', 'object'],
+                        description="call's metadata.",
+                        properties={
+                            'calendarEventId': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'clientUniqueId': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'customData': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'direction': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'duration': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'id': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'isPrivate': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                            'language': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'media': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'meetingUrl': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'primaryUserId': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'purpose': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'scheduled': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'scope': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'sdrDisposition': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'started': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'system': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'title': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'url': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'workspaceId': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='parties',
+                        type=['null', 'array'],
+                        description="A list of the call's participants",
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='settings_scorecards',
+                x_airbyte_name='scorecards',
+                fields=[
+                    CacheFieldConfig(
+                        name='created',
+                        type=['null', 'string'],
+                        description='The timestamp when the scorecard was created',
+                    ),
+                    CacheFieldConfig(
+                        name='enabled',
+                        type=['null', 'boolean'],
+                        description='Indicates if the scorecard is enabled or disabled',
+                    ),
+                    CacheFieldConfig(
+                        name='questions',
+                        type=['null', 'array'],
+                        description='An array of questions related to the scorecard',
+                    ),
+                    CacheFieldConfig(
+                        name='scorecardId',
+                        type=['null', 'string'],
+                        description='The unique identifier of the scorecard',
+                    ),
+                    CacheFieldConfig(
+                        name='scorecardName',
+                        type=['null', 'string'],
+                        description='The name of the scorecard',
+                    ),
+                    CacheFieldConfig(
+                        name='updated',
+                        type=['null', 'string'],
+                        description='The timestamp when the scorecard was last updated',
+                    ),
+                    CacheFieldConfig(
+                        name='updaterUserId',
+                        type=['null', 'string'],
+                        description='The user ID of the person who last updated the scorecard',
+                    ),
+                    CacheFieldConfig(
+                        name='workspaceId',
+                        type=['null', 'string'],
+                        description='The unique identifier of the workspace associated with the scorecard',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='stats_activity_scorecards',
+                x_airbyte_name='answeredScorecards',
+                fields=[
+                    CacheFieldConfig(
+                        name='answeredScorecardId',
+                        type=['null', 'string'],
+                        description='Unique identifier for the answered scorecard instance.',
+                    ),
+                    CacheFieldConfig(
+                        name='answers',
+                        type=['null', 'array'],
+                        description='Contains the answered questions in the scorecards',
+                    ),
+                    CacheFieldConfig(
+                        name='callId',
+                        type=['null', 'string'],
+                        description='Unique identifier for the call associated with the answered scorecard.',
+                    ),
+                    CacheFieldConfig(
+                        name='callStartTime',
+                        type=['null', 'string'],
+                        description='Timestamp indicating the start time of the call.',
+                    ),
+                    CacheFieldConfig(
+                        name='reviewTime',
+                        type=['null', 'string'],
+                        description='Timestamp indicating when the review of the answered scorecard was completed.',
+                    ),
+                    CacheFieldConfig(
+                        name='reviewedUserId',
+                        type=['null', 'string'],
+                        description='Unique identifier for the user whose performance was reviewed.',
+                    ),
+                    CacheFieldConfig(
+                        name='reviewerUserId',
+                        type=['null', 'string'],
+                        description='Unique identifier for the user who performed the review.',
+                    ),
+                    CacheFieldConfig(
+                        name='scorecardId',
+                        type=['null', 'string'],
+                        description='Unique identifier for the scorecard template used.',
+                    ),
+                    CacheFieldConfig(
+                        name='scorecardName',
+                        type=['null', 'string'],
+                        description='Name or title of the scorecard template used.',
+                    ),
+                    CacheFieldConfig(
+                        name='visibilityType',
+                        type=['null', 'string'],
+                        description='Type indicating the visibility permissions for the answered scorecard.',
+                    ),
+                ],
+            ),
+        ],
+    ),
     search_field_paths={
         'users': [
             'active',

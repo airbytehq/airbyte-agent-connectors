@@ -19,6 +19,12 @@ from airbyte_agent_sdk.schema.security import (
     AuthConfigFieldSpec,
     AuthConfigSpec,
 )
+from airbyte_agent_sdk.schema.extensions import (
+    CacheConfig,
+    CacheEntityConfig,
+    CacheFieldConfig,
+    CacheFieldProperty,
+)
 from airbyte_agent_sdk.schema.base import (
     ExampleQuestions,
 )
@@ -1402,6 +1408,382 @@ ConfluenceConnectorModel: ConnectorModel = ConnectorModel(
             },
         ),
     ],
+    context_store=CacheConfig(
+        entities=[
+            CacheEntityConfig(
+                entity='audit',
+                x_airbyte_name='audit',
+                fields=[
+                    CacheFieldConfig(
+                        name='affectedObject',
+                        type=['null', 'object'],
+                        description='The object that was affected by the audit event.',
+                    ),
+                    CacheFieldConfig(
+                        name='associatedObjects',
+                        type=['null', 'array'],
+                        description='Any associated objects related to the audit event.',
+                    ),
+                    CacheFieldConfig(
+                        name='author',
+                        type=['null', 'object'],
+                        description='The user who triggered the audit event.',
+                    ),
+                    CacheFieldConfig(
+                        name='category',
+                        type=['null', 'string'],
+                        description='The category under which the audit event falls.',
+                    ),
+                    CacheFieldConfig(
+                        name='changedValues',
+                        type=['null', 'array'],
+                        description='Details of the values that were changed during the audit event.',
+                    ),
+                    CacheFieldConfig(
+                        name='creationDate',
+                        type=['null', 'integer'],
+                        description='The date and time when the audit event was created.',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='A detailed description of the audit event.',
+                    ),
+                    CacheFieldConfig(
+                        name='remoteAddress',
+                        type=['null', 'string'],
+                        description='The IP address from which the audit event originated.',
+                    ),
+                    CacheFieldConfig(
+                        name='summary',
+                        type=['null', 'string'],
+                        description='A brief summary or title describing the audit event.',
+                    ),
+                    CacheFieldConfig(
+                        name='superAdmin',
+                        type=['null', 'boolean'],
+                        description='Indicates if the user triggering the audit event is a super admin.',
+                    ),
+                    CacheFieldConfig(
+                        name='sysAdmin',
+                        type=['null', 'boolean'],
+                        description='Indicates if the user triggering the audit event is a system admin.',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='blog_posts',
+                suggested=True,
+                x_airbyte_name='blog_posts',
+                fields=[
+                    CacheFieldConfig(
+                        name='_links',
+                        type=['null', 'object'],
+                        description='Links related to the blog post',
+                        properties={
+                            'webui': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'editui': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'tinyui': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='authorId',
+                        type=['null', 'string'],
+                        description='ID of the user who created the blog post',
+                    ),
+                    CacheFieldConfig(
+                        name='body',
+                        type=['null', 'object'],
+                        description='Blog post body content',
+                        properties={
+                            'storage': CacheFieldProperty(
+                                type=['null', 'object'],
+                            ),
+                            'atlas_doc_format': CacheFieldProperty(
+                                type=['null', 'object'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='createdAt',
+                        type=['null', 'string'],
+                        description='Timestamp when the blog post was created',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique blog post identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='spaceId',
+                        type=['null', 'string'],
+                        description='ID of the space containing this blog post',
+                    ),
+                    CacheFieldConfig(
+                        name='status',
+                        type=['null', 'string'],
+                        description='Blog post status (current, draft, trashed)',
+                    ),
+                    CacheFieldConfig(
+                        name='title',
+                        type=['null', 'string'],
+                        description='Blog post title',
+                    ),
+                    CacheFieldConfig(
+                        name='version',
+                        type=['null', 'object'],
+                        description='Version information',
+                        properties={
+                            'createdAt': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'message': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'number': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'minorEdit': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                            'authorId': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='groups',
+                x_airbyte_name='group',
+                fields=[
+                    CacheFieldConfig(
+                        name='_links',
+                        type=['null', 'object'],
+                        description='Links related to the group',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='The unique identifier of the group',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='The name of the group',
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description='The type of group',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='pages',
+                suggested=True,
+                x_airbyte_name='pages',
+                fields=[
+                    CacheFieldConfig(
+                        name='_links',
+                        type=['null', 'object'],
+                        description='Links related to the page',
+                        properties={
+                            'webui': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'editui': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'tinyui': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='authorId',
+                        type=['null', 'string'],
+                        description='ID of the user who created the page',
+                    ),
+                    CacheFieldConfig(
+                        name='body',
+                        type=['null', 'object'],
+                        description='Page body content',
+                        properties={
+                            'storage': CacheFieldProperty(
+                                type=['null', 'object'],
+                            ),
+                            'atlas_doc_format': CacheFieldProperty(
+                                type=['null', 'object'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='createdAt',
+                        type=['null', 'string'],
+                        description='Timestamp when the page was created',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique page identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='lastOwnerId',
+                        type=['null', 'string'],
+                        description='ID of the previous page owner',
+                    ),
+                    CacheFieldConfig(
+                        name='ownerId',
+                        type=['null', 'string'],
+                        description='ID of the current page owner',
+                    ),
+                    CacheFieldConfig(
+                        name='parentId',
+                        type=['null', 'string'],
+                        description='ID of the parent page',
+                    ),
+                    CacheFieldConfig(
+                        name='parentType',
+                        type=['null', 'string'],
+                        description='Type of the parent (page or space)',
+                    ),
+                    CacheFieldConfig(
+                        name='position',
+                        type=['null', 'integer'],
+                        description='Position of the page among siblings',
+                    ),
+                    CacheFieldConfig(
+                        name='spaceId',
+                        type=['null', 'string'],
+                        description='ID of the space containing this page',
+                    ),
+                    CacheFieldConfig(
+                        name='status',
+                        type=['null', 'string'],
+                        description='Page status (current, archived, trashed, draft)',
+                    ),
+                    CacheFieldConfig(
+                        name='title',
+                        type=['null', 'string'],
+                        description='Page title',
+                    ),
+                    CacheFieldConfig(
+                        name='version',
+                        type=['null', 'object'],
+                        description='Version information',
+                        properties={
+                            'createdAt': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'message': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'number': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'minorEdit': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                            'authorId': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='spaces',
+                suggested=True,
+                x_airbyte_name='space',
+                fields=[
+                    CacheFieldConfig(
+                        name='_links',
+                        type=['null', 'object'],
+                        description='Links related to the space',
+                        properties={
+                            'webui': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='authorId',
+                        type=['null', 'string'],
+                        description='ID of the user who created the space',
+                    ),
+                    CacheFieldConfig(
+                        name='createdAt',
+                        type=['null', 'string'],
+                        description='Timestamp when the space was created',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'object'],
+                        description='Space description in various formats',
+                        properties={
+                            'plain': CacheFieldProperty(
+                                type=['null', 'object'],
+                            ),
+                            'view': CacheFieldProperty(
+                                type=['null', 'object'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='homepageId',
+                        type=['null', 'string'],
+                        description='ID of the space homepage',
+                    ),
+                    CacheFieldConfig(
+                        name='icon',
+                        type=['null', 'object'],
+                        description='Space icon information',
+                        properties={
+                            'path': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'apiDownloadLink': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique space identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='key',
+                        type=['null', 'string'],
+                        description='Space key',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Space name',
+                    ),
+                    CacheFieldConfig(
+                        name='status',
+                        type=['null', 'string'],
+                        description='Space status (current or archived)',
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description='Space type (global or personal)',
+                    ),
+                ],
+            ),
+        ],
+        disable_compaction=True,
+    ),
     search_field_paths={
         'audit': [
             'affectedObject',

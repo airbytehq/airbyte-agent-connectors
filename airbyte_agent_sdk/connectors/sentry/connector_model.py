@@ -20,6 +20,10 @@ from airbyte_agent_sdk.schema.security import (
     AuthConfigSpec,
 )
 from airbyte_agent_sdk.schema.extensions import (
+    CacheConfig,
+    CacheEntityConfig,
+    CacheFieldConfig,
+    CacheFieldProperty,
     EntityRelationshipConfig,
     ScopingParamConfig,
 )
@@ -3500,6 +3504,682 @@ SentryConnectorModel: ConnectorModel = ConnectorModel(
             },
         ),
     ],
+    context_store=CacheConfig(
+        entities=[
+            CacheEntityConfig(
+                entity='events',
+                suggested=True,
+                x_airbyte_name='events',
+                fields=[
+                    CacheFieldConfig(
+                        name='_meta',
+                        type=['null', 'object'],
+                        description='Meta information for data scrubbing.',
+                    ),
+                    CacheFieldConfig(
+                        name='context',
+                        type=['null', 'object'],
+                        description='Additional context data.',
+                    ),
+                    CacheFieldConfig(
+                        name='contexts',
+                        type=['null', 'object'],
+                        description='Structured context information.',
+                    ),
+                    CacheFieldConfig(
+                        name='crashFile',
+                        type=['null', 'string'],
+                        description='Crash file reference.',
+                    ),
+                    CacheFieldConfig(
+                        name='culprit',
+                        type=['null', 'string'],
+                        description='The culprit (source) of the event.',
+                    ),
+                    CacheFieldConfig(
+                        name='dateCreated',
+                        type=['string', 'null'],
+                        description='When the event was created.',
+                    ),
+                    CacheFieldConfig(
+                        name='dateReceived',
+                        type=['null', 'string'],
+                        description='When the event was received by Sentry.',
+                    ),
+                    CacheFieldConfig(
+                        name='dist',
+                        type=['null', 'string'],
+                        description='Distribution information.',
+                    ),
+                    CacheFieldConfig(
+                        name='entries',
+                        type=['null', 'array'],
+                        description='Event entries (exception, breadcrumbs, request, etc.).',
+                    ),
+                    CacheFieldConfig(
+                        name='errors',
+                        type=['null', 'array'],
+                        description='Processing errors.',
+                    ),
+                    CacheFieldConfig(
+                        name='event.type',
+                        type=['string', 'null'],
+                        description='The type of the event.',
+                    ),
+                    CacheFieldConfig(
+                        name='eventID',
+                        type=['string', 'null'],
+                        description='Event ID as reported by the client.',
+                    ),
+                    CacheFieldConfig(
+                        name='fingerprints',
+                        type=['null', 'array'],
+                        description='Fingerprints used for grouping.',
+                    ),
+                    CacheFieldConfig(
+                        name='groupID',
+                        type=['string', 'null'],
+                        description='ID of the issue group this event belongs to.',
+                    ),
+                    CacheFieldConfig(
+                        name='groupingConfig',
+                        type=['null', 'object'],
+                        description='Grouping configuration.',
+                        properties={
+                            'id': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'enhancements': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['string', 'null'],
+                        description='Unique event identifier.',
+                    ),
+                    CacheFieldConfig(
+                        name='location',
+                        type=['null', 'string'],
+                        description='Location in source code.',
+                    ),
+                    CacheFieldConfig(
+                        name='message',
+                        type=['string', 'null'],
+                        description='Event message.',
+                    ),
+                    CacheFieldConfig(
+                        name='metadata',
+                        type=['null', 'object'],
+                        description='Event metadata.',
+                        properties={
+                            'title': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'in_app_frame_mix': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='occurrence',
+                        type=['null', 'string'],
+                        description='Occurrence information for the event.',
+                    ),
+                    CacheFieldConfig(
+                        name='packages',
+                        type=['null', 'object'],
+                        description='Package information.',
+                    ),
+                    CacheFieldConfig(
+                        name='platform',
+                        type=['string', 'null'],
+                        description='Platform the event was generated on.',
+                    ),
+                    CacheFieldConfig(
+                        name='projectID',
+                        type=['null', 'string'],
+                        description='Project ID this event belongs to.',
+                    ),
+                    CacheFieldConfig(
+                        name='sdk',
+                        type=['null', 'string'],
+                        description='SDK information.',
+                    ),
+                    CacheFieldConfig(
+                        name='size',
+                        type=['null', 'integer'],
+                        description='Event payload size in bytes.',
+                    ),
+                    CacheFieldConfig(
+                        name='tags',
+                        type=['array', 'null'],
+                        description='Tags associated with the event.',
+                    ),
+                    CacheFieldConfig(
+                        name='title',
+                        type=['string', 'null'],
+                        description='Event title.',
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description='Event type.',
+                    ),
+                    CacheFieldConfig(
+                        name='user',
+                        type=['null', 'object'],
+                        description='User associated with the event.',
+                        properties={
+                            'id': CacheFieldProperty(
+                                type=['string', 'null'],
+                            ),
+                            'email': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'username': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'ip_address': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='issues',
+                suggested=True,
+                x_airbyte_name='issues',
+                fields=[
+                    CacheFieldConfig(
+                        name='annotations',
+                        type=['array', 'null'],
+                        description='Annotations on the issue.',
+                    ),
+                    CacheFieldConfig(
+                        name='assignedTo',
+                        type=['null', 'object'],
+                        description='User or team assigned to this issue.',
+                    ),
+                    CacheFieldConfig(
+                        name='count',
+                        type=['string', 'null'],
+                        description='Number of events for this issue.',
+                    ),
+                    CacheFieldConfig(
+                        name='culprit',
+                        type=['string', 'null'],
+                        description='The culprit (source) of the issue.',
+                    ),
+                    CacheFieldConfig(
+                        name='firstSeen',
+                        type=['string', 'null'],
+                        description='When the issue was first seen.',
+                    ),
+                    CacheFieldConfig(
+                        name='hasSeen',
+                        type=['boolean', 'null'],
+                        description='Whether the authenticated user has seen the issue.',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['string', 'null'],
+                        description='Unique issue identifier.',
+                    ),
+                    CacheFieldConfig(
+                        name='isBookmarked',
+                        type=['boolean', 'null'],
+                        description='Whether the issue is bookmarked.',
+                    ),
+                    CacheFieldConfig(
+                        name='isPublic',
+                        type=['boolean', 'null'],
+                        description='Whether the issue is public.',
+                    ),
+                    CacheFieldConfig(
+                        name='isSubscribed',
+                        type=['boolean', 'null'],
+                        description='Whether the user is subscribed to the issue.',
+                    ),
+                    CacheFieldConfig(
+                        name='isUnhandled',
+                        type=['null', 'boolean'],
+                        description='Whether the issue is from an unhandled error.',
+                    ),
+                    CacheFieldConfig(
+                        name='issueCategory',
+                        type=['null', 'string'],
+                        description='The category classification of the issue.',
+                    ),
+                    CacheFieldConfig(
+                        name='issueType',
+                        type=['null', 'string'],
+                        description='The type classification of the issue.',
+                    ),
+                    CacheFieldConfig(
+                        name='lastSeen',
+                        type=['string', 'null'],
+                        description='When the issue was last seen.',
+                    ),
+                    CacheFieldConfig(
+                        name='level',
+                        type=['string', 'null'],
+                        description='Issue severity level.',
+                    ),
+                    CacheFieldConfig(
+                        name='logger',
+                        type=['null', 'string'],
+                        description='Logger that generated the issue.',
+                    ),
+                    CacheFieldConfig(
+                        name='metadata',
+                        type=['object', 'null'],
+                        description='Issue metadata.',
+                    ),
+                    CacheFieldConfig(
+                        name='numComments',
+                        type=['integer', 'null'],
+                        description='Number of comments on the issue.',
+                    ),
+                    CacheFieldConfig(
+                        name='permalink',
+                        type=['string', 'null'],
+                        description='Permalink to the issue in the Sentry UI.',
+                    ),
+                    CacheFieldConfig(
+                        name='platform',
+                        type=['null', 'string'],
+                        description='Platform for this issue.',
+                    ),
+                    CacheFieldConfig(
+                        name='project',
+                        type=['object', 'null'],
+                        description='Project this issue belongs to.',
+                        properties={
+                            'id': CacheFieldProperty(
+                                type=['string', 'null'],
+                            ),
+                            'name': CacheFieldProperty(
+                                type=['string', 'null'],
+                            ),
+                            'slug': CacheFieldProperty(
+                                type=['string', 'null'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='shareId',
+                        type=['null', 'string'],
+                        description='Share ID if the issue is shared.',
+                    ),
+                    CacheFieldConfig(
+                        name='shortId',
+                        type=['string', 'null'],
+                        description='Short human-readable identifier.',
+                    ),
+                    CacheFieldConfig(
+                        name='stats',
+                        type=['object', 'null'],
+                        description='Issue event statistics.',
+                    ),
+                    CacheFieldConfig(
+                        name='status',
+                        type=['string', 'null'],
+                        description='Issue status (resolved, unresolved, ignored).',
+                    ),
+                    CacheFieldConfig(
+                        name='statusDetails',
+                        type=['object', 'null'],
+                        description='Status detail information.',
+                    ),
+                    CacheFieldConfig(
+                        name='subscriptionDetails',
+                        type=['null', 'object'],
+                        description='Subscription details.',
+                    ),
+                    CacheFieldConfig(
+                        name='substatus',
+                        type=['null', 'string'],
+                        description='Issue substatus.',
+                    ),
+                    CacheFieldConfig(
+                        name='title',
+                        type=['string', 'null'],
+                        description='Issue title.',
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['string', 'null'],
+                        description='Issue type.',
+                    ),
+                    CacheFieldConfig(
+                        name='userCount',
+                        type=['integer', 'null'],
+                        description='Number of users affected.',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='projects',
+                suggested=True,
+                x_airbyte_name='projects',
+                fields=[
+                    CacheFieldConfig(
+                        name='access',
+                        type=['null', 'array'],
+                        description='List of access permissions for the authenticated user.',
+                    ),
+                    CacheFieldConfig(
+                        name='avatar',
+                        type=['object', 'null'],
+                        description='Project avatar information.',
+                        properties={
+                            'avatarUrl': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'avatarType': CacheFieldProperty(
+                                type=['string', 'null'],
+                            ),
+                            'avatarUuid': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='color',
+                        type=['string', 'null'],
+                        description='Project color code.',
+                    ),
+                    CacheFieldConfig(
+                        name='dateCreated',
+                        type=['string', 'null'],
+                        description='Date the project was created.',
+                    ),
+                    CacheFieldConfig(
+                        name='features',
+                        type=['array', 'null'],
+                        description='List of enabled features.',
+                    ),
+                    CacheFieldConfig(
+                        name='firstEvent',
+                        type=['null', 'string'],
+                        description='Timestamp of the first event.',
+                    ),
+                    CacheFieldConfig(
+                        name='firstTransactionEvent',
+                        type=['null', 'boolean'],
+                        description='Whether a transaction event has been received.',
+                    ),
+                    CacheFieldConfig(
+                        name='hasAccess',
+                        type=['boolean', 'null'],
+                        description='Whether the user has access to this project.',
+                    ),
+                    CacheFieldConfig(
+                        name='hasCustomMetrics',
+                        type=['null', 'boolean'],
+                        description='Whether the project has custom metrics.',
+                    ),
+                    CacheFieldConfig(
+                        name='hasFeedbacks',
+                        type=['null', 'boolean'],
+                        description='Whether the project has user feedback.',
+                    ),
+                    CacheFieldConfig(
+                        name='hasMinifiedStackTrace',
+                        type=['null', 'boolean'],
+                        description='Whether the project has minified stack traces.',
+                    ),
+                    CacheFieldConfig(
+                        name='hasMonitors',
+                        type=['null', 'boolean'],
+                        description='Whether the project has cron monitors.',
+                    ),
+                    CacheFieldConfig(
+                        name='hasNewFeedbacks',
+                        type=['null', 'boolean'],
+                        description='Whether the project has new user feedback.',
+                    ),
+                    CacheFieldConfig(
+                        name='hasProfiles',
+                        type=['null', 'boolean'],
+                        description='Whether the project has profiling data.',
+                    ),
+                    CacheFieldConfig(
+                        name='hasReplays',
+                        type=['null', 'boolean'],
+                        description='Whether the project has session replays.',
+                    ),
+                    CacheFieldConfig(
+                        name='hasSessions',
+                        type=['null', 'boolean'],
+                        description='Whether the project has session data.',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['string', 'null'],
+                        description='Unique project identifier.',
+                    ),
+                    CacheFieldConfig(
+                        name='isBookmarked',
+                        type=['boolean', 'null'],
+                        description='Whether the project is bookmarked.',
+                    ),
+                    CacheFieldConfig(
+                        name='isInternal',
+                        type=['boolean', 'null'],
+                        description='Whether the project is internal.',
+                    ),
+                    CacheFieldConfig(
+                        name='isMember',
+                        type=['boolean', 'null'],
+                        description='Whether the authenticated user is a member.',
+                    ),
+                    CacheFieldConfig(
+                        name='isPublic',
+                        type=['boolean', 'null'],
+                        description='Whether the project is public.',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['string', 'null'],
+                        description='Human-readable project name.',
+                    ),
+                    CacheFieldConfig(
+                        name='organization',
+                        type=['object', 'null'],
+                        description='Organization this project belongs to.',
+                        properties={
+                            'id': CacheFieldProperty(
+                                type=['string', 'null'],
+                            ),
+                            'name': CacheFieldProperty(
+                                type=['string', 'null'],
+                            ),
+                            'slug': CacheFieldProperty(
+                                type=['string', 'null'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='platform',
+                        type=['null', 'string'],
+                        description='The platform for this project.',
+                    ),
+                    CacheFieldConfig(
+                        name='slug',
+                        type=['string', 'null'],
+                        description='URL-friendly project identifier.',
+                    ),
+                    CacheFieldConfig(
+                        name='status',
+                        type=['string', 'null'],
+                        description='Project status.',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='releases',
+                suggested=True,
+                x_airbyte_name='releases',
+                fields=[
+                    CacheFieldConfig(
+                        name='authors',
+                        type=['null', 'array'],
+                        description='Authors of commits in this release.',
+                    ),
+                    CacheFieldConfig(
+                        name='commitCount',
+                        type=['null', 'integer'],
+                        description='Number of commits in this release.',
+                    ),
+                    CacheFieldConfig(
+                        name='currentProjectMeta',
+                        type=['null', 'object'],
+                        description='Metadata for the current project context.',
+                    ),
+                    CacheFieldConfig(
+                        name='data',
+                        type=['null', 'object'],
+                        description='Additional release data.',
+                    ),
+                    CacheFieldConfig(
+                        name='dateCreated',
+                        type=['null', 'string'],
+                        description='When the release was created.',
+                    ),
+                    CacheFieldConfig(
+                        name='dateReleased',
+                        type=['null', 'string'],
+                        description='When the release was deployed.',
+                    ),
+                    CacheFieldConfig(
+                        name='deployCount',
+                        type=['null', 'integer'],
+                        description='Number of deploys for this release.',
+                    ),
+                    CacheFieldConfig(
+                        name='firstEvent',
+                        type=['null', 'string'],
+                        description='Timestamp of the first event in this release.',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique release identifier.',
+                    ),
+                    CacheFieldConfig(
+                        name='lastCommit',
+                        type=['null', 'object'],
+                        description='Last commit in this release.',
+                    ),
+                    CacheFieldConfig(
+                        name='lastDeploy',
+                        type=['null', 'object'],
+                        description='Last deploy of this release.',
+                    ),
+                    CacheFieldConfig(
+                        name='lastEvent',
+                        type=['null', 'string'],
+                        description='Timestamp of the last event in this release.',
+                    ),
+                    CacheFieldConfig(
+                        name='newGroups',
+                        type=['null', 'integer'],
+                        description='Number of new issue groups in this release.',
+                    ),
+                    CacheFieldConfig(
+                        name='owner',
+                        type=['null', 'string'],
+                        description='Owner of the release.',
+                    ),
+                    CacheFieldConfig(
+                        name='projects',
+                        type=['null', 'array'],
+                        description='Projects associated with this release.',
+                    ),
+                    CacheFieldConfig(
+                        name='ref',
+                        type=['null', 'string'],
+                        description='Git reference (commit SHA, tag, etc.).',
+                    ),
+                    CacheFieldConfig(
+                        name='shortVersion',
+                        type=['null', 'string'],
+                        description='Short version string.',
+                    ),
+                    CacheFieldConfig(
+                        name='status',
+                        type=['null', 'string'],
+                        description='Release status.',
+                    ),
+                    CacheFieldConfig(
+                        name='url',
+                        type=['null', 'string'],
+                        description='URL associated with the release.',
+                    ),
+                    CacheFieldConfig(
+                        name='userAgent',
+                        type=['null', 'string'],
+                        description='User agent that created the release.',
+                    ),
+                    CacheFieldConfig(
+                        name='version',
+                        type=['null', 'string'],
+                        description='Release version string.',
+                    ),
+                    CacheFieldConfig(
+                        name='versionInfo',
+                        type=['null', 'object'],
+                        description='Parsed version information.',
+                        properties={
+                            'version': CacheFieldProperty(
+                                type=['null', 'object'],
+                                properties={
+                                    'pre': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                    'raw': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                    'major': CacheFieldProperty(
+                                        type=['null', 'integer'],
+                                    ),
+                                    'minor': CacheFieldProperty(
+                                        type=['null', 'integer'],
+                                    ),
+                                    'patch': CacheFieldProperty(
+                                        type=['null', 'integer'],
+                                    ),
+                                    'buildCode': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                    'components': CacheFieldProperty(
+                                        type=['null', 'integer'],
+                                    ),
+                                },
+                            ),
+                            'description': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'package': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'buildHash': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                ],
+            ),
+        ],
+        disable_compaction=True,
+    ),
     search_field_paths={
         'events': [
             '_meta',

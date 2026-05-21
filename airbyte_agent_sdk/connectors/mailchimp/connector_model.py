@@ -20,6 +20,10 @@ from airbyte_agent_sdk.schema.security import (
     AuthConfigSpec,
 )
 from airbyte_agent_sdk.schema.extensions import (
+    CacheConfig,
+    CacheEntityConfig,
+    CacheFieldConfig,
+    CacheFieldProperty,
     EntityRelationshipConfig,
 )
 from airbyte_agent_sdk.schema.base import (
@@ -5762,6 +5766,1561 @@ MailchimpConnectorModel: ConnectorModel = ConnectorModel(
             ],
         ),
     ],
+    context_store=CacheConfig(
+        entities=[
+            CacheEntityConfig(
+                entity='campaigns',
+                suggested=True,
+                x_airbyte_name='campaigns',
+                fields=[
+                    CacheFieldConfig(
+                        name='ab_split_opts',
+                        type=['null', 'object'],
+                        description='[A/B Testing](https://mailchimp.com/help/about-ab-testing-campaigns/) options for a campaign.',
+                        properties={
+                            'from_name_a': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'from_name_b': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'pick_winner': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'reply_email_a': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'reply_email_b': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'send_time_a': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'send_time_b': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'send_time_winner': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'split_size': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'split_test': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'subject_a': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'subject_b': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'wait_time': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'wait_units': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='archive_url',
+                        type=['null', 'string'],
+                        description="The link to the campaign's archive version in ISO 8601 format.",
+                    ),
+                    CacheFieldConfig(
+                        name='content_type',
+                        type=['null', 'string'],
+                        description="How the campaign's content is put together.",
+                    ),
+                    CacheFieldConfig(
+                        name='create_time',
+                        type=['null', 'string'],
+                        description='The date and time the campaign was created in ISO 8601 format.',
+                    ),
+                    CacheFieldConfig(
+                        name='delivery_status',
+                        type=['null', 'object'],
+                        description='Updates on campaigns in the process of sending.',
+                        properties={
+                            'can_cancel': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                            'emails_canceled': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'emails_sent': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'enabled': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                            'status': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='emails_sent',
+                        type=['null', 'integer'],
+                        description='The total number of emails sent for this campaign.',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='A string that uniquely identifies this campaign.',
+                    ),
+                    CacheFieldConfig(
+                        name='long_archive_url',
+                        type=['null', 'string'],
+                        description="The original link to the campaign's archive version.",
+                    ),
+                    CacheFieldConfig(
+                        name='needs_block_refresh',
+                        type=['null', 'boolean'],
+                        description='Determines if the campaign needs its blocks refreshed by opening the web-based campaign editor. D...',
+                    ),
+                    CacheFieldConfig(
+                        name='parent_campaign_id',
+                        type=['null', 'string'],
+                        description='If this campaign is the child of another campaign, this identifies the parent campaign. For Examp...',
+                    ),
+                    CacheFieldConfig(
+                        name='recipients',
+                        type=['null', 'object'],
+                        description='List settings for the campaign.',
+                        properties={
+                            'list_id': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'list_is_active': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                            'list_name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'recipient_count': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'segment_opts': CacheFieldProperty(
+                                type=['null', 'object'],
+                            ),
+                            'segment_text': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='report_summary',
+                        type=['null', 'object'],
+                        description='For sent campaigns, a summary of opens, clicks, and e-commerce data.',
+                        properties={
+                            'click_rate': CacheFieldProperty(
+                                type=['null', 'number'],
+                            ),
+                            'clicks': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'ecommerce': CacheFieldProperty(
+                                type=['null', 'object'],
+                            ),
+                            'open_rate': CacheFieldProperty(
+                                type=['null', 'number'],
+                            ),
+                            'opens': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'subscriber_clicks': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'unique_opens': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='resendable',
+                        type=['null', 'boolean'],
+                        description='Determines if the campaign qualifies to be resent to non-openers.',
+                    ),
+                    CacheFieldConfig(
+                        name='rss_opts',
+                        type=['null', 'object'],
+                        description='[RSS](https://mailchimp.com/help/share-your-blog-posts-with-mailchimp/) options for a campaign.',
+                        properties={
+                            'constrain_rss_img': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                            'feed_url': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'frequency': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'last_sent': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'schedule': CacheFieldProperty(
+                                type=['null', 'object'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='send_time',
+                        type=['null', 'string'],
+                        description='The date and time a campaign was sent.',
+                    ),
+                    CacheFieldConfig(
+                        name='settings',
+                        type=['null', 'object'],
+                        description='The settings for your campaign, including subject, from name, reply-to address, and more.',
+                        properties={
+                            'authenticate': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                            'auto_fb_post': CacheFieldProperty(
+                                type=['null', 'array'],
+                            ),
+                            'auto_footer': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                            'auto_tweet': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                            'drag_and_drop': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                            'fb_comments': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                            'folder_id': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'from_name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'inline_css': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                            'preview_text': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'reply_to': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'subject_line': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'template_id': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'timewarp': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                            'title': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'to_name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'use_conversation': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='social_card',
+                        type=['null', 'object'],
+                        description='The preview for the campaign, rendered by social networks like Facebook and Twitter. [Learn more]...',
+                        properties={
+                            'description': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'image_url': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'title': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='status',
+                        type=['null', 'string'],
+                        description='The current status of the campaign.',
+                    ),
+                    CacheFieldConfig(
+                        name='tracking',
+                        type=['null', 'object'],
+                        description='The tracking options for a campaign.',
+                        properties={
+                            'capsule': CacheFieldProperty(
+                                type=['null', 'object'],
+                            ),
+                            'clicktale': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'ecomm360': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                            'goal_tracking': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                            'google_analytics': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'html_clicks': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                            'opens': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                            'salesforce': CacheFieldProperty(
+                                type=['null', 'object'],
+                            ),
+                            'text_clicks': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description='There are four types of [campaigns](https://mailchimp.com/help/getting-started-with-campaigns/) y...',
+                    ),
+                    CacheFieldConfig(
+                        name='variate_settings',
+                        type=['null', 'object'],
+                        description='The settings specific to A/B test campaigns.',
+                        properties={
+                            'combinations': CacheFieldProperty(
+                                type=['null', 'array'],
+                            ),
+                            'contents': CacheFieldProperty(
+                                type=['null', 'array'],
+                            ),
+                            'from_names': CacheFieldProperty(
+                                type=['null', 'array'],
+                            ),
+                            'reply_to_addresses': CacheFieldProperty(
+                                type=['null', 'array'],
+                            ),
+                            'send_times': CacheFieldProperty(
+                                type=['null', 'array'],
+                            ),
+                            'subject_lines': CacheFieldProperty(
+                                type=['null', 'array'],
+                            ),
+                            'test_size': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'wait_time': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'winner_criteria': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'winning_campaign_id': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'winning_combination_id': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='web_id',
+                        type=['null', 'integer'],
+                        description='The ID used in the Mailchimp web application. View this campaign in your Mailchimp account at `ht...',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='email_activity',
+                suggested=True,
+                x_airbyte_name='email_activity',
+                fields=[
+                    CacheFieldConfig(
+                        name='action',
+                        type=['string', 'null'],
+                        description="One of the following actions: 'open', 'click', or 'bounce'",
+                    ),
+                    CacheFieldConfig(
+                        name='campaign_id',
+                        type=['null', 'string'],
+                        description='The unique id for the campaign.',
+                    ),
+                    CacheFieldConfig(
+                        name='email_address',
+                        type=['null', 'string'],
+                        description='Email address for a subscriber.',
+                    ),
+                    CacheFieldConfig(
+                        name='email_id',
+                        type=['null', 'string'],
+                        description="The MD5 hash of the lowercase version of the list member's email address.",
+                    ),
+                    CacheFieldConfig(
+                        name='ip',
+                        type=['string', 'null'],
+                        description='The IP address recorded for the action.',
+                    ),
+                    CacheFieldConfig(
+                        name='list_id',
+                        type=['null', 'string'],
+                        description='The unique id for the list.',
+                    ),
+                    CacheFieldConfig(
+                        name='list_is_active',
+                        type=['null', 'boolean'],
+                        description="The status of the list used, namely if it's deleted or disabled.",
+                    ),
+                    CacheFieldConfig(
+                        name='timestamp',
+                        type=['string', 'null'],
+                        description='The date and time recorded for the action in ISO 8601 format.',
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['string', 'null'],
+                        description="If the action is a 'bounce', the type of bounce received: 'hard', 'soft'.",
+                    ),
+                    CacheFieldConfig(
+                        name='url',
+                        type=['string', 'null'],
+                        description="If the action is a 'click', the URL on which the member clicked.",
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='lists',
+                suggested=True,
+                x_airbyte_name='lists',
+                fields=[
+                    CacheFieldConfig(
+                        name='beamer_address',
+                        type=['null', 'string'],
+                        description="The list's Email Beamer address.",
+                    ),
+                    CacheFieldConfig(
+                        name='campaign_defaults',
+                        type=['null', 'object'],
+                        description='Default values for campaigns created for this list.',
+                        properties={
+                            'from_email': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'from_name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'language': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'subject': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='contact',
+                        type=['null', 'object'],
+                        description='Contact information displayed in campaign footers to comply with international spam laws.',
+                        properties={
+                            'address1': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'address2': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'city': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'company': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'country': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'phone': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'state': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'zip': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='date_created',
+                        type=['null', 'string'],
+                        description='The date and time that this list was created in ISO 8601 format.',
+                    ),
+                    CacheFieldConfig(
+                        name='double_optin',
+                        type=['null', 'boolean'],
+                        description='Whether or not to require the subscriber to confirm subscription via email.',
+                    ),
+                    CacheFieldConfig(
+                        name='email_type_option',
+                        type=['null', 'boolean'],
+                        description='Whether the list supports multiple formats for emails. When set to `true`, subscribers can choose...',
+                    ),
+                    CacheFieldConfig(
+                        name='has_welcome',
+                        type=['null', 'boolean'],
+                        description='Whether or not this list has a welcome automation connected.',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='A string that uniquely identifies this list.',
+                    ),
+                    CacheFieldConfig(
+                        name='list_rating',
+                        type=['null', 'integer'],
+                        description='An auto-generated activity score for the list (0-5).',
+                    ),
+                    CacheFieldConfig(
+                        name='marketing_permissions',
+                        type=['null', 'boolean'],
+                        description='Whether or not the list has marketing permissions (eg. GDPR) enabled.',
+                    ),
+                    CacheFieldConfig(
+                        name='modules',
+                        type=['null', 'array'],
+                        description='Any list-specific modules installed for this list.',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='The name of the list.',
+                    ),
+                    CacheFieldConfig(
+                        name='notify_on_subscribe',
+                        type=['null', 'string'],
+                        description='The email address to send subscribe notifications to.',
+                    ),
+                    CacheFieldConfig(
+                        name='notify_on_unsubscribe',
+                        type=['null', 'string'],
+                        description='The email address to send unsubscribe notifications to.',
+                    ),
+                    CacheFieldConfig(
+                        name='permission_reminder',
+                        type=['null', 'string'],
+                        description='The permission reminder for the list.',
+                    ),
+                    CacheFieldConfig(
+                        name='stats',
+                        type=['null', 'object'],
+                        description='Stats for the list. Many of these are cached for at least five minutes.',
+                        properties={
+                            'avg_sub_rate': CacheFieldProperty(
+                                type=['null', 'number'],
+                            ),
+                            'avg_unsub_rate': CacheFieldProperty(
+                                type=['null', 'number'],
+                            ),
+                            'campaign_count': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'campaign_last_sent': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'cleaned_count': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'cleaned_count_since_send': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'click_rate': CacheFieldProperty(
+                                type=['null', 'number'],
+                            ),
+                            'last_sub_date': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'last_unsub_date': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'member_count': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'member_count_since_send': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'merge_field_count': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'open_rate': CacheFieldProperty(
+                                type=['null', 'number'],
+                            ),
+                            'target_sub_rate': CacheFieldProperty(
+                                type=['null', 'number'],
+                            ),
+                            'total_contacts': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'unsubscribe_count': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'unsubscribe_count_since_send': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='subscribe_url_long',
+                        type=['null', 'string'],
+                        description="The full version of this list's subscribe form (host will vary).",
+                    ),
+                    CacheFieldConfig(
+                        name='subscribe_url_short',
+                        type=['null', 'string'],
+                        description="Our EepURL shortened version of this list's subscribe form.",
+                    ),
+                    CacheFieldConfig(
+                        name='use_archive_bar',
+                        type=['null', 'boolean'],
+                        description='Whether campaigns for this list use the Archive Bar in archives by default.',
+                    ),
+                    CacheFieldConfig(
+                        name='visibility',
+                        type=['null', 'string'],
+                        description='Whether this list is public or private.',
+                    ),
+                    CacheFieldConfig(
+                        name='web_id',
+                        type=['null', 'integer'],
+                        description='The ID used in the Mailchimp web application. View this list in your Mailchimp account at `https:...',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='reports',
+                suggested=True,
+                x_airbyte_name='reports',
+                fields=[
+                    CacheFieldConfig(
+                        name='ab_split',
+                        type=['null', 'object'],
+                        description='General stats about different groups of an A/B Split campaign. Does not return information about ...',
+                        properties={
+                            'a': CacheFieldProperty(
+                                type=['null', 'object'],
+                            ),
+                            'b': CacheFieldProperty(
+                                type=['null', 'object'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='abuse_reports',
+                        type=['null', 'integer'],
+                        description='The number of abuse reports generated for this campaign.',
+                    ),
+                    CacheFieldConfig(
+                        name='bounces',
+                        type=['null', 'object'],
+                        description='An object describing the bounce summary for the campaign.',
+                        properties={
+                            'hard_bounces': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'soft_bounces': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'syntax_errors': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='campaign_title',
+                        type=['null', 'string'],
+                        description='The title of the campaign.',
+                    ),
+                    CacheFieldConfig(
+                        name='clicks',
+                        type=['null', 'object'],
+                        description='An object describing the click activity for the campaign.',
+                        properties={
+                            'click_rate': CacheFieldProperty(
+                                type=['null', 'number'],
+                            ),
+                            'clicks_total': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'last_click': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'unique_clicks': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'unique_subscriber_clicks': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='delivery_status',
+                        type=['null', 'object'],
+                        description='Updates on campaigns in the process of sending.',
+                        properties={
+                            'can_cancel': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                            'emails_canceled': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'emails_sent': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'enabled': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                            'status': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='ecommerce',
+                        type=['null', 'object'],
+                        description='E-Commerce stats for a campaign.',
+                        properties={
+                            'currency_code': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'total_orders': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'total_revenue': CacheFieldProperty(
+                                type=['null', 'number'],
+                            ),
+                            'total_spent': CacheFieldProperty(
+                                type=['null', 'number'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='emails_sent',
+                        type=['null', 'integer'],
+                        description='The total number of emails sent for this campaign.',
+                    ),
+                    CacheFieldConfig(
+                        name='facebook_likes',
+                        type=['null', 'object'],
+                        description='An object describing campaign engagement on Facebook.',
+                        properties={
+                            'facebook_likes': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'recipient_likes': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'unique_likes': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='forwards',
+                        type=['null', 'object'],
+                        description='An object describing the forwards and forward activity for the campaign.',
+                        properties={
+                            'forwards_count': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'forwards_opens': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='A string that uniquely identifies this campaign.',
+                    ),
+                    CacheFieldConfig(
+                        name='industry_stats',
+                        type=['null', 'object'],
+                        description='The average campaign statistics for your industry.',
+                        properties={
+                            'abuse_rate': CacheFieldProperty(
+                                type=['null', 'number'],
+                            ),
+                            'bounce_rate': CacheFieldProperty(
+                                type=['null', 'number'],
+                            ),
+                            'click_rate': CacheFieldProperty(
+                                type=['null', 'number'],
+                            ),
+                            'open_rate': CacheFieldProperty(
+                                type=['null', 'number'],
+                            ),
+                            'type': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'unopen_rate': CacheFieldProperty(
+                                type=['null', 'number'],
+                            ),
+                            'unsub_rate': CacheFieldProperty(
+                                type=['null', 'number'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='list_id',
+                        type=['null', 'string'],
+                        description='The unique list id.',
+                    ),
+                    CacheFieldConfig(
+                        name='list_is_active',
+                        type=['null', 'boolean'],
+                        description="The status of the list used, namely if it's deleted or disabled.",
+                    ),
+                    CacheFieldConfig(
+                        name='list_name',
+                        type=['null', 'string'],
+                        description='The name of the list.',
+                    ),
+                    CacheFieldConfig(
+                        name='list_stats',
+                        type=['null', 'object'],
+                        description="The average campaign statistics for your list. This won't be present if we haven't calculated i...",
+                        properties={
+                            'click_rate': CacheFieldProperty(
+                                type=['null', 'number'],
+                            ),
+                            'open_rate': CacheFieldProperty(
+                                type=['null', 'number'],
+                            ),
+                            'sub_rate': CacheFieldProperty(
+                                type=['null', 'number'],
+                            ),
+                            'unsub_rate': CacheFieldProperty(
+                                type=['null', 'number'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='opens',
+                        type=['null', 'object'],
+                        description='An object describing the open activity for the campaign.',
+                        properties={
+                            'last_open': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'open_rate': CacheFieldProperty(
+                                type=['null', 'number'],
+                            ),
+                            'opens_total': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'unique_opens': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='preview_text',
+                        type=['null', 'string'],
+                        description='The preview text for the campaign.',
+                    ),
+                    CacheFieldConfig(
+                        name='rss_last_send',
+                        type=['null', 'string'],
+                        description='For RSS campaigns, the date and time of the last send in ISO 8601 format.',
+                    ),
+                    CacheFieldConfig(
+                        name='send_time',
+                        type=['null', 'string'],
+                        description='The date and time a campaign was sent in ISO 8601 format.',
+                    ),
+                    CacheFieldConfig(
+                        name='share_report',
+                        type=['null', 'object'],
+                        description='The url and password for the VIP report.',
+                        properties={
+                            'share_password': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'share_url': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='subject_line',
+                        type=['null', 'string'],
+                        description='The subject line for the campaign.',
+                    ),
+                    CacheFieldConfig(
+                        name='timeseries',
+                        type=['null', 'array'],
+                        description='An hourly breakdown of the performance of the campaign over the first 24 hours.',
+                    ),
+                    CacheFieldConfig(
+                        name='timewarp',
+                        type=['null', 'array'],
+                        description='An hourly breakdown of sends, opens, and clicks if a campaign is sent using timewarp.',
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description='The type of campaign (regular, plain-text, ab_split, rss, automation, variate, or auto).',
+                    ),
+                    CacheFieldConfig(
+                        name='unsubscribed',
+                        type=['null', 'integer'],
+                        description='The total number of unsubscribed members for this campaign.',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='list_members',
+                suggested=True,
+                x_airbyte_name='list_members',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['string'],
+                        description="The MD5 hash of the lowercase version of the list member's email address",
+                    ),
+                    CacheFieldConfig(
+                        name='email_address',
+                        type=['null', 'string'],
+                        description='Email address for a subscriber',
+                    ),
+                    CacheFieldConfig(
+                        name='unique_email_id',
+                        type=['null', 'string'],
+                        description='An identifier for the address across all of Mailchimp',
+                    ),
+                    CacheFieldConfig(
+                        name='contact_id',
+                        type=['null', 'string'],
+                        description='As Mailchimp evolves beyond email, you may eventually have contacts without email addresses',
+                    ),
+                    CacheFieldConfig(
+                        name='full_name',
+                        type=['null', 'string'],
+                        description="The contact's full name",
+                    ),
+                    CacheFieldConfig(
+                        name='web_id',
+                        type=['null', 'integer'],
+                        description='The ID used in the Mailchimp web application',
+                    ),
+                    CacheFieldConfig(
+                        name='email_type',
+                        type=['null', 'string'],
+                        description='Type of email this member asked to get',
+                    ),
+                    CacheFieldConfig(
+                        name='status',
+                        type=['null', 'string'],
+                        description="Subscriber's current status",
+                    ),
+                    CacheFieldConfig(
+                        name='unsubscribe_reason',
+                        type=['null', 'string'],
+                        description="A subscriber's reason for unsubscribing",
+                    ),
+                    CacheFieldConfig(
+                        name='consents_to_one_to_one_messaging',
+                        type=['null', 'boolean'],
+                        description='Indicates whether a contact consents to 1:1 messaging',
+                    ),
+                    CacheFieldConfig(
+                        name='merge_fields',
+                        type=['null', 'object'],
+                        description='A dictionary of merge fields where the keys are the merge tags',
+                    ),
+                    CacheFieldConfig(
+                        name='interests',
+                        type=['null', 'object'],
+                        description="The key of this object's properties is the ID of the interest in question",
+                    ),
+                    CacheFieldConfig(
+                        name='stats',
+                        type=['null', 'object'],
+                        description='Open and click rates for this subscriber',
+                        properties={
+                            'avg_open_rate': CacheFieldProperty(
+                                type=['null', 'number'],
+                            ),
+                            'avg_click_rate': CacheFieldProperty(
+                                type=['null', 'number'],
+                            ),
+                            'ecommerce_data': CacheFieldProperty(
+                                type=['null', 'object'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='ip_signup',
+                        type=['null', 'string'],
+                        description='IP address the subscriber signed up from',
+                    ),
+                    CacheFieldConfig(
+                        name='timestamp_signup',
+                        type=['null', 'string'],
+                        description='The date and time the subscriber signed up for the list',
+                    ),
+                    CacheFieldConfig(
+                        name='ip_opt',
+                        type=['null', 'string'],
+                        description='The IP address the subscriber used to confirm their opt-in status',
+                    ),
+                    CacheFieldConfig(
+                        name='timestamp_opt',
+                        type=['null', 'string'],
+                        description='The date and time the subscriber confirmed their opt-in status',
+                    ),
+                    CacheFieldConfig(
+                        name='member_rating',
+                        type=['null', 'integer'],
+                        description='Star rating for this member, between 1 and 5',
+                    ),
+                    CacheFieldConfig(
+                        name='last_changed',
+                        type=['null', 'string'],
+                        description="The date and time the member's info was last changed",
+                    ),
+                    CacheFieldConfig(
+                        name='language',
+                        type=['null', 'string'],
+                        description="If set/detected, the subscriber's language",
+                    ),
+                    CacheFieldConfig(
+                        name='vip',
+                        type=['null', 'boolean'],
+                        description='VIP status for subscriber',
+                    ),
+                    CacheFieldConfig(
+                        name='email_client',
+                        type=['null', 'string'],
+                        description="The list member's email client",
+                    ),
+                    CacheFieldConfig(
+                        name='location',
+                        type=['null', 'object'],
+                        description='Subscriber location information',
+                        properties={
+                            'latitude': CacheFieldProperty(
+                                type=['null', 'number'],
+                            ),
+                            'longitude': CacheFieldProperty(
+                                type=['null', 'number'],
+                            ),
+                            'gmtoff': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'dstoff': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'country_code': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'timezone': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'region': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='source',
+                        type=['null', 'string'],
+                        description='The source from which the subscriber was added to this list',
+                    ),
+                    CacheFieldConfig(
+                        name='tags_count',
+                        type=['null', 'integer'],
+                        description='The number of tags applied to this member',
+                    ),
+                    CacheFieldConfig(
+                        name='tags',
+                        type=['null', 'array'],
+                        description='Returns up to 50 tags applied to this member',
+                    ),
+                    CacheFieldConfig(
+                        name='list_id',
+                        type=['null', 'string'],
+                        description='The list id',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='automations',
+                suggested=True,
+                x_airbyte_name='automations',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['string'],
+                        description='A string that uniquely identifies an Automation workflow',
+                    ),
+                    CacheFieldConfig(
+                        name='create_time',
+                        type=['null', 'string'],
+                        description='The date and time the Automation was created',
+                    ),
+                    CacheFieldConfig(
+                        name='start_time',
+                        type=['null', 'string'],
+                        description='The date and time the Automation was started',
+                    ),
+                    CacheFieldConfig(
+                        name='status',
+                        type=['null', 'string'],
+                        description='The current status of the Automation',
+                    ),
+                    CacheFieldConfig(
+                        name='emails_sent',
+                        type=['null', 'integer'],
+                        description='The total number of emails sent for the Automation',
+                    ),
+                    CacheFieldConfig(
+                        name='recipients',
+                        type=['null', 'object'],
+                        description='List settings for the Automation',
+                        properties={
+                            'list_id': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'list_is_active': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                            'list_name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'segment_opts': CacheFieldProperty(
+                                type=['null', 'object'],
+                            ),
+                            'store_id': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='settings',
+                        type=['null', 'object'],
+                        description='The settings for the Automation workflow',
+                        properties={
+                            'title': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'from_name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'reply_to': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'use_conversation': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                            'to_name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'authenticate': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                            'auto_footer': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                            'inline_css': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='tracking',
+                        type=['null', 'object'],
+                        description='The tracking options for the Automation',
+                        properties={
+                            'opens': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                            'html_clicks': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                            'text_clicks': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                            'goal_tracking': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                            'ecomm360': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                            'google_analytics': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'clicktale': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='report_summary',
+                        type=['null', 'object'],
+                        description='A summary of opens and clicks for sent campaigns',
+                        properties={
+                            'opens': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'unique_opens': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'open_rate': CacheFieldProperty(
+                                type=['null', 'number'],
+                            ),
+                            'clicks': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'subscriber_clicks': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'click_rate': CacheFieldProperty(
+                                type=['null', 'number'],
+                            ),
+                        },
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='tags',
+                suggested=True,
+                x_airbyte_name='tags',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['integer'],
+                        description='The unique id for the tag',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='The name of the tag',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='interest_categories',
+                suggested=True,
+                x_airbyte_name='interest_categories',
+                fields=[
+                    CacheFieldConfig(
+                        name='list_id',
+                        type=['null', 'string'],
+                        description='The unique list id for the category',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['string'],
+                        description='The id for the interest category',
+                    ),
+                    CacheFieldConfig(
+                        name='title',
+                        type=['null', 'string'],
+                        description='The text description of this category',
+                    ),
+                    CacheFieldConfig(
+                        name='display_order',
+                        type=['null', 'integer'],
+                        description='The order that the categories are displayed in the list',
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description="Determines how this category's interests appear on signup forms",
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='interests',
+                suggested=True,
+                x_airbyte_name='interests',
+                fields=[
+                    CacheFieldConfig(
+                        name='category_id',
+                        type=['null', 'string'],
+                        description='The id for the interest category',
+                    ),
+                    CacheFieldConfig(
+                        name='list_id',
+                        type=['null', 'string'],
+                        description='The ID for the list that this interest belongs to',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['string'],
+                        description='The ID for the interest',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='The name of the interest',
+                    ),
+                    CacheFieldConfig(
+                        name='subscriber_count',
+                        type=['null', 'string'],
+                        description='The number of subscribers associated with this interest',
+                    ),
+                    CacheFieldConfig(
+                        name='display_order',
+                        type=['null', 'integer'],
+                        description='The display order for interests',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='segments',
+                suggested=True,
+                x_airbyte_name='segments',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['integer'],
+                        description='The unique id for the segment',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='The name of the segment',
+                    ),
+                    CacheFieldConfig(
+                        name='member_count',
+                        type=['null', 'integer'],
+                        description='The number of active subscribers currently included in the segment',
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description='The type of segment',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='The date and time the segment was created',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='The date and time the segment was last updated',
+                    ),
+                    CacheFieldConfig(
+                        name='options',
+                        type=['null', 'object'],
+                        description='The conditions of the segment',
+                        properties={
+                            'match': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'conditions': CacheFieldProperty(
+                                type=['null', 'array'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='list_id',
+                        type=['null', 'string'],
+                        description='The list id',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='segment_members',
+                suggested=True,
+                x_airbyte_name='segment_members',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['string'],
+                        description="The MD5 hash of the lowercase version of the list member's email address",
+                    ),
+                    CacheFieldConfig(
+                        name='email_address',
+                        type=['null', 'string'],
+                        description='Email address for a subscriber',
+                    ),
+                    CacheFieldConfig(
+                        name='unique_email_id',
+                        type=['null', 'string'],
+                        description='An identifier for the address across all of Mailchimp',
+                    ),
+                    CacheFieldConfig(
+                        name='email_type',
+                        type=['null', 'string'],
+                        description='Type of email this member asked to get',
+                    ),
+                    CacheFieldConfig(
+                        name='status',
+                        type=['null', 'string'],
+                        description="Subscriber's current status",
+                    ),
+                    CacheFieldConfig(
+                        name='merge_fields',
+                        type=['null', 'object'],
+                        description='A dictionary of merge fields where the keys are the merge tags',
+                    ),
+                    CacheFieldConfig(
+                        name='interests',
+                        type=['null', 'object'],
+                        description="The key of this object's properties is the ID of the interest in question",
+                    ),
+                    CacheFieldConfig(
+                        name='stats',
+                        type=['null', 'object'],
+                        description='Open and click rates for this subscriber',
+                        properties={
+                            'avg_open_rate': CacheFieldProperty(
+                                type=['null', 'number'],
+                            ),
+                            'avg_click_rate': CacheFieldProperty(
+                                type=['null', 'number'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='ip_signup',
+                        type=['null', 'string'],
+                        description='IP address the subscriber signed up from',
+                    ),
+                    CacheFieldConfig(
+                        name='timestamp_signup',
+                        type=['null', 'string'],
+                        description='The date and time the subscriber signed up for the list',
+                    ),
+                    CacheFieldConfig(
+                        name='ip_opt',
+                        type=['null', 'string'],
+                        description='The IP address the subscriber used to confirm their opt-in status',
+                    ),
+                    CacheFieldConfig(
+                        name='timestamp_opt',
+                        type=['null', 'string'],
+                        description='The date and time the subscriber confirmed their opt-in status',
+                    ),
+                    CacheFieldConfig(
+                        name='member_rating',
+                        type=['null', 'integer'],
+                        description='Star rating for this member, between 1 and 5',
+                    ),
+                    CacheFieldConfig(
+                        name='last_changed',
+                        type=['null', 'string'],
+                        description="The date and time the member's info was last changed",
+                    ),
+                    CacheFieldConfig(
+                        name='language',
+                        type=['null', 'string'],
+                        description="If set/detected, the subscriber's language",
+                    ),
+                    CacheFieldConfig(
+                        name='vip',
+                        type=['null', 'boolean'],
+                        description='VIP status for subscriber',
+                    ),
+                    CacheFieldConfig(
+                        name='email_client',
+                        type=['null', 'string'],
+                        description="The list member's email client",
+                    ),
+                    CacheFieldConfig(
+                        name='location',
+                        type=['null', 'object'],
+                        description='Subscriber location information',
+                        properties={
+                            'latitude': CacheFieldProperty(
+                                type=['null', 'number'],
+                            ),
+                            'longitude': CacheFieldProperty(
+                                type=['null', 'number'],
+                            ),
+                            'gmtoff': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'dstoff': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'country_code': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'timezone': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'region': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='list_id',
+                        type=['null', 'string'],
+                        description='The list id',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='unsubscribes',
+                suggested=True,
+                x_airbyte_name='unsubscribes',
+                fields=[
+                    CacheFieldConfig(
+                        name='email_id',
+                        type=['null', 'string'],
+                        description="The MD5 hash of the lowercase version of the list member's email address",
+                    ),
+                    CacheFieldConfig(
+                        name='email_address',
+                        type=['null', 'string'],
+                        description='Email address for a subscriber',
+                    ),
+                    CacheFieldConfig(
+                        name='merge_fields',
+                        type=['null', 'object'],
+                        description='A dictionary of merge fields where the keys are the merge tags',
+                    ),
+                    CacheFieldConfig(
+                        name='vip',
+                        type=['null', 'boolean'],
+                        description='VIP status for subscriber',
+                    ),
+                    CacheFieldConfig(
+                        name='timestamp',
+                        type=['null', 'string'],
+                        description='The date and time the member opted-out',
+                    ),
+                    CacheFieldConfig(
+                        name='reason',
+                        type=['null', 'string'],
+                        description='If available, the reason listed by the member for unsubscribing',
+                    ),
+                    CacheFieldConfig(
+                        name='campaign_id',
+                        type=['null', 'string'],
+                        description='The campaign id',
+                    ),
+                    CacheFieldConfig(
+                        name='list_id',
+                        type=['null', 'string'],
+                        description='The list id',
+                    ),
+                    CacheFieldConfig(
+                        name='list_is_active',
+                        type=['null', 'boolean'],
+                        description='The status of the list used',
+                    ),
+                ],
+            ),
+        ],
+        disable_compaction=True,
+    ),
     search_field_paths={
         'campaigns': [
             'ab_split_opts',

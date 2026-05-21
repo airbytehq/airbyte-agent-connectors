@@ -21,6 +21,10 @@ from airbyte_agent_sdk.schema.security import (
     AuthConfigSpec,
 )
 from airbyte_agent_sdk.schema.extensions import (
+    CacheConfig,
+    CacheEntityConfig,
+    CacheFieldConfig,
+    CacheFieldProperty,
     EntityRelationshipConfig,
 )
 from airbyte_agent_sdk.schema.base import (
@@ -4244,6 +4248,587 @@ SlackConnectorModel: ConnectorModel = ConnectorModel(
             },
         ),
     ],
+    context_store=CacheConfig(
+        entities=[
+            CacheEntityConfig(
+                entity='channels',
+                suggested=True,
+                x_airbyte_name='channels',
+                fields=[
+                    CacheFieldConfig(
+                        name='context_team_id',
+                        type=['null', 'string'],
+                        description='The unique identifier of the team context in which the channel exists.',
+                    ),
+                    CacheFieldConfig(
+                        name='created',
+                        type=['null', 'integer'],
+                        description='The timestamp when the channel was created.',
+                    ),
+                    CacheFieldConfig(
+                        name='creator',
+                        type=['null', 'string'],
+                        description='The ID of the user who created the channel.',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='The unique identifier of the channel.',
+                    ),
+                    CacheFieldConfig(
+                        name='is_archived',
+                        type=['null', 'boolean'],
+                        description='Indicates if the channel is archived.',
+                    ),
+                    CacheFieldConfig(
+                        name='is_channel',
+                        type=['null', 'boolean'],
+                        description='Indicates if the entity is a channel.',
+                    ),
+                    CacheFieldConfig(
+                        name='is_ext_shared',
+                        type=['null', 'boolean'],
+                        description='Indicates if the channel is externally shared.',
+                    ),
+                    CacheFieldConfig(
+                        name='is_general',
+                        type=['null', 'boolean'],
+                        description='Indicates if the channel is a general channel in the workspace.',
+                    ),
+                    CacheFieldConfig(
+                        name='is_group',
+                        type=['null', 'boolean'],
+                        description='Indicates if the channel is a group (private channel) rather than a regular channel.',
+                    ),
+                    CacheFieldConfig(
+                        name='is_im',
+                        type=['null', 'boolean'],
+                        description='Indicates if the entity is a direct message (IM) channel.',
+                    ),
+                    CacheFieldConfig(
+                        name='is_member',
+                        type=['null', 'boolean'],
+                        description='Indicates if the calling user is a member of the channel.',
+                    ),
+                    CacheFieldConfig(
+                        name='is_mpim',
+                        type=['null', 'boolean'],
+                        description='Indicates if the entity is a multiple person direct message (MPIM) channel.',
+                    ),
+                    CacheFieldConfig(
+                        name='is_org_shared',
+                        type=['null', 'boolean'],
+                        description='Indicates if the channel is organization-wide shared.',
+                    ),
+                    CacheFieldConfig(
+                        name='is_pending_ext_shared',
+                        type=['null', 'boolean'],
+                        description='Indicates if the channel is pending external shared.',
+                    ),
+                    CacheFieldConfig(
+                        name='is_private',
+                        type=['null', 'boolean'],
+                        description='Indicates if the channel is a private channel.',
+                    ),
+                    CacheFieldConfig(
+                        name='is_read_only',
+                        type=['null', 'boolean'],
+                        description='Indicates if the channel is read-only.',
+                    ),
+                    CacheFieldConfig(
+                        name='is_shared',
+                        type=['null', 'boolean'],
+                        description='Indicates if the channel is shared.',
+                    ),
+                    CacheFieldConfig(
+                        name='last_read',
+                        type=['null', 'string'],
+                        description="The timestamp of the user's last read message in the channel.",
+                    ),
+                    CacheFieldConfig(
+                        name='locale',
+                        type=['null', 'string'],
+                        description='The locale of the channel.',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='The name of the channel.',
+                    ),
+                    CacheFieldConfig(
+                        name='name_normalized',
+                        type=['null', 'string'],
+                        description='The normalized name of the channel.',
+                    ),
+                    CacheFieldConfig(
+                        name='num_members',
+                        type=['null', 'integer'],
+                        description='The number of members in the channel.',
+                    ),
+                    CacheFieldConfig(
+                        name='parent_conversation',
+                        type=['null', 'string'],
+                        description='The parent conversation of the channel.',
+                    ),
+                    CacheFieldConfig(
+                        name='pending_connected_team_ids',
+                        type=['null', 'array'],
+                        description='The IDs of teams that are pending to be connected to the channel.',
+                    ),
+                    CacheFieldConfig(
+                        name='pending_shared',
+                        type=['null', 'array'],
+                        description='The list of pending shared items of the channel.',
+                    ),
+                    CacheFieldConfig(
+                        name='previous_names',
+                        type=['null', 'array'],
+                        description='The previous names of the channel.',
+                    ),
+                    CacheFieldConfig(
+                        name='purpose',
+                        type=['null', 'object'],
+                        description='The purpose of the channel.',
+                        properties={
+                            'creator': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'last_set': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'value': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='shared_team_ids',
+                        type=['null', 'array'],
+                        description='The IDs of teams with which the channel is shared.',
+                    ),
+                    CacheFieldConfig(
+                        name='topic',
+                        type=['null', 'object'],
+                        description='The topic of the channel.',
+                        properties={
+                            'creator': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'last_set': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'value': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='unlinked',
+                        type=['null', 'integer'],
+                        description='Indicates if the channel is unlinked.',
+                    ),
+                    CacheFieldConfig(
+                        name='updated',
+                        type=['null', 'integer'],
+                        description='The timestamp when the channel was last updated.',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='channel_messages',
+                suggested=True,
+                x_airbyte_name='channel_messages',
+                fields=[
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description='Message type.',
+                    ),
+                    CacheFieldConfig(
+                        name='subtype',
+                        type=['null', 'string'],
+                        description='Message subtype.',
+                    ),
+                    CacheFieldConfig(
+                        name='ts',
+                        type=['null', 'string'],
+                        description='Message timestamp (unique identifier).',
+                    ),
+                    CacheFieldConfig(
+                        name='user',
+                        type=['null', 'string'],
+                        description='User ID who sent the message.',
+                    ),
+                    CacheFieldConfig(
+                        name='text',
+                        type=['null', 'string'],
+                        description='Message text content.',
+                    ),
+                    CacheFieldConfig(
+                        name='thread_ts',
+                        type=['null', 'string'],
+                        description='Thread parent timestamp.',
+                    ),
+                    CacheFieldConfig(
+                        name='reply_count',
+                        type=['null', 'integer'],
+                        description='Number of replies in thread.',
+                    ),
+                    CacheFieldConfig(
+                        name='reply_users_count',
+                        type=['null', 'integer'],
+                        description='Number of unique users who replied.',
+                    ),
+                    CacheFieldConfig(
+                        name='latest_reply',
+                        type=['null', 'string'],
+                        description='Timestamp of latest reply.',
+                    ),
+                    CacheFieldConfig(
+                        name='reply_users',
+                        type=['null', 'array'],
+                        description='User IDs who replied to the thread.',
+                    ),
+                    CacheFieldConfig(
+                        name='is_locked',
+                        type=['null', 'boolean'],
+                        description='Whether the thread is locked.',
+                    ),
+                    CacheFieldConfig(
+                        name='subscribed',
+                        type=['null', 'boolean'],
+                        description='Whether the user is subscribed to the thread.',
+                    ),
+                    CacheFieldConfig(
+                        name='reactions',
+                        type=['null', 'array'],
+                        description='Reactions to the message.',
+                    ),
+                    CacheFieldConfig(
+                        name='attachments',
+                        type=['null', 'array'],
+                        description='Message attachments.',
+                    ),
+                    CacheFieldConfig(
+                        name='blocks',
+                        type=['null', 'array'],
+                        description='Block kit blocks.',
+                    ),
+                    CacheFieldConfig(
+                        name='bot_id',
+                        type=['null', 'string'],
+                        description='Bot ID if message was sent by a bot.',
+                    ),
+                    CacheFieldConfig(
+                        name='bot_profile',
+                        type=['null', 'object'],
+                        description='Bot profile information.',
+                    ),
+                    CacheFieldConfig(
+                        name='team',
+                        type=['null', 'string'],
+                        description='Team ID.',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='threads',
+                suggested=True,
+                x_airbyte_name='threads',
+                fields=[
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description='Message type.',
+                    ),
+                    CacheFieldConfig(
+                        name='subtype',
+                        type=['null', 'string'],
+                        description='Message subtype.',
+                    ),
+                    CacheFieldConfig(
+                        name='ts',
+                        type=['null', 'string'],
+                        description='Message timestamp (unique identifier).',
+                    ),
+                    CacheFieldConfig(
+                        name='user',
+                        type=['null', 'string'],
+                        description='User ID who sent the message.',
+                    ),
+                    CacheFieldConfig(
+                        name='text',
+                        type=['null', 'string'],
+                        description='Message text content.',
+                    ),
+                    CacheFieldConfig(
+                        name='thread_ts',
+                        type=['null', 'string'],
+                        description='Thread parent timestamp.',
+                    ),
+                    CacheFieldConfig(
+                        name='parent_user_id',
+                        type=['null', 'string'],
+                        description='User ID of the parent message author (present in thread replies).',
+                    ),
+                    CacheFieldConfig(
+                        name='reply_count',
+                        type=['null', 'integer'],
+                        description='Number of replies in thread.',
+                    ),
+                    CacheFieldConfig(
+                        name='reply_users_count',
+                        type=['null', 'integer'],
+                        description='Number of unique users who replied.',
+                    ),
+                    CacheFieldConfig(
+                        name='latest_reply',
+                        type=['null', 'string'],
+                        description='Timestamp of latest reply.',
+                    ),
+                    CacheFieldConfig(
+                        name='reply_users',
+                        type=['null', 'array'],
+                        description='User IDs who replied to the thread.',
+                    ),
+                    CacheFieldConfig(
+                        name='is_locked',
+                        type=['null', 'boolean'],
+                        description='Whether the thread is locked.',
+                    ),
+                    CacheFieldConfig(
+                        name='subscribed',
+                        type=['null', 'boolean'],
+                        description='Whether the user is subscribed to the thread.',
+                    ),
+                    CacheFieldConfig(
+                        name='blocks',
+                        type=['null', 'array'],
+                        description='Block kit blocks.',
+                    ),
+                    CacheFieldConfig(
+                        name='bot_id',
+                        type=['null', 'string'],
+                        description='Bot ID if message was sent by a bot.',
+                    ),
+                    CacheFieldConfig(
+                        name='team',
+                        type=['null', 'string'],
+                        description='Team ID.',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='users',
+                suggested=True,
+                x_airbyte_name='users',
+                fields=[
+                    CacheFieldConfig(
+                        name='color',
+                        type=['null', 'string'],
+                        description='The color assigned to the user for visual purposes.',
+                    ),
+                    CacheFieldConfig(
+                        name='deleted',
+                        type=['null', 'boolean'],
+                        description='Indicates if the user is deleted or not.',
+                    ),
+                    CacheFieldConfig(
+                        name='has_2fa',
+                        type=['null', 'boolean'],
+                        description='Flag indicating if the user has two-factor authentication enabled.',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique identifier for the user.',
+                    ),
+                    CacheFieldConfig(
+                        name='is_admin',
+                        type=['null', 'boolean'],
+                        description='Flag specifying if the user is an admin or not.',
+                    ),
+                    CacheFieldConfig(
+                        name='is_app_user',
+                        type=['null', 'boolean'],
+                        description='Specifies if the user is an app user.',
+                    ),
+                    CacheFieldConfig(
+                        name='is_bot',
+                        type=['null', 'boolean'],
+                        description='Indicates if the user is a bot account.',
+                    ),
+                    CacheFieldConfig(
+                        name='is_email_confirmed',
+                        type=['null', 'boolean'],
+                        description="Flag indicating if the user's email is confirmed.",
+                    ),
+                    CacheFieldConfig(
+                        name='is_forgotten',
+                        type=['null', 'boolean'],
+                        description='Specifies if the user is marked as forgotten.',
+                    ),
+                    CacheFieldConfig(
+                        name='is_invited_user',
+                        type=['null', 'boolean'],
+                        description='Indicates if the user is invited or not.',
+                    ),
+                    CacheFieldConfig(
+                        name='is_owner',
+                        type=['null', 'boolean'],
+                        description='Flag indicating if the user is an owner.',
+                    ),
+                    CacheFieldConfig(
+                        name='is_primary_owner',
+                        type=['null', 'boolean'],
+                        description='Specifies if the user is the primary owner.',
+                    ),
+                    CacheFieldConfig(
+                        name='is_restricted',
+                        type=['null', 'boolean'],
+                        description='Flag specifying if the user is restricted.',
+                    ),
+                    CacheFieldConfig(
+                        name='is_ultra_restricted',
+                        type=['null', 'boolean'],
+                        description='Indicates if the user has ultra-restricted access.',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='The username of the user.',
+                    ),
+                    CacheFieldConfig(
+                        name='profile',
+                        type=['null', 'object'],
+                        description="User's profile information containing detailed details.",
+                        properties={
+                            'always_active': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                            'avatar_hash': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'display_name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'display_name_normalized': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'email': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'fields': CacheFieldProperty(
+                                type=['null', 'object'],
+                            ),
+                            'first_name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'huddle_state': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'image_1024': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'image_192': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'image_24': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'image_32': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'image_48': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'image_512': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'image_72': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'image_original': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'last_name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'phone': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'real_name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'real_name_normalized': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'skype': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'status_emoji': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'status_emoji_display_info': CacheFieldProperty(
+                                type=['null', 'array'],
+                            ),
+                            'status_expiration': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'status_text': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'status_text_canonical': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'team': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'title': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='real_name',
+                        type=['null', 'string'],
+                        description='The real name of the user.',
+                    ),
+                    CacheFieldConfig(
+                        name='team_id',
+                        type=['null', 'string'],
+                        description='Unique identifier for the team the user belongs to.',
+                    ),
+                    CacheFieldConfig(
+                        name='tz',
+                        type=['null', 'string'],
+                        description='Timezone of the user.',
+                    ),
+                    CacheFieldConfig(
+                        name='tz_label',
+                        type=['null', 'string'],
+                        description='Label representing the timezone of the user.',
+                    ),
+                    CacheFieldConfig(
+                        name='tz_offset',
+                        type=['null', 'integer'],
+                        description="Offset of the user's timezone.",
+                    ),
+                    CacheFieldConfig(
+                        name='updated',
+                        type=['null', 'integer'],
+                        description="Timestamp of when the user's information was last updated.",
+                    ),
+                    CacheFieldConfig(
+                        name='who_can_share_contact_card',
+                        type=['null', 'string'],
+                        description="Specifies who can share the user's contact card.",
+                    ),
+                ],
+            ),
+        ],
+        disable_compaction=True,
+    ),
     search_field_paths={
         'channels': [
             'context_team_id',

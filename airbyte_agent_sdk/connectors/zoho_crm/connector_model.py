@@ -19,6 +19,11 @@ from airbyte_agent_sdk.schema.security import (
     AuthConfigFieldSpec,
     AuthConfigSpec,
 )
+from airbyte_agent_sdk.schema.extensions import (
+    CacheConfig,
+    CacheEntityConfig,
+    CacheFieldConfig,
+)
 from airbyte_agent_sdk.schema.base import (
     ExampleQuestions,
 )
@@ -7381,6 +7386,890 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
             },
         ),
     ],
+    context_store=CacheConfig(
+        entities=[
+            CacheEntityConfig(
+                entity='leads',
+                suggested=True,
+                x_airbyte_name='incremental_leads_zoho_crm_stream',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['string'],
+                        description='Unique record identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='First_Name',
+                        type=['null', 'string'],
+                        description="Lead's first name",
+                    ),
+                    CacheFieldConfig(
+                        name='Last_Name',
+                        type=['null', 'string'],
+                        description="Lead's last name",
+                    ),
+                    CacheFieldConfig(
+                        name='Full_Name',
+                        type=['null', 'string'],
+                        description="Lead's full name",
+                    ),
+                    CacheFieldConfig(
+                        name='Email',
+                        type=['null', 'string'],
+                        description="Lead's email address",
+                    ),
+                    CacheFieldConfig(
+                        name='Phone',
+                        type=['null', 'string'],
+                        description="Lead's phone number",
+                    ),
+                    CacheFieldConfig(
+                        name='Mobile',
+                        type=['null', 'string'],
+                        description="Lead's mobile number",
+                    ),
+                    CacheFieldConfig(
+                        name='Company',
+                        type=['null', 'string'],
+                        description='Company the lead is associated with',
+                    ),
+                    CacheFieldConfig(
+                        name='Title',
+                        type=['null', 'string'],
+                        description="Lead's job title",
+                    ),
+                    CacheFieldConfig(
+                        name='Lead_Source',
+                        type=['null', 'string'],
+                        description='Source from which the lead was generated',
+                    ),
+                    CacheFieldConfig(
+                        name='Industry',
+                        type=['null', 'string'],
+                        description='Industry the lead belongs to',
+                    ),
+                    CacheFieldConfig(
+                        name='Annual_Revenue',
+                        type=['null', 'number'],
+                        description="Annual revenue of the lead's company",
+                    ),
+                    CacheFieldConfig(
+                        name='No_of_Employees',
+                        type=['null', 'integer'],
+                        description="Number of employees in the lead's company",
+                    ),
+                    CacheFieldConfig(
+                        name='Rating',
+                        type=['null', 'string'],
+                        description='Lead rating',
+                    ),
+                    CacheFieldConfig(
+                        name='Lead_Status',
+                        type=['null', 'string'],
+                        description='Current status of the lead',
+                    ),
+                    CacheFieldConfig(
+                        name='Website',
+                        type=['null', 'string'],
+                        description="Lead's website URL",
+                    ),
+                    CacheFieldConfig(
+                        name='City',
+                        type=['null', 'string'],
+                        description="Lead's city",
+                    ),
+                    CacheFieldConfig(
+                        name='State',
+                        type=['null', 'string'],
+                        description="Lead's state or province",
+                    ),
+                    CacheFieldConfig(
+                        name='Country',
+                        type=['null', 'string'],
+                        description="Lead's country",
+                    ),
+                    CacheFieldConfig(
+                        name='Description',
+                        type=['null', 'string'],
+                        description='Description or notes about the lead',
+                    ),
+                    CacheFieldConfig(
+                        name='Created_Time',
+                        type=['null', 'string'],
+                        description='Time the record was created',
+                    ),
+                    CacheFieldConfig(
+                        name='Modified_Time',
+                        type=['null', 'string'],
+                        description='Time the record was last modified',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='contacts',
+                suggested=True,
+                x_airbyte_name='incremental_contacts_zoho_crm_stream',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['string'],
+                        description='Unique record identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='First_Name',
+                        type=['null', 'string'],
+                        description="Contact's first name",
+                    ),
+                    CacheFieldConfig(
+                        name='Last_Name',
+                        type=['null', 'string'],
+                        description="Contact's last name",
+                    ),
+                    CacheFieldConfig(
+                        name='Full_Name',
+                        type=['null', 'string'],
+                        description="Contact's full name",
+                    ),
+                    CacheFieldConfig(
+                        name='Email',
+                        type=['null', 'string'],
+                        description="Contact's email address",
+                    ),
+                    CacheFieldConfig(
+                        name='Phone',
+                        type=['null', 'string'],
+                        description="Contact's phone number",
+                    ),
+                    CacheFieldConfig(
+                        name='Mobile',
+                        type=['null', 'string'],
+                        description="Contact's mobile number",
+                    ),
+                    CacheFieldConfig(
+                        name='Title',
+                        type=['null', 'string'],
+                        description="Contact's job title",
+                    ),
+                    CacheFieldConfig(
+                        name='Department',
+                        type=['null', 'string'],
+                        description='Department the contact belongs to',
+                    ),
+                    CacheFieldConfig(
+                        name='Lead_Source',
+                        type=['null', 'string'],
+                        description='Source from which the contact was generated',
+                    ),
+                    CacheFieldConfig(
+                        name='Date_of_Birth',
+                        type=['null', 'string'],
+                        description="Contact's date of birth",
+                    ),
+                    CacheFieldConfig(
+                        name='Mailing_City',
+                        type=['null', 'string'],
+                        description='Mailing address city',
+                    ),
+                    CacheFieldConfig(
+                        name='Mailing_State',
+                        type=['null', 'string'],
+                        description='Mailing address state or province',
+                    ),
+                    CacheFieldConfig(
+                        name='Mailing_Country',
+                        type=['null', 'string'],
+                        description='Mailing address country',
+                    ),
+                    CacheFieldConfig(
+                        name='Description',
+                        type=['null', 'string'],
+                        description='Description or notes about the contact',
+                    ),
+                    CacheFieldConfig(
+                        name='Created_Time',
+                        type=['null', 'string'],
+                        description='Time the record was created',
+                    ),
+                    CacheFieldConfig(
+                        name='Modified_Time',
+                        type=['null', 'string'],
+                        description='Time the record was last modified',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='accounts',
+                suggested=True,
+                x_airbyte_name='incremental_accounts_zoho_crm_stream',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['string'],
+                        description='Unique record identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='Account_Name',
+                        type=['null', 'string'],
+                        description='Name of the account or company',
+                    ),
+                    CacheFieldConfig(
+                        name='Account_Number',
+                        type=['null', 'string'],
+                        description='Account number',
+                    ),
+                    CacheFieldConfig(
+                        name='Account_Type',
+                        type=['null', 'string'],
+                        description='Type of account (e.g., Analyst, Competitor, Customer)',
+                    ),
+                    CacheFieldConfig(
+                        name='Industry',
+                        type=['null', 'string'],
+                        description='Industry the account belongs to',
+                    ),
+                    CacheFieldConfig(
+                        name='Annual_Revenue',
+                        type=['null', 'number'],
+                        description='Annual revenue of the account',
+                    ),
+                    CacheFieldConfig(
+                        name='Employees',
+                        type=['null', 'integer'],
+                        description='Number of employees',
+                    ),
+                    CacheFieldConfig(
+                        name='Phone',
+                        type=['null', 'string'],
+                        description='Account phone number',
+                    ),
+                    CacheFieldConfig(
+                        name='Website',
+                        type=['null', 'string'],
+                        description='Account website URL',
+                    ),
+                    CacheFieldConfig(
+                        name='Ownership',
+                        type=['null', 'string'],
+                        description='Ownership type (e.g., Public, Private)',
+                    ),
+                    CacheFieldConfig(
+                        name='Rating',
+                        type=['null', 'string'],
+                        description='Account rating',
+                    ),
+                    CacheFieldConfig(
+                        name='Billing_City',
+                        type=['null', 'string'],
+                        description='Billing address city',
+                    ),
+                    CacheFieldConfig(
+                        name='Billing_State',
+                        type=['null', 'string'],
+                        description='Billing address state or province',
+                    ),
+                    CacheFieldConfig(
+                        name='Billing_Country',
+                        type=['null', 'string'],
+                        description='Billing address country',
+                    ),
+                    CacheFieldConfig(
+                        name='Description',
+                        type=['null', 'string'],
+                        description='Description or notes about the account',
+                    ),
+                    CacheFieldConfig(
+                        name='Created_Time',
+                        type=['null', 'string'],
+                        description='Time the record was created',
+                    ),
+                    CacheFieldConfig(
+                        name='Modified_Time',
+                        type=['null', 'string'],
+                        description='Time the record was last modified',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='deals',
+                suggested=True,
+                x_airbyte_name='incremental_deals_zoho_crm_stream',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['string'],
+                        description='Unique record identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='Deal_Name',
+                        type=['null', 'string'],
+                        description='Name of the deal',
+                    ),
+                    CacheFieldConfig(
+                        name='Amount',
+                        type=['null', 'number'],
+                        description='Monetary value of the deal',
+                    ),
+                    CacheFieldConfig(
+                        name='Stage',
+                        type=['null', 'string'],
+                        description='Current stage of the deal in the pipeline',
+                    ),
+                    CacheFieldConfig(
+                        name='Probability',
+                        type=['null', 'integer'],
+                        description='Probability of closing the deal (percentage)',
+                    ),
+                    CacheFieldConfig(
+                        name='Closing_Date',
+                        type=['null', 'string'],
+                        description='Expected closing date',
+                    ),
+                    CacheFieldConfig(
+                        name='Type',
+                        type=['null', 'string'],
+                        description='Type of deal (e.g., New Business, Existing Business)',
+                    ),
+                    CacheFieldConfig(
+                        name='Next_Step',
+                        type=['null', 'string'],
+                        description='Next step in the deal process',
+                    ),
+                    CacheFieldConfig(
+                        name='Lead_Source',
+                        type=['null', 'string'],
+                        description='Source from which the deal originated',
+                    ),
+                    CacheFieldConfig(
+                        name='Description',
+                        type=['null', 'string'],
+                        description='Description or notes about the deal',
+                    ),
+                    CacheFieldConfig(
+                        name='Created_Time',
+                        type=['null', 'string'],
+                        description='Time the record was created',
+                    ),
+                    CacheFieldConfig(
+                        name='Modified_Time',
+                        type=['null', 'string'],
+                        description='Time the record was last modified',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='campaigns',
+                suggested=True,
+                x_airbyte_name='incremental_campaigns_zoho_crm_stream',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['string'],
+                        description='Unique record identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='Campaign_Name',
+                        type=['null', 'string'],
+                        description='Name of the campaign',
+                    ),
+                    CacheFieldConfig(
+                        name='Type',
+                        type=['null', 'string'],
+                        description='Type of campaign (e.g., Email, Webinar, Conference)',
+                    ),
+                    CacheFieldConfig(
+                        name='Status',
+                        type=['null', 'string'],
+                        description='Current status of the campaign',
+                    ),
+                    CacheFieldConfig(
+                        name='Start_Date',
+                        type=['null', 'string'],
+                        description='Campaign start date',
+                    ),
+                    CacheFieldConfig(
+                        name='End_Date',
+                        type=['null', 'string'],
+                        description='Campaign end date',
+                    ),
+                    CacheFieldConfig(
+                        name='Expected_Revenue',
+                        type=['null', 'number'],
+                        description='Expected revenue from the campaign',
+                    ),
+                    CacheFieldConfig(
+                        name='Budgeted_Cost',
+                        type=['null', 'number'],
+                        description='Budget allocated for the campaign',
+                    ),
+                    CacheFieldConfig(
+                        name='Actual_Cost',
+                        type=['null', 'number'],
+                        description='Actual cost incurred',
+                    ),
+                    CacheFieldConfig(
+                        name='Num_sent',
+                        type=['null', 'string'],
+                        description='Number of campaign messages sent',
+                    ),
+                    CacheFieldConfig(
+                        name='Expected_Response',
+                        type=['null', 'integer'],
+                        description='Expected response count',
+                    ),
+                    CacheFieldConfig(
+                        name='Description',
+                        type=['null', 'string'],
+                        description='Description or notes about the campaign',
+                    ),
+                    CacheFieldConfig(
+                        name='Created_Time',
+                        type=['null', 'string'],
+                        description='Time the record was created',
+                    ),
+                    CacheFieldConfig(
+                        name='Modified_Time',
+                        type=['null', 'string'],
+                        description='Time the record was last modified',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='tasks',
+                x_airbyte_name='incremental_tasks_zoho_crm_stream',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['string'],
+                        description='Unique record identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='Subject',
+                        type=['null', 'string'],
+                        description='Subject or title of the task',
+                    ),
+                    CacheFieldConfig(
+                        name='Due_Date',
+                        type=['null', 'string'],
+                        description='Due date for the task',
+                    ),
+                    CacheFieldConfig(
+                        name='Status',
+                        type=['null', 'string'],
+                        description='Current status (e.g., Not Started, In Progress, Completed)',
+                    ),
+                    CacheFieldConfig(
+                        name='Priority',
+                        type=['null', 'string'],
+                        description='Priority level (e.g., High, Highest, Low, Lowest, Normal)',
+                    ),
+                    CacheFieldConfig(
+                        name='Send_Notification_Email',
+                        type=['null', 'boolean'],
+                        description='Whether to send a notification email',
+                    ),
+                    CacheFieldConfig(
+                        name='Description',
+                        type=['null', 'string'],
+                        description='Description or notes about the task',
+                    ),
+                    CacheFieldConfig(
+                        name='Created_Time',
+                        type=['null', 'string'],
+                        description='Time the record was created',
+                    ),
+                    CacheFieldConfig(
+                        name='Modified_Time',
+                        type=['null', 'string'],
+                        description='Time the record was last modified',
+                    ),
+                    CacheFieldConfig(
+                        name='Closed_Time',
+                        type=['null', 'string'],
+                        description='Time the task was closed',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='events',
+                x_airbyte_name='incremental_events_zoho_crm_stream',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['string'],
+                        description='Unique record identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='Event_Title',
+                        type=['null', 'string'],
+                        description='Title of the event',
+                    ),
+                    CacheFieldConfig(
+                        name='Start_DateTime',
+                        type=['null', 'string'],
+                        description='Event start date and time',
+                    ),
+                    CacheFieldConfig(
+                        name='End_DateTime',
+                        type=['null', 'string'],
+                        description='Event end date and time',
+                    ),
+                    CacheFieldConfig(
+                        name='All_day',
+                        type=['null', 'boolean'],
+                        description='Whether this is an all-day event',
+                    ),
+                    CacheFieldConfig(
+                        name='Location',
+                        type=['null', 'string'],
+                        description='Event location',
+                    ),
+                    CacheFieldConfig(
+                        name='Description',
+                        type=['null', 'string'],
+                        description='Description or notes about the event',
+                    ),
+                    CacheFieldConfig(
+                        name='Created_Time',
+                        type=['null', 'string'],
+                        description='Time the record was created',
+                    ),
+                    CacheFieldConfig(
+                        name='Modified_Time',
+                        type=['null', 'string'],
+                        description='Time the record was last modified',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='calls',
+                x_airbyte_name='incremental_calls_zoho_crm_stream',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['string'],
+                        description='Unique record identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='Subject',
+                        type=['null', 'string'],
+                        description='Subject of the call',
+                    ),
+                    CacheFieldConfig(
+                        name='Call_Type',
+                        type=['null', 'string'],
+                        description='Type of call (Inbound or Outbound)',
+                    ),
+                    CacheFieldConfig(
+                        name='Call_Start_Time',
+                        type=['null', 'string'],
+                        description='Start time of the call',
+                    ),
+                    CacheFieldConfig(
+                        name='Call_Duration',
+                        type=['null', 'string'],
+                        description='Duration of the call as a formatted string',
+                    ),
+                    CacheFieldConfig(
+                        name='Call_Duration_in_seconds',
+                        type=['null', 'number'],
+                        description='Duration of the call in seconds',
+                    ),
+                    CacheFieldConfig(
+                        name='Call_Purpose',
+                        type=['null', 'string'],
+                        description='Purpose of the call',
+                    ),
+                    CacheFieldConfig(
+                        name='Call_Result',
+                        type=['null', 'string'],
+                        description='Result or outcome of the call',
+                    ),
+                    CacheFieldConfig(
+                        name='Caller_ID',
+                        type=['null', 'string'],
+                        description='Caller ID number',
+                    ),
+                    CacheFieldConfig(
+                        name='Outgoing_Call_Status',
+                        type=['null', 'string'],
+                        description='Status of outgoing calls',
+                    ),
+                    CacheFieldConfig(
+                        name='Description',
+                        type=['null', 'string'],
+                        description='Description or notes about the call',
+                    ),
+                    CacheFieldConfig(
+                        name='Created_Time',
+                        type=['null', 'string'],
+                        description='Time the record was created',
+                    ),
+                    CacheFieldConfig(
+                        name='Modified_Time',
+                        type=['null', 'string'],
+                        description='Time the record was last modified',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='products',
+                suggested=True,
+                x_airbyte_name='incremental_products_zoho_crm_stream',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['string'],
+                        description='Unique record identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='Product_Name',
+                        type=['null', 'string'],
+                        description='Name of the product',
+                    ),
+                    CacheFieldConfig(
+                        name='Product_Code',
+                        type=['null', 'string'],
+                        description='Product code or SKU',
+                    ),
+                    CacheFieldConfig(
+                        name='Product_Category',
+                        type=['null', 'string'],
+                        description='Category of the product',
+                    ),
+                    CacheFieldConfig(
+                        name='Product_Active',
+                        type=['null', 'boolean'],
+                        description='Whether the product is active',
+                    ),
+                    CacheFieldConfig(
+                        name='Unit_Price',
+                        type=['null', 'number'],
+                        description='Unit price of the product',
+                    ),
+                    CacheFieldConfig(
+                        name='Commission_Rate',
+                        type=['null', 'number'],
+                        description='Commission rate for the product',
+                    ),
+                    CacheFieldConfig(
+                        name='Manufacturer',
+                        type=['null', 'string'],
+                        description='Product manufacturer',
+                    ),
+                    CacheFieldConfig(
+                        name='Sales_Start_Date',
+                        type=['null', 'string'],
+                        description='Date when sales begin',
+                    ),
+                    CacheFieldConfig(
+                        name='Sales_End_Date',
+                        type=['null', 'string'],
+                        description='Date when sales end',
+                    ),
+                    CacheFieldConfig(
+                        name='Qty_in_Stock',
+                        type=['null', 'number'],
+                        description='Quantity currently in stock',
+                    ),
+                    CacheFieldConfig(
+                        name='Qty_in_Demand',
+                        type=['null', 'number'],
+                        description='Quantity in demand',
+                    ),
+                    CacheFieldConfig(
+                        name='Qty_Ordered',
+                        type=['null', 'number'],
+                        description='Quantity on order',
+                    ),
+                    CacheFieldConfig(
+                        name='Description',
+                        type=['null', 'string'],
+                        description='Description of the product',
+                    ),
+                    CacheFieldConfig(
+                        name='Created_Time',
+                        type=['null', 'string'],
+                        description='Time the record was created',
+                    ),
+                    CacheFieldConfig(
+                        name='Modified_Time',
+                        type=['null', 'string'],
+                        description='Time the record was last modified',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='quotes',
+                suggested=True,
+                x_airbyte_name='incremental_quotes_zoho_crm_stream',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['string'],
+                        description='Unique record identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='Subject',
+                        type=['null', 'string'],
+                        description='Subject or title of the quote',
+                    ),
+                    CacheFieldConfig(
+                        name='Quote_Stage',
+                        type=['null', 'string'],
+                        description='Current stage of the quote',
+                    ),
+                    CacheFieldConfig(
+                        name='Valid_Till',
+                        type=['null', 'string'],
+                        description='Date until which the quote is valid',
+                    ),
+                    CacheFieldConfig(
+                        name='Carrier',
+                        type=['null', 'string'],
+                        description='Shipping carrier',
+                    ),
+                    CacheFieldConfig(
+                        name='Sub_Total',
+                        type=['null', 'number'],
+                        description='Subtotal before tax and adjustments',
+                    ),
+                    CacheFieldConfig(
+                        name='Tax',
+                        type=['null', 'number'],
+                        description='Tax amount',
+                    ),
+                    CacheFieldConfig(
+                        name='Adjustment',
+                        type=['null', 'number'],
+                        description='Adjustment amount',
+                    ),
+                    CacheFieldConfig(
+                        name='Grand_Total',
+                        type=['null', 'number'],
+                        description='Total amount including tax and adjustments',
+                    ),
+                    CacheFieldConfig(
+                        name='Discount',
+                        type=['null', 'number'],
+                        description='Discount amount',
+                    ),
+                    CacheFieldConfig(
+                        name='Terms_and_Conditions',
+                        type=['null', 'string'],
+                        description='Terms and conditions text',
+                    ),
+                    CacheFieldConfig(
+                        name='Description',
+                        type=['null', 'string'],
+                        description='Description or notes about the quote',
+                    ),
+                    CacheFieldConfig(
+                        name='Created_Time',
+                        type=['null', 'string'],
+                        description='Time the record was created',
+                    ),
+                    CacheFieldConfig(
+                        name='Modified_Time',
+                        type=['null', 'string'],
+                        description='Time the record was last modified',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='invoices',
+                suggested=True,
+                x_airbyte_name='incremental_invoices_zoho_crm_stream',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['string'],
+                        description='Unique record identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='Subject',
+                        type=['null', 'string'],
+                        description='Subject or title of the invoice',
+                    ),
+                    CacheFieldConfig(
+                        name='Invoice_Number',
+                        type=['null', 'string'],
+                        description='Invoice number',
+                    ),
+                    CacheFieldConfig(
+                        name='Invoice_Date',
+                        type=['null', 'string'],
+                        description='Date the invoice was issued',
+                    ),
+                    CacheFieldConfig(
+                        name='Due_Date',
+                        type=['null', 'string'],
+                        description='Payment due date',
+                    ),
+                    CacheFieldConfig(
+                        name='Status',
+                        type=['null', 'string'],
+                        description='Current status of the invoice',
+                    ),
+                    CacheFieldConfig(
+                        name='Purchase_Order',
+                        type=['null', 'string'],
+                        description='Associated purchase order number',
+                    ),
+                    CacheFieldConfig(
+                        name='Sub_Total',
+                        type=['null', 'number'],
+                        description='Subtotal before tax and adjustments',
+                    ),
+                    CacheFieldConfig(
+                        name='Tax',
+                        type=['null', 'number'],
+                        description='Tax amount',
+                    ),
+                    CacheFieldConfig(
+                        name='Adjustment',
+                        type=['null', 'number'],
+                        description='Adjustment amount',
+                    ),
+                    CacheFieldConfig(
+                        name='Grand_Total',
+                        type=['null', 'number'],
+                        description='Total amount including tax and adjustments',
+                    ),
+                    CacheFieldConfig(
+                        name='Discount',
+                        type=['null', 'number'],
+                        description='Discount amount',
+                    ),
+                    CacheFieldConfig(
+                        name='Excise_Duty',
+                        type=['null', 'number'],
+                        description='Excise duty amount',
+                    ),
+                    CacheFieldConfig(
+                        name='Terms_and_Conditions',
+                        type=['null', 'string'],
+                        description='Terms and conditions text',
+                    ),
+                    CacheFieldConfig(
+                        name='Description',
+                        type=['null', 'string'],
+                        description='Description or notes about the invoice',
+                    ),
+                    CacheFieldConfig(
+                        name='Created_Time',
+                        type=['null', 'string'],
+                        description='Time the record was created',
+                    ),
+                    CacheFieldConfig(
+                        name='Modified_Time',
+                        type=['null', 'string'],
+                        description='Time the record was last modified',
+                    ),
+                ],
+            ),
+        ],
+        disable_compaction=True,
+    ),
     search_field_paths={
         'leads': [
             'id',

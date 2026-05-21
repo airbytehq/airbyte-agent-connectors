@@ -20,6 +20,10 @@ from airbyte_agent_sdk.schema.security import (
     AuthConfigSpec,
 )
 from airbyte_agent_sdk.schema.extensions import (
+    CacheConfig,
+    CacheEntityConfig,
+    CacheFieldConfig,
+    CacheFieldProperty,
     EntityRelationshipConfig,
 )
 from airbyte_agent_sdk.schema.base import (
@@ -2817,6 +2821,695 @@ AmazonSellerPartnerConnectorModel: ConnectorModel = ConnectorModel(
             },
         ),
     ],
+    context_store=CacheConfig(
+        entities=[
+            CacheEntityConfig(
+                entity='orders',
+                suggested=True,
+                x_airbyte_name='Orders',
+                fields=[
+                    CacheFieldConfig(
+                        name='AmazonOrderId',
+                        type=['null', 'string'],
+                        description='Unique identifier for the Amazon order',
+                    ),
+                    CacheFieldConfig(
+                        name='AutomatedShippingSettings',
+                        type=['null', 'object'],
+                        description='Settings related to automated shipping processes',
+                        properties={
+                            'HasAutomatedShippingSettings': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='BuyerInfo',
+                        type=['null', 'object'],
+                        description='Information about the buyer',
+                    ),
+                    CacheFieldConfig(
+                        name='DefaultShipFromLocationAddress',
+                        type=['null', 'object'],
+                        description='The default address from which orders are shipped',
+                        properties={
+                            'AddressLine1': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'City': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'CountryCode': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'Name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'PostalCode': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'StateOrRegion': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='EarliestDeliveryDate',
+                        type=['null', 'string'],
+                        description='Earliest estimated delivery date of the order',
+                    ),
+                    CacheFieldConfig(
+                        name='EarliestShipDate',
+                        type=['null', 'string'],
+                        description='Earliest shipment date for the order',
+                    ),
+                    CacheFieldConfig(
+                        name='FulfillmentChannel',
+                        type=['null', 'string'],
+                        description='Channel through which the order is fulfilled',
+                    ),
+                    CacheFieldConfig(
+                        name='HasRegulatedItems',
+                        type=['null', 'boolean'],
+                        description='Indicates if the order has regulated items',
+                    ),
+                    CacheFieldConfig(
+                        name='IsAccessPointOrder',
+                        type=['null', 'boolean'],
+                        description='Indicates if the order is an Amazon Hub Counter order',
+                    ),
+                    CacheFieldConfig(
+                        name='IsBusinessOrder',
+                        type=['null', 'boolean'],
+                        description='Indicates if the order is a business order',
+                    ),
+                    CacheFieldConfig(
+                        name='IsGlobalExpressEnabled',
+                        type=['null', 'boolean'],
+                        description='Indicates if global express is enabled for the order',
+                    ),
+                    CacheFieldConfig(
+                        name='IsISPU',
+                        type=['null', 'boolean'],
+                        description='Indicates if the order is for In-Store Pickup',
+                    ),
+                    CacheFieldConfig(
+                        name='IsPremiumOrder',
+                        type=['null', 'boolean'],
+                        description='Indicates if the order is a premium order',
+                    ),
+                    CacheFieldConfig(
+                        name='IsPrime',
+                        type=['null', 'boolean'],
+                        description='Indicates if the order is a Prime order',
+                    ),
+                    CacheFieldConfig(
+                        name='IsReplacementOrder',
+                        type=['null', 'string'],
+                        description='Indicates if the order is a replacement order',
+                    ),
+                    CacheFieldConfig(
+                        name='IsSoldByAB',
+                        type=['null', 'boolean'],
+                        description='Indicates if the order is sold by Amazon Business',
+                    ),
+                    CacheFieldConfig(
+                        name='LastUpdateDate',
+                        type=['null', 'string'],
+                        description='Date and time when the order was last updated',
+                    ),
+                    CacheFieldConfig(
+                        name='LatestDeliveryDate',
+                        type=['null', 'string'],
+                        description='Latest estimated delivery date of the order',
+                    ),
+                    CacheFieldConfig(
+                        name='LatestShipDate',
+                        type=['null', 'string'],
+                        description='Latest shipment date for the order',
+                    ),
+                    CacheFieldConfig(
+                        name='MarketplaceId',
+                        type=['null', 'string'],
+                        description='Identifier for the marketplace where the order was placed',
+                    ),
+                    CacheFieldConfig(
+                        name='NumberOfItemsShipped',
+                        type=['null', 'integer'],
+                        description='Number of items shipped in the order',
+                    ),
+                    CacheFieldConfig(
+                        name='NumberOfItemsUnshipped',
+                        type=['null', 'integer'],
+                        description='Number of items yet to be shipped in the order',
+                    ),
+                    CacheFieldConfig(
+                        name='OrderStatus',
+                        type=['null', 'string'],
+                        description='Status of the order',
+                    ),
+                    CacheFieldConfig(
+                        name='OrderTotal',
+                        type=['null', 'object'],
+                        description='Total amount of the order',
+                        properties={
+                            'CurrencyCode': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'Amount': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='OrderType',
+                        type=['null', 'string'],
+                        description='Type of the order',
+                    ),
+                    CacheFieldConfig(
+                        name='PaymentMethod',
+                        type=['null', 'string'],
+                        description='Payment method used for the order',
+                    ),
+                    CacheFieldConfig(
+                        name='PaymentMethodDetails',
+                        type=['null', 'array'],
+                        description='Details of the payment method used for the order',
+                    ),
+                    CacheFieldConfig(
+                        name='PurchaseDate',
+                        type=['null', 'string'],
+                        description='Date and time when the order was purchased',
+                    ),
+                    CacheFieldConfig(
+                        name='SalesChannel',
+                        type=['null', 'string'],
+                        description='Channel through which the order was sold',
+                    ),
+                    CacheFieldConfig(
+                        name='SellerOrderId',
+                        type=['null', 'string'],
+                        description='Unique identifier given by the seller for the order',
+                    ),
+                    CacheFieldConfig(
+                        name='ShipServiceLevel',
+                        type=['null', 'string'],
+                        description='Service level for shipping the order',
+                    ),
+                    CacheFieldConfig(
+                        name='ShipmentServiceLevelCategory',
+                        type=['null', 'string'],
+                        description='Service level category for shipping the order',
+                    ),
+                    CacheFieldConfig(
+                        name='ShippingAddress',
+                        type=['null', 'object'],
+                        description='The address to which the order will be shipped',
+                        properties={
+                            'City': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'CountryCode': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'PostalCode': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'StateOrRegion': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='seller_id',
+                        type=['null', 'string'],
+                        description='Identifier for the seller associated with the order',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='order_items',
+                suggested=True,
+                x_airbyte_name='OrderItems',
+                fields=[
+                    CacheFieldConfig(
+                        name='ASIN',
+                        type=['null', 'string'],
+                        description='Amazon Standard Identification Number of the product',
+                    ),
+                    CacheFieldConfig(
+                        name='AmazonOrderId',
+                        type=['null', 'string'],
+                        description='ID of the Amazon order',
+                    ),
+                    CacheFieldConfig(
+                        name='BuyerInfo',
+                        type=['null', 'object'],
+                        description='Information about the buyer',
+                    ),
+                    CacheFieldConfig(
+                        name='BuyerRequestedCancel',
+                        type=['null', 'object'],
+                        description="Information about buyer's request for cancellation",
+                    ),
+                    CacheFieldConfig(
+                        name='CODFee',
+                        type=['null', 'object'],
+                        description='Cash on delivery fee',
+                    ),
+                    CacheFieldConfig(
+                        name='CODFeeDiscount',
+                        type=['null', 'object'],
+                        description='Discount on cash on delivery fee',
+                    ),
+                    CacheFieldConfig(
+                        name='ConditionId',
+                        type=['null', 'string'],
+                        description='Condition ID of the product',
+                    ),
+                    CacheFieldConfig(
+                        name='ConditionNote',
+                        type=['null', 'string'],
+                        description='Additional notes on the condition of the product',
+                    ),
+                    CacheFieldConfig(
+                        name='ConditionSubtypeId',
+                        type=['null', 'string'],
+                        description='Subtype ID of the product condition',
+                    ),
+                    CacheFieldConfig(
+                        name='DeemedResellerCategory',
+                        type=['null', 'string'],
+                        description='Category indicating if the seller is considered a reseller',
+                    ),
+                    CacheFieldConfig(
+                        name='IossNumber',
+                        type=['null', 'string'],
+                        description='Import One Stop Shop number',
+                    ),
+                    CacheFieldConfig(
+                        name='IsGift',
+                        type=['null', 'string'],
+                        description='Flag indicating if the order is a gift',
+                    ),
+                    CacheFieldConfig(
+                        name='IsTransparency',
+                        type=['null', 'boolean'],
+                        description='Flag indicating if transparency is applied',
+                    ),
+                    CacheFieldConfig(
+                        name='ItemPrice',
+                        type=['null', 'object'],
+                        description='Price of the item',
+                    ),
+                    CacheFieldConfig(
+                        name='ItemTax',
+                        type=['null', 'object'],
+                        description='Tax applied on the item',
+                    ),
+                    CacheFieldConfig(
+                        name='LastUpdateDate',
+                        type=['null', 'string'],
+                        description='Date and time of the last update',
+                    ),
+                    CacheFieldConfig(
+                        name='OrderItemId',
+                        type=['null', 'string'],
+                        description='ID of the order item',
+                    ),
+                    CacheFieldConfig(
+                        name='PointsGranted',
+                        type=['null', 'object'],
+                        description='Points granted for the purchase',
+                    ),
+                    CacheFieldConfig(
+                        name='PriceDesignation',
+                        type=['null', 'string'],
+                        description='Designation of the price',
+                    ),
+                    CacheFieldConfig(
+                        name='ProductInfo',
+                        type=['null', 'object'],
+                        description='Information about the product',
+                    ),
+                    CacheFieldConfig(
+                        name='PromotionDiscount',
+                        type=['null', 'object'],
+                        description='Discount applied due to promotion',
+                    ),
+                    CacheFieldConfig(
+                        name='PromotionDiscountTax',
+                        type=['null', 'object'],
+                        description='Tax applied on the promotion discount',
+                    ),
+                    CacheFieldConfig(
+                        name='PromotionIds',
+                        type=['null', 'array'],
+                        description='IDs of promotions applied',
+                    ),
+                    CacheFieldConfig(
+                        name='QuantityOrdered',
+                        type=['null', 'integer'],
+                        description='Quantity of the item ordered',
+                    ),
+                    CacheFieldConfig(
+                        name='QuantityShipped',
+                        type=['null', 'integer'],
+                        description='Quantity of the item shipped',
+                    ),
+                    CacheFieldConfig(
+                        name='ScheduledDeliveryEndDate',
+                        type=['null', 'string'],
+                        description='End date for scheduled delivery',
+                    ),
+                    CacheFieldConfig(
+                        name='ScheduledDeliveryStartDate',
+                        type=['null', 'string'],
+                        description='Start date for scheduled delivery',
+                    ),
+                    CacheFieldConfig(
+                        name='SellerSKU',
+                        type=['null', 'string'],
+                        description='SKU of the seller',
+                    ),
+                    CacheFieldConfig(
+                        name='SerialNumberRequired',
+                        type=['null', 'boolean'],
+                        description='Flag indicating if serial number is required',
+                    ),
+                    CacheFieldConfig(
+                        name='SerialNumbers',
+                        type=['null', 'array'],
+                        description='List of serial numbers',
+                    ),
+                    CacheFieldConfig(
+                        name='ShippingDiscount',
+                        type=['null', 'object'],
+                        description='Discount applied on shipping',
+                    ),
+                    CacheFieldConfig(
+                        name='ShippingDiscountTax',
+                        type=['null', 'object'],
+                        description='Tax applied on the shipping discount',
+                    ),
+                    CacheFieldConfig(
+                        name='ShippingPrice',
+                        type=['null', 'object'],
+                        description='Price of shipping',
+                    ),
+                    CacheFieldConfig(
+                        name='ShippingTax',
+                        type=['null', 'object'],
+                        description='Tax applied on shipping',
+                    ),
+                    CacheFieldConfig(
+                        name='StoreChainStoreId',
+                        type=['null', 'string'],
+                        description='ID of the store chain',
+                    ),
+                    CacheFieldConfig(
+                        name='TaxCollection',
+                        type=['null', 'object'],
+                        description='Information about tax collection',
+                    ),
+                    CacheFieldConfig(
+                        name='Title',
+                        type=['null', 'string'],
+                        description='Title of the product',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='list_financial_event_groups',
+                suggested=True,
+                x_airbyte_name='ListFinancialEventGroups',
+                fields=[
+                    CacheFieldConfig(
+                        name='AccountTail',
+                        type=['null', 'string'],
+                        description='The last digits of the account number',
+                    ),
+                    CacheFieldConfig(
+                        name='BeginningBalance',
+                        type=['null', 'object'],
+                        description='Beginning balance',
+                        properties={
+                            'CurrencyCode': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'CurrencyAmount': CacheFieldProperty(
+                                type=['null', 'number'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='ConvertedTotal',
+                        type=['null', 'object'],
+                        description='Converted total',
+                        properties={
+                            'CurrencyCode': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'CurrencyAmount': CacheFieldProperty(
+                                type=['null', 'number'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='FinancialEventGroupEnd',
+                        type=['null', 'string'],
+                        description='End datetime of the financial event group',
+                    ),
+                    CacheFieldConfig(
+                        name='FinancialEventGroupId',
+                        type=['null', 'string'],
+                        description='Unique identifier for the financial event group',
+                    ),
+                    CacheFieldConfig(
+                        name='FinancialEventGroupStart',
+                        type=['null', 'string'],
+                        description='Start datetime of the financial event group',
+                    ),
+                    CacheFieldConfig(
+                        name='FundTransferDate',
+                        type=['null', 'string'],
+                        description='Date the fund transfer occurred',
+                    ),
+                    CacheFieldConfig(
+                        name='FundTransferStatus',
+                        type=['null', 'string'],
+                        description='Status of the fund transfer',
+                    ),
+                    CacheFieldConfig(
+                        name='OriginalTotal',
+                        type=['null', 'object'],
+                        description='Original total amount',
+                        properties={
+                            'CurrencyCode': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'CurrencyAmount': CacheFieldProperty(
+                                type=['null', 'number'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='ProcessingStatus',
+                        type=['null', 'string'],
+                        description='Processing status of the financial event group',
+                    ),
+                    CacheFieldConfig(
+                        name='TraceId',
+                        type=['null', 'string'],
+                        description='Unique identifier for tracing',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='list_financial_events',
+                suggested=True,
+                x_airbyte_name='ListFinancialEvents',
+                fields=[
+                    CacheFieldConfig(
+                        name='AdhocDisbursementEventList',
+                        type=['null', 'array'],
+                        description='List of adhoc disbursement events',
+                    ),
+                    CacheFieldConfig(
+                        name='AdjustmentEventList',
+                        type=['null', 'array'],
+                        description='List of adjustment events',
+                    ),
+                    CacheFieldConfig(
+                        name='AffordabilityExpenseEventList',
+                        type=['null', 'array'],
+                        description='List of affordability expense events',
+                    ),
+                    CacheFieldConfig(
+                        name='AffordabilityExpenseReversalEventList',
+                        type=['null', 'array'],
+                        description='List of affordability expense reversal events',
+                    ),
+                    CacheFieldConfig(
+                        name='CapacityReservationBillingEventList',
+                        type=['null', 'array'],
+                        description='List of capacity reservation billing events',
+                    ),
+                    CacheFieldConfig(
+                        name='ChargeRefundEventList',
+                        type=['null', 'array'],
+                        description='List of charge refund events',
+                    ),
+                    CacheFieldConfig(
+                        name='ChargebackEventList',
+                        type=['null', 'array'],
+                        description='List of chargeback events',
+                    ),
+                    CacheFieldConfig(
+                        name='CouponPaymentEventList',
+                        type=['null', 'array'],
+                        description='List of coupon payment events',
+                    ),
+                    CacheFieldConfig(
+                        name='DebtRecoveryEventList',
+                        type=['null', 'array'],
+                        description='List of debt recovery events',
+                    ),
+                    CacheFieldConfig(
+                        name='FBALiquidationEventList',
+                        type=['null', 'array'],
+                        description='List of FBA liquidation events',
+                    ),
+                    CacheFieldConfig(
+                        name='FailedAdhocDisbursementEventList',
+                        type=['null', 'array'],
+                        description='List of failed adhoc disbursement events',
+                    ),
+                    CacheFieldConfig(
+                        name='GuaranteeClaimEventList',
+                        type=['null', 'array'],
+                        description='List of guarantee claim events',
+                    ),
+                    CacheFieldConfig(
+                        name='ImagingServicesFeeEventList',
+                        type=['null', 'array'],
+                        description='List of imaging services fee events',
+                    ),
+                    CacheFieldConfig(
+                        name='LoanServicingEventList',
+                        type=['null', 'array'],
+                        description='List of loan servicing events',
+                    ),
+                    CacheFieldConfig(
+                        name='NetworkComminglingTransactionEventList',
+                        type=['null', 'array'],
+                        description='List of network commingling events',
+                    ),
+                    CacheFieldConfig(
+                        name='PayWithAmazonEventList',
+                        type=['null', 'array'],
+                        description='List of Pay with Amazon events',
+                    ),
+                    CacheFieldConfig(
+                        name='PerformanceBondRefundEventList',
+                        type=['null', 'array'],
+                        description='List of performance bond refund events',
+                    ),
+                    CacheFieldConfig(
+                        name='PostedBefore',
+                        type=['null', 'string'],
+                        description='Date filter for events posted before',
+                    ),
+                    CacheFieldConfig(
+                        name='ProductAdsPaymentEventList',
+                        type=['null', 'array'],
+                        description='List of product ads payment events',
+                    ),
+                    CacheFieldConfig(
+                        name='RefundEventList',
+                        type=['null', 'array'],
+                        description='List of refund events',
+                    ),
+                    CacheFieldConfig(
+                        name='RemovalShipmentAdjustmentEventList',
+                        type=['null', 'array'],
+                        description='List of removal shipment adjustment events',
+                    ),
+                    CacheFieldConfig(
+                        name='RemovalShipmentEventList',
+                        type=['null', 'array'],
+                        description='List of removal shipment events',
+                    ),
+                    CacheFieldConfig(
+                        name='RentalTransactionEventList',
+                        type=['null', 'array'],
+                        description='List of rental transaction events',
+                    ),
+                    CacheFieldConfig(
+                        name='RetrochargeEventList',
+                        type=['null', 'array'],
+                        description='List of retrocharge events',
+                    ),
+                    CacheFieldConfig(
+                        name='SAFETReimbursementEventList',
+                        type=['null', 'array'],
+                        description='List of SAFET reimbursement events',
+                    ),
+                    CacheFieldConfig(
+                        name='SellerDealPaymentEventList',
+                        type=['null', 'array'],
+                        description='List of seller deal payment events',
+                    ),
+                    CacheFieldConfig(
+                        name='SellerReviewEnrollmentPaymentEventList',
+                        type=['null', 'array'],
+                        description='List of seller review enrollment events',
+                    ),
+                    CacheFieldConfig(
+                        name='ServiceFeeEventList',
+                        type=['null', 'array'],
+                        description='List of service fee events',
+                    ),
+                    CacheFieldConfig(
+                        name='ServiceProviderCreditEventList',
+                        type=['null', 'array'],
+                        description='List of service provider credit events',
+                    ),
+                    CacheFieldConfig(
+                        name='ShipmentEventList',
+                        type=['null', 'array'],
+                        description='List of shipment events',
+                    ),
+                    CacheFieldConfig(
+                        name='ShipmentSettleEventList',
+                        type=['null', 'array'],
+                        description='List of shipment settlement events',
+                    ),
+                    CacheFieldConfig(
+                        name='TDSReimbursementEventList',
+                        type=['null', 'array'],
+                        description='List of TDS reimbursement events',
+                    ),
+                    CacheFieldConfig(
+                        name='TaxWithholdingEventList',
+                        type=['null', 'array'],
+                        description='List of tax withholding events',
+                    ),
+                    CacheFieldConfig(
+                        name='TrialShipmentEventList',
+                        type=['null', 'array'],
+                        description='List of trial shipment events',
+                    ),
+                    CacheFieldConfig(
+                        name='ValueAddedServiceChargeEventList',
+                        type=['null', 'array'],
+                        description='List of value-added service charge events',
+                    ),
+                ],
+            ),
+        ],
+        disable_compaction=True,
+    ),
     search_field_paths={
         'orders': [
             'AmazonOrderId',

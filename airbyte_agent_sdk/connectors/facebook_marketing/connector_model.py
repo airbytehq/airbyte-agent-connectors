@@ -22,6 +22,9 @@ from airbyte_agent_sdk.schema.security import (
     AuthConfigSpec,
 )
 from airbyte_agent_sdk.schema.extensions import (
+    CacheConfig,
+    CacheEntityConfig,
+    CacheFieldConfig,
     EntityRelationshipConfig,
 )
 from airbyte_agent_sdk.schema.base import (
@@ -5697,6 +5700,602 @@ FacebookMarketingConnectorModel: ConnectorModel = ConnectorModel(
             },
         ),
     ],
+    context_store=CacheConfig(
+        entities=[
+            CacheEntityConfig(
+                entity='campaigns',
+                suggested=True,
+                x_airbyte_name='campaigns',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Campaign ID',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Campaign name',
+                    ),
+                    CacheFieldConfig(
+                        name='account_id',
+                        type=['null', 'string'],
+                        description='Ad account ID',
+                    ),
+                    CacheFieldConfig(
+                        name='status',
+                        type=['null', 'string'],
+                        description='Campaign status',
+                    ),
+                    CacheFieldConfig(
+                        name='effective_status',
+                        type=['null', 'string'],
+                        description='Effective status',
+                    ),
+                    CacheFieldConfig(
+                        name='objective',
+                        type=['null', 'string'],
+                        description='Campaign objective',
+                    ),
+                    CacheFieldConfig(
+                        name='daily_budget',
+                        type=['null', 'number'],
+                        description='Daily budget in account currency',
+                    ),
+                    CacheFieldConfig(
+                        name='lifetime_budget',
+                        type=['null', 'number'],
+                        description='Lifetime budget',
+                    ),
+                    CacheFieldConfig(
+                        name='budget_remaining',
+                        type=['null', 'number'],
+                        description='Remaining budget',
+                    ),
+                    CacheFieldConfig(
+                        name='created_time',
+                        type=['null', 'string'],
+                        description='Campaign creation time',
+                    ),
+                    CacheFieldConfig(
+                        name='start_time',
+                        type=['null', 'string'],
+                        description='Campaign start time',
+                    ),
+                    CacheFieldConfig(
+                        name='stop_time',
+                        type=['null', 'string'],
+                        description='Campaign stop time',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_time',
+                        type=['null', 'string'],
+                        description='Last update time',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='ad_sets',
+                suggested=True,
+                x_airbyte_name='ad_sets',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Ad Set ID',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Ad Set name',
+                    ),
+                    CacheFieldConfig(
+                        name='account_id',
+                        type=['null', 'string'],
+                        description='Ad account ID',
+                    ),
+                    CacheFieldConfig(
+                        name='campaign_id',
+                        type=['null', 'string'],
+                        description='Parent campaign ID',
+                    ),
+                    CacheFieldConfig(
+                        name='effective_status',
+                        type=['null', 'string'],
+                        description='Effective status',
+                    ),
+                    CacheFieldConfig(
+                        name='daily_budget',
+                        type=['null', 'number'],
+                        description='Daily budget',
+                    ),
+                    CacheFieldConfig(
+                        name='lifetime_budget',
+                        type=['null', 'number'],
+                        description='Lifetime budget',
+                    ),
+                    CacheFieldConfig(
+                        name='budget_remaining',
+                        type=['null', 'number'],
+                        description='Remaining budget',
+                    ),
+                    CacheFieldConfig(
+                        name='bid_amount',
+                        type=['null', 'number'],
+                        description='Bid amount',
+                    ),
+                    CacheFieldConfig(
+                        name='bid_strategy',
+                        type=['null', 'string'],
+                        description='Bid strategy',
+                    ),
+                    CacheFieldConfig(
+                        name='created_time',
+                        type=['null', 'string'],
+                        description='Ad set creation time',
+                    ),
+                    CacheFieldConfig(
+                        name='start_time',
+                        type=['null', 'string'],
+                        description='Ad set start time',
+                    ),
+                    CacheFieldConfig(
+                        name='end_time',
+                        type=['null', 'string'],
+                        description='Ad set end time',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_time',
+                        type=['null', 'string'],
+                        description='Last update time',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='ads',
+                suggested=True,
+                x_airbyte_name='ads',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Ad ID',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Ad name',
+                    ),
+                    CacheFieldConfig(
+                        name='account_id',
+                        type=['null', 'string'],
+                        description='Ad account ID',
+                    ),
+                    CacheFieldConfig(
+                        name='adset_id',
+                        type=['null', 'string'],
+                        description='Parent ad set ID',
+                    ),
+                    CacheFieldConfig(
+                        name='campaign_id',
+                        type=['null', 'string'],
+                        description='Parent campaign ID',
+                    ),
+                    CacheFieldConfig(
+                        name='status',
+                        type=['null', 'string'],
+                        description='Ad status',
+                    ),
+                    CacheFieldConfig(
+                        name='effective_status',
+                        type=['null', 'string'],
+                        description='Effective status',
+                    ),
+                    CacheFieldConfig(
+                        name='created_time',
+                        type=['null', 'string'],
+                        description='Ad creation time',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_time',
+                        type=['null', 'string'],
+                        description='Last update time',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='ad_creatives',
+                suggested=True,
+                x_airbyte_name='ad_creatives',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Ad Creative ID',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Ad Creative name',
+                    ),
+                    CacheFieldConfig(
+                        name='account_id',
+                        type=['null', 'string'],
+                        description='Ad account ID',
+                    ),
+                    CacheFieldConfig(
+                        name='body',
+                        type=['null', 'string'],
+                        description='Ad body text',
+                    ),
+                    CacheFieldConfig(
+                        name='title',
+                        type=['null', 'string'],
+                        description='Ad title',
+                    ),
+                    CacheFieldConfig(
+                        name='status',
+                        type=['null', 'string'],
+                        description='Creative status',
+                    ),
+                    CacheFieldConfig(
+                        name='image_url',
+                        type=['null', 'string'],
+                        description='Image URL',
+                    ),
+                    CacheFieldConfig(
+                        name='thumbnail_url',
+                        type=['null', 'string'],
+                        description='Thumbnail URL',
+                    ),
+                    CacheFieldConfig(
+                        name='link_url',
+                        type=['null', 'string'],
+                        description='Link URL',
+                    ),
+                    CacheFieldConfig(
+                        name='call_to_action_type',
+                        type=['null', 'string'],
+                        description='Call to action type',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='ads_insights',
+                suggested=True,
+                x_airbyte_name='ads_insights',
+                fields=[
+                    CacheFieldConfig(
+                        name='account_id',
+                        type=['null', 'string'],
+                        description='Ad account ID',
+                    ),
+                    CacheFieldConfig(
+                        name='account_name',
+                        type=['null', 'string'],
+                        description='Ad account name',
+                    ),
+                    CacheFieldConfig(
+                        name='campaign_id',
+                        type=['null', 'string'],
+                        description='Campaign ID',
+                    ),
+                    CacheFieldConfig(
+                        name='campaign_name',
+                        type=['null', 'string'],
+                        description='Campaign name',
+                    ),
+                    CacheFieldConfig(
+                        name='adset_id',
+                        type=['null', 'string'],
+                        description='Ad set ID',
+                    ),
+                    CacheFieldConfig(
+                        name='adset_name',
+                        type=['null', 'string'],
+                        description='Ad set name',
+                    ),
+                    CacheFieldConfig(
+                        name='ad_id',
+                        type=['null', 'string'],
+                        description='Ad ID',
+                    ),
+                    CacheFieldConfig(
+                        name='ad_name',
+                        type=['null', 'string'],
+                        description='Ad name',
+                    ),
+                    CacheFieldConfig(
+                        name='clicks',
+                        type=['null', 'integer'],
+                        description='Number of clicks',
+                    ),
+                    CacheFieldConfig(
+                        name='impressions',
+                        type=['null', 'integer'],
+                        description='Number of impressions',
+                    ),
+                    CacheFieldConfig(
+                        name='reach',
+                        type=['null', 'integer'],
+                        description='Number of unique people reached',
+                    ),
+                    CacheFieldConfig(
+                        name='spend',
+                        type=['null', 'number'],
+                        description='Amount spent',
+                    ),
+                    CacheFieldConfig(
+                        name='cpc',
+                        type=['null', 'number'],
+                        description='Cost per click',
+                    ),
+                    CacheFieldConfig(
+                        name='cpm',
+                        type=['null', 'number'],
+                        description='Cost per 1000 impressions',
+                    ),
+                    CacheFieldConfig(
+                        name='ctr',
+                        type=['null', 'number'],
+                        description='Click-through rate',
+                    ),
+                    CacheFieldConfig(
+                        name='date_start',
+                        type=['null', 'string'],
+                        description='Start date of the reporting period',
+                    ),
+                    CacheFieldConfig(
+                        name='date_stop',
+                        type=['null', 'string'],
+                        description='End date of the reporting period',
+                    ),
+                    CacheFieldConfig(
+                        name='actions',
+                        type=['null', 'array'],
+                        description='Total number of actions taken',
+                    ),
+                    CacheFieldConfig(
+                        name='action_values',
+                        type=['null', 'array'],
+                        description='Action values taken on the ad',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='ad_accounts',
+                suggested=True,
+                x_airbyte_name='ad_account',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Ad account ID',
+                    ),
+                    CacheFieldConfig(
+                        name='account_id',
+                        type=['null', 'string'],
+                        description='Ad account ID (numeric)',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Ad account name',
+                    ),
+                    CacheFieldConfig(
+                        name='balance',
+                        type=['null', 'string'],
+                        description='Current balance of the ad account',
+                    ),
+                    CacheFieldConfig(
+                        name='currency',
+                        type=['null', 'string'],
+                        description='Currency used by the ad account',
+                    ),
+                    CacheFieldConfig(
+                        name='account_status',
+                        type=['null', 'integer'],
+                        description='Account status',
+                    ),
+                    CacheFieldConfig(
+                        name='amount_spent',
+                        type=['null', 'string'],
+                        description='Total amount spent',
+                    ),
+                    CacheFieldConfig(
+                        name='business_name',
+                        type=['null', 'string'],
+                        description='Business name',
+                    ),
+                    CacheFieldConfig(
+                        name='created_time',
+                        type=['null', 'string'],
+                        description='Account creation time',
+                    ),
+                    CacheFieldConfig(
+                        name='spend_cap',
+                        type=['null', 'string'],
+                        description='Spend cap',
+                    ),
+                    CacheFieldConfig(
+                        name='timezone_name',
+                        type=['null', 'string'],
+                        description='Timezone name',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='custom_conversions',
+                suggested=True,
+                x_airbyte_name='custom_conversions',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Custom Conversion ID',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Custom Conversion name',
+                    ),
+                    CacheFieldConfig(
+                        name='account_id',
+                        type=['null', 'string'],
+                        description='Ad account ID',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='Description',
+                    ),
+                    CacheFieldConfig(
+                        name='custom_event_type',
+                        type=['null', 'string'],
+                        description='Custom event type',
+                    ),
+                    CacheFieldConfig(
+                        name='creation_time',
+                        type=['null', 'string'],
+                        description='Creation time',
+                    ),
+                    CacheFieldConfig(
+                        name='first_fired_time',
+                        type=['null', 'string'],
+                        description='First fired time',
+                    ),
+                    CacheFieldConfig(
+                        name='last_fired_time',
+                        type=['null', 'string'],
+                        description='Last fired time',
+                    ),
+                    CacheFieldConfig(
+                        name='is_archived',
+                        type=['null', 'boolean'],
+                        description='Whether the conversion is archived',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='images',
+                suggested=True,
+                x_airbyte_name='images',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Image ID',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Image name',
+                    ),
+                    CacheFieldConfig(
+                        name='account_id',
+                        type=['null', 'string'],
+                        description='Ad account ID',
+                    ),
+                    CacheFieldConfig(
+                        name='hash',
+                        type=['null', 'string'],
+                        description='Image hash',
+                    ),
+                    CacheFieldConfig(
+                        name='url',
+                        type=['null', 'string'],
+                        description='Image URL',
+                    ),
+                    CacheFieldConfig(
+                        name='permalink_url',
+                        type=['null', 'string'],
+                        description='Permalink URL',
+                    ),
+                    CacheFieldConfig(
+                        name='width',
+                        type=['null', 'integer'],
+                        description='Image width',
+                    ),
+                    CacheFieldConfig(
+                        name='height',
+                        type=['null', 'integer'],
+                        description='Image height',
+                    ),
+                    CacheFieldConfig(
+                        name='status',
+                        type=['null', 'string'],
+                        description='Image status',
+                    ),
+                    CacheFieldConfig(
+                        name='created_time',
+                        type=['null', 'string'],
+                        description='Creation time',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_time',
+                        type=['null', 'string'],
+                        description='Last update time',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='videos',
+                x_airbyte_name='videos',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Video ID',
+                    ),
+                    CacheFieldConfig(
+                        name='title',
+                        type=['null', 'string'],
+                        description='Video title',
+                    ),
+                    CacheFieldConfig(
+                        name='account_id',
+                        type=['null', 'string'],
+                        description='Ad account ID',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='Video description',
+                    ),
+                    CacheFieldConfig(
+                        name='length',
+                        type=['null', 'number'],
+                        description='Video length in seconds',
+                    ),
+                    CacheFieldConfig(
+                        name='source',
+                        type=['null', 'string'],
+                        description='Video source URL',
+                    ),
+                    CacheFieldConfig(
+                        name='permalink_url',
+                        type=['null', 'string'],
+                        description='Permalink URL',
+                    ),
+                    CacheFieldConfig(
+                        name='views',
+                        type=['null', 'integer'],
+                        description='Number of views',
+                    ),
+                    CacheFieldConfig(
+                        name='created_time',
+                        type=['null', 'string'],
+                        description='Creation time',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_time',
+                        type=['null', 'string'],
+                        description='Last update time',
+                    ),
+                ],
+            ),
+        ],
+    ),
     search_field_paths={
         'campaigns': [
             'id',

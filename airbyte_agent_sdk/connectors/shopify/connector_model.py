@@ -20,6 +20,9 @@ from airbyte_agent_sdk.schema.security import (
     AuthConfigSpec,
 )
 from airbyte_agent_sdk.schema.extensions import (
+    CacheConfig,
+    CacheEntityConfig,
+    CacheFieldConfig,
     EntityRelationshipConfig,
 )
 from airbyte_agent_sdk.schema.base import (
@@ -12985,6 +12988,1412 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
             ],
         ),
     ],
+    context_store=CacheConfig(
+        entities=[
+            CacheEntityConfig(
+                entity='abandoned_checkouts',
+                suggested=True,
+                x_airbyte_name='abandoned_checkouts',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the abandoned checkout',
+                    ),
+                    CacheFieldConfig(
+                        name='token',
+                        type=['null', 'string'],
+                        description='Unique token identifying the checkout',
+                    ),
+                    CacheFieldConfig(
+                        name='email',
+                        type=['null', 'string'],
+                        description='Email address provided for the checkout',
+                    ),
+                    CacheFieldConfig(
+                        name='phone',
+                        type=['null', 'string'],
+                        description='Phone number provided for the checkout',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Shopify-assigned display name for the checkout (e.g. `#C12345`)',
+                    ),
+                    CacheFieldConfig(
+                        name='currency',
+                        type=['null', 'string'],
+                        description='ISO 4217 currency code for the checkout totals',
+                    ),
+                    CacheFieldConfig(
+                        name='total_price',
+                        type=['null', 'string'],
+                        description="Total price of the checkout in the shop's currency",
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the checkout was created',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the checkout was last updated',
+                    ),
+                    CacheFieldConfig(
+                        name='completed_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the checkout was completed, if applicable',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='collects',
+                x_airbyte_name='collects',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the collect',
+                    ),
+                    CacheFieldConfig(
+                        name='collection_id',
+                        type=['null', 'integer'],
+                        description='Identifier of the collection the product belongs to',
+                    ),
+                    CacheFieldConfig(
+                        name='product_id',
+                        type=['null', 'integer'],
+                        description='Identifier of the product in the collection',
+                    ),
+                    CacheFieldConfig(
+                        name='position',
+                        type=['null', 'integer'],
+                        description='Position of the product within the collection',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the collect was created',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the collect was last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='countries',
+                x_airbyte_name='countries',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the country tax row',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Human-readable country name',
+                    ),
+                    CacheFieldConfig(
+                        name='code',
+                        type=['null', 'string'],
+                        description='ISO 3166-1 alpha-2 country code',
+                    ),
+                    CacheFieldConfig(
+                        name='tax_name',
+                        type=['null', 'string'],
+                        description='Localized name of the tax applied in this country',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='custom_collections',
+                x_airbyte_name='custom_collections',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the custom collection',
+                    ),
+                    CacheFieldConfig(
+                        name='handle',
+                        type=['null', 'string'],
+                        description='URL-friendly handle for the custom collection',
+                    ),
+                    CacheFieldConfig(
+                        name='title',
+                        type=['null', 'string'],
+                        description='Display title of the custom collection',
+                    ),
+                    CacheFieldConfig(
+                        name='sort_order',
+                        type=['null', 'string'],
+                        description='How products are sorted within the collection (e.g. `best-selling`)',
+                    ),
+                    CacheFieldConfig(
+                        name='published_scope',
+                        type=['null', 'string'],
+                        description='Publishing scope (`web` or `global`)',
+                    ),
+                    CacheFieldConfig(
+                        name='published_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the collection was published',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the collection was last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='customers',
+                suggested=True,
+                x_airbyte_name='customers',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the customer',
+                    ),
+                    CacheFieldConfig(
+                        name='email',
+                        type=['null', 'string'],
+                        description='Primary email address of the customer',
+                    ),
+                    CacheFieldConfig(
+                        name='phone',
+                        type=['null', 'string'],
+                        description='Primary phone number of the customer',
+                    ),
+                    CacheFieldConfig(
+                        name='first_name',
+                        type=['null', 'string'],
+                        description='First name of the customer',
+                    ),
+                    CacheFieldConfig(
+                        name='last_name',
+                        type=['null', 'string'],
+                        description='Last name of the customer',
+                    ),
+                    CacheFieldConfig(
+                        name='state',
+                        type=['null', 'string'],
+                        description='Account state (`disabled`, `invited`, `enabled`, `declined`)',
+                    ),
+                    CacheFieldConfig(
+                        name='orders_count',
+                        type=['null', 'integer'],
+                        description='Number of orders placed by the customer',
+                    ),
+                    CacheFieldConfig(
+                        name='total_spent',
+                        type=['null', 'string'],
+                        description='Total lifetime amount spent by the customer',
+                    ),
+                    CacheFieldConfig(
+                        name='currency',
+                        type=['null', 'string'],
+                        description="ISO 4217 currency code for the customer's total spend",
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the customer record was created',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the customer record was last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='discount_codes',
+                suggested=True,
+                x_airbyte_name='discount_codes',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the discount code',
+                    ),
+                    CacheFieldConfig(
+                        name='price_rule_id',
+                        type=['null', 'integer'],
+                        description='Identifier of the parent price rule',
+                    ),
+                    CacheFieldConfig(
+                        name='code',
+                        type=['null', 'string'],
+                        description='Discount code string shoppers enter at checkout',
+                    ),
+                    CacheFieldConfig(
+                        name='usage_count',
+                        type=['null', 'integer'],
+                        description='Number of times the code has been redeemed',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the code was created',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the code was last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='draft_orders',
+                suggested=True,
+                x_airbyte_name='draft_orders',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the draft order',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Shopify-assigned display name for the draft order (e.g. `#D12345`)',
+                    ),
+                    CacheFieldConfig(
+                        name='email',
+                        type=['null', 'string'],
+                        description='Email address associated with the draft order',
+                    ),
+                    CacheFieldConfig(
+                        name='status',
+                        type=['null', 'string'],
+                        description='Status of the draft order (`open`, `invoice_sent`, `completed`)',
+                    ),
+                    CacheFieldConfig(
+                        name='currency',
+                        type=['null', 'string'],
+                        description='ISO 4217 currency code for the draft order totals',
+                    ),
+                    CacheFieldConfig(
+                        name='total_price',
+                        type=['null', 'string'],
+                        description='Total price of the draft order',
+                    ),
+                    CacheFieldConfig(
+                        name='order_id',
+                        type=['null', 'integer'],
+                        description='Identifier of the completed order, if the draft has been completed',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the draft order was created',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the draft order was last updated',
+                    ),
+                    CacheFieldConfig(
+                        name='completed_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the draft order was completed, if applicable',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='fulfillment_orders',
+                x_airbyte_name='fulfillment_orders',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the fulfillment order',
+                    ),
+                    CacheFieldConfig(
+                        name='order_id',
+                        type=['null', 'integer'],
+                        description='Identifier of the parent order',
+                    ),
+                    CacheFieldConfig(
+                        name='shop_id',
+                        type=['null', 'integer'],
+                        description='Identifier of the shop that owns the fulfillment order',
+                    ),
+                    CacheFieldConfig(
+                        name='assigned_location_id',
+                        type=['null', 'integer'],
+                        description='Identifier of the location assigned to fulfill the order',
+                    ),
+                    CacheFieldConfig(
+                        name='status',
+                        type=['null', 'string'],
+                        description='Fulfillment order status (e.g. `open`, `in_progress`, `closed`)',
+                    ),
+                    CacheFieldConfig(
+                        name='request_status',
+                        type=['null', 'string'],
+                        description='Status of the fulfillment request (e.g. `unsubmitted`, `submitted`)',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the fulfillment order was created',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the fulfillment order was last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='fulfillments',
+                suggested=True,
+                x_airbyte_name='fulfillments',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the fulfillment',
+                    ),
+                    CacheFieldConfig(
+                        name='order_id',
+                        type=['null', 'integer'],
+                        description='Identifier of the parent order',
+                    ),
+                    CacheFieldConfig(
+                        name='status',
+                        type=['null', 'string'],
+                        description='Fulfillment status (e.g. `pending`, `open`, `success`, `cancelled`)',
+                    ),
+                    CacheFieldConfig(
+                        name='shipment_status',
+                        type=['null', 'string'],
+                        description='Carrier shipment status (e.g. `delivered`, `in_transit`)',
+                    ),
+                    CacheFieldConfig(
+                        name='tracking_company',
+                        type=['null', 'string'],
+                        description='Name of the shipping carrier',
+                    ),
+                    CacheFieldConfig(
+                        name='tracking_number',
+                        type=['null', 'string'],
+                        description='Primary tracking number for the shipment',
+                    ),
+                    CacheFieldConfig(
+                        name='location_id',
+                        type=['null', 'integer'],
+                        description='Identifier of the fulfilling location',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the fulfillment was created',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the fulfillment was last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='inventory_items',
+                suggested=True,
+                x_airbyte_name='inventory_items',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the inventory item',
+                    ),
+                    CacheFieldConfig(
+                        name='sku',
+                        type=['null', 'string'],
+                        description='Stock keeping unit associated with the inventory item',
+                    ),
+                    CacheFieldConfig(
+                        name='tracked',
+                        type=['null', 'boolean'],
+                        description='Whether Shopify is tracking inventory for this item',
+                    ),
+                    CacheFieldConfig(
+                        name='requires_shipping',
+                        type=['null', 'boolean'],
+                        description='Whether the item requires shipping',
+                    ),
+                    CacheFieldConfig(
+                        name='country_code_of_origin',
+                        type=['null', 'string'],
+                        description="ISO country code of the item's country of origin",
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the inventory item was created',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the inventory item was last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='inventory_levels',
+                suggested=True,
+                x_airbyte_name='inventory_levels',
+                fields=[
+                    CacheFieldConfig(
+                        name='inventory_item_id',
+                        type=['null', 'integer'],
+                        description='Identifier of the inventory item',
+                    ),
+                    CacheFieldConfig(
+                        name='location_id',
+                        type=['null', 'integer'],
+                        description='Identifier of the location holding the inventory',
+                    ),
+                    CacheFieldConfig(
+                        name='available',
+                        type=['null', 'integer'],
+                        description='Number of units available at the location',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the inventory level was last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='locations',
+                x_airbyte_name='locations',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the location',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Display name of the location',
+                    ),
+                    CacheFieldConfig(
+                        name='address1',
+                        type=['null', 'string'],
+                        description='Primary street address of the location',
+                    ),
+                    CacheFieldConfig(
+                        name='city',
+                        type=['null', 'string'],
+                        description='City of the location',
+                    ),
+                    CacheFieldConfig(
+                        name='province',
+                        type=['null', 'string'],
+                        description='Province, state, or region of the location',
+                    ),
+                    CacheFieldConfig(
+                        name='country',
+                        type=['null', 'string'],
+                        description='Country name of the location',
+                    ),
+                    CacheFieldConfig(
+                        name='country_code',
+                        type=['null', 'string'],
+                        description='ISO 3166-1 alpha-2 country code of the location',
+                    ),
+                    CacheFieldConfig(
+                        name='phone',
+                        type=['null', 'string'],
+                        description='Phone number for the location',
+                    ),
+                    CacheFieldConfig(
+                        name='active',
+                        type=['null', 'boolean'],
+                        description='Whether the location is currently active',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the location was created',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the location was last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='metafield_customers',
+                x_airbyte_name='metafield_customers',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='namespace',
+                        type=['null', 'string'],
+                        description='Namespace group for the metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='key',
+                        type=['null', 'string'],
+                        description='Key of the metafield within its namespace',
+                    ),
+                    CacheFieldConfig(
+                        name='value',
+                        type=['null', 'string'],
+                        description='Serialized value stored in the metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description='Shopify metafield type (e.g. `single_line_text_field`, `json`)',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='Human-readable description of the metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='owner_id',
+                        type=['null', 'integer'],
+                        description='Identifier of the resource that owns this metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='owner_resource',
+                        type=['null', 'string'],
+                        description='Resource type that owns this metafield (e.g. `product`, `customer`)',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the metafield was created',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the metafield was last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='metafield_draft_orders',
+                x_airbyte_name='metafield_draft_orders',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='namespace',
+                        type=['null', 'string'],
+                        description='Namespace group for the metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='key',
+                        type=['null', 'string'],
+                        description='Key of the metafield within its namespace',
+                    ),
+                    CacheFieldConfig(
+                        name='value',
+                        type=['null', 'string'],
+                        description='Serialized value stored in the metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description='Shopify metafield type (e.g. `single_line_text_field`, `json`)',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='Human-readable description of the metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='owner_id',
+                        type=['null', 'integer'],
+                        description='Identifier of the resource that owns this metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='owner_resource',
+                        type=['null', 'string'],
+                        description='Resource type that owns this metafield (e.g. `product`, `customer`)',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the metafield was created',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the metafield was last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='metafield_locations',
+                x_airbyte_name='metafield_locations',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='namespace',
+                        type=['null', 'string'],
+                        description='Namespace group for the metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='key',
+                        type=['null', 'string'],
+                        description='Key of the metafield within its namespace',
+                    ),
+                    CacheFieldConfig(
+                        name='value',
+                        type=['null', 'string'],
+                        description='Serialized value stored in the metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description='Shopify metafield type (e.g. `single_line_text_field`, `json`)',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='Human-readable description of the metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='owner_id',
+                        type=['null', 'integer'],
+                        description='Identifier of the resource that owns this metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='owner_resource',
+                        type=['null', 'string'],
+                        description='Resource type that owns this metafield (e.g. `product`, `customer`)',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the metafield was created',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the metafield was last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='metafield_orders',
+                x_airbyte_name='metafield_orders',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='namespace',
+                        type=['null', 'string'],
+                        description='Namespace group for the metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='key',
+                        type=['null', 'string'],
+                        description='Key of the metafield within its namespace',
+                    ),
+                    CacheFieldConfig(
+                        name='value',
+                        type=['null', 'string'],
+                        description='Serialized value stored in the metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description='Shopify metafield type (e.g. `single_line_text_field`, `json`)',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='Human-readable description of the metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='owner_id',
+                        type=['null', 'integer'],
+                        description='Identifier of the resource that owns this metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='owner_resource',
+                        type=['null', 'string'],
+                        description='Resource type that owns this metafield (e.g. `product`, `customer`)',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the metafield was created',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the metafield was last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='metafield_product_images',
+                x_airbyte_name='metafield_product_images',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='namespace',
+                        type=['null', 'string'],
+                        description='Namespace group for the metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='key',
+                        type=['null', 'string'],
+                        description='Key of the metafield within its namespace',
+                    ),
+                    CacheFieldConfig(
+                        name='value',
+                        type=['null', 'string'],
+                        description='Serialized value stored in the metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description='Shopify metafield type (e.g. `single_line_text_field`, `json`)',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='Human-readable description of the metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='owner_id',
+                        type=['null', 'integer'],
+                        description='Identifier of the resource that owns this metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='owner_resource',
+                        type=['null', 'string'],
+                        description='Resource type that owns this metafield (e.g. `product`, `customer`)',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the metafield was created',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the metafield was last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='metafield_product_variants',
+                x_airbyte_name='metafield_product_variants',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='namespace',
+                        type=['null', 'string'],
+                        description='Namespace group for the metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='key',
+                        type=['null', 'string'],
+                        description='Key of the metafield within its namespace',
+                    ),
+                    CacheFieldConfig(
+                        name='value',
+                        type=['null', 'string'],
+                        description='Serialized value stored in the metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description='Shopify metafield type (e.g. `single_line_text_field`, `json`)',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='Human-readable description of the metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='owner_id',
+                        type=['null', 'integer'],
+                        description='Identifier of the resource that owns this metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='owner_resource',
+                        type=['null', 'string'],
+                        description='Resource type that owns this metafield (e.g. `product`, `customer`)',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the metafield was created',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the metafield was last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='metafield_products',
+                x_airbyte_name='metafield_products',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='namespace',
+                        type=['null', 'string'],
+                        description='Namespace group for the metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='key',
+                        type=['null', 'string'],
+                        description='Key of the metafield within its namespace',
+                    ),
+                    CacheFieldConfig(
+                        name='value',
+                        type=['null', 'string'],
+                        description='Serialized value stored in the metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description='Shopify metafield type (e.g. `single_line_text_field`, `json`)',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='Human-readable description of the metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='owner_id',
+                        type=['null', 'integer'],
+                        description='Identifier of the resource that owns this metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='owner_resource',
+                        type=['null', 'string'],
+                        description='Resource type that owns this metafield (e.g. `product`, `customer`)',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the metafield was created',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the metafield was last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='metafield_shops',
+                x_airbyte_name='metafield_shops',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='namespace',
+                        type=['null', 'string'],
+                        description='Namespace group for the metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='key',
+                        type=['null', 'string'],
+                        description='Key of the metafield within its namespace',
+                    ),
+                    CacheFieldConfig(
+                        name='value',
+                        type=['null', 'string'],
+                        description='Serialized value stored in the metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description='Shopify metafield type (e.g. `single_line_text_field`, `json`)',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='Human-readable description of the metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='owner_id',
+                        type=['null', 'integer'],
+                        description='Identifier of the resource that owns this metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='owner_resource',
+                        type=['null', 'string'],
+                        description='Resource type that owns this metafield (e.g. `product`, `customer`)',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the metafield was created',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the metafield was last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='metafield_smart_collections',
+                x_airbyte_name='metafield_smart_collections',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='namespace',
+                        type=['null', 'string'],
+                        description='Namespace group for the metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='key',
+                        type=['null', 'string'],
+                        description='Key of the metafield within its namespace',
+                    ),
+                    CacheFieldConfig(
+                        name='value',
+                        type=['null', 'string'],
+                        description='Serialized value stored in the metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description='Shopify metafield type (e.g. `single_line_text_field`, `json`)',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='Human-readable description of the metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='owner_id',
+                        type=['null', 'integer'],
+                        description='Identifier of the resource that owns this metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='owner_resource',
+                        type=['null', 'string'],
+                        description='Resource type that owns this metafield (e.g. `product`, `customer`)',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the metafield was created',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the metafield was last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='order_refunds',
+                suggested=True,
+                x_airbyte_name='order_refunds',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the refund',
+                    ),
+                    CacheFieldConfig(
+                        name='order_id',
+                        type=['null', 'integer'],
+                        description='Identifier of the refunded order',
+                    ),
+                    CacheFieldConfig(
+                        name='user_id',
+                        type=['null', 'integer'],
+                        description='Identifier of the staff user who processed the refund',
+                    ),
+                    CacheFieldConfig(
+                        name='note',
+                        type=['null', 'string'],
+                        description='Merchant-provided note explaining the refund',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the refund was created',
+                    ),
+                    CacheFieldConfig(
+                        name='processed_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the refund was processed',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='price_rules',
+                x_airbyte_name='price_rules',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the price rule',
+                    ),
+                    CacheFieldConfig(
+                        name='title',
+                        type=['null', 'string'],
+                        description='Administrative title of the price rule',
+                    ),
+                    CacheFieldConfig(
+                        name='value_type',
+                        type=['null', 'string'],
+                        description='How the discount value is interpreted (`fixed_amount` or `percentage`)',
+                    ),
+                    CacheFieldConfig(
+                        name='value',
+                        type=['null', 'string'],
+                        description='Discount value applied by the rule',
+                    ),
+                    CacheFieldConfig(
+                        name='target_type',
+                        type=['null', 'string'],
+                        description='Type of target the rule applies to (`line_item` or `shipping_line`)',
+                    ),
+                    CacheFieldConfig(
+                        name='target_selection',
+                        type=['null', 'string'],
+                        description='Which target items the rule applies to (`all` or `entitled`)',
+                    ),
+                    CacheFieldConfig(
+                        name='allocation_method',
+                        type=['null', 'string'],
+                        description='How the discount is allocated (`each` or `across`)',
+                    ),
+                    CacheFieldConfig(
+                        name='starts_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the rule starts being active',
+                    ),
+                    CacheFieldConfig(
+                        name='ends_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the rule stops being active, if applicable',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the rule was created',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the rule was last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='product_images',
+                x_airbyte_name='product_images',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the product image',
+                    ),
+                    CacheFieldConfig(
+                        name='product_id',
+                        type=['null', 'integer'],
+                        description='Identifier of the product the image belongs to',
+                    ),
+                    CacheFieldConfig(
+                        name='position',
+                        type=['null', 'integer'],
+                        description='Display position of the image within the product',
+                    ),
+                    CacheFieldConfig(
+                        name='alt',
+                        type=['null', 'string'],
+                        description='Alt text for the image',
+                    ),
+                    CacheFieldConfig(
+                        name='width',
+                        type=['null', 'integer'],
+                        description='Image width in pixels',
+                    ),
+                    CacheFieldConfig(
+                        name='height',
+                        type=['null', 'integer'],
+                        description='Image height in pixels',
+                    ),
+                    CacheFieldConfig(
+                        name='src',
+                        type=['null', 'string'],
+                        description='Public URL of the image',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the image was created',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the image was last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='product_variants',
+                suggested=True,
+                x_airbyte_name='product_variants',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the product variant',
+                    ),
+                    CacheFieldConfig(
+                        name='product_id',
+                        type=['null', 'integer'],
+                        description='Identifier of the parent product',
+                    ),
+                    CacheFieldConfig(
+                        name='title',
+                        type=['null', 'string'],
+                        description='Display title of the variant',
+                    ),
+                    CacheFieldConfig(
+                        name='sku',
+                        type=['null', 'string'],
+                        description='Stock keeping unit for the variant',
+                    ),
+                    CacheFieldConfig(
+                        name='price',
+                        type=['null', 'string'],
+                        description="Price of the variant in the shop's currency",
+                    ),
+                    CacheFieldConfig(
+                        name='compare_at_price',
+                        type=['null', 'string'],
+                        description='Original (compare-at) price of the variant, if set',
+                    ),
+                    CacheFieldConfig(
+                        name='position',
+                        type=['null', 'integer'],
+                        description='Display position of the variant within the product',
+                    ),
+                    CacheFieldConfig(
+                        name='inventory_policy',
+                        type=['null', 'string'],
+                        description='Behaviour when out of stock (`deny` or `continue`)',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the variant was created',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the variant was last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='shop',
+                x_airbyte_name='shop',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the shop',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Display name of the shop',
+                    ),
+                    CacheFieldConfig(
+                        name='email',
+                        type=['null', 'string'],
+                        description='Primary contact email for the shop',
+                    ),
+                    CacheFieldConfig(
+                        name='domain',
+                        type=['null', 'string'],
+                        description='Custom domain configured for the shop, if any',
+                    ),
+                    CacheFieldConfig(
+                        name='myshopify_domain',
+                        type=['null', 'string'],
+                        description='Canonical `*.myshopify.com` domain for the shop',
+                    ),
+                    CacheFieldConfig(
+                        name='country_code',
+                        type=['null', 'string'],
+                        description='ISO 3166-1 alpha-2 country code of the shop',
+                    ),
+                    CacheFieldConfig(
+                        name='currency',
+                        type=['null', 'string'],
+                        description='ISO 4217 currency code used by the shop',
+                    ),
+                    CacheFieldConfig(
+                        name='timezone',
+                        type=['null', 'string'],
+                        description='Timezone configured for the shop (e.g. `(GMT-05:00) Eastern Time`)',
+                    ),
+                    CacheFieldConfig(
+                        name='plan_name',
+                        type=['null', 'string'],
+                        description='Shopify plan identifier (e.g. `shopify_plus`, `basic`)',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the shop was created',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the shop was last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='smart_collections',
+                x_airbyte_name='smart_collections',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the smart collection',
+                    ),
+                    CacheFieldConfig(
+                        name='handle',
+                        type=['null', 'string'],
+                        description='URL-friendly handle for the smart collection',
+                    ),
+                    CacheFieldConfig(
+                        name='title',
+                        type=['null', 'string'],
+                        description='Display title of the smart collection',
+                    ),
+                    CacheFieldConfig(
+                        name='sort_order',
+                        type=['null', 'string'],
+                        description='How products are sorted within the collection',
+                    ),
+                    CacheFieldConfig(
+                        name='published_scope',
+                        type=['null', 'string'],
+                        description='Publishing scope (`web` or `global`)',
+                    ),
+                    CacheFieldConfig(
+                        name='published_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the collection was published',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the collection was last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='tender_transactions',
+                x_airbyte_name='tender_transactions',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the tender transaction',
+                    ),
+                    CacheFieldConfig(
+                        name='order_id',
+                        type=['null', 'integer'],
+                        description='Identifier of the order the transaction belongs to',
+                    ),
+                    CacheFieldConfig(
+                        name='user_id',
+                        type=['null', 'integer'],
+                        description='Identifier of the staff user who processed the transaction',
+                    ),
+                    CacheFieldConfig(
+                        name='amount',
+                        type=['null', 'string'],
+                        description="Amount of the transaction in the shop's currency",
+                    ),
+                    CacheFieldConfig(
+                        name='currency',
+                        type=['null', 'string'],
+                        description='ISO 4217 currency code for the transaction amount',
+                    ),
+                    CacheFieldConfig(
+                        name='payment_method',
+                        type=['null', 'string'],
+                        description='Payment method used (e.g. `credit_card`, `paypal`)',
+                    ),
+                    CacheFieldConfig(
+                        name='test',
+                        type=['null', 'boolean'],
+                        description='Whether the transaction was a test transaction',
+                    ),
+                    CacheFieldConfig(
+                        name='processed_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the transaction was processed',
+                    ),
+                ],
+            ),
+        ],
+    ),
     search_field_paths={
         'abandoned_checkouts': [
             'id',

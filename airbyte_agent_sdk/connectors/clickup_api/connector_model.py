@@ -20,6 +20,9 @@ from airbyte_agent_sdk.schema.security import (
     AuthConfigSpec,
 )
 from airbyte_agent_sdk.schema.extensions import (
+    CacheConfig,
+    CacheEntityConfig,
+    CacheFieldConfig,
     EntityRelationshipConfig,
 )
 from airbyte_agent_sdk.schema.base import (
@@ -4586,6 +4589,288 @@ ClickupApiConnectorModel: ConnectorModel = ConnectorModel(
             ],
         ),
     ],
+    context_store=CacheConfig(
+        entities=[
+            CacheEntityConfig(
+                entity='user',
+                suggested=True,
+                x_airbyte_name='user',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the user',
+                    ),
+                    CacheFieldConfig(
+                        name='username',
+                        type=['null', 'string'],
+                        description='Display name of the user',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='teams',
+                suggested=True,
+                x_airbyte_name='team',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique identifier for the team (workspace)',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Name of the team',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='spaces',
+                suggested=True,
+                x_airbyte_name='space',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique identifier for the space',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Name of the space',
+                    ),
+                    CacheFieldConfig(
+                        name='private',
+                        type=['null', 'boolean'],
+                        description='Whether the space is private',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='folders',
+                suggested=True,
+                x_airbyte_name='folder',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique identifier for the folder',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Name of the folder',
+                    ),
+                    CacheFieldConfig(
+                        name='hidden',
+                        type=['null', 'boolean'],
+                        description='Whether the folder is hidden from the sidebar',
+                    ),
+                    CacheFieldConfig(
+                        name='task_count',
+                        type=['null', 'string'],
+                        description='Number of tasks contained in the folder',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='lists',
+                suggested=True,
+                x_airbyte_name='list',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique identifier for the list',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Name of the list',
+                    ),
+                    CacheFieldConfig(
+                        name='archived',
+                        type=['null', 'boolean'],
+                        description='Whether the list has been archived',
+                    ),
+                    CacheFieldConfig(
+                        name='due_date',
+                        type=['null', 'string'],
+                        description='Due date for the list, in ClickUp timestamp format',
+                    ),
+                    CacheFieldConfig(
+                        name='start_date',
+                        type=['null', 'string'],
+                        description='Start date for the list, in ClickUp timestamp format',
+                    ),
+                    CacheFieldConfig(
+                        name='priority',
+                        type=['null', 'string'],
+                        description='Priority assigned to the list',
+                    ),
+                    CacheFieldConfig(
+                        name='task_count',
+                        type=['null', 'integer'],
+                        description='Number of tasks contained in the list',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='tasks',
+                suggested=True,
+                x_airbyte_name='task',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique identifier for the task',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Name of the task',
+                    ),
+                    CacheFieldConfig(
+                        name='date_created',
+                        type=['null', 'string'],
+                        description='Creation timestamp of the task, in ClickUp timestamp format',
+                    ),
+                    CacheFieldConfig(
+                        name='date_updated',
+                        type=['null', 'string'],
+                        description='Last update timestamp of the task, in ClickUp timestamp format',
+                    ),
+                    CacheFieldConfig(
+                        name='date_closed',
+                        type=['null', 'string'],
+                        description='Timestamp when the task was closed, in ClickUp timestamp format',
+                    ),
+                    CacheFieldConfig(
+                        name='due_date',
+                        type=['null', 'string'],
+                        description='Due date for the task, in ClickUp timestamp format',
+                    ),
+                    CacheFieldConfig(
+                        name='start_date',
+                        type=['null', 'string'],
+                        description='Start date for the task, in ClickUp timestamp format',
+                    ),
+                    CacheFieldConfig(
+                        name='parent',
+                        type=['null', 'string'],
+                        description='ID of the parent task, if this task is a subtask',
+                    ),
+                    CacheFieldConfig(
+                        name='url',
+                        type=['null', 'string'],
+                        description='Permalink URL to view the task in ClickUp',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='comments',
+                suggested=True,
+                x_airbyte_name='list_comments',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type='string',
+                        description='Unique identifier for the comment',
+                    ),
+                    CacheFieldConfig(
+                        name='comment_text',
+                        type=['null', 'string'],
+                        description='Plain-text content of the comment',
+                    ),
+                    CacheFieldConfig(
+                        name='date',
+                        type=['null', 'string'],
+                        description='Timestamp when the comment was posted, in ClickUp timestamp format',
+                    ),
+                    CacheFieldConfig(
+                        name='reply_count',
+                        type=['null', 'number'],
+                        description='Number of replies on the comment',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='goals',
+                suggested=True,
+                x_airbyte_name='team_goals',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type='string',
+                        description='Unique identifier for the goal',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Name of the goal',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='Description of the goal',
+                    ),
+                    CacheFieldConfig(
+                        name='archived',
+                        type=['null', 'boolean'],
+                        description='Whether the goal has been archived',
+                    ),
+                    CacheFieldConfig(
+                        name='pinned',
+                        type=['null', 'boolean'],
+                        description='Whether the goal is pinned to the top of the list',
+                    ),
+                    CacheFieldConfig(
+                        name='private',
+                        type=['null', 'boolean'],
+                        description='Whether the goal is private to its owners',
+                    ),
+                    CacheFieldConfig(
+                        name='date_created',
+                        type=['null', 'string'],
+                        description='Creation timestamp of the goal, in ClickUp timestamp format',
+                    ),
+                    CacheFieldConfig(
+                        name='due_date',
+                        type=['null', 'string'],
+                        description='Due date for the goal, in ClickUp timestamp format',
+                    ),
+                    CacheFieldConfig(
+                        name='percent_completed',
+                        type=['null', 'number'],
+                        description='Completion percentage of the goal, between 0 and 100',
+                    ),
+                    CacheFieldConfig(
+                        name='team_id',
+                        type=['null', 'string'],
+                        description='Identifier of the team that owns the goal',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='time_tracking',
+                suggested=True,
+                x_airbyte_name='time_tracking',
+                fields=[
+                    CacheFieldConfig(
+                        name='time',
+                        type=['number', 'null'],
+                        description='Total tracked time in milliseconds',
+                    ),
+                    CacheFieldConfig(
+                        name='user',
+                        type=['object', 'null'],
+                        description='User who tracked the time',
+                    ),
+                ],
+            ),
+        ],
+    ),
     search_field_paths={
         'user': ['id', 'username'],
         'teams': ['id', 'name'],

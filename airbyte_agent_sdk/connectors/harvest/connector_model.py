@@ -20,6 +20,11 @@ from airbyte_agent_sdk.schema.security import (
     AuthConfigFieldSpec,
     AuthConfigSpec,
 )
+from airbyte_agent_sdk.schema.extensions import (
+    CacheConfig,
+    CacheEntityConfig,
+    CacheFieldConfig,
+)
 from airbyte_agent_sdk.schema.base import (
     ExampleQuestions,
 )
@@ -5645,6 +5650,895 @@ HarvestConnectorModel: ConnectorModel = ConnectorModel(
             },
         ),
     ],
+    context_store=CacheConfig(
+        entities=[
+            CacheEntityConfig(
+                entity='clients',
+                suggested=True,
+                x_airbyte_name='clients',
+                fields=[
+                    CacheFieldConfig(
+                        name='address',
+                        type=['null', 'string'],
+                        description="The client's postal address",
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='When the client record was created',
+                    ),
+                    CacheFieldConfig(
+                        name='currency',
+                        type=['null', 'string'],
+                        description='The currency used by the client',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the client',
+                    ),
+                    CacheFieldConfig(
+                        name='is_active',
+                        type=['null', 'boolean'],
+                        description='Whether the client is active',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description="The client's name",
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='When the client record was last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='company',
+                x_airbyte_name='company',
+                fields=[
+                    CacheFieldConfig(
+                        name='base_uri',
+                        type=['null', 'string'],
+                        description='The base URI',
+                    ),
+                    CacheFieldConfig(
+                        name='currency',
+                        type=['null', 'string'],
+                        description='Currency used by the company',
+                    ),
+                    CacheFieldConfig(
+                        name='full_domain',
+                        type=['null', 'string'],
+                        description='The full domain name',
+                    ),
+                    CacheFieldConfig(
+                        name='is_active',
+                        type=['null', 'boolean'],
+                        description='Whether the company is active',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='The name of the company',
+                    ),
+                    CacheFieldConfig(
+                        name='plan_type',
+                        type=['null', 'string'],
+                        description='The plan type',
+                    ),
+                    CacheFieldConfig(
+                        name='weekly_capacity',
+                        type=['null', 'integer'],
+                        description='Weekly capacity in seconds',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='contacts',
+                x_airbyte_name='contacts',
+                fields=[
+                    CacheFieldConfig(
+                        name='client',
+                        type=['null', 'object'],
+                        description='Client associated with the contact',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='When created',
+                    ),
+                    CacheFieldConfig(
+                        name='email',
+                        type=['null', 'string'],
+                        description='Email address',
+                    ),
+                    CacheFieldConfig(
+                        name='first_name',
+                        type=['null', 'string'],
+                        description='First name',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='last_name',
+                        type=['null', 'string'],
+                        description='Last name',
+                    ),
+                    CacheFieldConfig(
+                        name='title',
+                        type=['null', 'string'],
+                        description='Job title',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='When last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='estimate_item_categories',
+                x_airbyte_name='estimate_item_categories',
+                fields=[
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='When created',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Category name',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='When last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='estimates',
+                x_airbyte_name='estimates',
+                fields=[
+                    CacheFieldConfig(
+                        name='amount',
+                        type=['null', 'number'],
+                        description='Total amount',
+                    ),
+                    CacheFieldConfig(
+                        name='client',
+                        type=['null', 'object'],
+                        description='Client details',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='When created',
+                    ),
+                    CacheFieldConfig(
+                        name='currency',
+                        type=['null', 'string'],
+                        description='Currency',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='issue_date',
+                        type=['null', 'string'],
+                        description='Issue date',
+                    ),
+                    CacheFieldConfig(
+                        name='number',
+                        type=['null', 'string'],
+                        description='Estimate number',
+                    ),
+                    CacheFieldConfig(
+                        name='state',
+                        type=['null', 'string'],
+                        description='Current state',
+                    ),
+                    CacheFieldConfig(
+                        name='subject',
+                        type=['null', 'string'],
+                        description='Subject',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='When last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='expense_categories',
+                x_airbyte_name='expense_categories',
+                fields=[
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='When created',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='is_active',
+                        type=['null', 'boolean'],
+                        description='Whether active',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Category name',
+                    ),
+                    CacheFieldConfig(
+                        name='unit_name',
+                        type=['null', 'string'],
+                        description='Unit name',
+                    ),
+                    CacheFieldConfig(
+                        name='unit_price',
+                        type=['null', 'number'],
+                        description='Unit price',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='When last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='expenses',
+                x_airbyte_name='expenses',
+                fields=[
+                    CacheFieldConfig(
+                        name='billable',
+                        type=['null', 'boolean'],
+                        description='Whether billable',
+                    ),
+                    CacheFieldConfig(
+                        name='client',
+                        type=['null', 'object'],
+                        description='Associated client',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='When created',
+                    ),
+                    CacheFieldConfig(
+                        name='expense_category',
+                        type=['null', 'object'],
+                        description='Expense category',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='is_billed',
+                        type=['null', 'boolean'],
+                        description='Whether billed',
+                    ),
+                    CacheFieldConfig(
+                        name='notes',
+                        type=['null', 'string'],
+                        description='Notes',
+                    ),
+                    CacheFieldConfig(
+                        name='project',
+                        type=['null', 'object'],
+                        description='Associated project',
+                    ),
+                    CacheFieldConfig(
+                        name='spent_date',
+                        type=['null', 'string'],
+                        description='Date spent',
+                    ),
+                    CacheFieldConfig(
+                        name='total_cost',
+                        type=['null', 'number'],
+                        description='Total cost',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='When last updated',
+                    ),
+                    CacheFieldConfig(
+                        name='user',
+                        type=['null', 'object'],
+                        description='Associated user',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='invoice_item_categories',
+                x_airbyte_name='invoice_item_categories',
+                fields=[
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='When created',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Category name',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='When last updated',
+                    ),
+                    CacheFieldConfig(
+                        name='use_as_expense',
+                        type=['null', 'boolean'],
+                        description='Whether used as expense type',
+                    ),
+                    CacheFieldConfig(
+                        name='use_as_service',
+                        type=['null', 'boolean'],
+                        description='Whether used as service type',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='invoices',
+                suggested=True,
+                x_airbyte_name='invoices',
+                fields=[
+                    CacheFieldConfig(
+                        name='amount',
+                        type=['null', 'number'],
+                        description='Total amount',
+                    ),
+                    CacheFieldConfig(
+                        name='client',
+                        type=['null', 'object'],
+                        description='Client details',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='When created',
+                    ),
+                    CacheFieldConfig(
+                        name='currency',
+                        type=['null', 'string'],
+                        description='Currency',
+                    ),
+                    CacheFieldConfig(
+                        name='due_amount',
+                        type=['null', 'number'],
+                        description='Amount due',
+                    ),
+                    CacheFieldConfig(
+                        name='due_date',
+                        type=['null', 'string'],
+                        description='Due date',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='issue_date',
+                        type=['null', 'string'],
+                        description='Issue date',
+                    ),
+                    CacheFieldConfig(
+                        name='number',
+                        type=['null', 'string'],
+                        description='Invoice number',
+                    ),
+                    CacheFieldConfig(
+                        name='state',
+                        type=['null', 'string'],
+                        description='Current state',
+                    ),
+                    CacheFieldConfig(
+                        name='subject',
+                        type=['null', 'string'],
+                        description='Subject',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='When last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='projects',
+                suggested=True,
+                x_airbyte_name='projects',
+                fields=[
+                    CacheFieldConfig(
+                        name='budget',
+                        type=['null', 'number'],
+                        description='Budget amount',
+                    ),
+                    CacheFieldConfig(
+                        name='client',
+                        type=['null', 'object'],
+                        description='Client details',
+                    ),
+                    CacheFieldConfig(
+                        name='code',
+                        type=['null', 'string'],
+                        description='Project code',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='When created',
+                    ),
+                    CacheFieldConfig(
+                        name='hourly_rate',
+                        type=['null', 'number'],
+                        description='Hourly rate',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='is_active',
+                        type=['null', 'boolean'],
+                        description='Whether active',
+                    ),
+                    CacheFieldConfig(
+                        name='is_billable',
+                        type=['null', 'boolean'],
+                        description='Whether billable',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Project name',
+                    ),
+                    CacheFieldConfig(
+                        name='starts_on',
+                        type=['null', 'string'],
+                        description='Start date',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='When last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='roles',
+                x_airbyte_name='roles',
+                fields=[
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='When created',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Role name',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='When last updated',
+                    ),
+                    CacheFieldConfig(
+                        name='user_ids',
+                        type=['null', 'array'],
+                        description='User IDs with this role',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='task_assignments',
+                x_airbyte_name='task_assignments',
+                fields=[
+                    CacheFieldConfig(
+                        name='billable',
+                        type=['null', 'boolean'],
+                        description='Whether billable',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='When created',
+                    ),
+                    CacheFieldConfig(
+                        name='hourly_rate',
+                        type=['null', 'number'],
+                        description='Hourly rate',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='is_active',
+                        type=['null', 'boolean'],
+                        description='Whether active',
+                    ),
+                    CacheFieldConfig(
+                        name='project',
+                        type=['null', 'object'],
+                        description='Associated project',
+                    ),
+                    CacheFieldConfig(
+                        name='task',
+                        type=['null', 'object'],
+                        description='Associated task',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='When last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='tasks',
+                suggested=True,
+                x_airbyte_name='tasks',
+                fields=[
+                    CacheFieldConfig(
+                        name='billable_by_default',
+                        type=['null', 'boolean'],
+                        description='Whether billable by default',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='When created',
+                    ),
+                    CacheFieldConfig(
+                        name='default_hourly_rate',
+                        type=['null', 'number'],
+                        description='Default hourly rate',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='is_active',
+                        type=['null', 'boolean'],
+                        description='Whether active',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['null', 'string'],
+                        description='Task name',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='When last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='time_entries',
+                suggested=True,
+                x_airbyte_name='time_entries',
+                fields=[
+                    CacheFieldConfig(
+                        name='billable',
+                        type=['null', 'boolean'],
+                        description='Whether billable',
+                    ),
+                    CacheFieldConfig(
+                        name='client',
+                        type=['null', 'object'],
+                        description='Associated client',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='When created',
+                    ),
+                    CacheFieldConfig(
+                        name='hours',
+                        type=['null', 'number'],
+                        description='Hours logged',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='is_billed',
+                        type=['null', 'boolean'],
+                        description='Whether billed',
+                    ),
+                    CacheFieldConfig(
+                        name='notes',
+                        type=['null', 'string'],
+                        description='Notes',
+                    ),
+                    CacheFieldConfig(
+                        name='project',
+                        type=['null', 'object'],
+                        description='Associated project',
+                    ),
+                    CacheFieldConfig(
+                        name='spent_date',
+                        type=['null', 'string'],
+                        description='Date time was spent',
+                    ),
+                    CacheFieldConfig(
+                        name='task',
+                        type=['null', 'object'],
+                        description='Associated task',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='When last updated',
+                    ),
+                    CacheFieldConfig(
+                        name='user',
+                        type=['null', 'object'],
+                        description='Associated user',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='time_projects',
+                x_airbyte_name='time_projects',
+                fields=[
+                    CacheFieldConfig(
+                        name='billable_amount',
+                        type=['null', 'number'],
+                        description='Total billable amount',
+                    ),
+                    CacheFieldConfig(
+                        name='billable_hours',
+                        type=['null', 'number'],
+                        description='Number of billable hours',
+                    ),
+                    CacheFieldConfig(
+                        name='client_id',
+                        type=['null', 'integer'],
+                        description='Client identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='client_name',
+                        type=['null', 'string'],
+                        description='Client name',
+                    ),
+                    CacheFieldConfig(
+                        name='currency',
+                        type=['null', 'string'],
+                        description='Currency code',
+                    ),
+                    CacheFieldConfig(
+                        name='project_id',
+                        type=['null', 'integer'],
+                        description='Project identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='project_name',
+                        type=['null', 'string'],
+                        description='Project name',
+                    ),
+                    CacheFieldConfig(
+                        name='total_hours',
+                        type=['null', 'number'],
+                        description='Total hours spent',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='time_tasks',
+                x_airbyte_name='time_tasks',
+                fields=[
+                    CacheFieldConfig(
+                        name='billable_amount',
+                        type=['null', 'number'],
+                        description='Total billable amount',
+                    ),
+                    CacheFieldConfig(
+                        name='billable_hours',
+                        type=['null', 'number'],
+                        description='Number of billable hours',
+                    ),
+                    CacheFieldConfig(
+                        name='currency',
+                        type=['null', 'string'],
+                        description='Currency code',
+                    ),
+                    CacheFieldConfig(
+                        name='task_id',
+                        type=['null', 'integer'],
+                        description='Task identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='task_name',
+                        type=['null', 'string'],
+                        description='Task name',
+                    ),
+                    CacheFieldConfig(
+                        name='total_hours',
+                        type=['null', 'number'],
+                        description='Total hours spent',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='user_assignments',
+                x_airbyte_name='user_assignments',
+                fields=[
+                    CacheFieldConfig(
+                        name='budget',
+                        type=['null', 'number'],
+                        description='Budget',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='When created',
+                    ),
+                    CacheFieldConfig(
+                        name='hourly_rate',
+                        type=['null', 'number'],
+                        description='Hourly rate',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='is_active',
+                        type=['null', 'boolean'],
+                        description='Whether active',
+                    ),
+                    CacheFieldConfig(
+                        name='is_project_manager',
+                        type=['null', 'boolean'],
+                        description='Whether project manager',
+                    ),
+                    CacheFieldConfig(
+                        name='project',
+                        type=['null', 'object'],
+                        description='Associated project',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='When last updated',
+                    ),
+                    CacheFieldConfig(
+                        name='user',
+                        type=['null', 'object'],
+                        description='Associated user',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='users',
+                suggested=True,
+                x_airbyte_name='users',
+                fields=[
+                    CacheFieldConfig(
+                        name='avatar_url',
+                        type=['null', 'string'],
+                        description='Avatar URL',
+                    ),
+                    CacheFieldConfig(
+                        name='cost_rate',
+                        type=['null', 'number'],
+                        description='Cost rate',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='When created',
+                    ),
+                    CacheFieldConfig(
+                        name='default_hourly_rate',
+                        type=['null', 'number'],
+                        description='Default hourly rate',
+                    ),
+                    CacheFieldConfig(
+                        name='email',
+                        type=['null', 'string'],
+                        description='Email address',
+                    ),
+                    CacheFieldConfig(
+                        name='first_name',
+                        type=['null', 'string'],
+                        description='First name',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier',
+                    ),
+                    CacheFieldConfig(
+                        name='is_active',
+                        type=['null', 'boolean'],
+                        description='Whether active',
+                    ),
+                    CacheFieldConfig(
+                        name='is_contractor',
+                        type=['null', 'boolean'],
+                        description='Whether contractor',
+                    ),
+                    CacheFieldConfig(
+                        name='last_name',
+                        type=['null', 'string'],
+                        description='Last name',
+                    ),
+                    CacheFieldConfig(
+                        name='roles',
+                        type=['null', 'array'],
+                        description='Assigned roles',
+                    ),
+                    CacheFieldConfig(
+                        name='telephone',
+                        type=['null', 'string'],
+                        description='Phone number',
+                    ),
+                    CacheFieldConfig(
+                        name='timezone',
+                        type=['null', 'string'],
+                        description='Timezone',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='When last updated',
+                    ),
+                    CacheFieldConfig(
+                        name='weekly_capacity',
+                        type=['null', 'integer'],
+                        description='Weekly capacity in seconds',
+                    ),
+                ],
+            ),
+        ],
+        disable_compaction=True,
+    ),
     search_field_paths={
         'clients': [
             'address',

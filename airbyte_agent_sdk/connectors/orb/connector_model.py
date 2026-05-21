@@ -19,6 +19,11 @@ from airbyte_agent_sdk.schema.security import (
     AuthConfigFieldSpec,
     AuthConfigSpec,
 )
+from airbyte_agent_sdk.schema.extensions import (
+    CacheConfig,
+    CacheEntityConfig,
+    CacheFieldConfig,
+)
 from airbyte_agent_sdk.schema.base import (
     ExampleQuestions,
 )
@@ -2263,6 +2268,218 @@ OrbConnectorModel: ConnectorModel = ConnectorModel(
             },
         ),
     ],
+    context_store=CacheConfig(
+        entities=[
+            CacheEntityConfig(
+                entity='customers',
+                suggested=True,
+                x_airbyte_name='customers',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type='string',
+                        description='The unique identifier of the customer',
+                    ),
+                    CacheFieldConfig(
+                        name='external_customer_id',
+                        type=['string', 'null'],
+                        description='The ID of the customer in an external system',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['string', 'null'],
+                        description='The name of the customer',
+                    ),
+                    CacheFieldConfig(
+                        name='email',
+                        type=['string', 'null'],
+                        description='The email address of the customer',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['string', 'null'],
+                        description='The date and time when the customer was created',
+                    ),
+                    CacheFieldConfig(
+                        name='payment_provider',
+                        type=['string', 'null'],
+                        description='The payment provider used by the customer',
+                    ),
+                    CacheFieldConfig(
+                        name='payment_provider_id',
+                        type=['string', 'null'],
+                        description="The ID of the customer in the payment provider's system",
+                    ),
+                    CacheFieldConfig(
+                        name='timezone',
+                        type=['string', 'null'],
+                        description='The timezone setting of the customer',
+                    ),
+                    CacheFieldConfig(
+                        name='shipping_address',
+                        type=['object', 'null'],
+                        description='The shipping address of the customer',
+                    ),
+                    CacheFieldConfig(
+                        name='billing_address',
+                        type=['object', 'null'],
+                        description='The billing address of the customer',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='subscriptions',
+                suggested=True,
+                x_airbyte_name='subscriptions',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type='string',
+                        description='The unique identifier of the subscription',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['string', 'null'],
+                        description='The date and time when the subscription was created',
+                    ),
+                    CacheFieldConfig(
+                        name='start_date',
+                        type=['string', 'null'],
+                        description='The date and time when the subscription starts',
+                    ),
+                    CacheFieldConfig(
+                        name='end_date',
+                        type=['string', 'null'],
+                        description='The date and time when the subscription ends',
+                    ),
+                    CacheFieldConfig(
+                        name='status',
+                        type=['string', 'null'],
+                        description='The current status of the subscription',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='plans',
+                x_airbyte_name='plans',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type='string',
+                        description='The unique identifier of the plan',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['string', 'null'],
+                        description='The date and time when the plan was created',
+                    ),
+                    CacheFieldConfig(
+                        name='name',
+                        type=['string', 'null'],
+                        description='The name of the plan',
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['string', 'null'],
+                        description='A description of the plan',
+                    ),
+                    CacheFieldConfig(
+                        name='prices',
+                        type=['array', 'null'],
+                        description='The pricing options for the plan',
+                    ),
+                    CacheFieldConfig(
+                        name='product',
+                        type=['object', 'null'],
+                        description='The product associated with the plan',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='invoices',
+                suggested=True,
+                x_airbyte_name='invoices',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type='string',
+                        description='The unique identifier of the invoice',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['string', 'null'],
+                        description='The date and time when the invoice was created',
+                    ),
+                    CacheFieldConfig(
+                        name='invoice_date',
+                        type=['string', 'null'],
+                        description='The date of the invoice',
+                    ),
+                    CacheFieldConfig(
+                        name='due_date',
+                        type=['string', 'null'],
+                        description='The due date for the invoice',
+                    ),
+                    CacheFieldConfig(
+                        name='invoice_pdf',
+                        type=['string', 'null'],
+                        description='The URL to download the PDF version of the invoice',
+                    ),
+                    CacheFieldConfig(
+                        name='subtotal',
+                        type=['string', 'null'],
+                        description='The subtotal amount of the invoice',
+                    ),
+                    CacheFieldConfig(
+                        name='total',
+                        type=['string', 'null'],
+                        description='The total amount of the invoice',
+                    ),
+                    CacheFieldConfig(
+                        name='amount_due',
+                        type=['string', 'null'],
+                        description='The amount due on the invoice',
+                    ),
+                    CacheFieldConfig(
+                        name='status',
+                        type=['string', 'null'],
+                        description='The current status of the invoice',
+                    ),
+                    CacheFieldConfig(
+                        name='memo',
+                        type=['string', 'null'],
+                        description='Any additional notes or comments on the invoice',
+                    ),
+                    CacheFieldConfig(
+                        name='paid_at',
+                        type=['string', 'null'],
+                        description='The date and time when the invoice was paid',
+                    ),
+                    CacheFieldConfig(
+                        name='issued_at',
+                        type=['string', 'null'],
+                        description='The date and time when the invoice was issued',
+                    ),
+                    CacheFieldConfig(
+                        name='hosted_invoice_url',
+                        type=['string', 'null'],
+                        description='The URL to view the hosted invoice',
+                    ),
+                    CacheFieldConfig(
+                        name='line_items',
+                        type=['array', 'null'],
+                        description='The line items on the invoice',
+                    ),
+                    CacheFieldConfig(
+                        name='subscription',
+                        type=['object', 'null'],
+                        description='The subscription associated with the invoice',
+                    ),
+                ],
+            ),
+        ],
+        disable_compaction=True,
+    ),
     search_field_paths={
         'customers': [
             'id',

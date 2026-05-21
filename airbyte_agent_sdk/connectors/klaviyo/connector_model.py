@@ -19,6 +19,12 @@ from airbyte_agent_sdk.schema.security import (
     AuthConfigFieldSpec,
     AuthConfigSpec,
 )
+from airbyte_agent_sdk.schema.extensions import (
+    CacheConfig,
+    CacheEntityConfig,
+    CacheFieldConfig,
+    CacheFieldProperty,
+)
 from airbyte_agent_sdk.schema.base import (
     ExampleQuestions,
 )
@@ -2221,6 +2227,1018 @@ KlaviyoConnectorModel: ConnectorModel = ConnectorModel(
             },
         ),
     ],
+    context_store=CacheConfig(
+        entities=[
+            CacheEntityConfig(
+                entity='profiles',
+                suggested=True,
+                x_airbyte_name='profiles',
+                fields=[
+                    CacheFieldConfig(
+                        name='attributes',
+                        type=['null', 'object'],
+                        description='',
+                        properties={
+                            'anonymous_id': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'created': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'email': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'external_id': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'first_name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'image': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'last_event_date': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'last_name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'locale': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'location': CacheFieldProperty(
+                                type=['null', 'object'],
+                                properties={
+                                    'address1': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                    'address2': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                    'city': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                    'country': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                    'ip': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                    'latitude': CacheFieldProperty(
+                                        type=['null', 'number', 'string'],
+                                    ),
+                                    'longitude': CacheFieldProperty(
+                                        type=['null', 'number', 'string'],
+                                    ),
+                                    'region': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                    'timezone': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                    'zip': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                },
+                            ),
+                            'organization': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'phone_number': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'predictive_analytics': CacheFieldProperty(
+                                type=['null', 'object'],
+                                properties={
+                                    'average_days_between_orders': CacheFieldProperty(
+                                        type=['null', 'number'],
+                                    ),
+                                    'average_order_value': CacheFieldProperty(
+                                        type=['null', 'number'],
+                                    ),
+                                    'churn_probability': CacheFieldProperty(
+                                        type=['null', 'number'],
+                                    ),
+                                    'expected_date_of_next_order': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                    'historic_clv': CacheFieldProperty(
+                                        type=['null', 'number'],
+                                    ),
+                                    'historic_number_of_orders': CacheFieldProperty(
+                                        type=['null', 'integer'],
+                                    ),
+                                    'predicted_clv': CacheFieldProperty(
+                                        type=['null', 'number'],
+                                    ),
+                                    'predicted_number_of_orders': CacheFieldProperty(
+                                        type=['null', 'number'],
+                                    ),
+                                    'total_clv': CacheFieldProperty(
+                                        type=['null', 'number'],
+                                    ),
+                                },
+                            ),
+                            'properties': CacheFieldProperty(
+                                type=['null', 'object'],
+                            ),
+                            'subscriptions': CacheFieldProperty(
+                                type=['null', 'object'],
+                                properties={
+                                    'email': CacheFieldProperty(
+                                        type=['null', 'object'],
+                                        properties={
+                                            'marketing': CacheFieldProperty(
+                                                type=['null', 'object'],
+                                                properties={
+                                                    'can_receive_email_marketing': CacheFieldProperty(
+                                                        type=['null', 'boolean'],
+                                                    ),
+                                                    'consent': CacheFieldProperty(
+                                                        type=['null', 'string'],
+                                                    ),
+                                                    'consent_timestamp': CacheFieldProperty(
+                                                        type=['null', 'string'],
+                                                    ),
+                                                    'custom_method_detail': CacheFieldProperty(
+                                                        type=['null', 'string'],
+                                                    ),
+                                                    'double_optin': CacheFieldProperty(
+                                                        type=['null', 'boolean'],
+                                                    ),
+                                                    'last_updated': CacheFieldProperty(
+                                                        type=['null', 'string'],
+                                                    ),
+                                                    'list_suppressions': CacheFieldProperty(
+                                                        type=['null', 'array'],
+                                                    ),
+                                                    'method': CacheFieldProperty(
+                                                        type=['null', 'string'],
+                                                    ),
+                                                    'method_detail': CacheFieldProperty(
+                                                        type=['null', 'string'],
+                                                    ),
+                                                    'suppressions': CacheFieldProperty(
+                                                        type=['null', 'array'],
+                                                    ),
+                                                    'timestamp': CacheFieldProperty(
+                                                        type=['null', 'string'],
+                                                    ),
+                                                },
+                                            ),
+                                        },
+                                    ),
+                                    'mobile_push': CacheFieldProperty(
+                                        type=['null', 'object'],
+                                        properties={
+                                            'marketing': CacheFieldProperty(
+                                                type=['null', 'object'],
+                                                properties={
+                                                    'can_receive_sms_marketing': CacheFieldProperty(
+                                                        type=['null', 'boolean'],
+                                                    ),
+                                                    'consent': CacheFieldProperty(
+                                                        type=['null', 'string'],
+                                                    ),
+                                                    'consent_timestamp': CacheFieldProperty(
+                                                        type=['null', 'string'],
+                                                    ),
+                                                },
+                                            ),
+                                        },
+                                    ),
+                                    'sms': CacheFieldProperty(
+                                        type=['null', 'object'],
+                                        properties={
+                                            'marketing': CacheFieldProperty(
+                                                type=['null', 'object'],
+                                                properties={
+                                                    'can_receive_sms_marketing': CacheFieldProperty(
+                                                        type=['null', 'boolean'],
+                                                    ),
+                                                    'consent': CacheFieldProperty(
+                                                        type=['null', 'string'],
+                                                    ),
+                                                    'consent_timestamp': CacheFieldProperty(
+                                                        type=['null', 'string'],
+                                                    ),
+                                                    'last_updated': CacheFieldProperty(
+                                                        type=['null', 'string'],
+                                                    ),
+                                                    'method': CacheFieldProperty(
+                                                        type=['null', 'string'],
+                                                    ),
+                                                    'method_detail': CacheFieldProperty(
+                                                        type=['null', 'string'],
+                                                    ),
+                                                    'timestamp': CacheFieldProperty(
+                                                        type=['null', 'string'],
+                                                    ),
+                                                },
+                                            ),
+                                            'transactional': CacheFieldProperty(
+                                                type=['null', 'object'],
+                                                properties={
+                                                    'can_receive_sms_marketing': CacheFieldProperty(
+                                                        type=['null', 'boolean'],
+                                                    ),
+                                                    'consent': CacheFieldProperty(
+                                                        type=['null', 'string'],
+                                                    ),
+                                                    'consent_timestamp': CacheFieldProperty(
+                                                        type=['null', 'string'],
+                                                    ),
+                                                    'last_updated': CacheFieldProperty(
+                                                        type=['null', 'string'],
+                                                    ),
+                                                    'method': CacheFieldProperty(
+                                                        type=['null', 'string'],
+                                                    ),
+                                                    'method_detail': CacheFieldProperty(
+                                                        type=['null', 'string'],
+                                                    ),
+                                                    'timestamp': CacheFieldProperty(
+                                                        type=['null', 'string'],
+                                                    ),
+                                                },
+                                            ),
+                                        },
+                                    ),
+                                },
+                            ),
+                            'title': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'updated': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='links',
+                        type=['null', 'object'],
+                        description='',
+                        properties={
+                            'self': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='relationships',
+                        type=['null', 'object'],
+                        description='',
+                        properties={
+                            'lists': CacheFieldProperty(
+                                type=['null', 'object'],
+                                properties={
+                                    'links': CacheFieldProperty(
+                                        type=['null', 'object'],
+                                        properties={
+                                            'related': CacheFieldProperty(
+                                                type=['null', 'string'],
+                                            ),
+                                            'self': CacheFieldProperty(
+                                                type=['null', 'string'],
+                                            ),
+                                        },
+                                    ),
+                                },
+                            ),
+                            'segments': CacheFieldProperty(
+                                type=['null', 'object'],
+                                properties={
+                                    'links': CacheFieldProperty(
+                                        type=['null', 'object'],
+                                        properties={
+                                            'related': CacheFieldProperty(
+                                                type=['null', 'string'],
+                                            ),
+                                            'self': CacheFieldProperty(
+                                                type=['null', 'string'],
+                                            ),
+                                        },
+                                    ),
+                                },
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='segments',
+                        type=['null', 'object'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='updated',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='events',
+                suggested=True,
+                x_airbyte_name='events',
+                fields=[
+                    CacheFieldConfig(
+                        name='attributes',
+                        type=['null', 'object'],
+                        description='',
+                        properties={
+                            'datetime': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'event_properties': CacheFieldProperty(
+                                type=['null', 'object'],
+                            ),
+                            'timestamp': CacheFieldProperty(
+                                type=['null', 'integer'],
+                            ),
+                            'uuid': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='datetime',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='links',
+                        type=['null', 'object'],
+                        description='',
+                        properties={
+                            'self': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='relationships',
+                        type=['null', 'object'],
+                        description='',
+                        properties={
+                            'attributions': CacheFieldProperty(
+                                type=['null', 'object'],
+                                properties={
+                                    'data': CacheFieldProperty(
+                                        type=['null', 'array'],
+                                    ),
+                                    'links': CacheFieldProperty(
+                                        type=['null', 'object'],
+                                        properties={
+                                            'related': CacheFieldProperty(
+                                                type=['null', 'string'],
+                                            ),
+                                            'self': CacheFieldProperty(
+                                                type=['null', 'string'],
+                                            ),
+                                        },
+                                    ),
+                                },
+                            ),
+                            'metric': CacheFieldProperty(
+                                type=['null', 'object'],
+                                properties={
+                                    'data': CacheFieldProperty(
+                                        type=['null', 'object'],
+                                        properties={
+                                            'type': CacheFieldProperty(
+                                                type=['null', 'string'],
+                                            ),
+                                            'id': CacheFieldProperty(
+                                                type=['null', 'string'],
+                                            ),
+                                        },
+                                    ),
+                                    'links': CacheFieldProperty(
+                                        type=['null', 'object'],
+                                        properties={
+                                            'related': CacheFieldProperty(
+                                                type=['null', 'string'],
+                                            ),
+                                            'self': CacheFieldProperty(
+                                                type=['null', 'string'],
+                                            ),
+                                        },
+                                    ),
+                                },
+                            ),
+                            'profile': CacheFieldProperty(
+                                type=['null', 'object'],
+                                properties={
+                                    'data': CacheFieldProperty(
+                                        type=['null', 'object'],
+                                        properties={
+                                            'type': CacheFieldProperty(
+                                                type=['null', 'string'],
+                                            ),
+                                            'id': CacheFieldProperty(
+                                                type=['null', 'string'],
+                                            ),
+                                        },
+                                    ),
+                                    'links': CacheFieldProperty(
+                                        type=['null', 'object'],
+                                        properties={
+                                            'related': CacheFieldProperty(
+                                                type=['null', 'string'],
+                                            ),
+                                            'self': CacheFieldProperty(
+                                                type=['null', 'string'],
+                                            ),
+                                        },
+                                    ),
+                                },
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='email_templates',
+                x_airbyte_name='email_templates',
+                fields=[
+                    CacheFieldConfig(
+                        name='attributes',
+                        type=['null', 'object'],
+                        description='',
+                        properties={
+                            'company_id': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'created': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'editor_type': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'html': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'text': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'updated': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='links',
+                        type=['null', 'object'],
+                        description='',
+                        properties={
+                            'self': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='updated',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='campaigns',
+                suggested=True,
+                x_airbyte_name='campaigns',
+                fields=[
+                    CacheFieldConfig(
+                        name='attributes',
+                        type=['null', 'object'],
+                        description='',
+                        properties={
+                            'archived': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                            'audiences': CacheFieldProperty(
+                                type=['null', 'object'],
+                                properties={
+                                    'excluded': CacheFieldProperty(
+                                        type=['null', 'array'],
+                                    ),
+                                    'included': CacheFieldProperty(
+                                        type=['null', 'array'],
+                                    ),
+                                },
+                            ),
+                            'channel': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'created_at': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'message': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'scheduled_at': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'send_options': CacheFieldProperty(
+                                type=['null', 'object'],
+                                properties={
+                                    'ignore_unsubscribes': CacheFieldProperty(
+                                        type=['null', 'boolean'],
+                                    ),
+                                    'use_smart_sending': CacheFieldProperty(
+                                        type=['null', 'boolean'],
+                                    ),
+                                },
+                            ),
+                            'send_strategy': CacheFieldProperty(
+                                type=['null', 'object'],
+                                properties={
+                                    'method': CacheFieldProperty(
+                                        type=['null', 'string'],
+                                    ),
+                                    'options_static': CacheFieldProperty(
+                                        type=['null', 'object'],
+                                        properties={
+                                            'datetime': CacheFieldProperty(
+                                                type=['null', 'string'],
+                                            ),
+                                            'is_local': CacheFieldProperty(
+                                                type=['null', 'boolean'],
+                                            ),
+                                            'send_past_recipients_immediately': CacheFieldProperty(
+                                                type=['null', 'boolean'],
+                                            ),
+                                        },
+                                    ),
+                                    'options_sto': CacheFieldProperty(
+                                        type=['null', 'object'],
+                                        properties={
+                                            'date': CacheFieldProperty(
+                                                type=['null', 'string'],
+                                            ),
+                                        },
+                                    ),
+                                    'options_throttled': CacheFieldProperty(
+                                        type=['null', 'object'],
+                                        properties={
+                                            'datetime': CacheFieldProperty(
+                                                type=['null', 'string'],
+                                            ),
+                                            'throttle_percentage': CacheFieldProperty(
+                                                type=['null', 'integer'],
+                                            ),
+                                        },
+                                    ),
+                                },
+                            ),
+                            'send_time': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'status': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'tracking_options': CacheFieldProperty(
+                                type=['null', 'object'],
+                                properties={
+                                    'add_tracking_params': CacheFieldProperty(
+                                        type=['null', 'boolean'],
+                                    ),
+                                    'is_add_utm': CacheFieldProperty(
+                                        type=['null', 'boolean'],
+                                    ),
+                                    'is_tracking_clicks': CacheFieldProperty(
+                                        type=['null', 'boolean'],
+                                    ),
+                                    'is_tracking_opens': CacheFieldProperty(
+                                        type=['null', 'boolean'],
+                                    ),
+                                    'utm_params': CacheFieldProperty(
+                                        type=['null', 'array'],
+                                    ),
+                                },
+                            ),
+                            'updated_at': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='links',
+                        type=['null', 'object'],
+                        description='',
+                        properties={
+                            'self': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='relationships',
+                        type=['null', 'object'],
+                        description='',
+                        properties={
+                            'campaign-messages': CacheFieldProperty(
+                                type=['null', 'object'],
+                                properties={
+                                    'data': CacheFieldProperty(
+                                        type=['null', 'array'],
+                                    ),
+                                    'links': CacheFieldProperty(
+                                        type=['null', 'object'],
+                                        properties={
+                                            'related': CacheFieldProperty(
+                                                type=['null', 'string'],
+                                            ),
+                                            'self': CacheFieldProperty(
+                                                type=['null', 'string'],
+                                            ),
+                                        },
+                                    ),
+                                },
+                            ),
+                            'tags': CacheFieldProperty(
+                                type=['null', 'object'],
+                                properties={
+                                    'data': CacheFieldProperty(
+                                        type=['null', 'array'],
+                                    ),
+                                    'links': CacheFieldProperty(
+                                        type=['null', 'object'],
+                                        properties={
+                                            'related': CacheFieldProperty(
+                                                type=['null', 'string'],
+                                            ),
+                                            'self': CacheFieldProperty(
+                                                type=['null', 'string'],
+                                            ),
+                                        },
+                                    ),
+                                },
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='flows',
+                suggested=True,
+                x_airbyte_name='flows',
+                fields=[
+                    CacheFieldConfig(
+                        name='attributes',
+                        type=['null', 'object'],
+                        description='',
+                        properties={
+                            'archived': CacheFieldProperty(
+                                type=['null', 'boolean'],
+                            ),
+                            'created': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'status': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'trigger_type': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'updated': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='links',
+                        type=['null', 'object'],
+                        description='',
+                        properties={
+                            'self': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='relationships',
+                        type=['null', 'object'],
+                        description='',
+                        properties={
+                            'flow-actions': CacheFieldProperty(
+                                type=['null', 'object'],
+                                properties={
+                                    'data': CacheFieldProperty(
+                                        type=['null', 'array'],
+                                    ),
+                                    'links': CacheFieldProperty(
+                                        type=['null', 'object'],
+                                        properties={
+                                            'related': CacheFieldProperty(
+                                                type=['null', 'string'],
+                                            ),
+                                            'self': CacheFieldProperty(
+                                                type=['null', 'string'],
+                                            ),
+                                        },
+                                    ),
+                                },
+                            ),
+                            'tags': CacheFieldProperty(
+                                type=['null', 'object'],
+                                properties={
+                                    'data': CacheFieldProperty(
+                                        type=['null', 'array'],
+                                    ),
+                                    'links': CacheFieldProperty(
+                                        type=['null', 'object'],
+                                        properties={
+                                            'related': CacheFieldProperty(
+                                                type=['null', 'string'],
+                                            ),
+                                            'self': CacheFieldProperty(
+                                                type=['null', 'string'],
+                                            ),
+                                        },
+                                    ),
+                                },
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='updated',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='metrics',
+                suggested=True,
+                x_airbyte_name='metrics',
+                fields=[
+                    CacheFieldConfig(
+                        name='attributes',
+                        type=['null', 'object'],
+                        description='',
+                        properties={
+                            'created': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'integration': CacheFieldProperty(
+                                type=['null', 'object'],
+                            ),
+                            'name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'updated': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='links',
+                        type=['null', 'object'],
+                        description='',
+                        properties={
+                            'self': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='relationships',
+                        type=['null', 'object'],
+                        description='',
+                        properties={
+                            'flow-triggers': CacheFieldProperty(
+                                type=['null', 'object'],
+                                properties={
+                                    'data': CacheFieldProperty(
+                                        type=['null', 'object'],
+                                        properties={
+                                            'type': CacheFieldProperty(
+                                                type=['null', 'string'],
+                                            ),
+                                            'id': CacheFieldProperty(
+                                                type=['null', 'string'],
+                                            ),
+                                        },
+                                    ),
+                                    'links': CacheFieldProperty(
+                                        type=['null', 'object'],
+                                        properties={
+                                            'related': CacheFieldProperty(
+                                                type=['null', 'string'],
+                                            ),
+                                            'self': CacheFieldProperty(
+                                                type=['null', 'string'],
+                                            ),
+                                        },
+                                    ),
+                                },
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='updated',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='lists',
+                suggested=True,
+                x_airbyte_name='lists',
+                fields=[
+                    CacheFieldConfig(
+                        name='attributes',
+                        type=['null', 'object'],
+                        description='',
+                        properties={
+                            'created': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'name': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'opt_in_process': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                            'updated': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='links',
+                        type=['null', 'object'],
+                        description='',
+                        properties={
+                            'self': CacheFieldProperty(
+                                type=['null', 'string'],
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='relationships',
+                        type=['null', 'object'],
+                        description='',
+                        properties={
+                            'flow-triggers': CacheFieldProperty(
+                                type=['null', 'object'],
+                                properties={
+                                    'data': CacheFieldProperty(
+                                        type=['null', 'object'],
+                                        properties={
+                                            'type': CacheFieldProperty(
+                                                type=['null', 'string'],
+                                            ),
+                                            'id': CacheFieldProperty(
+                                                type=['null', 'string'],
+                                            ),
+                                        },
+                                    ),
+                                    'links': CacheFieldProperty(
+                                        type=['null', 'object'],
+                                        properties={
+                                            'related': CacheFieldProperty(
+                                                type=['null', 'string'],
+                                            ),
+                                            'self': CacheFieldProperty(
+                                                type=['null', 'string'],
+                                            ),
+                                        },
+                                    ),
+                                },
+                            ),
+                            'profiles': CacheFieldProperty(
+                                type=['null', 'object'],
+                                properties={
+                                    'links': CacheFieldProperty(
+                                        type=['null', 'object'],
+                                        properties={
+                                            'related': CacheFieldProperty(
+                                                type=['null', 'string'],
+                                            ),
+                                            'self': CacheFieldProperty(
+                                                type=['null', 'string'],
+                                            ),
+                                        },
+                                    ),
+                                },
+                            ),
+                            'tags': CacheFieldProperty(
+                                type=['null', 'object'],
+                                properties={
+                                    'data': CacheFieldProperty(
+                                        type=['null', 'array'],
+                                    ),
+                                    'links': CacheFieldProperty(
+                                        type=['null', 'object'],
+                                        properties={
+                                            'related': CacheFieldProperty(
+                                                type=['null', 'string'],
+                                            ),
+                                            'self': CacheFieldProperty(
+                                                type=['null', 'string'],
+                                            ),
+                                        },
+                                    ),
+                                },
+                            ),
+                        },
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                    CacheFieldConfig(
+                        name='updated',
+                        type=['null', 'string'],
+                        description='',
+                    ),
+                ],
+            ),
+        ],
+        disable_compaction=True,
+    ),
     search_field_paths={
         'profiles': [
             'attributes',
