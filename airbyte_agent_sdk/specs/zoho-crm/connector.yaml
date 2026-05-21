@@ -12,6 +12,9 @@ info:
     for leads, contacts, accounts, deals, and tasks.
   x-airbyte-connector-name: zoho-crm
   x-airbyte-connector-definition-id: 4942d392-c7b5-4271-91f9-3b4f4e51eb3e
+  x-airbyte-platform-availability:
+    state: experimental
+    reason: Requires additional QA testing
   x-airbyte-replication-version: "0.1.3"
   x-airbyte-replication-compatibility: ">=0.1.3, <1.0.0"
   x-airbyte-external-documentation-urls:

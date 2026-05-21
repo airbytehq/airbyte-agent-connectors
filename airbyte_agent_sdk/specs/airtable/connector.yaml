@@ -9,6 +9,9 @@ info:
     data analysis and workflow automation.
   x-airbyte-connector-name: airtable
   x-airbyte-connector-definition-id: 14c6e7ea-97ed-4f5e-a7b5-25e9a80b8212
+  x-airbyte-platform-availability:
+    state: experimental
+    reason: Requires additional QA testing
   x-airbyte-replication-version: "4.6.25"
   x-airbyte-replication-compatibility: ">=4.6.25, <5.0.0"
   x-airbyte-external-documentation-urls:
