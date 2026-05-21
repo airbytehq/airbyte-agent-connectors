@@ -476,15 +476,6 @@ class PixelOwnerBusiness(BaseModel):
     name: str | None | None = Field(default=None, description="Owner business name")
     """Owner business name"""
 
-class PixelCreator(BaseModel):
-    """User who created the pixel"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: str | None | None = Field(default=None, description="Creator user ID")
-    """Creator user ID"""
-    name: str | None | None = Field(default=None, description="Creator user name")
-    """Creator user name"""
-
 class PixelOwnerAdAccount(BaseModel):
     """Ad account that owns the pixel"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -493,6 +484,15 @@ class PixelOwnerAdAccount(BaseModel):
     """Owner ad account ID"""
     id: str | None | None = Field(default=None, description="Owner ad account ID (with act_ prefix)")
     """Owner ad account ID (with act_ prefix)"""
+
+class PixelCreator(BaseModel):
+    """User who created the pixel"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None | None = Field(default=None, description="Creator user ID")
+    """Creator user ID"""
+    name: str | None | None = Field(default=None, description="Creator user name")
+    """Creator user name"""
 
 class Pixel(BaseModel):
     """Facebook Ads Pixel"""
@@ -718,15 +718,6 @@ class AdLibraryAdSpend(BaseModel):
     upper_bound: int | None | None = Field(default=None, description="Upper bound of spend")
     """Upper bound of spend"""
 
-class AdLibraryAdEstimatedAudienceSize(BaseModel):
-    """Estimated audience size range"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    lower_bound: int | None | None = Field(default=None, description="Lower bound of the estimated audience size")
-    """Lower bound of the estimated audience size"""
-    upper_bound: int | None | None = Field(default=None, description="Upper bound of the estimated audience size")
-    """Upper bound of the estimated audience size"""
-
 class AdLibraryAdDeliveryByRegionItem(BaseModel):
     """Nested schema for AdLibraryAd.delivery_by_region_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -735,6 +726,15 @@ class AdLibraryAdDeliveryByRegionItem(BaseModel):
     """Region name"""
     percentage: str | None | None = Field(default=None, description="Percentage of audience in this region")
     """Percentage of audience in this region"""
+
+class AdLibraryAdEstimatedAudienceSize(BaseModel):
+    """Estimated audience size range"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    lower_bound: int | None | None = Field(default=None, description="Lower bound of the estimated audience size")
+    """Lower bound of the estimated audience size"""
+    upper_bound: int | None | None = Field(default=None, description="Upper bound of the estimated audience size")
+    """Upper bound of the estimated audience size"""
 
 class AdLibraryAd(BaseModel):
     """An archived ad from the Facebook Ad Library, containing ad creative content, delivery information, spend data, and demographic reach breakdowns."""

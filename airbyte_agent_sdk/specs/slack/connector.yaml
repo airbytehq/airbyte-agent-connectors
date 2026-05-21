@@ -121,6 +121,7 @@ info:
       threads_ignore_no_replies: true
 
   x-airbyte-context-store:
+    flush_batch_size_mb: 10
     disable_compaction: true
     entities:
       - entity: channels
