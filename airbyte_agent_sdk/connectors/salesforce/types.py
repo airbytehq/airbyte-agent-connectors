@@ -23,14 +23,77 @@ class SobjectsListParams(TypedDict):
     """Parameters for sobjects.list operation"""
     pass
 
+class SobjectsCreateParams(TypedDict):
+    """Parameters for sobjects.create operation"""
+    sobject_type: str
+
+class SobjectsGetParams(TypedDict):
+    """Parameters for sobjects.get operation"""
+    sobject_type: str
+    id: str
+    fields: NotRequired[str]
+
+class SobjectsUpdateParams(TypedDict):
+    """Parameters for sobjects.update operation"""
+    sobject_type: str
+    id: str
+
+class SobjectsDeleteParams(TypedDict):
+    """Parameters for sobjects.delete operation"""
+    sobject_type: str
+    id: str
+
 class AccountsListParams(TypedDict):
     """Parameters for accounts.list operation"""
     q: str
+
+class AccountsCreateParams(TypedDict):
+    """Parameters for accounts.create operation"""
+    name: str
+    account_number: NotRequired[str]
+    type: NotRequired[str]
+    industry: NotRequired[str]
+    phone: NotRequired[str]
+    website: NotRequired[str]
+    billing_street: NotRequired[str]
+    billing_city: NotRequired[str]
+    billing_state: NotRequired[str]
+    billing_postal_code: NotRequired[str]
+    billing_country: NotRequired[str]
+    annual_revenue: NotRequired[float]
+    number_of_employees: NotRequired[int]
+    description: NotRequired[str]
+    owner_id: NotRequired[str]
+    parent_id: NotRequired[str]
 
 class AccountsGetParams(TypedDict):
     """Parameters for accounts.get operation"""
     id: str
     fields: NotRequired[str]
+
+class AccountsUpdateParams(TypedDict):
+    """Parameters for accounts.update operation"""
+    name: str
+    account_number: NotRequired[str]
+    type: NotRequired[str]
+    industry: NotRequired[str]
+    phone: NotRequired[str]
+    website: NotRequired[str]
+    billing_street: NotRequired[str]
+    billing_city: NotRequired[str]
+    billing_state: NotRequired[str]
+    billing_postal_code: NotRequired[str]
+    billing_country: NotRequired[str]
+    annual_revenue: NotRequired[float]
+    number_of_employees: NotRequired[int]
+    description: NotRequired[str]
+    owner_id: NotRequired[str]
+    parent_id: NotRequired[str]
+    id: str
+
+class AccountsDeleteParams(TypedDict):
+    """Parameters for accounts.delete operation"""
+    id: str
 
 class AccountsApiSearchParams(TypedDict):
     """Parameters for accounts.api_search operation"""
@@ -40,10 +103,51 @@ class ContactsListParams(TypedDict):
     """Parameters for contacts.list operation"""
     q: str
 
+class ContactsCreateParams(TypedDict):
+    """Parameters for contacts.create operation"""
+    first_name: NotRequired[str]
+    last_name: str
+    email: NotRequired[str]
+    phone: NotRequired[str]
+    mobile_phone: NotRequired[str]
+    title: NotRequired[str]
+    department: NotRequired[str]
+    account_id: NotRequired[str]
+    mailing_street: NotRequired[str]
+    mailing_city: NotRequired[str]
+    mailing_state: NotRequired[str]
+    mailing_postal_code: NotRequired[str]
+    mailing_country: NotRequired[str]
+    description: NotRequired[str]
+    owner_id: NotRequired[str]
+
 class ContactsGetParams(TypedDict):
     """Parameters for contacts.get operation"""
     id: str
     fields: NotRequired[str]
+
+class ContactsUpdateParams(TypedDict):
+    """Parameters for contacts.update operation"""
+    first_name: NotRequired[str]
+    last_name: str
+    email: NotRequired[str]
+    phone: NotRequired[str]
+    mobile_phone: NotRequired[str]
+    title: NotRequired[str]
+    department: NotRequired[str]
+    account_id: NotRequired[str]
+    mailing_street: NotRequired[str]
+    mailing_city: NotRequired[str]
+    mailing_state: NotRequired[str]
+    mailing_postal_code: NotRequired[str]
+    mailing_country: NotRequired[str]
+    description: NotRequired[str]
+    owner_id: NotRequired[str]
+    id: str
+
+class ContactsDeleteParams(TypedDict):
+    """Parameters for contacts.delete operation"""
+    id: str
 
 class ContactsApiSearchParams(TypedDict):
     """Parameters for contacts.api_search operation"""
@@ -53,10 +157,63 @@ class LeadsListParams(TypedDict):
     """Parameters for leads.list operation"""
     q: str
 
+class LeadsCreateParams(TypedDict):
+    """Parameters for leads.create operation"""
+    first_name: NotRequired[str]
+    last_name: str
+    company: str
+    title: NotRequired[str]
+    email: NotRequired[str]
+    phone: NotRequired[str]
+    mobile_phone: NotRequired[str]
+    website: NotRequired[str]
+    status: NotRequired[str]
+    lead_source: NotRequired[str]
+    industry: NotRequired[str]
+    rating: NotRequired[str]
+    annual_revenue: NotRequired[float]
+    number_of_employees: NotRequired[int]
+    street: NotRequired[str]
+    city: NotRequired[str]
+    state: NotRequired[str]
+    postal_code: NotRequired[str]
+    country: NotRequired[str]
+    description: NotRequired[str]
+    owner_id: NotRequired[str]
+
 class LeadsGetParams(TypedDict):
     """Parameters for leads.get operation"""
     id: str
     fields: NotRequired[str]
+
+class LeadsUpdateParams(TypedDict):
+    """Parameters for leads.update operation"""
+    first_name: NotRequired[str]
+    last_name: str
+    company: str
+    title: NotRequired[str]
+    email: NotRequired[str]
+    phone: NotRequired[str]
+    mobile_phone: NotRequired[str]
+    website: NotRequired[str]
+    status: NotRequired[str]
+    lead_source: NotRequired[str]
+    industry: NotRequired[str]
+    rating: NotRequired[str]
+    annual_revenue: NotRequired[float]
+    number_of_employees: NotRequired[int]
+    street: NotRequired[str]
+    city: NotRequired[str]
+    state: NotRequired[str]
+    postal_code: NotRequired[str]
+    country: NotRequired[str]
+    description: NotRequired[str]
+    owner_id: NotRequired[str]
+    id: str
+
+class LeadsDeleteParams(TypedDict):
+    """Parameters for leads.delete operation"""
+    id: str
 
 class LeadsApiSearchParams(TypedDict):
     """Parameters for leads.api_search operation"""
@@ -66,10 +223,47 @@ class OpportunitiesListParams(TypedDict):
     """Parameters for opportunities.list operation"""
     q: str
 
+class OpportunitiesCreateParams(TypedDict):
+    """Parameters for opportunities.create operation"""
+    name: str
+    account_id: NotRequired[str]
+    stage_name: str
+    close_date: str
+    amount: NotRequired[float]
+    probability: NotRequired[float]
+    type: NotRequired[str]
+    lead_source: NotRequired[str]
+    next_step: NotRequired[str]
+    campaign_id: NotRequired[str]
+    forecast_category_name: NotRequired[str]
+    description: NotRequired[str]
+    owner_id: NotRequired[str]
+
 class OpportunitiesGetParams(TypedDict):
     """Parameters for opportunities.get operation"""
     id: str
     fields: NotRequired[str]
+
+class OpportunitiesUpdateParams(TypedDict):
+    """Parameters for opportunities.update operation"""
+    name: str
+    account_id: NotRequired[str]
+    stage_name: str
+    close_date: str
+    amount: NotRequired[float]
+    probability: NotRequired[float]
+    type: NotRequired[str]
+    lead_source: NotRequired[str]
+    next_step: NotRequired[str]
+    campaign_id: NotRequired[str]
+    forecast_category_name: NotRequired[str]
+    description: NotRequired[str]
+    owner_id: NotRequired[str]
+    id: str
+
+class OpportunitiesDeleteParams(TypedDict):
+    """Parameters for opportunities.delete operation"""
+    id: str
 
 class OpportunitiesApiSearchParams(TypedDict):
     """Parameters for opportunities.api_search operation"""
@@ -79,10 +273,43 @@ class TasksListParams(TypedDict):
     """Parameters for tasks.list operation"""
     q: str
 
+class TasksCreateParams(TypedDict):
+    """Parameters for tasks.create operation"""
+    subject: str
+    status: NotRequired[str]
+    priority: NotRequired[str]
+    activity_date: NotRequired[str]
+    who_id: NotRequired[str]
+    what_id: NotRequired[str]
+    description: NotRequired[str]
+    type: NotRequired[str]
+    is_reminder_set: NotRequired[bool]
+    reminder_date_time: NotRequired[str]
+    owner_id: NotRequired[str]
+
 class TasksGetParams(TypedDict):
     """Parameters for tasks.get operation"""
     id: str
     fields: NotRequired[str]
+
+class TasksUpdateParams(TypedDict):
+    """Parameters for tasks.update operation"""
+    subject: str
+    status: NotRequired[str]
+    priority: NotRequired[str]
+    activity_date: NotRequired[str]
+    who_id: NotRequired[str]
+    what_id: NotRequired[str]
+    description: NotRequired[str]
+    type: NotRequired[str]
+    is_reminder_set: NotRequired[bool]
+    reminder_date_time: NotRequired[str]
+    owner_id: NotRequired[str]
+    id: str
+
+class TasksDeleteParams(TypedDict):
+    """Parameters for tasks.delete operation"""
+    id: str
 
 class TasksApiSearchParams(TypedDict):
     """Parameters for tasks.api_search operation"""
@@ -92,10 +319,43 @@ class EventsListParams(TypedDict):
     """Parameters for events.list operation"""
     q: str
 
+class EventsCreateParams(TypedDict):
+    """Parameters for events.create operation"""
+    subject: str
+    start_date_time: str
+    end_date_time: NotRequired[str]
+    duration_in_minutes: int
+    location: NotRequired[str]
+    description: NotRequired[str]
+    who_id: NotRequired[str]
+    what_id: NotRequired[str]
+    is_all_day_event: NotRequired[bool]
+    show_as: NotRequired[str]
+    owner_id: NotRequired[str]
+
 class EventsGetParams(TypedDict):
     """Parameters for events.get operation"""
     id: str
     fields: NotRequired[str]
+
+class EventsUpdateParams(TypedDict):
+    """Parameters for events.update operation"""
+    subject: str
+    start_date_time: str
+    end_date_time: NotRequired[str]
+    duration_in_minutes: int
+    location: NotRequired[str]
+    description: NotRequired[str]
+    who_id: NotRequired[str]
+    what_id: NotRequired[str]
+    is_all_day_event: NotRequired[bool]
+    show_as: NotRequired[str]
+    owner_id: NotRequired[str]
+    id: str
+
+class EventsDeleteParams(TypedDict):
+    """Parameters for events.delete operation"""
+    id: str
 
 class EventsApiSearchParams(TypedDict):
     """Parameters for events.api_search operation"""
@@ -105,10 +365,49 @@ class CampaignsListParams(TypedDict):
     """Parameters for campaigns.list operation"""
     q: str
 
+class CampaignsCreateParams(TypedDict):
+    """Parameters for campaigns.create operation"""
+    name: str
+    type: NotRequired[str]
+    status: NotRequired[str]
+    start_date: NotRequired[str]
+    end_date: NotRequired[str]
+    is_active: NotRequired[bool]
+    description: NotRequired[str]
+    expected_revenue: NotRequired[float]
+    budgeted_cost: NotRequired[float]
+    actual_cost: NotRequired[float]
+    expected_response: NotRequired[float]
+    number_sent: NotRequired[float]
+    parent_id: NotRequired[str]
+    owner_id: NotRequired[str]
+
 class CampaignsGetParams(TypedDict):
     """Parameters for campaigns.get operation"""
     id: str
     fields: NotRequired[str]
+
+class CampaignsUpdateParams(TypedDict):
+    """Parameters for campaigns.update operation"""
+    name: str
+    type: NotRequired[str]
+    status: NotRequired[str]
+    start_date: NotRequired[str]
+    end_date: NotRequired[str]
+    is_active: NotRequired[bool]
+    description: NotRequired[str]
+    expected_revenue: NotRequired[float]
+    budgeted_cost: NotRequired[float]
+    actual_cost: NotRequired[float]
+    expected_response: NotRequired[float]
+    number_sent: NotRequired[float]
+    parent_id: NotRequired[str]
+    owner_id: NotRequired[str]
+    id: str
+
+class CampaignsDeleteParams(TypedDict):
+    """Parameters for campaigns.delete operation"""
+    id: str
 
 class CampaignsApiSearchParams(TypedDict):
     """Parameters for campaigns.api_search operation"""
@@ -118,10 +417,51 @@ class CasesListParams(TypedDict):
     """Parameters for cases.list operation"""
     q: str
 
+class CasesCreateParams(TypedDict):
+    """Parameters for cases.create operation"""
+    subject: NotRequired[str]
+    status: NotRequired[str]
+    priority: NotRequired[str]
+    origin: NotRequired[str]
+    type: NotRequired[str]
+    reason: NotRequired[str]
+    description: NotRequired[str]
+    account_id: NotRequired[str]
+    contact_id: NotRequired[str]
+    supplied_name: NotRequired[str]
+    supplied_email: NotRequired[str]
+    supplied_phone: NotRequired[str]
+    supplied_company: NotRequired[str]
+    owner_id: NotRequired[str]
+    parent_id: NotRequired[str]
+
 class CasesGetParams(TypedDict):
     """Parameters for cases.get operation"""
     id: str
     fields: NotRequired[str]
+
+class CasesUpdateParams(TypedDict):
+    """Parameters for cases.update operation"""
+    subject: NotRequired[str]
+    status: NotRequired[str]
+    priority: NotRequired[str]
+    origin: NotRequired[str]
+    type: NotRequired[str]
+    reason: NotRequired[str]
+    description: NotRequired[str]
+    account_id: NotRequired[str]
+    contact_id: NotRequired[str]
+    supplied_name: NotRequired[str]
+    supplied_email: NotRequired[str]
+    supplied_phone: NotRequired[str]
+    supplied_company: NotRequired[str]
+    owner_id: NotRequired[str]
+    parent_id: NotRequired[str]
+    id: str
+
+class CasesDeleteParams(TypedDict):
+    """Parameters for cases.delete operation"""
+    id: str
 
 class CasesApiSearchParams(TypedDict):
     """Parameters for cases.api_search operation"""

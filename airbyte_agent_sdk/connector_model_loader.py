@@ -379,7 +379,9 @@ def _extract_request_body_config(
         request_schema = resolve_schema_refs(schema, spec_dict)
 
         # Extract body field names and defaults from resolved schema
-        if isinstance(request_schema, dict) and "properties" in request_schema:
+        if isinstance(request_schema, dict) and request_schema.get("additionalProperties") is True and "properties" not in request_schema:
+            body_fields = ["*"]
+        elif isinstance(request_schema, dict) and "properties" in request_schema:
             body_fields = list(request_schema["properties"].keys())
             # Extract default values and probe-only defaults for each property.
             # `default` flows through `_build_request_body` at runtime; the

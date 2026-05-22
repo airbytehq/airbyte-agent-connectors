@@ -1279,6 +1279,9 @@ class LocalExecutor:
         Returns:
             Dictionary of body fields with None values filtered out
         """
+        if allowed_fields == ["*"]:
+            reserved_fields = {"id", "sobjectType"}
+            return {key: value for key, value in params.items() if key not in reserved_fields and value is not None}
         return {key: value for key, value in params.items() if key in allowed_fields and value is not None}
 
     def _extract_header_params(self, endpoint: EndpointDefinition, params: dict[str, Any], body: dict[str, Any] | None = None) -> dict[str, str]:

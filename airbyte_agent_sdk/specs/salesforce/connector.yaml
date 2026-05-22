@@ -5,7 +5,7 @@ openapi: 3.1.0
 
 info:
   title: Salesforce CRM API Connector
-  version: 1.0.18
+  version: 1.1.0
   description: |
     Salesforce is a cloud-based CRM platform that helps businesses manage customer
     relationships, sales pipelines, and business operations. This connector provides
@@ -13,8 +13,8 @@ info:
     notes, and attachments for sales analytics and customer relationship management.
   x-airbyte-connector-name: salesforce
   x-airbyte-connector-definition-id: b117307c-14b6-41aa-9422-947e34922962
-  x-airbyte-replication-version: "2.7.22"
-  x-airbyte-replication-compatibility: ">=2.7.22, <3.0.0"
+  x-airbyte-replication-version: "2.7.23"
+  x-airbyte-replication-compatibility: ">=2.7.23, <3.0.0"
   x-airbyte-external-documentation-urls:
     - type: api_reference
       title: Salesforce REST API Documentation
@@ -1124,6 +1124,169 @@ paths:
         "401":
           description: Unauthorized
 
+  /sobjects/{sobjectType}:
+    post:
+      summary: Create an SObject record
+      description: |
+        Create a record for any Salesforce SObject by name. Works for standard
+        objects (Account, Contact, ...) and custom objects (e.g. `MyObject__c`).
+        Pass the SObject's API name in the `sobjectType` path parameter and the
+        field values as a free-form JSON body.
+      operationId: createSObject
+      x-airbyte-entity: sobjects
+      x-airbyte-action: create
+      tags:
+        - SObjects
+      parameters:
+        - name: sobjectType
+          in: path
+          required: true
+          schema:
+            type: string
+          description: SObject API name (e.g., `Account`, `MyCustomObject__c`).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              description: Field name/value pairs for the new record.
+      responses:
+        "201":
+          description: Record created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: Id of the created record.
+                  success:
+                    type: boolean
+                  errors:
+                    type: array
+                    items:
+                      type: object
+        "400":
+          description: Bad request (missing required fields or schema mismatch)
+        "401":
+          description: Unauthorized
+
+  /sobjects/{sobjectType}/{id}:
+    get:
+      summary: Get an SObject record by id
+      description: |
+        Fetch a single record from any SObject by id. Works for standard and
+        custom objects.
+      operationId: getSObjectById
+      x-airbyte-entity: sobjects
+      x-airbyte-action: get
+      tags:
+        - SObjects
+      parameters:
+        - name: sobjectType
+          in: path
+          required: true
+          schema:
+            type: string
+          description: SObject API name.
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Salesforce record Id.
+        - name: fields
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Comma-separated field names to return. Omit for default fields.
+      responses:
+        "200":
+          description: Record
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "404":
+          description: Record not found
+        "401":
+          description: Unauthorized
+    patch:
+      summary: Update an SObject record
+      description: |
+        Update fields on an existing record. Pass only the fields you want to
+        change in the JSON body; Salesforce leaves the rest untouched.
+      operationId: updateSObject
+      x-airbyte-entity: sobjects
+      x-airbyte-action: update
+      tags:
+        - SObjects
+      parameters:
+        - name: sobjectType
+          in: path
+          required: true
+          schema:
+            type: string
+          description: SObject API name.
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Salesforce record Id.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              description: Field name/value pairs to update.
+      responses:
+        "204":
+          description: Record updated
+        "400":
+          description: Bad request
+        "404":
+          description: Record not found
+        "401":
+          description: Unauthorized
+    delete:
+      summary: Delete an SObject record
+      description: |
+        Delete a record by id. Salesforce moves the record to the Recycle Bin
+        (15-day retention) for most objects.
+      operationId: deleteSObject
+      x-airbyte-entity: sobjects
+      x-airbyte-action: delete
+      tags:
+        - SObjects
+      parameters:
+        - name: sobjectType
+          in: path
+          required: true
+          schema:
+            type: string
+          description: SObject API name.
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Salesforce record Id.
+      responses:
+        "204":
+          description: Record deleted
+        "404":
+          description: Record not found
+        "401":
+          description: Unauthorized
+
   # ============================================
   # ACCOUNTS Resource
   # ============================================
@@ -1180,6 +1343,32 @@ paths:
         "401":
           description: Unauthorized
 
+  /sobjects/Account:
+    post:
+      summary: Create an account
+      operationId: createAccount
+      x-airbyte-entity: accounts
+      x-airbyte-action: create
+      tags:
+        - Accounts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AccountWriteInput"
+      responses:
+        "201":
+          description: Account created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SObjectCreateResponse"
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+
   /sobjects/Account/{id}:
     get:
       summary: Get an account
@@ -1212,6 +1401,52 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Account"
+        "404":
+          description: Account not found
+        "401":
+          description: Unauthorized
+    patch:
+      summary: Update an account
+      operationId: updateAccount
+      x-airbyte-entity: accounts
+      x-airbyte-action: update
+      tags:
+        - Accounts
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AccountWriteInput"
+      responses:
+        "204":
+          description: Account updated
+        "404":
+          description: Account not found
+        "401":
+          description: Unauthorized
+    delete:
+      summary: Delete an account
+      operationId: deleteAccount
+      x-airbyte-entity: accounts
+      x-airbyte-action: delete
+      tags:
+        - Accounts
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Account deleted
         "404":
           description: Account not found
         "401":
@@ -1301,6 +1536,32 @@ paths:
         "401":
           description: Unauthorized
 
+  /sobjects/Contact:
+    post:
+      summary: Create a contact
+      operationId: createContact
+      x-airbyte-entity: contacts
+      x-airbyte-action: create
+      tags:
+        - Contacts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContactWriteInput"
+      responses:
+        "201":
+          description: Contact created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SObjectCreateResponse"
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+
   /sobjects/Contact/{id}:
     get:
       summary: Get a contact
@@ -1333,6 +1594,52 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Contact"
+        "404":
+          description: Contact not found
+        "401":
+          description: Unauthorized
+    patch:
+      summary: Update a contact
+      operationId: updateContact
+      x-airbyte-entity: contacts
+      x-airbyte-action: update
+      tags:
+        - Contacts
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContactWriteInput"
+      responses:
+        "204":
+          description: Contact updated
+        "404":
+          description: Contact not found
+        "401":
+          description: Unauthorized
+    delete:
+      summary: Delete a contact
+      operationId: deleteContact
+      x-airbyte-entity: contacts
+      x-airbyte-action: delete
+      tags:
+        - Contacts
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Contact deleted
         "404":
           description: Contact not found
         "401":
@@ -1420,6 +1727,32 @@ paths:
         "401":
           description: Unauthorized
 
+  /sobjects/Lead:
+    post:
+      summary: Create a lead
+      operationId: createLead
+      x-airbyte-entity: leads
+      x-airbyte-action: create
+      tags:
+        - Leads
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LeadWriteInput"
+      responses:
+        "201":
+          description: Lead created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SObjectCreateResponse"
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+
   /sobjects/Lead/{id}:
     get:
       summary: Get a lead
@@ -1452,6 +1785,52 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Lead"
+        "404":
+          description: Lead not found
+        "401":
+          description: Unauthorized
+    patch:
+      summary: Update a lead
+      operationId: updateLead
+      x-airbyte-entity: leads
+      x-airbyte-action: update
+      tags:
+        - Leads
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LeadWriteInput"
+      responses:
+        "204":
+          description: Lead updated
+        "404":
+          description: Lead not found
+        "401":
+          description: Unauthorized
+    delete:
+      summary: Delete a lead
+      operationId: deleteLead
+      x-airbyte-entity: leads
+      x-airbyte-action: delete
+      tags:
+        - Leads
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Lead deleted
         "404":
           description: Lead not found
         "401":
@@ -1544,6 +1923,32 @@ paths:
         "401":
           description: Unauthorized
 
+  /sobjects/Opportunity:
+    post:
+      summary: Create an opportunity
+      operationId: createOpportunity
+      x-airbyte-entity: opportunities
+      x-airbyte-action: create
+      tags:
+        - Opportunities
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OpportunityWriteInput"
+      responses:
+        "201":
+          description: Opportunity created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SObjectCreateResponse"
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+
   /sobjects/Opportunity/{id}:
     get:
       summary: Get an opportunity
@@ -1576,6 +1981,52 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Opportunity"
+        "404":
+          description: Opportunity not found
+        "401":
+          description: Unauthorized
+    patch:
+      summary: Update an opportunity
+      operationId: updateOpportunity
+      x-airbyte-entity: opportunities
+      x-airbyte-action: update
+      tags:
+        - Opportunities
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OpportunityWriteInput"
+      responses:
+        "204":
+          description: Opportunity updated
+        "404":
+          description: Opportunity not found
+        "401":
+          description: Unauthorized
+    delete:
+      summary: Delete an opportunity
+      operationId: deleteOpportunity
+      x-airbyte-entity: opportunities
+      x-airbyte-action: delete
+      tags:
+        - Opportunities
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Opportunity deleted
         "404":
           description: Opportunity not found
         "401":
@@ -1664,6 +2115,32 @@ paths:
         "401":
           description: Unauthorized
 
+  /sobjects/Task:
+    post:
+      summary: Create a task
+      operationId: createTask
+      x-airbyte-entity: tasks
+      x-airbyte-action: create
+      tags:
+        - Tasks
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TaskWriteInput"
+      responses:
+        "201":
+          description: Task created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SObjectCreateResponse"
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+
   /sobjects/Task/{id}:
     get:
       summary: Get a task
@@ -1696,6 +2173,52 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Task"
+        "404":
+          description: Task not found
+        "401":
+          description: Unauthorized
+    patch:
+      summary: Update a task
+      operationId: updateTask
+      x-airbyte-entity: tasks
+      x-airbyte-action: update
+      tags:
+        - Tasks
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TaskWriteInput"
+      responses:
+        "204":
+          description: Task updated
+        "404":
+          description: Task not found
+        "401":
+          description: Unauthorized
+    delete:
+      summary: Delete a task
+      operationId: deleteTask
+      x-airbyte-entity: tasks
+      x-airbyte-action: delete
+      tags:
+        - Tasks
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Task deleted
         "404":
           description: Task not found
         "401":
@@ -1784,6 +2307,32 @@ paths:
         "401":
           description: Unauthorized
 
+  /sobjects/Event:
+    post:
+      summary: Create an event
+      operationId: createEvent
+      x-airbyte-entity: events
+      x-airbyte-action: create
+      tags:
+        - Events
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EventWriteInput"
+      responses:
+        "201":
+          description: Event created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SObjectCreateResponse"
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+
   /sobjects/Event/{id}:
     get:
       summary: Get an event
@@ -1816,6 +2365,52 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Event"
+        "404":
+          description: Event not found
+        "401":
+          description: Unauthorized
+    patch:
+      summary: Update an event
+      operationId: updateEvent
+      x-airbyte-entity: events
+      x-airbyte-action: update
+      tags:
+        - Events
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EventWriteInput"
+      responses:
+        "204":
+          description: Event updated
+        "404":
+          description: Event not found
+        "401":
+          description: Unauthorized
+    delete:
+      summary: Delete an event
+      operationId: deleteEvent
+      x-airbyte-entity: events
+      x-airbyte-action: delete
+      tags:
+        - Events
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Event deleted
         "404":
           description: Event not found
         "401":
@@ -1903,6 +2498,32 @@ paths:
         "401":
           description: Unauthorized
 
+  /sobjects/Campaign:
+    post:
+      summary: Create a campaign
+      operationId: createCampaign
+      x-airbyte-entity: campaigns
+      x-airbyte-action: create
+      tags:
+        - Campaigns
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CampaignWriteInput"
+      responses:
+        "201":
+          description: Campaign created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SObjectCreateResponse"
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+
   /sobjects/Campaign/{id}:
     get:
       summary: Get a campaign
@@ -1935,6 +2556,52 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Campaign"
+        "404":
+          description: Campaign not found
+        "401":
+          description: Unauthorized
+    patch:
+      summary: Update a campaign
+      operationId: updateCampaign
+      x-airbyte-entity: campaigns
+      x-airbyte-action: update
+      tags:
+        - Campaigns
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CampaignWriteInput"
+      responses:
+        "204":
+          description: Campaign updated
+        "404":
+          description: Campaign not found
+        "401":
+          description: Unauthorized
+    delete:
+      summary: Delete a campaign
+      operationId: deleteCampaign
+      x-airbyte-entity: campaigns
+      x-airbyte-action: delete
+      tags:
+        - Campaigns
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Campaign deleted
         "404":
           description: Campaign not found
         "401":
@@ -2022,6 +2689,32 @@ paths:
         "401":
           description: Unauthorized
 
+  /sobjects/Case:
+    post:
+      summary: Create a case
+      operationId: createCase
+      x-airbyte-entity: cases
+      x-airbyte-action: create
+      tags:
+        - Cases
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CaseWriteInput"
+      responses:
+        "201":
+          description: Case created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SObjectCreateResponse"
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+
   /sobjects/Case/{id}:
     get:
       summary: Get a case
@@ -2054,6 +2747,52 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Case"
+        "404":
+          description: Case not found
+        "401":
+          description: Unauthorized
+    patch:
+      summary: Update a case
+      operationId: updateCase
+      x-airbyte-entity: cases
+      x-airbyte-action: update
+      tags:
+        - Cases
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CaseWriteInput"
+      responses:
+        "204":
+          description: Case updated
+        "404":
+          description: Case not found
+        "401":
+          description: Unauthorized
+    delete:
+      summary: Delete a case
+      operationId: deleteCase
+      x-airbyte-entity: cases
+      x-airbyte-action: delete
+      tags:
+        - Cases
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Case deleted
         "404":
           description: Case not found
         "401":
@@ -2739,7 +3478,86 @@ components:
           refreshUrl: https://login.salesforce.com/services/oauth2/token
           scopes:
             api: Access and manage your data
+            web: Allow access via the web
             refresh_token: Perform requests on your behalf at any time
+            lightning: Access Lightning Experience
+      x-airbyte-oauth-scopes:
+        - scope: "api"
+          mode: read_write
+          entities:
+            - sobjects
+            - accounts
+            - attachments
+            - campaigns
+            - cases
+            - contacts
+            - content_versions
+            - events
+            - leads
+            - notes
+            - opportunities
+            - opportunity_stages
+            - query
+            - reports
+            - tasks
+            - users
+        - scope: "web"
+          mode: read_write
+          entities:
+            - sobjects
+            - accounts
+            - attachments
+            - campaigns
+            - cases
+            - contacts
+            - content_versions
+            - events
+            - leads
+            - notes
+            - opportunities
+            - opportunity_stages
+            - query
+            - reports
+            - tasks
+            - users
+        - scope: "refresh_token"
+          mode: read_write
+          entities:
+            - sobjects
+            - accounts
+            - attachments
+            - campaigns
+            - cases
+            - contacts
+            - content_versions
+            - events
+            - leads
+            - notes
+            - opportunities
+            - opportunity_stages
+            - query
+            - reports
+            - tasks
+            - users
+        - scope: "lightning"
+          mode: read_write
+          entities:
+            - sobjects
+            - accounts
+            - attachments
+            - campaigns
+            - cases
+            - contacts
+            - content_versions
+            - events
+            - leads
+            - notes
+            - opportunities
+            - opportunity_stages
+            - query
+            - reports
+            - tasks
+            - users
       x-airbyte-token-refresh:
         auth_style: body
         body_format: form
@@ -2863,6 +3681,325 @@ components:
           description: List of available Salesforce objects
           items:
             $ref: "#/components/schemas/SObject"
+
+    # ============================================
+    # SObject Write Inputs
+    # ============================================
+    SObjectCreateResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Id of the created record.
+        success:
+          type: boolean
+        errors:
+          type: array
+          items:
+            type: object
+
+    AccountWriteInput:
+      type: object
+      additionalProperties: true
+      required:
+        - Name
+      properties:
+        Name:
+          type: string
+          description: Account name.
+        AccountNumber:
+          type: string
+        Type:
+          type: string
+        Industry:
+          type: string
+        Phone:
+          type: string
+        Website:
+          type: string
+        BillingStreet:
+          type: string
+        BillingCity:
+          type: string
+        BillingState:
+          type: string
+        BillingPostalCode:
+          type: string
+        BillingCountry:
+          type: string
+        AnnualRevenue:
+          type: number
+        NumberOfEmployees:
+          type: integer
+        Description:
+          type: string
+        OwnerId:
+          type: string
+        ParentId:
+          type: string
+
+    ContactWriteInput:
+      type: object
+      additionalProperties: true
+      required:
+        - LastName
+      properties:
+        FirstName:
+          type: string
+        LastName:
+          type: string
+        Email:
+          type: string
+        Phone:
+          type: string
+        MobilePhone:
+          type: string
+        Title:
+          type: string
+        Department:
+          type: string
+        AccountId:
+          type: string
+        MailingStreet:
+          type: string
+        MailingCity:
+          type: string
+        MailingState:
+          type: string
+        MailingPostalCode:
+          type: string
+        MailingCountry:
+          type: string
+        Description:
+          type: string
+        OwnerId:
+          type: string
+
+    LeadWriteInput:
+      type: object
+      additionalProperties: true
+      required:
+        - LastName
+        - Company
+      properties:
+        FirstName:
+          type: string
+        LastName:
+          type: string
+        Company:
+          type: string
+        Title:
+          type: string
+        Email:
+          type: string
+        Phone:
+          type: string
+        MobilePhone:
+          type: string
+        Website:
+          type: string
+        Status:
+          type: string
+        LeadSource:
+          type: string
+        Industry:
+          type: string
+        Rating:
+          type: string
+        AnnualRevenue:
+          type: number
+        NumberOfEmployees:
+          type: integer
+        Street:
+          type: string
+        City:
+          type: string
+        State:
+          type: string
+        PostalCode:
+          type: string
+        Country:
+          type: string
+        Description:
+          type: string
+        OwnerId:
+          type: string
+
+    OpportunityWriteInput:
+      type: object
+      additionalProperties: true
+      required:
+        - Name
+        - StageName
+        - CloseDate
+      properties:
+        Name:
+          type: string
+        AccountId:
+          type: string
+        StageName:
+          type: string
+          description: Opportunity stage (e.g., Prospecting, Qualification, Closed Won).
+        CloseDate:
+          type: string
+          format: date
+        Amount:
+          type: number
+        Probability:
+          type: number
+        Type:
+          type: string
+        LeadSource:
+          type: string
+        NextStep:
+          type: string
+        CampaignId:
+          type: string
+        ForecastCategoryName:
+          type: string
+        Description:
+          type: string
+        OwnerId:
+          type: string
+
+    TaskWriteInput:
+      type: object
+      additionalProperties: true
+      required:
+        - Subject
+      properties:
+        Subject:
+          type: string
+        Status:
+          type: string
+          description: Task status (e.g., Not Started, In Progress, Completed).
+        Priority:
+          type: string
+        ActivityDate:
+          type: string
+          format: date
+        WhoId:
+          type: string
+          description: Related contact or lead Id.
+        WhatId:
+          type: string
+          description: Related Account, Opportunity, or other object Id.
+        Description:
+          type: string
+        Type:
+          type: string
+        IsReminderSet:
+          type: boolean
+        ReminderDateTime:
+          type: string
+          format: date-time
+        OwnerId:
+          type: string
+
+    EventWriteInput:
+      type: object
+      additionalProperties: true
+      required:
+        - Subject
+        - StartDateTime
+        - DurationInMinutes
+      properties:
+        Subject:
+          type: string
+        StartDateTime:
+          type: string
+          format: date-time
+        EndDateTime:
+          type: string
+          format: date-time
+        DurationInMinutes:
+          type: integer
+        Location:
+          type: string
+        Description:
+          type: string
+        WhoId:
+          type: string
+        WhatId:
+          type: string
+        IsAllDayEvent:
+          type: boolean
+        ShowAs:
+          type: string
+        OwnerId:
+          type: string
+
+    CampaignWriteInput:
+      type: object
+      additionalProperties: true
+      required:
+        - Name
+      properties:
+        Name:
+          type: string
+        Type:
+          type: string
+        Status:
+          type: string
+        StartDate:
+          type: string
+          format: date
+        EndDate:
+          type: string
+          format: date
+        IsActive:
+          type: boolean
+        Description:
+          type: string
+        ExpectedRevenue:
+          type: number
+        BudgetedCost:
+          type: number
+        ActualCost:
+          type: number
+        ExpectedResponse:
+          type: number
+        NumberSent:
+          type: number
+        ParentId:
+          type: string
+        OwnerId:
+          type: string
+
+    CaseWriteInput:
+      type: object
+      additionalProperties: true
+      properties:
+        Subject:
+          type: string
+        Status:
+          type: string
+        Priority:
+          type: string
+        Origin:
+          type: string
+        Type:
+          type: string
+        Reason:
+          type: string
+        Description:
+          type: string
+        AccountId:
+          type: string
+        ContactId:
+          type: string
+        SuppliedName:
+          type: string
+        SuppliedEmail:
+          type: string
+        SuppliedPhone:
+          type: string
+        SuppliedCompany:
+          type: string
+        OwnerId:
+          type: string
+        ParentId:
+          type: string
 
     # ============================================
     # Account Schemas

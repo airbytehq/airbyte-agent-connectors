@@ -19,44 +19,72 @@ from airbyte_agent_sdk.translation import DEFAULT_MAX_OUTPUT_CHARS, FrameworkNam
 from airbyte_agent_sdk.types import AirbyteAuthConfig
 from .types import (
     AccountsApiSearchParams,
+    AccountsCreateParams,
+    AccountsDeleteParams,
     AccountsGetParams,
     AccountsListParams,
+    AccountsUpdateParams,
     AttachmentsDownloadParams,
     AttachmentsGetParams,
     AttachmentsListParams,
     CampaignsApiSearchParams,
+    CampaignsCreateParams,
+    CampaignsDeleteParams,
     CampaignsGetParams,
     CampaignsListParams,
+    CampaignsUpdateParams,
     CasesApiSearchParams,
+    CasesCreateParams,
+    CasesDeleteParams,
     CasesGetParams,
     CasesListParams,
+    CasesUpdateParams,
     ContactsApiSearchParams,
+    ContactsCreateParams,
+    ContactsDeleteParams,
     ContactsGetParams,
     ContactsListParams,
+    ContactsUpdateParams,
     ContentVersionsDownloadParams,
     ContentVersionsGetParams,
     ContentVersionsListParams,
     EventsApiSearchParams,
+    EventsCreateParams,
+    EventsDeleteParams,
     EventsGetParams,
     EventsListParams,
+    EventsUpdateParams,
     LeadsApiSearchParams,
+    LeadsCreateParams,
+    LeadsDeleteParams,
     LeadsGetParams,
     LeadsListParams,
+    LeadsUpdateParams,
     NotesApiSearchParams,
     NotesGetParams,
     NotesListParams,
     OpportunitiesApiSearchParams,
+    OpportunitiesCreateParams,
+    OpportunitiesDeleteParams,
     OpportunitiesGetParams,
     OpportunitiesListParams,
+    OpportunitiesUpdateParams,
     OpportunityStagesGetParams,
     OpportunityStagesListParams,
     QueryListParams,
     ReportsGetParams,
     ReportsListParams,
+    SobjectsCreateParams,
+    SobjectsDeleteParams,
+    SobjectsGetParams,
     SobjectsListParams,
+    SobjectsUpdateParams,
     TasksApiSearchParams,
+    TasksCreateParams,
+    TasksDeleteParams,
     TasksGetParams,
     TasksListParams,
+    TasksUpdateParams,
     UsersGetParams,
     UsersListParams,
     AirbyteSearchParams,
@@ -121,6 +149,7 @@ from .models import (
     Report,
     ReportResults,
     SObject,
+    SObjectCreateResponse,
     SearchResult,
     Task,
     User,
@@ -156,35 +185,63 @@ class SalesforceConnector:
     """
 
     connector_name = "salesforce"
-    connector_version = "1.0.18"
-    sdk_version = "0.1.210"
+    connector_version = "1.1.0"
+    sdk_version = "0.1.211"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
         ("sobjects", "list"): True,
+        ("sobjects", "create"): None,
+        ("sobjects", "get"): None,
+        ("sobjects", "update"): None,
+        ("sobjects", "delete"): None,
         ("accounts", "list"): True,
+        ("accounts", "create"): None,
         ("accounts", "get"): None,
+        ("accounts", "update"): None,
+        ("accounts", "delete"): None,
         ("accounts", "api_search"): True,
         ("contacts", "list"): True,
+        ("contacts", "create"): None,
         ("contacts", "get"): None,
+        ("contacts", "update"): None,
+        ("contacts", "delete"): None,
         ("contacts", "api_search"): True,
         ("leads", "list"): True,
+        ("leads", "create"): None,
         ("leads", "get"): None,
+        ("leads", "update"): None,
+        ("leads", "delete"): None,
         ("leads", "api_search"): True,
         ("opportunities", "list"): True,
+        ("opportunities", "create"): None,
         ("opportunities", "get"): None,
+        ("opportunities", "update"): None,
+        ("opportunities", "delete"): None,
         ("opportunities", "api_search"): True,
         ("tasks", "list"): True,
+        ("tasks", "create"): None,
         ("tasks", "get"): None,
+        ("tasks", "update"): None,
+        ("tasks", "delete"): None,
         ("tasks", "api_search"): True,
         ("events", "list"): True,
+        ("events", "create"): None,
         ("events", "get"): None,
+        ("events", "update"): None,
+        ("events", "delete"): None,
         ("events", "api_search"): True,
         ("campaigns", "list"): True,
+        ("campaigns", "create"): None,
         ("campaigns", "get"): None,
+        ("campaigns", "update"): None,
+        ("campaigns", "delete"): None,
         ("campaigns", "api_search"): True,
         ("cases", "list"): True,
+        ("cases", "create"): None,
         ("cases", "get"): None,
+        ("cases", "update"): None,
+        ("cases", "delete"): None,
         ("cases", "api_search"): True,
         ("notes", "list"): True,
         ("notes", "get"): None,
@@ -207,29 +264,57 @@ class SalesforceConnector:
     # Map of (entity, action) -> {python_param_name: api_param_name}
     # Used to convert snake_case TypedDict keys to API parameter names in execute()
     _PARAM_MAP = {
+        ('sobjects', 'create'): {'sobject_type': 'sobjectType'},
+        ('sobjects', 'get'): {'sobject_type': 'sobjectType', 'id': 'id', 'fields': 'fields'},
+        ('sobjects', 'update'): {'sobject_type': 'sobjectType', 'id': 'id'},
+        ('sobjects', 'delete'): {'sobject_type': 'sobjectType', 'id': 'id'},
         ('accounts', 'list'): {'q': 'q'},
+        ('accounts', 'create'): {'name': 'Name', 'account_number': 'AccountNumber', 'type': 'Type', 'industry': 'Industry', 'phone': 'Phone', 'website': 'Website', 'billing_street': 'BillingStreet', 'billing_city': 'BillingCity', 'billing_state': 'BillingState', 'billing_postal_code': 'BillingPostalCode', 'billing_country': 'BillingCountry', 'annual_revenue': 'AnnualRevenue', 'number_of_employees': 'NumberOfEmployees', 'description': 'Description', 'owner_id': 'OwnerId', 'parent_id': 'ParentId'},
         ('accounts', 'get'): {'id': 'id', 'fields': 'fields'},
+        ('accounts', 'update'): {'name': 'Name', 'account_number': 'AccountNumber', 'type': 'Type', 'industry': 'Industry', 'phone': 'Phone', 'website': 'Website', 'billing_street': 'BillingStreet', 'billing_city': 'BillingCity', 'billing_state': 'BillingState', 'billing_postal_code': 'BillingPostalCode', 'billing_country': 'BillingCountry', 'annual_revenue': 'AnnualRevenue', 'number_of_employees': 'NumberOfEmployees', 'description': 'Description', 'owner_id': 'OwnerId', 'parent_id': 'ParentId', 'id': 'id'},
+        ('accounts', 'delete'): {'id': 'id'},
         ('accounts', 'api_search'): {'q': 'q'},
         ('contacts', 'list'): {'q': 'q'},
+        ('contacts', 'create'): {'first_name': 'FirstName', 'last_name': 'LastName', 'email': 'Email', 'phone': 'Phone', 'mobile_phone': 'MobilePhone', 'title': 'Title', 'department': 'Department', 'account_id': 'AccountId', 'mailing_street': 'MailingStreet', 'mailing_city': 'MailingCity', 'mailing_state': 'MailingState', 'mailing_postal_code': 'MailingPostalCode', 'mailing_country': 'MailingCountry', 'description': 'Description', 'owner_id': 'OwnerId'},
         ('contacts', 'get'): {'id': 'id', 'fields': 'fields'},
+        ('contacts', 'update'): {'first_name': 'FirstName', 'last_name': 'LastName', 'email': 'Email', 'phone': 'Phone', 'mobile_phone': 'MobilePhone', 'title': 'Title', 'department': 'Department', 'account_id': 'AccountId', 'mailing_street': 'MailingStreet', 'mailing_city': 'MailingCity', 'mailing_state': 'MailingState', 'mailing_postal_code': 'MailingPostalCode', 'mailing_country': 'MailingCountry', 'description': 'Description', 'owner_id': 'OwnerId', 'id': 'id'},
+        ('contacts', 'delete'): {'id': 'id'},
         ('contacts', 'api_search'): {'q': 'q'},
         ('leads', 'list'): {'q': 'q'},
+        ('leads', 'create'): {'first_name': 'FirstName', 'last_name': 'LastName', 'company': 'Company', 'title': 'Title', 'email': 'Email', 'phone': 'Phone', 'mobile_phone': 'MobilePhone', 'website': 'Website', 'status': 'Status', 'lead_source': 'LeadSource', 'industry': 'Industry', 'rating': 'Rating', 'annual_revenue': 'AnnualRevenue', 'number_of_employees': 'NumberOfEmployees', 'street': 'Street', 'city': 'City', 'state': 'State', 'postal_code': 'PostalCode', 'country': 'Country', 'description': 'Description', 'owner_id': 'OwnerId'},
         ('leads', 'get'): {'id': 'id', 'fields': 'fields'},
+        ('leads', 'update'): {'first_name': 'FirstName', 'last_name': 'LastName', 'company': 'Company', 'title': 'Title', 'email': 'Email', 'phone': 'Phone', 'mobile_phone': 'MobilePhone', 'website': 'Website', 'status': 'Status', 'lead_source': 'LeadSource', 'industry': 'Industry', 'rating': 'Rating', 'annual_revenue': 'AnnualRevenue', 'number_of_employees': 'NumberOfEmployees', 'street': 'Street', 'city': 'City', 'state': 'State', 'postal_code': 'PostalCode', 'country': 'Country', 'description': 'Description', 'owner_id': 'OwnerId', 'id': 'id'},
+        ('leads', 'delete'): {'id': 'id'},
         ('leads', 'api_search'): {'q': 'q'},
         ('opportunities', 'list'): {'q': 'q'},
+        ('opportunities', 'create'): {'name': 'Name', 'account_id': 'AccountId', 'stage_name': 'StageName', 'close_date': 'CloseDate', 'amount': 'Amount', 'probability': 'Probability', 'type': 'Type', 'lead_source': 'LeadSource', 'next_step': 'NextStep', 'campaign_id': 'CampaignId', 'forecast_category_name': 'ForecastCategoryName', 'description': 'Description', 'owner_id': 'OwnerId'},
         ('opportunities', 'get'): {'id': 'id', 'fields': 'fields'},
+        ('opportunities', 'update'): {'name': 'Name', 'account_id': 'AccountId', 'stage_name': 'StageName', 'close_date': 'CloseDate', 'amount': 'Amount', 'probability': 'Probability', 'type': 'Type', 'lead_source': 'LeadSource', 'next_step': 'NextStep', 'campaign_id': 'CampaignId', 'forecast_category_name': 'ForecastCategoryName', 'description': 'Description', 'owner_id': 'OwnerId', 'id': 'id'},
+        ('opportunities', 'delete'): {'id': 'id'},
         ('opportunities', 'api_search'): {'q': 'q'},
         ('tasks', 'list'): {'q': 'q'},
+        ('tasks', 'create'): {'subject': 'Subject', 'status': 'Status', 'priority': 'Priority', 'activity_date': 'ActivityDate', 'who_id': 'WhoId', 'what_id': 'WhatId', 'description': 'Description', 'type': 'Type', 'is_reminder_set': 'IsReminderSet', 'reminder_date_time': 'ReminderDateTime', 'owner_id': 'OwnerId'},
         ('tasks', 'get'): {'id': 'id', 'fields': 'fields'},
+        ('tasks', 'update'): {'subject': 'Subject', 'status': 'Status', 'priority': 'Priority', 'activity_date': 'ActivityDate', 'who_id': 'WhoId', 'what_id': 'WhatId', 'description': 'Description', 'type': 'Type', 'is_reminder_set': 'IsReminderSet', 'reminder_date_time': 'ReminderDateTime', 'owner_id': 'OwnerId', 'id': 'id'},
+        ('tasks', 'delete'): {'id': 'id'},
         ('tasks', 'api_search'): {'q': 'q'},
         ('events', 'list'): {'q': 'q'},
+        ('events', 'create'): {'subject': 'Subject', 'start_date_time': 'StartDateTime', 'end_date_time': 'EndDateTime', 'duration_in_minutes': 'DurationInMinutes', 'location': 'Location', 'description': 'Description', 'who_id': 'WhoId', 'what_id': 'WhatId', 'is_all_day_event': 'IsAllDayEvent', 'show_as': 'ShowAs', 'owner_id': 'OwnerId'},
         ('events', 'get'): {'id': 'id', 'fields': 'fields'},
+        ('events', 'update'): {'subject': 'Subject', 'start_date_time': 'StartDateTime', 'end_date_time': 'EndDateTime', 'duration_in_minutes': 'DurationInMinutes', 'location': 'Location', 'description': 'Description', 'who_id': 'WhoId', 'what_id': 'WhatId', 'is_all_day_event': 'IsAllDayEvent', 'show_as': 'ShowAs', 'owner_id': 'OwnerId', 'id': 'id'},
+        ('events', 'delete'): {'id': 'id'},
         ('events', 'api_search'): {'q': 'q'},
         ('campaigns', 'list'): {'q': 'q'},
+        ('campaigns', 'create'): {'name': 'Name', 'type': 'Type', 'status': 'Status', 'start_date': 'StartDate', 'end_date': 'EndDate', 'is_active': 'IsActive', 'description': 'Description', 'expected_revenue': 'ExpectedRevenue', 'budgeted_cost': 'BudgetedCost', 'actual_cost': 'ActualCost', 'expected_response': 'ExpectedResponse', 'number_sent': 'NumberSent', 'parent_id': 'ParentId', 'owner_id': 'OwnerId'},
         ('campaigns', 'get'): {'id': 'id', 'fields': 'fields'},
+        ('campaigns', 'update'): {'name': 'Name', 'type': 'Type', 'status': 'Status', 'start_date': 'StartDate', 'end_date': 'EndDate', 'is_active': 'IsActive', 'description': 'Description', 'expected_revenue': 'ExpectedRevenue', 'budgeted_cost': 'BudgetedCost', 'actual_cost': 'ActualCost', 'expected_response': 'ExpectedResponse', 'number_sent': 'NumberSent', 'parent_id': 'ParentId', 'owner_id': 'OwnerId', 'id': 'id'},
+        ('campaigns', 'delete'): {'id': 'id'},
         ('campaigns', 'api_search'): {'q': 'q'},
         ('cases', 'list'): {'q': 'q'},
+        ('cases', 'create'): {'subject': 'Subject', 'status': 'Status', 'priority': 'Priority', 'origin': 'Origin', 'type': 'Type', 'reason': 'Reason', 'description': 'Description', 'account_id': 'AccountId', 'contact_id': 'ContactId', 'supplied_name': 'SuppliedName', 'supplied_email': 'SuppliedEmail', 'supplied_phone': 'SuppliedPhone', 'supplied_company': 'SuppliedCompany', 'owner_id': 'OwnerId', 'parent_id': 'ParentId'},
         ('cases', 'get'): {'id': 'id', 'fields': 'fields'},
+        ('cases', 'update'): {'subject': 'Subject', 'status': 'Status', 'priority': 'Priority', 'origin': 'Origin', 'type': 'Type', 'reason': 'Reason', 'description': 'Description', 'account_id': 'AccountId', 'contact_id': 'ContactId', 'supplied_name': 'SuppliedName', 'supplied_email': 'SuppliedEmail', 'supplied_phone': 'SuppliedPhone', 'supplied_company': 'SuppliedCompany', 'owner_id': 'OwnerId', 'parent_id': 'ParentId', 'id': 'id'},
+        ('cases', 'delete'): {'id': 'id'},
         ('cases', 'api_search'): {'q': 'q'},
         ('notes', 'list'): {'q': 'q'},
         ('notes', 'get'): {'id': 'id', 'fields': 'fields'},
@@ -382,6 +467,54 @@ class SalesforceConnector:
     @overload
     async def execute(
         self,
+        entity: Literal["sobjects"],
+        action: Literal["create"],
+        params: "SobjectsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "dict[str, Any]": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["sobjects"],
+        action: Literal["get"],
+        params: "SobjectsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "dict[str, Any]": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["sobjects"],
+        action: Literal["update"],
+        params: "SobjectsUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "dict[str, Any]": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["sobjects"],
+        action: Literal["delete"],
+        params: "SobjectsDeleteParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "dict[str, Any]": ...
+
+    @overload
+    async def execute(
+        self,
         entity: Literal["accounts"],
         action: Literal["list"],
         params: "AccountsListParams",
@@ -395,6 +528,18 @@ class SalesforceConnector:
     async def execute(
         self,
         entity: Literal["accounts"],
+        action: Literal["create"],
+        params: "AccountsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "SObjectCreateResponse": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["accounts"],
         action: Literal["get"],
         params: "AccountsGetParams",
         *,
@@ -402,6 +547,30 @@ class SalesforceConnector:
         exclude_fields: list[str] | None = ...,
         skip_truncation: bool = ...
     ) -> "Account": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["accounts"],
+        action: Literal["update"],
+        params: "AccountsUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "dict[str, Any]": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["accounts"],
+        action: Literal["delete"],
+        params: "AccountsDeleteParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "dict[str, Any]": ...
 
     @overload
     async def execute(
@@ -431,6 +600,18 @@ class SalesforceConnector:
     async def execute(
         self,
         entity: Literal["contacts"],
+        action: Literal["create"],
+        params: "ContactsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "SObjectCreateResponse": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["contacts"],
         action: Literal["get"],
         params: "ContactsGetParams",
         *,
@@ -438,6 +619,30 @@ class SalesforceConnector:
         exclude_fields: list[str] | None = ...,
         skip_truncation: bool = ...
     ) -> "Contact": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["contacts"],
+        action: Literal["update"],
+        params: "ContactsUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "dict[str, Any]": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["contacts"],
+        action: Literal["delete"],
+        params: "ContactsDeleteParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "dict[str, Any]": ...
 
     @overload
     async def execute(
@@ -467,6 +672,18 @@ class SalesforceConnector:
     async def execute(
         self,
         entity: Literal["leads"],
+        action: Literal["create"],
+        params: "LeadsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "SObjectCreateResponse": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["leads"],
         action: Literal["get"],
         params: "LeadsGetParams",
         *,
@@ -474,6 +691,30 @@ class SalesforceConnector:
         exclude_fields: list[str] | None = ...,
         skip_truncation: bool = ...
     ) -> "Lead": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["leads"],
+        action: Literal["update"],
+        params: "LeadsUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "dict[str, Any]": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["leads"],
+        action: Literal["delete"],
+        params: "LeadsDeleteParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "dict[str, Any]": ...
 
     @overload
     async def execute(
@@ -503,6 +744,18 @@ class SalesforceConnector:
     async def execute(
         self,
         entity: Literal["opportunities"],
+        action: Literal["create"],
+        params: "OpportunitiesCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "SObjectCreateResponse": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["opportunities"],
         action: Literal["get"],
         params: "OpportunitiesGetParams",
         *,
@@ -510,6 +763,30 @@ class SalesforceConnector:
         exclude_fields: list[str] | None = ...,
         skip_truncation: bool = ...
     ) -> "Opportunity": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["opportunities"],
+        action: Literal["update"],
+        params: "OpportunitiesUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "dict[str, Any]": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["opportunities"],
+        action: Literal["delete"],
+        params: "OpportunitiesDeleteParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "dict[str, Any]": ...
 
     @overload
     async def execute(
@@ -539,6 +816,18 @@ class SalesforceConnector:
     async def execute(
         self,
         entity: Literal["tasks"],
+        action: Literal["create"],
+        params: "TasksCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "SObjectCreateResponse": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["tasks"],
         action: Literal["get"],
         params: "TasksGetParams",
         *,
@@ -546,6 +835,30 @@ class SalesforceConnector:
         exclude_fields: list[str] | None = ...,
         skip_truncation: bool = ...
     ) -> "Task": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["tasks"],
+        action: Literal["update"],
+        params: "TasksUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "dict[str, Any]": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["tasks"],
+        action: Literal["delete"],
+        params: "TasksDeleteParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "dict[str, Any]": ...
 
     @overload
     async def execute(
@@ -575,6 +888,18 @@ class SalesforceConnector:
     async def execute(
         self,
         entity: Literal["events"],
+        action: Literal["create"],
+        params: "EventsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "SObjectCreateResponse": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["events"],
         action: Literal["get"],
         params: "EventsGetParams",
         *,
@@ -582,6 +907,30 @@ class SalesforceConnector:
         exclude_fields: list[str] | None = ...,
         skip_truncation: bool = ...
     ) -> "Event": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["events"],
+        action: Literal["update"],
+        params: "EventsUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "dict[str, Any]": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["events"],
+        action: Literal["delete"],
+        params: "EventsDeleteParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "dict[str, Any]": ...
 
     @overload
     async def execute(
@@ -611,6 +960,18 @@ class SalesforceConnector:
     async def execute(
         self,
         entity: Literal["campaigns"],
+        action: Literal["create"],
+        params: "CampaignsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "SObjectCreateResponse": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["campaigns"],
         action: Literal["get"],
         params: "CampaignsGetParams",
         *,
@@ -618,6 +979,30 @@ class SalesforceConnector:
         exclude_fields: list[str] | None = ...,
         skip_truncation: bool = ...
     ) -> "Campaign": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["campaigns"],
+        action: Literal["update"],
+        params: "CampaignsUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "dict[str, Any]": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["campaigns"],
+        action: Literal["delete"],
+        params: "CampaignsDeleteParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "dict[str, Any]": ...
 
     @overload
     async def execute(
@@ -647,6 +1032,18 @@ class SalesforceConnector:
     async def execute(
         self,
         entity: Literal["cases"],
+        action: Literal["create"],
+        params: "CasesCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "SObjectCreateResponse": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["cases"],
         action: Literal["get"],
         params: "CasesGetParams",
         *,
@@ -654,6 +1051,30 @@ class SalesforceConnector:
         exclude_fields: list[str] | None = ...,
         skip_truncation: bool = ...
     ) -> "Case": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["cases"],
+        action: Literal["update"],
+        params: "CasesUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "dict[str, Any]": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["cases"],
+        action: Literal["delete"],
+        params: "CasesDeleteParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "dict[str, Any]": ...
 
     @overload
     async def execute(
@@ -864,7 +1285,7 @@ class SalesforceConnector:
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get", "api_search", "download", "context_store_search"],
+        action: Literal["list", "create", "get", "update", "delete", "api_search", "download", "context_store_search"],
         params: Mapping[str, Any],
         *,
         select_fields: list[str] | None = ...,
@@ -875,7 +1296,7 @@ class SalesforceConnector:
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get", "api_search", "download", "context_store_search"],
+        action: Literal["list", "create", "get", "update", "delete", "api_search", "download", "context_store_search"],
         params: Mapping[str, Any] | None = None,
         *,
         select_fields: list[str] | None = None,
@@ -1173,6 +1594,128 @@ This endpoint is used for health checks to verify authentication and connectivit
 
 
 
+    async def create(
+        self,
+        sobject_type: str,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Create a record for any Salesforce SObject by name. Works for standard
+objects (Account, Contact, ...) and custom objects (e.g. `MyObject__c`).
+Pass the SObject's API name in the `sobjectType` path parameter and the
+field values as a free-form JSON body.
+
+
+        Args:
+            sobject_type: SObject API name (e.g., `Account`, `MyCustomObject__c`).
+            **kwargs: Additional parameters
+
+        Returns:
+            dict[str, Any]
+        """
+        params = {k: v for k, v in {
+            "sobjectType": sobject_type,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("sobjects", "create", params)
+        return result
+
+
+
+    async def get(
+        self,
+        sobject_type: str,
+        id: str | None = None,
+        fields: str | None = None,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Fetch a single record from any SObject by id. Works for standard and
+custom objects.
+
+
+        Args:
+            sobject_type: SObject API name.
+            id: Salesforce record Id.
+            fields: Comma-separated field names to return. Omit for default fields.
+            **kwargs: Additional parameters
+
+        Returns:
+            dict[str, Any]
+        """
+        params = {k: v for k, v in {
+            "sobjectType": sobject_type,
+            "id": id,
+            "fields": fields,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("sobjects", "get", params)
+        return result
+
+
+
+    async def update(
+        self,
+        sobject_type: str,
+        id: str | None = None,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Update fields on an existing record. Pass only the fields you want to
+change in the JSON body; Salesforce leaves the rest untouched.
+
+
+        Args:
+            sobject_type: SObject API name.
+            id: Salesforce record Id.
+            **kwargs: Additional parameters
+
+        Returns:
+            dict[str, Any]
+        """
+        params = {k: v for k, v in {
+            "sobjectType": sobject_type,
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("sobjects", "update", params)
+        return result
+
+
+
+    async def delete(
+        self,
+        sobject_type: str,
+        id: str | None = None,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Delete a record by id. Salesforce moves the record to the Recycle Bin
+(15-day retention) for most objects.
+
+
+        Args:
+            sobject_type: SObject API name.
+            id: Salesforce record Id.
+            **kwargs: Additional parameters
+
+        Returns:
+            dict[str, Any]
+        """
+        params = {k: v for k, v in {
+            "sobjectType": sobject_type,
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("sobjects", "delete", params)
+        return result
+
+
+
 class AccountsQuery:
     """
     Query class for Accounts entity operations.
@@ -1231,6 +1774,76 @@ fields inline instead of returning raw IDs.
 
 
 
+    async def create(
+        self,
+        name: str,
+        account_number: str | None = None,
+        type: str | None = None,
+        industry: str | None = None,
+        phone: str | None = None,
+        website: str | None = None,
+        billing_street: str | None = None,
+        billing_city: str | None = None,
+        billing_state: str | None = None,
+        billing_postal_code: str | None = None,
+        billing_country: str | None = None,
+        annual_revenue: float | None = None,
+        number_of_employees: int | None = None,
+        description: str | None = None,
+        owner_id: str | None = None,
+        parent_id: str | None = None,
+        **kwargs
+    ) -> SObjectCreateResponse:
+        """
+        Create an account
+
+        Args:
+            name: Account name.
+            account_number: Parameter AccountNumber
+            type: Parameter Type
+            industry: Parameter Industry
+            phone: Parameter Phone
+            website: Parameter Website
+            billing_street: Parameter BillingStreet
+            billing_city: Parameter BillingCity
+            billing_state: Parameter BillingState
+            billing_postal_code: Parameter BillingPostalCode
+            billing_country: Parameter BillingCountry
+            annual_revenue: Parameter AnnualRevenue
+            number_of_employees: Parameter NumberOfEmployees
+            description: Parameter Description
+            owner_id: Parameter OwnerId
+            parent_id: Parameter ParentId
+            **kwargs: Additional parameters
+
+        Returns:
+            SObjectCreateResponse
+        """
+        params = {k: v for k, v in {
+            "Name": name,
+            "AccountNumber": account_number,
+            "Type": type,
+            "Industry": industry,
+            "Phone": phone,
+            "Website": website,
+            "BillingStreet": billing_street,
+            "BillingCity": billing_city,
+            "BillingState": billing_state,
+            "BillingPostalCode": billing_postal_code,
+            "BillingCountry": billing_country,
+            "AnnualRevenue": annual_revenue,
+            "NumberOfEmployees": number_of_employees,
+            "Description": description,
+            "OwnerId": owner_id,
+            "ParentId": parent_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("accounts", "create", params)
+        return result
+
+
+
     async def get(
         self,
         id: str | None = None,
@@ -1259,6 +1872,104 @@ Example: "Id,Name,Industry,AnnualRevenue,Website"
         }.items() if v is not None}
 
         result = await self._connector.execute("accounts", "get", params)
+        return result
+
+
+
+    async def update(
+        self,
+        name: str,
+        account_number: str | None = None,
+        type: str | None = None,
+        industry: str | None = None,
+        phone: str | None = None,
+        website: str | None = None,
+        billing_street: str | None = None,
+        billing_city: str | None = None,
+        billing_state: str | None = None,
+        billing_postal_code: str | None = None,
+        billing_country: str | None = None,
+        annual_revenue: float | None = None,
+        number_of_employees: int | None = None,
+        description: str | None = None,
+        owner_id: str | None = None,
+        parent_id: str | None = None,
+        id: str | None = None,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Update an account
+
+        Args:
+            name: Account name.
+            account_number: Parameter AccountNumber
+            type: Parameter Type
+            industry: Parameter Industry
+            phone: Parameter Phone
+            website: Parameter Website
+            billing_street: Parameter BillingStreet
+            billing_city: Parameter BillingCity
+            billing_state: Parameter BillingState
+            billing_postal_code: Parameter BillingPostalCode
+            billing_country: Parameter BillingCountry
+            annual_revenue: Parameter AnnualRevenue
+            number_of_employees: Parameter NumberOfEmployees
+            description: Parameter Description
+            owner_id: Parameter OwnerId
+            parent_id: Parameter ParentId
+            id: Parameter id
+            **kwargs: Additional parameters
+
+        Returns:
+            dict[str, Any]
+        """
+        params = {k: v for k, v in {
+            "Name": name,
+            "AccountNumber": account_number,
+            "Type": type,
+            "Industry": industry,
+            "Phone": phone,
+            "Website": website,
+            "BillingStreet": billing_street,
+            "BillingCity": billing_city,
+            "BillingState": billing_state,
+            "BillingPostalCode": billing_postal_code,
+            "BillingCountry": billing_country,
+            "AnnualRevenue": annual_revenue,
+            "NumberOfEmployees": number_of_employees,
+            "Description": description,
+            "OwnerId": owner_id,
+            "ParentId": parent_id,
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("accounts", "update", params)
+        return result
+
+
+
+    async def delete(
+        self,
+        id: str | None = None,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Delete an account
+
+        Args:
+            id: Parameter id
+            **kwargs: Additional parameters
+
+        Returns:
+            dict[str, Any]
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("accounts", "delete", params)
         return result
 
 
@@ -1433,6 +2144,73 @@ relationship fields inline instead of returning raw IDs.
 
 
 
+    async def create(
+        self,
+        last_name: str,
+        first_name: str | None = None,
+        email: str | None = None,
+        phone: str | None = None,
+        mobile_phone: str | None = None,
+        title: str | None = None,
+        department: str | None = None,
+        account_id: str | None = None,
+        mailing_street: str | None = None,
+        mailing_city: str | None = None,
+        mailing_state: str | None = None,
+        mailing_postal_code: str | None = None,
+        mailing_country: str | None = None,
+        description: str | None = None,
+        owner_id: str | None = None,
+        **kwargs
+    ) -> SObjectCreateResponse:
+        """
+        Create a contact
+
+        Args:
+            first_name: Parameter FirstName
+            last_name: Parameter LastName
+            email: Parameter Email
+            phone: Parameter Phone
+            mobile_phone: Parameter MobilePhone
+            title: Parameter Title
+            department: Parameter Department
+            account_id: Parameter AccountId
+            mailing_street: Parameter MailingStreet
+            mailing_city: Parameter MailingCity
+            mailing_state: Parameter MailingState
+            mailing_postal_code: Parameter MailingPostalCode
+            mailing_country: Parameter MailingCountry
+            description: Parameter Description
+            owner_id: Parameter OwnerId
+            **kwargs: Additional parameters
+
+        Returns:
+            SObjectCreateResponse
+        """
+        params = {k: v for k, v in {
+            "FirstName": first_name,
+            "LastName": last_name,
+            "Email": email,
+            "Phone": phone,
+            "MobilePhone": mobile_phone,
+            "Title": title,
+            "Department": department,
+            "AccountId": account_id,
+            "MailingStreet": mailing_street,
+            "MailingCity": mailing_city,
+            "MailingState": mailing_state,
+            "MailingPostalCode": mailing_postal_code,
+            "MailingCountry": mailing_country,
+            "Description": description,
+            "OwnerId": owner_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("contacts", "create", params)
+        return result
+
+
+
     async def get(
         self,
         id: str | None = None,
@@ -1461,6 +2239,101 @@ Example: "Id,FirstName,LastName,Email,Phone,AccountId"
         }.items() if v is not None}
 
         result = await self._connector.execute("contacts", "get", params)
+        return result
+
+
+
+    async def update(
+        self,
+        last_name: str,
+        first_name: str | None = None,
+        email: str | None = None,
+        phone: str | None = None,
+        mobile_phone: str | None = None,
+        title: str | None = None,
+        department: str | None = None,
+        account_id: str | None = None,
+        mailing_street: str | None = None,
+        mailing_city: str | None = None,
+        mailing_state: str | None = None,
+        mailing_postal_code: str | None = None,
+        mailing_country: str | None = None,
+        description: str | None = None,
+        owner_id: str | None = None,
+        id: str | None = None,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Update a contact
+
+        Args:
+            first_name: Parameter FirstName
+            last_name: Parameter LastName
+            email: Parameter Email
+            phone: Parameter Phone
+            mobile_phone: Parameter MobilePhone
+            title: Parameter Title
+            department: Parameter Department
+            account_id: Parameter AccountId
+            mailing_street: Parameter MailingStreet
+            mailing_city: Parameter MailingCity
+            mailing_state: Parameter MailingState
+            mailing_postal_code: Parameter MailingPostalCode
+            mailing_country: Parameter MailingCountry
+            description: Parameter Description
+            owner_id: Parameter OwnerId
+            id: Parameter id
+            **kwargs: Additional parameters
+
+        Returns:
+            dict[str, Any]
+        """
+        params = {k: v for k, v in {
+            "FirstName": first_name,
+            "LastName": last_name,
+            "Email": email,
+            "Phone": phone,
+            "MobilePhone": mobile_phone,
+            "Title": title,
+            "Department": department,
+            "AccountId": account_id,
+            "MailingStreet": mailing_street,
+            "MailingCity": mailing_city,
+            "MailingState": mailing_state,
+            "MailingPostalCode": mailing_postal_code,
+            "MailingCountry": mailing_country,
+            "Description": description,
+            "OwnerId": owner_id,
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("contacts", "update", params)
+        return result
+
+
+
+    async def delete(
+        self,
+        id: str | None = None,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Delete a contact
+
+        Args:
+            id: Parameter id
+            **kwargs: Additional parameters
+
+        Returns:
+            dict[str, Any]
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("contacts", "delete", params)
         return result
 
 
@@ -1629,6 +2502,91 @@ ConvertedOpportunity.Name) to resolve relationship fields inline instead of retu
 
 
 
+    async def create(
+        self,
+        last_name: str,
+        company: str,
+        first_name: str | None = None,
+        title: str | None = None,
+        email: str | None = None,
+        phone: str | None = None,
+        mobile_phone: str | None = None,
+        website: str | None = None,
+        status: str | None = None,
+        lead_source: str | None = None,
+        industry: str | None = None,
+        rating: str | None = None,
+        annual_revenue: float | None = None,
+        number_of_employees: int | None = None,
+        street: str | None = None,
+        city: str | None = None,
+        state: str | None = None,
+        postal_code: str | None = None,
+        country: str | None = None,
+        description: str | None = None,
+        owner_id: str | None = None,
+        **kwargs
+    ) -> SObjectCreateResponse:
+        """
+        Create a lead
+
+        Args:
+            first_name: Parameter FirstName
+            last_name: Parameter LastName
+            company: Parameter Company
+            title: Parameter Title
+            email: Parameter Email
+            phone: Parameter Phone
+            mobile_phone: Parameter MobilePhone
+            website: Parameter Website
+            status: Parameter Status
+            lead_source: Parameter LeadSource
+            industry: Parameter Industry
+            rating: Parameter Rating
+            annual_revenue: Parameter AnnualRevenue
+            number_of_employees: Parameter NumberOfEmployees
+            street: Parameter Street
+            city: Parameter City
+            state: Parameter State
+            postal_code: Parameter PostalCode
+            country: Parameter Country
+            description: Parameter Description
+            owner_id: Parameter OwnerId
+            **kwargs: Additional parameters
+
+        Returns:
+            SObjectCreateResponse
+        """
+        params = {k: v for k, v in {
+            "FirstName": first_name,
+            "LastName": last_name,
+            "Company": company,
+            "Title": title,
+            "Email": email,
+            "Phone": phone,
+            "MobilePhone": mobile_phone,
+            "Website": website,
+            "Status": status,
+            "LeadSource": lead_source,
+            "Industry": industry,
+            "Rating": rating,
+            "AnnualRevenue": annual_revenue,
+            "NumberOfEmployees": number_of_employees,
+            "Street": street,
+            "City": city,
+            "State": state,
+            "PostalCode": postal_code,
+            "Country": country,
+            "Description": description,
+            "OwnerId": owner_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("leads", "create", params)
+        return result
+
+
+
     async def get(
         self,
         id: str | None = None,
@@ -1657,6 +2615,119 @@ Example: "Id,FirstName,LastName,Email,Company,Status,LeadSource"
         }.items() if v is not None}
 
         result = await self._connector.execute("leads", "get", params)
+        return result
+
+
+
+    async def update(
+        self,
+        last_name: str,
+        company: str,
+        first_name: str | None = None,
+        title: str | None = None,
+        email: str | None = None,
+        phone: str | None = None,
+        mobile_phone: str | None = None,
+        website: str | None = None,
+        status: str | None = None,
+        lead_source: str | None = None,
+        industry: str | None = None,
+        rating: str | None = None,
+        annual_revenue: float | None = None,
+        number_of_employees: int | None = None,
+        street: str | None = None,
+        city: str | None = None,
+        state: str | None = None,
+        postal_code: str | None = None,
+        country: str | None = None,
+        description: str | None = None,
+        owner_id: str | None = None,
+        id: str | None = None,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Update a lead
+
+        Args:
+            first_name: Parameter FirstName
+            last_name: Parameter LastName
+            company: Parameter Company
+            title: Parameter Title
+            email: Parameter Email
+            phone: Parameter Phone
+            mobile_phone: Parameter MobilePhone
+            website: Parameter Website
+            status: Parameter Status
+            lead_source: Parameter LeadSource
+            industry: Parameter Industry
+            rating: Parameter Rating
+            annual_revenue: Parameter AnnualRevenue
+            number_of_employees: Parameter NumberOfEmployees
+            street: Parameter Street
+            city: Parameter City
+            state: Parameter State
+            postal_code: Parameter PostalCode
+            country: Parameter Country
+            description: Parameter Description
+            owner_id: Parameter OwnerId
+            id: Parameter id
+            **kwargs: Additional parameters
+
+        Returns:
+            dict[str, Any]
+        """
+        params = {k: v for k, v in {
+            "FirstName": first_name,
+            "LastName": last_name,
+            "Company": company,
+            "Title": title,
+            "Email": email,
+            "Phone": phone,
+            "MobilePhone": mobile_phone,
+            "Website": website,
+            "Status": status,
+            "LeadSource": lead_source,
+            "Industry": industry,
+            "Rating": rating,
+            "AnnualRevenue": annual_revenue,
+            "NumberOfEmployees": number_of_employees,
+            "Street": street,
+            "City": city,
+            "State": state,
+            "PostalCode": postal_code,
+            "Country": country,
+            "Description": description,
+            "OwnerId": owner_id,
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("leads", "update", params)
+        return result
+
+
+
+    async def delete(
+        self,
+        id: str | None = None,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Delete a lead
+
+        Args:
+            id: Parameter id
+            **kwargs: Additional parameters
+
+        Returns:
+            dict[str, Any]
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("leads", "delete", params)
         return result
 
 
@@ -1838,6 +2909,67 @@ relationship fields inline instead of returning raw IDs.
 
 
 
+    async def create(
+        self,
+        name: str,
+        stage_name: str,
+        close_date: str,
+        account_id: str | None = None,
+        amount: float | None = None,
+        probability: float | None = None,
+        type: str | None = None,
+        lead_source: str | None = None,
+        next_step: str | None = None,
+        campaign_id: str | None = None,
+        forecast_category_name: str | None = None,
+        description: str | None = None,
+        owner_id: str | None = None,
+        **kwargs
+    ) -> SObjectCreateResponse:
+        """
+        Create an opportunity
+
+        Args:
+            name: Parameter Name
+            account_id: Parameter AccountId
+            stage_name: Opportunity stage (e.g., Prospecting, Qualification, Closed Won).
+            close_date: Parameter CloseDate
+            amount: Parameter Amount
+            probability: Parameter Probability
+            type: Parameter Type
+            lead_source: Parameter LeadSource
+            next_step: Parameter NextStep
+            campaign_id: Parameter CampaignId
+            forecast_category_name: Parameter ForecastCategoryName
+            description: Parameter Description
+            owner_id: Parameter OwnerId
+            **kwargs: Additional parameters
+
+        Returns:
+            SObjectCreateResponse
+        """
+        params = {k: v for k, v in {
+            "Name": name,
+            "AccountId": account_id,
+            "StageName": stage_name,
+            "CloseDate": close_date,
+            "Amount": amount,
+            "Probability": probability,
+            "Type": type,
+            "LeadSource": lead_source,
+            "NextStep": next_step,
+            "CampaignId": campaign_id,
+            "ForecastCategoryName": forecast_category_name,
+            "Description": description,
+            "OwnerId": owner_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("opportunities", "create", params)
+        return result
+
+
+
     async def get(
         self,
         id: str | None = None,
@@ -1866,6 +2998,95 @@ Example: "Id,Name,Amount,StageName,CloseDate,AccountId"
         }.items() if v is not None}
 
         result = await self._connector.execute("opportunities", "get", params)
+        return result
+
+
+
+    async def update(
+        self,
+        name: str,
+        stage_name: str,
+        close_date: str,
+        account_id: str | None = None,
+        amount: float | None = None,
+        probability: float | None = None,
+        type: str | None = None,
+        lead_source: str | None = None,
+        next_step: str | None = None,
+        campaign_id: str | None = None,
+        forecast_category_name: str | None = None,
+        description: str | None = None,
+        owner_id: str | None = None,
+        id: str | None = None,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Update an opportunity
+
+        Args:
+            name: Parameter Name
+            account_id: Parameter AccountId
+            stage_name: Opportunity stage (e.g., Prospecting, Qualification, Closed Won).
+            close_date: Parameter CloseDate
+            amount: Parameter Amount
+            probability: Parameter Probability
+            type: Parameter Type
+            lead_source: Parameter LeadSource
+            next_step: Parameter NextStep
+            campaign_id: Parameter CampaignId
+            forecast_category_name: Parameter ForecastCategoryName
+            description: Parameter Description
+            owner_id: Parameter OwnerId
+            id: Parameter id
+            **kwargs: Additional parameters
+
+        Returns:
+            dict[str, Any]
+        """
+        params = {k: v for k, v in {
+            "Name": name,
+            "AccountId": account_id,
+            "StageName": stage_name,
+            "CloseDate": close_date,
+            "Amount": amount,
+            "Probability": probability,
+            "Type": type,
+            "LeadSource": lead_source,
+            "NextStep": next_step,
+            "CampaignId": campaign_id,
+            "ForecastCategoryName": forecast_category_name,
+            "Description": description,
+            "OwnerId": owner_id,
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("opportunities", "update", params)
+        return result
+
+
+
+    async def delete(
+        self,
+        id: str | None = None,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Delete an opportunity
+
+        Args:
+            id: Parameter id
+            **kwargs: Additional parameters
+
+        Returns:
+            dict[str, Any]
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("opportunities", "delete", params)
         return result
 
 
@@ -2035,6 +3256,61 @@ polymorphic WhoId/WhatId references to the related record's name.
 
 
 
+    async def create(
+        self,
+        subject: str,
+        status: str | None = None,
+        priority: str | None = None,
+        activity_date: str | None = None,
+        who_id: str | None = None,
+        what_id: str | None = None,
+        description: str | None = None,
+        type: str | None = None,
+        is_reminder_set: bool | None = None,
+        reminder_date_time: str | None = None,
+        owner_id: str | None = None,
+        **kwargs
+    ) -> SObjectCreateResponse:
+        """
+        Create a task
+
+        Args:
+            subject: Parameter Subject
+            status: Task status (e.g., Not Started, In Progress, Completed).
+            priority: Parameter Priority
+            activity_date: Parameter ActivityDate
+            who_id: Related contact or lead Id.
+            what_id: Related Account, Opportunity, or other object Id.
+            description: Parameter Description
+            type: Parameter Type
+            is_reminder_set: Parameter IsReminderSet
+            reminder_date_time: Parameter ReminderDateTime
+            owner_id: Parameter OwnerId
+            **kwargs: Additional parameters
+
+        Returns:
+            SObjectCreateResponse
+        """
+        params = {k: v for k, v in {
+            "Subject": subject,
+            "Status": status,
+            "Priority": priority,
+            "ActivityDate": activity_date,
+            "WhoId": who_id,
+            "WhatId": what_id,
+            "Description": description,
+            "Type": type,
+            "IsReminderSet": is_reminder_set,
+            "ReminderDateTime": reminder_date_time,
+            "OwnerId": owner_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("tasks", "create", params)
+        return result
+
+
+
     async def get(
         self,
         id: str | None = None,
@@ -2063,6 +3339,89 @@ Example: "Id,Subject,Status,Priority,ActivityDate,WhoId,WhatId"
         }.items() if v is not None}
 
         result = await self._connector.execute("tasks", "get", params)
+        return result
+
+
+
+    async def update(
+        self,
+        subject: str,
+        status: str | None = None,
+        priority: str | None = None,
+        activity_date: str | None = None,
+        who_id: str | None = None,
+        what_id: str | None = None,
+        description: str | None = None,
+        type: str | None = None,
+        is_reminder_set: bool | None = None,
+        reminder_date_time: str | None = None,
+        owner_id: str | None = None,
+        id: str | None = None,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Update a task
+
+        Args:
+            subject: Parameter Subject
+            status: Task status (e.g., Not Started, In Progress, Completed).
+            priority: Parameter Priority
+            activity_date: Parameter ActivityDate
+            who_id: Related contact or lead Id.
+            what_id: Related Account, Opportunity, or other object Id.
+            description: Parameter Description
+            type: Parameter Type
+            is_reminder_set: Parameter IsReminderSet
+            reminder_date_time: Parameter ReminderDateTime
+            owner_id: Parameter OwnerId
+            id: Parameter id
+            **kwargs: Additional parameters
+
+        Returns:
+            dict[str, Any]
+        """
+        params = {k: v for k, v in {
+            "Subject": subject,
+            "Status": status,
+            "Priority": priority,
+            "ActivityDate": activity_date,
+            "WhoId": who_id,
+            "WhatId": what_id,
+            "Description": description,
+            "Type": type,
+            "IsReminderSet": is_reminder_set,
+            "ReminderDateTime": reminder_date_time,
+            "OwnerId": owner_id,
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("tasks", "update", params)
+        return result
+
+
+
+    async def delete(
+        self,
+        id: str | None = None,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Delete a task
+
+        Args:
+            id: Parameter id
+            **kwargs: Additional parameters
+
+        Returns:
+            dict[str, Any]
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("tasks", "delete", params)
         return result
 
 
@@ -2230,6 +3589,61 @@ polymorphic WhoId/WhatId references to the related record's name.
 
 
 
+    async def create(
+        self,
+        subject: str,
+        start_date_time: str,
+        duration_in_minutes: int,
+        end_date_time: str | None = None,
+        location: str | None = None,
+        description: str | None = None,
+        who_id: str | None = None,
+        what_id: str | None = None,
+        is_all_day_event: bool | None = None,
+        show_as: str | None = None,
+        owner_id: str | None = None,
+        **kwargs
+    ) -> SObjectCreateResponse:
+        """
+        Create an event
+
+        Args:
+            subject: Parameter Subject
+            start_date_time: Parameter StartDateTime
+            end_date_time: Parameter EndDateTime
+            duration_in_minutes: Parameter DurationInMinutes
+            location: Parameter Location
+            description: Parameter Description
+            who_id: Parameter WhoId
+            what_id: Parameter WhatId
+            is_all_day_event: Parameter IsAllDayEvent
+            show_as: Parameter ShowAs
+            owner_id: Parameter OwnerId
+            **kwargs: Additional parameters
+
+        Returns:
+            SObjectCreateResponse
+        """
+        params = {k: v for k, v in {
+            "Subject": subject,
+            "StartDateTime": start_date_time,
+            "EndDateTime": end_date_time,
+            "DurationInMinutes": duration_in_minutes,
+            "Location": location,
+            "Description": description,
+            "WhoId": who_id,
+            "WhatId": what_id,
+            "IsAllDayEvent": is_all_day_event,
+            "ShowAs": show_as,
+            "OwnerId": owner_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("events", "create", params)
+        return result
+
+
+
     async def get(
         self,
         id: str | None = None,
@@ -2258,6 +3672,89 @@ Example: "Id,Subject,StartDateTime,EndDateTime,Location,WhoId,WhatId"
         }.items() if v is not None}
 
         result = await self._connector.execute("events", "get", params)
+        return result
+
+
+
+    async def update(
+        self,
+        subject: str,
+        start_date_time: str,
+        duration_in_minutes: int,
+        end_date_time: str | None = None,
+        location: str | None = None,
+        description: str | None = None,
+        who_id: str | None = None,
+        what_id: str | None = None,
+        is_all_day_event: bool | None = None,
+        show_as: str | None = None,
+        owner_id: str | None = None,
+        id: str | None = None,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Update an event
+
+        Args:
+            subject: Parameter Subject
+            start_date_time: Parameter StartDateTime
+            end_date_time: Parameter EndDateTime
+            duration_in_minutes: Parameter DurationInMinutes
+            location: Parameter Location
+            description: Parameter Description
+            who_id: Parameter WhoId
+            what_id: Parameter WhatId
+            is_all_day_event: Parameter IsAllDayEvent
+            show_as: Parameter ShowAs
+            owner_id: Parameter OwnerId
+            id: Parameter id
+            **kwargs: Additional parameters
+
+        Returns:
+            dict[str, Any]
+        """
+        params = {k: v for k, v in {
+            "Subject": subject,
+            "StartDateTime": start_date_time,
+            "EndDateTime": end_date_time,
+            "DurationInMinutes": duration_in_minutes,
+            "Location": location,
+            "Description": description,
+            "WhoId": who_id,
+            "WhatId": what_id,
+            "IsAllDayEvent": is_all_day_event,
+            "ShowAs": show_as,
+            "OwnerId": owner_id,
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("events", "update", params)
+        return result
+
+
+
+    async def delete(
+        self,
+        id: str | None = None,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Delete an event
+
+        Args:
+            id: Parameter id
+            **kwargs: Additional parameters
+
+        Returns:
+            dict[str, Any]
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("events", "delete", params)
         return result
 
 
@@ -2346,6 +3843,70 @@ instead of returning raw IDs.
 
 
 
+    async def create(
+        self,
+        name: str,
+        type: str | None = None,
+        status: str | None = None,
+        start_date: str | None = None,
+        end_date: str | None = None,
+        is_active: bool | None = None,
+        description: str | None = None,
+        expected_revenue: float | None = None,
+        budgeted_cost: float | None = None,
+        actual_cost: float | None = None,
+        expected_response: float | None = None,
+        number_sent: float | None = None,
+        parent_id: str | None = None,
+        owner_id: str | None = None,
+        **kwargs
+    ) -> SObjectCreateResponse:
+        """
+        Create a campaign
+
+        Args:
+            name: Parameter Name
+            type: Parameter Type
+            status: Parameter Status
+            start_date: Parameter StartDate
+            end_date: Parameter EndDate
+            is_active: Parameter IsActive
+            description: Parameter Description
+            expected_revenue: Parameter ExpectedRevenue
+            budgeted_cost: Parameter BudgetedCost
+            actual_cost: Parameter ActualCost
+            expected_response: Parameter ExpectedResponse
+            number_sent: Parameter NumberSent
+            parent_id: Parameter ParentId
+            owner_id: Parameter OwnerId
+            **kwargs: Additional parameters
+
+        Returns:
+            SObjectCreateResponse
+        """
+        params = {k: v for k, v in {
+            "Name": name,
+            "Type": type,
+            "Status": status,
+            "StartDate": start_date,
+            "EndDate": end_date,
+            "IsActive": is_active,
+            "Description": description,
+            "ExpectedRevenue": expected_revenue,
+            "BudgetedCost": budgeted_cost,
+            "ActualCost": actual_cost,
+            "ExpectedResponse": expected_response,
+            "NumberSent": number_sent,
+            "ParentId": parent_id,
+            "OwnerId": owner_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("campaigns", "create", params)
+        return result
+
+
+
     async def get(
         self,
         id: str | None = None,
@@ -2374,6 +3935,98 @@ Example: "Id,Name,Type,Status,StartDate,EndDate,IsActive"
         }.items() if v is not None}
 
         result = await self._connector.execute("campaigns", "get", params)
+        return result
+
+
+
+    async def update(
+        self,
+        name: str,
+        type: str | None = None,
+        status: str | None = None,
+        start_date: str | None = None,
+        end_date: str | None = None,
+        is_active: bool | None = None,
+        description: str | None = None,
+        expected_revenue: float | None = None,
+        budgeted_cost: float | None = None,
+        actual_cost: float | None = None,
+        expected_response: float | None = None,
+        number_sent: float | None = None,
+        parent_id: str | None = None,
+        owner_id: str | None = None,
+        id: str | None = None,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Update a campaign
+
+        Args:
+            name: Parameter Name
+            type: Parameter Type
+            status: Parameter Status
+            start_date: Parameter StartDate
+            end_date: Parameter EndDate
+            is_active: Parameter IsActive
+            description: Parameter Description
+            expected_revenue: Parameter ExpectedRevenue
+            budgeted_cost: Parameter BudgetedCost
+            actual_cost: Parameter ActualCost
+            expected_response: Parameter ExpectedResponse
+            number_sent: Parameter NumberSent
+            parent_id: Parameter ParentId
+            owner_id: Parameter OwnerId
+            id: Parameter id
+            **kwargs: Additional parameters
+
+        Returns:
+            dict[str, Any]
+        """
+        params = {k: v for k, v in {
+            "Name": name,
+            "Type": type,
+            "Status": status,
+            "StartDate": start_date,
+            "EndDate": end_date,
+            "IsActive": is_active,
+            "Description": description,
+            "ExpectedRevenue": expected_revenue,
+            "BudgetedCost": budgeted_cost,
+            "ActualCost": actual_cost,
+            "ExpectedResponse": expected_response,
+            "NumberSent": number_sent,
+            "ParentId": parent_id,
+            "OwnerId": owner_id,
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("campaigns", "update", params)
+        return result
+
+
+
+    async def delete(
+        self,
+        id: str | None = None,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Delete a campaign
+
+        Args:
+            id: Parameter id
+            **kwargs: Additional parameters
+
+        Returns:
+            dict[str, Any]
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("campaigns", "delete", params)
         return result
 
 
@@ -2462,6 +4115,73 @@ relationship fields inline instead of returning raw IDs.
 
 
 
+    async def create(
+        self,
+        subject: str | None = None,
+        status: str | None = None,
+        priority: str | None = None,
+        origin: str | None = None,
+        type: str | None = None,
+        reason: str | None = None,
+        description: str | None = None,
+        account_id: str | None = None,
+        contact_id: str | None = None,
+        supplied_name: str | None = None,
+        supplied_email: str | None = None,
+        supplied_phone: str | None = None,
+        supplied_company: str | None = None,
+        owner_id: str | None = None,
+        parent_id: str | None = None,
+        **kwargs
+    ) -> SObjectCreateResponse:
+        """
+        Create a case
+
+        Args:
+            subject: Parameter Subject
+            status: Parameter Status
+            priority: Parameter Priority
+            origin: Parameter Origin
+            type: Parameter Type
+            reason: Parameter Reason
+            description: Parameter Description
+            account_id: Parameter AccountId
+            contact_id: Parameter ContactId
+            supplied_name: Parameter SuppliedName
+            supplied_email: Parameter SuppliedEmail
+            supplied_phone: Parameter SuppliedPhone
+            supplied_company: Parameter SuppliedCompany
+            owner_id: Parameter OwnerId
+            parent_id: Parameter ParentId
+            **kwargs: Additional parameters
+
+        Returns:
+            SObjectCreateResponse
+        """
+        params = {k: v for k, v in {
+            "Subject": subject,
+            "Status": status,
+            "Priority": priority,
+            "Origin": origin,
+            "Type": type,
+            "Reason": reason,
+            "Description": description,
+            "AccountId": account_id,
+            "ContactId": contact_id,
+            "SuppliedName": supplied_name,
+            "SuppliedEmail": supplied_email,
+            "SuppliedPhone": supplied_phone,
+            "SuppliedCompany": supplied_company,
+            "OwnerId": owner_id,
+            "ParentId": parent_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("cases", "create", params)
+        return result
+
+
+
     async def get(
         self,
         id: str | None = None,
@@ -2490,6 +4210,101 @@ Example: "Id,CaseNumber,Subject,Status,Priority,ContactId,AccountId"
         }.items() if v is not None}
 
         result = await self._connector.execute("cases", "get", params)
+        return result
+
+
+
+    async def update(
+        self,
+        subject: str | None = None,
+        status: str | None = None,
+        priority: str | None = None,
+        origin: str | None = None,
+        type: str | None = None,
+        reason: str | None = None,
+        description: str | None = None,
+        account_id: str | None = None,
+        contact_id: str | None = None,
+        supplied_name: str | None = None,
+        supplied_email: str | None = None,
+        supplied_phone: str | None = None,
+        supplied_company: str | None = None,
+        owner_id: str | None = None,
+        parent_id: str | None = None,
+        id: str | None = None,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Update a case
+
+        Args:
+            subject: Parameter Subject
+            status: Parameter Status
+            priority: Parameter Priority
+            origin: Parameter Origin
+            type: Parameter Type
+            reason: Parameter Reason
+            description: Parameter Description
+            account_id: Parameter AccountId
+            contact_id: Parameter ContactId
+            supplied_name: Parameter SuppliedName
+            supplied_email: Parameter SuppliedEmail
+            supplied_phone: Parameter SuppliedPhone
+            supplied_company: Parameter SuppliedCompany
+            owner_id: Parameter OwnerId
+            parent_id: Parameter ParentId
+            id: Parameter id
+            **kwargs: Additional parameters
+
+        Returns:
+            dict[str, Any]
+        """
+        params = {k: v for k, v in {
+            "Subject": subject,
+            "Status": status,
+            "Priority": priority,
+            "Origin": origin,
+            "Type": type,
+            "Reason": reason,
+            "Description": description,
+            "AccountId": account_id,
+            "ContactId": contact_id,
+            "SuppliedName": supplied_name,
+            "SuppliedEmail": supplied_email,
+            "SuppliedPhone": supplied_phone,
+            "SuppliedCompany": supplied_company,
+            "OwnerId": owner_id,
+            "ParentId": parent_id,
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("cases", "update", params)
+        return result
+
+
+
+    async def delete(
+        self,
+        id: str | None = None,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Delete a case
+
+        Args:
+            id: Parameter id
+            **kwargs: Additional parameters
+
+        Returns:
+            dict[str, Any]
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("cases", "delete", params)
         return result
 
 

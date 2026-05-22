@@ -51,6 +51,170 @@ class SObjectsResponse(BaseModel):
     max_batch_size: int | None = Field(default=None, alias="maxBatchSize")
     sobjects: list[SObject] | None = Field(default=None)
 
+class SObjectCreateResponse(BaseModel):
+    """SObjectCreateResponse type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None)
+    success: bool | None = Field(default=None)
+    errors: list[dict[str, Any]] | None = Field(default=None)
+
+class AccountWriteInput(BaseModel):
+    """AccountWriteInput type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: str = Field(alias="Name")
+    account_number: str | None = Field(default=None, alias="AccountNumber")
+    type_: str | None = Field(default=None, alias="Type")
+    industry: str | None = Field(default=None, alias="Industry")
+    phone: str | None = Field(default=None, alias="Phone")
+    website: str | None = Field(default=None, alias="Website")
+    billing_street: str | None = Field(default=None, alias="BillingStreet")
+    billing_city: str | None = Field(default=None, alias="BillingCity")
+    billing_state: str | None = Field(default=None, alias="BillingState")
+    billing_postal_code: str | None = Field(default=None, alias="BillingPostalCode")
+    billing_country: str | None = Field(default=None, alias="BillingCountry")
+    annual_revenue: float | None = Field(default=None, alias="AnnualRevenue")
+    number_of_employees: int | None = Field(default=None, alias="NumberOfEmployees")
+    description: str | None = Field(default=None, alias="Description")
+    owner_id: str | None = Field(default=None, alias="OwnerId")
+    parent_id: str | None = Field(default=None, alias="ParentId")
+
+class ContactWriteInput(BaseModel):
+    """ContactWriteInput type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    first_name: str | None = Field(default=None, alias="FirstName")
+    last_name: str = Field(alias="LastName")
+    email: str | None = Field(default=None, alias="Email")
+    phone: str | None = Field(default=None, alias="Phone")
+    mobile_phone: str | None = Field(default=None, alias="MobilePhone")
+    title: str | None = Field(default=None, alias="Title")
+    department: str | None = Field(default=None, alias="Department")
+    account_id: str | None = Field(default=None, alias="AccountId")
+    mailing_street: str | None = Field(default=None, alias="MailingStreet")
+    mailing_city: str | None = Field(default=None, alias="MailingCity")
+    mailing_state: str | None = Field(default=None, alias="MailingState")
+    mailing_postal_code: str | None = Field(default=None, alias="MailingPostalCode")
+    mailing_country: str | None = Field(default=None, alias="MailingCountry")
+    description: str | None = Field(default=None, alias="Description")
+    owner_id: str | None = Field(default=None, alias="OwnerId")
+
+class LeadWriteInput(BaseModel):
+    """LeadWriteInput type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    first_name: str | None = Field(default=None, alias="FirstName")
+    last_name: str = Field(alias="LastName")
+    company: str = Field(alias="Company")
+    title: str | None = Field(default=None, alias="Title")
+    email: str | None = Field(default=None, alias="Email")
+    phone: str | None = Field(default=None, alias="Phone")
+    mobile_phone: str | None = Field(default=None, alias="MobilePhone")
+    website: str | None = Field(default=None, alias="Website")
+    status: str | None = Field(default=None, alias="Status")
+    lead_source: str | None = Field(default=None, alias="LeadSource")
+    industry: str | None = Field(default=None, alias="Industry")
+    rating: str | None = Field(default=None, alias="Rating")
+    annual_revenue: float | None = Field(default=None, alias="AnnualRevenue")
+    number_of_employees: int | None = Field(default=None, alias="NumberOfEmployees")
+    street: str | None = Field(default=None, alias="Street")
+    city: str | None = Field(default=None, alias="City")
+    state: str | None = Field(default=None, alias="State")
+    postal_code: str | None = Field(default=None, alias="PostalCode")
+    country: str | None = Field(default=None, alias="Country")
+    description: str | None = Field(default=None, alias="Description")
+    owner_id: str | None = Field(default=None, alias="OwnerId")
+
+class OpportunityWriteInput(BaseModel):
+    """OpportunityWriteInput type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: str = Field(alias="Name")
+    account_id: str | None = Field(default=None, alias="AccountId")
+    stage_name: str = Field(alias="StageName")
+    close_date: str = Field(alias="CloseDate")
+    amount: float | None = Field(default=None, alias="Amount")
+    probability: float | None = Field(default=None, alias="Probability")
+    type_: str | None = Field(default=None, alias="Type")
+    lead_source: str | None = Field(default=None, alias="LeadSource")
+    next_step: str | None = Field(default=None, alias="NextStep")
+    campaign_id: str | None = Field(default=None, alias="CampaignId")
+    forecast_category_name: str | None = Field(default=None, alias="ForecastCategoryName")
+    description: str | None = Field(default=None, alias="Description")
+    owner_id: str | None = Field(default=None, alias="OwnerId")
+
+class TaskWriteInput(BaseModel):
+    """TaskWriteInput type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    subject: str = Field(alias="Subject")
+    status: str | None = Field(default=None, alias="Status")
+    priority: str | None = Field(default=None, alias="Priority")
+    activity_date: str | None = Field(default=None, alias="ActivityDate")
+    who_id: str | None = Field(default=None, alias="WhoId")
+    what_id: str | None = Field(default=None, alias="WhatId")
+    description: str | None = Field(default=None, alias="Description")
+    type_: str | None = Field(default=None, alias="Type")
+    is_reminder_set: bool | None = Field(default=None, alias="IsReminderSet")
+    reminder_date_time: str | None = Field(default=None, alias="ReminderDateTime")
+    owner_id: str | None = Field(default=None, alias="OwnerId")
+
+class EventWriteInput(BaseModel):
+    """EventWriteInput type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    subject: str = Field(alias="Subject")
+    start_date_time: str = Field(alias="StartDateTime")
+    end_date_time: str | None = Field(default=None, alias="EndDateTime")
+    duration_in_minutes: int = Field(alias="DurationInMinutes")
+    location: str | None = Field(default=None, alias="Location")
+    description: str | None = Field(default=None, alias="Description")
+    who_id: str | None = Field(default=None, alias="WhoId")
+    what_id: str | None = Field(default=None, alias="WhatId")
+    is_all_day_event: bool | None = Field(default=None, alias="IsAllDayEvent")
+    show_as: str | None = Field(default=None, alias="ShowAs")
+    owner_id: str | None = Field(default=None, alias="OwnerId")
+
+class CampaignWriteInput(BaseModel):
+    """CampaignWriteInput type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: str = Field(alias="Name")
+    type_: str | None = Field(default=None, alias="Type")
+    status: str | None = Field(default=None, alias="Status")
+    start_date: str | None = Field(default=None, alias="StartDate")
+    end_date: str | None = Field(default=None, alias="EndDate")
+    is_active: bool | None = Field(default=None, alias="IsActive")
+    description: str | None = Field(default=None, alias="Description")
+    expected_revenue: float | None = Field(default=None, alias="ExpectedRevenue")
+    budgeted_cost: float | None = Field(default=None, alias="BudgetedCost")
+    actual_cost: float | None = Field(default=None, alias="ActualCost")
+    expected_response: float | None = Field(default=None, alias="ExpectedResponse")
+    number_sent: float | None = Field(default=None, alias="NumberSent")
+    parent_id: str | None = Field(default=None, alias="ParentId")
+    owner_id: str | None = Field(default=None, alias="OwnerId")
+
+class CaseWriteInput(BaseModel):
+    """CaseWriteInput type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    subject: str | None = Field(default=None, alias="Subject")
+    status: str | None = Field(default=None, alias="Status")
+    priority: str | None = Field(default=None, alias="Priority")
+    origin: str | None = Field(default=None, alias="Origin")
+    type_: str | None = Field(default=None, alias="Type")
+    reason: str | None = Field(default=None, alias="Reason")
+    description: str | None = Field(default=None, alias="Description")
+    account_id: str | None = Field(default=None, alias="AccountId")
+    contact_id: str | None = Field(default=None, alias="ContactId")
+    supplied_name: str | None = Field(default=None, alias="SuppliedName")
+    supplied_email: str | None = Field(default=None, alias="SuppliedEmail")
+    supplied_phone: str | None = Field(default=None, alias="SuppliedPhone")
+    supplied_company: str | None = Field(default=None, alias="SuppliedCompany")
+    owner_id: str | None = Field(default=None, alias="OwnerId")
+    parent_id: str | None = Field(default=None, alias="ParentId")
+
 class AccountAttributes(BaseModel):
     """Nested schema for Account.attributes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)

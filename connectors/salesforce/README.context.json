@@ -3,7 +3,7 @@
   "class_name": "SalesforceConnector",
   "package_name": "airbyte_agent_sdk.connectors.salesforce",
   "install_package": "airbyte-agent-sdk",
-  "yaml_version": "1.0.18",
+  "yaml_version": "1.1.0",
   "api_reference_url": "https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/intro_rest.htm",
   "auth_example": "SalesforceAuthConfig(refresh_token=\"...\", client_id=\"...\", client_secret=\"...\")",
   "auth_import": ", SalesforceAuthConfig",
@@ -81,6 +81,159 @@
         "record_type": "list[SObject]",
         "meta_fields": null,
         "is_download": false
+      },
+      {
+        "method_name": "create_s_object",
+        "http_method": "post",
+        "path": "/sobjects/{sobjectType}",
+        "entity": "sobjects",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "sobjectType",
+            "python_name": "sobject_type",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "SObject API name (e.g., `Account`, `MyCustomObject__c`)."
+          }
+        ],
+        "params_type_name": "SobjectsCreateParams",
+        "response_type": "dict[str, Any]",
+        "description": "Create a record for any Salesforce SObject by name. Works for standard\nobjects (Account, Contact, ...) and custom objects (e.g. `MyObject__c`).\nPass the SObject's API name in the `sobjectType` path parameter and the\nfield values as a free-form JSON body.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_s_object_by_id",
+        "http_method": "get",
+        "path": "/sobjects/{sobjectType}/{id}",
+        "entity": "sobjects",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "sobjectType",
+            "python_name": "sobject_type",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "SObject API name."
+          },
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Salesforce record Id."
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Comma-separated field names to return. Omit for default fields.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "SobjectsGetParams",
+        "response_type": "dict[str, Any]",
+        "description": "Fetch a single record from any SObject by id. Works for standard and\ncustom objects.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "update_s_object",
+        "http_method": "patch",
+        "path": "/sobjects/{sobjectType}/{id}",
+        "entity": "sobjects",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "sobjectType",
+            "python_name": "sobject_type",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "SObject API name."
+          },
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Salesforce record Id."
+          }
+        ],
+        "params_type_name": "SobjectsUpdateParams",
+        "response_type": "dict[str, Any]",
+        "description": "Update fields on an existing record. Pass only the fields you want to\nchange in the JSON body; Salesforce leaves the rest untouched.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": null,
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "delete_s_object",
+        "http_method": "delete",
+        "path": "/sobjects/{sobjectType}/{id}",
+        "entity": "sobjects",
+        "action": "delete",
+        "parameters": [
+          {
+            "name": "sobjectType",
+            "python_name": "sobject_type",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "SObject API name."
+          },
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Salesforce record Id."
+          }
+        ],
+        "params_type_name": "SobjectsDeleteParams",
+        "response_type": "dict[str, Any]",
+        "description": "Delete a record by id. Salesforce moves the record to the Recycle Bin\n(15-day retention) for most objects.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": null,
+        "meta_fields": null,
+        "is_download": false
       }
     ],
     "accounts": [
@@ -137,6 +290,185 @@
         "is_download": false
       },
       {
+        "method_name": "create_account",
+        "http_method": "post",
+        "path": "/sobjects/Account",
+        "entity": "accounts",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "Name",
+            "python_name": "name",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Account name."
+            },
+            "required": true,
+            "description": "Account name."
+          },
+          {
+            "name": "AccountNumber",
+            "python_name": "account_number",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Type",
+            "python_name": "type",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Industry",
+            "python_name": "industry",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Phone",
+            "python_name": "phone",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Website",
+            "python_name": "website",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "BillingStreet",
+            "python_name": "billing_street",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "BillingCity",
+            "python_name": "billing_city",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "BillingState",
+            "python_name": "billing_state",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "BillingPostalCode",
+            "python_name": "billing_postal_code",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "BillingCountry",
+            "python_name": "billing_country",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "AnnualRevenue",
+            "python_name": "annual_revenue",
+            "type": "float",
+            "schema": {
+              "type": "number"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "NumberOfEmployees",
+            "python_name": "number_of_employees",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Description",
+            "python_name": "description",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "OwnerId",
+            "python_name": "owner_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "ParentId",
+            "python_name": "parent_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          }
+        ],
+        "params_type_name": "AccountsCreateParams",
+        "response_type": "SObjectCreateResponse",
+        "description": "Create an account",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "SObjectCreateResponse",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
         "method_name": "get_account",
         "http_method": "get",
         "path": "/sobjects/Account/{id}",
@@ -172,6 +504,223 @@
         "meta_extractor": null,
         "needs_envelope": null,
         "record_type": "Account",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "update_account",
+        "http_method": "patch",
+        "path": "/sobjects/Account/{id}",
+        "entity": "accounts",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "Name",
+            "python_name": "name",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Account name."
+            },
+            "required": true,
+            "description": "Account name."
+          },
+          {
+            "name": "AccountNumber",
+            "python_name": "account_number",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Type",
+            "python_name": "type",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Industry",
+            "python_name": "industry",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Phone",
+            "python_name": "phone",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Website",
+            "python_name": "website",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "BillingStreet",
+            "python_name": "billing_street",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "BillingCity",
+            "python_name": "billing_city",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "BillingState",
+            "python_name": "billing_state",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "BillingPostalCode",
+            "python_name": "billing_postal_code",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "BillingCountry",
+            "python_name": "billing_country",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "AnnualRevenue",
+            "python_name": "annual_revenue",
+            "type": "float",
+            "schema": {
+              "type": "number"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "NumberOfEmployees",
+            "python_name": "number_of_employees",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Description",
+            "python_name": "description",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "OwnerId",
+            "python_name": "owner_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "ParentId",
+            "python_name": "parent_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": ""
+          }
+        ],
+        "params_type_name": "AccountsUpdateParams",
+        "response_type": "dict[str, Any]",
+        "description": "Update an account",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": null,
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "delete_account",
+        "http_method": "delete",
+        "path": "/sobjects/Account/{id}",
+        "entity": "accounts",
+        "action": "delete",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": ""
+          }
+        ],
+        "params_type_name": "AccountsDeleteParams",
+        "response_type": "dict[str, Any]",
+        "description": "Delete an account",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": null,
         "meta_fields": null,
         "is_download": false
       },
@@ -257,6 +806,174 @@
         "is_download": false
       },
       {
+        "method_name": "create_contact",
+        "http_method": "post",
+        "path": "/sobjects/Contact",
+        "entity": "contacts",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "FirstName",
+            "python_name": "first_name",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "LastName",
+            "python_name": "last_name",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": ""
+          },
+          {
+            "name": "Email",
+            "python_name": "email",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Phone",
+            "python_name": "phone",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "MobilePhone",
+            "python_name": "mobile_phone",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Title",
+            "python_name": "title",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Department",
+            "python_name": "department",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "AccountId",
+            "python_name": "account_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "MailingStreet",
+            "python_name": "mailing_street",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "MailingCity",
+            "python_name": "mailing_city",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "MailingState",
+            "python_name": "mailing_state",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "MailingPostalCode",
+            "python_name": "mailing_postal_code",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "MailingCountry",
+            "python_name": "mailing_country",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Description",
+            "python_name": "description",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "OwnerId",
+            "python_name": "owner_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          }
+        ],
+        "params_type_name": "ContactsCreateParams",
+        "response_type": "SObjectCreateResponse",
+        "description": "Create a contact",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "SObjectCreateResponse",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
         "method_name": "get_contact",
         "http_method": "get",
         "path": "/sobjects/Contact/{id}",
@@ -292,6 +1009,212 @@
         "meta_extractor": null,
         "needs_envelope": null,
         "record_type": "Contact",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "update_contact",
+        "http_method": "patch",
+        "path": "/sobjects/Contact/{id}",
+        "entity": "contacts",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "FirstName",
+            "python_name": "first_name",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "LastName",
+            "python_name": "last_name",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": ""
+          },
+          {
+            "name": "Email",
+            "python_name": "email",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Phone",
+            "python_name": "phone",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "MobilePhone",
+            "python_name": "mobile_phone",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Title",
+            "python_name": "title",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Department",
+            "python_name": "department",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "AccountId",
+            "python_name": "account_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "MailingStreet",
+            "python_name": "mailing_street",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "MailingCity",
+            "python_name": "mailing_city",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "MailingState",
+            "python_name": "mailing_state",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "MailingPostalCode",
+            "python_name": "mailing_postal_code",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "MailingCountry",
+            "python_name": "mailing_country",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Description",
+            "python_name": "description",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "OwnerId",
+            "python_name": "owner_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": ""
+          }
+        ],
+        "params_type_name": "ContactsUpdateParams",
+        "response_type": "dict[str, Any]",
+        "description": "Update a contact",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": null,
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "delete_contact",
+        "http_method": "delete",
+        "path": "/sobjects/Contact/{id}",
+        "entity": "contacts",
+        "action": "delete",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": ""
+          }
+        ],
+        "params_type_name": "ContactsDeleteParams",
+        "response_type": "dict[str, Any]",
+        "description": "Delete a contact",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": null,
         "meta_fields": null,
         "is_download": false
       },
@@ -377,6 +1300,234 @@
         "is_download": false
       },
       {
+        "method_name": "create_lead",
+        "http_method": "post",
+        "path": "/sobjects/Lead",
+        "entity": "leads",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "FirstName",
+            "python_name": "first_name",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "LastName",
+            "python_name": "last_name",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": ""
+          },
+          {
+            "name": "Company",
+            "python_name": "company",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": ""
+          },
+          {
+            "name": "Title",
+            "python_name": "title",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Email",
+            "python_name": "email",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Phone",
+            "python_name": "phone",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "MobilePhone",
+            "python_name": "mobile_phone",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Website",
+            "python_name": "website",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Status",
+            "python_name": "status",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "LeadSource",
+            "python_name": "lead_source",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Industry",
+            "python_name": "industry",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Rating",
+            "python_name": "rating",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "AnnualRevenue",
+            "python_name": "annual_revenue",
+            "type": "float",
+            "schema": {
+              "type": "number"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "NumberOfEmployees",
+            "python_name": "number_of_employees",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Street",
+            "python_name": "street",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "City",
+            "python_name": "city",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "State",
+            "python_name": "state",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "PostalCode",
+            "python_name": "postal_code",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Country",
+            "python_name": "country",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Description",
+            "python_name": "description",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "OwnerId",
+            "python_name": "owner_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          }
+        ],
+        "params_type_name": "LeadsCreateParams",
+        "response_type": "SObjectCreateResponse",
+        "description": "Create a lead",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "SObjectCreateResponse",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
         "method_name": "get_lead",
         "http_method": "get",
         "path": "/sobjects/Lead/{id}",
@@ -412,6 +1563,272 @@
         "meta_extractor": null,
         "needs_envelope": null,
         "record_type": "Lead",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "update_lead",
+        "http_method": "patch",
+        "path": "/sobjects/Lead/{id}",
+        "entity": "leads",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "FirstName",
+            "python_name": "first_name",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "LastName",
+            "python_name": "last_name",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": ""
+          },
+          {
+            "name": "Company",
+            "python_name": "company",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": ""
+          },
+          {
+            "name": "Title",
+            "python_name": "title",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Email",
+            "python_name": "email",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Phone",
+            "python_name": "phone",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "MobilePhone",
+            "python_name": "mobile_phone",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Website",
+            "python_name": "website",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Status",
+            "python_name": "status",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "LeadSource",
+            "python_name": "lead_source",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Industry",
+            "python_name": "industry",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Rating",
+            "python_name": "rating",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "AnnualRevenue",
+            "python_name": "annual_revenue",
+            "type": "float",
+            "schema": {
+              "type": "number"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "NumberOfEmployees",
+            "python_name": "number_of_employees",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Street",
+            "python_name": "street",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "City",
+            "python_name": "city",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "State",
+            "python_name": "state",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "PostalCode",
+            "python_name": "postal_code",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Country",
+            "python_name": "country",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Description",
+            "python_name": "description",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "OwnerId",
+            "python_name": "owner_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": ""
+          }
+        ],
+        "params_type_name": "LeadsUpdateParams",
+        "response_type": "dict[str, Any]",
+        "description": "Update a lead",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": null,
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "delete_lead",
+        "http_method": "delete",
+        "path": "/sobjects/Lead/{id}",
+        "entity": "leads",
+        "action": "delete",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": ""
+          }
+        ],
+        "params_type_name": "LeadsDeleteParams",
+        "response_type": "dict[str, Any]",
+        "description": "Delete a lead",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": null,
         "meta_fields": null,
         "is_download": false
       },
@@ -497,6 +1914,156 @@
         "is_download": false
       },
       {
+        "method_name": "create_opportunity",
+        "http_method": "post",
+        "path": "/sobjects/Opportunity",
+        "entity": "opportunities",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "Name",
+            "python_name": "name",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": ""
+          },
+          {
+            "name": "AccountId",
+            "python_name": "account_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "StageName",
+            "python_name": "stage_name",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Opportunity stage (e.g., Prospecting, Qualification, Closed Won)."
+            },
+            "required": true,
+            "description": "Opportunity stage (e.g., Prospecting, Qualification, Closed Won)."
+          },
+          {
+            "name": "CloseDate",
+            "python_name": "close_date",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "required": true,
+            "description": ""
+          },
+          {
+            "name": "Amount",
+            "python_name": "amount",
+            "type": "float",
+            "schema": {
+              "type": "number"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Probability",
+            "python_name": "probability",
+            "type": "float",
+            "schema": {
+              "type": "number"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Type",
+            "python_name": "type",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "LeadSource",
+            "python_name": "lead_source",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "NextStep",
+            "python_name": "next_step",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "CampaignId",
+            "python_name": "campaign_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "ForecastCategoryName",
+            "python_name": "forecast_category_name",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Description",
+            "python_name": "description",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "OwnerId",
+            "python_name": "owner_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          }
+        ],
+        "params_type_name": "OpportunitiesCreateParams",
+        "response_type": "SObjectCreateResponse",
+        "description": "Create an opportunity",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "SObjectCreateResponse",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
         "method_name": "get_opportunity",
         "http_method": "get",
         "path": "/sobjects/Opportunity/{id}",
@@ -532,6 +2099,194 @@
         "meta_extractor": null,
         "needs_envelope": null,
         "record_type": "Opportunity",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "update_opportunity",
+        "http_method": "patch",
+        "path": "/sobjects/Opportunity/{id}",
+        "entity": "opportunities",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "Name",
+            "python_name": "name",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": ""
+          },
+          {
+            "name": "AccountId",
+            "python_name": "account_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "StageName",
+            "python_name": "stage_name",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Opportunity stage (e.g., Prospecting, Qualification, Closed Won)."
+            },
+            "required": true,
+            "description": "Opportunity stage (e.g., Prospecting, Qualification, Closed Won)."
+          },
+          {
+            "name": "CloseDate",
+            "python_name": "close_date",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "required": true,
+            "description": ""
+          },
+          {
+            "name": "Amount",
+            "python_name": "amount",
+            "type": "float",
+            "schema": {
+              "type": "number"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Probability",
+            "python_name": "probability",
+            "type": "float",
+            "schema": {
+              "type": "number"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Type",
+            "python_name": "type",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "LeadSource",
+            "python_name": "lead_source",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "NextStep",
+            "python_name": "next_step",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "CampaignId",
+            "python_name": "campaign_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "ForecastCategoryName",
+            "python_name": "forecast_category_name",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Description",
+            "python_name": "description",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "OwnerId",
+            "python_name": "owner_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": ""
+          }
+        ],
+        "params_type_name": "OpportunitiesUpdateParams",
+        "response_type": "dict[str, Any]",
+        "description": "Update an opportunity",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": null,
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "delete_opportunity",
+        "http_method": "delete",
+        "path": "/sobjects/Opportunity/{id}",
+        "entity": "opportunities",
+        "action": "delete",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": ""
+          }
+        ],
+        "params_type_name": "OpportunitiesDeleteParams",
+        "response_type": "dict[str, Any]",
+        "description": "Delete an opportunity",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": null,
         "meta_fields": null,
         "is_download": false
       },
@@ -617,6 +2372,139 @@
         "is_download": false
       },
       {
+        "method_name": "create_task",
+        "http_method": "post",
+        "path": "/sobjects/Task",
+        "entity": "tasks",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "Subject",
+            "python_name": "subject",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": ""
+          },
+          {
+            "name": "Status",
+            "python_name": "status",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Task status (e.g., Not Started, In Progress, Completed)."
+            },
+            "required": false,
+            "description": "Task status (e.g., Not Started, In Progress, Completed)."
+          },
+          {
+            "name": "Priority",
+            "python_name": "priority",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "ActivityDate",
+            "python_name": "activity_date",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "WhoId",
+            "python_name": "who_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Related contact or lead Id."
+            },
+            "required": false,
+            "description": "Related contact or lead Id."
+          },
+          {
+            "name": "WhatId",
+            "python_name": "what_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Related Account, Opportunity, or other object Id."
+            },
+            "required": false,
+            "description": "Related Account, Opportunity, or other object Id."
+          },
+          {
+            "name": "Description",
+            "python_name": "description",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Type",
+            "python_name": "type",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "IsReminderSet",
+            "python_name": "is_reminder_set",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "ReminderDateTime",
+            "python_name": "reminder_date_time",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "OwnerId",
+            "python_name": "owner_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          }
+        ],
+        "params_type_name": "TasksCreateParams",
+        "response_type": "SObjectCreateResponse",
+        "description": "Create a task",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "SObjectCreateResponse",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
         "method_name": "get_task",
         "http_method": "get",
         "path": "/sobjects/Task/{id}",
@@ -652,6 +2540,177 @@
         "meta_extractor": null,
         "needs_envelope": null,
         "record_type": "Task",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "update_task",
+        "http_method": "patch",
+        "path": "/sobjects/Task/{id}",
+        "entity": "tasks",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "Subject",
+            "python_name": "subject",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": ""
+          },
+          {
+            "name": "Status",
+            "python_name": "status",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Task status (e.g., Not Started, In Progress, Completed)."
+            },
+            "required": false,
+            "description": "Task status (e.g., Not Started, In Progress, Completed)."
+          },
+          {
+            "name": "Priority",
+            "python_name": "priority",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "ActivityDate",
+            "python_name": "activity_date",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "WhoId",
+            "python_name": "who_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Related contact or lead Id."
+            },
+            "required": false,
+            "description": "Related contact or lead Id."
+          },
+          {
+            "name": "WhatId",
+            "python_name": "what_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Related Account, Opportunity, or other object Id."
+            },
+            "required": false,
+            "description": "Related Account, Opportunity, or other object Id."
+          },
+          {
+            "name": "Description",
+            "python_name": "description",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Type",
+            "python_name": "type",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "IsReminderSet",
+            "python_name": "is_reminder_set",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "ReminderDateTime",
+            "python_name": "reminder_date_time",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "OwnerId",
+            "python_name": "owner_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": ""
+          }
+        ],
+        "params_type_name": "TasksUpdateParams",
+        "response_type": "dict[str, Any]",
+        "description": "Update a task",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": null,
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "delete_task",
+        "http_method": "delete",
+        "path": "/sobjects/Task/{id}",
+        "entity": "tasks",
+        "action": "delete",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": ""
+          }
+        ],
+        "params_type_name": "TasksDeleteParams",
+        "response_type": "dict[str, Any]",
+        "description": "Delete a task",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": null,
         "meta_fields": null,
         "is_download": false
       },
@@ -737,6 +2796,136 @@
         "is_download": false
       },
       {
+        "method_name": "create_event",
+        "http_method": "post",
+        "path": "/sobjects/Event",
+        "entity": "events",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "Subject",
+            "python_name": "subject",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": ""
+          },
+          {
+            "name": "StartDateTime",
+            "python_name": "start_date_time",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": true,
+            "description": ""
+          },
+          {
+            "name": "EndDateTime",
+            "python_name": "end_date_time",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "DurationInMinutes",
+            "python_name": "duration_in_minutes",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": ""
+          },
+          {
+            "name": "Location",
+            "python_name": "location",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Description",
+            "python_name": "description",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "WhoId",
+            "python_name": "who_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "WhatId",
+            "python_name": "what_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "IsAllDayEvent",
+            "python_name": "is_all_day_event",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "ShowAs",
+            "python_name": "show_as",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "OwnerId",
+            "python_name": "owner_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          }
+        ],
+        "params_type_name": "EventsCreateParams",
+        "response_type": "SObjectCreateResponse",
+        "description": "Create an event",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "SObjectCreateResponse",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
         "method_name": "get_event",
         "http_method": "get",
         "path": "/sobjects/Event/{id}",
@@ -772,6 +2961,174 @@
         "meta_extractor": null,
         "needs_envelope": null,
         "record_type": "Event",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "update_event",
+        "http_method": "patch",
+        "path": "/sobjects/Event/{id}",
+        "entity": "events",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "Subject",
+            "python_name": "subject",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": ""
+          },
+          {
+            "name": "StartDateTime",
+            "python_name": "start_date_time",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": true,
+            "description": ""
+          },
+          {
+            "name": "EndDateTime",
+            "python_name": "end_date_time",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "DurationInMinutes",
+            "python_name": "duration_in_minutes",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": ""
+          },
+          {
+            "name": "Location",
+            "python_name": "location",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Description",
+            "python_name": "description",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "WhoId",
+            "python_name": "who_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "WhatId",
+            "python_name": "what_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "IsAllDayEvent",
+            "python_name": "is_all_day_event",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "ShowAs",
+            "python_name": "show_as",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "OwnerId",
+            "python_name": "owner_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": ""
+          }
+        ],
+        "params_type_name": "EventsUpdateParams",
+        "response_type": "dict[str, Any]",
+        "description": "Update an event",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": null,
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "delete_event",
+        "http_method": "delete",
+        "path": "/sobjects/Event/{id}",
+        "entity": "events",
+        "action": "delete",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": ""
+          }
+        ],
+        "params_type_name": "EventsDeleteParams",
+        "response_type": "dict[str, Any]",
+        "description": "Delete an event",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": null,
         "meta_fields": null,
         "is_download": false
       },
@@ -857,6 +3214,166 @@
         "is_download": false
       },
       {
+        "method_name": "create_campaign",
+        "http_method": "post",
+        "path": "/sobjects/Campaign",
+        "entity": "campaigns",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "Name",
+            "python_name": "name",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": ""
+          },
+          {
+            "name": "Type",
+            "python_name": "type",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Status",
+            "python_name": "status",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "StartDate",
+            "python_name": "start_date",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "EndDate",
+            "python_name": "end_date",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "IsActive",
+            "python_name": "is_active",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Description",
+            "python_name": "description",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "ExpectedRevenue",
+            "python_name": "expected_revenue",
+            "type": "float",
+            "schema": {
+              "type": "number"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "BudgetedCost",
+            "python_name": "budgeted_cost",
+            "type": "float",
+            "schema": {
+              "type": "number"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "ActualCost",
+            "python_name": "actual_cost",
+            "type": "float",
+            "schema": {
+              "type": "number"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "ExpectedResponse",
+            "python_name": "expected_response",
+            "type": "float",
+            "schema": {
+              "type": "number"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "NumberSent",
+            "python_name": "number_sent",
+            "type": "float",
+            "schema": {
+              "type": "number"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "ParentId",
+            "python_name": "parent_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "OwnerId",
+            "python_name": "owner_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          }
+        ],
+        "params_type_name": "CampaignsCreateParams",
+        "response_type": "SObjectCreateResponse",
+        "description": "Create a campaign",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "SObjectCreateResponse",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
         "method_name": "get_campaign",
         "http_method": "get",
         "path": "/sobjects/Campaign/{id}",
@@ -892,6 +3409,204 @@
         "meta_extractor": null,
         "needs_envelope": null,
         "record_type": "Campaign",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "update_campaign",
+        "http_method": "patch",
+        "path": "/sobjects/Campaign/{id}",
+        "entity": "campaigns",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "Name",
+            "python_name": "name",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": ""
+          },
+          {
+            "name": "Type",
+            "python_name": "type",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Status",
+            "python_name": "status",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "StartDate",
+            "python_name": "start_date",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "EndDate",
+            "python_name": "end_date",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "IsActive",
+            "python_name": "is_active",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Description",
+            "python_name": "description",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "ExpectedRevenue",
+            "python_name": "expected_revenue",
+            "type": "float",
+            "schema": {
+              "type": "number"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "BudgetedCost",
+            "python_name": "budgeted_cost",
+            "type": "float",
+            "schema": {
+              "type": "number"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "ActualCost",
+            "python_name": "actual_cost",
+            "type": "float",
+            "schema": {
+              "type": "number"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "ExpectedResponse",
+            "python_name": "expected_response",
+            "type": "float",
+            "schema": {
+              "type": "number"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "NumberSent",
+            "python_name": "number_sent",
+            "type": "float",
+            "schema": {
+              "type": "number"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "ParentId",
+            "python_name": "parent_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "OwnerId",
+            "python_name": "owner_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": ""
+          }
+        ],
+        "params_type_name": "CampaignsUpdateParams",
+        "response_type": "dict[str, Any]",
+        "description": "Update a campaign",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": null,
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "delete_campaign",
+        "http_method": "delete",
+        "path": "/sobjects/Campaign/{id}",
+        "entity": "campaigns",
+        "action": "delete",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": ""
+          }
+        ],
+        "params_type_name": "CampaignsDeleteParams",
+        "response_type": "dict[str, Any]",
+        "description": "Delete a campaign",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": null,
         "meta_fields": null,
         "is_download": false
       },
@@ -977,6 +3692,174 @@
         "is_download": false
       },
       {
+        "method_name": "create_case",
+        "http_method": "post",
+        "path": "/sobjects/Case",
+        "entity": "cases",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "Subject",
+            "python_name": "subject",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Status",
+            "python_name": "status",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Priority",
+            "python_name": "priority",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Origin",
+            "python_name": "origin",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Type",
+            "python_name": "type",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Reason",
+            "python_name": "reason",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Description",
+            "python_name": "description",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "AccountId",
+            "python_name": "account_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "ContactId",
+            "python_name": "contact_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "SuppliedName",
+            "python_name": "supplied_name",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "SuppliedEmail",
+            "python_name": "supplied_email",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "SuppliedPhone",
+            "python_name": "supplied_phone",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "SuppliedCompany",
+            "python_name": "supplied_company",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "OwnerId",
+            "python_name": "owner_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "ParentId",
+            "python_name": "parent_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          }
+        ],
+        "params_type_name": "CasesCreateParams",
+        "response_type": "SObjectCreateResponse",
+        "description": "Create a case",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "SObjectCreateResponse",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
         "method_name": "get_case",
         "http_method": "get",
         "path": "/sobjects/Case/{id}",
@@ -1012,6 +3895,212 @@
         "meta_extractor": null,
         "needs_envelope": null,
         "record_type": "Case",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "update_case",
+        "http_method": "patch",
+        "path": "/sobjects/Case/{id}",
+        "entity": "cases",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "Subject",
+            "python_name": "subject",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Status",
+            "python_name": "status",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Priority",
+            "python_name": "priority",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Origin",
+            "python_name": "origin",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Type",
+            "python_name": "type",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Reason",
+            "python_name": "reason",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Description",
+            "python_name": "description",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "AccountId",
+            "python_name": "account_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "ContactId",
+            "python_name": "contact_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "SuppliedName",
+            "python_name": "supplied_name",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "SuppliedEmail",
+            "python_name": "supplied_email",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "SuppliedPhone",
+            "python_name": "supplied_phone",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "SuppliedCompany",
+            "python_name": "supplied_company",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "OwnerId",
+            "python_name": "owner_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "ParentId",
+            "python_name": "parent_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": ""
+          }
+        ],
+        "params_type_name": "CasesUpdateParams",
+        "response_type": "dict[str, Any]",
+        "description": "Update a case",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": null,
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "delete_case",
+        "http_method": "delete",
+        "path": "/sobjects/Case/{id}",
+        "entity": "cases",
+        "action": "delete",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": ""
+          }
+        ],
+        "params_type_name": "CasesDeleteParams",
+        "response_type": "dict[str, Any]",
+        "description": "Delete a case",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": null,
         "meta_fields": null,
         "is_download": false
       },
