@@ -3,7 +3,7 @@
   "class_name": "SalesforceConnector",
   "package_name": "airbyte_agent_sdk.connectors.salesforce",
   "install_package": "airbyte-agent-sdk",
-  "yaml_version": "1.1.0",
+  "yaml_version": "1.2.0",
   "api_reference_url": "https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/intro_rest.htm",
   "auth_example": "SalesforceAuthConfig(refresh_token=\"...\", client_id=\"...\", client_secret=\"...\")",
   "auth_import": ", SalesforceAuthConfig",
@@ -4186,6 +4186,78 @@
         "is_download": false
       },
       {
+        "method_name": "create_note",
+        "http_method": "post",
+        "path": "/sobjects/Note",
+        "entity": "notes",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "Title",
+            "python_name": "title",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Note title, up to 80 characters."
+            },
+            "required": true,
+            "description": "Note title, up to 80 characters."
+          },
+          {
+            "name": "Body",
+            "python_name": "body",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Note body content (up to ~32,000 characters)."
+            },
+            "required": false,
+            "description": "Note body content (up to ~32,000 characters)."
+          },
+          {
+            "name": "ParentId",
+            "python_name": "parent_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Id of the parent record this note is attached to (Account, Contact, Lead, Opportunity, Case, custom object, etc.)."
+            },
+            "required": true,
+            "description": "Id of the parent record this note is attached to (Account, Contact, Lead, Opportunity, Case, custom object, etc.)."
+          },
+          {
+            "name": "IsPrivate",
+            "python_name": "is_private",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "When true, the note is visible only to its owner and admins."
+            },
+            "required": false,
+            "description": "When true, the note is visible only to its owner and admins."
+          },
+          {
+            "name": "OwnerId",
+            "python_name": "owner_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          }
+        ],
+        "params_type_name": "NotesCreateParams",
+        "response_type": "SObjectCreateResponse",
+        "description": "Create a classic Salesforce Note attached to a parent record (Account, Contact,\nLead, Opportunity, Case, custom object, etc.). `Title` and `ParentId` are required.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "SObjectCreateResponse",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
         "method_name": "get_note",
         "http_method": "get",
         "path": "/sobjects/Note/{id}",
@@ -4221,6 +4293,105 @@
         "meta_extractor": null,
         "needs_envelope": null,
         "record_type": "Note",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "update_note",
+        "http_method": "patch",
+        "path": "/sobjects/Note/{id}",
+        "entity": "notes",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "Title",
+            "python_name": "title",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Note title, up to 80 characters."
+            },
+            "required": false,
+            "description": "Note title, up to 80 characters."
+          },
+          {
+            "name": "Body",
+            "python_name": "body",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Note body content (up to ~32,000 characters)."
+            },
+            "required": false,
+            "description": "Note body content (up to ~32,000 characters)."
+          },
+          {
+            "name": "IsPrivate",
+            "python_name": "is_private",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "When true, the note is visible only to its owner and admins."
+            },
+            "required": false,
+            "description": "When true, the note is visible only to its owner and admins."
+          },
+          {
+            "name": "OwnerId",
+            "python_name": "owner_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": ""
+          }
+        ],
+        "params_type_name": "NotesUpdateParams",
+        "response_type": "dict[str, Any]",
+        "description": "Update a note",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": null,
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "delete_note",
+        "http_method": "delete",
+        "path": "/sobjects/Note/{id}",
+        "entity": "notes",
+        "action": "delete",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": ""
+          }
+        ],
+        "params_type_name": "NotesDeleteParams",
+        "response_type": "dict[str, Any]",
+        "description": "Delete a note",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": null,
         "meta_fields": null,
         "is_download": false
       },
@@ -4625,6 +4796,202 @@
         "is_download": false
       },
       {
+        "method_name": "create_user",
+        "http_method": "post",
+        "path": "/sobjects/User",
+        "entity": "users",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "Username",
+            "python_name": "username",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Login name (email-format, must be unique across all Salesforce orgs)."
+            },
+            "required": true,
+            "description": "Login name (email-format, must be unique across all Salesforce orgs)."
+          },
+          {
+            "name": "FirstName",
+            "python_name": "first_name",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "LastName",
+            "python_name": "last_name",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": ""
+          },
+          {
+            "name": "Email",
+            "python_name": "email",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": ""
+          },
+          {
+            "name": "Alias",
+            "python_name": "alias",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "1-8 character alias."
+            },
+            "required": true,
+            "description": "1-8 character alias."
+          },
+          {
+            "name": "ProfileId",
+            "python_name": "profile_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Salesforce profile that determines the user's base permissions."
+            },
+            "required": true,
+            "description": "Salesforce profile that determines the user's base permissions."
+          },
+          {
+            "name": "UserRoleId",
+            "python_name": "user_role_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "ManagerId",
+            "python_name": "manager_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "TimeZoneSidKey",
+            "python_name": "time_zone_sid_key",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "e.g., \"America/Los_Angeles\"."
+            },
+            "required": true,
+            "description": "e.g., \"America/Los_Angeles\"."
+          },
+          {
+            "name": "LocaleSidKey",
+            "python_name": "locale_sid_key",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "e.g., \"en_US\"."
+            },
+            "required": true,
+            "description": "e.g., \"en_US\"."
+          },
+          {
+            "name": "EmailEncodingKey",
+            "python_name": "email_encoding_key",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "e.g., \"UTF-8\"."
+            },
+            "required": true,
+            "description": "e.g., \"UTF-8\"."
+          },
+          {
+            "name": "LanguageLocaleKey",
+            "python_name": "language_locale_key",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "e.g., \"en_US\"."
+            },
+            "required": true,
+            "description": "e.g., \"en_US\"."
+          },
+          {
+            "name": "IsActive",
+            "python_name": "is_active",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Set to false to deactivate the user (Salesforce does not support delete)."
+            },
+            "required": false,
+            "description": "Set to false to deactivate the user (Salesforce does not support delete)."
+          },
+          {
+            "name": "Title",
+            "python_name": "title",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Department",
+            "python_name": "department",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Phone",
+            "python_name": "phone",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "MobilePhone",
+            "python_name": "mobile_phone",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          }
+        ],
+        "params_type_name": "UsersCreateParams",
+        "response_type": "SObjectCreateResponse",
+        "description": "Create a Salesforce User. Consumes a paid user-license seat. Requires the\n\"Manage Internal Users\" permission on the running OAuth identity.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "SObjectCreateResponse",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
         "method_name": "get_user",
         "http_method": "get",
         "path": "/sobjects/User/{id}",
@@ -4660,6 +5027,212 @@
         "meta_extractor": null,
         "needs_envelope": null,
         "record_type": "User",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "update_user",
+        "http_method": "patch",
+        "path": "/sobjects/User/{id}",
+        "entity": "users",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "Username",
+            "python_name": "username",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Login name (email-format, must be unique across all Salesforce orgs)."
+            },
+            "required": false,
+            "description": "Login name (email-format, must be unique across all Salesforce orgs)."
+          },
+          {
+            "name": "FirstName",
+            "python_name": "first_name",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "LastName",
+            "python_name": "last_name",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Email",
+            "python_name": "email",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Alias",
+            "python_name": "alias",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "1-8 character alias."
+            },
+            "required": false,
+            "description": "1-8 character alias."
+          },
+          {
+            "name": "ProfileId",
+            "python_name": "profile_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Salesforce profile that determines the user's base permissions."
+            },
+            "required": false,
+            "description": "Salesforce profile that determines the user's base permissions."
+          },
+          {
+            "name": "UserRoleId",
+            "python_name": "user_role_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "ManagerId",
+            "python_name": "manager_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "TimeZoneSidKey",
+            "python_name": "time_zone_sid_key",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "e.g., \"America/Los_Angeles\"."
+            },
+            "required": false,
+            "description": "e.g., \"America/Los_Angeles\"."
+          },
+          {
+            "name": "LocaleSidKey",
+            "python_name": "locale_sid_key",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "e.g., \"en_US\"."
+            },
+            "required": false,
+            "description": "e.g., \"en_US\"."
+          },
+          {
+            "name": "EmailEncodingKey",
+            "python_name": "email_encoding_key",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "e.g., \"UTF-8\"."
+            },
+            "required": false,
+            "description": "e.g., \"UTF-8\"."
+          },
+          {
+            "name": "LanguageLocaleKey",
+            "python_name": "language_locale_key",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "e.g., \"en_US\"."
+            },
+            "required": false,
+            "description": "e.g., \"en_US\"."
+          },
+          {
+            "name": "IsActive",
+            "python_name": "is_active",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Set to false to deactivate the user (Salesforce does not support delete)."
+            },
+            "required": false,
+            "description": "Set to false to deactivate the user (Salesforce does not support delete)."
+          },
+          {
+            "name": "Title",
+            "python_name": "title",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Department",
+            "python_name": "department",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "Phone",
+            "python_name": "phone",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "MobilePhone",
+            "python_name": "mobile_phone",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": ""
+          }
+        ],
+        "params_type_name": "UsersUpdateParams",
+        "response_type": "dict[str, Any]",
+        "description": "Update a Salesforce User. To deactivate a user (Salesforce does not allow\ndelete), send `{ \"IsActive\": false }`.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": null,
         "meta_fields": null,
         "is_download": false
       }

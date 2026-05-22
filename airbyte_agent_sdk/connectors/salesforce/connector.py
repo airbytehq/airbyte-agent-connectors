@@ -61,8 +61,11 @@ from .types import (
     LeadsListParams,
     LeadsUpdateParams,
     NotesApiSearchParams,
+    NotesCreateParams,
+    NotesDeleteParams,
     NotesGetParams,
     NotesListParams,
+    NotesUpdateParams,
     OpportunitiesApiSearchParams,
     OpportunitiesCreateParams,
     OpportunitiesDeleteParams,
@@ -85,8 +88,10 @@ from .types import (
     TasksGetParams,
     TasksListParams,
     TasksUpdateParams,
+    UsersCreateParams,
     UsersGetParams,
     UsersListParams,
+    UsersUpdateParams,
     AirbyteSearchParams,
     AccountsSearchFilter,
     AccountsSearchQuery,
@@ -185,8 +190,8 @@ class SalesforceConnector:
     """
 
     connector_name = "salesforce"
-    connector_version = "1.1.0"
-    sdk_version = "0.1.213"
+    connector_version = "1.2.0"
+    sdk_version = "0.1.214"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -244,7 +249,10 @@ class SalesforceConnector:
         ("cases", "delete"): None,
         ("cases", "api_search"): True,
         ("notes", "list"): True,
+        ("notes", "create"): None,
         ("notes", "get"): None,
+        ("notes", "update"): None,
+        ("notes", "delete"): None,
         ("notes", "api_search"): True,
         ("content_versions", "list"): True,
         ("content_versions", "get"): None,
@@ -255,7 +263,9 @@ class SalesforceConnector:
         ("reports", "list"): True,
         ("reports", "get"): None,
         ("users", "list"): True,
+        ("users", "create"): None,
         ("users", "get"): None,
+        ("users", "update"): None,
         ("opportunity_stages", "list"): True,
         ("opportunity_stages", "get"): None,
         ("query", "list"): True,
@@ -317,7 +327,10 @@ class SalesforceConnector:
         ('cases', 'delete'): {'id': 'id'},
         ('cases', 'api_search'): {'q': 'q'},
         ('notes', 'list'): {'q': 'q'},
+        ('notes', 'create'): {'title': 'Title', 'body': 'Body', 'parent_id': 'ParentId', 'is_private': 'IsPrivate', 'owner_id': 'OwnerId'},
         ('notes', 'get'): {'id': 'id', 'fields': 'fields'},
+        ('notes', 'update'): {'title': 'Title', 'body': 'Body', 'is_private': 'IsPrivate', 'owner_id': 'OwnerId', 'id': 'id'},
+        ('notes', 'delete'): {'id': 'id'},
         ('notes', 'api_search'): {'q': 'q'},
         ('content_versions', 'list'): {'q': 'q'},
         ('content_versions', 'get'): {'id': 'id', 'fields': 'fields'},
@@ -327,7 +340,9 @@ class SalesforceConnector:
         ('attachments', 'download'): {'id': 'id', 'range_header': 'range_header'},
         ('reports', 'get'): {'id': 'id', 'include_details': 'includeDetails'},
         ('users', 'list'): {'q': 'q'},
+        ('users', 'create'): {'username': 'Username', 'first_name': 'FirstName', 'last_name': 'LastName', 'email': 'Email', 'alias': 'Alias', 'profile_id': 'ProfileId', 'user_role_id': 'UserRoleId', 'manager_id': 'ManagerId', 'time_zone_sid_key': 'TimeZoneSidKey', 'locale_sid_key': 'LocaleSidKey', 'email_encoding_key': 'EmailEncodingKey', 'language_locale_key': 'LanguageLocaleKey', 'is_active': 'IsActive', 'title': 'Title', 'department': 'Department', 'phone': 'Phone', 'mobile_phone': 'MobilePhone'},
         ('users', 'get'): {'id': 'id', 'fields': 'fields'},
+        ('users', 'update'): {'username': 'Username', 'first_name': 'FirstName', 'last_name': 'LastName', 'email': 'Email', 'alias': 'Alias', 'profile_id': 'ProfileId', 'user_role_id': 'UserRoleId', 'manager_id': 'ManagerId', 'time_zone_sid_key': 'TimeZoneSidKey', 'locale_sid_key': 'LocaleSidKey', 'email_encoding_key': 'EmailEncodingKey', 'language_locale_key': 'LanguageLocaleKey', 'is_active': 'IsActive', 'title': 'Title', 'department': 'Department', 'phone': 'Phone', 'mobile_phone': 'MobilePhone', 'id': 'id'},
         ('opportunity_stages', 'list'): {'q': 'q'},
         ('opportunity_stages', 'get'): {'id': 'id', 'fields': 'fields'},
         ('query', 'list'): {'q': 'q'},
@@ -1104,6 +1119,18 @@ class SalesforceConnector:
     async def execute(
         self,
         entity: Literal["notes"],
+        action: Literal["create"],
+        params: "NotesCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "SObjectCreateResponse": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["notes"],
         action: Literal["get"],
         params: "NotesGetParams",
         *,
@@ -1111,6 +1138,30 @@ class SalesforceConnector:
         exclude_fields: list[str] | None = ...,
         skip_truncation: bool = ...
     ) -> "Note": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["notes"],
+        action: Literal["update"],
+        params: "NotesUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "dict[str, Any]": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["notes"],
+        action: Literal["delete"],
+        params: "NotesDeleteParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "dict[str, Any]": ...
 
     @overload
     async def execute(
@@ -1236,6 +1287,18 @@ class SalesforceConnector:
     async def execute(
         self,
         entity: Literal["users"],
+        action: Literal["create"],
+        params: "UsersCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "SObjectCreateResponse": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["users"],
         action: Literal["get"],
         params: "UsersGetParams",
         *,
@@ -1243,6 +1306,18 @@ class SalesforceConnector:
         exclude_fields: list[str] | None = ...,
         skip_truncation: bool = ...
     ) -> "User": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["users"],
+        action: Literal["update"],
+        params: "UsersUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "dict[str, Any]": ...
 
     @overload
     async def execute(
@@ -4393,6 +4468,45 @@ instead of returning raw IDs.
 
 
 
+    async def create(
+        self,
+        title: str,
+        parent_id: str,
+        body: str | None = None,
+        is_private: bool | None = None,
+        owner_id: str | None = None,
+        **kwargs
+    ) -> SObjectCreateResponse:
+        """
+        Create a classic Salesforce Note attached to a parent record (Account, Contact,
+Lead, Opportunity, Case, custom object, etc.). `Title` and `ParentId` are required.
+
+
+        Args:
+            title: Note title, up to 80 characters.
+            body: Note body content (up to ~32,000 characters).
+            parent_id: Id of the parent record this note is attached to (Account, Contact, Lead, Opportunity, Case, custom object, etc.).
+            is_private: When true, the note is visible only to its owner and admins.
+            owner_id: Parameter OwnerId
+            **kwargs: Additional parameters
+
+        Returns:
+            SObjectCreateResponse
+        """
+        params = {k: v for k, v in {
+            "Title": title,
+            "Body": body,
+            "ParentId": parent_id,
+            "IsPrivate": is_private,
+            "OwnerId": owner_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("notes", "create", params)
+        return result
+
+
+
     async def get(
         self,
         id: str | None = None,
@@ -4421,6 +4535,68 @@ Example: "Id,Title,Body,ParentId,OwnerId"
         }.items() if v is not None}
 
         result = await self._connector.execute("notes", "get", params)
+        return result
+
+
+
+    async def update(
+        self,
+        title: str | None = None,
+        body: str | None = None,
+        is_private: bool | None = None,
+        owner_id: str | None = None,
+        id: str | None = None,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Update a note
+
+        Args:
+            title: Note title, up to 80 characters.
+            body: Note body content (up to ~32,000 characters).
+            is_private: When true, the note is visible only to its owner and admins.
+            owner_id: Parameter OwnerId
+            id: Parameter id
+            **kwargs: Additional parameters
+
+        Returns:
+            dict[str, Any]
+        """
+        params = {k: v for k, v in {
+            "Title": title,
+            "Body": body,
+            "IsPrivate": is_private,
+            "OwnerId": owner_id,
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("notes", "update", params)
+        return result
+
+
+
+    async def delete(
+        self,
+        id: str | None = None,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Delete a note
+
+        Args:
+            id: Parameter id
+            **kwargs: Additional parameters
+
+        Returns:
+            dict[str, Any]
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("notes", "delete", params)
         return result
 
 
@@ -4872,6 +5048,81 @@ relationship fields inline instead of returning raw IDs.
 
 
 
+    async def create(
+        self,
+        username: str,
+        last_name: str,
+        email: str,
+        alias: str,
+        profile_id: str,
+        time_zone_sid_key: str,
+        locale_sid_key: str,
+        email_encoding_key: str,
+        language_locale_key: str,
+        first_name: str | None = None,
+        user_role_id: str | None = None,
+        manager_id: str | None = None,
+        is_active: bool | None = None,
+        title: str | None = None,
+        department: str | None = None,
+        phone: str | None = None,
+        mobile_phone: str | None = None,
+        **kwargs
+    ) -> SObjectCreateResponse:
+        """
+        Create a Salesforce User. Consumes a paid user-license seat. Requires the
+"Manage Internal Users" permission on the running OAuth identity.
+
+
+        Args:
+            username: Login name (email-format, must be unique across all Salesforce orgs).
+            first_name: Parameter FirstName
+            last_name: Parameter LastName
+            email: Parameter Email
+            alias: 1-8 character alias.
+            profile_id: Salesforce profile that determines the user's base permissions.
+            user_role_id: Parameter UserRoleId
+            manager_id: Parameter ManagerId
+            time_zone_sid_key: e.g., "America/Los_Angeles".
+            locale_sid_key: e.g., "en_US".
+            email_encoding_key: e.g., "UTF-8".
+            language_locale_key: e.g., "en_US".
+            is_active: Set to false to deactivate the user (Salesforce does not support delete).
+            title: Parameter Title
+            department: Parameter Department
+            phone: Parameter Phone
+            mobile_phone: Parameter MobilePhone
+            **kwargs: Additional parameters
+
+        Returns:
+            SObjectCreateResponse
+        """
+        params = {k: v for k, v in {
+            "Username": username,
+            "FirstName": first_name,
+            "LastName": last_name,
+            "Email": email,
+            "Alias": alias,
+            "ProfileId": profile_id,
+            "UserRoleId": user_role_id,
+            "ManagerId": manager_id,
+            "TimeZoneSidKey": time_zone_sid_key,
+            "LocaleSidKey": locale_sid_key,
+            "EmailEncodingKey": email_encoding_key,
+            "LanguageLocaleKey": language_locale_key,
+            "IsActive": is_active,
+            "Title": title,
+            "Department": department,
+            "Phone": phone,
+            "MobilePhone": mobile_phone,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("users", "create", params)
+        return result
+
+
+
     async def get(
         self,
         id: str | None = None,
@@ -4900,6 +5151,84 @@ Example: "Id,Name,Email,Username,IsActive,ProfileId,UserRoleId"
         }.items() if v is not None}
 
         result = await self._connector.execute("users", "get", params)
+        return result
+
+
+
+    async def update(
+        self,
+        username: str | None = None,
+        first_name: str | None = None,
+        last_name: str | None = None,
+        email: str | None = None,
+        alias: str | None = None,
+        profile_id: str | None = None,
+        user_role_id: str | None = None,
+        manager_id: str | None = None,
+        time_zone_sid_key: str | None = None,
+        locale_sid_key: str | None = None,
+        email_encoding_key: str | None = None,
+        language_locale_key: str | None = None,
+        is_active: bool | None = None,
+        title: str | None = None,
+        department: str | None = None,
+        phone: str | None = None,
+        mobile_phone: str | None = None,
+        id: str | None = None,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Update a Salesforce User. To deactivate a user (Salesforce does not allow
+delete), send `{ "IsActive": false }`.
+
+
+        Args:
+            username: Login name (email-format, must be unique across all Salesforce orgs).
+            first_name: Parameter FirstName
+            last_name: Parameter LastName
+            email: Parameter Email
+            alias: 1-8 character alias.
+            profile_id: Salesforce profile that determines the user's base permissions.
+            user_role_id: Parameter UserRoleId
+            manager_id: Parameter ManagerId
+            time_zone_sid_key: e.g., "America/Los_Angeles".
+            locale_sid_key: e.g., "en_US".
+            email_encoding_key: e.g., "UTF-8".
+            language_locale_key: e.g., "en_US".
+            is_active: Set to false to deactivate the user (Salesforce does not support delete).
+            title: Parameter Title
+            department: Parameter Department
+            phone: Parameter Phone
+            mobile_phone: Parameter MobilePhone
+            id: Parameter id
+            **kwargs: Additional parameters
+
+        Returns:
+            dict[str, Any]
+        """
+        params = {k: v for k, v in {
+            "Username": username,
+            "FirstName": first_name,
+            "LastName": last_name,
+            "Email": email,
+            "Alias": alias,
+            "ProfileId": profile_id,
+            "UserRoleId": user_role_id,
+            "ManagerId": manager_id,
+            "TimeZoneSidKey": time_zone_sid_key,
+            "LocaleSidKey": locale_sid_key,
+            "EmailEncodingKey": email_encoding_key,
+            "LanguageLocaleKey": language_locale_key,
+            "IsActive": is_active,
+            "Title": title,
+            "Department": department,
+            "Phone": phone,
+            "MobilePhone": mobile_phone,
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("users", "update", params)
         return result
 
 

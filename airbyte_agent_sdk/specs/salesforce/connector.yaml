@@ -5,7 +5,7 @@ openapi: 3.1.0
 
 info:
   title: Salesforce CRM API Connector
-  version: 1.1.0
+  version: 1.2.0
   description: |
     Salesforce is a cloud-based CRM platform that helps businesses manage customer
     relationships, sales pipelines, and business operations. This connector provides
@@ -2880,6 +2880,35 @@ paths:
         "401":
           description: Unauthorized
 
+  /sobjects/Note:
+    post:
+      summary: Create a note
+      description: |
+        Create a classic Salesforce Note attached to a parent record (Account, Contact,
+        Lead, Opportunity, Case, custom object, etc.). `Title` and `ParentId` are required.
+      operationId: createNote
+      x-airbyte-entity: notes
+      x-airbyte-action: create
+      tags:
+        - Notes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NoteCreateInput"
+      responses:
+        "201":
+          description: Note created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SObjectCreateResponse"
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+
   /sobjects/Note/{id}:
     get:
       summary: Get a note
@@ -2912,6 +2941,52 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Note"
+        "404":
+          description: Note not found
+        "401":
+          description: Unauthorized
+    patch:
+      summary: Update a note
+      operationId: updateNote
+      x-airbyte-entity: notes
+      x-airbyte-action: update
+      tags:
+        - Notes
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NoteWriteInput"
+      responses:
+        "204":
+          description: Note updated
+        "404":
+          description: Note not found
+        "401":
+          description: Unauthorized
+    delete:
+      summary: Delete a note
+      operationId: deleteNote
+      x-airbyte-entity: notes
+      x-airbyte-action: delete
+      tags:
+        - Notes
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Note deleted
         "404":
           description: Note not found
         "401":
@@ -3298,6 +3373,35 @@ paths:
         "401":
           description: Unauthorized
 
+  /sobjects/User:
+    post:
+      summary: Create a user
+      description: |
+        Create a Salesforce User. Consumes a paid user-license seat. Requires the
+        "Manage Internal Users" permission on the running OAuth identity.
+      operationId: createUser
+      x-airbyte-entity: users
+      x-airbyte-action: create
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserCreateInput"
+      responses:
+        "201":
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SObjectCreateResponse"
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+
   /sobjects/User/{id}:
     get:
       summary: Get a user
@@ -3330,6 +3434,35 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/User"
+        "404":
+          description: User not found
+        "401":
+          description: Unauthorized
+    patch:
+      summary: Update a user
+      description: |
+        Update a Salesforce User. To deactivate a user (Salesforce does not allow
+        delete), send `{ "IsActive": false }`.
+      operationId: updateUser
+      x-airbyte-entity: users
+      x-airbyte-action: update
+      tags:
+        - Users
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserWriteInput"
+      responses:
+        "204":
+          description: User updated
         "404":
           description: User not found
         "401":
@@ -3999,6 +4132,156 @@ components:
         OwnerId:
           type: string
         ParentId:
+          type: string
+
+    NoteCreateInput:
+      type: object
+      additionalProperties: true
+      required:
+        - Title
+        - ParentId
+      properties:
+        Title:
+          type: string
+          description: Note title, up to 80 characters.
+        Body:
+          type: string
+          description: Note body content (up to ~32,000 characters).
+        ParentId:
+          type: string
+          description: Id of the parent record this note is attached to (Account, Contact, Lead, Opportunity, Case, custom object, etc.).
+        IsPrivate:
+          type: boolean
+          description: When true, the note is visible only to its owner and admins.
+        OwnerId:
+          type: string
+
+    NoteWriteInput:
+      type: object
+      additionalProperties: true
+      description: |
+        Fields for updating a classic Note. `ParentId` is omitted because Salesforce
+        treats it as immutable on existing Notes; create a new Note under a different
+        parent rather than reparenting.
+      properties:
+        Title:
+          type: string
+          description: Note title, up to 80 characters.
+        Body:
+          type: string
+          description: Note body content (up to ~32,000 characters).
+        IsPrivate:
+          type: boolean
+          description: When true, the note is visible only to its owner and admins.
+        OwnerId:
+          type: string
+
+    UserCreateInput:
+      type: object
+      additionalProperties: true
+      description: |
+        Fields for creating a Salesforce User. Creating a User consumes a paid
+        user-license seat. Requires the "Manage Internal Users" permission.
+      required:
+        - Username
+        - LastName
+        - Email
+        - Alias
+        - ProfileId
+        - TimeZoneSidKey
+        - LocaleSidKey
+        - EmailEncodingKey
+        - LanguageLocaleKey
+      properties:
+        Username:
+          type: string
+          description: Login name (email-format, must be unique across all Salesforce orgs).
+        FirstName:
+          type: string
+        LastName:
+          type: string
+        Email:
+          type: string
+        Alias:
+          type: string
+          description: 1-8 character alias.
+        ProfileId:
+          type: string
+          description: Salesforce profile that determines the user's base permissions.
+        UserRoleId:
+          type: string
+        ManagerId:
+          type: string
+        TimeZoneSidKey:
+          type: string
+          description: e.g., "America/Los_Angeles".
+        LocaleSidKey:
+          type: string
+          description: e.g., "en_US".
+        EmailEncodingKey:
+          type: string
+          description: e.g., "UTF-8".
+        LanguageLocaleKey:
+          type: string
+          description: e.g., "en_US".
+        IsActive:
+          type: boolean
+          description: Set to false to deactivate the user (Salesforce does not support delete).
+        Title:
+          type: string
+        Department:
+          type: string
+        Phone:
+          type: string
+        MobilePhone:
+          type: string
+
+    UserWriteInput:
+      type: object
+      additionalProperties: true
+      description: "Fields for updating a Salesforce User. Salesforce does not allow deleting Users; deactivate by sending `IsActive: false`."
+      properties:
+        Username:
+          type: string
+          description: Login name (email-format, must be unique across all Salesforce orgs).
+        FirstName:
+          type: string
+        LastName:
+          type: string
+        Email:
+          type: string
+        Alias:
+          type: string
+          description: 1-8 character alias.
+        ProfileId:
+          type: string
+          description: Salesforce profile that determines the user's base permissions.
+        UserRoleId:
+          type: string
+        ManagerId:
+          type: string
+        TimeZoneSidKey:
+          type: string
+          description: e.g., "America/Los_Angeles".
+        LocaleSidKey:
+          type: string
+          description: e.g., "en_US".
+        EmailEncodingKey:
+          type: string
+          description: e.g., "UTF-8".
+        LanguageLocaleKey:
+          type: string
+          description: e.g., "en_US".
+        IsActive:
+          type: boolean
+          description: Set to false to deactivate the user (Salesforce does not support delete).
+        Title:
+          type: string
+        Department:
+          type: string
+        Phone:
+          type: string
+        MobilePhone:
           type: string
 
     # ============================================

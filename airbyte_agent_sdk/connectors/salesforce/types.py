@@ -471,10 +471,30 @@ class NotesListParams(TypedDict):
     """Parameters for notes.list operation"""
     q: str
 
+class NotesCreateParams(TypedDict):
+    """Parameters for notes.create operation"""
+    title: str
+    body: NotRequired[str]
+    parent_id: str
+    is_private: NotRequired[bool]
+    owner_id: NotRequired[str]
+
 class NotesGetParams(TypedDict):
     """Parameters for notes.get operation"""
     id: str
     fields: NotRequired[str]
+
+class NotesUpdateParams(TypedDict):
+    """Parameters for notes.update operation"""
+    title: NotRequired[str]
+    body: NotRequired[str]
+    is_private: NotRequired[bool]
+    owner_id: NotRequired[str]
+    id: str
+
+class NotesDeleteParams(TypedDict):
+    """Parameters for notes.delete operation"""
+    id: str
 
 class NotesApiSearchParams(TypedDict):
     """Parameters for notes.api_search operation"""
@@ -521,10 +541,51 @@ class UsersListParams(TypedDict):
     """Parameters for users.list operation"""
     q: str
 
+class UsersCreateParams(TypedDict):
+    """Parameters for users.create operation"""
+    username: str
+    first_name: NotRequired[str]
+    last_name: str
+    email: str
+    alias: str
+    profile_id: str
+    user_role_id: NotRequired[str]
+    manager_id: NotRequired[str]
+    time_zone_sid_key: str
+    locale_sid_key: str
+    email_encoding_key: str
+    language_locale_key: str
+    is_active: NotRequired[bool]
+    title: NotRequired[str]
+    department: NotRequired[str]
+    phone: NotRequired[str]
+    mobile_phone: NotRequired[str]
+
 class UsersGetParams(TypedDict):
     """Parameters for users.get operation"""
     id: str
     fields: NotRequired[str]
+
+class UsersUpdateParams(TypedDict):
+    """Parameters for users.update operation"""
+    username: NotRequired[str]
+    first_name: NotRequired[str]
+    last_name: NotRequired[str]
+    email: NotRequired[str]
+    alias: NotRequired[str]
+    profile_id: NotRequired[str]
+    user_role_id: NotRequired[str]
+    manager_id: NotRequired[str]
+    time_zone_sid_key: NotRequired[str]
+    locale_sid_key: NotRequired[str]
+    email_encoding_key: NotRequired[str]
+    language_locale_key: NotRequired[str]
+    is_active: NotRequired[bool]
+    title: NotRequired[str]
+    department: NotRequired[str]
+    phone: NotRequired[str]
+    mobile_phone: NotRequired[str]
+    id: str
 
 class OpportunityStagesListParams(TypedDict):
     """Parameters for opportunity_stages.list operation"""

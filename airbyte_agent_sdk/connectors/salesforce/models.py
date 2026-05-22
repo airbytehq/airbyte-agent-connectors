@@ -215,6 +215,74 @@ class CaseWriteInput(BaseModel):
     owner_id: str | None = Field(default=None, alias="OwnerId")
     parent_id: str | None = Field(default=None, alias="ParentId")
 
+class NoteCreateInput(BaseModel):
+    """NoteCreateInput type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    title: str = Field(alias="Title")
+    body: str | None = Field(default=None, alias="Body")
+    parent_id: str = Field(alias="ParentId")
+    is_private: bool | None = Field(default=None, alias="IsPrivate")
+    owner_id: str | None = Field(default=None, alias="OwnerId")
+
+class NoteWriteInput(BaseModel):
+    """Fields for updating a classic Note. `ParentId` is omitted because Salesforce
+treats it as immutable on existing Notes; create a new Note under a different
+parent rather than reparenting.
+"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    title: str | None = Field(default=None, alias="Title")
+    body: str | None = Field(default=None, alias="Body")
+    is_private: bool | None = Field(default=None, alias="IsPrivate")
+    owner_id: str | None = Field(default=None, alias="OwnerId")
+
+class UserCreateInput(BaseModel):
+    """Fields for creating a Salesforce User. Creating a User consumes a paid
+user-license seat. Requires the "Manage Internal Users" permission.
+"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    username: str = Field(alias="Username")
+    first_name: str | None = Field(default=None, alias="FirstName")
+    last_name: str = Field(alias="LastName")
+    email: str = Field(alias="Email")
+    alias: str = Field(alias="Alias")
+    profile_id: str = Field(alias="ProfileId")
+    user_role_id: str | None = Field(default=None, alias="UserRoleId")
+    manager_id: str | None = Field(default=None, alias="ManagerId")
+    time_zone_sid_key: str = Field(alias="TimeZoneSidKey")
+    locale_sid_key: str = Field(alias="LocaleSidKey")
+    email_encoding_key: str = Field(alias="EmailEncodingKey")
+    language_locale_key: str = Field(alias="LanguageLocaleKey")
+    is_active: bool | None = Field(default=None, alias="IsActive")
+    title: str | None = Field(default=None, alias="Title")
+    department: str | None = Field(default=None, alias="Department")
+    phone: str | None = Field(default=None, alias="Phone")
+    mobile_phone: str | None = Field(default=None, alias="MobilePhone")
+
+class UserWriteInput(BaseModel):
+    """Fields for updating a Salesforce User. Salesforce does not allow deleting Users; deactivate by sending `IsActive: false`."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    username: str | None = Field(default=None, alias="Username")
+    first_name: str | None = Field(default=None, alias="FirstName")
+    last_name: str | None = Field(default=None, alias="LastName")
+    email: str | None = Field(default=None, alias="Email")
+    alias: str | None = Field(default=None, alias="Alias")
+    profile_id: str | None = Field(default=None, alias="ProfileId")
+    user_role_id: str | None = Field(default=None, alias="UserRoleId")
+    manager_id: str | None = Field(default=None, alias="ManagerId")
+    time_zone_sid_key: str | None = Field(default=None, alias="TimeZoneSidKey")
+    locale_sid_key: str | None = Field(default=None, alias="LocaleSidKey")
+    email_encoding_key: str | None = Field(default=None, alias="EmailEncodingKey")
+    language_locale_key: str | None = Field(default=None, alias="LanguageLocaleKey")
+    is_active: bool | None = Field(default=None, alias="IsActive")
+    title: str | None = Field(default=None, alias="Title")
+    department: str | None = Field(default=None, alias="Department")
+    phone: str | None = Field(default=None, alias="Phone")
+    mobile_phone: str | None = Field(default=None, alias="MobilePhone")
+
 class AccountAttributes(BaseModel):
     """Nested schema for Account.attributes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
