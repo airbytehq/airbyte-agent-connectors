@@ -195,6 +195,30 @@ class ChannelResponse(BaseModel):
     ok: bool | None = Field(default=None)
     channel: Channel | None = Field(default=None)
 
+class File(BaseModel):
+    """File object"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    title: str | None = Field(default=None)
+    mimetype: str | None = Field(default=None)
+    filetype: str | None = Field(default=None)
+    pretty_type: str | None = Field(default=None)
+    user: str | None = Field(default=None)
+    size: int | None = Field(default=None)
+    mode: str | None = Field(default=None)
+    is_external: bool | None = Field(default=None)
+    external_type: str | None = Field(default=None)
+    is_public: bool | None = Field(default=None)
+    public_url_shared: bool | None = Field(default=None)
+    url_private: str | None = Field(default=None)
+    url_private_download: str | None = Field(default=None)
+    permalink: str | None = Field(default=None)
+    permalink_public: str | None = Field(default=None)
+    created: int | None = Field(default=None)
+    timestamp: int | None = Field(default=None)
+
 class Attachment(BaseModel):
     """Message attachment"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -223,30 +247,6 @@ class Reaction(BaseModel):
     name: str | None = Field(default=None)
     users: list[str] | None = Field(default=None)
     count: int | None = Field(default=None)
-
-class File(BaseModel):
-    """File object"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: str | None = Field(default=None)
-    name: str | None = Field(default=None)
-    title: str | None = Field(default=None)
-    mimetype: str | None = Field(default=None)
-    filetype: str | None = Field(default=None)
-    pretty_type: str | None = Field(default=None)
-    user: str | None = Field(default=None)
-    size: int | None = Field(default=None)
-    mode: str | None = Field(default=None)
-    is_external: bool | None = Field(default=None)
-    external_type: str | None = Field(default=None)
-    is_public: bool | None = Field(default=None)
-    public_url_shared: bool | None = Field(default=None)
-    url_private: str | None = Field(default=None)
-    url_private_download: str | None = Field(default=None)
-    permalink: str | None = Field(default=None)
-    permalink_public: str | None = Field(default=None)
-    created: int | None = Field(default=None)
-    timestamp: int | None = Field(default=None)
 
 class Message(BaseModel):
     """Slack message object"""
