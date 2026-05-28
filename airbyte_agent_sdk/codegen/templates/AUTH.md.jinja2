@@ -1,8 +1,7 @@
+{%- from "_macros.jinja2" import framework_usage_blocks, cli_connector_create, cli_connector_describe, cli_generic_execute -%}
 # {{ connector_name|title }} authentication
 
 This page documents the authentication and configuration options for the {{ connector_name|title }} agent connector.
-
-## Authentication
 
 {% if auth_config and auth_config.options %}
 {#- Categorize auth options into OAuth and non-OAuth -#}
@@ -16,90 +15,20 @@ This page documents the authentication and configuration options for the {{ conn
 {%- endif -%}
 {%- endfor -%}
 
-### Open source execution
+## Hosted mode (most cases)
 
-In open source mode, you provide API credentials directly to the connector.
+In hosted mode, create the connector through the Airbyte Agent CLI or API, then execute operations using the CLI, Python SDK, or API. If you need a step-by-step guide, see the [developer quickstart](https://docs.airbyte.com/ai-agents/get-started/developer-quickstart/).
 
-#### OAuth
+### OAuth
 {% if oauth_options %}
+Use the CLI for hosted OAuth connector creation when possible. It opens the hosted setup flow and avoids passing connector secrets through the command line:
 
-`credentials` fields you need:
-
-{% for option in oauth_options %}
-
-| Field Name | Type | Required | Description |
-|------------|------|----------|-------------|
-{% for field in option.fields %}
-| `{{ field.name }}` | `{{ field.type }}` | {{ "Yes" if field.required else "No" }} | {{ (field.description or "N/A") | mdx_escape }} |
-{% endfor %}
-
-Example request:
-
-```python
-from {{ package_name }} import {{ class_name }}
-{% if auth_config.options|length > 1 %}
-from {{ package_name }}.models import {{ auth_config.base_name }}{{ option.type_suffix }}AuthConfig
-
-connector = {{ class_name }}(
-    auth_config={{ auth_config.base_name }}{{ option.type_suffix }}AuthConfig(
-{% else %}
-from {{ package_name }}.models import {{ auth_config.type_name }}
-
-connector = {{ class_name }}(
-    auth_config={{ auth_config.type_name }}(
-{% endif %}
-{% for field in option.fields %}        {{ field.name }}="<{{ field.description or field.name }}>"{{ "," if not loop.last else "" }}
-{% endfor %}    )
-)
+```bash
+airbyte-agent login
+{{ cli_connector_create(connector_name) }}
 ```
-{% endfor %}
-{% else %}
-This authentication method isn't available for this connector.
-{% endif %}
 
-#### Token
-{% if token_options %}
-
-`credentials` fields you need:
-{% for option in token_options %}
-
-| Field Name | Type | Required | Description |
-|------------|------|----------|-------------|
-{% for field in option.fields %}
-| `{{ field.name }}` | `{{ field.type }}` | {{ "Yes" if field.required else "No" }} | {{ (field.description or "N/A") | mdx_escape }} |
-{% endfor %}
-
-Example request:
-
-```python
-from {{ package_name }} import {{ class_name }}
-{% if auth_config.options|length > 1 %}
-from {{ package_name }}.models import {{ auth_config.base_name }}{{ option.type_suffix }}AuthConfig
-
-connector = {{ class_name }}(
-    auth_config={{ auth_config.base_name }}{{ option.type_suffix }}AuthConfig(
-{% else %}
-from {{ package_name }}.models import {{ auth_config.type_name }}
-
-connector = {{ class_name }}(
-    auth_config={{ auth_config.type_name }}(
-{% endif %}
-{% for field in option.fields %}        {{ field.name }}="<{{ field.description or field.name }}>"{{ "," if not loop.last else "" }}
-{% endfor %}    )
-)
-```
-{% endfor %}
-{% else %}
-This authentication method isn't available for this connector.
-{% endif %}
-
-### Hosted execution
-
-In hosted mode, you first create a connector via the Airbyte Agent API (providing your OAuth or Token credentials), then execute operations using either the Python SDK or API. If you need a step-by-step guide, see the [developer quickstart](https://docs.airbyte.com/ai-agents/get-started/developer-quickstart/).
-
-#### OAuth
-{% if oauth_options %}
-Create a connector with OAuth credentials.
+For API-first use cases, create a connector with OAuth credentials directly.
 
 `credentials` fields you need:
 
@@ -146,12 +75,13 @@ curl -X POST "https://api.airbyte.ai/api/v1/integrations/connectors" \
 This authentication method isn't available for this connector.
 {% endif %}
 
-#### Bring your own OAuth flow
+{#
+### Bring your own OAuth flow
 {% if oauth_options %}
 To implement your own OAuth flow, use Airbyte's server-side OAuth API endpoints. For a complete guide, see [Build your own OAuth flow](https://docs.airbyte.com/ai-agents/platform/authenticate/build-auth/build-your-own).
 {% if oauth_credentials %}
 
-##### Configure your own OAuth app credentials (optional)
+#### Configure your own OAuth app credentials (optional)
 
 By default, Airbyte uses its own OAuth app credentials. You can override these with your own so that OAuth consent screens show your company's branding. If you skip this step, the consent screen shows "Airbyte" as the requesting application.
 
@@ -175,7 +105,7 @@ curl -X DELETE "https://api.airbyte.ai/api/v1/oauth/credentials/connector_type/{
 ```
 {% endif %}
 
-##### Step 1: Initiate the OAuth flow
+#### Step 1: Initiate the OAuth flow
 
 Request a consent URL for your user.
 
@@ -200,7 +130,7 @@ curl -X POST "https://api.airbyte.ai/api/v1/integrations/connectors/oauth/initia
 
 Redirect your user to the `consent_url` from the response.
 
-##### Step 2: Handle the callback
+#### Step 2: Handle the callback
 
 After the user authorizes access, Airbyte automatically creates the connector and redirects them to your `redirect_url` with a `connector_id` query parameter. You don't need to make a separate API call to create the connector.
 
@@ -212,8 +142,9 @@ Extract the `connector_id` from the callback URL and store it for future operati
 {% else %}
 This authentication method isn't available for this connector.
 {% endif %}
+#}
 
-#### Token
+### Token
 {% if token_options %}
 Create a connector with Token credentials.
 
@@ -261,12 +192,36 @@ curl -X POST "https://api.airbyte.ai/api/v1/integrations/connectors" \
 This authentication method isn't available for this connector.
 {% endif %}
 
-#### Execution
+### Execution
 
-After creating the connector, execute operations using either the Python SDK or API.
-If your Airbyte client can access multiple organizations, include `organization_id` in `AirbyteAuthConfig` and `X-Organization-Id` in raw API calls.
+After creating the connector, execute operations using the CLI, Python SDK, or API.
+If your Airbyte client can access multiple organizations, set the default organization with `airbyte-agent organizations use`, include `organization_id` in `AirbyteAuthConfig`, or include `X-Organization-Id` in raw API calls.
 
-{% from "_macros.jinja2" import framework_usage_blocks %}
+**CLI**
+
+Authenticate with Airbyte:
+
+```bash
+airbyte-agent login
+```
+
+Create the connector. The CLI opens the hosted setup flow:
+
+```bash
+{{ cli_connector_create(connector_name) }}
+```
+
+Describe the connector to see its supported entities and actions:
+
+```bash
+{{ cli_connector_describe(connector_name) }}
+```
+
+Execute an action:
+
+```bash
+{{ cli_generic_execute(connector_name) }}
+```
 
 **Python SDK**
 
@@ -313,10 +268,91 @@ curl -X POST 'https://api.airbyte.ai/api/v1/integrations/connectors/<connector_i
 This connector does not require authentication.
 {% endif %}
 
+## Open source mode
+
+In open source mode, provide API credentials directly to the connector.
+
+### OAuth
+{% if oauth_options %}
+
+`credentials` fields you need:
+
+{% for option in oauth_options %}
+
+| Field Name | Type | Required | Description |
+|------------|------|----------|-------------|
+{% for field in option.fields %}
+| `{{ field.name }}` | `{{ field.type }}` | {{ "Yes" if field.required else "No" }} | {{ (field.description or "N/A") | mdx_escape }} |
+{% endfor %}
+
+Example request:
+
+```python
+from {{ package_name }} import {{ class_name }}
+{% if auth_config.options|length > 1 %}
+from {{ package_name }}.models import {{ auth_config.base_name }}{{ option.type_suffix }}AuthConfig
+
+connector = {{ class_name }}(
+    auth_config={{ auth_config.base_name }}{{ option.type_suffix }}AuthConfig(
+{% else %}
+from {{ package_name }}.models import {{ auth_config.type_name }}
+
+connector = {{ class_name }}(
+    auth_config={{ auth_config.type_name }}(
+{% endif %}
+{% for field in option.fields %}        {{ field.name }}="<{{ field.description or field.name }}>"{{ "," if not loop.last else "" }}
+{% endfor %}    )
+)
+```
+{% endfor %}
+{% else %}
+This authentication method isn't available for this connector.
+{% endif %}
+
+### Token
+{% if token_options %}
+
+`credentials` fields you need:
+{% for option in token_options %}
+
+| Field Name | Type | Required | Description |
+|------------|------|----------|-------------|
+{% for field in option.fields %}
+| `{{ field.name }}` | `{{ field.type }}` | {{ "Yes" if field.required else "No" }} | {{ (field.description or "N/A") | mdx_escape }} |
+{% endfor %}
+
+Example request:
+
+```python
+from {{ package_name }} import {{ class_name }}
+{% if auth_config.options|length > 1 %}
+from {{ package_name }}.models import {{ auth_config.base_name }}{{ option.type_suffix }}AuthConfig
+
+connector = {{ class_name }}(
+    auth_config={{ auth_config.base_name }}{{ option.type_suffix }}AuthConfig(
+{% else %}
+from {{ package_name }}.models import {{ auth_config.type_name }}
+
+connector = {{ class_name }}(
+    auth_config={{ auth_config.type_name }}(
+{% endif %}
+{% for field in option.fields %}        {{ field.name }}="<{{ field.description or field.name }}>"{{ "," if not loop.last else "" }}
+{% endfor %}    )
+)
+```
+{% endfor %}
+{% else %}
+This authentication method isn't available for this connector.
+{% endif %}
+
 {% if server_variables %}
 ## Configuration
 
-The {{ connector_name|title }} connector requires the following configuration variables. These variables are used to construct the base API URL. Pass them via the `config` parameter when initializing the connector.
+The {{ connector_name|title }} connector also needs these configuration values to construct the base API URL.
+
+- **Hosted CLI**: `airbyte-agent connectors create` doesn't currently accept these configuration fields directly. For hosted connectors that need these values, create the connector with the hosted API `replication_config`, then use the CLI for describe and execute operations after creation.
+- **Hosted API**: pass these values in the connector creation `replication_config`.
+- **Open source mode**: provide these values with your local connector setup so the connector can build the correct API base URL.
 
 | Variable | Type | Required | Default | Description |
 |----------|------|----------|---------|-------------|

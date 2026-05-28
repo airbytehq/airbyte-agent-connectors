@@ -588,6 +588,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Meta information for data scrubbing."
         },
         {
@@ -596,6 +597,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Additional context data."
         },
         {
@@ -604,6 +606,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Structured context information."
         },
         {
@@ -612,6 +615,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Crash file reference."
         },
         {
@@ -620,6 +624,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The culprit (source) of the event."
         },
         {
@@ -628,6 +633,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "When the event was created."
         },
         {
@@ -636,6 +642,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "When the event was received by Sentry."
         },
         {
@@ -644,6 +651,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Distribution information."
         },
         {
@@ -652,6 +660,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Event entries (exception, breadcrumbs, request, etc.)."
         },
         {
@@ -660,6 +669,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Processing errors."
         },
         {
@@ -668,6 +678,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The type of the event."
         },
         {
@@ -676,6 +687,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Event ID as reported by the client."
         },
         {
@@ -684,6 +696,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Fingerprints used for grouping."
         },
         {
@@ -692,6 +705,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the issue group this event belongs to."
         },
         {
@@ -700,6 +714,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Grouping configuration."
         },
         {
@@ -708,6 +723,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique event identifier."
         },
         {
@@ -716,6 +732,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Location in source code."
         },
         {
@@ -724,6 +741,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Event message."
         },
         {
@@ -732,6 +750,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Event metadata."
         },
         {
@@ -740,6 +759,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Occurrence information for the event."
         },
         {
@@ -748,6 +768,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Package information."
         },
         {
@@ -756,6 +777,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Platform the event was generated on."
         },
         {
@@ -764,6 +786,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Project ID this event belongs to."
         },
         {
@@ -772,6 +795,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "SDK information."
         },
         {
@@ -780,6 +804,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Event payload size in bytes."
         },
         {
@@ -788,6 +813,7 @@
           "type": "list[Any] | None",
           "json_type": "array | null",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Tags associated with the event."
         },
         {
@@ -796,6 +822,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Event title."
         },
         {
@@ -804,6 +831,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Event type."
         },
         {
@@ -812,6 +840,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "User associated with the event."
         }
       ]
@@ -835,6 +864,7 @@
           "type": "list[Any] | None",
           "json_type": "array | null",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Annotations on the issue."
         },
         {
@@ -843,6 +873,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "User or team assigned to this issue."
         },
         {
@@ -851,6 +882,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Number of events for this issue."
         },
         {
@@ -859,6 +891,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The culprit (source) of the issue."
         },
         {
@@ -867,6 +900,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "When the issue was first seen."
         },
         {
@@ -875,6 +909,7 @@
           "type": "bool | None",
           "json_type": "boolean | null",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the authenticated user has seen the issue."
         },
         {
@@ -883,6 +918,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique issue identifier."
         },
         {
@@ -891,6 +927,7 @@
           "type": "bool | None",
           "json_type": "boolean | null",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the issue is bookmarked."
         },
         {
@@ -899,6 +936,7 @@
           "type": "bool | None",
           "json_type": "boolean | null",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the issue is public."
         },
         {
@@ -907,6 +945,7 @@
           "type": "bool | None",
           "json_type": "boolean | null",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the user is subscribed to the issue."
         },
         {
@@ -915,6 +954,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the issue is from an unhandled error."
         },
         {
@@ -923,6 +963,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The category classification of the issue."
         },
         {
@@ -931,6 +972,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The type classification of the issue."
         },
         {
@@ -939,6 +981,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "When the issue was last seen."
         },
         {
@@ -947,6 +990,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Issue severity level."
         },
         {
@@ -955,6 +999,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Logger that generated the issue."
         },
         {
@@ -963,6 +1008,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "object | null",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Issue metadata."
         },
         {
@@ -971,6 +1017,7 @@
           "type": "int | None",
           "json_type": "integer | null",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Number of comments on the issue."
         },
         {
@@ -979,6 +1026,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Permalink to the issue in the Sentry UI."
         },
         {
@@ -987,6 +1035,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Platform for this issue."
         },
         {
@@ -995,6 +1044,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "object | null",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Project this issue belongs to."
         },
         {
@@ -1003,6 +1053,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Share ID if the issue is shared."
         },
         {
@@ -1011,6 +1062,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Short human-readable identifier."
         },
         {
@@ -1019,6 +1071,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "object | null",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Issue event statistics."
         },
         {
@@ -1027,6 +1080,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Issue status (resolved, unresolved, ignored)."
         },
         {
@@ -1035,6 +1089,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "object | null",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Status detail information."
         },
         {
@@ -1043,6 +1098,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Subscription details."
         },
         {
@@ -1051,6 +1107,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Issue substatus."
         },
         {
@@ -1059,6 +1116,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Issue title."
         },
         {
@@ -1067,6 +1125,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Issue type."
         },
         {
@@ -1075,6 +1134,7 @@
           "type": "int | None",
           "json_type": "integer | null",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Number of users affected."
         }
       ]
@@ -1098,6 +1158,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "List of access permissions for the authenticated user."
         },
         {
@@ -1106,6 +1167,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "object | null",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Project avatar information."
         },
         {
@@ -1114,6 +1176,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Project color code."
         },
         {
@@ -1122,6 +1185,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Date the project was created."
         },
         {
@@ -1130,6 +1194,7 @@
           "type": "list[Any] | None",
           "json_type": "array | null",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "List of enabled features."
         },
         {
@@ -1138,6 +1203,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp of the first event."
         },
         {
@@ -1146,6 +1212,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether a transaction event has been received."
         },
         {
@@ -1154,6 +1221,7 @@
           "type": "bool | None",
           "json_type": "boolean | null",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the user has access to this project."
         },
         {
@@ -1162,6 +1230,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the project has custom metrics."
         },
         {
@@ -1170,6 +1239,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the project has user feedback."
         },
         {
@@ -1178,6 +1248,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the project has minified stack traces."
         },
         {
@@ -1186,6 +1257,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the project has cron monitors."
         },
         {
@@ -1194,6 +1266,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the project has new user feedback."
         },
         {
@@ -1202,6 +1275,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the project has profiling data."
         },
         {
@@ -1210,6 +1284,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the project has session replays."
         },
         {
@@ -1218,6 +1293,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the project has session data."
         },
         {
@@ -1226,6 +1302,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique project identifier."
         },
         {
@@ -1234,6 +1311,7 @@
           "type": "bool | None",
           "json_type": "boolean | null",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the project is bookmarked."
         },
         {
@@ -1242,6 +1320,7 @@
           "type": "bool | None",
           "json_type": "boolean | null",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the project is internal."
         },
         {
@@ -1250,6 +1329,7 @@
           "type": "bool | None",
           "json_type": "boolean | null",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the authenticated user is a member."
         },
         {
@@ -1258,6 +1338,7 @@
           "type": "bool | None",
           "json_type": "boolean | null",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the project is public."
         },
         {
@@ -1266,6 +1347,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Human-readable project name."
         },
         {
@@ -1274,6 +1356,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "object | null",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Organization this project belongs to."
         },
         {
@@ -1282,6 +1365,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The platform for this project."
         },
         {
@@ -1290,6 +1374,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "URL-friendly project identifier."
         },
         {
@@ -1298,6 +1383,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Project status."
         }
       ]
@@ -1321,6 +1407,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Authors of commits in this release."
         },
         {
@@ -1329,6 +1416,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Number of commits in this release."
         },
         {
@@ -1337,6 +1425,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Metadata for the current project context."
         },
         {
@@ -1345,6 +1434,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Additional release data."
         },
         {
@@ -1353,6 +1443,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "When the release was created."
         },
         {
@@ -1361,6 +1452,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "When the release was deployed."
         },
         {
@@ -1369,6 +1461,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Number of deploys for this release."
         },
         {
@@ -1377,6 +1470,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp of the first event in this release."
         },
         {
@@ -1385,6 +1479,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Unique release identifier."
         },
         {
@@ -1393,6 +1488,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Last commit in this release."
         },
         {
@@ -1401,6 +1497,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Last deploy of this release."
         },
         {
@@ -1409,6 +1506,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp of the last event in this release."
         },
         {
@@ -1417,6 +1515,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Number of new issue groups in this release."
         },
         {
@@ -1425,6 +1524,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Owner of the release."
         },
         {
@@ -1433,6 +1533,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Projects associated with this release."
         },
         {
@@ -1441,6 +1542,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Git reference (commit SHA, tag, etc.)."
         },
         {
@@ -1449,6 +1551,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Short version string."
         },
         {
@@ -1457,6 +1560,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Release status."
         },
         {
@@ -1465,6 +1569,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "URL associated with the release."
         },
         {
@@ -1473,6 +1578,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "User agent that created the release."
         },
         {
@@ -1481,6 +1587,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Release version string."
         },
         {
@@ -1489,6 +1596,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Parsed version information."
         }
       ]

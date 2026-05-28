@@ -1407,6 +1407,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The physical address of the advertiser."
         },
         {
@@ -1415,6 +1416,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The type of advertiser's account (e.g., individual, business)."
         },
         {
@@ -1423,6 +1425,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Unique identifier for the advertiser."
         },
         {
@@ -1431,6 +1434,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "The current balance in the advertiser's account."
         },
         {
@@ -1439,6 +1443,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The brand name associated with the advertiser."
         },
         {
@@ -1447,6 +1452,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The cellphone number of the advertiser."
         },
         {
@@ -1455,6 +1461,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The name of the company associated with the advertiser."
         },
         {
@@ -1463,6 +1470,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The contact person for the advertiser."
         },
         {
@@ -1471,6 +1479,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The country where the advertiser is located."
         },
         {
@@ -1479,6 +1488,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The timestamp when the advertiser account was created."
         },
         {
@@ -1487,6 +1497,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The currency used for transactions in the account."
         },
         {
@@ -1495,6 +1506,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "A brief description or bio of the advertiser or company."
         },
         {
@@ -1503,6 +1515,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The timezone for display purposes."
         },
         {
@@ -1511,6 +1524,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The email address associated with the advertiser."
         },
         {
@@ -1519,6 +1533,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The industry or sector the advertiser operates in."
         },
         {
@@ -1527,6 +1542,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The preferred language of communication for the advertiser."
         },
         {
@@ -1535,6 +1551,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The city where the advertiser's license is registered."
         },
         {
@@ -1543,6 +1560,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The license number of the advertiser."
         },
         {
@@ -1551,6 +1569,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The province or state where the advertiser's license is registered."
         },
         {
@@ -1559,6 +1578,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The URL link to the advertiser's license documentation."
         },
         {
@@ -1567,6 +1587,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The name of the advertiser or company."
         },
         {
@@ -1575,6 +1596,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The specific area or region where the advertiser focuses promotion."
         },
         {
@@ -1583,6 +1605,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The city at the center of the advertiser's promotion activities."
         },
         {
@@ -1591,6 +1614,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The province or state at the center of the advertiser's promotion activities."
         },
         {
@@ -1599,6 +1623,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Reason for any advertisement rejection by the platform."
         },
         {
@@ -1607,6 +1632,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The role or position of the advertiser within the company."
         },
         {
@@ -1615,6 +1641,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The current status of the advertiser's account."
         },
         {
@@ -1623,6 +1650,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The telephone number of the advertiser."
         },
         {
@@ -1631,6 +1659,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The timezone setting for the advertiser's activities."
         }
       ]
@@ -1654,6 +1683,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The unique identifier of the advertiser associated with the campaign"
         },
         {
@@ -1662,6 +1692,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Type of app promotion being used in the campaign"
         },
         {
@@ -1670,6 +1701,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Type of bid strategy being used in the campaign"
         },
         {
@@ -1678,6 +1710,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Total budget allocated for the campaign"
         },
         {
@@ -1686,6 +1719,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Mode in which the budget is being managed (e.g., daily, lifetime)"
         },
         {
@@ -1694,6 +1728,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "The metric or event that the budget optimization is based on"
         },
         {
@@ -1702,6 +1737,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The unique identifier of the campaign"
         },
         {
@@ -1710,6 +1746,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Name of the campaign for easy identification"
         },
         {
@@ -1718,6 +1755,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Type of campaign (e.g., awareness, conversion)"
         },
         {
@@ -1726,6 +1764,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp when the campaign was created"
         },
         {
@@ -1734,6 +1773,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Advanced bid type used for campaign optimization"
         },
         {
@@ -1742,6 +1782,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Flag indicating if the campaign utilizes a new campaign structure"
         },
         {
@@ -1750,6 +1791,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Flag indicating if the campaign is a search campaign"
         },
         {
@@ -1758,6 +1800,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Flag indicating if the campaign uses smart performance optimization"
         },
         {
@@ -1766,6 +1809,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp when the campaign was last modified"
         },
         {
@@ -1774,6 +1818,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The objective or goal of the campaign"
         },
         {
@@ -1782,6 +1827,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Type of objective selected for the campaign"
         },
         {
@@ -1790,6 +1836,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Current operational status of the campaign"
         },
         {
@@ -1798,6 +1845,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Specific goal to be optimized for in the campaign"
         },
         {
@@ -1806,6 +1854,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Type of RF (reach and frequency) campaign being run"
         },
         {
@@ -1814,6 +1863,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Return on ad spend goal set for the campaign"
         },
         {
@@ -1822,6 +1872,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Additional status information of the campaign"
         },
         {
@@ -1830,6 +1881,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Variable being tested in a split test campaign"
         }
       ]
@@ -1853,6 +1905,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The unique identifier of the ad group"
         },
         {
@@ -1861,6 +1914,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The name of the ad group"
         },
         {
@@ -1869,6 +1923,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The unique identifier of the advertiser"
         },
         {
@@ -1877,6 +1932,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "The allocated budget for the ad group"
         },
         {
@@ -1885,6 +1941,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The mode for managing the budget"
         },
         {
@@ -1893,6 +1950,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The unique identifier of the campaign"
         },
         {
@@ -1901,6 +1959,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The timestamp for when the ad group was created"
         },
         {
@@ -1909,6 +1968,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The timestamp for when the ad group was last modified"
         },
         {
@@ -1917,6 +1977,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The status of the operation"
         },
         {
@@ -1925,6 +1986,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The goal set for optimization"
         },
         {
@@ -1933,6 +1995,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The type of ad placement"
         },
         {
@@ -1941,6 +2004,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The type of promotion"
         },
         {
@@ -1949,6 +2013,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The secondary status of the ad group"
         }
       ]
@@ -1972,6 +2037,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The format of the ad"
         },
         {
@@ -1980,6 +2046,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The unique identifier of the ad"
         },
         {
@@ -1988,6 +2055,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The name of the ad"
         },
         {
@@ -1996,6 +2064,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The text content of the ad"
         },
         {
@@ -2004,6 +2073,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The unique identifier of the ad group"
         },
         {
@@ -2012,6 +2082,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The name of the ad group"
         },
         {
@@ -2020,6 +2091,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The unique identifier of the advertiser"
         },
         {
@@ -2028,6 +2100,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The unique identifier of the campaign"
         },
         {
@@ -2036,6 +2109,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The name of the campaign"
         },
         {
@@ -2044,6 +2118,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The timestamp when the ad was created"
         },
         {
@@ -2052,6 +2127,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The URL of the landing page for the ad"
         },
         {
@@ -2060,6 +2136,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The timestamp when the ad was last modified"
         },
         {
@@ -2068,6 +2145,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The operational status of the ad"
         },
         {
@@ -2076,6 +2154,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The secondary status of the ad"
         },
         {
@@ -2084,6 +2163,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The unique identifier of the video"
         }
       ]
@@ -2107,6 +2187,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier for the audience"
         },
         {
@@ -2115,6 +2196,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Type of audience"
         },
         {
@@ -2123,6 +2205,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Number of audience members covered"
         },
         {
@@ -2131,6 +2214,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp indicating when the audience was created"
         },
         {
@@ -2139,6 +2223,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Flag indicating if the audience data is valid"
         },
         {
@@ -2147,6 +2232,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Name of the audience"
         },
         {
@@ -2155,6 +2241,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Flag indicating if the audience is shared"
         }
       ]
@@ -2178,6 +2265,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The timestamp when the image was created."
         },
         {
@@ -2186,6 +2274,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The name of the image file."
         },
         {
@@ -2194,6 +2283,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The format type of the image file."
         },
         {
@@ -2202,6 +2292,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The height dimension of the image."
         },
         {
@@ -2210,6 +2301,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The unique identifier for the image."
         },
         {
@@ -2218,6 +2310,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The URL to access the image."
         },
         {
@@ -2226,6 +2319,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The timestamp when the image was last modified."
         },
         {
@@ -2234,6 +2328,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The size of the image file."
         },
         {
@@ -2242,6 +2337,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The width dimension of the image."
         }
       ]
@@ -2265,6 +2361,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp when the video was created."
         },
         {
@@ -2273,6 +2370,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Duration of the video in seconds."
         },
         {
@@ -2281,6 +2379,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Name of the video file."
         },
         {
@@ -2289,6 +2388,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Format of the video file."
         },
         {
@@ -2297,6 +2397,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Height of the video in pixels."
         },
         {
@@ -2305,6 +2406,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp when the video was last modified."
         },
         {
@@ -2313,6 +2415,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Size of the video file in bytes."
         },
         {
@@ -2321,6 +2424,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "URL for the cover image of the video."
         },
         {
@@ -2329,6 +2433,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the video."
         },
         {
@@ -2337,6 +2442,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Width of the video in pixels."
         }
       ]
@@ -2360,6 +2466,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The unique identifier for the advertiser."
         },
         {
@@ -2368,6 +2475,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The date for which the statistical data is recorded (YYYY-MM-DD HH:MM:SS format)."
         },
         {
@@ -2376,6 +2484,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Total amount of money spent."
         },
         {
@@ -2384,6 +2493,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The amount of money spent in cash."
         },
         {
@@ -2392,6 +2502,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Amount spent using vouchers."
         },
         {
@@ -2400,6 +2511,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Cost per click."
         },
         {
@@ -2408,6 +2520,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Cost per thousand impressions."
         },
         {
@@ -2416,6 +2529,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Number of times the ad was displayed."
         },
         {
@@ -2424,6 +2538,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Number of clicks on the ad."
         },
         {
@@ -2432,6 +2547,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Click-through rate."
         },
         {
@@ -2440,6 +2556,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Total number of unique users reached."
         },
         {
@@ -2448,6 +2565,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Cost per 1000 unique users reached."
         },
         {
@@ -2456,6 +2574,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Average number of times each person saw the ad."
         },
         {
@@ -2464,6 +2583,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of video play actions."
         },
         {
@@ -2472,6 +2592,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of times video was watched for at least 2 seconds."
         },
         {
@@ -2480,6 +2601,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of times video was watched for at least 6 seconds."
         },
         {
@@ -2488,6 +2610,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Average video play duration."
         },
         {
@@ -2496,6 +2619,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Average video play duration per user."
         },
         {
@@ -2504,6 +2628,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of times video was watched to 25%."
         },
         {
@@ -2512,6 +2637,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of times video was watched to 50%."
         },
         {
@@ -2520,6 +2646,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of times video was watched to 75%."
         },
         {
@@ -2528,6 +2655,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of times video was watched to 100%."
         },
         {
@@ -2536,6 +2664,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of profile visits."
         },
         {
@@ -2544,6 +2673,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of likes."
         },
         {
@@ -2552,6 +2682,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of comments."
         },
         {
@@ -2560,6 +2691,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of shares."
         },
         {
@@ -2568,6 +2700,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of follows."
         },
         {
@@ -2576,6 +2709,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of clicks on the music disc."
         },
         {
@@ -2584,6 +2718,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Real-time app installations."
         },
         {
@@ -2592,6 +2727,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Cost of real-time app installations."
         },
         {
@@ -2600,6 +2736,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of app installations."
         }
       ]
@@ -2623,6 +2760,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The unique identifier for the campaign."
         },
         {
@@ -2631,6 +2769,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The date for which the statistical data is recorded (YYYY-MM-DD HH:MM:SS format)."
         },
         {
@@ -2639,6 +2778,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The name of the marketing campaign."
         },
         {
@@ -2647,6 +2787,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Total amount of money spent."
         },
         {
@@ -2655,6 +2796,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Cost per click."
         },
         {
@@ -2663,6 +2805,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Cost per thousand impressions."
         },
         {
@@ -2671,6 +2814,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Number of times the ad was displayed."
         },
         {
@@ -2679,6 +2823,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Number of clicks on the ad."
         },
         {
@@ -2687,6 +2832,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Click-through rate."
         },
         {
@@ -2695,6 +2841,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Total number of unique users reached."
         },
         {
@@ -2703,6 +2850,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Cost per 1000 unique users reached."
         },
         {
@@ -2711,6 +2859,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Average number of times each person saw the ad."
         },
         {
@@ -2719,6 +2868,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of video play actions."
         },
         {
@@ -2727,6 +2877,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of times video was watched for at least 2 seconds."
         },
         {
@@ -2735,6 +2886,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of times video was watched for at least 6 seconds."
         },
         {
@@ -2743,6 +2895,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Average video play duration."
         },
         {
@@ -2751,6 +2904,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Average video play duration per user."
         },
         {
@@ -2759,6 +2913,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of times video was watched to 25%."
         },
         {
@@ -2767,6 +2922,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of times video was watched to 50%."
         },
         {
@@ -2775,6 +2931,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of times video was watched to 75%."
         },
         {
@@ -2783,6 +2940,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of times video was watched to 100%."
         },
         {
@@ -2791,6 +2949,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of profile visits."
         },
         {
@@ -2799,6 +2958,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of likes."
         },
         {
@@ -2807,6 +2967,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of comments."
         },
         {
@@ -2815,6 +2976,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of shares."
         },
         {
@@ -2823,6 +2985,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of follows."
         },
         {
@@ -2831,6 +2994,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of clicks on the music disc."
         },
         {
@@ -2839,6 +3003,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Real-time app installations."
         },
         {
@@ -2847,6 +3012,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Cost of real-time app installations."
         },
         {
@@ -2855,6 +3021,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of app installations."
         }
       ]
@@ -2878,6 +3045,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The unique identifier for the ad group."
         },
         {
@@ -2886,6 +3054,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The date for which the statistical data is recorded (YYYY-MM-DD HH:MM:SS format)."
         },
         {
@@ -2894,6 +3063,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The name of the marketing campaign."
         },
         {
@@ -2902,6 +3072,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The unique identifier for the campaign."
         },
         {
@@ -2910,6 +3081,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The name of the ad group."
         },
         {
@@ -2918,6 +3090,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Type of ad placement."
         },
         {
@@ -2926,6 +3099,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Total amount of money spent."
         },
         {
@@ -2934,6 +3108,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Cost per click."
         },
         {
@@ -2942,6 +3117,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Cost per thousand impressions."
         },
         {
@@ -2950,6 +3126,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Number of times the ad was displayed."
         },
         {
@@ -2958,6 +3135,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Number of clicks on the ad."
         },
         {
@@ -2966,6 +3144,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Click-through rate."
         },
         {
@@ -2974,6 +3153,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Total number of unique users reached."
         },
         {
@@ -2982,6 +3162,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Cost per 1000 unique users reached."
         },
         {
@@ -2990,6 +3171,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Number of conversions."
         },
         {
@@ -2998,6 +3180,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Cost per conversion."
         },
         {
@@ -3006,6 +3189,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Rate of conversions."
         },
         {
@@ -3014,6 +3198,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Real-time conversions."
         },
         {
@@ -3022,6 +3207,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Real-time cost per conversion."
         },
         {
@@ -3030,6 +3216,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Real-time conversion rate."
         },
         {
@@ -3038,6 +3225,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Number of results."
         },
         {
@@ -3046,6 +3234,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Cost per result."
         },
         {
@@ -3054,6 +3243,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Rate of results."
         },
         {
@@ -3062,6 +3252,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Real-time results."
         },
         {
@@ -3070,6 +3261,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Real-time cost per result."
         },
         {
@@ -3078,6 +3270,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Real-time result rate."
         },
         {
@@ -3086,6 +3279,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Results for secondary goals."
         },
         {
@@ -3094,6 +3288,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Cost per secondary goal result."
         },
         {
@@ -3102,6 +3297,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Rate of secondary goal results."
         },
         {
@@ -3110,6 +3306,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Average number of times each person saw the ad."
         },
         {
@@ -3118,6 +3315,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of video play actions."
         },
         {
@@ -3126,6 +3324,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of times video was watched for at least 2 seconds."
         },
         {
@@ -3134,6 +3333,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of times video was watched for at least 6 seconds."
         },
         {
@@ -3142,6 +3342,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Average video play duration."
         },
         {
@@ -3150,6 +3351,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Average video play duration per user."
         },
         {
@@ -3158,6 +3360,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of times video was watched to 25%."
         },
         {
@@ -3166,6 +3369,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of times video was watched to 50%."
         },
         {
@@ -3174,6 +3378,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of times video was watched to 75%."
         },
         {
@@ -3182,6 +3387,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of times video was watched to 100%."
         },
         {
@@ -3190,6 +3396,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of profile visits."
         },
         {
@@ -3198,6 +3405,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of likes."
         },
         {
@@ -3206,6 +3414,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of comments."
         },
         {
@@ -3214,6 +3423,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of shares."
         },
         {
@@ -3222,6 +3432,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of follows."
         },
         {
@@ -3230,6 +3441,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of clicks on the music disc."
         },
         {
@@ -3238,6 +3450,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Real-time app installations."
         },
         {
@@ -3246,6 +3459,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Cost of real-time app installations."
         },
         {
@@ -3254,6 +3468,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of app installations."
         }
       ]
@@ -3277,6 +3492,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The unique identifier for the ad."
         },
         {
@@ -3285,6 +3501,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The date for which the statistical data is recorded (YYYY-MM-DD HH:MM:SS format)."
         },
         {
@@ -3293,6 +3510,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The name of the marketing campaign."
         },
         {
@@ -3301,6 +3519,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The unique identifier for the campaign."
         },
         {
@@ -3309,6 +3528,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The name of the ad group."
         },
         {
@@ -3317,6 +3537,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The unique identifier for the ad group."
         },
         {
@@ -3325,6 +3546,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The name of the ad."
         },
         {
@@ -3333,6 +3555,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The text content of the ad."
         },
         {
@@ -3341,6 +3564,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Type of ad placement."
         },
         {
@@ -3349,6 +3573,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Total amount of money spent."
         },
         {
@@ -3357,6 +3582,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Cost per click."
         },
         {
@@ -3365,6 +3591,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Cost per thousand impressions."
         },
         {
@@ -3373,6 +3600,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Number of times the ad was displayed."
         },
         {
@@ -3381,6 +3609,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Number of clicks on the ad."
         },
         {
@@ -3389,6 +3618,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Click-through rate."
         },
         {
@@ -3397,6 +3627,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Total number of unique users reached."
         },
         {
@@ -3405,6 +3636,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Cost per 1000 unique users reached."
         },
         {
@@ -3413,6 +3645,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Number of conversions."
         },
         {
@@ -3421,6 +3654,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Cost per conversion."
         },
         {
@@ -3429,6 +3663,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Rate of conversions."
         },
         {
@@ -3437,6 +3672,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Real-time conversions."
         },
         {
@@ -3445,6 +3681,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Real-time cost per conversion."
         },
         {
@@ -3453,6 +3690,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Real-time conversion rate."
         },
         {
@@ -3461,6 +3699,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Number of results."
         },
         {
@@ -3469,6 +3708,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Cost per result."
         },
         {
@@ -3477,6 +3717,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Rate of results."
         },
         {
@@ -3485,6 +3726,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Real-time results."
         },
         {
@@ -3493,6 +3735,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Real-time cost per result."
         },
         {
@@ -3501,6 +3744,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Real-time result rate."
         },
         {
@@ -3509,6 +3753,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Results for secondary goals."
         },
         {
@@ -3517,6 +3762,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Cost per secondary goal result."
         },
         {
@@ -3525,6 +3771,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Rate of secondary goal results."
         },
         {
@@ -3533,6 +3780,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Average number of times each person saw the ad."
         },
         {
@@ -3541,6 +3789,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of video play actions."
         },
         {
@@ -3549,6 +3798,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of times video was watched for at least 2 seconds."
         },
         {
@@ -3557,6 +3807,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of times video was watched for at least 6 seconds."
         },
         {
@@ -3565,6 +3816,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Average video play duration."
         },
         {
@@ -3573,6 +3825,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Average video play duration per user."
         },
         {
@@ -3581,6 +3834,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of times video was watched to 25%."
         },
         {
@@ -3589,6 +3843,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of times video was watched to 50%."
         },
         {
@@ -3597,6 +3852,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of times video was watched to 75%."
         },
         {
@@ -3605,6 +3861,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of times video was watched to 100%."
         },
         {
@@ -3613,6 +3870,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of profile visits."
         },
         {
@@ -3621,6 +3879,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of likes."
         },
         {
@@ -3629,6 +3888,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of comments."
         },
         {
@@ -3637,6 +3897,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of shares."
         },
         {
@@ -3645,6 +3906,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of follows."
         },
         {
@@ -3653,6 +3915,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of clicks on the music disc."
         },
         {
@@ -3661,6 +3924,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Real-time app installations."
         },
         {
@@ -3669,6 +3933,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Cost of real-time app installations."
         },
         {
@@ -3677,6 +3942,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of app installations."
         }
       ]

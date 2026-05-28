@@ -708,6 +708,7 @@
           "type": "int",
           "json_type": "integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Unique agent identifier"
         },
         {
@@ -716,6 +717,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Agent email address"
         },
         {
@@ -724,6 +726,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Agent display name"
         },
         {
@@ -732,6 +735,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Agent first name"
         },
         {
@@ -740,6 +744,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Agent last name"
         },
         {
@@ -748,6 +753,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether agent is enabled"
         },
         {
@@ -756,6 +762,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Agent role ID"
         },
         {
@@ -764,6 +771,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Department IDs agent belongs to"
         },
         {
@@ -772,6 +780,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "When agent was created"
         }
       ]
@@ -795,6 +804,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique chat identifier"
         },
         {
@@ -803,6 +813,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Chat start timestamp"
         },
         {
@@ -811,6 +822,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Last update timestamp"
         },
         {
@@ -819,6 +831,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Department ID"
         },
         {
@@ -827,6 +840,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Department name"
         },
         {
@@ -835,6 +849,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Chat duration in seconds"
         },
         {
@@ -843,6 +858,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Satisfaction rating"
         },
         {
@@ -851,6 +867,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether chat was missed"
         },
         {
@@ -859,6 +876,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "IDs of agents in chat"
         }
       ]
@@ -882,6 +900,7 @@
           "type": "int",
           "json_type": "integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Department ID"
         },
         {
@@ -890,6 +909,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Department name"
         },
         {
@@ -898,6 +918,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether department is enabled"
         },
         {
@@ -906,6 +927,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Agent IDs in department"
         }
       ]
@@ -929,6 +951,7 @@
           "type": "int",
           "json_type": "integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Shortcut ID"
         },
         {
@@ -937,6 +960,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Shortcut name/trigger"
         },
         {
@@ -945,6 +969,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Shortcut message content"
         },
         {
@@ -953,6 +978,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Tags applied when shortcut is used"
         }
       ]
@@ -976,6 +1002,7 @@
           "type": "int",
           "json_type": "integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Trigger ID"
         },
         {
@@ -984,6 +1011,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Trigger name"
         },
         {
@@ -992,6 +1020,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether trigger is enabled"
         }
       ]

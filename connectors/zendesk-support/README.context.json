@@ -3855,6 +3855,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Indicates whether the brand is set as active"
         },
         {
@@ -3863,6 +3864,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The public URL of the brand"
         },
         {
@@ -3871,6 +3873,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp when the brand was created"
         },
         {
@@ -3879,6 +3882,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Indicates whether the brand is the default brand for tickets generated from non-branded channels"
         },
         {
@@ -3887,6 +3891,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Indicates whether the brand has a Help Center enabled"
         },
         {
@@ -3895,6 +3900,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The state of the Help Center, with allowed values of enabled, disabled, or restricted"
         },
         {
@@ -3903,6 +3909,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The host mapping configuration for the brand, visible only to administrators"
         },
         {
@@ -3911,6 +3918,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Unique identifier automatically assigned when the brand is created"
         },
         {
@@ -3919,6 +3927,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Indicates whether the brand has been deleted"
         },
         {
@@ -3927,6 +3936,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Brand logo image file represented as an Attachment object"
         },
         {
@@ -3935,6 +3945,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The name of the brand"
         },
         {
@@ -3943,6 +3954,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The signature template used for the brand"
         },
         {
@@ -3951,6 +3963,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The subdomain associated with the brand"
         },
         {
@@ -3959,6 +3972,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Array of ticket form IDs that are available for use by this brand"
         },
         {
@@ -3967,6 +3981,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp when the brand was last updated"
         },
         {
@@ -3975,6 +3990,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The API URL for accessing this brand resource"
         }
       ]
@@ -3998,6 +4014,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp indicating when the group was created"
         },
         {
@@ -4006,6 +4023,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Indicates if the group is the default one for the account"
         },
         {
@@ -4014,6 +4032,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Indicates whether the group has been deleted"
         },
         {
@@ -4022,6 +4041,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The description of the group"
         },
         {
@@ -4030,6 +4050,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Unique identifier automatically assigned when creating groups"
         },
         {
@@ -4038,6 +4059,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Indicates if the group is public (true) or private (false)"
         },
         {
@@ -4046,6 +4068,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The name of the group"
         },
         {
@@ -4054,6 +4077,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp indicating when the group was last updated"
         },
         {
@@ -4062,6 +4086,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The API URL of the group"
         }
       ]
@@ -4085,6 +4110,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp when the organization was created"
         },
         {
@@ -4093,6 +4119,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp when the organization was deleted"
         },
         {
@@ -4101,6 +4128,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Details about the organization, such as the address"
         },
         {
@@ -4109,6 +4137,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Array of domain names associated with this organization for automatic user assignment"
         },
         {
@@ -4117,6 +4146,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique external identifier to associate the organization to an external record (case-insensitive)"
         },
         {
@@ -4125,6 +4155,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "ID of the group where new tickets from users in this organization are automatically assigned"
         },
         {
@@ -4133,6 +4164,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Unique identifier automatically assigned when the organization is created"
         },
         {
@@ -4141,6 +4173,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique name for the organization (mandatory field)"
         },
         {
@@ -4149,6 +4182,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Notes about the organization"
         },
         {
@@ -4157,6 +4191,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Key-value object for custom organization fields"
         },
         {
@@ -4165,6 +4200,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Boolean indicating whether end users in this organization can comment on each other's tickets"
         },
         {
@@ -4173,6 +4209,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Boolean indicating whether end users in this organization can see each other's tickets"
         },
         {
@@ -4181,6 +4218,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Array of tags associated with the organization"
         },
         {
@@ -4189,6 +4227,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp of the last update to the organization"
         },
         {
@@ -4197,6 +4236,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The API URL of this organization"
         }
       ]
@@ -4220,6 +4260,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The identifier of the agent assigned to the ticket at the time the rating was submitted"
         },
         {
@@ -4228,6 +4269,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Optional comment provided by the requester with the rating"
         },
         {
@@ -4236,6 +4278,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp indicating when the satisfaction rating was created"
         },
         {
@@ -4244,6 +4287,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The identifier of the group assigned to the ticket at the time the rating was submitted"
         },
         {
@@ -4252,6 +4296,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Unique identifier for the satisfaction rating, automatically assigned upon creation"
         },
         {
@@ -4260,6 +4305,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Free-text reason for a bad rating provided by the requester in a follow-up question"
         },
         {
@@ -4268,6 +4314,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Identifier for the predefined reason given for a negative rating"
         },
         {
@@ -4276,6 +4323,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The identifier of the ticket requester who submitted the satisfaction rating"
         },
         {
@@ -4284,6 +4332,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The satisfaction rating value: 'offered', 'unoffered', 'good', or 'bad'"
         },
         {
@@ -4292,6 +4341,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The identifier of the ticket being rated"
         },
         {
@@ -4300,6 +4350,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp indicating when the satisfaction rating was last updated"
         },
         {
@@ -4308,6 +4359,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The API URL of this satisfaction rating resource"
         }
       ]
@@ -4331,6 +4383,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The number of times this tag has been used across resources"
         },
         {
@@ -4339,6 +4392,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The tag name string used to label and categorize resources"
         }
       ]
@@ -4362,6 +4416,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Files or documents attached to the audit"
         },
         {
@@ -4370,6 +4425,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The unique identifier of the user who created the audit"
         },
         {
@@ -4378,6 +4434,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp indicating when the audit was created"
         },
         {
@@ -4386,6 +4443,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Array of events that occurred in this audit, such as field changes, comments, or tag updates"
         },
         {
@@ -4394,6 +4452,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Unique identifier for the audit record, automatically assigned when the audit is created"
         },
         {
@@ -4402,6 +4461,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Custom and system data associated with the audit"
         },
         {
@@ -4410,6 +4470,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The unique identifier of the ticket associated with this audit"
         },
         {
@@ -4418,6 +4479,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Describes how the audit was created, providing context about the creation source"
         }
       ]
@@ -4441,6 +4503,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "List of files or media attached to the comment"
         },
         {
@@ -4449,6 +4512,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Identifier of the audit record associated with this comment event"
         },
         {
@@ -4457,6 +4521,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Identifier of the user who created the comment"
         },
         {
@@ -4465,6 +4530,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Content of the comment in its original format"
         },
         {
@@ -4473,6 +4539,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp when the comment was created"
         },
         {
@@ -4481,6 +4548,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Specific classification of the event within the ticket event stream"
         },
         {
@@ -4489,6 +4557,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "HTML-formatted content of the comment"
         },
         {
@@ -4497,6 +4566,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Unique identifier for the comment event"
         },
         {
@@ -4505,6 +4575,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Additional structured information about the comment not covered by standard fields"
         },
         {
@@ -4513,6 +4584,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Plain text content of the comment without formatting"
         },
         {
@@ -4521,6 +4593,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Boolean indicating whether the comment is visible to end users or is an internal note"
         },
         {
@@ -4529,6 +4602,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Identifier of the ticket to which this comment belongs"
         },
         {
@@ -4537,6 +4611,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Timestamp of when the event occurred in the incremental export stream"
         },
         {
@@ -4545,6 +4620,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Type of event, typically indicating this is a comment event"
         },
         {
@@ -4553,6 +4629,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Array of upload tokens or identifiers for files being attached to the comment"
         },
         {
@@ -4561,6 +4638,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Channel or method through which the comment was submitted"
         },
         {
@@ -4569,6 +4647,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Reference identifier for the channel through which the comment was created"
         }
       ]
@@ -4592,6 +4671,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether this field is currently available for use"
         },
         {
@@ -4600,6 +4680,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "A description of the ticket field that only agents can see"
         },
         {
@@ -4608,6 +4689,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "If true, the field is shown to agents by default; if false, it is hidden alongside infrequently used fields"
         },
         {
@@ -4616,6 +4698,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp when the custom ticket field was created"
         },
         {
@@ -4624,6 +4707,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Array of option objects for custom ticket fields of type multiselect or tagger"
         },
         {
@@ -4632,6 +4716,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "List of customized ticket statuses, only present for system ticket fields of type custom_status"
         },
         {
@@ -4640,6 +4725,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Text describing the purpose of the ticket field to users"
         },
         {
@@ -4648,6 +4734,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether this field is editable by end users in Help Center"
         },
         {
@@ -4656,6 +4743,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Unique identifier for the ticket field, automatically assigned when created"
         },
         {
@@ -4664,6 +4752,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Internal identifier or reference key for the field"
         },
         {
@@ -4672,6 +4761,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The relative position of the ticket field on a ticket, controlling display order"
         },
         {
@@ -4680,6 +4770,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The dynamic content placeholder if present, or the description value if not"
         },
         {
@@ -4688,6 +4779,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The dynamic content placeholder if present, or the title value if not"
         },
         {
@@ -4696,6 +4788,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The dynamic content placeholder if present, or the title_in_portal value if not"
         },
         {
@@ -4704,6 +4797,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "For regexp fields only, the validation pattern for a field value to be deemed valid"
         },
         {
@@ -4712,6 +4806,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "If false, this field is a system field that must be present on all tickets"
         },
         {
@@ -4720,6 +4815,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "If true, agents must enter a value in the field to change the ticket status to solved"
         },
         {
@@ -4728,6 +4824,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "If true, end users must enter a value in the field to create a request"
         },
         {
@@ -4736,6 +4833,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "For system ticket fields of type priority and status, controlling available options"
         },
         {
@@ -4744,6 +4842,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Array of options for system ticket fields of type tickettype, priority, or status"
         },
         {
@@ -4752,6 +4851,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "For checkbox fields only, a tag added to tickets when the checkbox field is selected"
         },
         {
@@ -4760,6 +4860,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The title of the ticket field displayed to agents"
         },
         {
@@ -4768,6 +4869,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The title of the ticket field displayed to end users in Help Center"
         },
         {
@@ -4776,6 +4878,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Field type such as text, textarea, checkbox, date, integer, decimal, regexp, multiselect, or tagger"
         },
         {
@@ -4784,6 +4887,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp when the custom ticket field was last updated"
         },
         {
@@ -4792,6 +4896,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The API URL for this ticket field resource"
         },
         {
@@ -4800,6 +4905,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether this field is visible to end users in Help Center"
         }
       ]
@@ -4823,6 +4929,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Indicates if the form is set as active"
         },
         {
@@ -4831,6 +4938,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Array of condition sets for agent workspaces"
         },
         {
@@ -4839,6 +4947,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp when the ticket form was created"
         },
         {
@@ -4847,6 +4956,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Indicates if the form is the default form for this account"
         },
         {
@@ -4855,6 +4965,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The name of the form that is displayed to an end user"
         },
         {
@@ -4863,6 +4974,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Array of condition sets for end user products"
         },
         {
@@ -4871,6 +4983,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Indicates if the form is visible to the end user"
         },
         {
@@ -4879,6 +4992,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Unique identifier for the ticket form, automatically assigned when creating the form"
         },
         {
@@ -4887,6 +5001,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Indicates if the form is available for use in all brands on this account"
         },
         {
@@ -4895,6 +5010,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The name of the ticket form"
         },
         {
@@ -4903,6 +5019,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The position of this form among other forms in the account, such as in a dropdown"
         },
         {
@@ -4911,6 +5028,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The dynamic content placeholder if present, or the display_name value if not"
         },
         {
@@ -4919,6 +5037,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The dynamic content placeholder if present, or the name value if not"
         },
         {
@@ -4927,6 +5046,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "IDs of all brands that this ticket form is restricted to"
         },
         {
@@ -4935,6 +5055,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "IDs of all ticket fields included in this ticket form"
         },
         {
@@ -4943,6 +5064,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp of the last update to the ticket form"
         },
         {
@@ -4951,6 +5073,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "URL of the ticket form"
         }
       ]
@@ -4974,6 +5097,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Number of minutes the agent spent waiting during calendar and business hours"
         },
         {
@@ -4982,6 +5106,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp when the ticket was assigned"
         },
         {
@@ -4990,6 +5115,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Number of assignees the ticket had"
         },
         {
@@ -4998,6 +5124,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp when the assignee last updated the ticket"
         },
         {
@@ -5006,6 +5133,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp when the metric record was created"
         },
         {
@@ -5014,6 +5142,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp when the ticket's custom status was last updated"
         },
         {
@@ -5022,6 +5151,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Number of minutes to the first resolution time during calendar and business hours"
         },
         {
@@ -5030,6 +5160,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Number of minutes to the full resolution during calendar and business hours"
         },
         {
@@ -5038,6 +5169,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Timestamp of when record was last updated"
         },
         {
@@ -5046,6 +5178,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Number of groups the ticket passed through"
         },
         {
@@ -5054,6 +5187,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Unique identifier for the ticket metric record"
         },
         {
@@ -5062,6 +5196,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp when the ticket was initially assigned"
         },
         {
@@ -5070,6 +5205,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "ID of the Zendesk instance associated with the ticket"
         },
         {
@@ -5078,6 +5214,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp when the latest comment was added"
         },
         {
@@ -5086,6 +5223,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Ticket metrics data"
         },
         {
@@ -5094,6 +5232,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Number of minutes on hold"
         },
         {
@@ -5102,6 +5241,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Total number of times the ticket was reopened"
         },
         {
@@ -5110,6 +5250,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The number of public replies added to a ticket by an agent"
         },
         {
@@ -5118,6 +5259,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Number of minutes to the first reply during calendar and business hours"
         },
         {
@@ -5126,6 +5268,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Number of seconds to the first reply during calendar hours, only available for Messaging tickets"
         },
         {
@@ -5134,6 +5277,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp when the requester last updated the ticket"
         },
         {
@@ -5142,6 +5286,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Number of minutes the requester spent waiting during calendar and business hours"
         },
         {
@@ -5150,6 +5295,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp when the ticket was solved"
         },
         {
@@ -5158,6 +5304,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The current status of the ticket (open, pending, solved, etc.)."
         },
         {
@@ -5166,6 +5313,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp when the status of the ticket was last updated"
         },
         {
@@ -5174,6 +5322,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Identifier of the associated ticket"
         },
         {
@@ -5182,6 +5331,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Time related to the ticket"
         },
         {
@@ -5190,6 +5340,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Type of ticket"
         },
         {
@@ -5198,6 +5349,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp when the metric record was last updated"
         },
         {
@@ -5206,6 +5358,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The API url of the ticket metric"
         }
       ]
@@ -5229,6 +5382,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Boolean indicating whether attachments are allowed on the ticket"
         },
         {
@@ -5237,6 +5391,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Boolean indicating whether agents can reply to the ticket through the original channel"
         },
         {
@@ -5245,6 +5400,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Unique identifier of the agent currently assigned to the ticket"
         },
         {
@@ -5253,6 +5409,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Unique identifier of the brand associated with the ticket in multi-brand accounts"
         },
         {
@@ -5261,6 +5418,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Array of user identifiers who are collaborating on the ticket"
         },
         {
@@ -5269,6 +5427,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp indicating when the ticket was created"
         },
         {
@@ -5277,6 +5436,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Array of custom field values specific to the account's ticket configuration"
         },
         {
@@ -5285,6 +5445,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Unique identifier of the custom status applied to the ticket"
         },
         {
@@ -5293,6 +5454,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The ID of the ticket form that was previously associated with this ticket but has since been deleted"
         },
         {
@@ -5301,6 +5463,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Initial description or content of the ticket when it was created"
         },
         {
@@ -5309,6 +5472,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp indicating when the ticket is due for completion or resolution"
         },
         {
@@ -5317,6 +5481,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Array of user identifiers who are CC'd on ticket email notifications"
         },
         {
@@ -5325,6 +5490,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "External identifier for the ticket, used for integrations with other systems"
         },
         {
@@ -5333,6 +5499,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Array of ticket field values including both system and custom fields"
         },
         {
@@ -5341,6 +5508,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Array of user identifiers who are following the ticket for updates"
         },
         {
@@ -5349,6 +5517,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Array of identifiers for follow-up tickets related to this ticket"
         },
         {
@@ -5357,6 +5526,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Unique identifier linking the ticket to a forum topic if applicable"
         },
         {
@@ -5365,6 +5535,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Boolean indicating whether the ticket originated from a messaging channel"
         },
         {
@@ -5373,6 +5544,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Timestamp updated for all ticket updates including system changes, used for incremental export"
         },
         {
@@ -5381,6 +5553,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Unique identifier of the agent group assigned to handle the ticket"
         },
         {
@@ -5389,6 +5562,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Boolean indicating whether this problem ticket has related incident tickets"
         },
         {
@@ -5397,6 +5571,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Unique identifier for the ticket"
         },
         {
@@ -5405,6 +5580,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Boolean indicating whether the ticket is publicly visible"
         },
         {
@@ -5413,6 +5589,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Unique identifier of the organization associated with the ticket"
         },
         {
@@ -5421,6 +5598,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Priority level assigned to the ticket (e.g., urgent, high, normal, low)"
         },
         {
@@ -5429,6 +5607,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Unique identifier of the problem ticket if this is an incident ticket"
         },
         {
@@ -5437,6 +5616,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Original unprocessed subject line before any system modifications"
         },
         {
@@ -5445,6 +5625,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Email address or identifier of the ticket recipient"
         },
         {
@@ -5453,6 +5634,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Unique identifier of the user who requested or created the ticket"
         },
         {
@@ -5461,6 +5643,7 @@
           "type": "Any",
           "json_type": "null | object | string",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Object containing customer satisfaction rating data for the ticket"
         },
         {
@@ -5469,6 +5652,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Array of sharing agreement identifiers if the ticket is shared across Zendesk instances"
         },
         {
@@ -5477,6 +5661,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Current status of the ticket (e.g., new, open, pending, solved, closed)"
         },
         {
@@ -5485,6 +5670,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Subject line of the ticket describing the issue or request"
         },
         {
@@ -5493,6 +5679,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Unique identifier of the user who submitted the ticket on behalf of the requester"
         },
         {
@@ -5501,6 +5688,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Array of tags applied to the ticket for categorization and filtering"
         },
         {
@@ -5509,6 +5697,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Unique identifier of the ticket form used when creating the ticket"
         },
         {
@@ -5517,6 +5706,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Type of ticket (e.g., problem, incident, question, task)"
         },
         {
@@ -5525,6 +5715,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp indicating when the ticket was last updated with a ticket event"
         },
         {
@@ -5533,6 +5724,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "API URL to access the full ticket resource"
         },
         {
@@ -5541,6 +5733,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The type of the search result (e.g. ticket) when returned from search endpoints"
         },
         {
@@ -5549,6 +5742,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Object describing the channel and method through which the ticket was created"
         }
       ]
@@ -5572,6 +5766,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The unique identifier of the deleted ticket"
         },
         {
@@ -5580,6 +5775,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The subject or title of the deleted ticket"
         },
         {
@@ -5588,6 +5784,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Additional details or comments about the deleted ticket"
         },
         {
@@ -5596,6 +5793,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The timestamp when the ticket was deleted"
         },
         {
@@ -5604,6 +5802,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The state of the ticket before it was deleted"
         },
         {
@@ -5612,6 +5811,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The user who performed the deletion action"
         }
       ]
@@ -5635,6 +5835,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Indicates if the user account is currently active"
         },
         {
@@ -5643,6 +5844,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Alternative name or nickname for the user"
         },
         {
@@ -5651,6 +5853,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Indicates if the user can only interact via chat"
         },
         {
@@ -5659,6 +5862,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp indicating when the user was created"
         },
         {
@@ -5667,6 +5871,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Identifier for a custom role assigned to the user"
         },
         {
@@ -5675,6 +5880,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Identifier of the default group assigned to the user"
         },
         {
@@ -5683,6 +5889,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Additional descriptive information about the user"
         },
         {
@@ -5691,6 +5898,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Email address of the user"
         },
         {
@@ -5699,6 +5907,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "External system identifier for the user, used for integrations"
         },
         {
@@ -5707,6 +5916,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "IANA standard time zone identifier for the user"
         },
         {
@@ -5715,6 +5925,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Unique identifier for the user"
         },
         {
@@ -5723,6 +5934,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp of the user's most recent login"
         },
         {
@@ -5731,6 +5943,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Locale setting determining language and regional format preferences"
         },
         {
@@ -5739,6 +5952,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Identifier for the user's locale preference"
         },
         {
@@ -5747,6 +5961,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Indicates if the user has moderator privileges"
         },
         {
@@ -5755,6 +5970,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Display name of the user"
         },
         {
@@ -5763,6 +5979,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Internal notes about the user, visible only to agents"
         },
         {
@@ -5771,6 +5988,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Indicates if the user can only make private comments on tickets"
         },
         {
@@ -5779,6 +5997,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Identifier of the organization the user belongs to"
         },
         {
@@ -5787,6 +6006,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Indicates if the user has been permanently deleted from the system"
         },
         {
@@ -5795,6 +6015,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Phone number of the user"
         },
         {
@@ -5803,6 +6024,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Profile photo or avatar of the user"
         },
         {
@@ -5811,6 +6033,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Indicates if the user receives reports in CSV format"
         },
         {
@@ -5819,6 +6042,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Indicates if the agent has restricted access permissions"
         },
         {
@@ -5827,6 +6051,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Role assigned to the user defining their permissions level"
         },
         {
@@ -5835,6 +6060,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Type classification of the user's role"
         },
         {
@@ -5843,6 +6069,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Indicates if the user is shared across multiple accounts"
         },
         {
@@ -5851,6 +6078,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Indicates if the user is a shared agent across multiple brands or accounts"
         },
         {
@@ -5859,6 +6087,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Indicates if the phone number is shared with other users"
         },
         {
@@ -5867,6 +6096,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Email signature text for the user"
         },
         {
@@ -5875,6 +6105,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Indicates if the user account is suspended"
         },
         {
@@ -5883,6 +6114,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Labels or tags associated with the user for categorization"
         },
         {
@@ -5891,6 +6123,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Defines which tickets the user can access based on restrictions"
         },
         {
@@ -5899,6 +6132,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Time zone setting for the user"
         },
         {
@@ -5907,6 +6141,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Indicates if two-factor authentication is enabled for the user"
         },
         {
@@ -5915,6 +6150,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp indicating when the user was last updated"
         },
         {
@@ -5923,6 +6159,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "API endpoint URL for accessing the user's detailed information"
         },
         {
@@ -5931,6 +6168,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Custom field values specific to the user, stored as key-value pairs"
         },
         {
@@ -5939,6 +6177,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Indicates if the user's identity has been verified"
         }
       ]
@@ -5962,6 +6201,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The unique ID of the article"
         },
         {
@@ -5970,6 +6210,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The API URL of the article"
         },
         {
@@ -5978,6 +6219,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The public URL of the article"
         },
         {
@@ -5986,6 +6228,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The title of the article"
         },
         {
@@ -5994,6 +6237,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The body content of the article (HTML)"
         },
         {
@@ -6002,6 +6246,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The locale of the article"
         },
         {
@@ -6010,6 +6255,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The ID of the user who created the article"
         },
         {
@@ -6018,6 +6264,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The ID of the section the article belongs to"
         },
         {
@@ -6026,6 +6273,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The time the article was created"
         },
         {
@@ -6034,6 +6282,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The time the article was last updated"
         },
         {
@@ -6042,6 +6291,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Sum of upvotes and downvotes"
         },
         {
@@ -6050,6 +6300,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Number of votes"
         },
         {
@@ -6058,6 +6309,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "List of label names associated with the article"
         },
         {
@@ -6066,6 +6318,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the article is a draft"
         },
         {
@@ -6074,6 +6327,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the article is promoted"
         },
         {
@@ -6082,6 +6336,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Position of the article in the section"
         }
       ]
@@ -6105,6 +6360,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The unique ID of the attachment"
         },
         {
@@ -6113,6 +6369,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The API URL of the attachment"
         },
         {
@@ -6121,6 +6378,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The ID of the article this attachment belongs to"
         },
         {
@@ -6129,6 +6387,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The name of the attached file"
         },
         {
@@ -6137,6 +6396,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The MIME type of the attachment"
         },
         {
@@ -6145,6 +6405,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The URL to download the attachment"
         },
         {
@@ -6153,6 +6414,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The size of the attachment in bytes"
         },
         {
@@ -6161,6 +6423,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the attachment is displayed inline"
         },
         {
@@ -6169,6 +6432,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The time the attachment was created"
         },
         {
@@ -6177,6 +6441,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The time the attachment was last updated"
         }
       ]
@@ -6200,6 +6465,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Automatically assigned when created"
         },
         {
@@ -6208,6 +6474,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The title of the automation"
         },
         {
@@ -6216,6 +6483,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the automation is active"
         },
         {
@@ -6224,6 +6492,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The position of the automation"
         },
         {
@@ -6232,6 +6501,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "An object that describes the conditions under which the automation will execute"
         },
         {
@@ -6240,6 +6510,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "An array of actions"
         },
         {
@@ -6248,6 +6519,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The dynamic content placeholder for title"
         },
         {
@@ -6256,6 +6528,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The time the automation was created"
         },
         {
@@ -6264,6 +6537,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The time the automation was last updated"
         }
       ]
@@ -6287,6 +6561,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Automatically assigned upon creation"
         },
         {
@@ -6295,6 +6570,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The API url of this record"
         },
         {
@@ -6303,6 +6579,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The id of an agent"
         },
         {
@@ -6311,6 +6588,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The id of a group"
         },
         {
@@ -6319,6 +6597,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "If true, tickets assigned directly to the agent will assume this membership's group"
         },
         {
@@ -6327,6 +6606,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "When the group membership was created"
         },
         {
@@ -6335,6 +6615,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "When the group membership was last updated"
         }
       ]
@@ -6358,6 +6639,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Automatically assigned when the macro is created"
         },
         {
@@ -6366,6 +6648,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "A URL to access the macro's details"
         },
         {
@@ -6374,6 +6657,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The title of the macro"
         },
         {
@@ -6382,6 +6666,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Useful for determining if the macro should be displayed"
         },
         {
@@ -6390,6 +6675,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The position of the macro"
         },
         {
@@ -6398,6 +6684,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The description of the macro"
         },
         {
@@ -6406,6 +6693,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Actions to perform when macro is applied"
         },
         {
@@ -6414,6 +6702,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Who may access this macro"
         },
         {
@@ -6422,6 +6711,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The dynamic content placeholder for title"
         },
         {
@@ -6430,6 +6720,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The time the macro was created"
         },
         {
@@ -6438,6 +6729,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The time the macro was last updated"
         }
       ]
@@ -6461,6 +6753,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Automatically assigned when the membership is created"
         },
         {
@@ -6469,6 +6762,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The API url of this membership"
         },
         {
@@ -6477,6 +6771,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The ID of the user for whom this memberships belongs"
         },
         {
@@ -6485,6 +6780,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The ID of the organization associated with this user"
         },
         {
@@ -6493,6 +6789,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "If true, this is the default organization for the user"
         },
         {
@@ -6501,6 +6798,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The name of the organization"
         },
         {
@@ -6509,6 +6807,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "If true, this user can view tickets from this organization"
         },
         {
@@ -6517,6 +6816,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "When the membership was created"
         },
         {
@@ -6525,6 +6825,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "When the membership was last updated"
         }
       ]
@@ -6548,6 +6849,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Automatically assigned when the SLA policy is created"
         },
         {
@@ -6556,6 +6858,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "URL of the SLA policy"
         },
         {
@@ -6564,6 +6867,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The title of the SLA policy"
         },
         {
@@ -6572,6 +6876,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The description of the SLA policy"
         },
         {
@@ -6580,6 +6885,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Position of the SLA policy"
         },
         {
@@ -6588,6 +6894,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Filter for the SLA policy"
         },
         {
@@ -6596,6 +6903,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Array of policy metrics"
         },
         {
@@ -6604,6 +6912,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "When the SLA policy was created"
         },
         {
@@ -6612,6 +6921,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "When the SLA policy was last updated"
         }
       ]
@@ -6635,6 +6945,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Automatically assigned when created"
         },
         {
@@ -6643,6 +6954,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The URL of the trigger"
         },
         {
@@ -6651,6 +6963,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The title of the trigger"
         },
         {
@@ -6659,6 +6972,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the trigger is active"
         },
         {
@@ -6667,6 +6981,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Position of the trigger"
         },
         {
@@ -6675,6 +6990,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The description of the trigger"
         },
         {
@@ -6683,6 +6999,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "An object that describes the conditions under which the trigger will execute"
         },
         {
@@ -6691,6 +7008,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "An array of actions"
         },
         {
@@ -6699,6 +7017,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The dynamic content placeholder for title"
         },
         {
@@ -6707,6 +7026,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The ID of the category the trigger belongs to"
         },
         {
@@ -6715,6 +7035,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The time the trigger was created"
         },
         {
@@ -6723,6 +7044,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The time the trigger was last updated"
         }
       ]

@@ -4394,6 +4394,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Branch name (e.g. `main`, `feature/foo`)"
         },
         {
@@ -4402,6 +4403,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Git ref prefix for the branch (typically `refs/heads/`)"
         }
       ]
@@ -4425,6 +4427,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "GraphQL node ID of the comment"
         },
         {
@@ -4433,6 +4436,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "REST API numeric identifier for the comment"
         },
         {
@@ -4441,6 +4445,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Markdown body of the comment"
         },
         {
@@ -4449,6 +4454,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the comment was created"
         },
         {
@@ -4457,6 +4463,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the comment was last updated"
         },
         {
@@ -4465,6 +4472,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Permalink to the comment on GitHub"
         },
         {
@@ -4473,6 +4481,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the comment has been hidden/collapsed"
         }
       ]
@@ -4496,6 +4505,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Full Git commit SHA"
         },
         {
@@ -4504,6 +4514,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Abbreviated Git commit SHA (typically 7 characters)"
         },
         {
@@ -4512,6 +4523,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "First line of the commit message"
         },
         {
@@ -4520,6 +4532,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Full commit message"
         },
         {
@@ -4528,6 +4541,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the commit was applied to its tree"
         },
         {
@@ -4536,6 +4550,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the commit was originally authored"
         },
         {
@@ -4544,6 +4559,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Number of lines added across all files in the commit"
         },
         {
@@ -4552,6 +4568,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Number of lines deleted across all files in the commit"
         },
         {
@@ -4560,6 +4577,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Number of files changed in the commit"
         },
         {
@@ -4568,6 +4586,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Permalink to the commit on GitHub"
         }
       ]
@@ -4633,6 +4652,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "GraphQL node ID of the issue"
         },
         {
@@ -4641,6 +4661,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "REST API numeric identifier for the issue"
         },
         {
@@ -4649,6 +4670,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Repository-scoped issue number"
         },
         {
@@ -4657,6 +4679,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Issue title"
         },
         {
@@ -4665,6 +4688,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Issue state: `OPEN` or `CLOSED`"
         },
         {
@@ -4673,6 +4697,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Reason the issue is in its current state (e.g. `COMPLETED`, `NOT_PLANNED`)"
         },
         {
@@ -4681,6 +4706,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the issue was created"
         },
         {
@@ -4689,6 +4715,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the issue was last updated"
         },
         {
@@ -4697,6 +4724,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the issue was closed, if applicable"
         },
         {
@@ -4705,6 +4733,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the conversation on the issue is locked"
         },
         {
@@ -4713,6 +4742,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Permalink to the issue on GitHub"
         }
       ]
@@ -4736,6 +4766,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "GraphQL node ID of the label"
         },
         {
@@ -4744,6 +4775,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Label name"
         },
         {
@@ -4752,6 +4784,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Label color as a 6-character hex string without a leading `#`"
         },
         {
@@ -4760,6 +4793,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Short description of what the label is used for"
         },
         {
@@ -4768,6 +4802,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the label was created"
         },
         {
@@ -4776,6 +4811,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Permalink to the label on GitHub"
         }
       ]
@@ -4799,6 +4835,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "GraphQL node ID of the milestone"
         },
         {
@@ -4807,6 +4844,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Repository-scoped milestone number"
         },
         {
@@ -4815,6 +4853,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Milestone title"
         },
         {
@@ -4823,6 +4862,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Milestone description"
         },
         {
@@ -4831,6 +4871,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Milestone state: `OPEN` or `CLOSED`"
         },
         {
@@ -4839,6 +4880,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp for the milestone's due date, if set"
         },
         {
@@ -4847,6 +4889,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the milestone was closed, if applicable"
         },
         {
@@ -4855,6 +4898,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the milestone was created"
         },
         {
@@ -4863,6 +4907,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the milestone was last updated"
         },
         {
@@ -4871,6 +4916,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Percentage of associated issues/PRs that are closed"
         }
       ]
@@ -4894,6 +4940,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "GraphQL node ID of the organization"
         },
         {
@@ -4902,6 +4949,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "REST API numeric identifier for the organization"
         },
         {
@@ -4910,6 +4958,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Organization login/handle (unique URL slug)"
         },
         {
@@ -4918,6 +4967,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Display name of the organization"
         },
         {
@@ -4926,6 +4976,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Short public description of the organization"
         },
         {
@@ -4934,6 +4985,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Public contact email for the organization, if set"
         },
         {
@@ -4942,6 +4994,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Public location of the organization, if set"
         },
         {
@@ -4950,6 +5003,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the organization has a verified domain"
         },
         {
@@ -4958,6 +5012,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the organization was created"
         }
       ]
@@ -5023,6 +5078,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "GraphQL node ID of the project"
         },
         {
@@ -5031,6 +5087,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Organization- or user-scoped project number"
         },
         {
@@ -5039,6 +5096,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Project title"
         },
         {
@@ -5047,6 +5105,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Short description displayed on the project summary"
         },
         {
@@ -5055,6 +5114,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Permalink to the project on GitHub"
         },
         {
@@ -5063,6 +5123,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the project has been closed"
         },
         {
@@ -5071,6 +5132,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the project is publicly visible"
         },
         {
@@ -5079,6 +5141,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the project was created"
         },
         {
@@ -5087,6 +5150,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the project was last updated"
         }
       ]
@@ -5110,6 +5174,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "GraphQL node ID of the pull request"
         },
         {
@@ -5118,6 +5183,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "REST API numeric identifier for the pull request"
         },
         {
@@ -5126,6 +5192,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Repository-scoped pull request number"
         },
         {
@@ -5134,6 +5201,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Pull request title"
         },
         {
@@ -5142,6 +5210,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Pull request state: `OPEN`, `CLOSED`, or `MERGED`"
         },
         {
@@ -5150,6 +5219,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the pull request is still a draft"
         },
         {
@@ -5158,6 +5228,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the pull request has been merged"
         },
         {
@@ -5166,6 +5237,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the pull request was created"
         },
         {
@@ -5174,6 +5246,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the pull request was last updated"
         },
         {
@@ -5182,6 +5255,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the pull request was closed, if applicable"
         },
         {
@@ -5190,6 +5264,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the pull request was merged, if applicable"
         },
         {
@@ -5198,6 +5273,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Name of the branch being merged into"
         },
         {
@@ -5206,6 +5282,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Name of the branch with the proposed changes"
         },
         {
@@ -5214,6 +5291,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Permalink to the pull request on GitHub"
         }
       ]
@@ -5237,6 +5315,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "GraphQL node ID of the release"
         },
         {
@@ -5245,6 +5324,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "REST API numeric identifier for the release"
         },
         {
@@ -5253,6 +5333,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Display name of the release"
         },
         {
@@ -5261,6 +5342,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Git tag the release points at (e.g. `v1.2.3`)"
         },
         {
@@ -5269,6 +5351,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Markdown body / release notes"
         },
         {
@@ -5277,6 +5360,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the release was published"
         },
         {
@@ -5285,6 +5369,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the release was created"
         },
         {
@@ -5293,6 +5378,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the release is marked as a pre-release"
         },
         {
@@ -5301,6 +5387,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the release is still a draft and not published"
         },
         {
@@ -5309,6 +5396,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Permalink to the release on GitHub"
         }
       ]
@@ -5332,6 +5420,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "GraphQL node ID of the repository"
         },
         {
@@ -5340,6 +5429,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Short repository name (without owner)"
         },
         {
@@ -5348,6 +5438,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Fully-qualified `owner/name` identifier for the repository"
         },
         {
@@ -5356,6 +5447,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Short description of the repository"
         },
         {
@@ -5364,6 +5456,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Canonical GitHub URL for the repository"
         },
         {
@@ -5372,6 +5465,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the repository was created"
         },
         {
@@ -5380,6 +5474,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the repository was last updated"
         },
         {
@@ -5388,6 +5483,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp of the most recent push to the repository"
         },
         {
@@ -5396,6 +5492,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Number of forks of the repository"
         },
         {
@@ -5404,6 +5501,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Number of users who have starred the repository"
         },
         {
@@ -5412,6 +5510,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the repository is private"
         },
         {
@@ -5420,6 +5519,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the repository is a fork of another repository"
         },
         {
@@ -5428,6 +5528,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the repository has been archived"
         }
       ]
@@ -5451,6 +5552,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "GraphQL node ID of the review"
         },
         {
@@ -5459,6 +5561,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "REST API numeric identifier for the review"
         },
         {
@@ -5467,6 +5570,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Review state: `PENDING`, `COMMENTED`, `APPROVED`, `CHANGES_REQUESTED`, or `DISMISSED`"
         },
         {
@@ -5475,6 +5579,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Review body text"
         },
         {
@@ -5483,6 +5588,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the review was submitted"
         },
         {
@@ -5491,6 +5597,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the review was created"
         },
         {
@@ -5499,6 +5606,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the review was last updated"
         },
         {
@@ -5507,6 +5615,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Permalink to the review on GitHub"
         }
       ]
@@ -5530,6 +5639,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the user starred the repository"
         }
       ]
@@ -5553,6 +5663,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Tag name (e.g. `v1.2.3`)"
         },
         {
@@ -5561,6 +5672,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Git ref prefix for the tag (typically `refs/tags/`)"
         }
       ]
@@ -5584,6 +5696,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "GraphQL node ID of the team"
         },
         {
@@ -5592,6 +5705,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "REST API numeric identifier for the team"
         },
         {
@@ -5600,6 +5714,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "URL-friendly slug for the team within its organization"
         },
         {
@@ -5608,6 +5723,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Display name of the team"
         },
         {
@@ -5616,6 +5732,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Short description of the team"
         },
         {
@@ -5624,6 +5741,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Team visibility: `SECRET` or `VISIBLE`"
         },
         {
@@ -5632,6 +5750,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Permalink to the team on GitHub"
         },
         {
@@ -5640,6 +5759,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the team was created"
         },
         {
@@ -5648,6 +5768,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the team was last updated"
         }
       ]
@@ -5671,6 +5792,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "GraphQL node ID of the user"
         },
         {
@@ -5679,6 +5801,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "REST API numeric identifier for the user"
         },
         {
@@ -5687,6 +5810,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "User login/handle"
         },
         {
@@ -5695,6 +5819,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Public display name of the user, if set"
         },
         {
@@ -5703,6 +5828,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Public email address of the user, if set"
         },
         {
@@ -5711,6 +5837,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Public company affiliation of the user, if set"
         },
         {
@@ -5719,6 +5846,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Public location of the user, if set"
         },
         {
@@ -5727,6 +5855,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Public Twitter/X username of the user, if set"
         },
         {
@@ -5735,6 +5864,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Permalink to the user's profile on GitHub"
         },
         {
@@ -5743,6 +5873,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the user account was created"
         },
         {
@@ -5751,6 +5882,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the user has marked themselves as available for hire"
         }
       ]

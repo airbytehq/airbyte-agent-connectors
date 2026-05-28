@@ -1178,6 +1178,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Unique identifier for the user"
         },
         {
@@ -1186,6 +1187,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Display name of the user"
         }
       ]
@@ -1209,6 +1211,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier for the team (workspace)"
         },
         {
@@ -1217,6 +1220,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Name of the team"
         }
       ]
@@ -1240,6 +1244,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier for the space"
         },
         {
@@ -1248,6 +1253,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Name of the space"
         },
         {
@@ -1256,6 +1262,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the space is private"
         }
       ]
@@ -1279,6 +1286,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier for the folder"
         },
         {
@@ -1287,6 +1295,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Name of the folder"
         },
         {
@@ -1295,6 +1304,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the folder is hidden from the sidebar"
         },
         {
@@ -1303,6 +1313,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Number of tasks contained in the folder"
         }
       ]
@@ -1326,6 +1337,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier for the list"
         },
         {
@@ -1334,6 +1346,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Name of the list"
         },
         {
@@ -1342,6 +1355,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the list has been archived"
         },
         {
@@ -1350,6 +1364,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Due date for the list, in ClickUp timestamp format"
         },
         {
@@ -1358,6 +1373,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Start date for the list, in ClickUp timestamp format"
         },
         {
@@ -1366,6 +1382,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Priority assigned to the list"
         },
         {
@@ -1374,6 +1391,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Number of tasks contained in the list"
         }
       ]
@@ -1397,6 +1415,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier for the task"
         },
         {
@@ -1405,6 +1424,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Name of the task"
         },
         {
@@ -1413,6 +1433,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Creation timestamp of the task, in ClickUp timestamp format"
         },
         {
@@ -1421,6 +1442,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Last update timestamp of the task, in ClickUp timestamp format"
         },
         {
@@ -1429,6 +1451,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp when the task was closed, in ClickUp timestamp format"
         },
         {
@@ -1437,6 +1460,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Due date for the task, in ClickUp timestamp format"
         },
         {
@@ -1445,6 +1469,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Start date for the task, in ClickUp timestamp format"
         },
         {
@@ -1453,6 +1478,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the parent task, if this task is a subtask"
         },
         {
@@ -1461,6 +1487,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Permalink URL to view the task in ClickUp"
         }
       ]
@@ -1484,6 +1511,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier for the comment"
         },
         {
@@ -1492,6 +1520,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Plain-text content of the comment"
         },
         {
@@ -1500,6 +1529,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp when the comment was posted, in ClickUp timestamp format"
         },
         {
@@ -1508,6 +1538,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Number of replies on the comment"
         }
       ]
@@ -1531,6 +1562,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier for the goal"
         },
         {
@@ -1539,6 +1571,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Name of the goal"
         },
         {
@@ -1547,6 +1580,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Description of the goal"
         },
         {
@@ -1555,6 +1589,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the goal has been archived"
         },
         {
@@ -1563,6 +1598,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the goal is pinned to the top of the list"
         },
         {
@@ -1571,6 +1607,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the goal is private to its owners"
         },
         {
@@ -1579,6 +1616,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Creation timestamp of the goal, in ClickUp timestamp format"
         },
         {
@@ -1587,6 +1625,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Due date for the goal, in ClickUp timestamp format"
         },
         {
@@ -1595,6 +1634,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Completion percentage of the goal, between 0 and 100"
         },
         {
@@ -1603,6 +1643,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Identifier of the team that owns the goal"
         }
       ]
@@ -1626,6 +1667,7 @@
           "type": "float | None",
           "json_type": "number | null",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Total tracked time in milliseconds"
         },
         {
@@ -1634,6 +1676,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "object | null",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "User who tracked the time"
         }
       ]

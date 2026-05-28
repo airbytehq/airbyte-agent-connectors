@@ -2713,6 +2713,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Amount intended to be collected by this payment in the smallest currency unit (e.g., 100 cents for $1.00), supporting up to eight digits."
         },
         {
@@ -2721,6 +2722,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Amount that was actually captured from this charge."
         },
         {
@@ -2729,6 +2731,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Amount that has been refunded back to the customer."
         },
         {
@@ -2737,6 +2740,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Updates to the amount that have been made during the charge lifecycle."
         },
         {
@@ -2745,6 +2749,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the application that created this charge (Connect only)."
         },
         {
@@ -2753,6 +2758,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the application fee associated with this charge (Connect only)."
         },
         {
@@ -2761,6 +2767,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The amount of the application fee deducted from this charge (Connect only)."
         },
         {
@@ -2769,6 +2776,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the balance transaction that describes the impact of this charge on your account balance (excluding refunds or disputes)."
         },
         {
@@ -2777,6 +2785,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Billing information associated with the payment method at the time of the transaction, including name, email, phone, and address."
         },
         {
@@ -2785,6 +2794,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The full statement descriptor that appears on the customer's credit card statement, combining prefix and suffix."
         },
         {
@@ -2793,6 +2803,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the charge has been captured and funds transferred to your account."
         },
         {
@@ -2801,6 +2812,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Deprecated card object containing payment card details if a card was used."
         },
         {
@@ -2809,6 +2821,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Timestamp indicating when the charge was created."
         },
         {
@@ -2817,6 +2830,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Three-letter ISO currency code in lowercase (e.g., 'usd', 'eur') for the charge amount."
         },
         {
@@ -2825,6 +2839,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the customer this charge is for, if one exists."
         },
         {
@@ -2833,6 +2848,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "An arbitrary string attached to the charge, often useful for displaying to users or internal reference."
         },
         {
@@ -2841,6 +2857,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the destination account where funds are transferred (Connect only)."
         },
         {
@@ -2849,6 +2866,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the dispute object if the charge has been disputed."
         },
         {
@@ -2857,6 +2875,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the charge has been disputed by the customer with their card issuer."
         },
         {
@@ -2865,6 +2884,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the balance transaction that describes the reversal of funds if the charge failed."
         },
         {
@@ -2873,6 +2893,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Error code explaining the reason for charge failure, if applicable."
         },
         {
@@ -2881,6 +2902,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Human-readable message providing more details about why the charge failed."
         },
         {
@@ -2889,6 +2911,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Information about fraud assessments and user reports related to this charge."
         },
         {
@@ -2897,6 +2920,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier for the charge, used to link transactions across other records."
         },
         {
@@ -2905,6 +2929,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the invoice this charge is for, if the charge was created by invoicing."
         },
         {
@@ -2913,6 +2938,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the charge occurred in live mode (true) or test mode (false)."
         },
         {
@@ -2921,6 +2947,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Key-value pairs for storing additional structured information about the charge, useful for internal tracking."
         },
         {
@@ -2929,6 +2956,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "String representing the object type, always 'charge' for charge objects."
         },
         {
@@ -2937,6 +2965,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the account on whose behalf the charge was made (Connect only)."
         },
         {
@@ -2945,6 +2974,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Deprecated field for order information associated with this charge."
         },
         {
@@ -2953,6 +2983,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Details about the outcome of the charge, including network status, risk assessment, and reason codes."
         },
         {
@@ -2961,6 +2992,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the charge succeeded and funds were successfully collected."
         },
         {
@@ -2969,6 +3001,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the PaymentIntent associated with this charge, if one exists."
         },
         {
@@ -2977,6 +3010,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the payment method used for this charge."
         },
         {
@@ -2985,6 +3019,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Details about the payment method at the time of the transaction, including card brand, network, and authentication results."
         },
         {
@@ -2993,6 +3028,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Email address to which the receipt for this charge was sent."
         },
         {
@@ -3001,6 +3037,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Receipt number that appears on email receipts sent for this charge."
         },
         {
@@ -3009,6 +3046,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "URL to a hosted receipt page for this charge, viewable by the customer."
         },
         {
@@ -3017,6 +3055,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the charge has been fully refunded (partial refunds will still show as false)."
         },
         {
@@ -3025,6 +3064,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "List of refunds that have been applied to this charge."
         },
         {
@@ -3033,6 +3073,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the review object associated with this charge, if it was flagged for manual review."
         },
         {
@@ -3041,6 +3082,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Shipping information for the charge, including recipient name, address, and tracking details."
         },
         {
@@ -3049,6 +3091,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Deprecated payment source object used to create this charge."
         },
         {
@@ -3057,6 +3100,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the transfer from a source account if funds came from another Stripe account (Connect only)."
         },
         {
@@ -3065,6 +3109,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Deprecated alias for statement_descriptor."
         },
         {
@@ -3073,6 +3118,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Statement descriptor that overrides the account default for card charges, appearing on the customer's statement."
         },
         {
@@ -3081,6 +3127,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Suffix concatenated to the account's statement descriptor prefix to form the complete descriptor on customer statements."
         },
         {
@@ -3089,6 +3136,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Current status of the payment: 'succeeded' (completed), 'pending' (processing), or 'failed' (unsuccessful)."
         },
         {
@@ -3097,6 +3145,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Object containing destination and amount for transfers to connected accounts (Connect only)."
         },
         {
@@ -3105,6 +3154,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "String identifier for grouping related charges and transfers together (Connect only)."
         },
         {
@@ -3113,6 +3163,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Timestamp of the last update to this charge object."
         }
       ]
@@ -3136,6 +3187,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Current balance value representing funds owed by or to the customer."
         },
         {
@@ -3144,6 +3196,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The customer's address information including line1, line2, city, state, postal code, and country."
         },
         {
@@ -3152,6 +3205,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Current balance (positive or negative) that is automatically applied to the customer's next invoice."
         },
         {
@@ -3160,6 +3214,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Card payment methods associated with the customer account."
         },
         {
@@ -3168,6 +3223,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Timestamp indicating when the customer object was created."
         },
         {
@@ -3176,6 +3232,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Three-letter ISO currency code representing the customer's default currency."
         },
         {
@@ -3184,6 +3241,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The default card to be used for charges when no specific payment method is provided."
         },
         {
@@ -3192,6 +3250,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The default payment source (card or bank account) for the customer."
         },
         {
@@ -3200,6 +3259,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Boolean indicating whether the customer is currently delinquent on payments."
         },
         {
@@ -3208,6 +3268,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "An arbitrary string attached to the customer, often useful for displaying to users."
         },
         {
@@ -3216,6 +3277,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Discount object describing any active discount applied to the customer."
         },
         {
@@ -3224,6 +3286,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The customer's email address for communication and tracking purposes."
         },
         {
@@ -3232,6 +3295,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier for the customer object."
         },
         {
@@ -3240,6 +3304,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The prefix for invoice numbers generated for this customer."
         },
         {
@@ -3248,6 +3313,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Customer's invoice-related settings including default payment method and custom fields."
         },
         {
@@ -3256,6 +3322,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Boolean indicating whether the customer has been deleted."
         },
         {
@@ -3264,6 +3331,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Boolean indicating whether the object exists in live mode or test mode."
         },
         {
@@ -3272,6 +3340,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Set of key-value pairs for storing additional structured information about the customer."
         },
         {
@@ -3280,6 +3349,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The customer's full name or business name."
         },
         {
@@ -3288,6 +3358,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The sequence number for the next invoice generated for this customer."
         },
         {
@@ -3296,6 +3367,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "String representing the object type, always 'customer'."
         },
         {
@@ -3304,6 +3376,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The customer's phone number."
         },
         {
@@ -3312,6 +3385,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Array of preferred locales for the customer, used for invoice and receipt localization."
         },
         {
@@ -3320,6 +3394,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Mailing and shipping address for the customer, appears on invoices emailed to the customer."
         },
         {
@@ -3328,6 +3403,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Payment sources (cards, bank accounts) attached to the customer for making payments."
         },
         {
@@ -3336,6 +3412,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "List of active subscriptions associated with the customer."
         },
         {
@@ -3344,6 +3421,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Describes the customer's tax exemption status (none, exempt, or reverse)."
         },
         {
@@ -3352,6 +3430,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Tax identification information for the customer."
         },
         {
@@ -3360,6 +3439,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Verification status of the customer's tax information."
         },
         {
@@ -3368,6 +3448,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the test clock associated with this customer for testing time-dependent scenarios."
         },
         {
@@ -3376,6 +3457,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Timestamp indicating when the customer object was last updated."
         }
       ]
@@ -3399,6 +3481,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The country of the business associated with this invoice, commonly used to display localized content."
         },
         {
@@ -3407,6 +3490,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The public name of the business associated with this invoice."
         },
         {
@@ -3415,6 +3499,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Tax IDs of the account associated with this invoice."
         },
         {
@@ -3423,6 +3508,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Total amount, in smallest currency unit, that is due and owed by the customer."
         },
         {
@@ -3431,6 +3517,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Total amount, in smallest currency unit, that has been paid by the customer."
         },
         {
@@ -3439,6 +3526,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The difference between amount_due and amount_paid, representing the outstanding balance."
         },
         {
@@ -3447,6 +3535,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Total amount of shipping costs on the invoice."
         },
         {
@@ -3455,6 +3544,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the Connect application that created this invoice."
         },
         {
@@ -3463,6 +3553,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Amount of application fee charged for this invoice in a Connect scenario."
         },
         {
@@ -3471,6 +3562,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The fee in smallest currency unit that is collected by the application in a Connect scenario."
         },
         {
@@ -3479,6 +3571,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Number of payment attempts made for this invoice."
         },
         {
@@ -3487,6 +3580,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether an attempt has been made to pay the invoice."
         },
         {
@@ -3495,6 +3589,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Controls whether Stripe performs automatic collection of the invoice."
         },
         {
@@ -3503,6 +3598,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Settings and status for automatic tax calculation on this invoice."
         },
         {
@@ -3511,6 +3607,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Billing method used for the invoice (charge_automatically or send_invoice)."
         },
         {
@@ -3519,6 +3616,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Indicates the reason why the invoice was created (subscription_cycle, manual, etc.)."
         },
         {
@@ -3527,6 +3625,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the latest charge generated for this invoice, if any."
         },
         {
@@ -3535,6 +3634,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the invoice has been marked as closed and no longer open for collection."
         },
         {
@@ -3543,6 +3643,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Method by which the invoice is collected: charge_automatically or send_invoice."
         },
         {
@@ -3551,6 +3652,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Timestamp indicating when the invoice was created."
         },
         {
@@ -3559,6 +3661,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Three-letter ISO currency code in which the invoice is denominated."
         },
         {
@@ -3567,6 +3670,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Custom fields displayed on the invoice as specified by the account."
         },
         {
@@ -3575,6 +3679,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The customer object or ID associated with this invoice."
         },
         {
@@ -3583,6 +3688,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The customer's address at the time the invoice was finalized."
         },
         {
@@ -3591,6 +3697,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The customer's email address at the time the invoice was finalized."
         },
         {
@@ -3599,6 +3706,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The customer's name at the time the invoice was finalized."
         },
         {
@@ -3607,6 +3715,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The customer's phone number at the time the invoice was finalized."
         },
         {
@@ -3615,6 +3724,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The customer's shipping information at the time the invoice was finalized."
         },
         {
@@ -3623,6 +3733,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The customer's tax exempt status at the time the invoice was finalized."
         },
         {
@@ -3631,6 +3742,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "The customer's tax IDs at the time the invoice was finalized."
         },
         {
@@ -3639,6 +3751,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Default payment method for the invoice, used if no other method is specified."
         },
         {
@@ -3647,6 +3760,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Default payment source for the invoice if no payment method is set."
         },
         {
@@ -3655,6 +3769,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "The tax rates applied to the invoice by default."
         },
         {
@@ -3663,6 +3778,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "An arbitrary string attached to the invoice, often displayed to customers."
         },
         {
@@ -3671,6 +3787,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The discount object applied to the invoice, if any."
         },
         {
@@ -3679,6 +3796,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Array of discount IDs or objects currently applied to this invoice."
         },
         {
@@ -3687,6 +3805,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "The date by which payment on this invoice is due, if the invoice is not auto-collected."
         },
         {
@@ -3695,6 +3814,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Timestamp when the invoice becomes effective and finalized for payment."
         },
         {
@@ -3703,6 +3823,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The customer's ending account balance after this invoice is finalized."
         },
         {
@@ -3711,6 +3832,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Footer text displayed on the invoice."
         },
         {
@@ -3719,6 +3841,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the invoice has been forgiven and is considered paid without actual payment."
         },
         {
@@ -3727,6 +3850,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Details about the invoice this invoice was created from, if applicable."
         },
         {
@@ -3735,6 +3859,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "URL for the hosted invoice page where customers can view and pay the invoice."
         },
         {
@@ -3743,6 +3868,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier for the invoice object."
         },
         {
@@ -3751,6 +3877,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "URL for the PDF version of the invoice."
         },
         {
@@ -3759,6 +3886,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Indicates whether this invoice has been deleted."
         },
         {
@@ -3767,6 +3895,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Details about the entity issuing the invoice."
         },
         {
@@ -3775,6 +3904,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The error encountered during the last finalization attempt, if any."
         },
         {
@@ -3783,6 +3913,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The latest revision of the invoice, if revisions are enabled."
         },
         {
@@ -3791,6 +3922,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The individual line items that make up the invoice, representing products, services, or fees."
         },
         {
@@ -3799,6 +3931,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Indicates whether the invoice exists in live mode (true) or test mode (false)."
         },
         {
@@ -3807,6 +3940,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Key-value pairs for storing additional structured information about the invoice."
         },
         {
@@ -3815,6 +3949,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Timestamp of the next automatic payment attempt for this invoice, if applicable."
         },
         {
@@ -3823,6 +3958,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "A unique, human-readable identifier for this invoice, often shown to customers."
         },
         {
@@ -3831,6 +3967,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "String representing the object type, always 'invoice'."
         },
         {
@@ -3839,6 +3976,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The account on behalf of which the invoice is being created, used in Connect scenarios."
         },
         {
@@ -3847,6 +3985,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the invoice has been paid in full."
         },
         {
@@ -3855,6 +3994,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether payment was made outside of Stripe and manually marked as paid."
         },
         {
@@ -3863,6 +4003,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the payment associated with this invoice, if any."
         },
         {
@@ -3871,6 +4012,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The PaymentIntent associated with this invoice for processing payment."
         },
         {
@@ -3879,6 +4021,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Configuration settings for how payment should be collected on this invoice."
         },
         {
@@ -3887,6 +4030,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "End date of the billing period covered by this invoice."
         },
         {
@@ -3895,6 +4039,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Start date of the billing period covered by this invoice."
         },
         {
@@ -3903,6 +4048,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Total amount of credit notes issued after the invoice was paid."
         },
         {
@@ -3911,6 +4057,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Total amount of credit notes applied before payment was attempted."
         },
         {
@@ -3919,6 +4066,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The quote from which this invoice was generated, if applicable."
         },
         {
@@ -3927,6 +4075,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The receipt number displayed on the invoice, if available."
         },
         {
@@ -3935,6 +4084,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "object | null",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Settings that control how the invoice is rendered for display."
         },
         {
@@ -3943,6 +4093,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Options for customizing the visual rendering of the invoice."
         },
         {
@@ -3951,6 +4102,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Total cost of shipping charges included in the invoice."
         },
         {
@@ -3959,6 +4111,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Detailed shipping information for the invoice, including address and carrier."
         },
         {
@@ -3967,6 +4120,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The customer's starting account balance at the beginning of the billing period."
         },
         {
@@ -3975,6 +4129,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Extra information about the invoice that appears on the customer's credit card statement."
         },
         {
@@ -3983,6 +4138,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "A dynamic descriptor that appears on the customer's credit card statement for this invoice."
         },
         {
@@ -3991,6 +4147,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The status of the invoice: draft, open, paid, void, or uncollectible."
         },
         {
@@ -3999,6 +4156,7 @@
           "type": "dict[str, Any]",
           "json_type": "object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Timestamps tracking when the invoice transitioned between different statuses."
         },
         {
@@ -4007,6 +4165,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The subscription this invoice was generated for, if applicable."
         },
         {
@@ -4015,6 +4174,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Additional details about the subscription associated with this invoice."
         },
         {
@@ -4023,6 +4183,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Total of all line items before discounts or tax are applied."
         },
         {
@@ -4031,6 +4192,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The subtotal amount excluding any tax calculations."
         },
         {
@@ -4039,6 +4201,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Total tax amount applied to the invoice."
         },
         {
@@ -4047,6 +4210,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "The percentage of tax applied to the invoice (deprecated, use total_tax_amounts instead)."
         },
         {
@@ -4055,6 +4219,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the test clock this invoice belongs to, used for testing time-dependent billing."
         },
         {
@@ -4063,6 +4228,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Total amount of the invoice after all line items, discounts, and taxes are calculated."
         },
         {
@@ -4071,6 +4237,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Array of the total discount amounts applied, broken down by discount."
         },
         {
@@ -4079,6 +4246,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Total amount of the invoice excluding all tax calculations."
         },
         {
@@ -4087,6 +4255,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Array of tax amounts applied to the invoice, broken down by tax rate."
         },
         {
@@ -4095,6 +4264,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Information about the transfer of funds associated with this invoice in Connect scenarios."
         },
         {
@@ -4103,6 +4273,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Timestamp indicating when the invoice was last updated."
         },
         {
@@ -4111,6 +4282,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Timestamp indicating when webhooks for this invoice were successfully delivered."
         }
       ]
@@ -4134,6 +4306,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Amount refunded, in cents (the smallest currency unit)."
         },
         {
@@ -4142,6 +4315,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the balance transaction that describes the impact of this refund on your account balance."
         },
         {
@@ -4150,6 +4324,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the charge that was refunded."
         },
         {
@@ -4158,6 +4333,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Timestamp indicating when the refund was created."
         },
         {
@@ -4166,6 +4342,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Three-letter ISO currency code in lowercase representing the currency of the refund."
         },
         {
@@ -4174,6 +4351,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Details about the destination where the refunded funds should be sent."
         },
         {
@@ -4182,6 +4360,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier for the refund object."
         },
         {
@@ -4190,6 +4369,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Set of key-value pairs that you can attach to an object for storing additional structured information."
         },
         {
@@ -4198,6 +4378,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "String representing the object type, always 'refund'."
         },
         {
@@ -4206,6 +4387,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the PaymentIntent that was refunded."
         },
         {
@@ -4214,6 +4396,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Reason for the refund, either user-provided (duplicate, fraudulent, or requested_by_customer) or generated by Stripe internally (expired_uncaptured_charge)."
         },
         {
@@ -4222,6 +4405,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The transaction number that appears on email receipts sent for this refund."
         },
         {
@@ -4230,6 +4414,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the transfer reversal that was created as a result of refunding a transfer (Connect only)."
         },
         {
@@ -4238,6 +4423,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Status of the refund (pending, requires_action, succeeded, failed, or canceled)."
         },
         {
@@ -4246,6 +4432,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the reversal of the transfer that funded the charge being refunded (Connect only)."
         },
         {
@@ -4254,6 +4441,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Timestamp indicating when the refund was last updated."
         }
       ]
@@ -4277,6 +4465,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "For Connect platforms, the application associated with the subscription."
         },
         {
@@ -4285,6 +4474,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "For Connect platforms, the percentage of the subscription amount taken as an application fee."
         },
         {
@@ -4293,6 +4483,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Automatic tax calculation settings for the subscription."
         },
         {
@@ -4301,6 +4492,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Billing mode configuration for the subscription."
         },
         {
@@ -4309,6 +4501,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Timestamp determining when the billing cycle for the subscription starts."
         },
         {
@@ -4317,6 +4510,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Configuration for the subscription's billing cycle anchor behavior."
         },
         {
@@ -4325,6 +4519,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Defines thresholds at which an invoice will be sent, controlling billing timing based on usage."
         },
         {
@@ -4333,6 +4528,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Timestamp indicating when the subscription is scheduled to be canceled."
         },
         {
@@ -4341,6 +4537,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Boolean indicating whether the subscription will be canceled at the end of the current billing period."
         },
         {
@@ -4349,6 +4546,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Timestamp indicating when the subscription was canceled, if applicable."
         },
         {
@@ -4357,6 +4555,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Details about why and how the subscription was canceled."
         },
         {
@@ -4365,6 +4564,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "How invoices are collected (charge_automatically or send_invoice)."
         },
         {
@@ -4373,6 +4573,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Timestamp indicating when the subscription was created."
         },
         {
@@ -4381,6 +4582,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Three-letter ISO currency code in lowercase indicating the currency for the subscription."
         },
         {
@@ -4389,6 +4591,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Timestamp marking the end of the current billing period."
         },
         {
@@ -4397,6 +4600,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Timestamp marking the start of the current billing period."
         },
         {
@@ -4405,6 +4609,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the customer who owns the subscription, expandable to full customer object."
         },
         {
@@ -4413,6 +4618,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Number of days until the invoice is due for subscriptions using send_invoice collection method."
         },
         {
@@ -4421,6 +4627,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the default payment method for the subscription, taking precedence over default_source."
         },
         {
@@ -4429,6 +4636,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the default payment source for the subscription."
         },
         {
@@ -4437,6 +4645,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Tax rates that apply to the subscription by default."
         },
         {
@@ -4445,6 +4654,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Human-readable description of the subscription, displayable to the customer."
         },
         {
@@ -4453,6 +4663,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Describes any discount currently applied to the subscription."
         },
         {
@@ -4461,6 +4672,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Timestamp indicating when the subscription ended, if applicable."
         },
         {
@@ -4469,6 +4681,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier for the subscription object."
         },
         {
@@ -4477,6 +4690,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Settings for invoices generated by this subscription, such as custom fields and footer."
         },
         {
@@ -4485,6 +4699,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Indicates whether the subscription has been deleted."
         },
         {
@@ -4493,6 +4708,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "List of subscription items, each with an attached price defining what the customer is subscribed to."
         },
         {
@@ -4501,6 +4717,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The most recent invoice this subscription has generated, expandable to full invoice object."
         },
         {
@@ -4509,6 +4726,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Indicates whether the subscription exists in live mode (true) or test mode (false)."
         },
         {
@@ -4517,6 +4735,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Set of key-value pairs that you can attach to the subscription for storing additional structured information."
         },
         {
@@ -4525,6 +4744,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Timestamp when the next invoice for pending invoice items will be created."
         },
         {
@@ -4533,6 +4753,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "String representing the object type, always 'subscription'."
         },
         {
@@ -4541,6 +4762,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "For Connect platforms, the account for which the subscription is being created or managed."
         },
         {
@@ -4549,6 +4771,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Configuration for pausing collection on the subscription while retaining the subscription structure."
         },
         {
@@ -4557,6 +4780,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Payment settings for invoices generated by this subscription."
         },
         {
@@ -4565,6 +4789,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Specifies an interval for aggregating usage records into pending invoice items."
         },
         {
@@ -4573,6 +4798,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "SetupIntent used for collecting user authentication when updating payment methods without immediate payment."
         },
         {
@@ -4581,6 +4807,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "If specified, pending updates that will be applied to the subscription once the latest_invoice has been paid."
         },
         {
@@ -4589,6 +4816,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The plan associated with the subscription (deprecated, use items instead)."
         },
         {
@@ -4597,6 +4825,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Quantity of the plan subscribed to (deprecated, use items instead)."
         },
         {
@@ -4605,6 +4834,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the subscription schedule managing this subscription's lifecycle, if applicable."
         },
         {
@@ -4613,6 +4843,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Timestamp indicating when the subscription started."
         },
         {
@@ -4621,6 +4852,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Current status of the subscription (incomplete, incomplete_expired, trialing, active, past_due, canceled, unpaid, or paused)."
         },
         {
@@ -4629,6 +4861,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "The percentage of tax applied to the subscription (deprecated, use default_tax_rates instead)."
         },
         {
@@ -4637,6 +4870,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the test clock associated with this subscription for simulating time-based scenarios."
         },
         {
@@ -4645,6 +4879,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "For Connect platforms, the account receiving funds from the subscription and optional percentage transferred."
         },
         {
@@ -4653,6 +4888,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Timestamp indicating when the trial period ends, if applicable."
         },
         {
@@ -4661,6 +4897,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Settings related to trial periods, including conditions for ending trials."
         },
         {
@@ -4669,6 +4906,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Timestamp indicating when the trial period began, if applicable."
         },
         {
@@ -4677,6 +4915,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Timestamp indicating when the subscription was last updated."
         }
       ]

@@ -593,6 +593,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Links to related resources"
         },
         {
@@ -601,6 +602,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Date and time when the form was created"
         },
         {
@@ -609,6 +611,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "List of fields within the form"
         },
         {
@@ -617,6 +620,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier of the form"
         },
         {
@@ -625,6 +629,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Date and time when the form was last updated"
         },
         {
@@ -633,6 +638,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Logic rules or conditions applied to the form fields"
         },
         {
@@ -641,6 +647,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Date and time when the form was published"
         },
         {
@@ -649,6 +656,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Settings and configurations for the form"
         },
         {
@@ -657,6 +665,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Thank you screen configurations"
         },
         {
@@ -665,6 +674,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Theme settings for the form"
         },
         {
@@ -673,6 +683,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Title of the form"
         },
         {
@@ -681,6 +692,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Type of the form"
         },
         {
@@ -689,6 +701,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Welcome screen configurations"
         },
         {
@@ -697,6 +710,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Workspace details where the form belongs"
         }
       ]
@@ -720,6 +734,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Response data for each question in the form"
         },
         {
@@ -728,6 +743,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Calculated data related to the response"
         },
         {
@@ -736,6 +752,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the form"
         },
         {
@@ -744,6 +761,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Hidden fields in the response"
         },
         {
@@ -752,6 +770,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp when the respondent landed on the form"
         },
         {
@@ -760,6 +779,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the landing page"
         },
         {
@@ -768,6 +788,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Metadata related to the response"
         },
         {
@@ -776,6 +797,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the response"
         },
         {
@@ -784,6 +806,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Type of the response"
         },
         {
@@ -792,6 +815,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp when the response was submitted"
         },
         {
@@ -800,6 +824,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Token associated with the response"
         },
         {
@@ -808,6 +833,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Variables associated with the response"
         }
       ]
@@ -831,6 +857,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp when the webhook was created"
         },
         {
@@ -839,6 +866,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the webhook is currently enabled"
         },
         {
@@ -847,6 +875,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the form associated with the webhook"
         },
         {
@@ -855,6 +884,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier of the webhook"
         },
         {
@@ -863,6 +893,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Tag to categorize or label the webhook"
         },
         {
@@ -871,6 +902,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp when the webhook was last updated"
         },
         {
@@ -879,6 +911,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "URL where webhook data is sent"
         },
         {
@@ -887,6 +920,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether SSL verification is enforced"
         }
       ]
@@ -910,6 +944,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Account ID associated with the workspace"
         },
         {
@@ -918,6 +953,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether this is the default workspace"
         },
         {
@@ -926,6 +962,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Information about forms in the workspace"
         },
         {
@@ -934,6 +971,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier of the workspace"
         },
         {
@@ -942,6 +980,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Name of the workspace"
         },
         {
@@ -950,6 +989,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Self-referential link"
         },
         {
@@ -958,6 +998,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether this workspace is shared"
         }
       ]
@@ -981,6 +1022,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Average color of the image"
         },
         {
@@ -989,6 +1031,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Name of the image file"
         },
         {
@@ -997,6 +1040,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the image has an alpha channel"
         },
         {
@@ -1005,6 +1049,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Height of the image in pixels"
         },
         {
@@ -1013,6 +1058,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier of the image"
         },
         {
@@ -1021,6 +1067,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "MIME type of the image"
         },
         {
@@ -1029,6 +1076,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "URL to access the image"
         },
         {
@@ -1037,6 +1085,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Width of the image in pixels"
         }
       ]
@@ -1060,6 +1109,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Background settings for the theme"
         },
         {
@@ -1068,6 +1118,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Color settings"
         },
         {
@@ -1076,6 +1127,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp when the theme was created"
         },
         {
@@ -1084,6 +1136,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Field display settings"
         },
         {
@@ -1092,6 +1145,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Font used in the theme"
         },
         {
@@ -1100,6 +1154,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the theme has a transparent button"
         },
         {
@@ -1108,6 +1163,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier of the theme"
         },
         {
@@ -1116,6 +1172,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Name of the theme"
         },
         {
@@ -1124,6 +1181,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Rounded corners setting"
         },
         {
@@ -1132,6 +1190,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Screen display settings"
         },
         {
@@ -1140,6 +1199,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp when the theme was last updated"
         },
         {
@@ -1148,6 +1208,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Visibility setting of the theme"
         }
       ]

@@ -338,6 +338,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The date when the annotation was made"
         },
         {
@@ -346,6 +347,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Additional details or information related to the annotation"
         },
         {
@@ -354,6 +356,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The unique identifier for the annotation"
         },
         {
@@ -362,6 +365,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The label assigned to the annotation"
         }
       ]
@@ -385,6 +389,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The unique identifier of the application"
         },
         {
@@ -393,6 +398,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Indicates if the cohort data is archived"
         },
         {
@@ -401,6 +407,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The identifier of the chart associated with the cohort"
         },
         {
@@ -409,6 +416,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The timestamp when the cohort was created"
         },
         {
@@ -417,6 +425,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The specific definition or criteria for the cohort"
         },
         {
@@ -425,6 +434,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "A brief explanation or summary of the cohort"
         },
         {
@@ -433,6 +443,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The ID for editing purposes or version control"
         },
         {
@@ -441,6 +452,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Indicates if the cohort data has been finalized"
         },
         {
@@ -449,6 +461,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Flag to determine if the cohort is hidden from view"
         },
         {
@@ -457,6 +470,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The unique identifier for the cohort"
         },
         {
@@ -465,6 +479,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Indicates if the cohort data is official content"
         },
         {
@@ -473,6 +488,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Flag to indicate if the cohort is predictive"
         },
         {
@@ -481,6 +497,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Timestamp of the last computation of cohort data"
         },
         {
@@ -489,6 +506,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Timestamp of the last modification made to the cohort"
         },
         {
@@ -497,6 +515,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Timestamp when the cohort was last viewed"
         },
         {
@@ -505,6 +524,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Identifier of the location associated with the cohort"
         },
         {
@@ -513,6 +533,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Additional information or data related to the cohort"
         },
         {
@@ -521,6 +542,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The name or title of the cohort"
         },
         {
@@ -529,6 +551,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "The owners or administrators of the cohort"
         },
         {
@@ -537,6 +560,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Popularity rank or score of the cohort"
         },
         {
@@ -545,6 +569,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Status indicating if the cohort data is published"
         },
         {
@@ -553,6 +578,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Identifiers of any shortcuts associated with the cohort"
         },
         {
@@ -561,6 +587,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Size or scale of the cohort data"
         },
         {
@@ -569,6 +596,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The type or category of the cohort"
         },
         {
@@ -577,6 +605,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The total count of views on the cohort data"
         },
         {
@@ -585,6 +614,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Users or viewers who have access to the cohort data"
         }
       ]
@@ -608,6 +638,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the event is auto-hidden"
         },
         {
@@ -616,6 +647,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the event is hidden from clusters"
         },
         {
@@ -624,6 +656,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the event is deleted"
         },
         {
@@ -632,6 +665,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Display name of the event"
         },
         {
@@ -640,6 +674,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the event is hidden from Pathfinder"
         },
         {
@@ -648,6 +683,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the event is hidden"
         },
         {
@@ -656,6 +692,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Unique identifier for the event type"
         },
         {
@@ -664,6 +701,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the event is in the waitroom"
         },
         {
@@ -672,6 +710,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Name of the event type"
         },
         {
@@ -680,6 +719,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the event is marked as inactive"
         },
         {
@@ -688,6 +728,7 @@
           "type": "Any",
           "json_type": "null | boolean | number",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the event is hidden from the timeline"
         },
         {
@@ -696,6 +737,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Total number of times the event occurred this week"
         },
         {
@@ -704,6 +746,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Change in totals from the previous period"
         },
         {
@@ -712,6 +755,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Raw event name in the data"
         }
       ]
@@ -735,6 +779,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The date for which the active user data is reported"
         },
         {
@@ -743,6 +788,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The statistics related to the active users for the given date"
         }
       ]
@@ -766,6 +812,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The date on which the session occurred"
         },
         {
@@ -774,6 +821,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "The duration of the session in seconds"
         }
       ]

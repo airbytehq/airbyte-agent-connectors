@@ -3421,6 +3421,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Unique identifier for the abandoned checkout"
         },
         {
@@ -3429,6 +3430,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique token identifying the checkout"
         },
         {
@@ -3437,6 +3439,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Email address provided for the checkout"
         },
         {
@@ -3445,6 +3448,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Phone number provided for the checkout"
         },
         {
@@ -3453,6 +3457,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Shopify-assigned display name for the checkout (e.g. `#C12345`)"
         },
         {
@@ -3461,6 +3466,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 4217 currency code for the checkout totals"
         },
         {
@@ -3469,6 +3475,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Total price of the checkout in the shop's currency"
         },
         {
@@ -3477,6 +3484,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the checkout was created"
         },
         {
@@ -3485,6 +3493,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the checkout was last updated"
         },
         {
@@ -3493,6 +3502,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the checkout was completed, if applicable"
         }
       ]
@@ -3516,6 +3526,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Unique identifier for the collect"
         },
         {
@@ -3524,6 +3535,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Identifier of the collection the product belongs to"
         },
         {
@@ -3532,6 +3544,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Identifier of the product in the collection"
         },
         {
@@ -3540,6 +3553,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Position of the product within the collection"
         },
         {
@@ -3548,6 +3562,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the collect was created"
         },
         {
@@ -3556,6 +3571,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the collect was last updated"
         }
       ]
@@ -3579,6 +3595,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Unique identifier for the country tax row"
         },
         {
@@ -3587,6 +3604,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Human-readable country name"
         },
         {
@@ -3595,6 +3613,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 3166-1 alpha-2 country code"
         },
         {
@@ -3603,6 +3622,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Localized name of the tax applied in this country"
         }
       ]
@@ -3626,6 +3646,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Unique identifier for the custom collection"
         },
         {
@@ -3634,6 +3655,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "URL-friendly handle for the custom collection"
         },
         {
@@ -3642,6 +3664,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Display title of the custom collection"
         },
         {
@@ -3650,6 +3673,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "How products are sorted within the collection (e.g. `best-selling`)"
         },
         {
@@ -3658,6 +3682,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Publishing scope (`web` or `global`)"
         },
         {
@@ -3666,6 +3691,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the collection was published"
         },
         {
@@ -3674,6 +3700,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the collection was last updated"
         }
       ]
@@ -3697,6 +3724,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Unique identifier for the customer"
         },
         {
@@ -3705,6 +3733,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Primary email address of the customer"
         },
         {
@@ -3713,6 +3742,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Primary phone number of the customer"
         },
         {
@@ -3721,6 +3751,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "First name of the customer"
         },
         {
@@ -3729,6 +3760,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Last name of the customer"
         },
         {
@@ -3737,6 +3769,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Account state (`disabled`, `invited`, `enabled`, `declined`)"
         },
         {
@@ -3745,6 +3778,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Number of orders placed by the customer"
         },
         {
@@ -3753,6 +3787,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Total lifetime amount spent by the customer"
         },
         {
@@ -3761,6 +3796,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 4217 currency code for the customer's total spend"
         },
         {
@@ -3769,6 +3805,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the customer record was created"
         },
         {
@@ -3777,6 +3814,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the customer record was last updated"
         }
       ]
@@ -3800,6 +3838,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Unique identifier for the discount code"
         },
         {
@@ -3808,6 +3847,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Identifier of the parent price rule"
         },
         {
@@ -3816,6 +3856,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Discount code string shoppers enter at checkout"
         },
         {
@@ -3824,6 +3865,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Number of times the code has been redeemed"
         },
         {
@@ -3832,6 +3874,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the code was created"
         },
         {
@@ -3840,6 +3883,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the code was last updated"
         }
       ]
@@ -3863,6 +3907,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Unique identifier for the draft order"
         },
         {
@@ -3871,6 +3916,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Shopify-assigned display name for the draft order (e.g. `#D12345`)"
         },
         {
@@ -3879,6 +3925,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Email address associated with the draft order"
         },
         {
@@ -3887,6 +3934,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Status of the draft order (`open`, `invoice_sent`, `completed`)"
         },
         {
@@ -3895,6 +3943,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 4217 currency code for the draft order totals"
         },
         {
@@ -3903,6 +3952,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Total price of the draft order"
         },
         {
@@ -3911,6 +3961,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Identifier of the completed order, if the draft has been completed"
         },
         {
@@ -3919,6 +3970,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the draft order was created"
         },
         {
@@ -3927,6 +3979,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the draft order was last updated"
         },
         {
@@ -3935,6 +3988,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the draft order was completed, if applicable"
         }
       ]
@@ -3958,6 +4012,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Unique identifier for the fulfillment order"
         },
         {
@@ -3966,6 +4021,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Identifier of the parent order"
         },
         {
@@ -3974,6 +4030,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Identifier of the shop that owns the fulfillment order"
         },
         {
@@ -3982,6 +4039,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Identifier of the location assigned to fulfill the order"
         },
         {
@@ -3990,6 +4048,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Fulfillment order status (e.g. `open`, `in_progress`, `closed`)"
         },
         {
@@ -3998,6 +4057,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Status of the fulfillment request (e.g. `unsubmitted`, `submitted`)"
         },
         {
@@ -4006,6 +4066,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the fulfillment order was created"
         },
         {
@@ -4014,6 +4075,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the fulfillment order was last updated"
         }
       ]
@@ -4037,6 +4099,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Unique identifier for the fulfillment"
         },
         {
@@ -4045,6 +4108,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Identifier of the parent order"
         },
         {
@@ -4053,6 +4117,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Fulfillment status (e.g. `pending`, `open`, `success`, `cancelled`)"
         },
         {
@@ -4061,6 +4126,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Carrier shipment status (e.g. `delivered`, `in_transit`)"
         },
         {
@@ -4069,6 +4135,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Name of the shipping carrier"
         },
         {
@@ -4077,6 +4144,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Primary tracking number for the shipment"
         },
         {
@@ -4085,6 +4153,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Identifier of the fulfilling location"
         },
         {
@@ -4093,6 +4162,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the fulfillment was created"
         },
         {
@@ -4101,6 +4171,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the fulfillment was last updated"
         }
       ]
@@ -4124,6 +4195,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Unique identifier for the inventory item"
         },
         {
@@ -4132,6 +4204,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Stock keeping unit associated with the inventory item"
         },
         {
@@ -4140,6 +4213,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether Shopify is tracking inventory for this item"
         },
         {
@@ -4148,6 +4222,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the item requires shipping"
         },
         {
@@ -4156,6 +4231,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO country code of the item's country of origin"
         },
         {
@@ -4164,6 +4240,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the inventory item was created"
         },
         {
@@ -4172,6 +4249,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the inventory item was last updated"
         }
       ]
@@ -4195,6 +4273,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Identifier of the inventory item"
         },
         {
@@ -4203,6 +4282,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Identifier of the location holding the inventory"
         },
         {
@@ -4211,6 +4291,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Number of units available at the location"
         },
         {
@@ -4219,6 +4300,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the inventory level was last updated"
         }
       ]
@@ -4242,6 +4324,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Unique identifier for the location"
         },
         {
@@ -4250,6 +4333,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Display name of the location"
         },
         {
@@ -4258,6 +4342,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Primary street address of the location"
         },
         {
@@ -4266,6 +4351,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "City of the location"
         },
         {
@@ -4274,6 +4360,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Province, state, or region of the location"
         },
         {
@@ -4282,6 +4369,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Country name of the location"
         },
         {
@@ -4290,6 +4378,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 3166-1 alpha-2 country code of the location"
         },
         {
@@ -4298,6 +4387,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Phone number for the location"
         },
         {
@@ -4306,6 +4396,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the location is currently active"
         },
         {
@@ -4314,6 +4405,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the location was created"
         },
         {
@@ -4322,6 +4414,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the location was last updated"
         }
       ]
@@ -4345,6 +4438,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Unique identifier for the metafield"
         },
         {
@@ -4353,6 +4447,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Namespace group for the metafield"
         },
         {
@@ -4361,6 +4456,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Key of the metafield within its namespace"
         },
         {
@@ -4369,6 +4465,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Serialized value stored in the metafield"
         },
         {
@@ -4377,6 +4474,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Shopify metafield type (e.g. `single_line_text_field`, `json`)"
         },
         {
@@ -4385,6 +4483,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Human-readable description of the metafield"
         },
         {
@@ -4393,6 +4492,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Identifier of the resource that owns this metafield"
         },
         {
@@ -4401,6 +4501,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Resource type that owns this metafield (e.g. `product`, `customer`)"
         },
         {
@@ -4409,6 +4510,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the metafield was created"
         },
         {
@@ -4417,6 +4519,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the metafield was last updated"
         }
       ]
@@ -4440,6 +4543,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Unique identifier for the metafield"
         },
         {
@@ -4448,6 +4552,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Namespace group for the metafield"
         },
         {
@@ -4456,6 +4561,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Key of the metafield within its namespace"
         },
         {
@@ -4464,6 +4570,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Serialized value stored in the metafield"
         },
         {
@@ -4472,6 +4579,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Shopify metafield type (e.g. `single_line_text_field`, `json`)"
         },
         {
@@ -4480,6 +4588,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Human-readable description of the metafield"
         },
         {
@@ -4488,6 +4597,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Identifier of the resource that owns this metafield"
         },
         {
@@ -4496,6 +4606,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Resource type that owns this metafield (e.g. `product`, `customer`)"
         },
         {
@@ -4504,6 +4615,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the metafield was created"
         },
         {
@@ -4512,6 +4624,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the metafield was last updated"
         }
       ]
@@ -4535,6 +4648,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Unique identifier for the metafield"
         },
         {
@@ -4543,6 +4657,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Namespace group for the metafield"
         },
         {
@@ -4551,6 +4666,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Key of the metafield within its namespace"
         },
         {
@@ -4559,6 +4675,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Serialized value stored in the metafield"
         },
         {
@@ -4567,6 +4684,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Shopify metafield type (e.g. `single_line_text_field`, `json`)"
         },
         {
@@ -4575,6 +4693,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Human-readable description of the metafield"
         },
         {
@@ -4583,6 +4702,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Identifier of the resource that owns this metafield"
         },
         {
@@ -4591,6 +4711,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Resource type that owns this metafield (e.g. `product`, `customer`)"
         },
         {
@@ -4599,6 +4720,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the metafield was created"
         },
         {
@@ -4607,6 +4729,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the metafield was last updated"
         }
       ]
@@ -4630,6 +4753,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Unique identifier for the metafield"
         },
         {
@@ -4638,6 +4762,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Namespace group for the metafield"
         },
         {
@@ -4646,6 +4771,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Key of the metafield within its namespace"
         },
         {
@@ -4654,6 +4780,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Serialized value stored in the metafield"
         },
         {
@@ -4662,6 +4789,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Shopify metafield type (e.g. `single_line_text_field`, `json`)"
         },
         {
@@ -4670,6 +4798,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Human-readable description of the metafield"
         },
         {
@@ -4678,6 +4807,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Identifier of the resource that owns this metafield"
         },
         {
@@ -4686,6 +4816,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Resource type that owns this metafield (e.g. `product`, `customer`)"
         },
         {
@@ -4694,6 +4825,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the metafield was created"
         },
         {
@@ -4702,6 +4834,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the metafield was last updated"
         }
       ]
@@ -4725,6 +4858,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Unique identifier for the metafield"
         },
         {
@@ -4733,6 +4867,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Namespace group for the metafield"
         },
         {
@@ -4741,6 +4876,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Key of the metafield within its namespace"
         },
         {
@@ -4749,6 +4885,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Serialized value stored in the metafield"
         },
         {
@@ -4757,6 +4894,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Shopify metafield type (e.g. `single_line_text_field`, `json`)"
         },
         {
@@ -4765,6 +4903,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Human-readable description of the metafield"
         },
         {
@@ -4773,6 +4912,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Identifier of the resource that owns this metafield"
         },
         {
@@ -4781,6 +4921,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Resource type that owns this metafield (e.g. `product`, `customer`)"
         },
         {
@@ -4789,6 +4930,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the metafield was created"
         },
         {
@@ -4797,6 +4939,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the metafield was last updated"
         }
       ]
@@ -4820,6 +4963,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Unique identifier for the metafield"
         },
         {
@@ -4828,6 +4972,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Namespace group for the metafield"
         },
         {
@@ -4836,6 +4981,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Key of the metafield within its namespace"
         },
         {
@@ -4844,6 +4990,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Serialized value stored in the metafield"
         },
         {
@@ -4852,6 +4999,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Shopify metafield type (e.g. `single_line_text_field`, `json`)"
         },
         {
@@ -4860,6 +5008,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Human-readable description of the metafield"
         },
         {
@@ -4868,6 +5017,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Identifier of the resource that owns this metafield"
         },
         {
@@ -4876,6 +5026,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Resource type that owns this metafield (e.g. `product`, `customer`)"
         },
         {
@@ -4884,6 +5035,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the metafield was created"
         },
         {
@@ -4892,6 +5044,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the metafield was last updated"
         }
       ]
@@ -4915,6 +5068,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Unique identifier for the metafield"
         },
         {
@@ -4923,6 +5077,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Namespace group for the metafield"
         },
         {
@@ -4931,6 +5086,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Key of the metafield within its namespace"
         },
         {
@@ -4939,6 +5095,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Serialized value stored in the metafield"
         },
         {
@@ -4947,6 +5104,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Shopify metafield type (e.g. `single_line_text_field`, `json`)"
         },
         {
@@ -4955,6 +5113,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Human-readable description of the metafield"
         },
         {
@@ -4963,6 +5122,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Identifier of the resource that owns this metafield"
         },
         {
@@ -4971,6 +5131,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Resource type that owns this metafield (e.g. `product`, `customer`)"
         },
         {
@@ -4979,6 +5140,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the metafield was created"
         },
         {
@@ -4987,6 +5149,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the metafield was last updated"
         }
       ]
@@ -5010,6 +5173,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Unique identifier for the metafield"
         },
         {
@@ -5018,6 +5182,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Namespace group for the metafield"
         },
         {
@@ -5026,6 +5191,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Key of the metafield within its namespace"
         },
         {
@@ -5034,6 +5200,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Serialized value stored in the metafield"
         },
         {
@@ -5042,6 +5209,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Shopify metafield type (e.g. `single_line_text_field`, `json`)"
         },
         {
@@ -5050,6 +5218,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Human-readable description of the metafield"
         },
         {
@@ -5058,6 +5227,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Identifier of the resource that owns this metafield"
         },
         {
@@ -5066,6 +5236,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Resource type that owns this metafield (e.g. `product`, `customer`)"
         },
         {
@@ -5074,6 +5245,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the metafield was created"
         },
         {
@@ -5082,6 +5254,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the metafield was last updated"
         }
       ]
@@ -5105,6 +5278,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Unique identifier for the metafield"
         },
         {
@@ -5113,6 +5287,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Namespace group for the metafield"
         },
         {
@@ -5121,6 +5296,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Key of the metafield within its namespace"
         },
         {
@@ -5129,6 +5305,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Serialized value stored in the metafield"
         },
         {
@@ -5137,6 +5314,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Shopify metafield type (e.g. `single_line_text_field`, `json`)"
         },
         {
@@ -5145,6 +5323,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Human-readable description of the metafield"
         },
         {
@@ -5153,6 +5332,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Identifier of the resource that owns this metafield"
         },
         {
@@ -5161,6 +5341,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Resource type that owns this metafield (e.g. `product`, `customer`)"
         },
         {
@@ -5169,6 +5350,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the metafield was created"
         },
         {
@@ -5177,6 +5359,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the metafield was last updated"
         }
       ]
@@ -5200,6 +5383,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Unique identifier for the refund"
         },
         {
@@ -5208,6 +5392,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Identifier of the refunded order"
         },
         {
@@ -5216,6 +5401,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Identifier of the staff user who processed the refund"
         },
         {
@@ -5224,6 +5410,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Merchant-provided note explaining the refund"
         },
         {
@@ -5232,6 +5419,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the refund was created"
         },
         {
@@ -5240,6 +5428,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the refund was processed"
         }
       ]
@@ -5263,6 +5452,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Unique identifier for the price rule"
         },
         {
@@ -5271,6 +5461,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Administrative title of the price rule"
         },
         {
@@ -5279,6 +5470,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "How the discount value is interpreted (`fixed_amount` or `percentage`)"
         },
         {
@@ -5287,6 +5479,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Discount value applied by the rule"
         },
         {
@@ -5295,6 +5488,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Type of target the rule applies to (`line_item` or `shipping_line`)"
         },
         {
@@ -5303,6 +5497,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Which target items the rule applies to (`all` or `entitled`)"
         },
         {
@@ -5311,6 +5506,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "How the discount is allocated (`each` or `across`)"
         },
         {
@@ -5319,6 +5515,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the rule starts being active"
         },
         {
@@ -5327,6 +5524,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the rule stops being active, if applicable"
         },
         {
@@ -5335,6 +5533,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the rule was created"
         },
         {
@@ -5343,6 +5542,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the rule was last updated"
         }
       ]
@@ -5366,6 +5566,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Unique identifier for the product image"
         },
         {
@@ -5374,6 +5575,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Identifier of the product the image belongs to"
         },
         {
@@ -5382,6 +5584,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Display position of the image within the product"
         },
         {
@@ -5390,6 +5593,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Alt text for the image"
         },
         {
@@ -5398,6 +5602,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Image width in pixels"
         },
         {
@@ -5406,6 +5611,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Image height in pixels"
         },
         {
@@ -5414,6 +5620,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Public URL of the image"
         },
         {
@@ -5422,6 +5629,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the image was created"
         },
         {
@@ -5430,6 +5638,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the image was last updated"
         }
       ]
@@ -5453,6 +5662,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Unique identifier for the product variant"
         },
         {
@@ -5461,6 +5671,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Identifier of the parent product"
         },
         {
@@ -5469,6 +5680,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Display title of the variant"
         },
         {
@@ -5477,6 +5689,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Stock keeping unit for the variant"
         },
         {
@@ -5485,6 +5698,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Price of the variant in the shop's currency"
         },
         {
@@ -5493,6 +5707,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Original (compare-at) price of the variant, if set"
         },
         {
@@ -5501,6 +5716,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Display position of the variant within the product"
         },
         {
@@ -5509,6 +5725,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Behaviour when out of stock (`deny` or `continue`)"
         },
         {
@@ -5517,6 +5734,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the variant was created"
         },
         {
@@ -5525,6 +5743,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the variant was last updated"
         }
       ]
@@ -5548,6 +5767,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Unique identifier for the shop"
         },
         {
@@ -5556,6 +5776,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Display name of the shop"
         },
         {
@@ -5564,6 +5785,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Primary contact email for the shop"
         },
         {
@@ -5572,6 +5794,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Custom domain configured for the shop, if any"
         },
         {
@@ -5580,6 +5803,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Canonical `*.myshopify.com` domain for the shop"
         },
         {
@@ -5588,6 +5812,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 3166-1 alpha-2 country code of the shop"
         },
         {
@@ -5596,6 +5821,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 4217 currency code used by the shop"
         },
         {
@@ -5604,6 +5830,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timezone configured for the shop (e.g. `(GMT-05:00) Eastern Time`)"
         },
         {
@@ -5612,6 +5839,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Shopify plan identifier (e.g. `shopify_plus`, `basic`)"
         },
         {
@@ -5620,6 +5848,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the shop was created"
         },
         {
@@ -5628,6 +5857,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the shop was last updated"
         }
       ]
@@ -5651,6 +5881,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Unique identifier for the smart collection"
         },
         {
@@ -5659,6 +5890,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "URL-friendly handle for the smart collection"
         },
         {
@@ -5667,6 +5899,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Display title of the smart collection"
         },
         {
@@ -5675,6 +5908,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "How products are sorted within the collection"
         },
         {
@@ -5683,6 +5917,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Publishing scope (`web` or `global`)"
         },
         {
@@ -5691,6 +5926,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the collection was published"
         },
         {
@@ -5699,6 +5935,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the collection was last updated"
         }
       ]
@@ -5722,6 +5959,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Unique identifier for the tender transaction"
         },
         {
@@ -5730,6 +5968,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Identifier of the order the transaction belongs to"
         },
         {
@@ -5738,6 +5977,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Identifier of the staff user who processed the transaction"
         },
         {
@@ -5746,6 +5986,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Amount of the transaction in the shop's currency"
         },
         {
@@ -5754,6 +5995,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 4217 currency code for the transaction amount"
         },
         {
@@ -5762,6 +6004,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Payment method used (e.g. `credit_card`, `paypal`)"
         },
         {
@@ -5770,6 +6013,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the transaction was a test transaction"
         },
         {
@@ -5778,6 +6022,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the transaction was processed"
         }
       ]

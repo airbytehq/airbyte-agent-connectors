@@ -1126,6 +1126,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The user's permission level for the site (owner, full, restricted, etc.)"
         },
         {
@@ -1134,6 +1135,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The URL of the site data being fetched"
         }
       ]
@@ -1157,6 +1159,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Data related to the sitemap contents"
         },
         {
@@ -1165,6 +1168,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Errors encountered while processing the sitemaps"
         },
         {
@@ -1173,6 +1177,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Flag indicating if the sitemap is pending for processing"
         },
         {
@@ -1181,6 +1186,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Flag indicating if the data represents a sitemap index"
         },
         {
@@ -1189,6 +1195,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp when the sitemap was last downloaded"
         },
         {
@@ -1197,6 +1204,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp when the sitemap was last submitted"
         },
         {
@@ -1205,6 +1213,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Path to the sitemap file"
         },
         {
@@ -1213,6 +1222,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Type of the sitemap"
         },
         {
@@ -1221,6 +1231,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Warnings encountered while processing the sitemaps"
         }
       ]
@@ -1244,6 +1255,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The number of times users clicked on the search result for a specific query"
         },
         {
@@ -1252,6 +1264,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The country from which the search query originated"
         },
         {
@@ -1260,6 +1273,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Click-through rate, calculated as clicks divided by impressions"
         },
         {
@@ -1268,6 +1282,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The date when the search query occurred"
         },
         {
@@ -1276,6 +1291,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The type of device used by the user (e.g., desktop, mobile)"
         },
         {
@@ -1284,6 +1300,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The number of times a search result appeared in response to a query"
         },
         {
@@ -1292,6 +1309,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The page URL that appeared in the search results"
         },
         {
@@ -1300,6 +1318,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "The average position of the search result on the search engine results page"
         },
         {
@@ -1308,6 +1327,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The search query entered by the user"
         },
         {
@@ -1316,6 +1336,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The type of search (e.g., web, image, video) that triggered the search result"
         },
         {
@@ -1324,6 +1345,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The URL of the site from which the data originates"
         }
       ]
@@ -1347,6 +1369,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The number of times users clicked on the search result for a specific country"
         },
         {
@@ -1355,6 +1378,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The country for which the search analytics data is being reported"
         },
         {
@@ -1363,6 +1387,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "The click-through rate for a specific country"
         },
         {
@@ -1371,6 +1396,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The date for which the search analytics data is being reported"
         },
         {
@@ -1379,6 +1405,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The total number of times a search result was shown for a specific country"
         },
         {
@@ -1387,6 +1414,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "The average position at which the site's search result appeared for a specific country"
         },
         {
@@ -1395,6 +1423,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The type of search for which the data is being reported"
         },
         {
@@ -1403,6 +1432,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The URL of the site for which the search analytics data is being reported"
         }
       ]
@@ -1426,6 +1456,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The total number of clicks on the specific date"
         },
         {
@@ -1434,6 +1465,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "The click-through rate for the specific date"
         },
         {
@@ -1442,6 +1474,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The date for which the search analytics data is being reported"
         },
         {
@@ -1450,6 +1483,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The number of impressions on the specific date"
         },
         {
@@ -1458,6 +1492,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "The average position in search results for the specific date"
         },
         {
@@ -1466,6 +1501,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The type of search query that generated the data"
         },
         {
@@ -1474,6 +1510,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The URL of the site for which the search analytics data is being reported"
         }
       ]
@@ -1497,6 +1534,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The total number of clicks by device type"
         },
         {
@@ -1505,6 +1543,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Click-through rate by device type"
         },
         {
@@ -1513,6 +1552,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The date for which the search analytics data is provided"
         },
         {
@@ -1521,6 +1561,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The type of device used by the user (e.g., desktop, mobile)"
         },
         {
@@ -1529,6 +1570,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The total number of impressions by device type"
         },
         {
@@ -1537,6 +1579,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "The average position in search results by device type"
         },
         {
@@ -1545,6 +1588,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The type of search performed"
         },
         {
@@ -1553,6 +1597,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The URL of the site for which search analytics data is being provided"
         }
       ]
@@ -1576,6 +1621,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The number of clicks for a specific page"
         },
         {
@@ -1584,6 +1630,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Click-through rate for the page"
         },
         {
@@ -1592,6 +1639,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The date for which the search analytics data is reported"
         },
         {
@@ -1600,6 +1648,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The number of impressions for the page"
         },
         {
@@ -1608,6 +1657,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The URL of the specific page being analyzed"
         },
         {
@@ -1616,6 +1666,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "The average position at which the page appeared in search results"
         },
         {
@@ -1624,6 +1675,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The type of search query that led to the page being displayed"
         },
         {
@@ -1632,6 +1684,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The URL of the site for which the search analytics data is being reported"
         }
       ]
@@ -1655,6 +1708,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The number of clicks for the specific query"
         },
         {
@@ -1663,6 +1717,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "The click-through rate for the specific query"
         },
         {
@@ -1671,6 +1726,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The date for which the search analytics data is recorded"
         },
         {
@@ -1679,6 +1735,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The number of impressions for the specific query"
         },
         {
@@ -1687,6 +1744,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "The average position for the specific query"
         },
         {
@@ -1695,6 +1753,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The search query for which the data is recorded"
         },
         {
@@ -1703,6 +1762,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The type of search result for the specific query"
         },
         {
@@ -1711,6 +1771,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The URL of the site for which the search analytics data is captured"
         }
       ]

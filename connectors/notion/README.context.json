@@ -4002,6 +4002,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Indicates whether the page is archived or not."
         },
         {
@@ -4010,6 +4011,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "URL or reference to the page cover image."
         },
         {
@@ -4018,6 +4020,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "User ID or name of the creator of the page."
         },
         {
@@ -4026,6 +4029,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Date and time when the page was created."
         },
         {
@@ -4034,6 +4038,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "URL or reference to the page icon."
         },
         {
@@ -4042,6 +4047,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier of the page."
         },
         {
@@ -4050,6 +4056,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Indicates whether the page is in trash or not."
         },
         {
@@ -4058,6 +4065,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "User ID or name of the last editor of the page."
         },
         {
@@ -4066,6 +4074,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Date and time when the page was last edited."
         },
         {
@@ -4074,6 +4083,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Type or category of the page object."
         },
         {
@@ -4082,6 +4092,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "ID or reference to the parent page."
         },
         {
@@ -4090,6 +4101,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Custom properties associated with the page."
         },
         {
@@ -4098,6 +4110,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Publicly accessible URL of the page."
         },
         {
@@ -4106,6 +4119,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "URL of the page within the service."
         }
       ]
@@ -4129,6 +4143,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "URL of the user's avatar"
         },
         {
@@ -4137,6 +4152,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Bot-specific data"
         },
         {
@@ -4145,6 +4161,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier for the user"
         },
         {
@@ -4153,6 +4170,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "User's display name"
         },
         {
@@ -4161,6 +4179,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Always user"
         },
         {
@@ -4169,6 +4188,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Person-specific data"
         },
         {
@@ -4177,6 +4197,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Type of user (person or bot)"
         }
       ]
@@ -4200,6 +4221,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Indicates if the data source is archived or not."
         },
         {
@@ -4208,6 +4230,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "URL or reference to the cover image of the data source."
         },
         {
@@ -4216,6 +4239,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The user who created the data source."
         },
         {
@@ -4224,6 +4248,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The timestamp when the data source was created."
         },
         {
@@ -4232,6 +4257,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The grandparent of the data source (parent of the database)."
         },
         {
@@ -4240,6 +4266,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Description text associated with the data source."
         },
         {
@@ -4248,6 +4275,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "URL or reference to the icon of the data source."
         },
         {
@@ -4256,6 +4284,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier of the data source."
         },
         {
@@ -4264,6 +4293,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Indicates if the data source is displayed inline."
         },
         {
@@ -4272,6 +4302,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The user who last edited the data source."
         },
         {
@@ -4280,6 +4311,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The timestamp when the data source was last edited."
         },
         {
@@ -4288,6 +4320,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The type of object (data_source)."
         },
         {
@@ -4296,6 +4329,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The parent database of the data source."
         },
         {
@@ -4304,6 +4338,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Schema of properties for the data source."
         },
         {
@@ -4312,6 +4347,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Public URL to access the data source."
         },
         {
@@ -4320,6 +4356,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Title or name of the data source."
         },
         {
@@ -4328,6 +4365,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "URL or reference to access the data source."
         }
       ]
@@ -4351,6 +4389,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Indicates if the block is archived or not."
         },
         {
@@ -4359,6 +4398,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Represents a bookmark within the block"
         },
         {
@@ -4367,6 +4407,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Represents a breadcrumb block."
         },
         {
@@ -4375,6 +4416,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Represents an item in a bulleted list."
         },
         {
@@ -4383,6 +4425,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Describes a callout message or content in the block"
         },
         {
@@ -4391,6 +4434,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Represents a child database block."
         },
         {
@@ -4399,6 +4443,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Represents a child page block."
         },
         {
@@ -4407,6 +4452,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Contains code snippets or blocks in the block content"
         },
         {
@@ -4415,6 +4461,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Represents a column block."
         },
         {
@@ -4423,6 +4470,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Represents a list of columns."
         },
         {
@@ -4431,6 +4479,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The user who created the block."
         },
         {
@@ -4439,6 +4488,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The timestamp when the block was created."
         },
         {
@@ -4447,6 +4497,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Represents a divider block."
         },
         {
@@ -4455,6 +4506,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Contains embedded content such as videos, tweets, etc."
         },
         {
@@ -4463,6 +4515,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Represents an equation or mathematical formula in the block"
         },
         {
@@ -4471,6 +4524,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Represents a file block."
         },
         {
@@ -4479,6 +4533,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Indicates if the block has children or not."
         },
         {
@@ -4487,6 +4542,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Represents a level 1 heading."
         },
         {
@@ -4495,6 +4551,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Represents a level 2 heading."
         },
         {
@@ -4503,6 +4560,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Represents a level 3 heading."
         },
         {
@@ -4511,6 +4569,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The unique identifier of the block."
         },
         {
@@ -4519,6 +4578,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Represents an image block."
         },
         {
@@ -4527,6 +4587,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The user who last edited the block."
         },
         {
@@ -4535,6 +4596,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The timestamp when the block was last edited."
         },
         {
@@ -4543,6 +4605,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Displays a preview of an external link within the block"
         },
         {
@@ -4551,6 +4614,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Provides a link to another page within the block"
         },
         {
@@ -4559,6 +4623,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Represents an item in a numbered list."
         },
         {
@@ -4567,6 +4632,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Represents an object block."
         },
         {
@@ -4575,6 +4641,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Represents a paragraph block."
         },
         {
@@ -4583,6 +4650,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The parent block of the current block."
         },
         {
@@ -4591,6 +4659,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Represents a PDF document block."
         },
         {
@@ -4599,6 +4668,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Represents a quote block."
         },
         {
@@ -4607,6 +4677,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Represents a block synced from another source"
         },
         {
@@ -4615,6 +4686,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Represents a table within the block"
         },
         {
@@ -4623,6 +4695,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Contains information regarding the table of contents"
         },
         {
@@ -4631,6 +4704,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Represents a row in a table within the block"
         },
         {
@@ -4639,6 +4713,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Specifies a template used within the block"
         },
         {
@@ -4647,6 +4722,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Represents a to-do list or task content"
         },
         {
@@ -4655,6 +4731,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Represents a toggle block."
         },
         {
@@ -4663,6 +4740,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The type of the block."
         },
         {
@@ -4671,6 +4749,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Represents an unsupported block."
         },
         {
@@ -4679,6 +4758,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Represents a video block."
         }
       ]
@@ -4702,6 +4782,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "User who created the comment."
         },
         {
@@ -4710,6 +4791,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Date and time when the comment was created."
         },
         {
@@ -4718,6 +4800,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Discussion thread ID."
         },
         {
@@ -4726,6 +4809,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier for the comment."
         },
         {
@@ -4734,6 +4818,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Date and time when the comment was last edited."
         },
         {
@@ -4742,6 +4827,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Always comment."
         },
         {
@@ -4750,6 +4836,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Parent of the comment."
         },
         {
@@ -4758,6 +4845,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Content of the comment as rich text."
         }
       ]

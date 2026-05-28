@@ -1240,6 +1240,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The ID of the application associated with the company"
         },
         {
@@ -1248,6 +1249,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The unique identifier of the company"
         },
         {
@@ -1256,6 +1258,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The date and time when the company was created"
         },
         {
@@ -1264,6 +1267,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Custom attributes specific to the company"
         },
         {
@@ -1272,6 +1276,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The ID of the company"
         },
         {
@@ -1280,6 +1285,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The industry in which the company operates"
         },
         {
@@ -1288,6 +1294,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "The monthly spend of the company"
         },
         {
@@ -1296,6 +1303,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The name of the company"
         },
         {
@@ -1304,6 +1312,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Details of the company's subscription plan"
         },
         {
@@ -1312,6 +1321,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The remote date and time when the company was created"
         },
         {
@@ -1320,6 +1330,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Segments associated with the company"
         },
         {
@@ -1328,6 +1339,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The number of sessions related to the company"
         },
         {
@@ -1336,6 +1348,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The size of the company"
         },
         {
@@ -1344,6 +1357,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Tags associated with the company"
         },
         {
@@ -1352,6 +1366,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The type of the company"
         },
         {
@@ -1360,6 +1375,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The date and time when the company was last updated"
         },
         {
@@ -1368,6 +1384,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The number of users associated with the company"
         },
         {
@@ -1376,6 +1393,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The website of the company"
         }
       ]
@@ -1399,6 +1417,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The name of the Android app associated with the contact."
         },
         {
@@ -1407,6 +1426,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The version of the Android app associated with the contact."
         },
         {
@@ -1415,6 +1435,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The device used by the contact for Android."
         },
         {
@@ -1423,6 +1444,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The date and time when the contact was last seen on Android."
         },
         {
@@ -1431,6 +1453,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The operating system version of the Android device."
         },
         {
@@ -1439,6 +1462,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The SDK version of the Android device."
         },
         {
@@ -1447,6 +1471,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "URL pointing to the contact's avatar image."
         },
         {
@@ -1455,6 +1480,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The browser used by the contact."
         },
         {
@@ -1463,6 +1489,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The language preference set in the contact's browser."
         },
         {
@@ -1471,6 +1498,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The version of the browser used by the contact."
         },
         {
@@ -1479,6 +1507,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Companies associated with the contact."
         },
         {
@@ -1487,6 +1516,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The date and time when the contact was created."
         },
         {
@@ -1495,6 +1525,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Custom attributes defined for the contact."
         },
         {
@@ -1503,6 +1534,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The email address of the contact."
         },
         {
@@ -1511,6 +1543,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "External identifier for the contact."
         },
         {
@@ -1519,6 +1552,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Flag indicating if the contact has hard bounced."
         },
         {
@@ -1527,6 +1561,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The unique identifier of the contact."
         },
         {
@@ -1535,6 +1570,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The name of the iOS app associated with the contact."
         },
         {
@@ -1543,6 +1579,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The version of the iOS app associated with the contact."
         },
         {
@@ -1551,6 +1588,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The device used by the contact for iOS."
         },
         {
@@ -1559,6 +1597,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The date and time when the contact was last seen on iOS."
         },
         {
@@ -1567,6 +1606,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The operating system version of the iOS device."
         },
         {
@@ -1575,6 +1615,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The SDK version of the iOS device."
         },
         {
@@ -1583,6 +1624,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Language override set for the contact."
         },
         {
@@ -1591,6 +1633,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The date and time when the contact was last contacted."
         },
         {
@@ -1599,6 +1642,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The date and time when the contact last clicked an email."
         },
         {
@@ -1607,6 +1651,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The date and time when the contact last opened an email."
         },
         {
@@ -1615,6 +1660,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The date and time when the contact last replied."
         },
         {
@@ -1623,6 +1669,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The date and time when the contact was last seen overall."
         },
         {
@@ -1631,6 +1678,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Location details of the contact."
         },
         {
@@ -1639,6 +1687,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Flag indicating if the contact's email was marked as spam."
         },
         {
@@ -1647,6 +1696,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The name of the contact."
         },
         {
@@ -1655,6 +1705,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Notes associated with the contact."
         },
         {
@@ -1663,6 +1714,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Subscription types the contact opted into."
         },
         {
@@ -1671,6 +1723,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Subscription types the contact opted out from."
         },
         {
@@ -1679,6 +1732,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Operating system of the contact's device."
         },
         {
@@ -1687,6 +1741,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The unique identifier of the contact's owner."
         },
         {
@@ -1695,6 +1750,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The phone number of the contact."
         },
         {
@@ -1703,6 +1759,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Referrer information related to the contact."
         },
         {
@@ -1711,6 +1768,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Role or position of the contact."
         },
         {
@@ -1719,6 +1777,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The date and time when the contact signed up."
         },
         {
@@ -1727,6 +1786,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Consent status for SMS communication."
         },
         {
@@ -1735,6 +1795,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Social profiles associated with the contact."
         },
         {
@@ -1743,6 +1804,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Tags associated with the contact."
         },
         {
@@ -1751,6 +1813,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Type of contact."
         },
         {
@@ -1759,6 +1822,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Flag indicating if the contact unsubscribed from emails."
         },
         {
@@ -1767,6 +1831,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Flag indicating if the contact unsubscribed from SMS."
         },
         {
@@ -1775,6 +1840,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The date and time when the contact was last updated."
         },
         {
@@ -1783,6 +1849,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Campaign data from UTM parameters."
         },
         {
@@ -1791,6 +1858,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Content data from UTM parameters."
         },
         {
@@ -1799,6 +1867,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Medium data from UTM parameters."
         },
         {
@@ -1807,6 +1876,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Source data from UTM parameters."
         },
         {
@@ -1815,6 +1885,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Term data from UTM parameters."
         },
         {
@@ -1823,6 +1894,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The unique identifier of the workspace associated with the contact."
         }
       ]
@@ -1846,6 +1918,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The ID of the administrator assigned to the conversation"
         },
         {
@@ -1854,6 +1927,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Data related to AI Agent involvement in the conversation"
         },
         {
@@ -1862,6 +1936,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Indicates whether AI Agent participated in the conversation"
         },
         {
@@ -1870,6 +1945,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The assigned user responsible for the conversation."
         },
         {
@@ -1878,6 +1954,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "List of contacts involved in the conversation."
         },
         {
@@ -1886,6 +1963,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The main message content of the conversation."
         },
         {
@@ -1894,6 +1972,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Ratings given to the conversation by the customer and teammate."
         },
         {
@@ -1902,6 +1981,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The timestamp when the conversation was created"
         },
         {
@@ -1910,6 +1990,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Custom attributes associated with the conversation"
         },
         {
@@ -1918,6 +1999,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Timestamp indicating when the customer first replied."
         },
         {
@@ -1926,6 +2008,7 @@
           "type": "list[Any] | None",
           "json_type": "array | null",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "List of customers involved in the conversation"
         },
         {
@@ -1934,6 +2017,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Timestamp indicating when the first contact replied."
         },
         {
@@ -1942,6 +2026,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The unique ID of the conversation"
         },
         {
@@ -1950,6 +2035,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Linked objects associated with the conversation"
         },
         {
@@ -1958,6 +2044,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Indicates if the conversation is open or closed"
         },
         {
@@ -1966,6 +2053,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The priority level of the conversation"
         },
         {
@@ -1974,6 +2062,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Indicates if the conversation has been read"
         },
         {
@@ -1982,6 +2071,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Indicates if the conversation is redacted"
         },
         {
@@ -1990,6 +2080,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The timestamp when the conversation was sent"
         },
         {
@@ -1998,6 +2089,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Service Level Agreement details applied to the conversation."
         },
         {
@@ -2006,6 +2098,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Timestamp until the conversation is snoozed"
         },
         {
@@ -2014,6 +2107,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Source details of the conversation."
         },
         {
@@ -2022,6 +2116,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The state of the conversation (e.g., new, in progress)"
         },
         {
@@ -2030,6 +2125,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Statistics related to the conversation."
         },
         {
@@ -2038,6 +2134,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Tags applied to the conversation."
         },
         {
@@ -2046,6 +2143,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The ID of the team assigned to the conversation"
         },
         {
@@ -2054,6 +2152,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "List of teammates involved in the conversation."
         },
         {
@@ -2062,6 +2161,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The title of the conversation"
         },
         {
@@ -2070,6 +2170,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Topics associated with the conversation."
         },
         {
@@ -2078,6 +2179,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The type of the conversation"
         },
         {
@@ -2086,6 +2188,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The timestamp when the conversation was last updated"
         },
         {
@@ -2094,6 +2197,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The user related to the conversation."
         },
         {
@@ -2102,6 +2206,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Timestamp since waiting for a response"
         }
       ]
@@ -2125,6 +2230,7 @@
           "type": "list[Any] | None",
           "json_type": "array | null",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Array of user IDs representing the admins of the team."
         },
         {
@@ -2133,6 +2239,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier for the team."
         },
         {
@@ -2141,6 +2248,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Name of the team."
         },
         {
@@ -2149,6 +2257,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Type of team (e.g., 'internal', 'external')."
         }
       ]

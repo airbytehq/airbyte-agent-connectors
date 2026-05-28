@@ -2638,6 +2638,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Details of changelogs associated with the issue"
         },
         {
@@ -2646,6 +2647,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The timestamp when the issue was created"
         },
         {
@@ -2654,6 +2656,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The metadata for the fields on the issue that can be amended"
         },
         {
@@ -2662,6 +2665,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Expand options that include additional issue details in the response"
         },
         {
@@ -2670,6 +2674,7 @@
           "type": "dict[str, Any]",
           "json_type": "object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Details of various fields associated with the issue"
         },
         {
@@ -2678,6 +2683,7 @@
           "type": "dict[str, Any]",
           "json_type": "object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Specify the fields to include in the fetched issues data"
         },
         {
@@ -2686,6 +2692,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The unique ID of the issue"
         },
         {
@@ -2694,6 +2701,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The unique key of the issue"
         },
         {
@@ -2702,6 +2710,7 @@
           "type": "dict[str, Any]",
           "json_type": "object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The ID and name of each field present on the issue"
         },
         {
@@ -2710,6 +2719,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The operations that can be performed on the issue"
         },
         {
@@ -2718,6 +2728,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The ID of the project containing the issue"
         },
         {
@@ -2726,6 +2737,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The key of the project containing the issue"
         },
         {
@@ -2734,6 +2746,7 @@
           "type": "dict[str, Any]",
           "json_type": "object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Details of the issue properties identified in the request"
         },
         {
@@ -2742,6 +2755,7 @@
           "type": "dict[str, Any]",
           "json_type": "object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The rendered value of each field present on the issue"
         },
         {
@@ -2750,6 +2764,7 @@
           "type": "dict[str, Any]",
           "json_type": "object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The schema describing each field present on the issue"
         },
         {
@@ -2758,6 +2773,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The URL of the issue details"
         },
         {
@@ -2766,6 +2782,7 @@
           "type": "list[Any]",
           "json_type": "array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "The transitions that can be performed on the issue"
         },
         {
@@ -2774,6 +2791,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The timestamp when the issue was last updated"
         },
         {
@@ -2782,6 +2800,7 @@
           "type": "dict[str, Any]",
           "json_type": "object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The versions of each field on the issue"
         }
       ]
@@ -2805,6 +2824,7 @@
           "type": "bool",
           "json_type": "boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the project is archived"
         },
         {
@@ -2813,6 +2833,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The user who archived the project"
         },
         {
@@ -2821,6 +2842,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The date when the project was archived"
         },
         {
@@ -2829,6 +2851,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The default assignee when creating issues for this project"
         },
         {
@@ -2837,6 +2860,7 @@
           "type": "dict[str, Any]",
           "json_type": "object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The URLs of the project's avatars"
         },
         {
@@ -2845,6 +2869,7 @@
           "type": "list[Any]",
           "json_type": "array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "List of the components contained in the project"
         },
         {
@@ -2853,6 +2878,7 @@
           "type": "bool",
           "json_type": "boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the project is marked as deleted"
         },
         {
@@ -2861,6 +2887,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The user who marked the project as deleted"
         },
         {
@@ -2869,6 +2896,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The date when the project was marked as deleted"
         },
         {
@@ -2877,6 +2905,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "A brief description of the project"
         },
         {
@@ -2885,6 +2914,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "An email address associated with the project"
         },
         {
@@ -2893,6 +2923,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The unique identifier of the project entity"
         },
         {
@@ -2901,6 +2932,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Expand options that include additional project details in the response"
         },
         {
@@ -2909,6 +2941,7 @@
           "type": "bool",
           "json_type": "boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the project is selected as a favorite"
         },
         {
@@ -2917,6 +2950,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The ID of the project"
         },
         {
@@ -2925,6 +2959,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Insights about the project"
         },
         {
@@ -2933,6 +2968,7 @@
           "type": "bool",
           "json_type": "boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the project is private"
         },
         {
@@ -2941,6 +2977,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The issue type hierarchy for the project"
         },
         {
@@ -2949,6 +2986,7 @@
           "type": "list[Any]",
           "json_type": "array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "List of the issue types available in the project"
         },
         {
@@ -2957,6 +2995,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The key of the project"
         },
         {
@@ -2965,6 +3004,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The username of the project lead"
         },
         {
@@ -2973,6 +3013,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The name of the project"
         },
         {
@@ -2981,6 +3022,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "User permissions on the project"
         },
         {
@@ -2989,6 +3031,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The category the project belongs to"
         },
         {
@@ -2997,6 +3040,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The project type of the project"
         },
         {
@@ -3005,6 +3049,7 @@
           "type": "dict[str, Any]",
           "json_type": "object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Map of project properties"
         },
         {
@@ -3013,6 +3058,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The date when the project is deleted permanently"
         },
         {
@@ -3021,6 +3067,7 @@
           "type": "dict[str, Any]",
           "json_type": "object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The name and self URL for each role defined in the project"
         },
         {
@@ -3029,6 +3076,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The URL of the project details"
         },
         {
@@ -3037,6 +3085,7 @@
           "type": "bool",
           "json_type": "boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the project is simplified"
         },
         {
@@ -3045,6 +3094,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The type of the project"
         },
         {
@@ -3053,6 +3103,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "A link to information about this project"
         },
         {
@@ -3061,6 +3112,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique ID for next-gen projects"
         },
         {
@@ -3069,6 +3121,7 @@
           "type": "list[Any]",
           "json_type": "array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "The versions defined in the project"
         }
       ]
@@ -3092,6 +3145,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The account ID of the user, uniquely identifying the user across all Atlassian products"
         },
         {
@@ -3100,6 +3154,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The user account type (atlassian, app, or customer)"
         },
         {
@@ -3108,6 +3163,7 @@
           "type": "bool",
           "json_type": "boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Indicates whether the user is active"
         },
         {
@@ -3116,6 +3172,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The application roles assigned to the user"
         },
         {
@@ -3124,6 +3181,7 @@
           "type": "dict[str, Any]",
           "json_type": "object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The avatars of the user"
         },
         {
@@ -3132,6 +3190,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The display name of the user"
         },
         {
@@ -3140,6 +3199,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The email address of the user"
         },
         {
@@ -3148,6 +3208,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Options to include additional user details in the response"
         },
         {
@@ -3156,6 +3217,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The groups to which the user belongs"
         },
         {
@@ -3164,6 +3226,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Deprecated property"
         },
         {
@@ -3172,6 +3235,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The locale of the user"
         },
         {
@@ -3180,6 +3244,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Deprecated property"
         },
         {
@@ -3188,6 +3253,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The URL of the user"
         },
         {
@@ -3196,6 +3262,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The time zone specified in the user's profile"
         }
       ]
@@ -3219,6 +3286,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The ID of the user who created the comment"
         },
         {
@@ -3227,6 +3295,7 @@
           "type": "dict[str, Any]",
           "json_type": "object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The comment text in Atlassian Document Format"
         },
         {
@@ -3235,6 +3304,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The date and time at which the comment was created"
         },
         {
@@ -3243,6 +3313,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The ID of the comment"
         },
         {
@@ -3251,6 +3322,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Id of the related issue"
         },
         {
@@ -3259,6 +3331,7 @@
           "type": "bool",
           "json_type": "boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the comment is visible in Jira Service Desk"
         },
         {
@@ -3267,6 +3340,7 @@
           "type": "list[Any]",
           "json_type": "array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "A list of comment properties"
         },
         {
@@ -3275,6 +3349,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The rendered version of the comment"
         },
         {
@@ -3283,6 +3358,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The URL of the comment"
         },
         {
@@ -3291,6 +3367,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The ID of the user who updated the comment last"
         },
         {
@@ -3299,6 +3376,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The date and time at which the comment was updated last"
         },
         {
@@ -3307,6 +3385,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The group or role to which this item is visible"
         }
       ]
@@ -3330,6 +3409,7 @@
           "type": "list[Any]",
           "json_type": "array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "The names that can be used to reference the field in an advanced search"
         },
         {
@@ -3338,6 +3418,7 @@
           "type": "bool",
           "json_type": "boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the field is a custom field"
         },
         {
@@ -3346,6 +3427,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The ID of the field"
         },
         {
@@ -3354,6 +3436,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The key of the field"
         },
         {
@@ -3362,6 +3445,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The name of the field"
         },
         {
@@ -3370,6 +3454,7 @@
           "type": "bool",
           "json_type": "boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the field can be used as a column on the issue navigator"
         },
         {
@@ -3378,6 +3463,7 @@
           "type": "bool",
           "json_type": "boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the content of the field can be used to order lists"
         },
         {
@@ -3386,6 +3472,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The data schema for the field"
         },
         {
@@ -3394,6 +3481,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The scope of the field"
         },
         {
@@ -3402,6 +3490,7 @@
           "type": "bool",
           "json_type": "boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the content of the field can be searched"
         },
         {
@@ -3410,6 +3499,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The untranslated name of the field"
         }
       ]
@@ -3433,6 +3523,7 @@
           "type": "dict[str, Any]",
           "json_type": "object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Details of the user who created the worklog"
         },
         {
@@ -3441,6 +3532,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "A comment about the worklog in Atlassian Document Format"
         },
         {
@@ -3449,6 +3541,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The datetime on which the worklog was created"
         },
         {
@@ -3457,6 +3550,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The ID of the worklog record"
         },
         {
@@ -3465,6 +3559,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The ID of the issue this worklog is for"
         },
         {
@@ -3473,6 +3568,7 @@
           "type": "list[Any]",
           "json_type": "array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Details of properties for the worklog"
         },
         {
@@ -3481,6 +3577,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The URL of the worklog item"
         },
         {
@@ -3489,6 +3586,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The datetime on which the worklog effort was started"
         },
         {
@@ -3497,6 +3595,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The time spent working on the issue as days, hours, or minutes"
         },
         {
@@ -3505,6 +3604,7 @@
           "type": "int",
           "json_type": "integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The time in seconds spent working on the issue"
         },
         {
@@ -3513,6 +3613,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Details of the user who last updated the worklog"
         },
         {
@@ -3521,6 +3622,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The datetime on which the worklog was last updated"
         },
         {
@@ -3529,6 +3631,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Details about any restrictions in the visibility of the worklog"
         }
       ]

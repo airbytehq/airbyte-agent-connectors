@@ -1171,6 +1171,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Email address of the authenticated Gmail account"
         },
         {
@@ -1179,6 +1180,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Mailbox history record identifier used for incremental sync"
         },
         {
@@ -1187,6 +1189,7 @@
           "type": "float | None",
           "json_type": "number | null",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Total number of messages currently in the mailbox"
         },
         {
@@ -1195,6 +1198,7 @@
           "type": "float | None",
           "json_type": "number | null",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Total number of threads currently in the mailbox"
         }
       ]
@@ -1218,6 +1222,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier for the message"
         },
         {
@@ -1226,6 +1231,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Identifier of the thread this message belongs to"
         },
         {
@@ -1234,6 +1240,7 @@
           "type": "list[Any] | None",
           "json_type": "array | null",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Labels applied to the message"
         },
         {
@@ -1242,6 +1249,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Short snippet of the message text"
         },
         {
@@ -1250,6 +1258,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Mailbox history record identifier for the message"
         },
         {
@@ -1258,6 +1267,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Internal message creation timestamp in epoch milliseconds"
         },
         {
@@ -1266,6 +1276,7 @@
           "type": "int | None",
           "json_type": "integer | null",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Estimated size of the message in bytes"
         },
         {
@@ -1274,6 +1285,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "object | null",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Parsed MIME payload including headers, body, nested MIME parts, and attachment metadata. Use payload.headers for sender, recipients, subject, date, and other email headers."
         }
       ]
@@ -1297,6 +1309,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier for the label"
         },
         {
@@ -1305,6 +1318,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Display name of the label"
         },
         {
@@ -1313,6 +1327,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Label type: `system` or `user`"
         },
         {
@@ -1321,6 +1336,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Visibility of the label in the label list"
         },
         {
@@ -1329,6 +1345,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Visibility of the label when viewing a message list"
         }
       ]
@@ -1352,6 +1369,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier for the draft"
         },
         {
@@ -1360,6 +1378,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "object | null",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Draft message payload (headers, body, and metadata)"
         }
       ]
@@ -1383,6 +1402,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier for the thread"
         },
         {
@@ -1391,6 +1411,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Mailbox history record identifier for the thread"
         },
         {
@@ -1399,6 +1420,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Short snippet of the thread's most recent message"
         }
       ]

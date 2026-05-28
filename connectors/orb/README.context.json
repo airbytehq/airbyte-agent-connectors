@@ -616,6 +616,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The unique identifier of the customer"
         },
         {
@@ -624,6 +625,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The ID of the customer in an external system"
         },
         {
@@ -632,6 +634,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The name of the customer"
         },
         {
@@ -640,6 +643,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The email address of the customer"
         },
         {
@@ -648,6 +652,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The date and time when the customer was created"
         },
         {
@@ -656,6 +661,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The payment provider used by the customer"
         },
         {
@@ -664,6 +670,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The ID of the customer in the payment provider's system"
         },
         {
@@ -672,6 +679,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The timezone setting of the customer"
         },
         {
@@ -680,6 +688,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "object | null",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The shipping address of the customer"
         },
         {
@@ -688,6 +697,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "object | null",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The billing address of the customer"
         }
       ]
@@ -711,6 +721,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The unique identifier of the subscription"
         },
         {
@@ -719,6 +730,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The date and time when the subscription was created"
         },
         {
@@ -727,6 +739,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The date and time when the subscription starts"
         },
         {
@@ -735,6 +748,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The date and time when the subscription ends"
         },
         {
@@ -743,6 +757,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The current status of the subscription"
         }
       ]
@@ -766,6 +781,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The unique identifier of the plan"
         },
         {
@@ -774,6 +790,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The date and time when the plan was created"
         },
         {
@@ -782,6 +799,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The name of the plan"
         },
         {
@@ -790,6 +808,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "A description of the plan"
         },
         {
@@ -798,6 +817,7 @@
           "type": "list[Any] | None",
           "json_type": "array | null",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "The pricing options for the plan"
         },
         {
@@ -806,6 +826,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "object | null",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The product associated with the plan"
         }
       ]
@@ -829,6 +850,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The unique identifier of the invoice"
         },
         {
@@ -837,6 +859,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The date and time when the invoice was created"
         },
         {
@@ -845,6 +868,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The date of the invoice"
         },
         {
@@ -853,6 +877,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The due date for the invoice"
         },
         {
@@ -861,6 +886,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The URL to download the PDF version of the invoice"
         },
         {
@@ -869,6 +895,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The subtotal amount of the invoice"
         },
         {
@@ -877,6 +904,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The total amount of the invoice"
         },
         {
@@ -885,6 +913,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The amount due on the invoice"
         },
         {
@@ -893,6 +922,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The current status of the invoice"
         },
         {
@@ -901,6 +931,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Any additional notes or comments on the invoice"
         },
         {
@@ -909,6 +940,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The date and time when the invoice was paid"
         },
         {
@@ -917,6 +949,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The date and time when the invoice was issued"
         },
         {
@@ -925,6 +958,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The URL to view the hosted invoice"
         },
         {
@@ -933,6 +967,7 @@
           "type": "list[Any] | None",
           "json_type": "array | null",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "The line items on the invoice"
         },
         {
@@ -941,6 +976,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "object | null",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The subscription associated with the invoice"
         }
       ]

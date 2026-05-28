@@ -1489,6 +1489,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Indicates if the user is currently active or not"
         },
         {
@@ -1497,6 +1498,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The timestamp denoting when the user account was created"
         },
         {
@@ -1505,6 +1507,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The primary email address associated with the user"
         },
         {
@@ -1513,6 +1516,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Additional email addresses that can be used to reach the user"
         },
         {
@@ -1521,6 +1525,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The phone extension number for the user"
         },
         {
@@ -1529,6 +1534,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The first name of the user"
         },
         {
@@ -1537,6 +1543,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier for the user"
         },
         {
@@ -1545,6 +1552,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The last name of the user"
         },
         {
@@ -1553,6 +1561,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The ID of the user's manager"
         },
         {
@@ -1561,6 +1570,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "URL for the consent page related to meetings"
         },
         {
@@ -1569,6 +1579,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "URLs for personal meeting rooms assigned to the user"
         },
         {
@@ -1577,6 +1588,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The phone number associated with the user"
         },
         {
@@ -1585,6 +1597,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "User-specific settings and configurations"
         },
         {
@@ -1593,6 +1606,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Languages spoken by the user"
         },
         {
@@ -1601,6 +1615,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The job title or position of the user"
         },
         {
@@ -1609,6 +1624,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "An email address that is considered trusted for the user"
         }
       ]
@@ -1632,6 +1648,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier for the calendar event associated with the call."
         },
         {
@@ -1640,6 +1657,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier for the client related to the call."
         },
         {
@@ -1648,6 +1666,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Custom data associated with the call."
         },
         {
@@ -1656,6 +1675,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Direction of the call (inbound/outbound)."
         },
         {
@@ -1664,6 +1684,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Duration of the call in seconds."
         },
         {
@@ -1672,6 +1693,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier for the call."
         },
         {
@@ -1680,6 +1702,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Indicates if the call is private or not."
         },
         {
@@ -1688,6 +1711,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Language used in the call."
         },
         {
@@ -1696,6 +1720,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Media type used for communication (voice, video, etc.)."
         },
         {
@@ -1704,6 +1729,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "URL for accessing the meeting associated with the call."
         },
         {
@@ -1712,6 +1738,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier for the primary user involved in the call."
         },
         {
@@ -1720,6 +1747,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Purpose or topic of the call."
         },
         {
@@ -1728,6 +1756,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Scheduled date and time of the call."
         },
         {
@@ -1736,6 +1765,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Scope or extent of the call."
         },
         {
@@ -1744,6 +1774,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Disposition set by the sales development representative."
         },
         {
@@ -1752,6 +1783,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Start date and time of the call."
         },
         {
@@ -1760,6 +1792,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "System information related to the call."
         },
         {
@@ -1768,6 +1801,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Title or headline of the call."
         },
         {
@@ -1776,6 +1810,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "URL associated with the call."
         },
         {
@@ -1784,6 +1819,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Identifier for the workspace to which the call belongs."
         }
       ]
@@ -1807,6 +1843,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Unique identifier for the call (from metaData.id)."
         },
         {
@@ -1815,6 +1852,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Datetime for extensive calls."
         },
         {
@@ -1823,6 +1861,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Collaboration information added to the call"
         },
         {
@@ -1831,6 +1870,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Analysis of the interaction content."
         },
         {
@@ -1839,6 +1879,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "A list of the agenda of each part of the call."
         },
         {
@@ -1847,6 +1888,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Metrics collected around the interaction during the call."
         },
         {
@@ -1855,6 +1897,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The media urls of the call."
         },
         {
@@ -1863,6 +1906,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "call's metadata."
         },
         {
@@ -1871,6 +1915,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "A list of the call's participants"
         }
       ]
@@ -1894,6 +1939,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The timestamp when the scorecard was created"
         },
         {
@@ -1902,6 +1948,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Indicates if the scorecard is enabled or disabled"
         },
         {
@@ -1910,6 +1957,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "An array of questions related to the scorecard"
         },
         {
@@ -1918,6 +1966,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The unique identifier of the scorecard"
         },
         {
@@ -1926,6 +1975,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The name of the scorecard"
         },
         {
@@ -1934,6 +1984,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The timestamp when the scorecard was last updated"
         },
         {
@@ -1942,6 +1993,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The user ID of the person who last updated the scorecard"
         },
         {
@@ -1950,6 +2002,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The unique identifier of the workspace associated with the scorecard"
         }
       ]
@@ -1973,6 +2026,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier for the answered scorecard instance."
         },
         {
@@ -1981,6 +2035,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Contains the answered questions in the scorecards"
         },
         {
@@ -1989,6 +2044,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier for the call associated with the answered scorecard."
         },
         {
@@ -1997,6 +2053,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp indicating the start time of the call."
         },
         {
@@ -2005,6 +2062,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp indicating when the review of the answered scorecard was completed."
         },
         {
@@ -2013,6 +2071,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier for the user whose performance was reviewed."
         },
         {
@@ -2021,6 +2080,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier for the user who performed the review."
         },
         {
@@ -2029,6 +2089,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier for the scorecard template used."
         },
         {
@@ -2037,6 +2098,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Name or title of the scorecard template used."
         },
         {
@@ -2045,6 +2107,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Type indicating the visibility permissions for the answered scorecard."
         }
       ]

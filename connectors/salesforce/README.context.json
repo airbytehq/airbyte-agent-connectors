@@ -5405,6 +5405,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier for the account record"
         },
         {
@@ -5413,6 +5414,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Name of the account or company"
         },
         {
@@ -5421,6 +5423,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Source of the account record (e.g., Web, Referral)"
         },
         {
@@ -5429,6 +5432,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Complete billing address as a compound field"
         },
         {
@@ -5437,6 +5441,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "City portion of the billing address"
         },
         {
@@ -5445,6 +5450,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Country portion of the billing address"
         },
         {
@@ -5453,6 +5459,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Postal code portion of the billing address"
         },
         {
@@ -5461,6 +5468,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "State or province portion of the billing address"
         },
         {
@@ -5469,6 +5477,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Street address portion of the billing address"
         },
         {
@@ -5477,6 +5486,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the user who created this account"
         },
         {
@@ -5485,6 +5495,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Date and time when the account was created"
         },
         {
@@ -5493,6 +5504,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Text description of the account"
         },
         {
@@ -5501,6 +5513,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Primary business industry of the account"
         },
         {
@@ -5509,6 +5522,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the account has been moved to the Recycle Bin"
         },
         {
@@ -5517,6 +5531,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Date of the last activity associated with this account"
         },
         {
@@ -5525,6 +5540,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the user who last modified this account"
         },
         {
@@ -5533,6 +5549,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Date and time when the account was last modified"
         },
         {
@@ -5541,6 +5558,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Number of employees at the account"
         },
         {
@@ -5549,6 +5567,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the user who owns this account"
         },
         {
@@ -5557,6 +5576,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the parent account, if this is a subsidiary"
         },
         {
@@ -5565,6 +5585,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Primary phone number for the account"
         },
         {
@@ -5573,6 +5594,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Complete shipping address as a compound field"
         },
         {
@@ -5581,6 +5603,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "City portion of the shipping address"
         },
         {
@@ -5589,6 +5612,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Country portion of the shipping address"
         },
         {
@@ -5597,6 +5621,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Postal code portion of the shipping address"
         },
         {
@@ -5605,6 +5630,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "State or province portion of the shipping address"
         },
         {
@@ -5613,6 +5639,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Street address portion of the shipping address"
         },
         {
@@ -5621,6 +5648,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Type of account (e.g., Customer, Partner, Competitor)"
         },
         {
@@ -5629,6 +5657,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Website URL for the account"
         },
         {
@@ -5637,6 +5666,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "System timestamp when the record was last modified"
         }
       ]
@@ -5660,6 +5690,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier for the contact record"
         },
         {
@@ -5668,6 +5699,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the account this contact is associated with"
         },
         {
@@ -5676,6 +5708,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the user who created this contact"
         },
         {
@@ -5684,6 +5717,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Date and time when the contact was created"
         },
         {
@@ -5692,6 +5726,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Department within the account where the contact works"
         },
         {
@@ -5700,6 +5735,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Email address of the contact"
         },
         {
@@ -5708,6 +5744,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "First name of the contact"
         },
         {
@@ -5716,6 +5753,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the contact has been moved to the Recycle Bin"
         },
         {
@@ -5724,6 +5762,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Date of the last activity associated with this contact"
         },
         {
@@ -5732,6 +5771,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the user who last modified this contact"
         },
         {
@@ -5740,6 +5780,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Date and time when the contact was last modified"
         },
         {
@@ -5748,6 +5789,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Last name of the contact"
         },
         {
@@ -5756,6 +5798,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Source from which this contact originated"
         },
         {
@@ -5764,6 +5807,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Complete mailing address as a compound field"
         },
         {
@@ -5772,6 +5816,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "City portion of the mailing address"
         },
         {
@@ -5780,6 +5825,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Country portion of the mailing address"
         },
         {
@@ -5788,6 +5834,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Postal code portion of the mailing address"
         },
         {
@@ -5796,6 +5843,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "State or province portion of the mailing address"
         },
         {
@@ -5804,6 +5852,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Street address portion of the mailing address"
         },
         {
@@ -5812,6 +5861,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Mobile phone number of the contact"
         },
         {
@@ -5820,6 +5870,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Full name of the contact (read-only, concatenation of first and last name)"
         },
         {
@@ -5828,6 +5879,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the user who owns this contact"
         },
         {
@@ -5836,6 +5888,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Business phone number of the contact"
         },
         {
@@ -5844,6 +5897,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the contact this contact reports to"
         },
         {
@@ -5852,6 +5906,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Job title of the contact"
         },
         {
@@ -5860,6 +5915,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "System timestamp when the record was last modified"
         }
       ]
@@ -5883,6 +5939,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier for the lead record"
         },
         {
@@ -5891,6 +5948,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Complete address as a compound field"
         },
         {
@@ -5899,6 +5957,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "City portion of the address"
         },
         {
@@ -5907,6 +5966,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Company or organization the lead works for"
         },
         {
@@ -5915,6 +5975,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the account created when lead was converted"
         },
         {
@@ -5923,6 +5984,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the contact created when lead was converted"
         },
         {
@@ -5931,6 +5993,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Date when the lead was converted"
         },
         {
@@ -5939,6 +6002,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the opportunity created when lead was converted"
         },
         {
@@ -5947,6 +6011,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Country portion of the address"
         },
         {
@@ -5955,6 +6020,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the user who created this lead"
         },
         {
@@ -5963,6 +6029,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Date and time when the lead was created"
         },
         {
@@ -5971,6 +6038,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Email address of the lead"
         },
         {
@@ -5979,6 +6047,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "First name of the lead"
         },
         {
@@ -5987,6 +6056,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Industry the lead's company operates in"
         },
         {
@@ -5995,6 +6065,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the lead has been converted to an account, contact, and opportunity"
         },
         {
@@ -6003,6 +6074,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the lead has been moved to the Recycle Bin"
         },
         {
@@ -6011,6 +6083,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Date of the last activity associated with this lead"
         },
         {
@@ -6019,6 +6092,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the user who last modified this lead"
         },
         {
@@ -6027,6 +6101,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Date and time when the lead was last modified"
         },
         {
@@ -6035,6 +6110,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Last name of the lead"
         },
         {
@@ -6043,6 +6119,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Source from which this lead originated"
         },
         {
@@ -6051,6 +6128,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Mobile phone number of the lead"
         },
         {
@@ -6059,6 +6137,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Full name of the lead (read-only, concatenation of first and last name)"
         },
         {
@@ -6067,6 +6146,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Number of employees at the lead's company"
         },
         {
@@ -6075,6 +6155,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the user who owns this lead"
         },
         {
@@ -6083,6 +6164,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Phone number of the lead"
         },
         {
@@ -6091,6 +6173,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Postal code portion of the address"
         },
         {
@@ -6099,6 +6182,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Rating of the lead (e.g., Hot, Warm, Cold)"
         },
         {
@@ -6107,6 +6191,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "State or province portion of the address"
         },
         {
@@ -6115,6 +6200,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Current status of the lead in the sales process"
         },
         {
@@ -6123,6 +6209,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Street address portion of the address"
         },
         {
@@ -6131,6 +6218,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Job title of the lead"
         },
         {
@@ -6139,6 +6227,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Website URL for the lead's company"
         },
         {
@@ -6147,6 +6236,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "System timestamp when the record was last modified"
         }
       ]
@@ -6170,6 +6260,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier for the opportunity record"
         },
         {
@@ -6178,6 +6269,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the account associated with this opportunity"
         },
         {
@@ -6186,6 +6278,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Estimated total sale amount"
         },
         {
@@ -6194,6 +6287,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the campaign that generated this opportunity"
         },
         {
@@ -6202,6 +6296,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Expected close date for the opportunity"
         },
         {
@@ -6210,6 +6305,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the primary contact for this opportunity"
         },
         {
@@ -6218,6 +6314,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the user who created this opportunity"
         },
         {
@@ -6226,6 +6323,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Date and time when the opportunity was created"
         },
         {
@@ -6234,6 +6332,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Text description of the opportunity"
         },
         {
@@ -6242,6 +6341,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Expected revenue based on amount and probability"
         },
         {
@@ -6250,6 +6350,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Forecast category for this opportunity"
         },
         {
@@ -6258,6 +6359,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Name of the forecast category"
         },
         {
@@ -6266,6 +6368,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the opportunity is closed"
         },
         {
@@ -6274,6 +6377,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the opportunity has been moved to the Recycle Bin"
         },
         {
@@ -6282,6 +6386,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the opportunity was won"
         },
         {
@@ -6290,6 +6395,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Date of the last activity associated with this opportunity"
         },
         {
@@ -6298,6 +6404,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the user who last modified this opportunity"
         },
         {
@@ -6306,6 +6413,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Date and time when the opportunity was last modified"
         },
         {
@@ -6314,6 +6422,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Source from which this opportunity originated"
         },
         {
@@ -6322,6 +6431,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Name of the opportunity"
         },
         {
@@ -6330,6 +6440,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Description of the next step in closing the opportunity"
         },
         {
@@ -6338,6 +6449,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the user who owns this opportunity"
         },
         {
@@ -6346,6 +6458,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Likelihood of closing the opportunity (percentage)"
         },
         {
@@ -6354,6 +6467,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Current stage of the opportunity in the sales process"
         },
         {
@@ -6362,6 +6476,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Type of opportunity (e.g., New Business, Existing Business)"
         },
         {
@@ -6370,6 +6485,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "System timestamp when the record was last modified"
         }
       ]
@@ -6393,6 +6509,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier for the task record"
         },
         {
@@ -6401,6 +6518,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the account associated with this task"
         },
         {
@@ -6409,6 +6527,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Due date for the task"
         },
         {
@@ -6417,6 +6536,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Result of the call, if this task represents a call"
         },
         {
@@ -6425,6 +6545,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Duration of the call in seconds"
         },
         {
@@ -6433,6 +6554,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Type of call (Inbound, Outbound, Internal)"
         },
         {
@@ -6441,6 +6563,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Date and time when the task was completed"
         },
         {
@@ -6449,6 +6572,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the user who created this task"
         },
         {
@@ -6457,6 +6581,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Date and time when the task was created"
         },
         {
@@ -6465,6 +6590,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Text description or notes about the task"
         },
         {
@@ -6473,6 +6599,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the task has been completed"
         },
         {
@@ -6481,6 +6608,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the task has been moved to the Recycle Bin"
         },
         {
@@ -6489,6 +6617,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the task is marked as high priority"
         },
         {
@@ -6497,6 +6626,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the user who last modified this task"
         },
         {
@@ -6505,6 +6635,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Date and time when the task was last modified"
         },
         {
@@ -6513,6 +6644,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the user who owns this task"
         },
         {
@@ -6521,6 +6653,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Priority level of the task (High, Normal, Low)"
         },
         {
@@ -6529,6 +6662,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Current status of the task"
         },
         {
@@ -6537,6 +6671,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Subject or title of the task"
         },
         {
@@ -6545,6 +6680,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Subtype of the task (e.g., Call, Email, Task)"
         },
         {
@@ -6553,6 +6689,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Type of task"
         },
         {
@@ -6561,6 +6698,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the related object (Account, Opportunity, etc.)"
         },
         {
@@ -6569,6 +6707,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the related person (Contact or Lead)"
         },
         {
@@ -6577,6 +6716,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "System timestamp when the record was last modified"
         }
       ]
@@ -6600,6 +6740,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier for the user record"
         },
         {
@@ -6608,6 +6749,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the account associated with this user (for portal users)"
         },
         {
@@ -6616,6 +6758,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Short name used to identify the user in list views and reports"
         },
         {
@@ -6624,6 +6767,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "City portion of the user's address"
         },
         {
@@ -6632,6 +6776,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Name of the user's company"
         },
         {
@@ -6640,6 +6785,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the contact associated with this user (for portal users)"
         },
         {
@@ -6648,6 +6794,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Country portion of the user's address"
         },
         {
@@ -6656,6 +6803,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the user who created this user record"
         },
         {
@@ -6664,6 +6812,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Date and time when the user was created"
         },
         {
@@ -6672,6 +6821,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Department within the organization"
         },
         {
@@ -6680,6 +6830,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Division within the organization"
         },
         {
@@ -6688,6 +6839,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Email address of the user"
         },
         {
@@ -6696,6 +6848,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Employee number or ID assigned by the organization"
         },
         {
@@ -6704,6 +6857,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "First name of the user"
         },
         {
@@ -6712,6 +6866,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the user is active and can log in"
         },
         {
@@ -6720,6 +6875,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Date and time of the user's most recent login"
         },
         {
@@ -6728,6 +6884,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the user who last modified this user record"
         },
         {
@@ -6736,6 +6893,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Date and time when the user was last modified"
         },
         {
@@ -6744,6 +6902,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Last name of the user"
         },
         {
@@ -6752,6 +6911,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the user's manager"
         },
         {
@@ -6760,6 +6920,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Mobile phone number of the user"
         },
         {
@@ -6768,6 +6929,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Full name of the user"
         },
         {
@@ -6776,6 +6938,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Business phone number of the user"
         },
         {
@@ -6784,6 +6947,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Postal code portion of the user's address"
         },
         {
@@ -6792,6 +6956,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the user's profile"
         },
         {
@@ -6800,6 +6965,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "State or province portion of the user's address"
         },
         {
@@ -6808,6 +6974,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Street address of the user"
         },
         {
@@ -6816,6 +6983,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Job title of the user"
         },
         {
@@ -6824,6 +6992,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the user's role in the organization"
         },
         {
@@ -6832,6 +7001,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Type of user license (e.g., Standard, PowerPartner)"
         },
         {
@@ -6840,6 +7010,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Username for logging into Salesforce (unique across all orgs)"
         },
         {
@@ -6848,6 +7019,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "System timestamp when the record was last modified"
         }
       ]
@@ -6871,6 +7043,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier for the opportunity stage record"
         },
         {
@@ -6879,6 +7052,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "API name of the stage used in code and integrations"
         },
         {
@@ -6887,6 +7061,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the user who created this stage"
         },
         {
@@ -6895,6 +7070,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Date and time when the stage was created"
         },
         {
@@ -6903,6 +7079,7 @@
           "type": "float | None",
           "json_type": "null | number",
           "example_value_json": "0.0",
+          "json_example_value": 0.0,
           "description": "Default probability percentage for opportunities at this stage"
         },
         {
@@ -6911,6 +7088,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Description of the stage"
         },
         {
@@ -6919,6 +7097,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Forecast category for opportunities at this stage"
         },
         {
@@ -6927,6 +7106,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Display name of the forecast category"
         },
         {
@@ -6935,6 +7115,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the stage is currently active and can be used"
         },
         {
@@ -6943,6 +7124,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether opportunities at this stage are considered closed"
         },
         {
@@ -6951,6 +7133,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether opportunities at this stage are considered won"
         },
         {
@@ -6959,6 +7142,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the user who last modified this stage"
         },
         {
@@ -6967,6 +7151,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Date and time when the stage was last modified"
         },
         {
@@ -6975,6 +7160,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Display label for the stage"
         },
         {
@@ -6983,6 +7169,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Order in which the stage appears in the sales process"
         },
         {
@@ -6991,6 +7178,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "System timestamp when the record was last modified"
         }
       ]

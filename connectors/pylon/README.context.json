@@ -2590,6 +2590,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier for the issue"
         },
         {
@@ -2598,6 +2599,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Title of the issue"
         },
         {
@@ -2606,6 +2608,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Current state of the issue (e.g. new, in_progress, closed)"
         },
         {
@@ -2614,6 +2617,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Channel the issue originated from (e.g. email, slack)"
         },
         {
@@ -2622,6 +2626,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Type classification of the issue"
         },
         {
@@ -2630,6 +2635,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Human-readable issue number within the workspace"
         },
         {
@@ -2638,6 +2644,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp when the issue was created, in ISO 8601 format"
         },
         {
@@ -2646,6 +2653,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp of the most recent message on the issue, in ISO 8601 format"
         },
         {
@@ -2654,6 +2662,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp when the issue was resolved, in ISO 8601 format"
         },
         {
@@ -2662,6 +2671,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp the issue is snoozed until, in ISO 8601 format"
         },
         {
@@ -2670,6 +2680,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the issue is visible in the customer portal"
         }
       ]
@@ -2693,6 +2704,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier for the account"
         },
         {
@@ -2701,6 +2713,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Name of the account (customer organization)"
         },
         {
@@ -2709,6 +2722,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Primary domain associated with the account"
         },
         {
@@ -2717,6 +2731,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Canonical primary domain for the account"
         },
         {
@@ -2725,6 +2740,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Classification of the account (e.g. customer, prospect)"
         },
         {
@@ -2733,6 +2749,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the account has been disabled"
         },
         {
@@ -2741,6 +2758,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp when the account was created, in ISO 8601 format"
         },
         {
@@ -2749,6 +2767,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp of the most recent activity from this account, in ISO 8601 format"
         }
       ]
@@ -2772,6 +2791,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier for the contact"
         },
         {
@@ -2780,6 +2800,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Full name of the contact"
         },
         {
@@ -2788,6 +2809,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Primary email address of the contact"
         },
         {
@@ -2796,6 +2818,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Primary phone number of the contact"
         },
         {
@@ -2804,6 +2827,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Role the contact has in the customer portal"
         }
       ]
@@ -2827,6 +2851,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier for the team"
         },
         {
@@ -2835,6 +2860,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Name of the team"
         }
       ]
@@ -2858,6 +2884,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier for the tag"
         },
         {
@@ -2866,6 +2893,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Display value of the tag"
         },
         {
@@ -2874,6 +2902,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Type of object this tag applies to (e.g. issue, account)"
         }
       ]
@@ -2897,6 +2926,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier for the user"
         },
         {
@@ -2905,6 +2935,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Full name of the user"
         },
         {
@@ -2913,6 +2944,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Primary email address of the user"
         },
         {
@@ -2921,6 +2953,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Identifier of the user's role"
         },
         {
@@ -2929,6 +2962,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Current status of the user (e.g. active, disabled)"
         }
       ]
@@ -2952,6 +2986,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier for the custom field"
         },
         {
@@ -2960,6 +2995,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Display label of the custom field"
         },
         {
@@ -2968,6 +3004,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "URL-safe identifier for the custom field"
         },
         {
@@ -2976,6 +3013,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Data type of the custom field (e.g. text, select)"
         },
         {
@@ -2984,6 +3022,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Type of object this custom field applies to (e.g. issue, account)"
         },
         {
@@ -2992,6 +3031,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the custom field is read-only"
         },
         {
@@ -3000,6 +3040,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp when the custom field was created, in ISO 8601 format"
         }
       ]
@@ -3023,6 +3064,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier for the ticket form"
         },
         {
@@ -3031,6 +3073,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Display name of the ticket form"
         },
         {
@@ -3039,6 +3082,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "URL-safe identifier for the ticket form"
         },
         {
@@ -3047,6 +3091,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the ticket form is publicly accessible"
         }
       ]
@@ -3070,6 +3115,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier for the user role"
         },
         {
@@ -3078,6 +3124,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Display name of the user role"
         },
         {
@@ -3086,6 +3133,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "URL-safe identifier for the user role"
         }
       ]

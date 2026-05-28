@@ -87,6 +87,7 @@ class ConnectorGenerator:
         self.env.filters["snake_case"] = to_snake_case
         self.env.filters["pascal_case"] = to_pascal_case
         self.env.filters["mdx_escape"] = mdx_escape
+        self.env.filters["pretty_json"] = self._pretty_json
 
         # Initialize nested schemas dict for tracking generated nested TypedDicts
         self._nested_schemas = {}  # TypedDict nested schemas for types.py (parameters)
@@ -610,6 +611,7 @@ class ConnectorGenerator:
                 enhanced_param = param.copy()
                 enhanced_param["example_value"] = self._get_example_value_for_param(param, base_indent=4)
                 enhanced_param["example_value_json"] = self._get_example_value_for_param(param, base_indent=8)
+                enhanced_param["json_example_value"] = self._get_json_example_value_for_param(param)
                 enhanced_params.append(enhanced_param)
 
             # Flatten parameters for documentation table (with dot notation)
@@ -1107,6 +1109,7 @@ class ConnectorGenerator:
                 if isinstance(base_type, list):
                     base_type = next((t for t in base_type if t != "null"), "string")
                 example_value_json = self._schema_to_example_value({"type": base_type}, field.name, base_indent=8)
+                json_example_value = self._schema_to_json_example_value({"type": base_type}, field.name)
 
                 fields.append(
                     {
@@ -1115,6 +1118,7 @@ class ConnectorGenerator:
                         "type": python_type,
                         "json_type": json_type,
                         "example_value_json": example_value_json,
+                        "json_example_value": json_example_value,
                         "description": field.description,
                     }
                 )
@@ -2355,6 +2359,61 @@ class ConnectorGenerator:
             raise ValueError(f"Parameter '{param_name}' has invalid schema (expected dict, got {type(param_schema).__name__})")
 
         return self._schema_to_example_value(param_schema, param_name, base_indent)
+
+    def _get_json_example_value_for_param(self, param: dict) -> Any:
+        param_name = param.get("name")
+        if not param_name:
+            raise ValueError(f"Parameter dict is missing 'name' field. This indicates a bug in parameter extraction. Param: {param}")
+
+        param_schema = param.get("schema")
+        if not param_schema:
+            raise ValueError(
+                f"Parameter '{param_name}' is missing 'schema' field. "
+                f"All parameters must include their OpenAPI schema for accurate example generation."
+            )
+
+        if not isinstance(param_schema, dict):
+            raise ValueError(f"Parameter '{param_name}' has invalid schema (expected dict, got {type(param_schema).__name__})")
+
+        return self._schema_to_json_example_value(param_schema, param_name)
+
+    def _schema_to_json_example_value(self, schema: dict, field_name: str = "field") -> Any:
+        schema_type = schema.get("type")
+
+        if isinstance(schema_type, list):
+            non_null_types = [t for t in schema_type if t != "null"]
+            schema_type = non_null_types[0] if non_null_types else "string"
+
+        if schema_type == "object":
+            properties = schema.get("properties", {})
+            required = schema.get("required", [])
+            if required and properties:
+                return {
+                    req_field: self._schema_to_json_example_value(properties[req_field], req_field)
+                    for req_field in required
+                    if req_field in properties
+                }
+            return {}
+
+        if schema_type == "array":
+            return []
+        if schema_type == "boolean":
+            return True
+        if schema_type == "integer":
+            return 0
+        if schema_type == "number":
+            return 0.0
+        if schema_type == "string":
+            if schema.get("format") == "date-time":
+                return "2025-01-01T00:00:00Z"
+            return "<str>"
+
+        raise ValueError(f"Field '{field_name}' has unsupported or missing schema type. Schema: {schema}")
+
+    @staticmethod
+    def _pretty_json(value: Any) -> str:
+        """Render a JSON example payload for generated documentation."""
+        return json.dumps(value, indent=2)
 
     def _schema_to_example_value(self, schema: dict, field_name: str = "field", base_indent: int = 4) -> str:
         """Recursively generate example value from OpenAPI schema with proper indentation.

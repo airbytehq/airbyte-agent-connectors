@@ -1894,6 +1894,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "[A/B Testing](https://mailchimp.com/help/about-ab-testing-campaigns/) options for a campaign."
         },
         {
@@ -1902,6 +1903,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The link to the campaign's archive version in ISO 8601 format."
         },
         {
@@ -1910,6 +1912,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "How the campaign's content is put together."
         },
         {
@@ -1918,6 +1921,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The date and time the campaign was created in ISO 8601 format."
         },
         {
@@ -1926,6 +1930,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Updates on campaigns in the process of sending."
         },
         {
@@ -1934,6 +1939,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The total number of emails sent for this campaign."
         },
         {
@@ -1942,6 +1948,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "A string that uniquely identifies this campaign."
         },
         {
@@ -1950,6 +1957,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The original link to the campaign's archive version."
         },
         {
@@ -1958,6 +1966,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Determines if the campaign needs its blocks refreshed by opening the web-based campaign editor. D..."
         },
         {
@@ -1966,6 +1975,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "If this campaign is the child of another campaign, this identifies the parent campaign. For Examp..."
         },
         {
@@ -1974,6 +1984,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "List settings for the campaign."
         },
         {
@@ -1982,6 +1993,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "For sent campaigns, a summary of opens, clicks, and e-commerce data."
         },
         {
@@ -1990,6 +2002,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Determines if the campaign qualifies to be resent to non-openers."
         },
         {
@@ -1998,6 +2011,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "[RSS](https://mailchimp.com/help/share-your-blog-posts-with-mailchimp/) options for a campaign."
         },
         {
@@ -2006,6 +2020,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The date and time a campaign was sent."
         },
         {
@@ -2014,6 +2029,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The settings for your campaign, including subject, from name, reply-to address, and more."
         },
         {
@@ -2022,6 +2038,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The preview for the campaign, rendered by social networks like Facebook and Twitter. [Learn more]..."
         },
         {
@@ -2030,6 +2047,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The current status of the campaign."
         },
         {
@@ -2038,6 +2056,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The tracking options for a campaign."
         },
         {
@@ -2046,6 +2065,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "There are four types of [campaigns](https://mailchimp.com/help/getting-started-with-campaigns/) y..."
         },
         {
@@ -2054,6 +2074,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The settings specific to A/B test campaigns."
         },
         {
@@ -2062,6 +2083,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The ID used in the Mailchimp web application. View this campaign in your Mailchimp account at `ht..."
         }
       ]
@@ -2085,6 +2107,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "One of the following actions: 'open', 'click', or 'bounce'"
         },
         {
@@ -2093,6 +2116,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The unique id for the campaign."
         },
         {
@@ -2101,6 +2125,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Email address for a subscriber."
         },
         {
@@ -2109,6 +2134,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The MD5 hash of the lowercase version of the list member's email address."
         },
         {
@@ -2117,6 +2143,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The IP address recorded for the action."
         },
         {
@@ -2125,6 +2152,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The unique id for the list."
         },
         {
@@ -2133,6 +2161,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "The status of the list used, namely if it's deleted or disabled."
         },
         {
@@ -2141,6 +2170,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The date and time recorded for the action in ISO 8601 format."
         },
         {
@@ -2149,6 +2179,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "If the action is a 'bounce', the type of bounce received: 'hard', 'soft'."
         },
         {
@@ -2157,6 +2188,7 @@
           "type": "str | None",
           "json_type": "string | null",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "If the action is a 'click', the URL on which the member clicked."
         }
       ]
@@ -2180,6 +2212,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The list's Email Beamer address."
         },
         {
@@ -2188,6 +2221,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Default values for campaigns created for this list."
         },
         {
@@ -2196,6 +2230,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Contact information displayed in campaign footers to comply with international spam laws."
         },
         {
@@ -2204,6 +2239,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The date and time that this list was created in ISO 8601 format."
         },
         {
@@ -2212,6 +2248,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether or not to require the subscriber to confirm subscription via email."
         },
         {
@@ -2220,6 +2257,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the list supports multiple formats for emails. When set to `true`, subscribers can choose..."
         },
         {
@@ -2228,6 +2266,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether or not this list has a welcome automation connected."
         },
         {
@@ -2236,6 +2275,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "A string that uniquely identifies this list."
         },
         {
@@ -2244,6 +2284,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "An auto-generated activity score for the list (0-5)."
         },
         {
@@ -2252,6 +2293,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether or not the list has marketing permissions (eg. GDPR) enabled."
         },
         {
@@ -2260,6 +2302,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Any list-specific modules installed for this list."
         },
         {
@@ -2268,6 +2311,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The name of the list."
         },
         {
@@ -2276,6 +2320,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The email address to send subscribe notifications to."
         },
         {
@@ -2284,6 +2329,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The email address to send unsubscribe notifications to."
         },
         {
@@ -2292,6 +2338,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The permission reminder for the list."
         },
         {
@@ -2300,6 +2347,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Stats for the list. Many of these are cached for at least five minutes."
         },
         {
@@ -2308,6 +2356,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The full version of this list's subscribe form (host will vary)."
         },
         {
@@ -2316,6 +2365,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Our EepURL shortened version of this list's subscribe form."
         },
         {
@@ -2324,6 +2374,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether campaigns for this list use the Archive Bar in archives by default."
         },
         {
@@ -2332,6 +2383,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Whether this list is public or private."
         },
         {
@@ -2340,6 +2392,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The ID used in the Mailchimp web application. View this list in your Mailchimp account at `https:..."
         }
       ]
@@ -2363,6 +2416,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "General stats about different groups of an A/B Split campaign. Does not return information about ..."
         },
         {
@@ -2371,6 +2425,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The number of abuse reports generated for this campaign."
         },
         {
@@ -2379,6 +2434,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "An object describing the bounce summary for the campaign."
         },
         {
@@ -2387,6 +2443,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The title of the campaign."
         },
         {
@@ -2395,6 +2452,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "An object describing the click activity for the campaign."
         },
         {
@@ -2403,6 +2461,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Updates on campaigns in the process of sending."
         },
         {
@@ -2411,6 +2470,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "E-Commerce stats for a campaign."
         },
         {
@@ -2419,6 +2479,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The total number of emails sent for this campaign."
         },
         {
@@ -2427,6 +2488,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "An object describing campaign engagement on Facebook."
         },
         {
@@ -2435,6 +2497,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "An object describing the forwards and forward activity for the campaign."
         },
         {
@@ -2443,6 +2506,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "A string that uniquely identifies this campaign."
         },
         {
@@ -2451,6 +2515,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The average campaign statistics for your industry."
         },
         {
@@ -2459,6 +2524,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The unique list id."
         },
         {
@@ -2467,6 +2533,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "The status of the list used, namely if it's deleted or disabled."
         },
         {
@@ -2475,6 +2542,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The name of the list."
         },
         {
@@ -2483,6 +2551,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The average campaign statistics for your list. This won't be present if we haven't calculated i..."
         },
         {
@@ -2491,6 +2560,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "An object describing the open activity for the campaign."
         },
         {
@@ -2499,6 +2569,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The preview text for the campaign."
         },
         {
@@ -2507,6 +2578,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "For RSS campaigns, the date and time of the last send in ISO 8601 format."
         },
         {
@@ -2515,6 +2587,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The date and time a campaign was sent in ISO 8601 format."
         },
         {
@@ -2523,6 +2596,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The url and password for the VIP report."
         },
         {
@@ -2531,6 +2605,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The subject line for the campaign."
         },
         {
@@ -2539,6 +2614,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "An hourly breakdown of the performance of the campaign over the first 24 hours."
         },
         {
@@ -2547,6 +2623,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "An hourly breakdown of sends, opens, and clicks if a campaign is sent using timewarp."
         },
         {
@@ -2555,6 +2632,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The type of campaign (regular, plain-text, ab_split, rss, automation, variate, or auto)."
         },
         {
@@ -2563,6 +2641,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The total number of unsubscribed members for this campaign."
         }
       ]
@@ -2586,6 +2665,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The MD5 hash of the lowercase version of the list member's email address"
         },
         {
@@ -2594,6 +2674,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Email address for a subscriber"
         },
         {
@@ -2602,6 +2683,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "An identifier for the address across all of Mailchimp"
         },
         {
@@ -2610,6 +2692,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "As Mailchimp evolves beyond email, you may eventually have contacts without email addresses"
         },
         {
@@ -2618,6 +2701,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The contact's full name"
         },
         {
@@ -2626,6 +2710,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The ID used in the Mailchimp web application"
         },
         {
@@ -2634,6 +2719,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Type of email this member asked to get"
         },
         {
@@ -2642,6 +2728,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Subscriber's current status"
         },
         {
@@ -2650,6 +2737,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "A subscriber's reason for unsubscribing"
         },
         {
@@ -2658,6 +2746,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Indicates whether a contact consents to 1:1 messaging"
         },
         {
@@ -2666,6 +2755,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "A dictionary of merge fields where the keys are the merge tags"
         },
         {
@@ -2674,6 +2764,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The key of this object's properties is the ID of the interest in question"
         },
         {
@@ -2682,6 +2773,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Open and click rates for this subscriber"
         },
         {
@@ -2690,6 +2782,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "IP address the subscriber signed up from"
         },
         {
@@ -2698,6 +2791,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The date and time the subscriber signed up for the list"
         },
         {
@@ -2706,6 +2800,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The IP address the subscriber used to confirm their opt-in status"
         },
         {
@@ -2714,6 +2809,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The date and time the subscriber confirmed their opt-in status"
         },
         {
@@ -2722,6 +2818,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Star rating for this member, between 1 and 5"
         },
         {
@@ -2730,6 +2827,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The date and time the member's info was last changed"
         },
         {
@@ -2738,6 +2836,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "If set/detected, the subscriber's language"
         },
         {
@@ -2746,6 +2845,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "VIP status for subscriber"
         },
         {
@@ -2754,6 +2854,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The list member's email client"
         },
         {
@@ -2762,6 +2863,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Subscriber location information"
         },
         {
@@ -2770,6 +2872,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The source from which the subscriber was added to this list"
         },
         {
@@ -2778,6 +2881,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The number of tags applied to this member"
         },
         {
@@ -2786,6 +2890,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Returns up to 50 tags applied to this member"
         },
         {
@@ -2794,6 +2899,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The list id"
         }
       ]
@@ -2817,6 +2923,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "A string that uniquely identifies an Automation workflow"
         },
         {
@@ -2825,6 +2932,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The date and time the Automation was created"
         },
         {
@@ -2833,6 +2941,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The date and time the Automation was started"
         },
         {
@@ -2841,6 +2950,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The current status of the Automation"
         },
         {
@@ -2849,6 +2959,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The total number of emails sent for the Automation"
         },
         {
@@ -2857,6 +2968,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "List settings for the Automation"
         },
         {
@@ -2865,6 +2977,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The settings for the Automation workflow"
         },
         {
@@ -2873,6 +2986,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The tracking options for the Automation"
         },
         {
@@ -2881,6 +2995,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "A summary of opens and clicks for sent campaigns"
         }
       ]
@@ -2904,6 +3019,7 @@
           "type": "int",
           "json_type": "integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The unique id for the tag"
         },
         {
@@ -2912,6 +3028,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The name of the tag"
         }
       ]
@@ -2935,6 +3052,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The unique list id for the category"
         },
         {
@@ -2943,6 +3061,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The id for the interest category"
         },
         {
@@ -2951,6 +3070,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The text description of this category"
         },
         {
@@ -2959,6 +3079,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The order that the categories are displayed in the list"
         },
         {
@@ -2967,6 +3088,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Determines how this category's interests appear on signup forms"
         }
       ]
@@ -2990,6 +3112,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The id for the interest category"
         },
         {
@@ -2998,6 +3121,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The ID for the list that this interest belongs to"
         },
         {
@@ -3006,6 +3130,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The ID for the interest"
         },
         {
@@ -3014,6 +3139,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The name of the interest"
         },
         {
@@ -3022,6 +3148,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The number of subscribers associated with this interest"
         },
         {
@@ -3030,6 +3157,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The display order for interests"
         }
       ]
@@ -3053,6 +3181,7 @@
           "type": "int",
           "json_type": "integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The unique id for the segment"
         },
         {
@@ -3061,6 +3190,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The name of the segment"
         },
         {
@@ -3069,6 +3199,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "The number of active subscribers currently included in the segment"
         },
         {
@@ -3077,6 +3208,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The type of segment"
         },
         {
@@ -3085,6 +3217,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The date and time the segment was created"
         },
         {
@@ -3093,6 +3226,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The date and time the segment was last updated"
         },
         {
@@ -3101,6 +3235,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The conditions of the segment"
         },
         {
@@ -3109,6 +3244,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The list id"
         }
       ]
@@ -3132,6 +3268,7 @@
           "type": "str",
           "json_type": "string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The MD5 hash of the lowercase version of the list member's email address"
         },
         {
@@ -3140,6 +3277,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Email address for a subscriber"
         },
         {
@@ -3148,6 +3286,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "An identifier for the address across all of Mailchimp"
         },
         {
@@ -3156,6 +3295,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Type of email this member asked to get"
         },
         {
@@ -3164,6 +3304,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Subscriber's current status"
         },
         {
@@ -3172,6 +3313,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "A dictionary of merge fields where the keys are the merge tags"
         },
         {
@@ -3180,6 +3322,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "The key of this object's properties is the ID of the interest in question"
         },
         {
@@ -3188,6 +3331,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Open and click rates for this subscriber"
         },
         {
@@ -3196,6 +3340,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "IP address the subscriber signed up from"
         },
         {
@@ -3204,6 +3349,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The date and time the subscriber signed up for the list"
         },
         {
@@ -3212,6 +3358,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The IP address the subscriber used to confirm their opt-in status"
         },
         {
@@ -3220,6 +3367,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The date and time the subscriber confirmed their opt-in status"
         },
         {
@@ -3228,6 +3376,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Star rating for this member, between 1 and 5"
         },
         {
@@ -3236,6 +3385,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The date and time the member's info was last changed"
         },
         {
@@ -3244,6 +3394,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "If set/detected, the subscriber's language"
         },
         {
@@ -3252,6 +3403,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "VIP status for subscriber"
         },
         {
@@ -3260,6 +3412,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The list member's email client"
         },
         {
@@ -3268,6 +3421,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Subscriber location information"
         },
         {
@@ -3276,6 +3430,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The list id"
         }
       ]
@@ -3299,6 +3454,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The MD5 hash of the lowercase version of the list member's email address"
         },
         {
@@ -3307,6 +3463,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Email address for a subscriber"
         },
         {
@@ -3315,6 +3472,7 @@
           "type": "dict[str, Any] | None",
           "json_type": "null | object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "A dictionary of merge fields where the keys are the merge tags"
         },
         {
@@ -3323,6 +3481,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "VIP status for subscriber"
         },
         {
@@ -3331,6 +3490,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The date and time the member opted-out"
         },
         {
@@ -3339,6 +3499,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "If available, the reason listed by the member for unsubscribing"
         },
         {
@@ -3347,6 +3508,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The campaign id"
         },
         {
@@ -3355,6 +3517,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "The list id"
         },
         {
@@ -3363,6 +3526,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "The status of the list used"
         }
       ]

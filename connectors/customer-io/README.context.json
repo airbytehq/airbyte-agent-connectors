@@ -2257,6 +2257,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Actions defined in this campaign"
         },
         {
@@ -2265,6 +2266,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether the campaign is active"
         },
         {
@@ -2273,6 +2275,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Creation timestamp (Unix)"
         },
         {
@@ -2281,6 +2284,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Who created the campaign"
         },
         {
@@ -2289,6 +2293,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Date attribute used for date-triggered campaigns"
         },
         {
@@ -2297,6 +2302,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Deduplication identifier"
         },
         {
@@ -2305,6 +2311,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Event name that triggers the campaign"
         },
         {
@@ -2313,6 +2320,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "When the campaign was first started (Unix)"
         },
         {
@@ -2321,6 +2329,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "How frequently a person can receive this campaign"
         },
         {
@@ -2329,6 +2338,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Unique campaign identifier"
         },
         {
@@ -2337,6 +2347,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Message templates used in the campaign"
         },
         {
@@ -2345,6 +2356,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Campaign name"
         },
         {
@@ -2353,6 +2365,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Hour of the day to trigger"
         },
         {
@@ -2361,6 +2374,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Minute of the hour to trigger"
         },
         {
@@ -2369,6 +2383,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Campaign status (draft, active, stopped)"
         },
         {
@@ -2377,6 +2392,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Tags associated with the campaign"
         },
         {
@@ -2385,6 +2401,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timezone for trigger scheduling"
         },
         {
@@ -2393,6 +2410,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Segment IDs that trigger this campaign"
         },
         {
@@ -2401,6 +2419,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Campaign trigger type"
         },
         {
@@ -2409,6 +2428,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Last update timestamp (Unix)"
         },
         {
@@ -2417,6 +2437,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether to use the customer's timezone"
         }
       ]
@@ -2440,6 +2461,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "BCC addresses"
         },
         {
@@ -2448,6 +2470,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Action body content (HTML for emails)"
         },
         {
@@ -2456,6 +2479,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Parent campaign ID"
         },
         {
@@ -2464,6 +2488,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Creation timestamp (Unix)"
         },
         {
@@ -2472,6 +2497,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Deduplication identifier"
         },
         {
@@ -2480,6 +2506,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Editor used to create the action"
         },
         {
@@ -2488,6 +2515,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Whether to use fake BCC"
         },
         {
@@ -2496,6 +2524,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "From address"
         },
         {
@@ -2504,6 +2533,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Sender identity ID"
         },
         {
@@ -2512,6 +2542,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Custom email headers as JSON"
         },
         {
@@ -2520,6 +2551,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique action identifier"
         },
         {
@@ -2528,6 +2560,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Language variant"
         },
         {
@@ -2536,6 +2569,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Layout template used"
         },
         {
@@ -2544,6 +2578,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Action name"
         },
         {
@@ -2552,6 +2587,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Parent action ID for language variants"
         },
         {
@@ -2560,6 +2596,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Email preheader/preview text"
         },
         {
@@ -2568,6 +2605,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "CSS preprocessor setting"
         },
         {
@@ -2576,6 +2614,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Recipient address"
         },
         {
@@ -2584,6 +2623,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Recipient environment ID"
         },
         {
@@ -2592,6 +2632,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Reply-to address"
         },
         {
@@ -2600,6 +2641,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Reply-to sender identity ID"
         },
         {
@@ -2608,6 +2650,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "HTTP request method for webhook actions"
         },
         {
@@ -2616,6 +2659,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Sending behavior (automatic or draft)"
         },
         {
@@ -2624,6 +2668,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Email subject line"
         },
         {
@@ -2632,6 +2677,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Action type (email, webhook, twilio, push, slack, in_app, whatsapp)"
         },
         {
@@ -2640,6 +2686,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Last update timestamp (Unix)"
         },
         {
@@ -2648,6 +2695,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Webhook URL (for webhook actions)"
         }
       ]
@@ -2671,6 +2719,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Content variant IDs for this newsletter"
         },
         {
@@ -2679,6 +2728,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Creation timestamp (Unix)"
         },
         {
@@ -2687,6 +2737,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Deduplication identifier"
         },
         {
@@ -2695,6 +2746,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Unique newsletter identifier"
         },
         {
@@ -2703,6 +2755,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Newsletter name"
         },
         {
@@ -2711,6 +2764,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "When the newsletter was last sent (Unix)"
         },
         {
@@ -2719,6 +2773,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Tags associated with the newsletter"
         },
         {
@@ -2727,6 +2782,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Channel type (email, webhook, twilio, push, in_app, inbox)"
         },
         {
@@ -2735,6 +2791,7 @@
           "type": "int | None",
           "json_type": "null | integer",
           "example_value_json": "0",
+          "json_example_value": 0,
           "description": "Last update timestamp (Unix)"
         }
       ]

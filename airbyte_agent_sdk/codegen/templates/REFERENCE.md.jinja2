@@ -1,4 +1,4 @@
-{%- from "_macros.jinja2" import python_operation_call, format_action, anchor -%}
+{%- from "_macros.jinja2" import python_operation_call, format_action, anchor, cli_operation_call, cli_context_store_search_call -%}
 # {{ connector_name|title }} full reference
 
 This is the full reference documentation for the {{ connector_name|title }} agent connector.
@@ -24,6 +24,12 @@ The {{ connector_name|title }} connector supports the following entities and act
 {# Write operations (create, update) show all parameters; read operations show only required #}
 {%- set is_write_operation = op.action in ['create', 'update'] -%}
 {%- set example_params = op.parameters if is_write_operation else op.required_parameters -%}
+#### CLI
+
+```bash
+{{ cli_operation_call(connector_name, op, params=example_params) }}
+```
+
 #### Python SDK
 
 ```python
@@ -92,10 +98,16 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 {% endfor %}
 {% if entity in search_schemas %}
 {%- set search_schema = search_schemas[entity] %}
-{%- set example_field = search_schema.fields[0] if search_schema.fields else {"name": "id", "example_value_json": '"<str>"'} %}
+{%- set example_field = search_schema.fields[0] if search_schema.fields else {"name": "id", "example_value_json": '"<str>"', "json_example_value": "<str>"} %}
 ### {{ entity.replace('_', ' ')|title }} {{ format_action("context_store_search") }}
 
 Search and filter {{ entity.replace('_', ' ') }} records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
+
+#### CLI
+
+```bash
+{{ cli_context_store_search_call(connector_name, entity, example_field) }}
+```
 
 #### Python SDK
 

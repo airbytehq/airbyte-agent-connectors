@@ -2010,6 +2010,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Indicates whether the company has been deleted and moved to the recycling bin"
         },
         {
@@ -2018,6 +2019,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Associated contact records linked to this company"
         },
         {
@@ -2026,6 +2028,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp when the company record was created"
         },
         {
@@ -2034,6 +2037,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier for the company record"
         },
         {
@@ -2042,6 +2046,7 @@
           "type": "dict[str, Any]",
           "json_type": "object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Object containing all property values for the company"
         },
         {
@@ -2050,6 +2055,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Date the company was created"
         },
         {
@@ -2058,6 +2064,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Company domain name"
         },
         {
@@ -2066,6 +2073,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Last modified date of the company"
         },
         {
@@ -2074,6 +2082,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "HubSpot object ID"
         },
         {
@@ -2082,6 +2091,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the HubSpot owner assigned to this company"
         },
         {
@@ -2090,6 +2100,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Company name"
         },
         {
@@ -2098,6 +2109,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp when the company record was last modified"
         }
       ]
@@ -2121,6 +2133,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Boolean flag indicating whether the contact has been archived or deleted"
         },
         {
@@ -2129,6 +2142,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Associated company records linked to this contact"
         },
         {
@@ -2137,6 +2151,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp indicating when the contact was first created in the system"
         },
         {
@@ -2145,6 +2160,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier for the contact record"
         },
         {
@@ -2153,6 +2169,7 @@
           "type": "dict[str, Any]",
           "json_type": "object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Key-value object storing all contact properties and their values."
         },
         {
@@ -2161,6 +2178,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the associated company"
         },
         {
@@ -2169,6 +2187,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Date the contact was created"
         },
         {
@@ -2177,6 +2196,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Contact email address"
         },
         {
@@ -2185,6 +2205,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Contact first name"
         },
         {
@@ -2193,6 +2214,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "HubSpot object ID"
         },
         {
@@ -2201,6 +2223,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the HubSpot owner assigned to this contact"
         },
         {
@@ -2209,6 +2232,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Last modified date of the contact"
         },
         {
@@ -2217,6 +2241,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Contact last name"
         },
         {
@@ -2225,6 +2250,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp indicating when the contact record was last modified"
         }
       ]
@@ -2248,6 +2274,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Indicates whether the deal has been deleted and moved to the recycling bin"
         },
         {
@@ -2256,6 +2283,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Collection of company records associated with the deal"
         },
         {
@@ -2264,6 +2292,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Collection of contact records associated with the deal"
         },
         {
@@ -2272,6 +2301,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp when the deal record was originally created"
         },
         {
@@ -2280,6 +2310,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier for the deal record"
         },
         {
@@ -2288,6 +2319,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Collection of product line items associated with the deal"
         },
         {
@@ -2296,6 +2328,7 @@
           "type": "dict[str, Any]",
           "json_type": "object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Key-value object containing all deal properties and custom fields"
         },
         {
@@ -2304,6 +2337,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Deal amount"
         },
         {
@@ -2312,6 +2346,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Expected close date of the deal"
         },
         {
@@ -2320,6 +2355,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Date the deal was created"
         },
         {
@@ -2328,6 +2364,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Deal name"
         },
         {
@@ -2336,6 +2373,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Current deal stage"
         },
         {
@@ -2344,6 +2382,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Last modified date of the deal"
         },
         {
@@ -2352,6 +2391,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "HubSpot object ID"
         },
         {
@@ -2360,6 +2400,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "ID of the HubSpot owner assigned to this deal"
         },
         {
@@ -2368,6 +2409,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Deal pipeline"
         },
         {
@@ -2376,6 +2418,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp when the deal record was last modified"
         }
       ]
@@ -2399,6 +2442,7 @@
           "type": "bool | None",
           "json_type": "null | boolean",
           "example_value_json": "True",
+          "json_example_value": true,
           "description": "Indicates whether the ticket has been deleted and moved to the recycling bin"
         },
         {
@@ -2407,6 +2451,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Collection of company records associated with the ticket"
         },
         {
@@ -2415,6 +2460,7 @@
           "type": "list[Any] | None",
           "json_type": "null | array",
           "example_value_json": "[]",
+          "json_example_value": [],
           "description": "Collection of contact records associated with the ticket"
         },
         {
@@ -2423,6 +2469,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp when the ticket record was originally created"
         },
         {
@@ -2431,6 +2478,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Unique identifier for the ticket record"
         },
         {
@@ -2439,6 +2487,7 @@
           "type": "dict[str, Any]",
           "json_type": "object",
           "example_value_json": "{}",
+          "json_example_value": {},
           "description": "Object containing all property values for the ticket"
         },
         {
@@ -2447,6 +2496,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Ticket content/description"
         },
         {
@@ -2455,6 +2505,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Date the ticket was created"
         },
         {
@@ -2463,6 +2514,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Last modified date of the ticket"
         },
         {
@@ -2471,6 +2523,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "HubSpot object ID"
         },
         {
@@ -2479,6 +2532,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Ticket pipeline"
         },
         {
@@ -2487,6 +2541,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Current pipeline stage of the ticket"
         },
         {
@@ -2495,6 +2550,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Ticket category"
         },
         {
@@ -2503,6 +2559,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Ticket priority level"
         },
         {
@@ -2511,6 +2568,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Ticket subject line"
         },
         {
@@ -2519,6 +2577,7 @@
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
           "description": "Timestamp when the ticket record was last modified"
         }
       ]

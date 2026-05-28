@@ -18,6 +18,58 @@
 {% endfor -%}
 {%- endmacro %}
 
+{% macro cli_connector_create(connector_name) -%}
+airbyte-agent connectors create --json '{
+  "workspace": "<your_workspace_name>",
+  "name": "{{ connector_name }}"
+}'
+{%- endmacro %}
+
+{% macro cli_connector_describe(connector_name) -%}
+airbyte-agent connectors describe --json '{
+  "workspace": "<your_workspace_name>",
+  "name": "{{ connector_name }}"
+}'
+{%- endmacro %}
+
+{% macro cli_operation_call(connector_name, op, params=None) -%}
+{%- set example_params = params if params is not none else op.required_parameters -%}
+{%- set payload = {
+  "workspace": "<your_workspace_name>",
+  "name": connector_name,
+  "entity": op.entity,
+  "action": op.action
+} -%}
+{%- if example_params %}
+{%- set _ = payload.update({"params": {}}) %}
+{%- for param in example_params %}
+{%- set _ = payload.params.update({param.name: param.json_example_value}) %}
+{%- endfor %}
+{%- endif %}
+airbyte-agent connectors execute --json '{{ payload | pretty_json }}'
+{%- endmacro %}
+
+{% macro cli_context_store_search_call(connector_name, entity, example_field) -%}
+{%- set payload = {
+  "workspace": "<your_workspace_name>",
+  "name": connector_name,
+  "entity": entity,
+  "action": "context_store_search",
+  "params": {"query": {"filter": {"eq": {example_field.name: example_field.json_example_value}}}}
+} -%}
+airbyte-agent connectors execute --json '{{ payload | pretty_json }}'
+{%- endmacro %}
+
+{% macro cli_generic_execute(connector_name) -%}
+airbyte-agent connectors execute --json '{
+  "workspace": "<your_workspace_name>",
+  "name": "{{ connector_name }}",
+  "entity": "<entity>",
+  "action": "<action>",
+  "params": {}
+}'
+{%- endmacro %}
+
 {# Emit multi-framework usage code blocks for a connector.
    Each block gets a `title` attribute so Docusaurus remark plugin can wrap them in tabs.
    On GitHub, all three blocks render sequentially with bold labels.
