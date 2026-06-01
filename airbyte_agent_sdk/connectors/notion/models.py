@@ -130,15 +130,15 @@ class Parent(BaseModel):
     block_id: str | None = Field(default=None)
     workspace: bool | None = Field(default=None)
 
-class PageCreatedBy(BaseModel):
-    """User who created the page"""
+class PageLastEditedBy(BaseModel):
+    """User who last edited the page"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     object_: str | None | None = Field(default=None, alias="object")
     id: str | None | None = Field(default=None)
 
-class PageLastEditedBy(BaseModel):
-    """User who last edited the page"""
+class PageCreatedBy(BaseModel):
+    """User who created the page"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     object_: str | None | None = Field(default=None, alias="object")
@@ -178,15 +178,15 @@ class PagesListResponse(BaseModel):
     page_or_data_source: dict[str, Any] | None = Field(default=None)
     request_id: str | None = Field(default=None)
 
-class DataSourceCreatedBy(BaseModel):
-    """User who created the data source"""
+class DataSourceLastEditedBy(BaseModel):
+    """User who last edited the data source"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     object_: str | None | None = Field(default=None, alias="object")
     id: str | None | None = Field(default=None)
 
-class DataSourceLastEditedBy(BaseModel):
-    """User who last edited the data source"""
+class DataSourceCreatedBy(BaseModel):
+    """User who created the data source"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     object_: str | None | None = Field(default=None, alias="object")
@@ -230,25 +230,19 @@ class DataSourcesListResponse(BaseModel):
     page_or_data_source: dict[str, Any] | None = Field(default=None)
     request_id: str | None = Field(default=None)
 
-class BlockColumn(BaseModel):
-    """Column block"""
+class BlockLinkPreview(BaseModel):
+    """Link preview block"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    width_ratio: float | None | None = Field(default=None)
+    url: str | None | None = Field(default=None)
 
-class BlockHeading2(BaseModel):
-    """Heading 2 block content"""
+class BlockToDo(BaseModel):
+    """To-do block content"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     rich_text: list[RichText] | None | None = Field(default=None)
+    checked: bool | None | None = Field(default=None)
     color: str | None | None = Field(default=None)
-    is_toggleable: bool | None | None = Field(default=None)
-
-class BlockEquation(BaseModel):
-    """Equation block"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    expression: str | None | None = Field(default=None)
 
 class BlockTable(BaseModel):
     """Table block"""
@@ -258,6 +252,33 @@ class BlockTable(BaseModel):
     has_column_header: bool | None | None = Field(default=None)
     has_row_header: bool | None | None = Field(default=None)
 
+class BlockChildDatabase(BaseModel):
+    """Child database block"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    title: str | None | None = Field(default=None)
+
+class BlockParagraph(BaseModel):
+    """Paragraph block content"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    rich_text: list[RichText] | None | None = Field(default=None)
+    color: str | None | None = Field(default=None)
+
+class BlockColumn(BaseModel):
+    """Column block"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    width_ratio: float | None | None = Field(default=None)
+
+class BlockCode(BaseModel):
+    """Code block content"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    rich_text: list[RichText] | None | None = Field(default=None)
+    caption: list[RichText] | None | None = Field(default=None)
+    language: str | None | None = Field(default=None)
+
 class BlockToggle(BaseModel):
     """Toggle block content"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -265,30 +286,53 @@ class BlockToggle(BaseModel):
     rich_text: list[RichText] | None | None = Field(default=None)
     color: str | None | None = Field(default=None)
 
-class BlockLinkPreview(BaseModel):
-    """Link preview block"""
+class BlockHeading2(BaseModel):
+    """Heading 2 block content"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    rich_text: list[RichText] | None | None = Field(default=None)
+    color: str | None | None = Field(default=None)
+    is_toggleable: bool | None | None = Field(default=None)
+
+class BlockCreatedBy(BaseModel):
+    """User who created the block"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    object_: str | None | None = Field(default=None, alias="object")
+    id: str | None | None = Field(default=None)
+
+class BlockBulletedListItem(BaseModel):
+    """Bulleted list item content"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    rich_text: list[RichText] | None | None = Field(default=None)
+    color: str | None | None = Field(default=None)
+
+class BlockEmbed(BaseModel):
+    """Embed block"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     url: str | None | None = Field(default=None)
 
-class BlockChildDatabase(BaseModel):
-    """Child database block"""
+class BlockChildPage(BaseModel):
+    """Child page block"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     title: str | None | None = Field(default=None)
+
+class BlockHeading1(BaseModel):
+    """Heading 1 block content"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    rich_text: list[RichText] | None | None = Field(default=None)
+    color: str | None | None = Field(default=None)
+    is_toggleable: bool | None | None = Field(default=None)
 
 class BlockTableRow(BaseModel):
     """Table row block"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     cells: list[Any] | None | None = Field(default=None)
-
-class BlockQuote(BaseModel):
-    """Quote block content"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    rich_text: list[RichText] | None | None = Field(default=None)
-    color: str | None | None = Field(default=None)
 
 class BlockNumberedListItem(BaseModel):
     """Numbered list item content"""
@@ -304,13 +348,33 @@ class BlockLastEditedBy(BaseModel):
     object_: str | None | None = Field(default=None, alias="object")
     id: str | None | None = Field(default=None)
 
-class BlockHeading1(BaseModel):
-    """Heading 1 block content"""
+class BlockBookmark(BaseModel):
+    """Bookmark block"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    caption: list[RichText] | None | None = Field(default=None)
+    url: str | None | None = Field(default=None)
+
+class BlockEquation(BaseModel):
+    """Equation block"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    expression: str | None | None = Field(default=None)
+
+class BlockCallout(BaseModel):
+    """Callout block content"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    rich_text: list[RichText] | None | None = Field(default=None)
+    icon: dict[str, Any] | None | None = Field(default=None)
+    color: str | None | None = Field(default=None)
+
+class BlockQuote(BaseModel):
+    """Quote block content"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     rich_text: list[RichText] | None | None = Field(default=None)
     color: str | None | None = Field(default=None)
-    is_toggleable: bool | None | None = Field(default=None)
 
 class BlockHeading3(BaseModel):
     """Heading 3 block content"""
@@ -324,70 +388,6 @@ class BlockTableOfContents(BaseModel):
     """Table of contents block"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    color: str | None | None = Field(default=None)
-
-class BlockBookmark(BaseModel):
-    """Bookmark block"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    caption: list[RichText] | None | None = Field(default=None)
-    url: str | None | None = Field(default=None)
-
-class BlockEmbed(BaseModel):
-    """Embed block"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    url: str | None | None = Field(default=None)
-
-class BlockCreatedBy(BaseModel):
-    """User who created the block"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    object_: str | None | None = Field(default=None, alias="object")
-    id: str | None | None = Field(default=None)
-
-class BlockChildPage(BaseModel):
-    """Child page block"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    title: str | None | None = Field(default=None)
-
-class BlockBulletedListItem(BaseModel):
-    """Bulleted list item content"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    rich_text: list[RichText] | None | None = Field(default=None)
-    color: str | None | None = Field(default=None)
-
-class BlockCallout(BaseModel):
-    """Callout block content"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    rich_text: list[RichText] | None | None = Field(default=None)
-    icon: dict[str, Any] | None | None = Field(default=None)
-    color: str | None | None = Field(default=None)
-
-class BlockCode(BaseModel):
-    """Code block content"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    rich_text: list[RichText] | None | None = Field(default=None)
-    caption: list[RichText] | None | None = Field(default=None)
-    language: str | None | None = Field(default=None)
-
-class BlockParagraph(BaseModel):
-    """Paragraph block content"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    rich_text: list[RichText] | None | None = Field(default=None)
-    color: str | None | None = Field(default=None)
-
-class BlockToDo(BaseModel):
-    """To-do block content"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    rich_text: list[RichText] | None | None = Field(default=None)
-    checked: bool | None | None = Field(default=None)
     color: str | None | None = Field(default=None)
 
 class Block(BaseModel):
@@ -506,12 +506,6 @@ class PageCreateParamsCover(BaseModel):
     file_upload: PageCreateParamsCoverFileUpload | None = Field(default=None, description="Uploaded file cover")
     """Uploaded file cover"""
 
-class PageCreateParamsIconFileUpload(BaseModel):
-    """Uploaded file icon (when type is file_upload)"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: str | None = Field(default=None)
-
 class PageCreateParamsIconCustomEmoji(BaseModel):
     """Custom emoji icon (when type is custom_emoji)"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -524,6 +518,12 @@ class PageCreateParamsIconIcon(BaseModel):
 
     name: str | None = Field(default=None)
     color: str | None = Field(default=None)
+
+class PageCreateParamsIconFileUpload(BaseModel):
+    """Uploaded file icon (when type is file_upload)"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None)
 
 class PageCreateParamsIconExternal(BaseModel):
     """External URL icon (when type is external)"""
@@ -558,18 +558,34 @@ class PageCreateParams(BaseModel):
     icon: PageCreateParamsIcon | None = Field(default=None)
     cover: PageCreateParamsCover | None = Field(default=None)
 
+class PageUpdateParamsCoverFileUpload(BaseModel):
+    """Uploaded file cover"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None)
+
+class PageUpdateParamsCoverExternal(BaseModel):
+    """External URL cover"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    url: str | None = Field(default=None)
+
+class PageUpdateParamsCover(BaseModel):
+    """Cover image. Supports external URL or file upload. Set to null to remove."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    type_: str | None = Field(default=None, alias="type", description="Cover type: external or file_upload")
+    """Cover type: external or file_upload"""
+    external: PageUpdateParamsCoverExternal | None = Field(default=None, description="External URL cover")
+    """External URL cover"""
+    file_upload: PageUpdateParamsCoverFileUpload | None = Field(default=None, description="Uploaded file cover")
+    """Uploaded file cover"""
+
 class PageUpdateParamsIconExternal(BaseModel):
     """External URL icon (when type is external)"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     url: str | None = Field(default=None)
-
-class PageUpdateParamsIconIcon(BaseModel):
-    """Notion native icon (when type is icon)"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: str | None = Field(default=None)
-    color: str | None = Field(default=None)
 
 class PageUpdateParamsIconFileUpload(BaseModel):
     """Uploaded file icon (when type is file_upload)"""
@@ -582,6 +598,13 @@ class PageUpdateParamsIconCustomEmoji(BaseModel):
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     id: str | None = Field(default=None)
+
+class PageUpdateParamsIconIcon(BaseModel):
+    """Notion native icon (when type is icon)"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: str | None = Field(default=None)
+    color: str | None = Field(default=None)
 
 class PageUpdateParamsIcon(BaseModel):
     """Icon. Supports emoji, external URL, file upload, custom emoji, and Notion native icons. Set to null to remove."""
@@ -600,29 +623,6 @@ class PageUpdateParamsIcon(BaseModel):
     icon: PageUpdateParamsIconIcon | None = Field(default=None, description="Notion native icon (when type is icon)")
     """Notion native icon (when type is icon)"""
 
-class PageUpdateParamsCoverExternal(BaseModel):
-    """External URL cover"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    url: str | None = Field(default=None)
-
-class PageUpdateParamsCoverFileUpload(BaseModel):
-    """Uploaded file cover"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: str | None = Field(default=None)
-
-class PageUpdateParamsCover(BaseModel):
-    """Cover image. Supports external URL or file upload. Set to null to remove."""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    type_: str | None = Field(default=None, alias="type", description="Cover type: external or file_upload")
-    """Cover type: external or file_upload"""
-    external: PageUpdateParamsCoverExternal | None = Field(default=None, description="External URL cover")
-    """External URL cover"""
-    file_upload: PageUpdateParamsCoverFileUpload | None = Field(default=None, description="Uploaded file cover")
-    """Uploaded file cover"""
-
 class PageUpdateParams(BaseModel):
     """Parameters for updating a page. All fields are optional for partial updates."""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -632,6 +632,82 @@ class PageUpdateParams(BaseModel):
     cover: PageUpdateParamsCover | None = Field(default=None)
     archived: bool | None = Field(default=None)
     in_trash: bool | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemAudioFileUpload(BaseModel):
+    """Nested schema for BlockCreateParamsChildrenItemAudio.file_upload"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemAudioExternal(BaseModel):
+    """Nested schema for BlockCreateParamsChildrenItemAudio.external"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    url: str | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemAudio(BaseModel):
+    """Media file. Use external URL or file upload."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    type_: str | None = Field(default=None, alias="type", description="File type: external or file_upload")
+    """File type: external or file_upload"""
+    external: BlockCreateParamsChildrenItemAudioExternal | None = Field(default=None)
+    file_upload: BlockCreateParamsChildrenItemAudioFileUpload | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemToDoRichTextItemEquation(BaseModel):
+    """Nested schema for BlockCreateParamsChildrenItemToDoRichTextItem.equation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    expression: str | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemToDoRichTextItemAnnotations(BaseModel):
+    """Nested schema for BlockCreateParamsChildrenItemToDoRichTextItem.annotations"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    bold: bool | None = Field(default=None)
+    italic: bool | None = Field(default=None)
+    strikethrough: bool | None = Field(default=None)
+    underline: bool | None = Field(default=None)
+    code: bool | None = Field(default=None)
+    color: str | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemToDoRichTextItemTextLink(BaseModel):
+    """Nested schema for BlockCreateParamsChildrenItemToDoRichTextItemText.link"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    url: str | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemToDoRichTextItemText(BaseModel):
+    """Nested schema for BlockCreateParamsChildrenItemToDoRichTextItem.text"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    content: str | None = Field(default=None)
+    link: BlockCreateParamsChildrenItemToDoRichTextItemTextLink | None | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemToDoRichTextItem(BaseModel):
+    """Nested schema for BlockCreateParamsChildrenItemToDo.rich_text_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    type_: str | None = Field(default=None, alias="type")
+    text: BlockCreateParamsChildrenItemToDoRichTextItemText | None = Field(default=None)
+    mention: dict[str, Any] | None = Field(default=None)
+    equation: BlockCreateParamsChildrenItemToDoRichTextItemEquation | None = Field(default=None)
+    annotations: BlockCreateParamsChildrenItemToDoRichTextItemAnnotations | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemToDo(BaseModel):
+    """To-do block content"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    rich_text: list[BlockCreateParamsChildrenItemToDoRichTextItem] | None = Field(default=None)
+    checked: bool | None = Field(default=None)
+    color: str | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemEquation(BaseModel):
+    """Equation block"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    expression: str | None = Field(default=None, description="LaTeX expression")
+    """LaTeX expression"""
 
 class BlockCreateParamsChildrenItemVideoFileUpload(BaseModel):
     """Nested schema for BlockCreateParamsChildrenItemVideo.file_upload"""
@@ -654,32 +730,169 @@ class BlockCreateParamsChildrenItemVideo(BaseModel):
     external: BlockCreateParamsChildrenItemVideoExternal | None = Field(default=None)
     file_upload: BlockCreateParamsChildrenItemVideoFileUpload | None = Field(default=None)
 
-class BlockCreateParamsChildrenItemTableOfContents(BaseModel):
-    """Table of contents block"""
+class BlockCreateParamsChildrenItemBookmarkCaptionItemEquation(BaseModel):
+    """Nested schema for BlockCreateParamsChildrenItemBookmarkCaptionItem.equation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
+    expression: str | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemBookmarkCaptionItemAnnotations(BaseModel):
+    """Nested schema for BlockCreateParamsChildrenItemBookmarkCaptionItem.annotations"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    bold: bool | None = Field(default=None)
+    italic: bool | None = Field(default=None)
+    strikethrough: bool | None = Field(default=None)
+    underline: bool | None = Field(default=None)
+    code: bool | None = Field(default=None)
     color: str | None = Field(default=None)
 
-class BlockCreateParamsChildrenItemPdfFileUpload(BaseModel):
-    """Nested schema for BlockCreateParamsChildrenItemPdf.file_upload"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: str | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemPdfExternal(BaseModel):
-    """Nested schema for BlockCreateParamsChildrenItemPdf.external"""
+class BlockCreateParamsChildrenItemBookmarkCaptionItemTextLink(BaseModel):
+    """Nested schema for BlockCreateParamsChildrenItemBookmarkCaptionItemText.link"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     url: str | None = Field(default=None)
 
-class BlockCreateParamsChildrenItemPdf(BaseModel):
+class BlockCreateParamsChildrenItemBookmarkCaptionItemText(BaseModel):
+    """Nested schema for BlockCreateParamsChildrenItemBookmarkCaptionItem.text"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    content: str | None = Field(default=None)
+    link: BlockCreateParamsChildrenItemBookmarkCaptionItemTextLink | None | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemBookmarkCaptionItem(BaseModel):
+    """Nested schema for BlockCreateParamsChildrenItemBookmark.caption_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    type_: str | None = Field(default=None, alias="type")
+    text: BlockCreateParamsChildrenItemBookmarkCaptionItemText | None = Field(default=None)
+    mention: dict[str, Any] | None = Field(default=None)
+    equation: BlockCreateParamsChildrenItemBookmarkCaptionItemEquation | None = Field(default=None)
+    annotations: BlockCreateParamsChildrenItemBookmarkCaptionItemAnnotations | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemBookmark(BaseModel):
+    """Bookmark block"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    url: str | None = Field(default=None, description="URL to bookmark")
+    """URL to bookmark"""
+    caption: list[BlockCreateParamsChildrenItemBookmarkCaptionItem] | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemToggleRichTextItemTextLink(BaseModel):
+    """Nested schema for BlockCreateParamsChildrenItemToggleRichTextItemText.link"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    url: str | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemToggleRichTextItemText(BaseModel):
+    """Nested schema for BlockCreateParamsChildrenItemToggleRichTextItem.text"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    content: str | None = Field(default=None)
+    link: BlockCreateParamsChildrenItemToggleRichTextItemTextLink | None | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemToggleRichTextItemEquation(BaseModel):
+    """Nested schema for BlockCreateParamsChildrenItemToggleRichTextItem.equation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    expression: str | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemToggleRichTextItemAnnotations(BaseModel):
+    """Nested schema for BlockCreateParamsChildrenItemToggleRichTextItem.annotations"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    bold: bool | None = Field(default=None)
+    italic: bool | None = Field(default=None)
+    strikethrough: bool | None = Field(default=None)
+    underline: bool | None = Field(default=None)
+    code: bool | None = Field(default=None)
+    color: str | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemToggleRichTextItem(BaseModel):
+    """Nested schema for BlockCreateParamsChildrenItemToggle.rich_text_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    type_: str | None = Field(default=None, alias="type")
+    text: BlockCreateParamsChildrenItemToggleRichTextItemText | None = Field(default=None)
+    mention: dict[str, Any] | None = Field(default=None)
+    equation: BlockCreateParamsChildrenItemToggleRichTextItemEquation | None = Field(default=None)
+    annotations: BlockCreateParamsChildrenItemToggleRichTextItemAnnotations | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemToggle(BaseModel):
+    """Toggle block content"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    rich_text: list[BlockCreateParamsChildrenItemToggleRichTextItem] | None = Field(default=None)
+    color: str | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemHeading2RichTextItemTextLink(BaseModel):
+    """Nested schema for BlockCreateParamsChildrenItemHeading2RichTextItemText.link"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    url: str | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemHeading2RichTextItemText(BaseModel):
+    """Nested schema for BlockCreateParamsChildrenItemHeading2RichTextItem.text"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    content: str | None = Field(default=None)
+    link: BlockCreateParamsChildrenItemHeading2RichTextItemTextLink | None | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemHeading2RichTextItemAnnotations(BaseModel):
+    """Nested schema for BlockCreateParamsChildrenItemHeading2RichTextItem.annotations"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    bold: bool | None = Field(default=None)
+    italic: bool | None = Field(default=None)
+    strikethrough: bool | None = Field(default=None)
+    underline: bool | None = Field(default=None)
+    code: bool | None = Field(default=None)
+    color: str | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemHeading2RichTextItemEquation(BaseModel):
+    """Nested schema for BlockCreateParamsChildrenItemHeading2RichTextItem.equation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    expression: str | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemHeading2RichTextItem(BaseModel):
+    """Nested schema for BlockCreateParamsChildrenItemHeading2.rich_text_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    type_: str | None = Field(default=None, alias="type")
+    text: BlockCreateParamsChildrenItemHeading2RichTextItemText | None = Field(default=None)
+    mention: dict[str, Any] | None = Field(default=None)
+    equation: BlockCreateParamsChildrenItemHeading2RichTextItemEquation | None = Field(default=None)
+    annotations: BlockCreateParamsChildrenItemHeading2RichTextItemAnnotations | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemHeading2(BaseModel):
+    """Heading 2 block content"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    rich_text: list[BlockCreateParamsChildrenItemHeading2RichTextItem] | None = Field(default=None)
+    color: str | None = Field(default=None)
+    is_toggleable: bool | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemFileExternal(BaseModel):
+    """Nested schema for BlockCreateParamsChildrenItemFile.external"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    url: str | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemFileFileUpload(BaseModel):
+    """Nested schema for BlockCreateParamsChildrenItemFile.file_upload"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemFile(BaseModel):
     """Media file. Use external URL or file upload."""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     type_: str | None = Field(default=None, alias="type", description="File type: external or file_upload")
     """File type: external or file_upload"""
-    external: BlockCreateParamsChildrenItemPdfExternal | None = Field(default=None)
-    file_upload: BlockCreateParamsChildrenItemPdfFileUpload | None = Field(default=None)
+    external: BlockCreateParamsChildrenItemFileExternal | None = Field(default=None)
+    file_upload: BlockCreateParamsChildrenItemFileFileUpload | None = Field(default=None)
 
 class BlockCreateParamsChildrenItemCodeRichTextItemEquation(BaseModel):
     """Nested schema for BlockCreateParamsChildrenItemCodeRichTextItem.equation"""
@@ -729,48 +942,27 @@ class BlockCreateParamsChildrenItemCode(BaseModel):
     language: str | None = Field(default=None, description="Programming language for syntax highlighting")
     """Programming language for syntax highlighting"""
 
-class BlockCreateParamsChildrenItemAudioExternal(BaseModel):
-    """Nested schema for BlockCreateParamsChildrenItemAudio.external"""
+class BlockCreateParamsChildrenItemBulletedListItemRichTextItemTextLink(BaseModel):
+    """Nested schema for BlockCreateParamsChildrenItemBulletedListItemRichTextItemText.link"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     url: str | None = Field(default=None)
 
-class BlockCreateParamsChildrenItemAudioFileUpload(BaseModel):
-    """Nested schema for BlockCreateParamsChildrenItemAudio.file_upload"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: str | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemAudio(BaseModel):
-    """Media file. Use external URL or file upload."""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    type_: str | None = Field(default=None, alias="type", description="File type: external or file_upload")
-    """File type: external or file_upload"""
-    external: BlockCreateParamsChildrenItemAudioExternal | None = Field(default=None)
-    file_upload: BlockCreateParamsChildrenItemAudioFileUpload | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemHeading2RichTextItemTextLink(BaseModel):
-    """Nested schema for BlockCreateParamsChildrenItemHeading2RichTextItemText.link"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    url: str | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemHeading2RichTextItemText(BaseModel):
-    """Nested schema for BlockCreateParamsChildrenItemHeading2RichTextItem.text"""
+class BlockCreateParamsChildrenItemBulletedListItemRichTextItemText(BaseModel):
+    """Nested schema for BlockCreateParamsChildrenItemBulletedListItemRichTextItem.text"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     content: str | None = Field(default=None)
-    link: BlockCreateParamsChildrenItemHeading2RichTextItemTextLink | None | None = Field(default=None)
+    link: BlockCreateParamsChildrenItemBulletedListItemRichTextItemTextLink | None | None = Field(default=None)
 
-class BlockCreateParamsChildrenItemHeading2RichTextItemEquation(BaseModel):
-    """Nested schema for BlockCreateParamsChildrenItemHeading2RichTextItem.equation"""
+class BlockCreateParamsChildrenItemBulletedListItemRichTextItemEquation(BaseModel):
+    """Nested schema for BlockCreateParamsChildrenItemBulletedListItemRichTextItem.equation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     expression: str | None = Field(default=None)
 
-class BlockCreateParamsChildrenItemHeading2RichTextItemAnnotations(BaseModel):
-    """Nested schema for BlockCreateParamsChildrenItemHeading2RichTextItem.annotations"""
+class BlockCreateParamsChildrenItemBulletedListItemRichTextItemAnnotations(BaseModel):
+    """Nested schema for BlockCreateParamsChildrenItemBulletedListItemRichTextItem.annotations"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     bold: bool | None = Field(default=None)
@@ -780,23 +972,268 @@ class BlockCreateParamsChildrenItemHeading2RichTextItemAnnotations(BaseModel):
     code: bool | None = Field(default=None)
     color: str | None = Field(default=None)
 
-class BlockCreateParamsChildrenItemHeading2RichTextItem(BaseModel):
-    """Nested schema for BlockCreateParamsChildrenItemHeading2.rich_text_item"""
+class BlockCreateParamsChildrenItemBulletedListItemRichTextItem(BaseModel):
+    """Nested schema for BlockCreateParamsChildrenItemBulletedListItem.rich_text_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     type_: str | None = Field(default=None, alias="type")
-    text: BlockCreateParamsChildrenItemHeading2RichTextItemText | None = Field(default=None)
+    text: BlockCreateParamsChildrenItemBulletedListItemRichTextItemText | None = Field(default=None)
     mention: dict[str, Any] | None = Field(default=None)
-    equation: BlockCreateParamsChildrenItemHeading2RichTextItemEquation | None = Field(default=None)
-    annotations: BlockCreateParamsChildrenItemHeading2RichTextItemAnnotations | None = Field(default=None)
+    equation: BlockCreateParamsChildrenItemBulletedListItemRichTextItemEquation | None = Field(default=None)
+    annotations: BlockCreateParamsChildrenItemBulletedListItemRichTextItemAnnotations | None = Field(default=None)
 
-class BlockCreateParamsChildrenItemHeading2(BaseModel):
-    """Heading 2 block content"""
+class BlockCreateParamsChildrenItemBulletedListItem(BaseModel):
+    """Bulleted list item content"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    rich_text: list[BlockCreateParamsChildrenItemHeading2RichTextItem] | None = Field(default=None)
+    rich_text: list[BlockCreateParamsChildrenItemBulletedListItemRichTextItem] | None = Field(default=None)
+    color: str | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemCalloutRichTextItemTextLink(BaseModel):
+    """Nested schema for BlockCreateParamsChildrenItemCalloutRichTextItemText.link"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    url: str | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemCalloutRichTextItemText(BaseModel):
+    """Nested schema for BlockCreateParamsChildrenItemCalloutRichTextItem.text"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    content: str | None = Field(default=None)
+    link: BlockCreateParamsChildrenItemCalloutRichTextItemTextLink | None | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemCalloutRichTextItemEquation(BaseModel):
+    """Nested schema for BlockCreateParamsChildrenItemCalloutRichTextItem.equation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    expression: str | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemCalloutRichTextItemAnnotations(BaseModel):
+    """Nested schema for BlockCreateParamsChildrenItemCalloutRichTextItem.annotations"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    bold: bool | None = Field(default=None)
+    italic: bool | None = Field(default=None)
+    strikethrough: bool | None = Field(default=None)
+    underline: bool | None = Field(default=None)
+    code: bool | None = Field(default=None)
+    color: str | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemCalloutRichTextItem(BaseModel):
+    """Nested schema for BlockCreateParamsChildrenItemCallout.rich_text_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    type_: str | None = Field(default=None, alias="type")
+    text: BlockCreateParamsChildrenItemCalloutRichTextItemText | None = Field(default=None)
+    mention: dict[str, Any] | None = Field(default=None)
+    equation: BlockCreateParamsChildrenItemCalloutRichTextItemEquation | None = Field(default=None)
+    annotations: BlockCreateParamsChildrenItemCalloutRichTextItemAnnotations | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemCallout(BaseModel):
+    """Callout block content"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    rich_text: list[BlockCreateParamsChildrenItemCalloutRichTextItem] | None = Field(default=None)
+    icon: dict[str, Any] | None = Field(default=None)
+    color: str | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemTableOfContents(BaseModel):
+    """Table of contents block"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    color: str | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemNumberedListItemRichTextItemTextLink(BaseModel):
+    """Nested schema for BlockCreateParamsChildrenItemNumberedListItemRichTextItemText.link"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    url: str | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemNumberedListItemRichTextItemText(BaseModel):
+    """Nested schema for BlockCreateParamsChildrenItemNumberedListItemRichTextItem.text"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    content: str | None = Field(default=None)
+    link: BlockCreateParamsChildrenItemNumberedListItemRichTextItemTextLink | None | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemNumberedListItemRichTextItemEquation(BaseModel):
+    """Nested schema for BlockCreateParamsChildrenItemNumberedListItemRichTextItem.equation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    expression: str | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemNumberedListItemRichTextItemAnnotations(BaseModel):
+    """Nested schema for BlockCreateParamsChildrenItemNumberedListItemRichTextItem.annotations"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    bold: bool | None = Field(default=None)
+    italic: bool | None = Field(default=None)
+    strikethrough: bool | None = Field(default=None)
+    underline: bool | None = Field(default=None)
+    code: bool | None = Field(default=None)
+    color: str | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemNumberedListItemRichTextItem(BaseModel):
+    """Nested schema for BlockCreateParamsChildrenItemNumberedListItem.rich_text_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    type_: str | None = Field(default=None, alias="type")
+    text: BlockCreateParamsChildrenItemNumberedListItemRichTextItemText | None = Field(default=None)
+    mention: dict[str, Any] | None = Field(default=None)
+    equation: BlockCreateParamsChildrenItemNumberedListItemRichTextItemEquation | None = Field(default=None)
+    annotations: BlockCreateParamsChildrenItemNumberedListItemRichTextItemAnnotations | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemNumberedListItem(BaseModel):
+    """Numbered list item content"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    rich_text: list[BlockCreateParamsChildrenItemNumberedListItemRichTextItem] | None = Field(default=None)
+    color: str | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemHeading1RichTextItemAnnotations(BaseModel):
+    """Nested schema for BlockCreateParamsChildrenItemHeading1RichTextItem.annotations"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    bold: bool | None = Field(default=None)
+    italic: bool | None = Field(default=None)
+    strikethrough: bool | None = Field(default=None)
+    underline: bool | None = Field(default=None)
+    code: bool | None = Field(default=None)
+    color: str | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemHeading1RichTextItemTextLink(BaseModel):
+    """Nested schema for BlockCreateParamsChildrenItemHeading1RichTextItemText.link"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    url: str | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemHeading1RichTextItemText(BaseModel):
+    """Nested schema for BlockCreateParamsChildrenItemHeading1RichTextItem.text"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    content: str | None = Field(default=None)
+    link: BlockCreateParamsChildrenItemHeading1RichTextItemTextLink | None | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemHeading1RichTextItemEquation(BaseModel):
+    """Nested schema for BlockCreateParamsChildrenItemHeading1RichTextItem.equation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    expression: str | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemHeading1RichTextItem(BaseModel):
+    """Nested schema for BlockCreateParamsChildrenItemHeading1.rich_text_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    type_: str | None = Field(default=None, alias="type")
+    text: BlockCreateParamsChildrenItemHeading1RichTextItemText | None = Field(default=None)
+    mention: dict[str, Any] | None = Field(default=None)
+    equation: BlockCreateParamsChildrenItemHeading1RichTextItemEquation | None = Field(default=None)
+    annotations: BlockCreateParamsChildrenItemHeading1RichTextItemAnnotations | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemHeading1(BaseModel):
+    """Heading 1 block content"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    rich_text: list[BlockCreateParamsChildrenItemHeading1RichTextItem] | None = Field(default=None)
     color: str | None = Field(default=None)
     is_toggleable: bool | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemHeading3RichTextItemAnnotations(BaseModel):
+    """Nested schema for BlockCreateParamsChildrenItemHeading3RichTextItem.annotations"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    bold: bool | None = Field(default=None)
+    italic: bool | None = Field(default=None)
+    strikethrough: bool | None = Field(default=None)
+    underline: bool | None = Field(default=None)
+    code: bool | None = Field(default=None)
+    color: str | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemHeading3RichTextItemEquation(BaseModel):
+    """Nested schema for BlockCreateParamsChildrenItemHeading3RichTextItem.equation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    expression: str | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemHeading3RichTextItemTextLink(BaseModel):
+    """Nested schema for BlockCreateParamsChildrenItemHeading3RichTextItemText.link"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    url: str | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemHeading3RichTextItemText(BaseModel):
+    """Nested schema for BlockCreateParamsChildrenItemHeading3RichTextItem.text"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    content: str | None = Field(default=None)
+    link: BlockCreateParamsChildrenItemHeading3RichTextItemTextLink | None | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemHeading3RichTextItem(BaseModel):
+    """Nested schema for BlockCreateParamsChildrenItemHeading3.rich_text_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    type_: str | None = Field(default=None, alias="type")
+    text: BlockCreateParamsChildrenItemHeading3RichTextItemText | None = Field(default=None)
+    mention: dict[str, Any] | None = Field(default=None)
+    equation: BlockCreateParamsChildrenItemHeading3RichTextItemEquation | None = Field(default=None)
+    annotations: BlockCreateParamsChildrenItemHeading3RichTextItemAnnotations | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemHeading3(BaseModel):
+    """Heading 3 block content"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    rich_text: list[BlockCreateParamsChildrenItemHeading3RichTextItem] | None = Field(default=None)
+    color: str | None = Field(default=None)
+    is_toggleable: bool | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemPdfExternal(BaseModel):
+    """Nested schema for BlockCreateParamsChildrenItemPdf.external"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    url: str | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemPdfFileUpload(BaseModel):
+    """Nested schema for BlockCreateParamsChildrenItemPdf.file_upload"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemPdf(BaseModel):
+    """Media file. Use external URL or file upload."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    type_: str | None = Field(default=None, alias="type", description="File type: external or file_upload")
+    """File type: external or file_upload"""
+    external: BlockCreateParamsChildrenItemPdfExternal | None = Field(default=None)
+    file_upload: BlockCreateParamsChildrenItemPdfFileUpload | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemImageExternal(BaseModel):
+    """Nested schema for BlockCreateParamsChildrenItemImage.external"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    url: str | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemImageFileUpload(BaseModel):
+    """Nested schema for BlockCreateParamsChildrenItemImage.file_upload"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemImage(BaseModel):
+    """Media file. Use external URL or file upload."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    type_: str | None = Field(default=None, alias="type", description="File type: external or file_upload")
+    """File type: external or file_upload"""
+    external: BlockCreateParamsChildrenItemImageExternal | None = Field(default=None)
+    file_upload: BlockCreateParamsChildrenItemImageFileUpload | None = Field(default=None)
+
+class BlockCreateParamsChildrenItemEmbed(BaseModel):
+    """Embed block"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    url: str | None = Field(default=None, description="URL to embed")
+    """URL to embed"""
 
 class BlockCreateParamsChildrenItemQuoteRichTextItemTextLink(BaseModel):
     """Nested schema for BlockCreateParamsChildrenItemQuoteRichTextItemText.link"""
@@ -845,27 +1282,8 @@ class BlockCreateParamsChildrenItemQuote(BaseModel):
     rich_text: list[BlockCreateParamsChildrenItemQuoteRichTextItem] | None = Field(default=None)
     color: str | None = Field(default=None)
 
-class BlockCreateParamsChildrenItemNumberedListItemRichTextItemEquation(BaseModel):
-    """Nested schema for BlockCreateParamsChildrenItemNumberedListItemRichTextItem.equation"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    expression: str | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemNumberedListItemRichTextItemTextLink(BaseModel):
-    """Nested schema for BlockCreateParamsChildrenItemNumberedListItemRichTextItemText.link"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    url: str | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemNumberedListItemRichTextItemText(BaseModel):
-    """Nested schema for BlockCreateParamsChildrenItemNumberedListItemRichTextItem.text"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    content: str | None = Field(default=None)
-    link: BlockCreateParamsChildrenItemNumberedListItemRichTextItemTextLink | None | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemNumberedListItemRichTextItemAnnotations(BaseModel):
-    """Nested schema for BlockCreateParamsChildrenItemNumberedListItemRichTextItem.annotations"""
+class BlockCreateParamsChildrenItemParagraphRichTextItemAnnotations(BaseModel):
+    """Nested schema for BlockCreateParamsChildrenItemParagraphRichTextItem.annotations"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     bold: bool | None = Field(default=None)
@@ -873,71 +1291,6 @@ class BlockCreateParamsChildrenItemNumberedListItemRichTextItemAnnotations(BaseM
     strikethrough: bool | None = Field(default=None)
     underline: bool | None = Field(default=None)
     code: bool | None = Field(default=None)
-    color: str | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemNumberedListItemRichTextItem(BaseModel):
-    """Nested schema for BlockCreateParamsChildrenItemNumberedListItem.rich_text_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    type_: str | None = Field(default=None, alias="type")
-    text: BlockCreateParamsChildrenItemNumberedListItemRichTextItemText | None = Field(default=None)
-    mention: dict[str, Any] | None = Field(default=None)
-    equation: BlockCreateParamsChildrenItemNumberedListItemRichTextItemEquation | None = Field(default=None)
-    annotations: BlockCreateParamsChildrenItemNumberedListItemRichTextItemAnnotations | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemNumberedListItem(BaseModel):
-    """Numbered list item content"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    rich_text: list[BlockCreateParamsChildrenItemNumberedListItemRichTextItem] | None = Field(default=None)
-    color: str | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemToDoRichTextItemTextLink(BaseModel):
-    """Nested schema for BlockCreateParamsChildrenItemToDoRichTextItemText.link"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    url: str | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemToDoRichTextItemText(BaseModel):
-    """Nested schema for BlockCreateParamsChildrenItemToDoRichTextItem.text"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    content: str | None = Field(default=None)
-    link: BlockCreateParamsChildrenItemToDoRichTextItemTextLink | None | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemToDoRichTextItemEquation(BaseModel):
-    """Nested schema for BlockCreateParamsChildrenItemToDoRichTextItem.equation"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    expression: str | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemToDoRichTextItemAnnotations(BaseModel):
-    """Nested schema for BlockCreateParamsChildrenItemToDoRichTextItem.annotations"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    bold: bool | None = Field(default=None)
-    italic: bool | None = Field(default=None)
-    strikethrough: bool | None = Field(default=None)
-    underline: bool | None = Field(default=None)
-    code: bool | None = Field(default=None)
-    color: str | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemToDoRichTextItem(BaseModel):
-    """Nested schema for BlockCreateParamsChildrenItemToDo.rich_text_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    type_: str | None = Field(default=None, alias="type")
-    text: BlockCreateParamsChildrenItemToDoRichTextItemText | None = Field(default=None)
-    mention: dict[str, Any] | None = Field(default=None)
-    equation: BlockCreateParamsChildrenItemToDoRichTextItemEquation | None = Field(default=None)
-    annotations: BlockCreateParamsChildrenItemToDoRichTextItemAnnotations | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemToDo(BaseModel):
-    """To-do block content"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    rich_text: list[BlockCreateParamsChildrenItemToDoRichTextItem] | None = Field(default=None)
-    checked: bool | None = Field(default=None)
     color: str | None = Field(default=None)
 
 class BlockCreateParamsChildrenItemParagraphRichTextItemTextLink(BaseModel):
@@ -959,17 +1312,6 @@ class BlockCreateParamsChildrenItemParagraphRichTextItemEquation(BaseModel):
 
     expression: str | None = Field(default=None)
 
-class BlockCreateParamsChildrenItemParagraphRichTextItemAnnotations(BaseModel):
-    """Nested schema for BlockCreateParamsChildrenItemParagraphRichTextItem.annotations"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    bold: bool | None = Field(default=None)
-    italic: bool | None = Field(default=None)
-    strikethrough: bool | None = Field(default=None)
-    underline: bool | None = Field(default=None)
-    code: bool | None = Field(default=None)
-    color: str | None = Field(default=None)
-
 class BlockCreateParamsChildrenItemParagraphRichTextItem(BaseModel):
     """Nested schema for BlockCreateParamsChildrenItemParagraph.rich_text_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -986,348 +1328,6 @@ class BlockCreateParamsChildrenItemParagraph(BaseModel):
 
     rich_text: list[BlockCreateParamsChildrenItemParagraphRichTextItem] | None = Field(default=None)
     color: str | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemEmbed(BaseModel):
-    """Embed block"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    url: str | None = Field(default=None, description="URL to embed")
-    """URL to embed"""
-
-class BlockCreateParamsChildrenItemImageExternal(BaseModel):
-    """Nested schema for BlockCreateParamsChildrenItemImage.external"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    url: str | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemImageFileUpload(BaseModel):
-    """Nested schema for BlockCreateParamsChildrenItemImage.file_upload"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: str | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemImage(BaseModel):
-    """Media file. Use external URL or file upload."""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    type_: str | None = Field(default=None, alias="type", description="File type: external or file_upload")
-    """File type: external or file_upload"""
-    external: BlockCreateParamsChildrenItemImageExternal | None = Field(default=None)
-    file_upload: BlockCreateParamsChildrenItemImageFileUpload | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemBulletedListItemRichTextItemEquation(BaseModel):
-    """Nested schema for BlockCreateParamsChildrenItemBulletedListItemRichTextItem.equation"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    expression: str | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemBulletedListItemRichTextItemAnnotations(BaseModel):
-    """Nested schema for BlockCreateParamsChildrenItemBulletedListItemRichTextItem.annotations"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    bold: bool | None = Field(default=None)
-    italic: bool | None = Field(default=None)
-    strikethrough: bool | None = Field(default=None)
-    underline: bool | None = Field(default=None)
-    code: bool | None = Field(default=None)
-    color: str | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemBulletedListItemRichTextItemTextLink(BaseModel):
-    """Nested schema for BlockCreateParamsChildrenItemBulletedListItemRichTextItemText.link"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    url: str | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemBulletedListItemRichTextItemText(BaseModel):
-    """Nested schema for BlockCreateParamsChildrenItemBulletedListItemRichTextItem.text"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    content: str | None = Field(default=None)
-    link: BlockCreateParamsChildrenItemBulletedListItemRichTextItemTextLink | None | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemBulletedListItemRichTextItem(BaseModel):
-    """Nested schema for BlockCreateParamsChildrenItemBulletedListItem.rich_text_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    type_: str | None = Field(default=None, alias="type")
-    text: BlockCreateParamsChildrenItemBulletedListItemRichTextItemText | None = Field(default=None)
-    mention: dict[str, Any] | None = Field(default=None)
-    equation: BlockCreateParamsChildrenItemBulletedListItemRichTextItemEquation | None = Field(default=None)
-    annotations: BlockCreateParamsChildrenItemBulletedListItemRichTextItemAnnotations | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemBulletedListItem(BaseModel):
-    """Bulleted list item content"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    rich_text: list[BlockCreateParamsChildrenItemBulletedListItemRichTextItem] | None = Field(default=None)
-    color: str | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemEquation(BaseModel):
-    """Equation block"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    expression: str | None = Field(default=None, description="LaTeX expression")
-    """LaTeX expression"""
-
-class BlockCreateParamsChildrenItemFileFileUpload(BaseModel):
-    """Nested schema for BlockCreateParamsChildrenItemFile.file_upload"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: str | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemFileExternal(BaseModel):
-    """Nested schema for BlockCreateParamsChildrenItemFile.external"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    url: str | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemFile(BaseModel):
-    """Media file. Use external URL or file upload."""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    type_: str | None = Field(default=None, alias="type", description="File type: external or file_upload")
-    """File type: external or file_upload"""
-    external: BlockCreateParamsChildrenItemFileExternal | None = Field(default=None)
-    file_upload: BlockCreateParamsChildrenItemFileFileUpload | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemToggleRichTextItemEquation(BaseModel):
-    """Nested schema for BlockCreateParamsChildrenItemToggleRichTextItem.equation"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    expression: str | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemToggleRichTextItemAnnotations(BaseModel):
-    """Nested schema for BlockCreateParamsChildrenItemToggleRichTextItem.annotations"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    bold: bool | None = Field(default=None)
-    italic: bool | None = Field(default=None)
-    strikethrough: bool | None = Field(default=None)
-    underline: bool | None = Field(default=None)
-    code: bool | None = Field(default=None)
-    color: str | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemToggleRichTextItemTextLink(BaseModel):
-    """Nested schema for BlockCreateParamsChildrenItemToggleRichTextItemText.link"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    url: str | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemToggleRichTextItemText(BaseModel):
-    """Nested schema for BlockCreateParamsChildrenItemToggleRichTextItem.text"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    content: str | None = Field(default=None)
-    link: BlockCreateParamsChildrenItemToggleRichTextItemTextLink | None | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemToggleRichTextItem(BaseModel):
-    """Nested schema for BlockCreateParamsChildrenItemToggle.rich_text_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    type_: str | None = Field(default=None, alias="type")
-    text: BlockCreateParamsChildrenItemToggleRichTextItemText | None = Field(default=None)
-    mention: dict[str, Any] | None = Field(default=None)
-    equation: BlockCreateParamsChildrenItemToggleRichTextItemEquation | None = Field(default=None)
-    annotations: BlockCreateParamsChildrenItemToggleRichTextItemAnnotations | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemToggle(BaseModel):
-    """Toggle block content"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    rich_text: list[BlockCreateParamsChildrenItemToggleRichTextItem] | None = Field(default=None)
-    color: str | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemCalloutRichTextItemEquation(BaseModel):
-    """Nested schema for BlockCreateParamsChildrenItemCalloutRichTextItem.equation"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    expression: str | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemCalloutRichTextItemTextLink(BaseModel):
-    """Nested schema for BlockCreateParamsChildrenItemCalloutRichTextItemText.link"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    url: str | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemCalloutRichTextItemText(BaseModel):
-    """Nested schema for BlockCreateParamsChildrenItemCalloutRichTextItem.text"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    content: str | None = Field(default=None)
-    link: BlockCreateParamsChildrenItemCalloutRichTextItemTextLink | None | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemCalloutRichTextItemAnnotations(BaseModel):
-    """Nested schema for BlockCreateParamsChildrenItemCalloutRichTextItem.annotations"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    bold: bool | None = Field(default=None)
-    italic: bool | None = Field(default=None)
-    strikethrough: bool | None = Field(default=None)
-    underline: bool | None = Field(default=None)
-    code: bool | None = Field(default=None)
-    color: str | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemCalloutRichTextItem(BaseModel):
-    """Nested schema for BlockCreateParamsChildrenItemCallout.rich_text_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    type_: str | None = Field(default=None, alias="type")
-    text: BlockCreateParamsChildrenItemCalloutRichTextItemText | None = Field(default=None)
-    mention: dict[str, Any] | None = Field(default=None)
-    equation: BlockCreateParamsChildrenItemCalloutRichTextItemEquation | None = Field(default=None)
-    annotations: BlockCreateParamsChildrenItemCalloutRichTextItemAnnotations | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemCallout(BaseModel):
-    """Callout block content"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    rich_text: list[BlockCreateParamsChildrenItemCalloutRichTextItem] | None = Field(default=None)
-    icon: dict[str, Any] | None = Field(default=None)
-    color: str | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemHeading1RichTextItemTextLink(BaseModel):
-    """Nested schema for BlockCreateParamsChildrenItemHeading1RichTextItemText.link"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    url: str | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemHeading1RichTextItemText(BaseModel):
-    """Nested schema for BlockCreateParamsChildrenItemHeading1RichTextItem.text"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    content: str | None = Field(default=None)
-    link: BlockCreateParamsChildrenItemHeading1RichTextItemTextLink | None | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemHeading1RichTextItemEquation(BaseModel):
-    """Nested schema for BlockCreateParamsChildrenItemHeading1RichTextItem.equation"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    expression: str | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemHeading1RichTextItemAnnotations(BaseModel):
-    """Nested schema for BlockCreateParamsChildrenItemHeading1RichTextItem.annotations"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    bold: bool | None = Field(default=None)
-    italic: bool | None = Field(default=None)
-    strikethrough: bool | None = Field(default=None)
-    underline: bool | None = Field(default=None)
-    code: bool | None = Field(default=None)
-    color: str | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemHeading1RichTextItem(BaseModel):
-    """Nested schema for BlockCreateParamsChildrenItemHeading1.rich_text_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    type_: str | None = Field(default=None, alias="type")
-    text: BlockCreateParamsChildrenItemHeading1RichTextItemText | None = Field(default=None)
-    mention: dict[str, Any] | None = Field(default=None)
-    equation: BlockCreateParamsChildrenItemHeading1RichTextItemEquation | None = Field(default=None)
-    annotations: BlockCreateParamsChildrenItemHeading1RichTextItemAnnotations | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemHeading1(BaseModel):
-    """Heading 1 block content"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    rich_text: list[BlockCreateParamsChildrenItemHeading1RichTextItem] | None = Field(default=None)
-    color: str | None = Field(default=None)
-    is_toggleable: bool | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemBookmarkCaptionItemTextLink(BaseModel):
-    """Nested schema for BlockCreateParamsChildrenItemBookmarkCaptionItemText.link"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    url: str | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemBookmarkCaptionItemText(BaseModel):
-    """Nested schema for BlockCreateParamsChildrenItemBookmarkCaptionItem.text"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    content: str | None = Field(default=None)
-    link: BlockCreateParamsChildrenItemBookmarkCaptionItemTextLink | None | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemBookmarkCaptionItemEquation(BaseModel):
-    """Nested schema for BlockCreateParamsChildrenItemBookmarkCaptionItem.equation"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    expression: str | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemBookmarkCaptionItemAnnotations(BaseModel):
-    """Nested schema for BlockCreateParamsChildrenItemBookmarkCaptionItem.annotations"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    bold: bool | None = Field(default=None)
-    italic: bool | None = Field(default=None)
-    strikethrough: bool | None = Field(default=None)
-    underline: bool | None = Field(default=None)
-    code: bool | None = Field(default=None)
-    color: str | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemBookmarkCaptionItem(BaseModel):
-    """Nested schema for BlockCreateParamsChildrenItemBookmark.caption_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    type_: str | None = Field(default=None, alias="type")
-    text: BlockCreateParamsChildrenItemBookmarkCaptionItemText | None = Field(default=None)
-    mention: dict[str, Any] | None = Field(default=None)
-    equation: BlockCreateParamsChildrenItemBookmarkCaptionItemEquation | None = Field(default=None)
-    annotations: BlockCreateParamsChildrenItemBookmarkCaptionItemAnnotations | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemBookmark(BaseModel):
-    """Bookmark block"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    url: str | None = Field(default=None, description="URL to bookmark")
-    """URL to bookmark"""
-    caption: list[BlockCreateParamsChildrenItemBookmarkCaptionItem] | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemHeading3RichTextItemAnnotations(BaseModel):
-    """Nested schema for BlockCreateParamsChildrenItemHeading3RichTextItem.annotations"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    bold: bool | None = Field(default=None)
-    italic: bool | None = Field(default=None)
-    strikethrough: bool | None = Field(default=None)
-    underline: bool | None = Field(default=None)
-    code: bool | None = Field(default=None)
-    color: str | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemHeading3RichTextItemTextLink(BaseModel):
-    """Nested schema for BlockCreateParamsChildrenItemHeading3RichTextItemText.link"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    url: str | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemHeading3RichTextItemText(BaseModel):
-    """Nested schema for BlockCreateParamsChildrenItemHeading3RichTextItem.text"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    content: str | None = Field(default=None)
-    link: BlockCreateParamsChildrenItemHeading3RichTextItemTextLink | None | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemHeading3RichTextItemEquation(BaseModel):
-    """Nested schema for BlockCreateParamsChildrenItemHeading3RichTextItem.equation"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    expression: str | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemHeading3RichTextItem(BaseModel):
-    """Nested schema for BlockCreateParamsChildrenItemHeading3.rich_text_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    type_: str | None = Field(default=None, alias="type")
-    text: BlockCreateParamsChildrenItemHeading3RichTextItemText | None = Field(default=None)
-    mention: dict[str, Any] | None = Field(default=None)
-    equation: BlockCreateParamsChildrenItemHeading3RichTextItemEquation | None = Field(default=None)
-    annotations: BlockCreateParamsChildrenItemHeading3RichTextItemAnnotations | None = Field(default=None)
-
-class BlockCreateParamsChildrenItemHeading3(BaseModel):
-    """Heading 3 block content"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    rich_text: list[BlockCreateParamsChildrenItemHeading3RichTextItem] | None = Field(default=None)
-    color: str | None = Field(default=None)
-    is_toggleable: bool | None = Field(default=None)
 
 class BlockCreateParamsChildrenItem(BaseModel):
     """A block object. Set type to the block kind and include matching content."""
@@ -1384,6 +1384,101 @@ class BlockCreateParams(BaseModel):
 
     children: list[BlockCreateParamsChildrenItem]
 
+class BlockUpdateParamsHeading1RichTextItemEquation(BaseModel):
+    """Nested schema for BlockUpdateParamsHeading1RichTextItem.equation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    expression: str | None = Field(default=None)
+
+class BlockUpdateParamsHeading1RichTextItemAnnotations(BaseModel):
+    """Nested schema for BlockUpdateParamsHeading1RichTextItem.annotations"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    bold: bool | None = Field(default=None)
+    italic: bool | None = Field(default=None)
+    strikethrough: bool | None = Field(default=None)
+    underline: bool | None = Field(default=None)
+    code: bool | None = Field(default=None)
+    color: str | None = Field(default=None)
+
+class BlockUpdateParamsHeading1RichTextItemTextLink(BaseModel):
+    """Nested schema for BlockUpdateParamsHeading1RichTextItemText.link"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    url: str | None = Field(default=None)
+
+class BlockUpdateParamsHeading1RichTextItemText(BaseModel):
+    """Nested schema for BlockUpdateParamsHeading1RichTextItem.text"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    content: str | None = Field(default=None)
+    link: BlockUpdateParamsHeading1RichTextItemTextLink | None | None = Field(default=None)
+
+class BlockUpdateParamsHeading1RichTextItem(BaseModel):
+    """Nested schema for BlockUpdateParamsHeading1.rich_text_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    type_: str | None = Field(default=None, alias="type")
+    text: BlockUpdateParamsHeading1RichTextItemText | None = Field(default=None)
+    mention: dict[str, Any] | None = Field(default=None)
+    equation: BlockUpdateParamsHeading1RichTextItemEquation | None = Field(default=None)
+    annotations: BlockUpdateParamsHeading1RichTextItemAnnotations | None = Field(default=None)
+
+class BlockUpdateParamsHeading1(BaseModel):
+    """Updated heading 1 content"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    rich_text: list[BlockUpdateParamsHeading1RichTextItem] | None = Field(default=None)
+    color: str | None = Field(default=None)
+    is_toggleable: bool | None = Field(default=None)
+
+class BlockUpdateParamsBookmarkCaptionItemAnnotations(BaseModel):
+    """Nested schema for BlockUpdateParamsBookmarkCaptionItem.annotations"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    bold: bool | None = Field(default=None)
+    italic: bool | None = Field(default=None)
+    strikethrough: bool | None = Field(default=None)
+    underline: bool | None = Field(default=None)
+    code: bool | None = Field(default=None)
+    color: str | None = Field(default=None)
+
+class BlockUpdateParamsBookmarkCaptionItemEquation(BaseModel):
+    """Nested schema for BlockUpdateParamsBookmarkCaptionItem.equation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    expression: str | None = Field(default=None)
+
+class BlockUpdateParamsBookmarkCaptionItemTextLink(BaseModel):
+    """Nested schema for BlockUpdateParamsBookmarkCaptionItemText.link"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    url: str | None = Field(default=None)
+
+class BlockUpdateParamsBookmarkCaptionItemText(BaseModel):
+    """Nested schema for BlockUpdateParamsBookmarkCaptionItem.text"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    content: str | None = Field(default=None)
+    link: BlockUpdateParamsBookmarkCaptionItemTextLink | None | None = Field(default=None)
+
+class BlockUpdateParamsBookmarkCaptionItem(BaseModel):
+    """Nested schema for BlockUpdateParamsBookmark.caption_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    type_: str | None = Field(default=None, alias="type")
+    text: BlockUpdateParamsBookmarkCaptionItemText | None = Field(default=None)
+    mention: dict[str, Any] | None = Field(default=None)
+    equation: BlockUpdateParamsBookmarkCaptionItemEquation | None = Field(default=None)
+    annotations: BlockUpdateParamsBookmarkCaptionItemAnnotations | None = Field(default=None)
+
+class BlockUpdateParamsBookmark(BaseModel):
+    """Updated bookmark"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    url: str | None = Field(default=None)
+    caption: list[BlockUpdateParamsBookmarkCaptionItem] | None = Field(default=None)
+
 class BlockUpdateParamsParagraphRichTextItemEquation(BaseModel):
     """Nested schema for BlockUpdateParamsParagraphRichTextItem.equation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -1431,207 +1526,11 @@ class BlockUpdateParamsParagraph(BaseModel):
     rich_text: list[BlockUpdateParamsParagraphRichTextItem] | None = Field(default=None)
     color: str | None = Field(default=None)
 
-class BlockUpdateParamsHeading3RichTextItemTextLink(BaseModel):
-    """Nested schema for BlockUpdateParamsHeading3RichTextItemText.link"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    url: str | None = Field(default=None)
-
-class BlockUpdateParamsHeading3RichTextItemText(BaseModel):
-    """Nested schema for BlockUpdateParamsHeading3RichTextItem.text"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    content: str | None = Field(default=None)
-    link: BlockUpdateParamsHeading3RichTextItemTextLink | None | None = Field(default=None)
-
-class BlockUpdateParamsHeading3RichTextItemAnnotations(BaseModel):
-    """Nested schema for BlockUpdateParamsHeading3RichTextItem.annotations"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    bold: bool | None = Field(default=None)
-    italic: bool | None = Field(default=None)
-    strikethrough: bool | None = Field(default=None)
-    underline: bool | None = Field(default=None)
-    code: bool | None = Field(default=None)
-    color: str | None = Field(default=None)
-
-class BlockUpdateParamsHeading3RichTextItemEquation(BaseModel):
-    """Nested schema for BlockUpdateParamsHeading3RichTextItem.equation"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    expression: str | None = Field(default=None)
-
-class BlockUpdateParamsHeading3RichTextItem(BaseModel):
-    """Nested schema for BlockUpdateParamsHeading3.rich_text_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    type_: str | None = Field(default=None, alias="type")
-    text: BlockUpdateParamsHeading3RichTextItemText | None = Field(default=None)
-    mention: dict[str, Any] | None = Field(default=None)
-    equation: BlockUpdateParamsHeading3RichTextItemEquation | None = Field(default=None)
-    annotations: BlockUpdateParamsHeading3RichTextItemAnnotations | None = Field(default=None)
-
-class BlockUpdateParamsHeading3(BaseModel):
-    """Updated heading 3 content"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    rich_text: list[BlockUpdateParamsHeading3RichTextItem] | None = Field(default=None)
-    color: str | None = Field(default=None)
-    is_toggleable: bool | None = Field(default=None)
-
-class BlockUpdateParamsImageExternal(BaseModel):
-    """Nested schema for BlockUpdateParamsImage.external"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    url: str | None = Field(default=None)
-
-class BlockUpdateParamsImageFileUpload(BaseModel):
-    """Nested schema for BlockUpdateParamsImage.file_upload"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: str | None = Field(default=None)
-
-class BlockUpdateParamsImage(BaseModel):
-    """Media file. Use external URL or file upload."""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    type_: str | None = Field(default=None, alias="type", description="File type: external or file_upload")
-    """File type: external or file_upload"""
-    external: BlockUpdateParamsImageExternal | None = Field(default=None)
-    file_upload: BlockUpdateParamsImageFileUpload | None = Field(default=None)
-
 class BlockUpdateParamsEmbed(BaseModel):
     """Updated embed"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     url: str | None = Field(default=None)
-
-class BlockUpdateParamsNumberedListItemRichTextItemAnnotations(BaseModel):
-    """Nested schema for BlockUpdateParamsNumberedListItemRichTextItem.annotations"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    bold: bool | None = Field(default=None)
-    italic: bool | None = Field(default=None)
-    strikethrough: bool | None = Field(default=None)
-    underline: bool | None = Field(default=None)
-    code: bool | None = Field(default=None)
-    color: str | None = Field(default=None)
-
-class BlockUpdateParamsNumberedListItemRichTextItemTextLink(BaseModel):
-    """Nested schema for BlockUpdateParamsNumberedListItemRichTextItemText.link"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    url: str | None = Field(default=None)
-
-class BlockUpdateParamsNumberedListItemRichTextItemText(BaseModel):
-    """Nested schema for BlockUpdateParamsNumberedListItemRichTextItem.text"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    content: str | None = Field(default=None)
-    link: BlockUpdateParamsNumberedListItemRichTextItemTextLink | None | None = Field(default=None)
-
-class BlockUpdateParamsNumberedListItemRichTextItemEquation(BaseModel):
-    """Nested schema for BlockUpdateParamsNumberedListItemRichTextItem.equation"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    expression: str | None = Field(default=None)
-
-class BlockUpdateParamsNumberedListItemRichTextItem(BaseModel):
-    """Nested schema for BlockUpdateParamsNumberedListItem.rich_text_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    type_: str | None = Field(default=None, alias="type")
-    text: BlockUpdateParamsNumberedListItemRichTextItemText | None = Field(default=None)
-    mention: dict[str, Any] | None = Field(default=None)
-    equation: BlockUpdateParamsNumberedListItemRichTextItemEquation | None = Field(default=None)
-    annotations: BlockUpdateParamsNumberedListItemRichTextItemAnnotations | None = Field(default=None)
-
-class BlockUpdateParamsNumberedListItem(BaseModel):
-    """Updated numbered list item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    rich_text: list[BlockUpdateParamsNumberedListItemRichTextItem] | None = Field(default=None)
-    color: str | None = Field(default=None)
-
-class BlockUpdateParamsVideoExternal(BaseModel):
-    """Nested schema for BlockUpdateParamsVideo.external"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    url: str | None = Field(default=None)
-
-class BlockUpdateParamsVideoFileUpload(BaseModel):
-    """Nested schema for BlockUpdateParamsVideo.file_upload"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: str | None = Field(default=None)
-
-class BlockUpdateParamsVideo(BaseModel):
-    """Media file. Use external URL or file upload."""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    type_: str | None = Field(default=None, alias="type", description="File type: external or file_upload")
-    """File type: external or file_upload"""
-    external: BlockUpdateParamsVideoExternal | None = Field(default=None)
-    file_upload: BlockUpdateParamsVideoFileUpload | None = Field(default=None)
-
-class BlockUpdateParamsCalloutRichTextItemEquation(BaseModel):
-    """Nested schema for BlockUpdateParamsCalloutRichTextItem.equation"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    expression: str | None = Field(default=None)
-
-class BlockUpdateParamsCalloutRichTextItemAnnotations(BaseModel):
-    """Nested schema for BlockUpdateParamsCalloutRichTextItem.annotations"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    bold: bool | None = Field(default=None)
-    italic: bool | None = Field(default=None)
-    strikethrough: bool | None = Field(default=None)
-    underline: bool | None = Field(default=None)
-    code: bool | None = Field(default=None)
-    color: str | None = Field(default=None)
-
-class BlockUpdateParamsCalloutRichTextItemTextLink(BaseModel):
-    """Nested schema for BlockUpdateParamsCalloutRichTextItemText.link"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    url: str | None = Field(default=None)
-
-class BlockUpdateParamsCalloutRichTextItemText(BaseModel):
-    """Nested schema for BlockUpdateParamsCalloutRichTextItem.text"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    content: str | None = Field(default=None)
-    link: BlockUpdateParamsCalloutRichTextItemTextLink | None | None = Field(default=None)
-
-class BlockUpdateParamsCalloutRichTextItem(BaseModel):
-    """Nested schema for BlockUpdateParamsCallout.rich_text_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    type_: str | None = Field(default=None, alias="type")
-    text: BlockUpdateParamsCalloutRichTextItemText | None = Field(default=None)
-    mention: dict[str, Any] | None = Field(default=None)
-    equation: BlockUpdateParamsCalloutRichTextItemEquation | None = Field(default=None)
-    annotations: BlockUpdateParamsCalloutRichTextItemAnnotations | None = Field(default=None)
-
-class BlockUpdateParamsCallout(BaseModel):
-    """Updated callout content"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    rich_text: list[BlockUpdateParamsCalloutRichTextItem] | None = Field(default=None)
-    icon: dict[str, Any] | None = Field(default=None)
-    color: str | None = Field(default=None)
-
-class BlockUpdateParamsQuoteRichTextItemAnnotations(BaseModel):
-    """Nested schema for BlockUpdateParamsQuoteRichTextItem.annotations"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    bold: bool | None = Field(default=None)
-    italic: bool | None = Field(default=None)
-    strikethrough: bool | None = Field(default=None)
-    underline: bool | None = Field(default=None)
-    code: bool | None = Field(default=None)
-    color: str | None = Field(default=None)
 
 class BlockUpdateParamsQuoteRichTextItemTextLink(BaseModel):
     """Nested schema for BlockUpdateParamsQuoteRichTextItemText.link"""
@@ -1652,6 +1551,17 @@ class BlockUpdateParamsQuoteRichTextItemEquation(BaseModel):
 
     expression: str | None = Field(default=None)
 
+class BlockUpdateParamsQuoteRichTextItemAnnotations(BaseModel):
+    """Nested schema for BlockUpdateParamsQuoteRichTextItem.annotations"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    bold: bool | None = Field(default=None)
+    italic: bool | None = Field(default=None)
+    strikethrough: bool | None = Field(default=None)
+    underline: bool | None = Field(default=None)
+    code: bool | None = Field(default=None)
+    color: str | None = Field(default=None)
+
 class BlockUpdateParamsQuoteRichTextItem(BaseModel):
     """Nested schema for BlockUpdateParamsQuote.rich_text_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -1667,54 +1577,6 @@ class BlockUpdateParamsQuote(BaseModel):
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     rich_text: list[BlockUpdateParamsQuoteRichTextItem] | None = Field(default=None)
-    color: str | None = Field(default=None)
-
-class BlockUpdateParamsToDoRichTextItemEquation(BaseModel):
-    """Nested schema for BlockUpdateParamsToDoRichTextItem.equation"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    expression: str | None = Field(default=None)
-
-class BlockUpdateParamsToDoRichTextItemAnnotations(BaseModel):
-    """Nested schema for BlockUpdateParamsToDoRichTextItem.annotations"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    bold: bool | None = Field(default=None)
-    italic: bool | None = Field(default=None)
-    strikethrough: bool | None = Field(default=None)
-    underline: bool | None = Field(default=None)
-    code: bool | None = Field(default=None)
-    color: str | None = Field(default=None)
-
-class BlockUpdateParamsToDoRichTextItemTextLink(BaseModel):
-    """Nested schema for BlockUpdateParamsToDoRichTextItemText.link"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    url: str | None = Field(default=None)
-
-class BlockUpdateParamsToDoRichTextItemText(BaseModel):
-    """Nested schema for BlockUpdateParamsToDoRichTextItem.text"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    content: str | None = Field(default=None)
-    link: BlockUpdateParamsToDoRichTextItemTextLink | None | None = Field(default=None)
-
-class BlockUpdateParamsToDoRichTextItem(BaseModel):
-    """Nested schema for BlockUpdateParamsToDo.rich_text_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    type_: str | None = Field(default=None, alias="type")
-    text: BlockUpdateParamsToDoRichTextItemText | None = Field(default=None)
-    mention: dict[str, Any] | None = Field(default=None)
-    equation: BlockUpdateParamsToDoRichTextItemEquation | None = Field(default=None)
-    annotations: BlockUpdateParamsToDoRichTextItemAnnotations | None = Field(default=None)
-
-class BlockUpdateParamsToDo(BaseModel):
-    """Updated to-do content"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    rich_text: list[BlockUpdateParamsToDoRichTextItem] | None = Field(default=None)
-    checked: bool | None = Field(default=None)
     color: str | None = Field(default=None)
 
 class BlockUpdateParamsFileExternal(BaseModel):
@@ -1738,8 +1600,8 @@ class BlockUpdateParamsFile(BaseModel):
     external: BlockUpdateParamsFileExternal | None = Field(default=None)
     file_upload: BlockUpdateParamsFileFileUpload | None = Field(default=None)
 
-class BlockUpdateParamsCodeCaptionItemAnnotations(BaseModel):
-    """Nested schema for BlockUpdateParamsCodeCaptionItem.annotations"""
+class BlockUpdateParamsNumberedListItemRichTextItemAnnotations(BaseModel):
+    """Nested schema for BlockUpdateParamsNumberedListItemRichTextItem.annotations"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     bold: bool | None = Field(default=None)
@@ -1749,88 +1611,83 @@ class BlockUpdateParamsCodeCaptionItemAnnotations(BaseModel):
     code: bool | None = Field(default=None)
     color: str | None = Field(default=None)
 
-class BlockUpdateParamsCodeCaptionItemEquation(BaseModel):
-    """Nested schema for BlockUpdateParamsCodeCaptionItem.equation"""
+class BlockUpdateParamsNumberedListItemRichTextItemEquation(BaseModel):
+    """Nested schema for BlockUpdateParamsNumberedListItemRichTextItem.equation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     expression: str | None = Field(default=None)
 
-class BlockUpdateParamsCodeCaptionItemTextLink(BaseModel):
-    """Nested schema for BlockUpdateParamsCodeCaptionItemText.link"""
+class BlockUpdateParamsNumberedListItemRichTextItemTextLink(BaseModel):
+    """Nested schema for BlockUpdateParamsNumberedListItemRichTextItemText.link"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     url: str | None = Field(default=None)
 
-class BlockUpdateParamsCodeCaptionItemText(BaseModel):
-    """Nested schema for BlockUpdateParamsCodeCaptionItem.text"""
+class BlockUpdateParamsNumberedListItemRichTextItemText(BaseModel):
+    """Nested schema for BlockUpdateParamsNumberedListItemRichTextItem.text"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     content: str | None = Field(default=None)
-    link: BlockUpdateParamsCodeCaptionItemTextLink | None | None = Field(default=None)
+    link: BlockUpdateParamsNumberedListItemRichTextItemTextLink | None | None = Field(default=None)
 
-class BlockUpdateParamsCodeCaptionItem(BaseModel):
-    """Nested schema for BlockUpdateParamsCode.caption_item"""
+class BlockUpdateParamsNumberedListItemRichTextItem(BaseModel):
+    """Nested schema for BlockUpdateParamsNumberedListItem.rich_text_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     type_: str | None = Field(default=None, alias="type")
-    text: BlockUpdateParamsCodeCaptionItemText | None = Field(default=None)
+    text: BlockUpdateParamsNumberedListItemRichTextItemText | None = Field(default=None)
     mention: dict[str, Any] | None = Field(default=None)
-    equation: BlockUpdateParamsCodeCaptionItemEquation | None = Field(default=None)
-    annotations: BlockUpdateParamsCodeCaptionItemAnnotations | None = Field(default=None)
+    equation: BlockUpdateParamsNumberedListItemRichTextItemEquation | None = Field(default=None)
+    annotations: BlockUpdateParamsNumberedListItemRichTextItemAnnotations | None = Field(default=None)
 
-class BlockUpdateParamsCodeRichTextItemEquation(BaseModel):
-    """Nested schema for BlockUpdateParamsCodeRichTextItem.equation"""
+class BlockUpdateParamsNumberedListItem(BaseModel):
+    """Updated numbered list item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    expression: str | None = Field(default=None)
-
-class BlockUpdateParamsCodeRichTextItemAnnotations(BaseModel):
-    """Nested schema for BlockUpdateParamsCodeRichTextItem.annotations"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    bold: bool | None = Field(default=None)
-    italic: bool | None = Field(default=None)
-    strikethrough: bool | None = Field(default=None)
-    underline: bool | None = Field(default=None)
-    code: bool | None = Field(default=None)
+    rich_text: list[BlockUpdateParamsNumberedListItemRichTextItem] | None = Field(default=None)
     color: str | None = Field(default=None)
 
-class BlockUpdateParamsCodeRichTextItemTextLink(BaseModel):
-    """Nested schema for BlockUpdateParamsCodeRichTextItemText.link"""
+class BlockUpdateParamsPdfFileUpload(BaseModel):
+    """Nested schema for BlockUpdateParamsPdf.file_upload"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None)
+
+class BlockUpdateParamsPdfExternal(BaseModel):
+    """Nested schema for BlockUpdateParamsPdf.external"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     url: str | None = Field(default=None)
 
-class BlockUpdateParamsCodeRichTextItemText(BaseModel):
-    """Nested schema for BlockUpdateParamsCodeRichTextItem.text"""
+class BlockUpdateParamsPdf(BaseModel):
+    """Media file. Use external URL or file upload."""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    content: str | None = Field(default=None)
-    link: BlockUpdateParamsCodeRichTextItemTextLink | None | None = Field(default=None)
+    type_: str | None = Field(default=None, alias="type", description="File type: external or file_upload")
+    """File type: external or file_upload"""
+    external: BlockUpdateParamsPdfExternal | None = Field(default=None)
+    file_upload: BlockUpdateParamsPdfFileUpload | None = Field(default=None)
 
-class BlockUpdateParamsCodeRichTextItem(BaseModel):
-    """Nested schema for BlockUpdateParamsCode.rich_text_item"""
+class BlockUpdateParamsVideoFileUpload(BaseModel):
+    """Nested schema for BlockUpdateParamsVideo.file_upload"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type_: str | None = Field(default=None, alias="type")
-    text: BlockUpdateParamsCodeRichTextItemText | None = Field(default=None)
-    mention: dict[str, Any] | None = Field(default=None)
-    equation: BlockUpdateParamsCodeRichTextItemEquation | None = Field(default=None)
-    annotations: BlockUpdateParamsCodeRichTextItemAnnotations | None = Field(default=None)
+    id: str | None = Field(default=None)
 
-class BlockUpdateParamsCode(BaseModel):
-    """Updated code block content"""
+class BlockUpdateParamsVideoExternal(BaseModel):
+    """Nested schema for BlockUpdateParamsVideo.external"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    rich_text: list[BlockUpdateParamsCodeRichTextItem] | None = Field(default=None)
-    language: str | None = Field(default=None)
-    caption: list[BlockUpdateParamsCodeCaptionItem] | None = Field(default=None)
+    url: str | None = Field(default=None)
 
-class BlockUpdateParamsBulletedListItemRichTextItemEquation(BaseModel):
-    """Nested schema for BlockUpdateParamsBulletedListItemRichTextItem.equation"""
+class BlockUpdateParamsVideo(BaseModel):
+    """Media file. Use external URL or file upload."""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    expression: str | None = Field(default=None)
+    type_: str | None = Field(default=None, alias="type", description="File type: external or file_upload")
+    """File type: external or file_upload"""
+    external: BlockUpdateParamsVideoExternal | None = Field(default=None)
+    file_upload: BlockUpdateParamsVideoFileUpload | None = Field(default=None)
 
 class BlockUpdateParamsBulletedListItemRichTextItemTextLink(BaseModel):
     """Nested schema for BlockUpdateParamsBulletedListItemRichTextItemText.link"""
@@ -1856,6 +1713,12 @@ class BlockUpdateParamsBulletedListItemRichTextItemAnnotations(BaseModel):
     code: bool | None = Field(default=None)
     color: str | None = Field(default=None)
 
+class BlockUpdateParamsBulletedListItemRichTextItemEquation(BaseModel):
+    """Nested schema for BlockUpdateParamsBulletedListItemRichTextItem.equation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    expression: str | None = Field(default=None)
+
 class BlockUpdateParamsBulletedListItemRichTextItem(BaseModel):
     """Nested schema for BlockUpdateParamsBulletedListItem.rich_text_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -1879,65 +1742,17 @@ class BlockUpdateParamsEquation(BaseModel):
 
     expression: str | None = Field(default=None)
 
-class BlockUpdateParamsHeading1RichTextItemAnnotations(BaseModel):
-    """Nested schema for BlockUpdateParamsHeading1RichTextItem.annotations"""
+class BlockUpdateParamsAudioFileUpload(BaseModel):
+    """Nested schema for BlockUpdateParamsAudio.file_upload"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    bold: bool | None = Field(default=None)
-    italic: bool | None = Field(default=None)
-    strikethrough: bool | None = Field(default=None)
-    underline: bool | None = Field(default=None)
-    code: bool | None = Field(default=None)
-    color: str | None = Field(default=None)
-
-class BlockUpdateParamsHeading1RichTextItemEquation(BaseModel):
-    """Nested schema for BlockUpdateParamsHeading1RichTextItem.equation"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    expression: str | None = Field(default=None)
-
-class BlockUpdateParamsHeading1RichTextItemTextLink(BaseModel):
-    """Nested schema for BlockUpdateParamsHeading1RichTextItemText.link"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    url: str | None = Field(default=None)
-
-class BlockUpdateParamsHeading1RichTextItemText(BaseModel):
-    """Nested schema for BlockUpdateParamsHeading1RichTextItem.text"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    content: str | None = Field(default=None)
-    link: BlockUpdateParamsHeading1RichTextItemTextLink | None | None = Field(default=None)
-
-class BlockUpdateParamsHeading1RichTextItem(BaseModel):
-    """Nested schema for BlockUpdateParamsHeading1.rich_text_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    type_: str | None = Field(default=None, alias="type")
-    text: BlockUpdateParamsHeading1RichTextItemText | None = Field(default=None)
-    mention: dict[str, Any] | None = Field(default=None)
-    equation: BlockUpdateParamsHeading1RichTextItemEquation | None = Field(default=None)
-    annotations: BlockUpdateParamsHeading1RichTextItemAnnotations | None = Field(default=None)
-
-class BlockUpdateParamsHeading1(BaseModel):
-    """Updated heading 1 content"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    rich_text: list[BlockUpdateParamsHeading1RichTextItem] | None = Field(default=None)
-    color: str | None = Field(default=None)
-    is_toggleable: bool | None = Field(default=None)
+    id: str | None = Field(default=None)
 
 class BlockUpdateParamsAudioExternal(BaseModel):
     """Nested schema for BlockUpdateParamsAudio.external"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     url: str | None = Field(default=None)
-
-class BlockUpdateParamsAudioFileUpload(BaseModel):
-    """Nested schema for BlockUpdateParamsAudio.file_upload"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: str | None = Field(default=None)
 
 class BlockUpdateParamsAudio(BaseModel):
     """Media file. Use external URL or file upload."""
@@ -1948,12 +1763,216 @@ class BlockUpdateParamsAudio(BaseModel):
     external: BlockUpdateParamsAudioExternal | None = Field(default=None)
     file_upload: BlockUpdateParamsAudioFileUpload | None = Field(default=None)
 
+class BlockUpdateParamsImageFileUpload(BaseModel):
+    """Nested schema for BlockUpdateParamsImage.file_upload"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None)
+
+class BlockUpdateParamsImageExternal(BaseModel):
+    """Nested schema for BlockUpdateParamsImage.external"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    url: str | None = Field(default=None)
+
+class BlockUpdateParamsImage(BaseModel):
+    """Media file. Use external URL or file upload."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    type_: str | None = Field(default=None, alias="type", description="File type: external or file_upload")
+    """File type: external or file_upload"""
+    external: BlockUpdateParamsImageExternal | None = Field(default=None)
+    file_upload: BlockUpdateParamsImageFileUpload | None = Field(default=None)
+
+class BlockUpdateParamsToggleRichTextItemEquation(BaseModel):
+    """Nested schema for BlockUpdateParamsToggleRichTextItem.equation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    expression: str | None = Field(default=None)
+
+class BlockUpdateParamsToggleRichTextItemTextLink(BaseModel):
+    """Nested schema for BlockUpdateParamsToggleRichTextItemText.link"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    url: str | None = Field(default=None)
+
+class BlockUpdateParamsToggleRichTextItemText(BaseModel):
+    """Nested schema for BlockUpdateParamsToggleRichTextItem.text"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    content: str | None = Field(default=None)
+    link: BlockUpdateParamsToggleRichTextItemTextLink | None | None = Field(default=None)
+
+class BlockUpdateParamsToggleRichTextItemAnnotations(BaseModel):
+    """Nested schema for BlockUpdateParamsToggleRichTextItem.annotations"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    bold: bool | None = Field(default=None)
+    italic: bool | None = Field(default=None)
+    strikethrough: bool | None = Field(default=None)
+    underline: bool | None = Field(default=None)
+    code: bool | None = Field(default=None)
+    color: str | None = Field(default=None)
+
+class BlockUpdateParamsToggleRichTextItem(BaseModel):
+    """Nested schema for BlockUpdateParamsToggle.rich_text_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    type_: str | None = Field(default=None, alias="type")
+    text: BlockUpdateParamsToggleRichTextItemText | None = Field(default=None)
+    mention: dict[str, Any] | None = Field(default=None)
+    equation: BlockUpdateParamsToggleRichTextItemEquation | None = Field(default=None)
+    annotations: BlockUpdateParamsToggleRichTextItemAnnotations | None = Field(default=None)
+
+class BlockUpdateParamsToggle(BaseModel):
+    """Updated toggle content"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    rich_text: list[BlockUpdateParamsToggleRichTextItem] | None = Field(default=None)
+    color: str | None = Field(default=None)
+
+class BlockUpdateParamsCodeCaptionItemTextLink(BaseModel):
+    """Nested schema for BlockUpdateParamsCodeCaptionItemText.link"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    url: str | None = Field(default=None)
+
+class BlockUpdateParamsCodeCaptionItemText(BaseModel):
+    """Nested schema for BlockUpdateParamsCodeCaptionItem.text"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    content: str | None = Field(default=None)
+    link: BlockUpdateParamsCodeCaptionItemTextLink | None | None = Field(default=None)
+
+class BlockUpdateParamsCodeCaptionItemAnnotations(BaseModel):
+    """Nested schema for BlockUpdateParamsCodeCaptionItem.annotations"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    bold: bool | None = Field(default=None)
+    italic: bool | None = Field(default=None)
+    strikethrough: bool | None = Field(default=None)
+    underline: bool | None = Field(default=None)
+    code: bool | None = Field(default=None)
+    color: str | None = Field(default=None)
+
+class BlockUpdateParamsCodeCaptionItemEquation(BaseModel):
+    """Nested schema for BlockUpdateParamsCodeCaptionItem.equation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    expression: str | None = Field(default=None)
+
+class BlockUpdateParamsCodeCaptionItem(BaseModel):
+    """Nested schema for BlockUpdateParamsCode.caption_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    type_: str | None = Field(default=None, alias="type")
+    text: BlockUpdateParamsCodeCaptionItemText | None = Field(default=None)
+    mention: dict[str, Any] | None = Field(default=None)
+    equation: BlockUpdateParamsCodeCaptionItemEquation | None = Field(default=None)
+    annotations: BlockUpdateParamsCodeCaptionItemAnnotations | None = Field(default=None)
+
+class BlockUpdateParamsCodeRichTextItemTextLink(BaseModel):
+    """Nested schema for BlockUpdateParamsCodeRichTextItemText.link"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    url: str | None = Field(default=None)
+
+class BlockUpdateParamsCodeRichTextItemText(BaseModel):
+    """Nested schema for BlockUpdateParamsCodeRichTextItem.text"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    content: str | None = Field(default=None)
+    link: BlockUpdateParamsCodeRichTextItemTextLink | None | None = Field(default=None)
+
+class BlockUpdateParamsCodeRichTextItemEquation(BaseModel):
+    """Nested schema for BlockUpdateParamsCodeRichTextItem.equation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    expression: str | None = Field(default=None)
+
+class BlockUpdateParamsCodeRichTextItemAnnotations(BaseModel):
+    """Nested schema for BlockUpdateParamsCodeRichTextItem.annotations"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    bold: bool | None = Field(default=None)
+    italic: bool | None = Field(default=None)
+    strikethrough: bool | None = Field(default=None)
+    underline: bool | None = Field(default=None)
+    code: bool | None = Field(default=None)
+    color: str | None = Field(default=None)
+
+class BlockUpdateParamsCodeRichTextItem(BaseModel):
+    """Nested schema for BlockUpdateParamsCode.rich_text_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    type_: str | None = Field(default=None, alias="type")
+    text: BlockUpdateParamsCodeRichTextItemText | None = Field(default=None)
+    mention: dict[str, Any] | None = Field(default=None)
+    equation: BlockUpdateParamsCodeRichTextItemEquation | None = Field(default=None)
+    annotations: BlockUpdateParamsCodeRichTextItemAnnotations | None = Field(default=None)
+
+class BlockUpdateParamsCode(BaseModel):
+    """Updated code block content"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    rich_text: list[BlockUpdateParamsCodeRichTextItem] | None = Field(default=None)
+    language: str | None = Field(default=None)
+    caption: list[BlockUpdateParamsCodeCaptionItem] | None = Field(default=None)
+
 class BlockUpdateParamsTable(BaseModel):
     """Updated table properties"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     has_column_header: bool | None = Field(default=None)
     has_row_header: bool | None = Field(default=None)
+
+class BlockUpdateParamsCalloutRichTextItemAnnotations(BaseModel):
+    """Nested schema for BlockUpdateParamsCalloutRichTextItem.annotations"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    bold: bool | None = Field(default=None)
+    italic: bool | None = Field(default=None)
+    strikethrough: bool | None = Field(default=None)
+    underline: bool | None = Field(default=None)
+    code: bool | None = Field(default=None)
+    color: str | None = Field(default=None)
+
+class BlockUpdateParamsCalloutRichTextItemTextLink(BaseModel):
+    """Nested schema for BlockUpdateParamsCalloutRichTextItemText.link"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    url: str | None = Field(default=None)
+
+class BlockUpdateParamsCalloutRichTextItemText(BaseModel):
+    """Nested schema for BlockUpdateParamsCalloutRichTextItem.text"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    content: str | None = Field(default=None)
+    link: BlockUpdateParamsCalloutRichTextItemTextLink | None | None = Field(default=None)
+
+class BlockUpdateParamsCalloutRichTextItemEquation(BaseModel):
+    """Nested schema for BlockUpdateParamsCalloutRichTextItem.equation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    expression: str | None = Field(default=None)
+
+class BlockUpdateParamsCalloutRichTextItem(BaseModel):
+    """Nested schema for BlockUpdateParamsCallout.rich_text_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    type_: str | None = Field(default=None, alias="type")
+    text: BlockUpdateParamsCalloutRichTextItemText | None = Field(default=None)
+    mention: dict[str, Any] | None = Field(default=None)
+    equation: BlockUpdateParamsCalloutRichTextItemEquation | None = Field(default=None)
+    annotations: BlockUpdateParamsCalloutRichTextItemAnnotations | None = Field(default=None)
+
+class BlockUpdateParamsCallout(BaseModel):
+    """Updated callout content"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    rich_text: list[BlockUpdateParamsCalloutRichTextItem] | None = Field(default=None)
+    icon: dict[str, Any] | None = Field(default=None)
+    color: str | None = Field(default=None)
 
 class BlockUpdateParamsHeading2RichTextItemEquation(BaseModel):
     """Nested schema for BlockUpdateParamsHeading2RichTextItem.equation"""
@@ -2003,21 +2022,8 @@ class BlockUpdateParamsHeading2(BaseModel):
     color: str | None = Field(default=None)
     is_toggleable: bool | None = Field(default=None)
 
-class BlockUpdateParamsToggleRichTextItemTextLink(BaseModel):
-    """Nested schema for BlockUpdateParamsToggleRichTextItemText.link"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    url: str | None = Field(default=None)
-
-class BlockUpdateParamsToggleRichTextItemText(BaseModel):
-    """Nested schema for BlockUpdateParamsToggleRichTextItem.text"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    content: str | None = Field(default=None)
-    link: BlockUpdateParamsToggleRichTextItemTextLink | None | None = Field(default=None)
-
-class BlockUpdateParamsToggleRichTextItemAnnotations(BaseModel):
-    """Nested schema for BlockUpdateParamsToggleRichTextItem.annotations"""
+class BlockUpdateParamsHeading3RichTextItemAnnotations(BaseModel):
+    """Nested schema for BlockUpdateParamsHeading3RichTextItem.annotations"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     bold: bool | None = Field(default=None)
@@ -2027,50 +2033,51 @@ class BlockUpdateParamsToggleRichTextItemAnnotations(BaseModel):
     code: bool | None = Field(default=None)
     color: str | None = Field(default=None)
 
-class BlockUpdateParamsToggleRichTextItemEquation(BaseModel):
-    """Nested schema for BlockUpdateParamsToggleRichTextItem.equation"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    expression: str | None = Field(default=None)
-
-class BlockUpdateParamsToggleRichTextItem(BaseModel):
-    """Nested schema for BlockUpdateParamsToggle.rich_text_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    type_: str | None = Field(default=None, alias="type")
-    text: BlockUpdateParamsToggleRichTextItemText | None = Field(default=None)
-    mention: dict[str, Any] | None = Field(default=None)
-    equation: BlockUpdateParamsToggleRichTextItemEquation | None = Field(default=None)
-    annotations: BlockUpdateParamsToggleRichTextItemAnnotations | None = Field(default=None)
-
-class BlockUpdateParamsToggle(BaseModel):
-    """Updated toggle content"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    rich_text: list[BlockUpdateParamsToggleRichTextItem] | None = Field(default=None)
-    color: str | None = Field(default=None)
-
-class BlockUpdateParamsBookmarkCaptionItemTextLink(BaseModel):
-    """Nested schema for BlockUpdateParamsBookmarkCaptionItemText.link"""
+class BlockUpdateParamsHeading3RichTextItemTextLink(BaseModel):
+    """Nested schema for BlockUpdateParamsHeading3RichTextItemText.link"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     url: str | None = Field(default=None)
 
-class BlockUpdateParamsBookmarkCaptionItemText(BaseModel):
-    """Nested schema for BlockUpdateParamsBookmarkCaptionItem.text"""
+class BlockUpdateParamsHeading3RichTextItemText(BaseModel):
+    """Nested schema for BlockUpdateParamsHeading3RichTextItem.text"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     content: str | None = Field(default=None)
-    link: BlockUpdateParamsBookmarkCaptionItemTextLink | None | None = Field(default=None)
+    link: BlockUpdateParamsHeading3RichTextItemTextLink | None | None = Field(default=None)
 
-class BlockUpdateParamsBookmarkCaptionItemEquation(BaseModel):
-    """Nested schema for BlockUpdateParamsBookmarkCaptionItem.equation"""
+class BlockUpdateParamsHeading3RichTextItemEquation(BaseModel):
+    """Nested schema for BlockUpdateParamsHeading3RichTextItem.equation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     expression: str | None = Field(default=None)
 
-class BlockUpdateParamsBookmarkCaptionItemAnnotations(BaseModel):
-    """Nested schema for BlockUpdateParamsBookmarkCaptionItem.annotations"""
+class BlockUpdateParamsHeading3RichTextItem(BaseModel):
+    """Nested schema for BlockUpdateParamsHeading3.rich_text_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    type_: str | None = Field(default=None, alias="type")
+    text: BlockUpdateParamsHeading3RichTextItemText | None = Field(default=None)
+    mention: dict[str, Any] | None = Field(default=None)
+    equation: BlockUpdateParamsHeading3RichTextItemEquation | None = Field(default=None)
+    annotations: BlockUpdateParamsHeading3RichTextItemAnnotations | None = Field(default=None)
+
+class BlockUpdateParamsHeading3(BaseModel):
+    """Updated heading 3 content"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    rich_text: list[BlockUpdateParamsHeading3RichTextItem] | None = Field(default=None)
+    color: str | None = Field(default=None)
+    is_toggleable: bool | None = Field(default=None)
+
+class BlockUpdateParamsToDoRichTextItemEquation(BaseModel):
+    """Nested schema for BlockUpdateParamsToDoRichTextItem.equation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    expression: str | None = Field(default=None)
+
+class BlockUpdateParamsToDoRichTextItemAnnotations(BaseModel):
+    """Nested schema for BlockUpdateParamsToDoRichTextItem.annotations"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     bold: bool | None = Field(default=None)
@@ -2080,43 +2087,36 @@ class BlockUpdateParamsBookmarkCaptionItemAnnotations(BaseModel):
     code: bool | None = Field(default=None)
     color: str | None = Field(default=None)
 
-class BlockUpdateParamsBookmarkCaptionItem(BaseModel):
-    """Nested schema for BlockUpdateParamsBookmark.caption_item"""
+class BlockUpdateParamsToDoRichTextItemTextLink(BaseModel):
+    """Nested schema for BlockUpdateParamsToDoRichTextItemText.link"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    url: str | None = Field(default=None)
+
+class BlockUpdateParamsToDoRichTextItemText(BaseModel):
+    """Nested schema for BlockUpdateParamsToDoRichTextItem.text"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    content: str | None = Field(default=None)
+    link: BlockUpdateParamsToDoRichTextItemTextLink | None | None = Field(default=None)
+
+class BlockUpdateParamsToDoRichTextItem(BaseModel):
+    """Nested schema for BlockUpdateParamsToDo.rich_text_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     type_: str | None = Field(default=None, alias="type")
-    text: BlockUpdateParamsBookmarkCaptionItemText | None = Field(default=None)
+    text: BlockUpdateParamsToDoRichTextItemText | None = Field(default=None)
     mention: dict[str, Any] | None = Field(default=None)
-    equation: BlockUpdateParamsBookmarkCaptionItemEquation | None = Field(default=None)
-    annotations: BlockUpdateParamsBookmarkCaptionItemAnnotations | None = Field(default=None)
+    equation: BlockUpdateParamsToDoRichTextItemEquation | None = Field(default=None)
+    annotations: BlockUpdateParamsToDoRichTextItemAnnotations | None = Field(default=None)
 
-class BlockUpdateParamsBookmark(BaseModel):
-    """Updated bookmark"""
+class BlockUpdateParamsToDo(BaseModel):
+    """Updated to-do content"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    url: str | None = Field(default=None)
-    caption: list[BlockUpdateParamsBookmarkCaptionItem] | None = Field(default=None)
-
-class BlockUpdateParamsPdfExternal(BaseModel):
-    """Nested schema for BlockUpdateParamsPdf.external"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    url: str | None = Field(default=None)
-
-class BlockUpdateParamsPdfFileUpload(BaseModel):
-    """Nested schema for BlockUpdateParamsPdf.file_upload"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: str | None = Field(default=None)
-
-class BlockUpdateParamsPdf(BaseModel):
-    """Media file. Use external URL or file upload."""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    type_: str | None = Field(default=None, alias="type", description="File type: external or file_upload")
-    """File type: external or file_upload"""
-    external: BlockUpdateParamsPdfExternal | None = Field(default=None)
-    file_upload: BlockUpdateParamsPdfFileUpload | None = Field(default=None)
+    rich_text: list[BlockUpdateParamsToDoRichTextItem] | None = Field(default=None)
+    checked: bool | None = Field(default=None)
+    color: str | None = Field(default=None)
 
 class BlockUpdateParams(BaseModel):
     """Parameters for updating a block. Include the block type and its updated content. Omitted fields within the type are unchanged."""
@@ -2144,6 +2144,17 @@ class BlockUpdateParams(BaseModel):
     table: BlockUpdateParamsTable | None = Field(default=None)
     archived: bool | None = Field(default=None)
 
+class CommentCreateParamsRichTextItemAnnotations(BaseModel):
+    """Nested schema for CommentCreateParamsRichTextItem.annotations"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    bold: bool | None = Field(default=None)
+    italic: bool | None = Field(default=None)
+    strikethrough: bool | None = Field(default=None)
+    underline: bool | None = Field(default=None)
+    code: bool | None = Field(default=None)
+    color: str | None = Field(default=None)
+
 class CommentCreateParamsRichTextItemTextLink(BaseModel):
     """Nested schema for CommentCreateParamsRichTextItemText.link"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -2156,17 +2167,6 @@ class CommentCreateParamsRichTextItemText(BaseModel):
 
     content: str | None = Field(default=None)
     link: CommentCreateParamsRichTextItemTextLink | None | None = Field(default=None)
-
-class CommentCreateParamsRichTextItemAnnotations(BaseModel):
-    """Nested schema for CommentCreateParamsRichTextItem.annotations"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    bold: bool | None = Field(default=None)
-    italic: bool | None = Field(default=None)
-    strikethrough: bool | None = Field(default=None)
-    underline: bool | None = Field(default=None)
-    code: bool | None = Field(default=None)
-    color: str | None = Field(default=None)
 
 class CommentCreateParamsRichTextItemEquation(BaseModel):
     """Nested schema for CommentCreateParamsRichTextItem.equation"""
@@ -2192,19 +2192,6 @@ class CommentCreateParams(BaseModel):
     discussion_id: str | None = Field(default=None)
     rich_text: list[CommentCreateParamsRichTextItem]
 
-class DataSourceUpdateParamsDescriptionItemTextLink(BaseModel):
-    """Nested schema for DataSourceUpdateParamsDescriptionItemText.link"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    url: str | None = Field(default=None)
-
-class DataSourceUpdateParamsDescriptionItemText(BaseModel):
-    """Nested schema for DataSourceUpdateParamsDescriptionItem.text"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    content: str | None = Field(default=None)
-    link: DataSourceUpdateParamsDescriptionItemTextLink | None | None = Field(default=None)
-
 class DataSourceUpdateParamsDescriptionItemAnnotations(BaseModel):
     """Nested schema for DataSourceUpdateParamsDescriptionItem.annotations"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -2222,6 +2209,19 @@ class DataSourceUpdateParamsDescriptionItemEquation(BaseModel):
 
     expression: str | None = Field(default=None)
 
+class DataSourceUpdateParamsDescriptionItemTextLink(BaseModel):
+    """Nested schema for DataSourceUpdateParamsDescriptionItemText.link"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    url: str | None = Field(default=None)
+
+class DataSourceUpdateParamsDescriptionItemText(BaseModel):
+    """Nested schema for DataSourceUpdateParamsDescriptionItem.text"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    content: str | None = Field(default=None)
+    link: DataSourceUpdateParamsDescriptionItemTextLink | None | None = Field(default=None)
+
 class DataSourceUpdateParamsDescriptionItem(BaseModel):
     """Nested schema for DataSourceUpdateParams.description_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -2232,17 +2232,17 @@ class DataSourceUpdateParamsDescriptionItem(BaseModel):
     equation: DataSourceUpdateParamsDescriptionItemEquation | None = Field(default=None)
     annotations: DataSourceUpdateParamsDescriptionItemAnnotations | None = Field(default=None)
 
-class DataSourceUpdateParamsCoverFileUpload(BaseModel):
-    """Uploaded file cover"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: str | None = Field(default=None)
-
 class DataSourceUpdateParamsCoverExternal(BaseModel):
     """External URL cover"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     url: str | None = Field(default=None)
+
+class DataSourceUpdateParamsCoverFileUpload(BaseModel):
+    """Uploaded file cover"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None)
 
 class DataSourceUpdateParamsCover(BaseModel):
     """Cover image. Supports external URL or file upload. Set to null to remove."""
@@ -2255,11 +2255,47 @@ class DataSourceUpdateParamsCover(BaseModel):
     file_upload: DataSourceUpdateParamsCoverFileUpload | None = Field(default=None, description="Uploaded file cover")
     """Uploaded file cover"""
 
-class DataSourceUpdateParamsTitleItemEquation(BaseModel):
-    """Nested schema for DataSourceUpdateParamsTitleItem.equation"""
+class DataSourceUpdateParamsIconIcon(BaseModel):
+    """Notion native icon (when type is icon)"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    expression: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    color: str | None = Field(default=None)
+
+class DataSourceUpdateParamsIconFileUpload(BaseModel):
+    """Uploaded file icon (when type is file_upload)"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None)
+
+class DataSourceUpdateParamsIconCustomEmoji(BaseModel):
+    """Custom emoji icon (when type is custom_emoji)"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None)
+
+class DataSourceUpdateParamsIconExternal(BaseModel):
+    """External URL icon (when type is external)"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    url: str | None = Field(default=None)
+
+class DataSourceUpdateParamsIcon(BaseModel):
+    """Icon. Supports emoji, external URL, file upload, custom emoji, and Notion native icons. Set to null to remove."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    type_: str | None = Field(default=None, alias="type", description="Icon type: emoji, external, file_upload, custom_emoji, or icon")
+    """Icon type: emoji, external, file_upload, custom_emoji, or icon"""
+    emoji: str | None = Field(default=None, description="Emoji character (when type is emoji)")
+    """Emoji character (when type is emoji)"""
+    external: DataSourceUpdateParamsIconExternal | None = Field(default=None, description="External URL icon (when type is external)")
+    """External URL icon (when type is external)"""
+    file_upload: DataSourceUpdateParamsIconFileUpload | None = Field(default=None, description="Uploaded file icon (when type is file_upload)")
+    """Uploaded file icon (when type is file_upload)"""
+    custom_emoji: DataSourceUpdateParamsIconCustomEmoji | None = Field(default=None, description="Custom emoji icon (when type is custom_emoji)")
+    """Custom emoji icon (when type is custom_emoji)"""
+    icon: DataSourceUpdateParamsIconIcon | None = Field(default=None, description="Notion native icon (when type is icon)")
+    """Notion native icon (when type is icon)"""
 
 class DataSourceUpdateParamsTitleItemTextLink(BaseModel):
     """Nested schema for DataSourceUpdateParamsTitleItemText.link"""
@@ -2285,6 +2321,12 @@ class DataSourceUpdateParamsTitleItemAnnotations(BaseModel):
     code: bool | None = Field(default=None)
     color: str | None = Field(default=None)
 
+class DataSourceUpdateParamsTitleItemEquation(BaseModel):
+    """Nested schema for DataSourceUpdateParamsTitleItem.equation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    expression: str | None = Field(default=None)
+
 class DataSourceUpdateParamsTitleItem(BaseModel):
     """Nested schema for DataSourceUpdateParams.title_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -2294,48 +2336,6 @@ class DataSourceUpdateParamsTitleItem(BaseModel):
     mention: dict[str, Any] | None = Field(default=None)
     equation: DataSourceUpdateParamsTitleItemEquation | None = Field(default=None)
     annotations: DataSourceUpdateParamsTitleItemAnnotations | None = Field(default=None)
-
-class DataSourceUpdateParamsIconExternal(BaseModel):
-    """External URL icon (when type is external)"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    url: str | None = Field(default=None)
-
-class DataSourceUpdateParamsIconFileUpload(BaseModel):
-    """Uploaded file icon (when type is file_upload)"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: str | None = Field(default=None)
-
-class DataSourceUpdateParamsIconIcon(BaseModel):
-    """Notion native icon (when type is icon)"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: str | None = Field(default=None)
-    color: str | None = Field(default=None)
-
-class DataSourceUpdateParamsIconCustomEmoji(BaseModel):
-    """Custom emoji icon (when type is custom_emoji)"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: str | None = Field(default=None)
-
-class DataSourceUpdateParamsIcon(BaseModel):
-    """Icon. Supports emoji, external URL, file upload, custom emoji, and Notion native icons. Set to null to remove."""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    type_: str | None = Field(default=None, alias="type", description="Icon type: emoji, external, file_upload, custom_emoji, or icon")
-    """Icon type: emoji, external, file_upload, custom_emoji, or icon"""
-    emoji: str | None = Field(default=None, description="Emoji character (when type is emoji)")
-    """Emoji character (when type is emoji)"""
-    external: DataSourceUpdateParamsIconExternal | None = Field(default=None, description="External URL icon (when type is external)")
-    """External URL icon (when type is external)"""
-    file_upload: DataSourceUpdateParamsIconFileUpload | None = Field(default=None, description="Uploaded file icon (when type is file_upload)")
-    """Uploaded file icon (when type is file_upload)"""
-    custom_emoji: DataSourceUpdateParamsIconCustomEmoji | None = Field(default=None, description="Custom emoji icon (when type is custom_emoji)")
-    """Custom emoji icon (when type is custom_emoji)"""
-    icon: DataSourceUpdateParamsIconIcon | None = Field(default=None, description="Notion native icon (when type is icon)")
-    """Notion native icon (when type is icon)"""
 
 class DataSourceUpdateParams(BaseModel):
     """Parameters for updating a data source. All fields are optional."""

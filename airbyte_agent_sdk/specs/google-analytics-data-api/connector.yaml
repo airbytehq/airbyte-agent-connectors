@@ -60,7 +60,7 @@ info:
     - param: property_id
       config_key: property_ids
   x-airbyte-context-store:
-    disable_compaction: true
+    disable_compaction: false
     entities:
       - entity: website_overview
         x-airbyte-name: website_overview

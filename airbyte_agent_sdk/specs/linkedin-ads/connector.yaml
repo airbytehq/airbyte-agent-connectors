@@ -71,7 +71,7 @@ info:
     target_key: id
     cardinality: many_to_one
   x-airbyte-context-store:
-    disable_compaction: true
+    disable_compaction: false
     entities:
     - entity: accounts
       x-airbyte-name: accounts
