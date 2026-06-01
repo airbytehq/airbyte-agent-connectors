@@ -4827,7 +4827,6 @@ SlackConnectorModel: ConnectorModel = ConnectorModel(
                 ],
             ),
         ],
-        disable_compaction=True,
         flush_batch_size_mb=10,
     ),
     search_field_paths={
