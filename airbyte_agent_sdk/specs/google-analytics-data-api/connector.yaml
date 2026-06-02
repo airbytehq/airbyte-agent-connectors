@@ -11,8 +11,8 @@ info:
     property IDs. Requires OAuth2 authentication with Google Analytics read-only scope.
   x-airbyte-connector-name: google-analytics-data-api
   x-airbyte-connector-definition-id: 3cc2eafd-84aa-4dca-93af-322d9dfeec1a
-  x-airbyte-replication-version: "2.9.34"
-  x-airbyte-replication-compatibility: ">=2.9.34, <3.0.0"
+  x-airbyte-replication-version: "2.9.37"
+  x-airbyte-replication-compatibility: ">=2.9.37, <3.0.0"
   x-airbyte-example-questions:
     direct:
       - "Show me the website overview report"

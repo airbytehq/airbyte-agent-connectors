@@ -13,8 +13,8 @@ info:
     for recruiting analytics and talent acquisition insights.
   x-airbyte-connector-name: greenhouse
   x-airbyte-connector-definition-id: 59f1e50a-331f-4f09-b3e8-2e8d4d355f44
-  x-airbyte-replication-version: "0.7.22"
-  x-airbyte-replication-compatibility: ">=0.7.22, <1.0.0"
+  x-airbyte-replication-version: "0.7.23"
+  x-airbyte-replication-compatibility: ">=0.7.23, <1.0.0"
   x-airbyte-external-documentation-urls:
     - type: api_reference
       title: Greenhouse API Reference documentation

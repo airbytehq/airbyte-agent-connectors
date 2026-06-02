@@ -13,8 +13,8 @@ info:
     coaching metrics, and library content for sales performance analysis and revenue insights.
   x-airbyte-connector-name: gong
   x-airbyte-connector-definition-id: 32382e40-3b49-4b99-9c5c-4076501914e7
-  x-airbyte-replication-version: "1.2.1"
-  x-airbyte-replication-compatibility: ">=1.2.1, <2.0.0"
+  x-airbyte-replication-version: "1.2.2"
+  x-airbyte-replication-compatibility: ">=1.2.2, <2.0.0"
   x-airbyte-example-questions:
     direct:
       - "List all users in my Gong account"

@@ -93,14 +93,6 @@ class Project(BaseModel):
     avatar: ProjectAvatar | None = Field(default=None)
     organization: ProjectOrganization | None = Field(default=None)
 
-class ProjectDetailTeamsItem(BaseModel):
-    """Nested schema for ProjectDetail.teams_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: str | None | None = Field(default=None)
-    name: str | None | None = Field(default=None)
-    slug: str | None | None = Field(default=None)
-
 class ProjectDetailAvatar(BaseModel):
     """Project avatar information."""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -108,6 +100,14 @@ class ProjectDetailAvatar(BaseModel):
     avatar_type: str | None | None = Field(default=None, alias="avatarType")
     avatar_uuid: str | None | None = Field(default=None, alias="avatarUuid")
     avatar_url: str | None | None = Field(default=None, alias="avatarUrl")
+
+class ProjectDetailOrganization(BaseModel):
+    """Organization this project belongs to."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None | None = Field(default=None)
+    name: str | None | None = Field(default=None)
+    slug: str | None | None = Field(default=None)
 
 class ProjectDetailTeam(BaseModel):
     """Primary team for this project."""
@@ -117,8 +117,8 @@ class ProjectDetailTeam(BaseModel):
     name: str | None | None = Field(default=None)
     slug: str | None | None = Field(default=None)
 
-class ProjectDetailOrganization(BaseModel):
-    """Organization this project belongs to."""
+class ProjectDetailTeamsItem(BaseModel):
+    """Nested schema for ProjectDetail.teams_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     id: str | None | None = Field(default=None)
@@ -262,6 +262,13 @@ class Issue(BaseModel):
     annotations: list[str | None] | None = Field(default=None)
     subscription_details: dict[str, Any] | None = Field(default=None, alias="subscriptionDetails")
 
+class EventGroupingconfig(BaseModel):
+    """Grouping configuration."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None | None = Field(default=None)
+    enhancements: str | None | None = Field(default=None)
+
 class EventMetadata(BaseModel):
     """Event metadata."""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -284,13 +291,6 @@ class EventUser(BaseModel):
     username: str | None | None = Field(default=None)
     name: str | None | None = Field(default=None)
     ip_address: str | None | None = Field(default=None)
-
-class EventGroupingconfig(BaseModel):
-    """Grouping configuration."""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: str | None | None = Field(default=None)
-    enhancements: str | None | None = Field(default=None)
 
 class Event(BaseModel):
     """A Sentry event (individual error occurrence)."""

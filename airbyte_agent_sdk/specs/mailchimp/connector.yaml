@@ -9,8 +9,8 @@ info:
     for marketing analytics and audience management.
   x-airbyte-connector-name: mailchimp
   x-airbyte-connector-definition-id: b03a9f3e-22a5-11eb-adc1-0242ac120002
-  x-airbyte-replication-version: "2.1.25"
-  x-airbyte-replication-compatibility: ">=2.1.25, <3.0.0"
+  x-airbyte-replication-version: "2.1.26"
+  x-airbyte-replication-compatibility: ">=2.1.26, <3.0.0"
   x-airbyte-external-documentation-urls:
   - title: Mailchimp Marketing API Reference
     type: api_reference

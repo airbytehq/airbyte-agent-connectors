@@ -219,39 +219,6 @@ class TransactionsList(BaseModel):
     total_pages: int | None = Field(default=None)
     links: list[TransactionsListLinksItem] | None = Field(default=None)
 
-class PaymentLinksItem(BaseModel):
-    """Nested schema for Payment.links_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    href: str | None = Field(default=None)
-    rel: str | None = Field(default=None)
-    method: str | None = Field(default=None)
-
-class PaymentPayerPayerInfo(BaseModel):
-    """Nested schema for PaymentPayer.payer_info"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    email: str | None = Field(default=None, description="Payer email.")
-    """Payer email."""
-    first_name: str | None = Field(default=None, description="Payer first name.")
-    """Payer first name."""
-    last_name: str | None = Field(default=None, description="Payer last name.")
-    """Payer last name."""
-    payer_id: str | None = Field(default=None, description="Payer ID.")
-    """Payer ID."""
-    country_code: str | None = Field(default=None, description="Payer country code.")
-    """Payer country code."""
-
-class PaymentPayer(BaseModel):
-    """Payer information."""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    payment_method: str | None = Field(default=None, description="Payment method.")
-    """Payment method."""
-    status: str | None = Field(default=None, description="Payer status.")
-    """Payer status."""
-    payer_info: PaymentPayerPayerInfo | None = Field(default=None)
-
 class PaymentTransactionsItemAmountDetails(BaseModel):
     """Nested schema for PaymentTransactionsItemAmount.details"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -280,6 +247,39 @@ class PaymentTransactionsItem(BaseModel):
     description: str | None = Field(default=None, description="Transaction description.")
     """Transaction description."""
     related_resources: list[dict[str, Any]] | None = Field(default=None)
+
+class PaymentPayerPayerInfo(BaseModel):
+    """Nested schema for PaymentPayer.payer_info"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    email: str | None = Field(default=None, description="Payer email.")
+    """Payer email."""
+    first_name: str | None = Field(default=None, description="Payer first name.")
+    """Payer first name."""
+    last_name: str | None = Field(default=None, description="Payer last name.")
+    """Payer last name."""
+    payer_id: str | None = Field(default=None, description="Payer ID.")
+    """Payer ID."""
+    country_code: str | None = Field(default=None, description="Payer country code.")
+    """Payer country code."""
+
+class PaymentPayer(BaseModel):
+    """Payer information."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    payment_method: str | None = Field(default=None, description="Payment method.")
+    """Payment method."""
+    status: str | None = Field(default=None, description="Payer status.")
+    """Payer status."""
+    payer_info: PaymentPayerPayerInfo | None = Field(default=None)
+
+class PaymentLinksItem(BaseModel):
+    """Nested schema for Payment.links_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    href: str | None = Field(default=None)
+    rel: str | None = Field(default=None)
+    method: str | None = Field(default=None)
 
 class Payment(BaseModel):
     """A PayPal payment object."""
@@ -429,14 +429,6 @@ class InvoiceSearchParams(BaseModel):
 
     creation_date_range: InvoiceSearchParamsCreationDateRange | None = Field(default=None)
 
-class InvoiceLinksItem(BaseModel):
-    """Nested schema for Invoice.links_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    href: str | None = Field(default=None)
-    rel: str | None = Field(default=None)
-    method: str | None = Field(default=None)
-
 class InvoiceItemsItemTax(BaseModel):
     """Nested schema for InvoiceItemsItem.tax"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -455,6 +447,21 @@ class InvoiceItemsItem(BaseModel):
     unit_amount: Money | None = Field(default=None)
     tax: InvoiceItemsItemTax | None = Field(default=None)
     unit_of_measure: str | None = Field(default=None)
+
+class InvoiceRefunds(BaseModel):
+    """Refund records for this invoice."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    refund_amount: Money | None = Field(default=None)
+    transactions: list[dict[str, Any]] | None = Field(default=None)
+
+class InvoiceLinksItem(BaseModel):
+    """Nested schema for Invoice.links_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    href: str | None = Field(default=None)
+    rel: str | None = Field(default=None)
+    method: str | None = Field(default=None)
 
 class InvoicePrimaryRecipientsItemBillingInfoName(BaseModel):
     """Nested schema for InvoicePrimaryRecipientsItemBillingInfo.name"""
@@ -477,6 +484,23 @@ class InvoicePrimaryRecipientsItem(BaseModel):
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     billing_info: InvoicePrimaryRecipientsItemBillingInfo | None = Field(default=None)
+
+class InvoiceInvoicerName(BaseModel):
+    """Nested schema for InvoiceInvoicer.name"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    given_name: str | None = Field(default=None)
+    surname: str | None = Field(default=None)
+    full_name: str | None = Field(default=None)
+
+class InvoiceInvoicer(BaseModel):
+    """Invoicer details."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: InvoiceInvoicerName | None = Field(default=None)
+    address: dict[str, Any] | None = Field(default=None)
+    email_address: str | None = Field(default=None, description="Invoicer email.")
+    """Invoicer email."""
 
 class InvoiceConfigurationPartialPayment(BaseModel):
     """Nested schema for InvoiceConfiguration.partial_payment"""
@@ -559,23 +583,6 @@ class InvoiceDetail(BaseModel):
     payment_term: InvoiceDetailPaymentTerm | None = Field(default=None)
     metadata: InvoiceDetailMetadata | None = Field(default=None)
 
-class InvoiceInvoicerName(BaseModel):
-    """Nested schema for InvoiceInvoicer.name"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    given_name: str | None = Field(default=None)
-    surname: str | None = Field(default=None)
-    full_name: str | None = Field(default=None)
-
-class InvoiceInvoicer(BaseModel):
-    """Invoicer details."""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: InvoiceInvoicerName | None = Field(default=None)
-    address: dict[str, Any] | None = Field(default=None)
-    email_address: str | None = Field(default=None, description="Invoicer email.")
-    """Invoicer email."""
-
 class InvoiceAmountBreakdown(BaseModel):
     """Nested schema for InvoiceAmount.breakdown"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -593,13 +600,6 @@ class InvoiceAmount(BaseModel):
     currency_code: str | None = Field(default=None)
     value: str | None = Field(default=None)
     breakdown: InvoiceAmountBreakdown | None = Field(default=None)
-
-class InvoiceRefunds(BaseModel):
-    """Refund records for this invoice."""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    refund_amount: Money | None = Field(default=None)
-    transactions: list[dict[str, Any]] | None = Field(default=None)
 
 class Invoice(BaseModel):
     """A PayPal invoice object."""

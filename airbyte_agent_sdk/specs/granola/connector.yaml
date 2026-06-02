@@ -10,8 +10,8 @@ info:
     and calendar event details. Requires a Granola API key.
   x-airbyte-connector-name: granola
   x-airbyte-connector-definition-id: 9023923c-002f-4131-9554-3ebdf56540a4
-  x-airbyte-replication-version: "0.2.1"
-  x-airbyte-replication-compatibility: ">=0.2.1, <1.0.0"
+  x-airbyte-replication-version: "0.2.2"
+  x-airbyte-replication-compatibility: ">=0.2.2, <1.0.0"
   x-airbyte-example-questions:
     direct:
       - "List all meeting notes from Granola"

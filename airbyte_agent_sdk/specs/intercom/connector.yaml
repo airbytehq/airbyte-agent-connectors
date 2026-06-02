@@ -15,8 +15,8 @@ info:
     and updating companies, and creating tags.
   x-airbyte-connector-name: intercom
   x-airbyte-connector-definition-id: d8313939-3782-41b0-be29-b3ca20d8dd3a
-  x-airbyte-replication-version: "0.13.23"
-  x-airbyte-replication-compatibility: ">=0.13.23, <1.0.0"
+  x-airbyte-replication-version: "0.13.24"
+  x-airbyte-replication-compatibility: ">=0.13.24, <1.0.0"
   x-airbyte-example-questions:
     direct:
       - "List all contacts in my Intercom workspace"

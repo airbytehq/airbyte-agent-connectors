@@ -11,8 +11,8 @@ info:
     and API token.
   x-airbyte-connector-name: confluence
   x-airbyte-connector-definition-id: cf40a7f8-71f8-45ce-a7fa-fca053e4028c
-  x-airbyte-replication-version: "1.0.23"
-  x-airbyte-replication-compatibility: ">=1.0.23, <2.0.0"
+  x-airbyte-replication-version: "1.0.24"
+  x-airbyte-replication-compatibility: ">=1.0.24, <2.0.0"
   x-airbyte-external-documentation-urls:
     - type: api_reference
       title: Confluence Cloud REST API

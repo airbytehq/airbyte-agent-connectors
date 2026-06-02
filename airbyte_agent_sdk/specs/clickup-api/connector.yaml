@@ -9,8 +9,8 @@ info:
     tasks (including workspace-wide search), comments, goals, views, time tracking, members, and docs.
   x-airbyte-connector-name: clickup-api
   x-airbyte-connector-definition-id: 311a7a27-3fb5-4f7e-8265-5e4afe258b66
-  x-airbyte-replication-version: "0.3.47"
-  x-airbyte-replication-compatibility: ">=0.3.47, <1.0.0"
+  x-airbyte-replication-version: "0.3.48"
+  x-airbyte-replication-compatibility: ">=0.3.48, <1.0.0"
   x-airbyte-context-store:
     entities:
       - entity: user
