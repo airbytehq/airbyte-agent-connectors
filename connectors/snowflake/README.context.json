@@ -28,10 +28,43 @@
     ],
     "is_multi_auth": false
   },
-  "replication_config": null,
-  "custom_description": "Connects to Snowflake via the SQL REST API (POST /api/v2/statements) to query\nmetadata about databases, schemas, tables, views, warehouses, and columns.\nUses Programmatic Access Token (PAT) authentication. All operations execute\nSHOW commands through the Snowflake SQL API and return structured result sets.\n",
-  "supported_questions": "- List all databases in Snowflake\n- Show me all schemas\n- What tables are available?\n- List all views\n- Show me the warehouses\n- What columns does my data have?\n- Find all tables in the ANALYTICS database\n- Which warehouses are currently running?\n- Show me all views in the PUBLIC schema\n- What databases were created this month?",
-  "unsupported_questions": "- Create a new database\n- Drop a table\n- Run a custom SQL query\n- Insert data into a table",
+  "replication_config": {
+    "type_name": "SnowflakeReplicationConfig",
+    "title": "Snowflake Connection Settings",
+    "description": "Database, warehouse, and role settings required for connecting to Snowflake. These map to the corresponding Airbyte source-snowflake configuration fields.",
+    "fields": [
+      {
+        "name": "database",
+        "type": "str",
+        "required": true,
+        "title": "Database",
+        "description": "The database for Airbyte to access data.",
+        "format": null,
+        "default": null
+      },
+      {
+        "name": "warehouse",
+        "type": "str",
+        "required": true,
+        "title": "Warehouse",
+        "description": "The warehouse for Airbyte to access data.",
+        "format": null,
+        "default": null
+      },
+      {
+        "name": "role",
+        "type": "str",
+        "required": true,
+        "title": "Role",
+        "description": "The role for Airbyte to access Snowflake.",
+        "format": null,
+        "default": null
+      }
+    ]
+  },
+  "custom_description": "Connects to Snowflake via the SQL REST API (POST /api/v2/statements) to query\nmetadata about databases, schemas, tables, views, warehouses, and columns,\nto read records from tables and views, and to create, update, and delete\nrecords in tables. Uses Programmatic Access Token (PAT) authentication.\nMetadata operations execute SHOW commands; record operations execute the SQL\nstatement you provide. This connector is experimental (beta): record actions\nrun arbitrary SQL bounded only by the connected PAT's Snowflake role, so scope\nthat role to least privilege (read-only for read-only use cases).\nParameterized bind variables (the SQL API `bindings` field / `?` placeholders)\nare not supported in this beta; inline literal values into the statement.\n",
+  "supported_questions": "- List all databases in Snowflake\n- Show me all schemas\n- What tables are available?\n- List all views\n- Show me the warehouses\n- What columns does my data have?\n- Get the record with id 42 from the users table\n- List all records from the orders table\n- Insert a new row into the customers table\n- Update the email for user 7 in the users table\n- Delete the record with id 99 from the logs table\n- Find all tables in the ANALYTICS database\n- Which warehouses are currently running?\n- Show me all views in the PUBLIC schema\n- What databases were created this month?\n- Find all orders placed in the last 30 days\n- Search for users with email ending in @example.com",
+  "unsupported_questions": null,
   "first_operation": {
     "method_name": "list_databases",
     "http_method": "post",
@@ -1057,6 +1090,599 @@
             }
           }
         ],
+        "is_download": false
+      }
+    ],
+    "record": [
+      {
+        "method_name": "get_record",
+        "http_method": "post",
+        "path": "/api/v2/statements:record_get",
+        "entity": "record",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "statement",
+            "python_name": "statement",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "SQL SELECT statement to retrieve a single record (e.g., SELECT * FROM users WHERE id = 42)"
+            },
+            "required": true,
+            "description": "SQL SELECT statement to retrieve a single record (e.g., SELECT * FROM users WHERE id = 42)"
+          },
+          {
+            "name": "database",
+            "python_name": "database",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Database context for the statement"
+            },
+            "required": false,
+            "description": "Database context for the statement"
+          },
+          {
+            "name": "schema",
+            "python_name": "schema",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Schema context for the statement"
+            },
+            "required": false,
+            "description": "Schema context for the statement"
+          },
+          {
+            "name": "warehouse",
+            "python_name": "warehouse",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Warehouse to use for execution"
+            },
+            "required": false,
+            "description": "Warehouse to use for execution"
+          },
+          {
+            "name": "role",
+            "python_name": "role",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Role to use for execution"
+            },
+            "required": false,
+            "description": "Role to use for execution"
+          },
+          {
+            "name": "timeout",
+            "python_name": "timeout",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Timeout in seconds for the statement execution"
+            },
+            "required": false,
+            "description": "Timeout in seconds for the statement execution"
+          },
+          {
+            "name": "parameters",
+            "python_name": "parameters",
+            "type": "dict[str, Any]",
+            "schema": {
+              "type": "object",
+              "description": "Session parameters for the statement execution",
+              "additionalProperties": true
+            },
+            "required": false,
+            "description": "Session parameters for the statement execution"
+          }
+        ],
+        "params_type_name": "RecordGetParams",
+        "response_type": "RecordResponse",
+        "description": "Execute a SQL SELECT statement and return the result set. Typically used to retrieve a single row by filtering on a unique identifier (e.g., SELECT * FROM users WHERE id = 42). The result is returned as rows, the same shape as the list action; when the SELECT targets one row the result contains a single row. Intended for row retrieval only. This is not a general-purpose SQL endpoint: it does not perform DDL/DCL (DROP, TRUNCATE, GRANT, CREATE) \u2014 issue the matching CRUD action for the operation you intend. Parameterized bind variables (the SQL API bindings field / ? placeholders) are not supported in this beta; inline literal values into the statement.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "RecordResponse",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "list_records",
+        "http_method": "post",
+        "path": "/api/v2/statements:record_list",
+        "entity": "record",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "statement",
+            "python_name": "statement",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "SQL SELECT statement to retrieve multiple records (e.g., SELECT * FROM orders WHERE status = 'active' LIMIT 100)"
+            },
+            "required": true,
+            "description": "SQL SELECT statement to retrieve multiple records (e.g., SELECT * FROM orders WHERE status = 'active' LIMIT 100)"
+          },
+          {
+            "name": "database",
+            "python_name": "database",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Database context for the statement"
+            },
+            "required": false,
+            "description": "Database context for the statement"
+          },
+          {
+            "name": "schema",
+            "python_name": "schema",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Schema context for the statement"
+            },
+            "required": false,
+            "description": "Schema context for the statement"
+          },
+          {
+            "name": "warehouse",
+            "python_name": "warehouse",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Warehouse to use for execution"
+            },
+            "required": false,
+            "description": "Warehouse to use for execution"
+          },
+          {
+            "name": "role",
+            "python_name": "role",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Role to use for execution"
+            },
+            "required": false,
+            "description": "Role to use for execution"
+          },
+          {
+            "name": "timeout",
+            "python_name": "timeout",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Timeout in seconds for the statement execution"
+            },
+            "required": false,
+            "description": "Timeout in seconds for the statement execution"
+          },
+          {
+            "name": "parameters",
+            "python_name": "parameters",
+            "type": "dict[str, Any]",
+            "schema": {
+              "type": "object",
+              "description": "Session parameters for the statement execution",
+              "additionalProperties": true
+            },
+            "required": false,
+            "description": "Session parameters for the statement execution"
+          }
+        ],
+        "params_type_name": "RecordListParams",
+        "response_type": "RecordListResult",
+        "description": "Execute a SQL SELECT query that returns multiple records from a Snowflake table or view. Use this action when you need to retrieve a set of rows, optionally with filtering, sorting, or limiting (e.g., SELECT * FROM orders WHERE status = 'active' ORDER BY created_at DESC LIMIT 100). Intended for row retrieval only. This is not a general-purpose SQL endpoint: it does not perform DDL/DCL (DROP, TRUNCATE, GRANT, CREATE) \u2014 issue the matching CRUD action for the operation you intend. Parameterized bind variables (the SQL API bindings field / ? placeholders) are not supported in this beta; inline literal values into the statement.",
+        "record_extractor": "$",
+        "meta_extractor": {
+          "next_page_url": "@link.next",
+          "request_id": "$.requestId",
+          "statement_handle": "$.statementHandle",
+          "partition_info": "$.resultSetMetaData.partitionInfo"
+        },
+        "needs_envelope": true,
+        "record_type": "RecordResponse",
+        "meta_fields": [
+          {
+            "name": "next_page_url",
+            "python_name": "next_page_url",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "request_id",
+            "python_name": "request_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Unique request identifier for the API call"
+            }
+          },
+          {
+            "name": "statement_handle",
+            "python_name": "statement_handle",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Unique handle for the executed statement"
+            }
+          },
+          {
+            "name": "partition_info",
+            "python_name": "partition_info",
+            "type": "list[PartitionInfo]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/PartitionInfo"
+              },
+              "description": "Information about result partitions"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "create_record",
+        "http_method": "post",
+        "path": "/api/v2/statements:record_create",
+        "entity": "record",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "statement",
+            "python_name": "statement",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "SQL INSERT statement to create new records (e.g., INSERT INTO users (name, email) VALUES ('Alice', 'alice@example.com'))"
+            },
+            "required": true,
+            "description": "SQL INSERT statement to create new records (e.g., INSERT INTO users (name, email) VALUES ('Alice', 'alice@example.com'))"
+          },
+          {
+            "name": "database",
+            "python_name": "database",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Database context for the statement"
+            },
+            "required": false,
+            "description": "Database context for the statement"
+          },
+          {
+            "name": "schema",
+            "python_name": "schema",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Schema context for the statement"
+            },
+            "required": false,
+            "description": "Schema context for the statement"
+          },
+          {
+            "name": "warehouse",
+            "python_name": "warehouse",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Warehouse to use for execution"
+            },
+            "required": false,
+            "description": "Warehouse to use for execution"
+          },
+          {
+            "name": "role",
+            "python_name": "role",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Role to use for execution"
+            },
+            "required": false,
+            "description": "Role to use for execution"
+          },
+          {
+            "name": "timeout",
+            "python_name": "timeout",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Timeout in seconds for the statement execution"
+            },
+            "required": false,
+            "description": "Timeout in seconds for the statement execution"
+          },
+          {
+            "name": "parameters",
+            "python_name": "parameters",
+            "type": "dict[str, Any]",
+            "schema": {
+              "type": "object",
+              "description": "Session parameters for the statement execution",
+              "additionalProperties": true
+            },
+            "required": false,
+            "description": "Session parameters for the statement execution"
+          },
+          {
+            "name": "requestId",
+            "python_name": "request_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Unique request ID for this DML statement. Reuse the SAME requestId when resubmitting after a network error or timeout so Snowflake deduplicates instead of executing the statement again.",
+            "is_deep_object": false
+          },
+          {
+            "name": "retry",
+            "python_name": "retry",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": false,
+            "description": "Set to true when resubmitting a previously-sent statement with the same requestId, so Snowflake treats it as a safe retry rather than a new DML.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "RecordCreateParams",
+        "response_type": "RecordResponse",
+        "description": "Execute a SQL INSERT statement to create one or more new rows in a Snowflake table (e.g., INSERT INTO users (name, email) VALUES ('Alice', 'alice@example.com')). Intended for row insertion only. This is not a general-purpose SQL endpoint: it does not perform DDL/DCL (DROP, TRUNCATE, GRANT, CREATE TABLE) \u2014 issue the matching CRUD action for the operation you intend. Parameterized bind variables (the SQL API bindings field / ? placeholders) are not supported in this beta; inline literal values into the statement.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "RecordResponse",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "update_record",
+        "http_method": "post",
+        "path": "/api/v2/statements:record_update",
+        "entity": "record",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "statement",
+            "python_name": "statement",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "SQL UPDATE statement to modify existing records (e.g., UPDATE users SET email = 'new@example.com' WHERE id = 7)"
+            },
+            "required": true,
+            "description": "SQL UPDATE statement to modify existing records (e.g., UPDATE users SET email = 'new@example.com' WHERE id = 7)"
+          },
+          {
+            "name": "database",
+            "python_name": "database",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Database context for the statement"
+            },
+            "required": false,
+            "description": "Database context for the statement"
+          },
+          {
+            "name": "schema",
+            "python_name": "schema",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Schema context for the statement"
+            },
+            "required": false,
+            "description": "Schema context for the statement"
+          },
+          {
+            "name": "warehouse",
+            "python_name": "warehouse",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Warehouse to use for execution"
+            },
+            "required": false,
+            "description": "Warehouse to use for execution"
+          },
+          {
+            "name": "role",
+            "python_name": "role",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Role to use for execution"
+            },
+            "required": false,
+            "description": "Role to use for execution"
+          },
+          {
+            "name": "timeout",
+            "python_name": "timeout",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Timeout in seconds for the statement execution"
+            },
+            "required": false,
+            "description": "Timeout in seconds for the statement execution"
+          },
+          {
+            "name": "parameters",
+            "python_name": "parameters",
+            "type": "dict[str, Any]",
+            "schema": {
+              "type": "object",
+              "description": "Session parameters for the statement execution",
+              "additionalProperties": true
+            },
+            "required": false,
+            "description": "Session parameters for the statement execution"
+          },
+          {
+            "name": "requestId",
+            "python_name": "request_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Unique request ID for this DML statement. Reuse the SAME requestId when resubmitting after a network error or timeout so Snowflake deduplicates instead of executing the statement again.",
+            "is_deep_object": false
+          },
+          {
+            "name": "retry",
+            "python_name": "retry",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": false,
+            "description": "Set to true when resubmitting a previously-sent statement with the same requestId, so Snowflake treats it as a safe retry rather than a new DML.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "RecordUpdateParams",
+        "response_type": "RecordResponse",
+        "description": "Execute a SQL UPDATE statement to modify existing rows in a Snowflake table (e.g., UPDATE users SET email = 'new@example.com' WHERE id = 7). Intended for row modification only. This is not a general-purpose SQL endpoint: it does not perform DDL/DCL (DROP, TRUNCATE, GRANT, ALTER) \u2014 issue the matching CRUD action for the operation you intend. Parameterized bind variables (the SQL API bindings field / ? placeholders) are not supported in this beta; inline literal values into the statement.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "RecordResponse",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "delete_record",
+        "http_method": "post",
+        "path": "/api/v2/statements:record_delete",
+        "entity": "record",
+        "action": "delete",
+        "parameters": [
+          {
+            "name": "statement",
+            "python_name": "statement",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "SQL DELETE statement to remove records (e.g., DELETE FROM logs WHERE id = 99)"
+            },
+            "required": true,
+            "description": "SQL DELETE statement to remove records (e.g., DELETE FROM logs WHERE id = 99)"
+          },
+          {
+            "name": "database",
+            "python_name": "database",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Database context for the statement"
+            },
+            "required": false,
+            "description": "Database context for the statement"
+          },
+          {
+            "name": "schema",
+            "python_name": "schema",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Schema context for the statement"
+            },
+            "required": false,
+            "description": "Schema context for the statement"
+          },
+          {
+            "name": "warehouse",
+            "python_name": "warehouse",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Warehouse to use for execution"
+            },
+            "required": false,
+            "description": "Warehouse to use for execution"
+          },
+          {
+            "name": "role",
+            "python_name": "role",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Role to use for execution"
+            },
+            "required": false,
+            "description": "Role to use for execution"
+          },
+          {
+            "name": "timeout",
+            "python_name": "timeout",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Timeout in seconds for the statement execution"
+            },
+            "required": false,
+            "description": "Timeout in seconds for the statement execution"
+          },
+          {
+            "name": "parameters",
+            "python_name": "parameters",
+            "type": "dict[str, Any]",
+            "schema": {
+              "type": "object",
+              "description": "Session parameters for the statement execution",
+              "additionalProperties": true
+            },
+            "required": false,
+            "description": "Session parameters for the statement execution"
+          },
+          {
+            "name": "requestId",
+            "python_name": "request_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Unique request ID for this DML statement. Reuse the SAME requestId when resubmitting after a network error or timeout so Snowflake deduplicates instead of executing the statement again.",
+            "is_deep_object": false
+          },
+          {
+            "name": "retry",
+            "python_name": "retry",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": false,
+            "description": "Set to true when resubmitting a previously-sent statement with the same requestId, so Snowflake treats it as a safe retry rather than a new DML.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "RecordDeleteParams",
+        "response_type": "RecordResponse",
+        "description": "Execute a SQL DELETE statement to remove rows from a Snowflake table (e.g., DELETE FROM logs WHERE id = 99). Intended for row deletion only. This is not a general-purpose SQL endpoint: it does not perform DDL/DCL (DROP, TRUNCATE, GRANT, CREATE) \u2014 issue the matching CRUD action for the operation you intend. Parameterized bind variables (the SQL API bindings field / ? placeholders) are not supported in this beta; inline literal values into the statement.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "RecordResponse",
+        "meta_fields": null,
         "is_download": false
       }
     ],

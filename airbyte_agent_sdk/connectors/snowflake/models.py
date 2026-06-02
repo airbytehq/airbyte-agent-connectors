@@ -20,6 +20,20 @@ class SnowflakeAuthConfig(BaseModel):
     programmatic_access_token: str
     """Snowflake Programmatic Access Token (PAT) for authentication. Generate one via ALTER USER ADD PROGRAMMATIC ACCESS TOKEN in Snowflake."""
 
+# Replication configuration
+
+class SnowflakeReplicationConfig(BaseModel):
+    """Snowflake Connection Settings - Database, warehouse, and role settings required for connecting to Snowflake. These map to the corresponding Airbyte source-snowflake configuration fields."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    database: str
+    """The database for Airbyte to access data."""
+    warehouse: str
+    """The warehouse for Airbyte to access data."""
+    role: str
+    """The role for Airbyte to access Snowflake."""
+
 # ===== RESPONSE TYPE DEFINITIONS (PYDANTIC) =====
 
 class RowType(BaseModel):
@@ -55,6 +69,19 @@ class ResultSetMetaData(BaseModel):
     row_type: list[RowType] | None = Field(default=None, alias="rowType")
     partition_info: list[PartitionInfo] | None = Field(default=None, alias="partitionInfo")
 
+class StatementResponseStats(BaseModel):
+    """DML statistics returned for INSERT, UPDATE, DELETE, and MERGE statements. Not present for SELECT or SHOW queries."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    num_rows_inserted: int | None = Field(default=None, alias="numRowsInserted", description="Number of rows inserted")
+    """Number of rows inserted"""
+    num_rows_deleted: int | None = Field(default=None, alias="numRowsDeleted", description="Number of rows deleted")
+    """Number of rows deleted"""
+    num_rows_updated: int | None = Field(default=None, alias="numRowsUpdated", description="Number of rows updated")
+    """Number of rows updated"""
+    num_dml_duplicates: int | None = Field(default=None, alias="numDmlDuplicates", description="Number of duplicate rows skipped")
+    """Number of duplicate rows skipped"""
+
 class StatementResponse(BaseModel):
     """Response from the Snowflake SQL API containing result set metadata and data rows. Used by all SHOW statement operations."""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -68,6 +95,20 @@ class StatementResponse(BaseModel):
     statement_handle: str | None = Field(default=None, alias="statementHandle")
     message: str | None = Field(default=None)
     created_on: int | None = Field(default=None, alias="createdOn")
+    stats: StatementResponseStats | None = Field(default=None)
+
+class DatabasesResponseStats(BaseModel):
+    """DML statistics returned for INSERT, UPDATE, DELETE, and MERGE statements. Not present for SELECT or SHOW queries."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    num_rows_inserted: int | None = Field(default=None, alias="numRowsInserted", description="Number of rows inserted")
+    """Number of rows inserted"""
+    num_rows_deleted: int | None = Field(default=None, alias="numRowsDeleted", description="Number of rows deleted")
+    """Number of rows deleted"""
+    num_rows_updated: int | None = Field(default=None, alias="numRowsUpdated", description="Number of rows updated")
+    """Number of rows updated"""
+    num_dml_duplicates: int | None = Field(default=None, alias="numDmlDuplicates", description="Number of duplicate rows skipped")
+    """Number of duplicate rows skipped"""
 
 class DatabasesResponse(BaseModel):
     """DatabasesResponse type definition"""
@@ -82,6 +123,20 @@ class DatabasesResponse(BaseModel):
     statement_handle: str | None = Field(default=None, alias="statementHandle")
     message: str | None = Field(default=None)
     created_on: int | None = Field(default=None, alias="createdOn")
+    stats: DatabasesResponseStats | None = Field(default=None)
+
+class SchemasResponseStats(BaseModel):
+    """DML statistics returned for INSERT, UPDATE, DELETE, and MERGE statements. Not present for SELECT or SHOW queries."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    num_rows_inserted: int | None = Field(default=None, alias="numRowsInserted", description="Number of rows inserted")
+    """Number of rows inserted"""
+    num_rows_deleted: int | None = Field(default=None, alias="numRowsDeleted", description="Number of rows deleted")
+    """Number of rows deleted"""
+    num_rows_updated: int | None = Field(default=None, alias="numRowsUpdated", description="Number of rows updated")
+    """Number of rows updated"""
+    num_dml_duplicates: int | None = Field(default=None, alias="numDmlDuplicates", description="Number of duplicate rows skipped")
+    """Number of duplicate rows skipped"""
 
 class SchemasResponse(BaseModel):
     """SchemasResponse type definition"""
@@ -96,6 +151,20 @@ class SchemasResponse(BaseModel):
     statement_handle: str | None = Field(default=None, alias="statementHandle")
     message: str | None = Field(default=None)
     created_on: int | None = Field(default=None, alias="createdOn")
+    stats: SchemasResponseStats | None = Field(default=None)
+
+class TablesResponseStats(BaseModel):
+    """DML statistics returned for INSERT, UPDATE, DELETE, and MERGE statements. Not present for SELECT or SHOW queries."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    num_rows_inserted: int | None = Field(default=None, alias="numRowsInserted", description="Number of rows inserted")
+    """Number of rows inserted"""
+    num_rows_deleted: int | None = Field(default=None, alias="numRowsDeleted", description="Number of rows deleted")
+    """Number of rows deleted"""
+    num_rows_updated: int | None = Field(default=None, alias="numRowsUpdated", description="Number of rows updated")
+    """Number of rows updated"""
+    num_dml_duplicates: int | None = Field(default=None, alias="numDmlDuplicates", description="Number of duplicate rows skipped")
+    """Number of duplicate rows skipped"""
 
 class TablesResponse(BaseModel):
     """TablesResponse type definition"""
@@ -110,6 +179,20 @@ class TablesResponse(BaseModel):
     statement_handle: str | None = Field(default=None, alias="statementHandle")
     message: str | None = Field(default=None)
     created_on: int | None = Field(default=None, alias="createdOn")
+    stats: TablesResponseStats | None = Field(default=None)
+
+class ViewsResponseStats(BaseModel):
+    """DML statistics returned for INSERT, UPDATE, DELETE, and MERGE statements. Not present for SELECT or SHOW queries."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    num_rows_inserted: int | None = Field(default=None, alias="numRowsInserted", description="Number of rows inserted")
+    """Number of rows inserted"""
+    num_rows_deleted: int | None = Field(default=None, alias="numRowsDeleted", description="Number of rows deleted")
+    """Number of rows deleted"""
+    num_rows_updated: int | None = Field(default=None, alias="numRowsUpdated", description="Number of rows updated")
+    """Number of rows updated"""
+    num_dml_duplicates: int | None = Field(default=None, alias="numDmlDuplicates", description="Number of duplicate rows skipped")
+    """Number of duplicate rows skipped"""
 
 class ViewsResponse(BaseModel):
     """ViewsResponse type definition"""
@@ -124,6 +207,20 @@ class ViewsResponse(BaseModel):
     statement_handle: str | None = Field(default=None, alias="statementHandle")
     message: str | None = Field(default=None)
     created_on: int | None = Field(default=None, alias="createdOn")
+    stats: ViewsResponseStats | None = Field(default=None)
+
+class WarehousesResponseStats(BaseModel):
+    """DML statistics returned for INSERT, UPDATE, DELETE, and MERGE statements. Not present for SELECT or SHOW queries."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    num_rows_inserted: int | None = Field(default=None, alias="numRowsInserted", description="Number of rows inserted")
+    """Number of rows inserted"""
+    num_rows_deleted: int | None = Field(default=None, alias="numRowsDeleted", description="Number of rows deleted")
+    """Number of rows deleted"""
+    num_rows_updated: int | None = Field(default=None, alias="numRowsUpdated", description="Number of rows updated")
+    """Number of rows updated"""
+    num_dml_duplicates: int | None = Field(default=None, alias="numDmlDuplicates", description="Number of duplicate rows skipped")
+    """Number of duplicate rows skipped"""
 
 class WarehousesResponse(BaseModel):
     """WarehousesResponse type definition"""
@@ -138,6 +235,20 @@ class WarehousesResponse(BaseModel):
     statement_handle: str | None = Field(default=None, alias="statementHandle")
     message: str | None = Field(default=None)
     created_on: int | None = Field(default=None, alias="createdOn")
+    stats: WarehousesResponseStats | None = Field(default=None)
+
+class ColumnsResponseStats(BaseModel):
+    """DML statistics returned for INSERT, UPDATE, DELETE, and MERGE statements. Not present for SELECT or SHOW queries."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    num_rows_inserted: int | None = Field(default=None, alias="numRowsInserted", description="Number of rows inserted")
+    """Number of rows inserted"""
+    num_rows_deleted: int | None = Field(default=None, alias="numRowsDeleted", description="Number of rows deleted")
+    """Number of rows deleted"""
+    num_rows_updated: int | None = Field(default=None, alias="numRowsUpdated", description="Number of rows updated")
+    """Number of rows updated"""
+    num_dml_duplicates: int | None = Field(default=None, alias="numDmlDuplicates", description="Number of duplicate rows skipped")
+    """Number of duplicate rows skipped"""
 
 class ColumnsResponse(BaseModel):
     """ColumnsResponse type definition"""
@@ -152,6 +263,48 @@ class ColumnsResponse(BaseModel):
     statement_handle: str | None = Field(default=None, alias="statementHandle")
     message: str | None = Field(default=None)
     created_on: int | None = Field(default=None, alias="createdOn")
+    stats: ColumnsResponseStats | None = Field(default=None)
+
+class RecordResponseStats(BaseModel):
+    """DML statistics returned for INSERT, UPDATE, DELETE, and MERGE statements. Not present for SELECT or SHOW queries."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    num_rows_inserted: int | None = Field(default=None, alias="numRowsInserted", description="Number of rows inserted")
+    """Number of rows inserted"""
+    num_rows_deleted: int | None = Field(default=None, alias="numRowsDeleted", description="Number of rows deleted")
+    """Number of rows deleted"""
+    num_rows_updated: int | None = Field(default=None, alias="numRowsUpdated", description="Number of rows updated")
+    """Number of rows updated"""
+    num_dml_duplicates: int | None = Field(default=None, alias="numDmlDuplicates", description="Number of duplicate rows skipped")
+    """Number of duplicate rows skipped"""
+
+class RecordResponse(BaseModel):
+    """RecordResponse type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    request_id: str | None = Field(default=None, alias="requestId")
+    result_set_meta_data: ResultSetMetaData | None = Field(default=None, alias="resultSetMetaData")
+    data: list[list[Any]] | None = Field(default=None)
+    code: str | None = Field(default=None)
+    statement_status_url: str | None = Field(default=None, alias="statementStatusUrl")
+    sql_state: str | None = Field(default=None, alias="sqlState")
+    statement_handle: str | None = Field(default=None, alias="statementHandle")
+    message: str | None = Field(default=None)
+    created_on: int | None = Field(default=None, alias="createdOn")
+    stats: RecordResponseStats | None = Field(default=None)
+
+class ResultPartitionResponseStats(BaseModel):
+    """DML statistics returned for INSERT, UPDATE, DELETE, and MERGE statements. Not present for SELECT or SHOW queries."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    num_rows_inserted: int | None = Field(default=None, alias="numRowsInserted", description="Number of rows inserted")
+    """Number of rows inserted"""
+    num_rows_deleted: int | None = Field(default=None, alias="numRowsDeleted", description="Number of rows deleted")
+    """Number of rows deleted"""
+    num_rows_updated: int | None = Field(default=None, alias="numRowsUpdated", description="Number of rows updated")
+    """Number of rows updated"""
+    num_dml_duplicates: int | None = Field(default=None, alias="numDmlDuplicates", description="Number of duplicate rows skipped")
+    """Number of duplicate rows skipped"""
 
 class ResultPartitionResponse(BaseModel):
     """ResultPartitionResponse type definition"""
@@ -166,6 +319,7 @@ class ResultPartitionResponse(BaseModel):
     statement_handle: str | None = Field(default=None, alias="statementHandle")
     message: str | None = Field(default=None)
     created_on: int | None = Field(default=None, alias="createdOn")
+    stats: ResultPartitionResponseStats | None = Field(default=None)
 
 # ===== METADATA TYPE DEFINITIONS (PYDANTIC) =====
 # Meta types for operations that extract metadata (e.g., pagination info)
@@ -217,6 +371,15 @@ class WarehousesListResultMeta(BaseModel):
 
 class ColumnsListResultMeta(BaseModel):
     """Metadata for columns.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next_page_url: str | None = Field(default=None)
+    request_id: str | None = Field(default=None)
+    statement_handle: str | None = Field(default=None)
+    partition_info: list[PartitionInfo] | None = Field(default=None)
+
+class RecordListResultMeta(BaseModel):
+    """Metadata for record.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next_page_url: str | None = Field(default=None)
@@ -293,4 +456,7 @@ WarehousesListResult = SnowflakeExecuteResultWithMeta[WarehousesResponse, Wareho
 
 ColumnsListResult = SnowflakeExecuteResultWithMeta[ColumnsResponse, ColumnsListResultMeta]
 """Result type for columns.list operation with data and metadata."""
+
+RecordListResult = SnowflakeExecuteResultWithMeta[RecordResponse, RecordListResultMeta]
+"""Result type for record.list operation with data and metadata."""
 

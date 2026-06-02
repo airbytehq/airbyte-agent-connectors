@@ -5,9 +5,15 @@ info:
   version: 1.0.0
   description: |
     Connects to Snowflake via the SQL REST API (POST /api/v2/statements) to query
-    metadata about databases, schemas, tables, views, warehouses, and columns.
-    Uses Programmatic Access Token (PAT) authentication. All operations execute
-    SHOW commands through the Snowflake SQL API and return structured result sets.
+    metadata about databases, schemas, tables, views, warehouses, and columns,
+    to read records from tables and views, and to create, update, and delete
+    records in tables. Uses Programmatic Access Token (PAT) authentication.
+    Metadata operations execute SHOW commands; record operations execute the SQL
+    statement you provide. This connector is experimental (beta): record actions
+    run arbitrary SQL bounded only by the connected PAT's Snowflake role, so scope
+    that role to least privilege (read-only for read-only use cases).
+    Parameterized bind variables (the SQL API `bindings` field / `?` placeholders)
+    are not supported in this beta; inline literal values into the statement.
   x-airbyte-connector-name: snowflake
   x-airbyte-connector-definition-id: e2d65910-8c8b-40a1-ae7d-ee2416b2bfa2
   x-airbyte-platform-availability:
@@ -33,16 +39,45 @@ info:
       - "List all views"
       - "Show me the warehouses"
       - "What columns does my data have?"
+      - "Get the record with id 42 from the users table"
+      - "List all records from the orders table"
+      - "Insert a new row into the customers table"
+      - "Update the email for user 7 in the users table"
+      - "Delete the record with id 99 from the logs table"
     search:
       - "Find all tables in the ANALYTICS database"
       - "Which warehouses are currently running?"
       - "Show me all views in the PUBLIC schema"
       - "What databases were created this month?"
-    unsupported:
-      - "Create a new database"
-      - "Drop a table"
-      - "Run a custom SQL query"
-      - "Insert data into a table"
+      - "Find all orders placed in the last 30 days"
+      - "Search for users with email ending in @example.com"
+  x-airbyte-replication-config:
+    title: Snowflake Connection Settings
+    description: >-
+      Database, warehouse, and role settings required for connecting to
+      Snowflake. These map to the corresponding Airbyte source-snowflake
+      configuration fields.
+    properties:
+      database:
+        type: string
+        title: Database
+        description: The database for Airbyte to access data.
+      warehouse:
+        type: string
+        title: Warehouse
+        description: The warehouse for Airbyte to access data.
+      role:
+        type: string
+        title: Role
+        description: The role for Airbyte to access Snowflake.
+    required:
+      - database
+      - warehouse
+      - role
+    replication_config_key_mapping:
+      database: database
+      warehouse: warehouse
+      role: role
   x-airbyte-skip-context-store: >-
     Snowflake is a database source connector — streams are dynamically discovered
     from user tables/views at connection time, not from a fixed API schema.
@@ -382,6 +417,355 @@ paths:
               schema:
                 $ref: "#/components/schemas/ColumnsResponse"
 
+  "/api/v2/statements:record_get":
+    post:
+      summary: Get a record
+      description: >-
+        Execute a SQL SELECT statement and return the result set. Typically used to
+        retrieve a single row by filtering on a unique identifier (e.g., SELECT *
+        FROM users WHERE id = 42). The result is returned as rows, the same shape
+        as the list action; when the SELECT targets one row the result contains a
+        single row. Intended for row retrieval only. This is not a general-purpose
+        SQL endpoint: it does not perform DDL/DCL (DROP, TRUNCATE, GRANT, CREATE)
+        — issue the matching CRUD action for the operation you intend.
+        Parameterized bind variables (the SQL API bindings field / ? placeholders)
+        are not supported in this beta; inline literal values into the statement.
+      operationId: getRecord
+      x-airbyte-entity: record
+      x-airbyte-action: get
+      x-airbyte-path-override:
+        path: /api/v2/statements
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - statement
+              properties:
+                statement:
+                  type: string
+                  description: >-
+                    SQL SELECT statement to retrieve a single record
+                    (e.g., SELECT * FROM users WHERE id = 42)
+                database:
+                  type: string
+                  description: Database context for the statement
+                schema:
+                  type: string
+                  description: Schema context for the statement
+                warehouse:
+                  type: string
+                  description: Warehouse to use for execution
+                role:
+                  type: string
+                  description: Role to use for execution
+                timeout:
+                  type: integer
+                  description: Timeout in seconds for the statement execution
+                parameters:
+                  type: object
+                  description: Session parameters for the statement execution
+                  additionalProperties: true
+      responses:
+        "200":
+          description: Query result set (single-row when the SELECT targets one row)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RecordResponse"
+
+  "/api/v2/statements:record_list":
+    post:
+      summary: List records
+      description: >-
+        Execute a SQL SELECT query that returns multiple records from a Snowflake
+        table or view. Use this action when you need to retrieve a set of rows,
+        optionally with filtering, sorting, or limiting (e.g., SELECT * FROM
+        orders WHERE status = 'active' ORDER BY created_at DESC LIMIT 100).
+        Intended for row retrieval only. This is not a general-purpose SQL
+        endpoint: it does not perform DDL/DCL (DROP, TRUNCATE, GRANT, CREATE)
+        — issue the matching CRUD action for the operation you intend.
+        Parameterized bind variables (the SQL API bindings field / ? placeholders)
+        are not supported in this beta; inline literal values into the statement.
+      operationId: listRecords
+      x-airbyte-entity: record
+      x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next_page_url: "@link.next"
+        request_id: "$.requestId"
+        statement_handle: "$.statementHandle"
+        partition_info: "$.resultSetMetaData.partitionInfo"
+      x-airbyte-path-override:
+        path: /api/v2/statements
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - statement
+              properties:
+                statement:
+                  type: string
+                  description: >-
+                    SQL SELECT statement to retrieve multiple records
+                    (e.g., SELECT * FROM orders WHERE status = 'active' LIMIT 100)
+                database:
+                  type: string
+                  description: Database context for the statement
+                schema:
+                  type: string
+                  description: Schema context for the statement
+                warehouse:
+                  type: string
+                  description: Warehouse to use for execution
+                role:
+                  type: string
+                  description: Role to use for execution
+                timeout:
+                  type: integer
+                  description: Timeout in seconds for the statement execution
+                parameters:
+                  type: object
+                  description: Session parameters for the statement execution
+                  additionalProperties: true
+      responses:
+        "200":
+          description: Multiple records from the query result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RecordResponse"
+
+  "/api/v2/statements:record_create":
+    post:
+      summary: Create records
+      description: >-
+        Execute a SQL INSERT statement to create one or more new rows in a
+        Snowflake table (e.g., INSERT INTO users (name, email) VALUES
+        ('Alice', 'alice@example.com')). Intended for row insertion only.
+        This is not a general-purpose SQL endpoint: it does not perform DDL/DCL
+        (DROP, TRUNCATE, GRANT, CREATE TABLE) — issue the matching CRUD action
+        for the operation you intend. Parameterized bind variables (the SQL API
+        bindings field / ? placeholders) are not supported in this beta; inline
+        literal values into the statement.
+      operationId: createRecord
+      x-airbyte-entity: record
+      x-airbyte-action: create
+      x-airbyte-path-override:
+        path: /api/v2/statements
+      parameters:
+        - name: requestId
+          in: query
+          required: false
+          schema:
+            type: string
+          description: >-
+            Unique request ID for this DML statement. Reuse the SAME requestId when
+            resubmitting after a network error or timeout so Snowflake deduplicates
+            instead of executing the statement again.
+        - name: retry
+          in: query
+          required: false
+          schema:
+            type: boolean
+          description: >-
+            Set to true when resubmitting a previously-sent statement with the same
+            requestId, so Snowflake treats it as a safe retry rather than a new DML.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - statement
+              properties:
+                statement:
+                  type: string
+                  description: >-
+                    SQL INSERT statement to create new records
+                    (e.g., INSERT INTO users (name, email) VALUES ('Alice', 'alice@example.com'))
+                database:
+                  type: string
+                  description: Database context for the statement
+                schema:
+                  type: string
+                  description: Schema context for the statement
+                warehouse:
+                  type: string
+                  description: Warehouse to use for execution
+                role:
+                  type: string
+                  description: Role to use for execution
+                timeout:
+                  type: integer
+                  description: Timeout in seconds for the statement execution
+                parameters:
+                  type: object
+                  description: Session parameters for the statement execution
+                  additionalProperties: true
+      responses:
+        "200":
+          description: Result of the INSERT operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RecordResponse"
+
+  "/api/v2/statements:record_update":
+    post:
+      summary: Update records
+      description: >-
+        Execute a SQL UPDATE statement to modify existing rows in a Snowflake
+        table (e.g., UPDATE users SET email = 'new@example.com' WHERE id = 7).
+        Intended for row modification only. This is not a general-purpose SQL
+        endpoint: it does not perform DDL/DCL (DROP, TRUNCATE, GRANT, ALTER)
+        — issue the matching CRUD action for the operation you intend.
+        Parameterized bind variables (the SQL API bindings field / ? placeholders)
+        are not supported in this beta; inline literal values into the statement.
+      operationId: updateRecord
+      x-airbyte-entity: record
+      x-airbyte-action: update
+      x-airbyte-path-override:
+        path: /api/v2/statements
+      parameters:
+        - name: requestId
+          in: query
+          required: false
+          schema:
+            type: string
+          description: >-
+            Unique request ID for this DML statement. Reuse the SAME requestId when
+            resubmitting after a network error or timeout so Snowflake deduplicates
+            instead of executing the statement again.
+        - name: retry
+          in: query
+          required: false
+          schema:
+            type: boolean
+          description: >-
+            Set to true when resubmitting a previously-sent statement with the same
+            requestId, so Snowflake treats it as a safe retry rather than a new DML.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - statement
+              properties:
+                statement:
+                  type: string
+                  description: >-
+                    SQL UPDATE statement to modify existing records
+                    (e.g., UPDATE users SET email = 'new@example.com' WHERE id = 7)
+                database:
+                  type: string
+                  description: Database context for the statement
+                schema:
+                  type: string
+                  description: Schema context for the statement
+                warehouse:
+                  type: string
+                  description: Warehouse to use for execution
+                role:
+                  type: string
+                  description: Role to use for execution
+                timeout:
+                  type: integer
+                  description: Timeout in seconds for the statement execution
+                parameters:
+                  type: object
+                  description: Session parameters for the statement execution
+                  additionalProperties: true
+      responses:
+        "200":
+          description: Result of the UPDATE operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RecordResponse"
+
+  "/api/v2/statements:record_delete":
+    post:
+      summary: Delete records
+      description: >-
+        Execute a SQL DELETE statement to remove rows from a Snowflake table
+        (e.g., DELETE FROM logs WHERE id = 99). Intended for row deletion only.
+        This is not a general-purpose SQL endpoint: it does not perform DDL/DCL
+        (DROP, TRUNCATE, GRANT, CREATE) — issue the matching CRUD action for the
+        operation you intend. Parameterized bind variables (the SQL API bindings
+        field / ? placeholders) are not supported in this beta; inline literal
+        values into the statement.
+      operationId: deleteRecord
+      x-airbyte-entity: record
+      x-airbyte-action: delete
+      x-airbyte-path-override:
+        path: /api/v2/statements
+      parameters:
+        - name: requestId
+          in: query
+          required: false
+          schema:
+            type: string
+          description: >-
+            Unique request ID for this DML statement. Reuse the SAME requestId when
+            resubmitting after a network error or timeout so Snowflake deduplicates
+            instead of executing the statement again.
+        - name: retry
+          in: query
+          required: false
+          schema:
+            type: boolean
+          description: >-
+            Set to true when resubmitting a previously-sent statement with the same
+            requestId, so Snowflake treats it as a safe retry rather than a new DML.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - statement
+              properties:
+                statement:
+                  type: string
+                  description: >-
+                    SQL DELETE statement to remove records
+                    (e.g., DELETE FROM logs WHERE id = 99)
+                database:
+                  type: string
+                  description: Database context for the statement
+                schema:
+                  type: string
+                  description: Schema context for the statement
+                warehouse:
+                  type: string
+                  description: Warehouse to use for execution
+                role:
+                  type: string
+                  description: Role to use for execution
+                timeout:
+                  type: integer
+                  description: Timeout in seconds for the statement execution
+                parameters:
+                  type: object
+                  description: Session parameters for the statement execution
+                  additionalProperties: true
+      responses:
+        "200":
+          description: Result of the DELETE operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RecordResponse"
+
   "/api/v2/statements/{statementHandle}:partition":
     get:
       summary: Get result partition
@@ -396,6 +780,7 @@ paths:
       operationId: getResultPartition
       x-airbyte-entity: result_partitions
       x-airbyte-action: get
+      x-airbyte-untested: true
       x-airbyte-path-override:
         path: /api/v2/statements/{statementHandle}
       parameters:
@@ -588,6 +973,24 @@ components:
         createdOn:
           type: integer
           description: Unix timestamp (milliseconds) when the statement was created
+        stats:
+          type: object
+          description: >-
+            DML statistics returned for INSERT, UPDATE, DELETE, and MERGE
+            statements. Not present for SELECT or SHOW queries.
+          properties:
+            numRowsInserted:
+              type: integer
+              description: Number of rows inserted
+            numRowsDeleted:
+              type: integer
+              description: Number of rows deleted
+            numRowsUpdated:
+              type: integer
+              description: Number of rows updated
+            numDmlDuplicates:
+              type: integer
+              description: Number of duplicate rows skipped
 
     DatabasesResponse:
       type: object
@@ -691,6 +1094,39 @@ components:
         example_questions:
           - "What columns does this table have?"
           - "Show me the column definitions"
+
+    RecordResponse:
+      type: object
+      properties: *statement_response_properties
+      x-airbyte-entity-name: record
+      x-airbyte-ai-hints:
+        summary: >-
+          Read, create, update, and delete rows in Snowflake tables and views
+          via the SQL API. Each CRUD action maps to its SQL verb.
+        when_to_use: >-
+          When the user wants to query, insert, update, or delete actual data
+          records in Snowflake tables or views. Use the get action for single-row
+          SELECT, list for multi-row SELECT, create for INSERT, update for UPDATE,
+          and delete for DELETE.
+        trigger_phrases:
+          - "query records"
+          - "select from table"
+          - "insert into table"
+          - "update record"
+          - "delete record"
+        freshness: live
+        search_strategy: >-
+          Use the record action that matches the intended CRUD operation (get/list
+          for SELECT, create for INSERT, update for UPDATE, delete for DELETE).
+          Pass the SQL statement in the request body; it should match that action's
+          SQL verb. Set database, schema, warehouse, and role fields as needed for
+          execution context.
+        example_questions:
+          - "Get the record with id 42 from the users table"
+          - "List all records from the orders table"
+          - "Insert a new row into the customers table"
+          - "Update the email for user 7 in the users table"
+          - "Delete the record with id 99 from the logs table"
 
     ResultPartitionResponse:
       type: object

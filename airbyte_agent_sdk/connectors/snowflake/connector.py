@@ -5,7 +5,7 @@ Snowflake connector.
 from __future__ import annotations
 
 import logging
-from typing import Any, Callable, Mapping, TypeVar, overload
+from typing import TYPE_CHECKING, Any, Callable, Mapping, TypeVar, overload
 try:
     from typing import Literal
 except ImportError:
@@ -20,6 +20,11 @@ from airbyte_agent_sdk.types import AirbyteAuthConfig
 from .types import (
     ColumnsListParams,
     DatabasesListParams,
+    RecordCreateParams,
+    RecordDeleteParams,
+    RecordGetParams,
+    RecordListParams,
+    RecordUpdateParams,
     ResultPartitionsGetParams,
     SchemasListParams,
     TablesListParams,
@@ -27,6 +32,8 @@ from .types import (
     WarehousesListParams,
 )
 from .models import SnowflakeAuthConfig
+if TYPE_CHECKING:
+    from .models import SnowflakeReplicationConfig
 
 # Import response models and envelope models at runtime
 from .models import (
@@ -39,8 +46,10 @@ from .models import (
     ViewsListResult,
     WarehousesListResult,
     ColumnsListResult,
+    RecordListResult,
     ColumnsResponse,
     DatabasesResponse,
+    RecordResponse,
     ResultPartitionResponse,
     SchemasResponse,
     TablesResponse,
@@ -63,7 +72,7 @@ class SnowflakeConnector:
 
     connector_name = "snowflake"
     connector_version = "1.0.0"
-    sdk_version = "0.1.219"
+    sdk_version = "0.1.220"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -73,6 +82,11 @@ class SnowflakeConnector:
         ("views", "list"): True,
         ("warehouses", "list"): True,
         ("columns", "list"): True,
+        ("record", "get"): None,
+        ("record", "list"): True,
+        ("record", "create"): None,
+        ("record", "update"): None,
+        ("record", "delete"): None,
         ("result_partitions", "get"): None,
     }
 
@@ -85,6 +99,11 @@ class SnowflakeConnector:
         ('views', 'list'): {'statement': 'statement', 'database': 'database', 'schema': 'schema', 'warehouse': 'warehouse', 'role': 'role', 'timeout': 'timeout', 'parameters': 'parameters'},
         ('warehouses', 'list'): {'statement': 'statement', 'database': 'database', 'schema': 'schema', 'warehouse': 'warehouse', 'role': 'role', 'timeout': 'timeout', 'parameters': 'parameters'},
         ('columns', 'list'): {'statement': 'statement', 'database': 'database', 'schema': 'schema', 'warehouse': 'warehouse', 'role': 'role', 'timeout': 'timeout', 'parameters': 'parameters'},
+        ('record', 'get'): {'statement': 'statement', 'database': 'database', 'schema': 'schema', 'warehouse': 'warehouse', 'role': 'role', 'timeout': 'timeout', 'parameters': 'parameters'},
+        ('record', 'list'): {'statement': 'statement', 'database': 'database', 'schema': 'schema', 'warehouse': 'warehouse', 'role': 'role', 'timeout': 'timeout', 'parameters': 'parameters'},
+        ('record', 'create'): {'statement': 'statement', 'database': 'database', 'schema': 'schema', 'warehouse': 'warehouse', 'role': 'role', 'timeout': 'timeout', 'parameters': 'parameters', 'request_id': 'requestId', 'retry': 'retry'},
+        ('record', 'update'): {'statement': 'statement', 'database': 'database', 'schema': 'schema', 'warehouse': 'warehouse', 'role': 'role', 'timeout': 'timeout', 'parameters': 'parameters', 'request_id': 'requestId', 'retry': 'retry'},
+        ('record', 'delete'): {'statement': 'statement', 'database': 'database', 'schema': 'schema', 'warehouse': 'warehouse', 'role': 'role', 'timeout': 'timeout', 'parameters': 'parameters', 'request_id': 'requestId', 'retry': 'retry'},
         ('result_partitions', 'get'): {'statement_handle': 'statementHandle', 'partition': 'partition', 'request_id': 'requestId'},
     }
 
@@ -194,6 +213,7 @@ class SnowflakeConnector:
         self.views = ViewsQuery(self)
         self.warehouses = WarehousesQuery(self)
         self.columns = ColumnsQuery(self)
+        self.record = RecordQuery(self)
         self.result_partitions = ResultPartitionsQuery(self)
 
     # ===== TYPED EXECUTE METHOD (Recommended Interface) =====
@@ -273,6 +293,66 @@ class SnowflakeConnector:
     @overload
     async def execute(
         self,
+        entity: Literal["record"],
+        action: Literal["get"],
+        params: "RecordGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "RecordResponse": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["record"],
+        action: Literal["list"],
+        params: "RecordListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "RecordListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["record"],
+        action: Literal["create"],
+        params: "RecordCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "RecordResponse": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["record"],
+        action: Literal["update"],
+        params: "RecordUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "RecordResponse": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["record"],
+        action: Literal["delete"],
+        params: "RecordDeleteParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "RecordResponse": ...
+
+    @overload
+    async def execute(
+        self,
         entity: Literal["result_partitions"],
         action: Literal["get"],
         params: "ResultPartitionsGetParams",
@@ -287,7 +367,7 @@ class SnowflakeConnector:
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get"],
+        action: Literal["list", "get", "create", "update", "delete"],
         params: Mapping[str, Any],
         *,
         select_fields: list[str] | None = ...,
@@ -298,7 +378,7 @@ class SnowflakeConnector:
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get"],
+        action: Literal["list", "get", "create", "update", "delete"],
         params: Mapping[str, Any] | None = None,
         *,
         select_fields: list[str] | None = None,
@@ -896,6 +976,252 @@ class ColumnsQuery:
             data=result.data,
             meta=getattr(result, "meta", None)
         )
+
+
+
+class RecordQuery:
+    """
+    Query class for Record entity operations.
+    """
+
+    def __init__(self, connector: SnowflakeConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def get(
+        self,
+        statement: str,
+        database: str | None = None,
+        schema: str | None = None,
+        warehouse: str | None = None,
+        role: str | None = None,
+        timeout: int | None = None,
+        parameters: dict[str, Any] | None = None,
+        **kwargs
+    ) -> RecordResponse:
+        """
+        Execute a SQL SELECT statement and return the result set. Typically used to retrieve a single row by filtering on a unique identifier (e.g., SELECT * FROM users WHERE id = 42). The result is returned as rows, the same shape as the list action; when the SELECT targets one row the result contains a single row. Intended for row retrieval only. This is not a general-purpose SQL endpoint: it does not perform DDL/DCL (DROP, TRUNCATE, GRANT, CREATE) — issue the matching CRUD action for the operation you intend. Parameterized bind variables (the SQL API bindings field / ? placeholders) are not supported in this beta; inline literal values into the statement.
+
+        Args:
+            statement: SQL SELECT statement to retrieve a single record (e.g., SELECT * FROM users WHERE id = 42)
+            database: Database context for the statement
+            schema: Schema context for the statement
+            warehouse: Warehouse to use for execution
+            role: Role to use for execution
+            timeout: Timeout in seconds for the statement execution
+            parameters: Session parameters for the statement execution
+            **kwargs: Additional parameters
+
+        Returns:
+            RecordResponse
+        """
+        params = {k: v for k, v in {
+            "statement": statement,
+            "database": database,
+            "schema": schema,
+            "warehouse": warehouse,
+            "role": role,
+            "timeout": timeout,
+            "parameters": parameters,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("record", "get", params)
+        return result
+
+
+
+    async def list(
+        self,
+        statement: str,
+        database: str | None = None,
+        schema: str | None = None,
+        warehouse: str | None = None,
+        role: str | None = None,
+        timeout: int | None = None,
+        parameters: dict[str, Any] | None = None,
+        **kwargs
+    ) -> RecordListResult:
+        """
+        Execute a SQL SELECT query that returns multiple records from a Snowflake table or view. Use this action when you need to retrieve a set of rows, optionally with filtering, sorting, or limiting (e.g., SELECT * FROM orders WHERE status = 'active' ORDER BY created_at DESC LIMIT 100). Intended for row retrieval only. This is not a general-purpose SQL endpoint: it does not perform DDL/DCL (DROP, TRUNCATE, GRANT, CREATE) — issue the matching CRUD action for the operation you intend. Parameterized bind variables (the SQL API bindings field / ? placeholders) are not supported in this beta; inline literal values into the statement.
+
+        Args:
+            statement: SQL SELECT statement to retrieve multiple records (e.g., SELECT * FROM orders WHERE status = 'active' LIMIT 100)
+            database: Database context for the statement
+            schema: Schema context for the statement
+            warehouse: Warehouse to use for execution
+            role: Role to use for execution
+            timeout: Timeout in seconds for the statement execution
+            parameters: Session parameters for the statement execution
+            **kwargs: Additional parameters
+
+        Returns:
+            RecordListResult
+        """
+        params = {k: v for k, v in {
+            "statement": statement,
+            "database": database,
+            "schema": schema,
+            "warehouse": warehouse,
+            "role": role,
+            "timeout": timeout,
+            "parameters": parameters,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("record", "list", params)
+        # Cast generic envelope to concrete typed result
+        return RecordListResult(
+            data=result.data,
+            meta=getattr(result, "meta", None)
+        )
+
+
+
+    async def create(
+        self,
+        statement: str,
+        database: str | None = None,
+        schema: str | None = None,
+        warehouse: str | None = None,
+        role: str | None = None,
+        timeout: int | None = None,
+        parameters: dict[str, Any] | None = None,
+        request_id: str | None = None,
+        retry: bool | None = None,
+        **kwargs
+    ) -> RecordResponse:
+        """
+        Execute a SQL INSERT statement to create one or more new rows in a Snowflake table (e.g., INSERT INTO users (name, email) VALUES ('Alice', 'alice@example.com')). Intended for row insertion only. This is not a general-purpose SQL endpoint: it does not perform DDL/DCL (DROP, TRUNCATE, GRANT, CREATE TABLE) — issue the matching CRUD action for the operation you intend. Parameterized bind variables (the SQL API bindings field / ? placeholders) are not supported in this beta; inline literal values into the statement.
+
+        Args:
+            statement: SQL INSERT statement to create new records (e.g., INSERT INTO users (name, email) VALUES ('Alice', 'alice@example.com'))
+            database: Database context for the statement
+            schema: Schema context for the statement
+            warehouse: Warehouse to use for execution
+            role: Role to use for execution
+            timeout: Timeout in seconds for the statement execution
+            parameters: Session parameters for the statement execution
+            request_id: Unique request ID for this DML statement. Reuse the SAME requestId when resubmitting after a network error or timeout so Snowflake deduplicates instead of executing the statement again.
+            retry: Set to true when resubmitting a previously-sent statement with the same requestId, so Snowflake treats it as a safe retry rather than a new DML.
+            **kwargs: Additional parameters
+
+        Returns:
+            RecordResponse
+        """
+        params = {k: v for k, v in {
+            "statement": statement,
+            "database": database,
+            "schema": schema,
+            "warehouse": warehouse,
+            "role": role,
+            "timeout": timeout,
+            "parameters": parameters,
+            "requestId": request_id,
+            "retry": retry,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("record", "create", params)
+        return result
+
+
+
+    async def update(
+        self,
+        statement: str,
+        database: str | None = None,
+        schema: str | None = None,
+        warehouse: str | None = None,
+        role: str | None = None,
+        timeout: int | None = None,
+        parameters: dict[str, Any] | None = None,
+        request_id: str | None = None,
+        retry: bool | None = None,
+        **kwargs
+    ) -> RecordResponse:
+        """
+        Execute a SQL UPDATE statement to modify existing rows in a Snowflake table (e.g., UPDATE users SET email = 'new@example.com' WHERE id = 7). Intended for row modification only. This is not a general-purpose SQL endpoint: it does not perform DDL/DCL (DROP, TRUNCATE, GRANT, ALTER) — issue the matching CRUD action for the operation you intend. Parameterized bind variables (the SQL API bindings field / ? placeholders) are not supported in this beta; inline literal values into the statement.
+
+        Args:
+            statement: SQL UPDATE statement to modify existing records (e.g., UPDATE users SET email = 'new@example.com' WHERE id = 7)
+            database: Database context for the statement
+            schema: Schema context for the statement
+            warehouse: Warehouse to use for execution
+            role: Role to use for execution
+            timeout: Timeout in seconds for the statement execution
+            parameters: Session parameters for the statement execution
+            request_id: Unique request ID for this DML statement. Reuse the SAME requestId when resubmitting after a network error or timeout so Snowflake deduplicates instead of executing the statement again.
+            retry: Set to true when resubmitting a previously-sent statement with the same requestId, so Snowflake treats it as a safe retry rather than a new DML.
+            **kwargs: Additional parameters
+
+        Returns:
+            RecordResponse
+        """
+        params = {k: v for k, v in {
+            "statement": statement,
+            "database": database,
+            "schema": schema,
+            "warehouse": warehouse,
+            "role": role,
+            "timeout": timeout,
+            "parameters": parameters,
+            "requestId": request_id,
+            "retry": retry,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("record", "update", params)
+        return result
+
+
+
+    async def delete(
+        self,
+        statement: str,
+        database: str | None = None,
+        schema: str | None = None,
+        warehouse: str | None = None,
+        role: str | None = None,
+        timeout: int | None = None,
+        parameters: dict[str, Any] | None = None,
+        request_id: str | None = None,
+        retry: bool | None = None,
+        **kwargs
+    ) -> RecordResponse:
+        """
+        Execute a SQL DELETE statement to remove rows from a Snowflake table (e.g., DELETE FROM logs WHERE id = 99). Intended for row deletion only. This is not a general-purpose SQL endpoint: it does not perform DDL/DCL (DROP, TRUNCATE, GRANT, CREATE) — issue the matching CRUD action for the operation you intend. Parameterized bind variables (the SQL API bindings field / ? placeholders) are not supported in this beta; inline literal values into the statement.
+
+        Args:
+            statement: SQL DELETE statement to remove records (e.g., DELETE FROM logs WHERE id = 99)
+            database: Database context for the statement
+            schema: Schema context for the statement
+            warehouse: Warehouse to use for execution
+            role: Role to use for execution
+            timeout: Timeout in seconds for the statement execution
+            parameters: Session parameters for the statement execution
+            request_id: Unique request ID for this DML statement. Reuse the SAME requestId when resubmitting after a network error or timeout so Snowflake deduplicates instead of executing the statement again.
+            retry: Set to true when resubmitting a previously-sent statement with the same requestId, so Snowflake treats it as a safe retry rather than a new DML.
+            **kwargs: Additional parameters
+
+        Returns:
+            RecordResponse
+        """
+        params = {k: v for k, v in {
+            "statement": statement,
+            "database": database,
+            "schema": schema,
+            "warehouse": warehouse,
+            "role": role,
+            "timeout": timeout,
+            "parameters": parameters,
+            "requestId": request_id,
+            "retry": retry,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("record", "delete", params)
+        return result
 
 
 

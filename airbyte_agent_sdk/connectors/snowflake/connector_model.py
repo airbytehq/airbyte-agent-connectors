@@ -196,6 +196,16 @@ SnowflakeConnectorModel: ConnectorModel = ConnectorModel(
                             'statementHandle': {'type': 'string', 'description': 'Unique handle for the executed statement'},
                             'message': {'type': 'string', 'description': 'Human-readable status message'},
                             'createdOn': {'type': 'integer', 'description': 'Unix timestamp (milliseconds) when the statement was created'},
+                            'stats': {
+                                'type': 'object',
+                                'description': 'DML statistics returned for INSERT, UPDATE, DELETE, and MERGE statements. Not present for SELECT or SHOW queries.',
+                                'properties': {
+                                    'numRowsInserted': {'type': 'integer', 'description': 'Number of rows inserted'},
+                                    'numRowsDeleted': {'type': 'integer', 'description': 'Number of rows deleted'},
+                                    'numRowsUpdated': {'type': 'integer', 'description': 'Number of rows updated'},
+                                    'numDmlDuplicates': {'type': 'integer', 'description': 'Number of duplicate rows skipped'},
+                                },
+                            },
                         },
                         'x-airbyte-entity-name': 'databases',
                         'x-airbyte-ai-hints': {
@@ -240,6 +250,16 @@ SnowflakeConnectorModel: ConnectorModel = ConnectorModel(
                     'statementHandle': {'type': 'string', 'description': 'Unique handle for the executed statement'},
                     'message': {'type': 'string', 'description': 'Human-readable status message'},
                     'createdOn': {'type': 'integer', 'description': 'Unix timestamp (milliseconds) when the statement was created'},
+                    'stats': {
+                        'type': 'object',
+                        'description': 'DML statistics returned for INSERT, UPDATE, DELETE, and MERGE statements. Not present for SELECT or SHOW queries.',
+                        'properties': {
+                            'numRowsInserted': {'type': 'integer', 'description': 'Number of rows inserted'},
+                            'numRowsDeleted': {'type': 'integer', 'description': 'Number of rows deleted'},
+                            'numRowsUpdated': {'type': 'integer', 'description': 'Number of rows updated'},
+                            'numDmlDuplicates': {'type': 'integer', 'description': 'Number of duplicate rows skipped'},
+                        },
+                    },
                 },
                 'x-airbyte-entity-name': 'databases',
                 'x-airbyte-ai-hints': {
@@ -398,6 +418,16 @@ SnowflakeConnectorModel: ConnectorModel = ConnectorModel(
                             'statementHandle': {'type': 'string', 'description': 'Unique handle for the executed statement'},
                             'message': {'type': 'string', 'description': 'Human-readable status message'},
                             'createdOn': {'type': 'integer', 'description': 'Unix timestamp (milliseconds) when the statement was created'},
+                            'stats': {
+                                'type': 'object',
+                                'description': 'DML statistics returned for INSERT, UPDATE, DELETE, and MERGE statements. Not present for SELECT or SHOW queries.',
+                                'properties': {
+                                    'numRowsInserted': {'type': 'integer', 'description': 'Number of rows inserted'},
+                                    'numRowsDeleted': {'type': 'integer', 'description': 'Number of rows deleted'},
+                                    'numRowsUpdated': {'type': 'integer', 'description': 'Number of rows updated'},
+                                    'numDmlDuplicates': {'type': 'integer', 'description': 'Number of duplicate rows skipped'},
+                                },
+                            },
                         },
                         'x-airbyte-entity-name': 'schemas',
                         'x-airbyte-ai-hints': {
@@ -441,6 +471,16 @@ SnowflakeConnectorModel: ConnectorModel = ConnectorModel(
                     'statementHandle': {'type': 'string', 'description': 'Unique handle for the executed statement'},
                     'message': {'type': 'string', 'description': 'Human-readable status message'},
                     'createdOn': {'type': 'integer', 'description': 'Unix timestamp (milliseconds) when the statement was created'},
+                    'stats': {
+                        'type': 'object',
+                        'description': 'DML statistics returned for INSERT, UPDATE, DELETE, and MERGE statements. Not present for SELECT or SHOW queries.',
+                        'properties': {
+                            'numRowsInserted': {'type': 'integer', 'description': 'Number of rows inserted'},
+                            'numRowsDeleted': {'type': 'integer', 'description': 'Number of rows deleted'},
+                            'numRowsUpdated': {'type': 'integer', 'description': 'Number of rows updated'},
+                            'numDmlDuplicates': {'type': 'integer', 'description': 'Number of duplicate rows skipped'},
+                        },
+                    },
                 },
                 'x-airbyte-entity-name': 'schemas',
                 'x-airbyte-ai-hints': {
@@ -599,6 +639,16 @@ SnowflakeConnectorModel: ConnectorModel = ConnectorModel(
                             'statementHandle': {'type': 'string', 'description': 'Unique handle for the executed statement'},
                             'message': {'type': 'string', 'description': 'Human-readable status message'},
                             'createdOn': {'type': 'integer', 'description': 'Unix timestamp (milliseconds) when the statement was created'},
+                            'stats': {
+                                'type': 'object',
+                                'description': 'DML statistics returned for INSERT, UPDATE, DELETE, and MERGE statements. Not present for SELECT or SHOW queries.',
+                                'properties': {
+                                    'numRowsInserted': {'type': 'integer', 'description': 'Number of rows inserted'},
+                                    'numRowsDeleted': {'type': 'integer', 'description': 'Number of rows deleted'},
+                                    'numRowsUpdated': {'type': 'integer', 'description': 'Number of rows updated'},
+                                    'numDmlDuplicates': {'type': 'integer', 'description': 'Number of duplicate rows skipped'},
+                                },
+                            },
                         },
                         'x-airbyte-entity-name': 'tables',
                         'x-airbyte-ai-hints': {
@@ -642,6 +692,16 @@ SnowflakeConnectorModel: ConnectorModel = ConnectorModel(
                     'statementHandle': {'type': 'string', 'description': 'Unique handle for the executed statement'},
                     'message': {'type': 'string', 'description': 'Human-readable status message'},
                     'createdOn': {'type': 'integer', 'description': 'Unix timestamp (milliseconds) when the statement was created'},
+                    'stats': {
+                        'type': 'object',
+                        'description': 'DML statistics returned for INSERT, UPDATE, DELETE, and MERGE statements. Not present for SELECT or SHOW queries.',
+                        'properties': {
+                            'numRowsInserted': {'type': 'integer', 'description': 'Number of rows inserted'},
+                            'numRowsDeleted': {'type': 'integer', 'description': 'Number of rows deleted'},
+                            'numRowsUpdated': {'type': 'integer', 'description': 'Number of rows updated'},
+                            'numDmlDuplicates': {'type': 'integer', 'description': 'Number of duplicate rows skipped'},
+                        },
+                    },
                 },
                 'x-airbyte-entity-name': 'tables',
                 'x-airbyte-ai-hints': {
@@ -800,6 +860,16 @@ SnowflakeConnectorModel: ConnectorModel = ConnectorModel(
                             'statementHandle': {'type': 'string', 'description': 'Unique handle for the executed statement'},
                             'message': {'type': 'string', 'description': 'Human-readable status message'},
                             'createdOn': {'type': 'integer', 'description': 'Unix timestamp (milliseconds) when the statement was created'},
+                            'stats': {
+                                'type': 'object',
+                                'description': 'DML statistics returned for INSERT, UPDATE, DELETE, and MERGE statements. Not present for SELECT or SHOW queries.',
+                                'properties': {
+                                    'numRowsInserted': {'type': 'integer', 'description': 'Number of rows inserted'},
+                                    'numRowsDeleted': {'type': 'integer', 'description': 'Number of rows deleted'},
+                                    'numRowsUpdated': {'type': 'integer', 'description': 'Number of rows updated'},
+                                    'numDmlDuplicates': {'type': 'integer', 'description': 'Number of duplicate rows skipped'},
+                                },
+                            },
                         },
                         'x-airbyte-entity-name': 'views',
                         'x-airbyte-ai-hints': {
@@ -843,6 +913,16 @@ SnowflakeConnectorModel: ConnectorModel = ConnectorModel(
                     'statementHandle': {'type': 'string', 'description': 'Unique handle for the executed statement'},
                     'message': {'type': 'string', 'description': 'Human-readable status message'},
                     'createdOn': {'type': 'integer', 'description': 'Unix timestamp (milliseconds) when the statement was created'},
+                    'stats': {
+                        'type': 'object',
+                        'description': 'DML statistics returned for INSERT, UPDATE, DELETE, and MERGE statements. Not present for SELECT or SHOW queries.',
+                        'properties': {
+                            'numRowsInserted': {'type': 'integer', 'description': 'Number of rows inserted'},
+                            'numRowsDeleted': {'type': 'integer', 'description': 'Number of rows deleted'},
+                            'numRowsUpdated': {'type': 'integer', 'description': 'Number of rows updated'},
+                            'numDmlDuplicates': {'type': 'integer', 'description': 'Number of duplicate rows skipped'},
+                        },
+                    },
                 },
                 'x-airbyte-entity-name': 'views',
                 'x-airbyte-ai-hints': {
@@ -1001,6 +1081,16 @@ SnowflakeConnectorModel: ConnectorModel = ConnectorModel(
                             'statementHandle': {'type': 'string', 'description': 'Unique handle for the executed statement'},
                             'message': {'type': 'string', 'description': 'Human-readable status message'},
                             'createdOn': {'type': 'integer', 'description': 'Unix timestamp (milliseconds) when the statement was created'},
+                            'stats': {
+                                'type': 'object',
+                                'description': 'DML statistics returned for INSERT, UPDATE, DELETE, and MERGE statements. Not present for SELECT or SHOW queries.',
+                                'properties': {
+                                    'numRowsInserted': {'type': 'integer', 'description': 'Number of rows inserted'},
+                                    'numRowsDeleted': {'type': 'integer', 'description': 'Number of rows deleted'},
+                                    'numRowsUpdated': {'type': 'integer', 'description': 'Number of rows updated'},
+                                    'numDmlDuplicates': {'type': 'integer', 'description': 'Number of duplicate rows skipped'},
+                                },
+                            },
                         },
                         'x-airbyte-entity-name': 'warehouses',
                         'x-airbyte-ai-hints': {
@@ -1044,6 +1134,16 @@ SnowflakeConnectorModel: ConnectorModel = ConnectorModel(
                     'statementHandle': {'type': 'string', 'description': 'Unique handle for the executed statement'},
                     'message': {'type': 'string', 'description': 'Human-readable status message'},
                     'createdOn': {'type': 'integer', 'description': 'Unix timestamp (milliseconds) when the statement was created'},
+                    'stats': {
+                        'type': 'object',
+                        'description': 'DML statistics returned for INSERT, UPDATE, DELETE, and MERGE statements. Not present for SELECT or SHOW queries.',
+                        'properties': {
+                            'numRowsInserted': {'type': 'integer', 'description': 'Number of rows inserted'},
+                            'numRowsDeleted': {'type': 'integer', 'description': 'Number of rows deleted'},
+                            'numRowsUpdated': {'type': 'integer', 'description': 'Number of rows updated'},
+                            'numDmlDuplicates': {'type': 'integer', 'description': 'Number of duplicate rows skipped'},
+                        },
+                    },
                 },
                 'x-airbyte-entity-name': 'warehouses',
                 'x-airbyte-ai-hints': {
@@ -1202,6 +1302,16 @@ SnowflakeConnectorModel: ConnectorModel = ConnectorModel(
                             'statementHandle': {'type': 'string', 'description': 'Unique handle for the executed statement'},
                             'message': {'type': 'string', 'description': 'Human-readable status message'},
                             'createdOn': {'type': 'integer', 'description': 'Unix timestamp (milliseconds) when the statement was created'},
+                            'stats': {
+                                'type': 'object',
+                                'description': 'DML statistics returned for INSERT, UPDATE, DELETE, and MERGE statements. Not present for SELECT or SHOW queries.',
+                                'properties': {
+                                    'numRowsInserted': {'type': 'integer', 'description': 'Number of rows inserted'},
+                                    'numRowsDeleted': {'type': 'integer', 'description': 'Number of rows deleted'},
+                                    'numRowsUpdated': {'type': 'integer', 'description': 'Number of rows updated'},
+                                    'numDmlDuplicates': {'type': 'integer', 'description': 'Number of duplicate rows skipped'},
+                                },
+                            },
                         },
                         'x-airbyte-entity-name': 'columns',
                         'x-airbyte-ai-hints': {
@@ -1250,6 +1360,16 @@ SnowflakeConnectorModel: ConnectorModel = ConnectorModel(
                     'statementHandle': {'type': 'string', 'description': 'Unique handle for the executed statement'},
                     'message': {'type': 'string', 'description': 'Human-readable status message'},
                     'createdOn': {'type': 'integer', 'description': 'Unix timestamp (milliseconds) when the statement was created'},
+                    'stats': {
+                        'type': 'object',
+                        'description': 'DML statistics returned for INSERT, UPDATE, DELETE, and MERGE statements. Not present for SELECT or SHOW queries.',
+                        'properties': {
+                            'numRowsInserted': {'type': 'integer', 'description': 'Number of rows inserted'},
+                            'numRowsDeleted': {'type': 'integer', 'description': 'Number of rows deleted'},
+                            'numRowsUpdated': {'type': 'integer', 'description': 'Number of rows updated'},
+                            'numDmlDuplicates': {'type': 'integer', 'description': 'Number of duplicate rows skipped'},
+                        },
+                    },
                 },
                 'x-airbyte-entity-name': 'columns',
                 'x-airbyte-ai-hints': {
@@ -1278,6 +1398,931 @@ SnowflakeConnectorModel: ConnectorModel = ConnectorModel(
                 'freshness': 'live',
                 'example_questions': ['What columns does this table have?', 'Show me the column definitions'],
                 'search_strategy': 'Execute SHOW COLUMNS via the SQL API',
+            },
+        ),
+        EntityDefinition(
+            name='record',
+            actions=[
+                Action.GET,
+                Action.LIST,
+                Action.CREATE,
+                Action.UPDATE,
+                Action.DELETE,
+            ],
+            endpoints={
+                Action.GET: EndpointDefinition(
+                    method='POST',
+                    path='/api/v2/statements:record_get',
+                    path_override=PathOverrideConfig(
+                        path='/api/v2/statements',
+                    ),
+                    action=Action.GET,
+                    description='Execute a SQL SELECT statement and return the result set. Typically used to retrieve a single row by filtering on a unique identifier (e.g., SELECT * FROM users WHERE id = 42). The result is returned as rows, the same shape as the list action; when the SELECT targets one row the result contains a single row. Intended for row retrieval only. This is not a general-purpose SQL endpoint: it does not perform DDL/DCL (DROP, TRUNCATE, GRANT, CREATE) — issue the matching CRUD action for the operation you intend. Parameterized bind variables (the SQL API bindings field / ? placeholders) are not supported in this beta; inline literal values into the statement.',
+                    body_fields=[
+                        'statement',
+                        'database',
+                        'schema',
+                        'warehouse',
+                        'role',
+                        'timeout',
+                        'parameters',
+                    ],
+                    request_schema={
+                        'type': 'object',
+                        'required': ['statement'],
+                        'properties': {
+                            'statement': {'type': 'string', 'description': 'SQL SELECT statement to retrieve a single record (e.g., SELECT * FROM users WHERE id = 42)'},
+                            'database': {'type': 'string', 'description': 'Database context for the statement'},
+                            'schema': {'type': 'string', 'description': 'Schema context for the statement'},
+                            'warehouse': {'type': 'string', 'description': 'Warehouse to use for execution'},
+                            'role': {'type': 'string', 'description': 'Role to use for execution'},
+                            'timeout': {'type': 'integer', 'description': 'Timeout in seconds for the statement execution'},
+                            'parameters': {
+                                'type': 'object',
+                                'description': 'Session parameters for the statement execution',
+                                'additionalProperties': True,
+                            },
+                        },
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'requestId': {'type': 'string', 'description': 'Unique request identifier for the API call'},
+                            'resultSetMetaData': {
+                                'type': 'object',
+                                'description': 'Metadata about the result set',
+                                'properties': {
+                                    'numRows': {'type': 'integer', 'description': 'Total number of rows in the result set'},
+                                    'format': {'type': 'string', 'description': 'Format of the result data (e.g., jsonv2)'},
+                                    'rowType': {
+                                        'type': 'array',
+                                        'items': {
+                                            'type': 'object',
+                                            'description': 'Column metadata describing a single column in the result set',
+                                            'properties': {
+                                                'name': {'type': 'string', 'description': 'Column name'},
+                                                'database': {'type': 'string', 'description': 'Database name'},
+                                                'schema': {'type': 'string', 'description': 'Schema name'},
+                                                'table': {'type': 'string', 'description': 'Table name'},
+                                                'type': {'type': 'string', 'description': 'Snowflake data type (text, fixed, real, boolean, etc.)'},
+                                                'scale': {
+                                                    'oneOf': [
+                                                        {'type': 'integer'},
+                                                        {'type': 'null'},
+                                                    ],
+                                                    'description': 'Decimal scale for numeric types',
+                                                },
+                                                'precision': {
+                                                    'oneOf': [
+                                                        {'type': 'integer'},
+                                                        {'type': 'null'},
+                                                    ],
+                                                    'description': 'Numeric precision',
+                                                },
+                                                'length': {
+                                                    'oneOf': [
+                                                        {'type': 'integer'},
+                                                        {'type': 'null'},
+                                                    ],
+                                                    'description': 'Maximum character length',
+                                                },
+                                                'nullable': {'type': 'boolean', 'description': 'Whether the column allows null values'},
+                                                'byteLength': {
+                                                    'oneOf': [
+                                                        {'type': 'integer'},
+                                                        {'type': 'null'},
+                                                    ],
+                                                    'description': 'Maximum byte length',
+                                                },
+                                                'collation': {
+                                                    'oneOf': [
+                                                        {'type': 'string'},
+                                                        {'type': 'null'},
+                                                    ],
+                                                    'description': 'Collation specification',
+                                                },
+                                            },
+                                        },
+                                        'description': 'Column metadata for each column in the result set',
+                                    },
+                                    'partitionInfo': {
+                                        'type': 'array',
+                                        'items': {
+                                            'type': 'object',
+                                            'description': 'Information about a result partition',
+                                            'properties': {
+                                                'rowCount': {'type': 'integer', 'description': 'Number of rows in this partition'},
+                                                'uncompressedSize': {'type': 'integer', 'description': 'Uncompressed size of the partition in bytes'},
+                                                'compressedSize': {'type': 'integer', 'description': 'Compressed size of the partition in bytes'},
+                                            },
+                                        },
+                                        'description': 'Information about result partitions',
+                                    },
+                                },
+                            },
+                            'data': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'array',
+                                    'items': {
+                                        'oneOf': [
+                                            {'type': 'string'},
+                                            {'type': 'null'},
+                                        ],
+                                    },
+                                },
+                                'description': 'Result rows as an array of arrays. Each inner array is a row with values as strings, matching the column order from resultSetMetaData.rowType.',
+                            },
+                            'code': {'type': 'string', 'description': 'Snowflake status code (e.g., 090001 for success)'},
+                            'statementStatusUrl': {'type': 'string', 'description': 'URL to check statement execution status'},
+                            'sqlState': {'type': 'string', 'description': 'SQL state code (e.g., 00000 for success)'},
+                            'statementHandle': {'type': 'string', 'description': 'Unique handle for the executed statement'},
+                            'message': {'type': 'string', 'description': 'Human-readable status message'},
+                            'createdOn': {'type': 'integer', 'description': 'Unix timestamp (milliseconds) when the statement was created'},
+                            'stats': {
+                                'type': 'object',
+                                'description': 'DML statistics returned for INSERT, UPDATE, DELETE, and MERGE statements. Not present for SELECT or SHOW queries.',
+                                'properties': {
+                                    'numRowsInserted': {'type': 'integer', 'description': 'Number of rows inserted'},
+                                    'numRowsDeleted': {'type': 'integer', 'description': 'Number of rows deleted'},
+                                    'numRowsUpdated': {'type': 'integer', 'description': 'Number of rows updated'},
+                                    'numDmlDuplicates': {'type': 'integer', 'description': 'Number of duplicate rows skipped'},
+                                },
+                            },
+                        },
+                        'x-airbyte-entity-name': 'record',
+                        'x-airbyte-ai-hints': {
+                            'summary': 'Read, create, update, and delete rows in Snowflake tables and views via the SQL API. Each CRUD action maps to its SQL verb.',
+                            'when_to_use': 'When the user wants to query, insert, update, or delete actual data records in Snowflake tables or views. Use the get action for single-row SELECT, list for multi-row SELECT, create for INSERT, update for UPDATE, and delete for DELETE.',
+                            'trigger_phrases': [
+                                'query records',
+                                'select from table',
+                                'insert into table',
+                                'update record',
+                                'delete record',
+                            ],
+                            'freshness': 'live',
+                            'example_questions': [
+                                'Get the record with id 42 from the users table',
+                                'List all records from the orders table',
+                                'Insert a new row into the customers table',
+                                'Update the email for user 7 in the users table',
+                                'Delete the record with id 99 from the logs table',
+                            ],
+                            'search_strategy': "Use the record action that matches the intended CRUD operation (get/list for SELECT, create for INSERT, update for UPDATE, delete for DELETE). Pass the SQL statement in the request body; it should match that action's SQL verb. Set database, schema, warehouse, and role fields as needed for execution context.",
+                        },
+                    },
+                ),
+                Action.LIST: EndpointDefinition(
+                    method='POST',
+                    path='/api/v2/statements:record_list',
+                    path_override=PathOverrideConfig(
+                        path='/api/v2/statements',
+                    ),
+                    action=Action.LIST,
+                    description="Execute a SQL SELECT query that returns multiple records from a Snowflake table or view. Use this action when you need to retrieve a set of rows, optionally with filtering, sorting, or limiting (e.g., SELECT * FROM orders WHERE status = 'active' ORDER BY created_at DESC LIMIT 100). Intended for row retrieval only. This is not a general-purpose SQL endpoint: it does not perform DDL/DCL (DROP, TRUNCATE, GRANT, CREATE) — issue the matching CRUD action for the operation you intend. Parameterized bind variables (the SQL API bindings field / ? placeholders) are not supported in this beta; inline literal values into the statement.",
+                    body_fields=[
+                        'statement',
+                        'database',
+                        'schema',
+                        'warehouse',
+                        'role',
+                        'timeout',
+                        'parameters',
+                    ],
+                    request_schema={
+                        'type': 'object',
+                        'required': ['statement'],
+                        'properties': {
+                            'statement': {'type': 'string', 'description': "SQL SELECT statement to retrieve multiple records (e.g., SELECT * FROM orders WHERE status = 'active' LIMIT 100)"},
+                            'database': {'type': 'string', 'description': 'Database context for the statement'},
+                            'schema': {'type': 'string', 'description': 'Schema context for the statement'},
+                            'warehouse': {'type': 'string', 'description': 'Warehouse to use for execution'},
+                            'role': {'type': 'string', 'description': 'Role to use for execution'},
+                            'timeout': {'type': 'integer', 'description': 'Timeout in seconds for the statement execution'},
+                            'parameters': {
+                                'type': 'object',
+                                'description': 'Session parameters for the statement execution',
+                                'additionalProperties': True,
+                            },
+                        },
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'requestId': {'type': 'string', 'description': 'Unique request identifier for the API call'},
+                            'resultSetMetaData': {
+                                'type': 'object',
+                                'description': 'Metadata about the result set',
+                                'properties': {
+                                    'numRows': {'type': 'integer', 'description': 'Total number of rows in the result set'},
+                                    'format': {'type': 'string', 'description': 'Format of the result data (e.g., jsonv2)'},
+                                    'rowType': {
+                                        'type': 'array',
+                                        'items': {
+                                            'type': 'object',
+                                            'description': 'Column metadata describing a single column in the result set',
+                                            'properties': {
+                                                'name': {'type': 'string', 'description': 'Column name'},
+                                                'database': {'type': 'string', 'description': 'Database name'},
+                                                'schema': {'type': 'string', 'description': 'Schema name'},
+                                                'table': {'type': 'string', 'description': 'Table name'},
+                                                'type': {'type': 'string', 'description': 'Snowflake data type (text, fixed, real, boolean, etc.)'},
+                                                'scale': {
+                                                    'oneOf': [
+                                                        {'type': 'integer'},
+                                                        {'type': 'null'},
+                                                    ],
+                                                    'description': 'Decimal scale for numeric types',
+                                                },
+                                                'precision': {
+                                                    'oneOf': [
+                                                        {'type': 'integer'},
+                                                        {'type': 'null'},
+                                                    ],
+                                                    'description': 'Numeric precision',
+                                                },
+                                                'length': {
+                                                    'oneOf': [
+                                                        {'type': 'integer'},
+                                                        {'type': 'null'},
+                                                    ],
+                                                    'description': 'Maximum character length',
+                                                },
+                                                'nullable': {'type': 'boolean', 'description': 'Whether the column allows null values'},
+                                                'byteLength': {
+                                                    'oneOf': [
+                                                        {'type': 'integer'},
+                                                        {'type': 'null'},
+                                                    ],
+                                                    'description': 'Maximum byte length',
+                                                },
+                                                'collation': {
+                                                    'oneOf': [
+                                                        {'type': 'string'},
+                                                        {'type': 'null'},
+                                                    ],
+                                                    'description': 'Collation specification',
+                                                },
+                                            },
+                                        },
+                                        'description': 'Column metadata for each column in the result set',
+                                    },
+                                    'partitionInfo': {
+                                        'type': 'array',
+                                        'items': {
+                                            'type': 'object',
+                                            'description': 'Information about a result partition',
+                                            'properties': {
+                                                'rowCount': {'type': 'integer', 'description': 'Number of rows in this partition'},
+                                                'uncompressedSize': {'type': 'integer', 'description': 'Uncompressed size of the partition in bytes'},
+                                                'compressedSize': {'type': 'integer', 'description': 'Compressed size of the partition in bytes'},
+                                            },
+                                        },
+                                        'description': 'Information about result partitions',
+                                    },
+                                },
+                            },
+                            'data': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'array',
+                                    'items': {
+                                        'oneOf': [
+                                            {'type': 'string'},
+                                            {'type': 'null'},
+                                        ],
+                                    },
+                                },
+                                'description': 'Result rows as an array of arrays. Each inner array is a row with values as strings, matching the column order from resultSetMetaData.rowType.',
+                            },
+                            'code': {'type': 'string', 'description': 'Snowflake status code (e.g., 090001 for success)'},
+                            'statementStatusUrl': {'type': 'string', 'description': 'URL to check statement execution status'},
+                            'sqlState': {'type': 'string', 'description': 'SQL state code (e.g., 00000 for success)'},
+                            'statementHandle': {'type': 'string', 'description': 'Unique handle for the executed statement'},
+                            'message': {'type': 'string', 'description': 'Human-readable status message'},
+                            'createdOn': {'type': 'integer', 'description': 'Unix timestamp (milliseconds) when the statement was created'},
+                            'stats': {
+                                'type': 'object',
+                                'description': 'DML statistics returned for INSERT, UPDATE, DELETE, and MERGE statements. Not present for SELECT or SHOW queries.',
+                                'properties': {
+                                    'numRowsInserted': {'type': 'integer', 'description': 'Number of rows inserted'},
+                                    'numRowsDeleted': {'type': 'integer', 'description': 'Number of rows deleted'},
+                                    'numRowsUpdated': {'type': 'integer', 'description': 'Number of rows updated'},
+                                    'numDmlDuplicates': {'type': 'integer', 'description': 'Number of duplicate rows skipped'},
+                                },
+                            },
+                        },
+                        'x-airbyte-entity-name': 'record',
+                        'x-airbyte-ai-hints': {
+                            'summary': 'Read, create, update, and delete rows in Snowflake tables and views via the SQL API. Each CRUD action maps to its SQL verb.',
+                            'when_to_use': 'When the user wants to query, insert, update, or delete actual data records in Snowflake tables or views. Use the get action for single-row SELECT, list for multi-row SELECT, create for INSERT, update for UPDATE, and delete for DELETE.',
+                            'trigger_phrases': [
+                                'query records',
+                                'select from table',
+                                'insert into table',
+                                'update record',
+                                'delete record',
+                            ],
+                            'freshness': 'live',
+                            'example_questions': [
+                                'Get the record with id 42 from the users table',
+                                'List all records from the orders table',
+                                'Insert a new row into the customers table',
+                                'Update the email for user 7 in the users table',
+                                'Delete the record with id 99 from the logs table',
+                            ],
+                            'search_strategy': "Use the record action that matches the intended CRUD operation (get/list for SELECT, create for INSERT, update for UPDATE, delete for DELETE). Pass the SQL statement in the request body; it should match that action's SQL verb. Set database, schema, warehouse, and role fields as needed for execution context.",
+                        },
+                    },
+                    meta_extractor={
+                        'next_page_url': '@link.next',
+                        'request_id': '$.requestId',
+                        'statement_handle': '$.statementHandle',
+                        'partition_info': '$.resultSetMetaData.partitionInfo',
+                    },
+                ),
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/api/v2/statements:record_create',
+                    path_override=PathOverrideConfig(
+                        path='/api/v2/statements',
+                    ),
+                    action=Action.CREATE,
+                    description="Execute a SQL INSERT statement to create one or more new rows in a Snowflake table (e.g., INSERT INTO users (name, email) VALUES ('Alice', 'alice@example.com')). Intended for row insertion only. This is not a general-purpose SQL endpoint: it does not perform DDL/DCL (DROP, TRUNCATE, GRANT, CREATE TABLE) — issue the matching CRUD action for the operation you intend. Parameterized bind variables (the SQL API bindings field / ? placeholders) are not supported in this beta; inline literal values into the statement.",
+                    body_fields=[
+                        'statement',
+                        'database',
+                        'schema',
+                        'warehouse',
+                        'role',
+                        'timeout',
+                        'parameters',
+                    ],
+                    query_params=['requestId', 'retry'],
+                    query_params_schema={
+                        'requestId': {'type': 'string', 'required': False},
+                        'retry': {'type': 'boolean', 'required': False},
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'required': ['statement'],
+                        'properties': {
+                            'statement': {'type': 'string', 'description': "SQL INSERT statement to create new records (e.g., INSERT INTO users (name, email) VALUES ('Alice', 'alice@example.com'))"},
+                            'database': {'type': 'string', 'description': 'Database context for the statement'},
+                            'schema': {'type': 'string', 'description': 'Schema context for the statement'},
+                            'warehouse': {'type': 'string', 'description': 'Warehouse to use for execution'},
+                            'role': {'type': 'string', 'description': 'Role to use for execution'},
+                            'timeout': {'type': 'integer', 'description': 'Timeout in seconds for the statement execution'},
+                            'parameters': {
+                                'type': 'object',
+                                'description': 'Session parameters for the statement execution',
+                                'additionalProperties': True,
+                            },
+                        },
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'requestId': {'type': 'string', 'description': 'Unique request identifier for the API call'},
+                            'resultSetMetaData': {
+                                'type': 'object',
+                                'description': 'Metadata about the result set',
+                                'properties': {
+                                    'numRows': {'type': 'integer', 'description': 'Total number of rows in the result set'},
+                                    'format': {'type': 'string', 'description': 'Format of the result data (e.g., jsonv2)'},
+                                    'rowType': {
+                                        'type': 'array',
+                                        'items': {
+                                            'type': 'object',
+                                            'description': 'Column metadata describing a single column in the result set',
+                                            'properties': {
+                                                'name': {'type': 'string', 'description': 'Column name'},
+                                                'database': {'type': 'string', 'description': 'Database name'},
+                                                'schema': {'type': 'string', 'description': 'Schema name'},
+                                                'table': {'type': 'string', 'description': 'Table name'},
+                                                'type': {'type': 'string', 'description': 'Snowflake data type (text, fixed, real, boolean, etc.)'},
+                                                'scale': {
+                                                    'oneOf': [
+                                                        {'type': 'integer'},
+                                                        {'type': 'null'},
+                                                    ],
+                                                    'description': 'Decimal scale for numeric types',
+                                                },
+                                                'precision': {
+                                                    'oneOf': [
+                                                        {'type': 'integer'},
+                                                        {'type': 'null'},
+                                                    ],
+                                                    'description': 'Numeric precision',
+                                                },
+                                                'length': {
+                                                    'oneOf': [
+                                                        {'type': 'integer'},
+                                                        {'type': 'null'},
+                                                    ],
+                                                    'description': 'Maximum character length',
+                                                },
+                                                'nullable': {'type': 'boolean', 'description': 'Whether the column allows null values'},
+                                                'byteLength': {
+                                                    'oneOf': [
+                                                        {'type': 'integer'},
+                                                        {'type': 'null'},
+                                                    ],
+                                                    'description': 'Maximum byte length',
+                                                },
+                                                'collation': {
+                                                    'oneOf': [
+                                                        {'type': 'string'},
+                                                        {'type': 'null'},
+                                                    ],
+                                                    'description': 'Collation specification',
+                                                },
+                                            },
+                                        },
+                                        'description': 'Column metadata for each column in the result set',
+                                    },
+                                    'partitionInfo': {
+                                        'type': 'array',
+                                        'items': {
+                                            'type': 'object',
+                                            'description': 'Information about a result partition',
+                                            'properties': {
+                                                'rowCount': {'type': 'integer', 'description': 'Number of rows in this partition'},
+                                                'uncompressedSize': {'type': 'integer', 'description': 'Uncompressed size of the partition in bytes'},
+                                                'compressedSize': {'type': 'integer', 'description': 'Compressed size of the partition in bytes'},
+                                            },
+                                        },
+                                        'description': 'Information about result partitions',
+                                    },
+                                },
+                            },
+                            'data': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'array',
+                                    'items': {
+                                        'oneOf': [
+                                            {'type': 'string'},
+                                            {'type': 'null'},
+                                        ],
+                                    },
+                                },
+                                'description': 'Result rows as an array of arrays. Each inner array is a row with values as strings, matching the column order from resultSetMetaData.rowType.',
+                            },
+                            'code': {'type': 'string', 'description': 'Snowflake status code (e.g., 090001 for success)'},
+                            'statementStatusUrl': {'type': 'string', 'description': 'URL to check statement execution status'},
+                            'sqlState': {'type': 'string', 'description': 'SQL state code (e.g., 00000 for success)'},
+                            'statementHandle': {'type': 'string', 'description': 'Unique handle for the executed statement'},
+                            'message': {'type': 'string', 'description': 'Human-readable status message'},
+                            'createdOn': {'type': 'integer', 'description': 'Unix timestamp (milliseconds) when the statement was created'},
+                            'stats': {
+                                'type': 'object',
+                                'description': 'DML statistics returned for INSERT, UPDATE, DELETE, and MERGE statements. Not present for SELECT or SHOW queries.',
+                                'properties': {
+                                    'numRowsInserted': {'type': 'integer', 'description': 'Number of rows inserted'},
+                                    'numRowsDeleted': {'type': 'integer', 'description': 'Number of rows deleted'},
+                                    'numRowsUpdated': {'type': 'integer', 'description': 'Number of rows updated'},
+                                    'numDmlDuplicates': {'type': 'integer', 'description': 'Number of duplicate rows skipped'},
+                                },
+                            },
+                        },
+                        'x-airbyte-entity-name': 'record',
+                        'x-airbyte-ai-hints': {
+                            'summary': 'Read, create, update, and delete rows in Snowflake tables and views via the SQL API. Each CRUD action maps to its SQL verb.',
+                            'when_to_use': 'When the user wants to query, insert, update, or delete actual data records in Snowflake tables or views. Use the get action for single-row SELECT, list for multi-row SELECT, create for INSERT, update for UPDATE, and delete for DELETE.',
+                            'trigger_phrases': [
+                                'query records',
+                                'select from table',
+                                'insert into table',
+                                'update record',
+                                'delete record',
+                            ],
+                            'freshness': 'live',
+                            'example_questions': [
+                                'Get the record with id 42 from the users table',
+                                'List all records from the orders table',
+                                'Insert a new row into the customers table',
+                                'Update the email for user 7 in the users table',
+                                'Delete the record with id 99 from the logs table',
+                            ],
+                            'search_strategy': "Use the record action that matches the intended CRUD operation (get/list for SELECT, create for INSERT, update for UPDATE, delete for DELETE). Pass the SQL statement in the request body; it should match that action's SQL verb. Set database, schema, warehouse, and role fields as needed for execution context.",
+                        },
+                    },
+                ),
+                Action.UPDATE: EndpointDefinition(
+                    method='POST',
+                    path='/api/v2/statements:record_update',
+                    path_override=PathOverrideConfig(
+                        path='/api/v2/statements',
+                    ),
+                    action=Action.UPDATE,
+                    description="Execute a SQL UPDATE statement to modify existing rows in a Snowflake table (e.g., UPDATE users SET email = 'new@example.com' WHERE id = 7). Intended for row modification only. This is not a general-purpose SQL endpoint: it does not perform DDL/DCL (DROP, TRUNCATE, GRANT, ALTER) — issue the matching CRUD action for the operation you intend. Parameterized bind variables (the SQL API bindings field / ? placeholders) are not supported in this beta; inline literal values into the statement.",
+                    body_fields=[
+                        'statement',
+                        'database',
+                        'schema',
+                        'warehouse',
+                        'role',
+                        'timeout',
+                        'parameters',
+                    ],
+                    query_params=['requestId', 'retry'],
+                    query_params_schema={
+                        'requestId': {'type': 'string', 'required': False},
+                        'retry': {'type': 'boolean', 'required': False},
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'required': ['statement'],
+                        'properties': {
+                            'statement': {'type': 'string', 'description': "SQL UPDATE statement to modify existing records (e.g., UPDATE users SET email = 'new@example.com' WHERE id = 7)"},
+                            'database': {'type': 'string', 'description': 'Database context for the statement'},
+                            'schema': {'type': 'string', 'description': 'Schema context for the statement'},
+                            'warehouse': {'type': 'string', 'description': 'Warehouse to use for execution'},
+                            'role': {'type': 'string', 'description': 'Role to use for execution'},
+                            'timeout': {'type': 'integer', 'description': 'Timeout in seconds for the statement execution'},
+                            'parameters': {
+                                'type': 'object',
+                                'description': 'Session parameters for the statement execution',
+                                'additionalProperties': True,
+                            },
+                        },
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'requestId': {'type': 'string', 'description': 'Unique request identifier for the API call'},
+                            'resultSetMetaData': {
+                                'type': 'object',
+                                'description': 'Metadata about the result set',
+                                'properties': {
+                                    'numRows': {'type': 'integer', 'description': 'Total number of rows in the result set'},
+                                    'format': {'type': 'string', 'description': 'Format of the result data (e.g., jsonv2)'},
+                                    'rowType': {
+                                        'type': 'array',
+                                        'items': {
+                                            'type': 'object',
+                                            'description': 'Column metadata describing a single column in the result set',
+                                            'properties': {
+                                                'name': {'type': 'string', 'description': 'Column name'},
+                                                'database': {'type': 'string', 'description': 'Database name'},
+                                                'schema': {'type': 'string', 'description': 'Schema name'},
+                                                'table': {'type': 'string', 'description': 'Table name'},
+                                                'type': {'type': 'string', 'description': 'Snowflake data type (text, fixed, real, boolean, etc.)'},
+                                                'scale': {
+                                                    'oneOf': [
+                                                        {'type': 'integer'},
+                                                        {'type': 'null'},
+                                                    ],
+                                                    'description': 'Decimal scale for numeric types',
+                                                },
+                                                'precision': {
+                                                    'oneOf': [
+                                                        {'type': 'integer'},
+                                                        {'type': 'null'},
+                                                    ],
+                                                    'description': 'Numeric precision',
+                                                },
+                                                'length': {
+                                                    'oneOf': [
+                                                        {'type': 'integer'},
+                                                        {'type': 'null'},
+                                                    ],
+                                                    'description': 'Maximum character length',
+                                                },
+                                                'nullable': {'type': 'boolean', 'description': 'Whether the column allows null values'},
+                                                'byteLength': {
+                                                    'oneOf': [
+                                                        {'type': 'integer'},
+                                                        {'type': 'null'},
+                                                    ],
+                                                    'description': 'Maximum byte length',
+                                                },
+                                                'collation': {
+                                                    'oneOf': [
+                                                        {'type': 'string'},
+                                                        {'type': 'null'},
+                                                    ],
+                                                    'description': 'Collation specification',
+                                                },
+                                            },
+                                        },
+                                        'description': 'Column metadata for each column in the result set',
+                                    },
+                                    'partitionInfo': {
+                                        'type': 'array',
+                                        'items': {
+                                            'type': 'object',
+                                            'description': 'Information about a result partition',
+                                            'properties': {
+                                                'rowCount': {'type': 'integer', 'description': 'Number of rows in this partition'},
+                                                'uncompressedSize': {'type': 'integer', 'description': 'Uncompressed size of the partition in bytes'},
+                                                'compressedSize': {'type': 'integer', 'description': 'Compressed size of the partition in bytes'},
+                                            },
+                                        },
+                                        'description': 'Information about result partitions',
+                                    },
+                                },
+                            },
+                            'data': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'array',
+                                    'items': {
+                                        'oneOf': [
+                                            {'type': 'string'},
+                                            {'type': 'null'},
+                                        ],
+                                    },
+                                },
+                                'description': 'Result rows as an array of arrays. Each inner array is a row with values as strings, matching the column order from resultSetMetaData.rowType.',
+                            },
+                            'code': {'type': 'string', 'description': 'Snowflake status code (e.g., 090001 for success)'},
+                            'statementStatusUrl': {'type': 'string', 'description': 'URL to check statement execution status'},
+                            'sqlState': {'type': 'string', 'description': 'SQL state code (e.g., 00000 for success)'},
+                            'statementHandle': {'type': 'string', 'description': 'Unique handle for the executed statement'},
+                            'message': {'type': 'string', 'description': 'Human-readable status message'},
+                            'createdOn': {'type': 'integer', 'description': 'Unix timestamp (milliseconds) when the statement was created'},
+                            'stats': {
+                                'type': 'object',
+                                'description': 'DML statistics returned for INSERT, UPDATE, DELETE, and MERGE statements. Not present for SELECT or SHOW queries.',
+                                'properties': {
+                                    'numRowsInserted': {'type': 'integer', 'description': 'Number of rows inserted'},
+                                    'numRowsDeleted': {'type': 'integer', 'description': 'Number of rows deleted'},
+                                    'numRowsUpdated': {'type': 'integer', 'description': 'Number of rows updated'},
+                                    'numDmlDuplicates': {'type': 'integer', 'description': 'Number of duplicate rows skipped'},
+                                },
+                            },
+                        },
+                        'x-airbyte-entity-name': 'record',
+                        'x-airbyte-ai-hints': {
+                            'summary': 'Read, create, update, and delete rows in Snowflake tables and views via the SQL API. Each CRUD action maps to its SQL verb.',
+                            'when_to_use': 'When the user wants to query, insert, update, or delete actual data records in Snowflake tables or views. Use the get action for single-row SELECT, list for multi-row SELECT, create for INSERT, update for UPDATE, and delete for DELETE.',
+                            'trigger_phrases': [
+                                'query records',
+                                'select from table',
+                                'insert into table',
+                                'update record',
+                                'delete record',
+                            ],
+                            'freshness': 'live',
+                            'example_questions': [
+                                'Get the record with id 42 from the users table',
+                                'List all records from the orders table',
+                                'Insert a new row into the customers table',
+                                'Update the email for user 7 in the users table',
+                                'Delete the record with id 99 from the logs table',
+                            ],
+                            'search_strategy': "Use the record action that matches the intended CRUD operation (get/list for SELECT, create for INSERT, update for UPDATE, delete for DELETE). Pass the SQL statement in the request body; it should match that action's SQL verb. Set database, schema, warehouse, and role fields as needed for execution context.",
+                        },
+                    },
+                ),
+                Action.DELETE: EndpointDefinition(
+                    method='POST',
+                    path='/api/v2/statements:record_delete',
+                    path_override=PathOverrideConfig(
+                        path='/api/v2/statements',
+                    ),
+                    action=Action.DELETE,
+                    description='Execute a SQL DELETE statement to remove rows from a Snowflake table (e.g., DELETE FROM logs WHERE id = 99). Intended for row deletion only. This is not a general-purpose SQL endpoint: it does not perform DDL/DCL (DROP, TRUNCATE, GRANT, CREATE) — issue the matching CRUD action for the operation you intend. Parameterized bind variables (the SQL API bindings field / ? placeholders) are not supported in this beta; inline literal values into the statement.',
+                    body_fields=[
+                        'statement',
+                        'database',
+                        'schema',
+                        'warehouse',
+                        'role',
+                        'timeout',
+                        'parameters',
+                    ],
+                    query_params=['requestId', 'retry'],
+                    query_params_schema={
+                        'requestId': {'type': 'string', 'required': False},
+                        'retry': {'type': 'boolean', 'required': False},
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'required': ['statement'],
+                        'properties': {
+                            'statement': {'type': 'string', 'description': 'SQL DELETE statement to remove records (e.g., DELETE FROM logs WHERE id = 99)'},
+                            'database': {'type': 'string', 'description': 'Database context for the statement'},
+                            'schema': {'type': 'string', 'description': 'Schema context for the statement'},
+                            'warehouse': {'type': 'string', 'description': 'Warehouse to use for execution'},
+                            'role': {'type': 'string', 'description': 'Role to use for execution'},
+                            'timeout': {'type': 'integer', 'description': 'Timeout in seconds for the statement execution'},
+                            'parameters': {
+                                'type': 'object',
+                                'description': 'Session parameters for the statement execution',
+                                'additionalProperties': True,
+                            },
+                        },
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'requestId': {'type': 'string', 'description': 'Unique request identifier for the API call'},
+                            'resultSetMetaData': {
+                                'type': 'object',
+                                'description': 'Metadata about the result set',
+                                'properties': {
+                                    'numRows': {'type': 'integer', 'description': 'Total number of rows in the result set'},
+                                    'format': {'type': 'string', 'description': 'Format of the result data (e.g., jsonv2)'},
+                                    'rowType': {
+                                        'type': 'array',
+                                        'items': {
+                                            'type': 'object',
+                                            'description': 'Column metadata describing a single column in the result set',
+                                            'properties': {
+                                                'name': {'type': 'string', 'description': 'Column name'},
+                                                'database': {'type': 'string', 'description': 'Database name'},
+                                                'schema': {'type': 'string', 'description': 'Schema name'},
+                                                'table': {'type': 'string', 'description': 'Table name'},
+                                                'type': {'type': 'string', 'description': 'Snowflake data type (text, fixed, real, boolean, etc.)'},
+                                                'scale': {
+                                                    'oneOf': [
+                                                        {'type': 'integer'},
+                                                        {'type': 'null'},
+                                                    ],
+                                                    'description': 'Decimal scale for numeric types',
+                                                },
+                                                'precision': {
+                                                    'oneOf': [
+                                                        {'type': 'integer'},
+                                                        {'type': 'null'},
+                                                    ],
+                                                    'description': 'Numeric precision',
+                                                },
+                                                'length': {
+                                                    'oneOf': [
+                                                        {'type': 'integer'},
+                                                        {'type': 'null'},
+                                                    ],
+                                                    'description': 'Maximum character length',
+                                                },
+                                                'nullable': {'type': 'boolean', 'description': 'Whether the column allows null values'},
+                                                'byteLength': {
+                                                    'oneOf': [
+                                                        {'type': 'integer'},
+                                                        {'type': 'null'},
+                                                    ],
+                                                    'description': 'Maximum byte length',
+                                                },
+                                                'collation': {
+                                                    'oneOf': [
+                                                        {'type': 'string'},
+                                                        {'type': 'null'},
+                                                    ],
+                                                    'description': 'Collation specification',
+                                                },
+                                            },
+                                        },
+                                        'description': 'Column metadata for each column in the result set',
+                                    },
+                                    'partitionInfo': {
+                                        'type': 'array',
+                                        'items': {
+                                            'type': 'object',
+                                            'description': 'Information about a result partition',
+                                            'properties': {
+                                                'rowCount': {'type': 'integer', 'description': 'Number of rows in this partition'},
+                                                'uncompressedSize': {'type': 'integer', 'description': 'Uncompressed size of the partition in bytes'},
+                                                'compressedSize': {'type': 'integer', 'description': 'Compressed size of the partition in bytes'},
+                                            },
+                                        },
+                                        'description': 'Information about result partitions',
+                                    },
+                                },
+                            },
+                            'data': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'array',
+                                    'items': {
+                                        'oneOf': [
+                                            {'type': 'string'},
+                                            {'type': 'null'},
+                                        ],
+                                    },
+                                },
+                                'description': 'Result rows as an array of arrays. Each inner array is a row with values as strings, matching the column order from resultSetMetaData.rowType.',
+                            },
+                            'code': {'type': 'string', 'description': 'Snowflake status code (e.g., 090001 for success)'},
+                            'statementStatusUrl': {'type': 'string', 'description': 'URL to check statement execution status'},
+                            'sqlState': {'type': 'string', 'description': 'SQL state code (e.g., 00000 for success)'},
+                            'statementHandle': {'type': 'string', 'description': 'Unique handle for the executed statement'},
+                            'message': {'type': 'string', 'description': 'Human-readable status message'},
+                            'createdOn': {'type': 'integer', 'description': 'Unix timestamp (milliseconds) when the statement was created'},
+                            'stats': {
+                                'type': 'object',
+                                'description': 'DML statistics returned for INSERT, UPDATE, DELETE, and MERGE statements. Not present for SELECT or SHOW queries.',
+                                'properties': {
+                                    'numRowsInserted': {'type': 'integer', 'description': 'Number of rows inserted'},
+                                    'numRowsDeleted': {'type': 'integer', 'description': 'Number of rows deleted'},
+                                    'numRowsUpdated': {'type': 'integer', 'description': 'Number of rows updated'},
+                                    'numDmlDuplicates': {'type': 'integer', 'description': 'Number of duplicate rows skipped'},
+                                },
+                            },
+                        },
+                        'x-airbyte-entity-name': 'record',
+                        'x-airbyte-ai-hints': {
+                            'summary': 'Read, create, update, and delete rows in Snowflake tables and views via the SQL API. Each CRUD action maps to its SQL verb.',
+                            'when_to_use': 'When the user wants to query, insert, update, or delete actual data records in Snowflake tables or views. Use the get action for single-row SELECT, list for multi-row SELECT, create for INSERT, update for UPDATE, and delete for DELETE.',
+                            'trigger_phrases': [
+                                'query records',
+                                'select from table',
+                                'insert into table',
+                                'update record',
+                                'delete record',
+                            ],
+                            'freshness': 'live',
+                            'example_questions': [
+                                'Get the record with id 42 from the users table',
+                                'List all records from the orders table',
+                                'Insert a new row into the customers table',
+                                'Update the email for user 7 in the users table',
+                                'Delete the record with id 99 from the logs table',
+                            ],
+                            'search_strategy': "Use the record action that matches the intended CRUD operation (get/list for SELECT, create for INSERT, update for UPDATE, delete for DELETE). Pass the SQL statement in the request body; it should match that action's SQL verb. Set database, schema, warehouse, and role fields as needed for execution context.",
+                        },
+                    },
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'properties': {
+                    'requestId': {'type': 'string', 'description': 'Unique request identifier for the API call'},
+                    'resultSetMetaData': {'$ref': '#/components/schemas/ResultSetMetaData'},
+                    'data': {
+                        'type': 'array',
+                        'items': {
+                            'type': 'array',
+                            'items': {
+                                'oneOf': [
+                                    {'type': 'string'},
+                                    {'type': 'null'},
+                                ],
+                            },
+                        },
+                        'description': 'Result rows as an array of arrays. Each inner array is a row with values as strings, matching the column order from resultSetMetaData.rowType.',
+                    },
+                    'code': {'type': 'string', 'description': 'Snowflake status code (e.g., 090001 for success)'},
+                    'statementStatusUrl': {'type': 'string', 'description': 'URL to check statement execution status'},
+                    'sqlState': {'type': 'string', 'description': 'SQL state code (e.g., 00000 for success)'},
+                    'statementHandle': {'type': 'string', 'description': 'Unique handle for the executed statement'},
+                    'message': {'type': 'string', 'description': 'Human-readable status message'},
+                    'createdOn': {'type': 'integer', 'description': 'Unix timestamp (milliseconds) when the statement was created'},
+                    'stats': {
+                        'type': 'object',
+                        'description': 'DML statistics returned for INSERT, UPDATE, DELETE, and MERGE statements. Not present for SELECT or SHOW queries.',
+                        'properties': {
+                            'numRowsInserted': {'type': 'integer', 'description': 'Number of rows inserted'},
+                            'numRowsDeleted': {'type': 'integer', 'description': 'Number of rows deleted'},
+                            'numRowsUpdated': {'type': 'integer', 'description': 'Number of rows updated'},
+                            'numDmlDuplicates': {'type': 'integer', 'description': 'Number of duplicate rows skipped'},
+                        },
+                    },
+                },
+                'x-airbyte-entity-name': 'record',
+                'x-airbyte-ai-hints': {
+                    'summary': 'Read, create, update, and delete rows in Snowflake tables and views via the SQL API. Each CRUD action maps to its SQL verb.',
+                    'when_to_use': 'When the user wants to query, insert, update, or delete actual data records in Snowflake tables or views. Use the get action for single-row SELECT, list for multi-row SELECT, create for INSERT, update for UPDATE, and delete for DELETE.',
+                    'trigger_phrases': [
+                        'query records',
+                        'select from table',
+                        'insert into table',
+                        'update record',
+                        'delete record',
+                    ],
+                    'freshness': 'live',
+                    'example_questions': [
+                        'Get the record with id 42 from the users table',
+                        'List all records from the orders table',
+                        'Insert a new row into the customers table',
+                        'Update the email for user 7 in the users table',
+                        'Delete the record with id 99 from the logs table',
+                    ],
+                    'search_strategy': "Use the record action that matches the intended CRUD operation (get/list for SELECT, create for INSERT, update for UPDATE, delete for DELETE). Pass the SQL statement in the request body; it should match that action's SQL verb. Set database, schema, warehouse, and role fields as needed for execution context.",
+                },
+            },
+            ai_hints={
+                'summary': 'Read, create, update, and delete rows in Snowflake tables and views via the SQL API. Each CRUD action maps to its SQL verb.',
+                'when_to_use': 'When the user wants to query, insert, update, or delete actual data records in Snowflake tables or views. Use the get action for single-row SELECT, list for multi-row SELECT, create for INSERT, update for UPDATE, and delete for DELETE.',
+                'trigger_phrases': [
+                    'query records',
+                    'select from table',
+                    'insert into table',
+                    'update record',
+                    'delete record',
+                ],
+                'freshness': 'live',
+                'example_questions': [
+                    'Get the record with id 42 from the users table',
+                    'List all records from the orders table',
+                    'Insert a new row into the customers table',
+                    'Update the email for user 7 in the users table',
+                    'Delete the record with id 99 from the logs table',
+                ],
+                'search_strategy': "Use the record action that matches the intended CRUD operation (get/list for SELECT, create for INSERT, update for UPDATE, delete for DELETE). Pass the SQL statement in the request body; it should match that action's SQL verb. Set database, schema, warehouse, and role fields as needed for execution context.",
             },
         ),
         EntityDefinition(
@@ -1400,6 +2445,16 @@ SnowflakeConnectorModel: ConnectorModel = ConnectorModel(
                             'statementHandle': {'type': 'string', 'description': 'Unique handle for the executed statement'},
                             'message': {'type': 'string', 'description': 'Human-readable status message'},
                             'createdOn': {'type': 'integer', 'description': 'Unix timestamp (milliseconds) when the statement was created'},
+                            'stats': {
+                                'type': 'object',
+                                'description': 'DML statistics returned for INSERT, UPDATE, DELETE, and MERGE statements. Not present for SELECT or SHOW queries.',
+                                'properties': {
+                                    'numRowsInserted': {'type': 'integer', 'description': 'Number of rows inserted'},
+                                    'numRowsDeleted': {'type': 'integer', 'description': 'Number of rows deleted'},
+                                    'numRowsUpdated': {'type': 'integer', 'description': 'Number of rows updated'},
+                                    'numDmlDuplicates': {'type': 'integer', 'description': 'Number of duplicate rows skipped'},
+                                },
+                            },
                         },
                         'x-airbyte-entity-name': 'result_partitions',
                         'x-airbyte-ai-hints': {
@@ -1416,6 +2471,7 @@ SnowflakeConnectorModel: ConnectorModel = ConnectorModel(
                             'search_strategy': 'Reuse the statement_handle and request_id returned in the prior list action metadata, then call this get action with the next partition number. Do not use this entity to execute new SQL or discover metadata from scratch.',
                         },
                     },
+                    untested=True,
                 ),
             },
             entity_schema={
@@ -1442,6 +2498,16 @@ SnowflakeConnectorModel: ConnectorModel = ConnectorModel(
                     'statementHandle': {'type': 'string', 'description': 'Unique handle for the executed statement'},
                     'message': {'type': 'string', 'description': 'Human-readable status message'},
                     'createdOn': {'type': 'integer', 'description': 'Unix timestamp (milliseconds) when the statement was created'},
+                    'stats': {
+                        'type': 'object',
+                        'description': 'DML statistics returned for INSERT, UPDATE, DELETE, and MERGE statements. Not present for SELECT or SHOW queries.',
+                        'properties': {
+                            'numRowsInserted': {'type': 'integer', 'description': 'Number of rows inserted'},
+                            'numRowsDeleted': {'type': 'integer', 'description': 'Number of rows deleted'},
+                            'numRowsUpdated': {'type': 'integer', 'description': 'Number of rows updated'},
+                            'numDmlDuplicates': {'type': 'integer', 'description': 'Number of duplicate rows skipped'},
+                        },
+                    },
                 },
                 'x-airbyte-entity-name': 'result_partitions',
                 'x-airbyte-ai-hints': {
@@ -1481,24 +2547,27 @@ SnowflakeConnectorModel: ConnectorModel = ConnectorModel(
             'List all views',
             'Show me the warehouses',
             'What columns does my data have?',
+            'Get the record with id 42 from the users table',
+            'List all records from the orders table',
+            'Insert a new row into the customers table',
+            'Update the email for user 7 in the users table',
+            'Delete the record with id 99 from the logs table',
         ],
         context_store_search=[
             'Find all tables in the ANALYTICS database',
             'Which warehouses are currently running?',
             'Show me all views in the PUBLIC schema',
             'What databases were created this month?',
+            'Find all orders placed in the last 30 days',
+            'Search for users with email ending in @example.com',
         ],
         search=[
             'Find all tables in the ANALYTICS database',
             'Which warehouses are currently running?',
             'Show me all views in the PUBLIC schema',
             'What databases were created this month?',
-        ],
-        unsupported=[
-            'Create a new database',
-            'Drop a table',
-            'Run a custom SQL query',
-            'Insert data into a table',
+            'Find all orders placed in the last 30 days',
+            'Search for users with email ending in @example.com',
         ],
     ),
     server_variable_defaults={'account': 'orgname-accountname'},

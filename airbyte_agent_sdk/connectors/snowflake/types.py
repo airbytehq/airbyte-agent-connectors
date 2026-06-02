@@ -79,6 +79,62 @@ class ColumnsListParams(TypedDict):
     timeout: NotRequired[int]
     parameters: NotRequired[dict[str, Any]]
 
+class RecordGetParams(TypedDict):
+    """Parameters for record.get operation"""
+    statement: str
+    database: NotRequired[str]
+    schema: NotRequired[str]
+    warehouse: NotRequired[str]
+    role: NotRequired[str]
+    timeout: NotRequired[int]
+    parameters: NotRequired[dict[str, Any]]
+
+class RecordListParams(TypedDict):
+    """Parameters for record.list operation"""
+    statement: str
+    database: NotRequired[str]
+    schema: NotRequired[str]
+    warehouse: NotRequired[str]
+    role: NotRequired[str]
+    timeout: NotRequired[int]
+    parameters: NotRequired[dict[str, Any]]
+
+class RecordCreateParams(TypedDict):
+    """Parameters for record.create operation"""
+    statement: str
+    database: NotRequired[str]
+    schema: NotRequired[str]
+    warehouse: NotRequired[str]
+    role: NotRequired[str]
+    timeout: NotRequired[int]
+    parameters: NotRequired[dict[str, Any]]
+    request_id: NotRequired[str]
+    retry: NotRequired[bool]
+
+class RecordUpdateParams(TypedDict):
+    """Parameters for record.update operation"""
+    statement: str
+    database: NotRequired[str]
+    schema: NotRequired[str]
+    warehouse: NotRequired[str]
+    role: NotRequired[str]
+    timeout: NotRequired[int]
+    parameters: NotRequired[dict[str, Any]]
+    request_id: NotRequired[str]
+    retry: NotRequired[bool]
+
+class RecordDeleteParams(TypedDict):
+    """Parameters for record.delete operation"""
+    statement: str
+    database: NotRequired[str]
+    schema: NotRequired[str]
+    warehouse: NotRequired[str]
+    role: NotRequired[str]
+    timeout: NotRequired[int]
+    parameters: NotRequired[dict[str, Any]]
+    request_id: NotRequired[str]
+    retry: NotRequired[bool]
+
 class ResultPartitionsGetParams(TypedDict):
     """Parameters for result_partitions.get operation"""
     statement_handle: str
