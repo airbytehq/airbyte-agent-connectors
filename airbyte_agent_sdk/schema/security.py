@@ -57,6 +57,7 @@ class AuthConfigFieldSpec(BaseModel):
     format: str | None = None  # e.g., "email", "uri"
     pattern: str | None = None  # Regex validation
     default: Any | None = None
+    airbyte_secret: bool | None = None
 
 
 class AuthConfigSpec(BaseModel):

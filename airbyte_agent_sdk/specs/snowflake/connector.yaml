@@ -1,0 +1,722 @@
+openapi: 3.1.0
+
+info:
+  title: Snowflake SQL API Connector
+  version: 1.0.0
+  description: |
+    Connects to Snowflake via the SQL REST API (POST /api/v2/statements) to query
+    metadata about databases, schemas, tables, views, warehouses, and columns.
+    Uses Programmatic Access Token (PAT) authentication. All operations execute
+    SHOW commands through the Snowflake SQL API and return structured result sets.
+  x-airbyte-connector-name: snowflake
+  x-airbyte-connector-definition-id: e2d65910-8c8b-40a1-ae7d-ee2416b2bfa2
+  x-airbyte-platform-availability:
+    state: experimental
+    reason: Requires additional QA testing
+  x-airbyte-replication-version: "1.1.0"
+  x-airbyte-replication-compatibility: ">=1.1.0, <2.0.0"
+  x-airbyte-external-documentation-urls:
+    - type: api_reference
+      title: Snowflake SQL API Reference
+      url: https://docs.snowflake.com/en/developer-guide/sql-api/reference
+    - type: api_reference
+      title: Snowflake PAT Authentication
+      url: https://docs.snowflake.com/en/user-guide/programmatic-access-tokens
+  x-airbyte-skip-auth-methods:
+    - basic
+    - api_key
+  x-airbyte-example-questions:
+    direct:
+      - "List all databases in Snowflake"
+      - "Show me all schemas"
+      - "What tables are available?"
+      - "List all views"
+      - "Show me the warehouses"
+      - "What columns does my data have?"
+    search:
+      - "Find all tables in the ANALYTICS database"
+      - "Which warehouses are currently running?"
+      - "Show me all views in the PUBLIC schema"
+      - "What databases were created this month?"
+    unsupported:
+      - "Create a new database"
+      - "Drop a table"
+      - "Run a custom SQL query"
+      - "Insert data into a table"
+  x-airbyte-skip-context-store: >-
+    Snowflake is a database source connector — streams are dynamically discovered
+    from user tables/views at connection time, not from a fixed API schema.
+    There are no predefined Airbyte streams to map to the Context Store.
+
+servers:
+  - url: https://{account}.snowflakecomputing.com
+    description: Snowflake SQL API Server
+    variables:
+      account:
+        default: orgname-accountname
+        description: >-
+          Snowflake account identifier in the format orgname-accountname
+          (e.g., myorg-myaccount)
+    x-airbyte-replication-environment-mapping:
+      host:
+        source: account
+        format: "{value}.snowflakecomputing.com"
+
+paths:
+  "/api/v2/statements:databases":
+    post:
+      summary: List databases
+      operationId: listDatabases
+      x-airbyte-entity: databases
+      x-airbyte-action: list
+      x-airbyte-preferred-for-check: true
+      x-airbyte-meta-extractor:
+        next_page_url: "@link.next"
+        request_id: "$.requestId"
+        statement_handle: "$.statementHandle"
+        partition_info: "$.resultSetMetaData.partitionInfo"
+      x-airbyte-path-override:
+        path: /api/v2/statements
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                statement:
+                  type: string
+                  default: "SHOW DATABASES"
+                  enum:
+                    - "SHOW DATABASES"
+                  description: SQL statement to execute
+                database:
+                  type: string
+                  description: Database context for the statement
+                schema:
+                  type: string
+                  description: Schema context for the statement
+                warehouse:
+                  type: string
+                  description: Warehouse to use for execution
+                role:
+                  type: string
+                  description: Role to use for execution
+                timeout:
+                  type: integer
+                  description: Timeout in seconds for the statement execution
+                parameters:
+                  type: object
+                  description: Session parameters for the statement execution
+                  additionalProperties: true
+      responses:
+        "200":
+          description: List of databases
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DatabasesResponse"
+
+  "/api/v2/statements:schemas":
+    post:
+      summary: List schemas
+      operationId: listSchemas
+      x-airbyte-entity: schemas
+      x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next_page_url: "@link.next"
+        request_id: "$.requestId"
+        statement_handle: "$.statementHandle"
+        partition_info: "$.resultSetMetaData.partitionInfo"
+      x-airbyte-path-override:
+        path: /api/v2/statements
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                statement:
+                  type: string
+                  default: "SHOW SCHEMAS"
+                  enum:
+                    - "SHOW SCHEMAS"
+                  description: SQL statement to execute
+                database:
+                  type: string
+                  description: Database context for the statement
+                schema:
+                  type: string
+                  description: Schema context for the statement
+                warehouse:
+                  type: string
+                  description: Warehouse to use for execution
+                role:
+                  type: string
+                  description: Role to use for execution
+                timeout:
+                  type: integer
+                  description: Timeout in seconds for the statement execution
+                parameters:
+                  type: object
+                  description: Session parameters for the statement execution
+                  additionalProperties: true
+      responses:
+        "200":
+          description: List of schemas
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SchemasResponse"
+
+  "/api/v2/statements:tables":
+    post:
+      summary: List tables
+      operationId: listTables
+      x-airbyte-entity: tables
+      x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next_page_url: "@link.next"
+        request_id: "$.requestId"
+        statement_handle: "$.statementHandle"
+        partition_info: "$.resultSetMetaData.partitionInfo"
+      x-airbyte-path-override:
+        path: /api/v2/statements
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                statement:
+                  type: string
+                  default: "SHOW TABLES"
+                  enum:
+                    - "SHOW TABLES"
+                  description: SQL statement to execute
+                database:
+                  type: string
+                  description: Database context for the statement
+                schema:
+                  type: string
+                  description: Schema context for the statement
+                warehouse:
+                  type: string
+                  description: Warehouse to use for execution
+                role:
+                  type: string
+                  description: Role to use for execution
+                timeout:
+                  type: integer
+                  description: Timeout in seconds for the statement execution
+                parameters:
+                  type: object
+                  description: Session parameters for the statement execution
+                  additionalProperties: true
+      responses:
+        "200":
+          description: List of tables
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TablesResponse"
+
+  "/api/v2/statements:views":
+    post:
+      summary: List views
+      operationId: listViews
+      x-airbyte-entity: views
+      x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next_page_url: "@link.next"
+        request_id: "$.requestId"
+        statement_handle: "$.statementHandle"
+        partition_info: "$.resultSetMetaData.partitionInfo"
+      x-airbyte-path-override:
+        path: /api/v2/statements
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                statement:
+                  type: string
+                  default: "SHOW VIEWS"
+                  enum:
+                    - "SHOW VIEWS"
+                  description: SQL statement to execute
+                database:
+                  type: string
+                  description: Database context for the statement
+                schema:
+                  type: string
+                  description: Schema context for the statement
+                warehouse:
+                  type: string
+                  description: Warehouse to use for execution
+                role:
+                  type: string
+                  description: Role to use for execution
+                timeout:
+                  type: integer
+                  description: Timeout in seconds for the statement execution
+                parameters:
+                  type: object
+                  description: Session parameters for the statement execution
+                  additionalProperties: true
+      responses:
+        "200":
+          description: List of views
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ViewsResponse"
+
+  "/api/v2/statements:warehouses":
+    post:
+      summary: List warehouses
+      operationId: listWarehouses
+      x-airbyte-entity: warehouses
+      x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next_page_url: "@link.next"
+        request_id: "$.requestId"
+        statement_handle: "$.statementHandle"
+        partition_info: "$.resultSetMetaData.partitionInfo"
+      x-airbyte-path-override:
+        path: /api/v2/statements
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                statement:
+                  type: string
+                  default: "SHOW WAREHOUSES"
+                  enum:
+                    - "SHOW WAREHOUSES"
+                  description: SQL statement to execute
+                database:
+                  type: string
+                  description: Database context for the statement
+                schema:
+                  type: string
+                  description: Schema context for the statement
+                warehouse:
+                  type: string
+                  description: Warehouse to use for execution
+                role:
+                  type: string
+                  description: Role to use for execution
+                timeout:
+                  type: integer
+                  description: Timeout in seconds for the statement execution
+                parameters:
+                  type: object
+                  description: Session parameters for the statement execution
+                  additionalProperties: true
+      responses:
+        "200":
+          description: List of warehouses
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WarehousesResponse"
+
+  "/api/v2/statements:columns":
+    post:
+      summary: List columns
+      operationId: listColumns
+      x-airbyte-entity: columns
+      x-airbyte-action: list
+      x-airbyte-meta-extractor:
+        next_page_url: "@link.next"
+        request_id: "$.requestId"
+        statement_handle: "$.statementHandle"
+        partition_info: "$.resultSetMetaData.partitionInfo"
+      x-airbyte-path-override:
+        path: /api/v2/statements
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                statement:
+                  type: string
+                  default: "SHOW COLUMNS"
+                  enum:
+                    - "SHOW COLUMNS"
+                  description: SQL statement to execute
+                database:
+                  type: string
+                  description: Database context for the statement
+                schema:
+                  type: string
+                  description: Schema context for the statement
+                warehouse:
+                  type: string
+                  description: Warehouse to use for execution
+                role:
+                  type: string
+                  description: Role to use for execution
+                timeout:
+                  type: integer
+                  description: Timeout in seconds for the statement execution
+                parameters:
+                  type: object
+                  description: Session parameters for the statement execution
+                  additionalProperties: true
+      responses:
+        "200":
+          description: List of columns
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ColumnsResponse"
+
+  "/api/v2/statements/{statementHandle}:partition":
+    get:
+      summary: Get result partition
+      description: >-
+        Continuation helper for Snowflake list actions. Use this only after a
+        databases, schemas, tables, views, warehouses, or columns list response
+        includes a next_page_url or multiple partitionInfo entries. The initial
+        list response contains partition 0; call this action with partition 1,
+        2, and so on to retrieve additional rows for the same SHOW statement.
+        This is not a standalone Snowflake resource and does not execute new
+        SQL.
+      operationId: getResultPartition
+      x-airbyte-entity: result_partitions
+      x-airbyte-action: get
+      x-airbyte-path-override:
+        path: /api/v2/statements/{statementHandle}
+      parameters:
+        - name: statementHandle
+          in: path
+          required: true
+          description: >-
+            Statement handle returned by the initial list response metadata.
+            Reuse this value when fetching additional partitions for that same
+            result set.
+          schema:
+            type: string
+        - name: partition
+          in: query
+          required: true
+          description: >-
+            Zero-based partition number to retrieve. The initial list response
+            contains partition 0; request partition 1 or higher for subsequent
+            pages.
+          schema:
+            type: integer
+            minimum: 0
+        - name: requestId
+          in: query
+          required: false
+          description: >-
+            Optional request ID from the initial list response metadata. Pass it
+            through when available to continue the same Snowflake SQL API
+            request.
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Additional result rows for the original list statement
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResultPartitionResponse"
+
+components:
+  securitySchemes:
+    snowflakePAT:
+      type: http
+      scheme: bearer
+      description: Snowflake Programmatic Access Token (PAT) authentication
+      x-airbyte-auth-config:
+        title: PAT Authentication
+        type: object
+        required:
+          - programmatic_access_token
+        properties:
+          programmatic_access_token:
+            type: string
+            title: Programmatic Access Token
+            airbyte_secret: true
+            description: >-
+              Snowflake Programmatic Access Token (PAT) for authentication.
+              Generate one via ALTER USER ADD PROGRAMMATIC ACCESS TOKEN in Snowflake.
+        auth_mapping:
+          token: "${programmatic_access_token}"
+        additional_headers:
+          X-Snowflake-Authorization-Token-Type: PROGRAMMATIC_ACCESS_TOKEN
+        replication_auth_key_mapping:
+          credentials.programmatic_access_token: "programmatic_access_token"
+        replication_auth_key_constants:
+          credentials.auth_type: "Programmatic Access Token"
+
+  schemas:
+    RowType:
+      type: object
+      description: Column metadata describing a single column in the result set
+      properties:
+        name:
+          type: string
+          description: Column name
+        database:
+          type: string
+          description: Database name
+        schema:
+          type: string
+          description: Schema name
+        table:
+          type: string
+          description: Table name
+        type:
+          type: string
+          description: Snowflake data type (text, fixed, real, boolean, etc.)
+        scale:
+          oneOf:
+            - type: integer
+            - type: "null"
+          description: Decimal scale for numeric types
+        precision:
+          oneOf:
+            - type: integer
+            - type: "null"
+          description: Numeric precision
+        length:
+          oneOf:
+            - type: integer
+            - type: "null"
+          description: Maximum character length
+        nullable:
+          type: boolean
+          description: Whether the column allows null values
+        byteLength:
+          oneOf:
+            - type: integer
+            - type: "null"
+          description: Maximum byte length
+        collation:
+          oneOf:
+            - type: string
+            - type: "null"
+          description: Collation specification
+
+    PartitionInfo:
+      type: object
+      description: Information about a result partition
+      properties:
+        rowCount:
+          type: integer
+          description: Number of rows in this partition
+        uncompressedSize:
+          type: integer
+          description: Uncompressed size of the partition in bytes
+        compressedSize:
+          type: integer
+          description: Compressed size of the partition in bytes
+
+    ResultSetMetaData:
+      type: object
+      description: Metadata about the result set
+      properties:
+        numRows:
+          type: integer
+          description: Total number of rows in the result set
+        format:
+          type: string
+          description: Format of the result data (e.g., jsonv2)
+        rowType:
+          type: array
+          items:
+            $ref: "#/components/schemas/RowType"
+          description: Column metadata for each column in the result set
+        partitionInfo:
+          type: array
+          items:
+            $ref: "#/components/schemas/PartitionInfo"
+          description: Information about result partitions
+
+    StatementResponse:
+      type: object
+      description: >-
+        Response from the Snowflake SQL API containing result set metadata
+        and data rows. Used by all SHOW statement operations.
+      properties: &statement_response_properties
+        requestId:
+          type: string
+          description: Unique request identifier for the API call
+        resultSetMetaData:
+          $ref: "#/components/schemas/ResultSetMetaData"
+        data:
+          type: array
+          items:
+            type: array
+            items:
+              oneOf:
+                - type: string
+                - type: "null"
+          description: >-
+            Result rows as an array of arrays. Each inner array is a row
+            with values as strings, matching the column order from
+            resultSetMetaData.rowType.
+        code:
+          type: string
+          description: Snowflake status code (e.g., 090001 for success)
+        statementStatusUrl:
+          type: string
+          description: URL to check statement execution status
+        sqlState:
+          type: string
+          description: SQL state code (e.g., 00000 for success)
+        statementHandle:
+          type: string
+          description: Unique handle for the executed statement
+        message:
+          type: string
+          description: Human-readable status message
+        createdOn:
+          type: integer
+          description: Unix timestamp (milliseconds) when the statement was created
+
+    DatabasesResponse:
+      type: object
+      properties: *statement_response_properties
+      x-airbyte-entity-name: databases
+      x-airbyte-ai-hints:
+        summary: "Snowflake databases accessible to the current user"
+        when_to_use: "When listing available databases or checking database metadata"
+        trigger_phrases:
+          - "list databases"
+          - "show databases"
+          - "what databases exist"
+        freshness: live
+        search_strategy: "Execute SHOW DATABASES via the SQL API"
+        example_questions:
+          - "What databases are available in Snowflake?"
+          - "List all Snowflake databases"
+
+    SchemasResponse:
+      type: object
+      properties: *statement_response_properties
+      x-airbyte-entity-name: schemas
+      x-airbyte-ai-hints:
+        summary: "Snowflake schemas within databases"
+        when_to_use: "When listing schemas or exploring database structure"
+        trigger_phrases:
+          - "list schemas"
+          - "show schemas"
+          - "what schemas exist"
+        freshness: live
+        search_strategy: "Execute SHOW SCHEMAS via the SQL API"
+        example_questions:
+          - "What schemas are in this database?"
+          - "Show all schemas"
+
+    TablesResponse:
+      type: object
+      properties: *statement_response_properties
+      x-airbyte-entity-name: tables
+      x-airbyte-ai-hints:
+        summary: "Snowflake tables with metadata like row count, size, and clustering"
+        when_to_use: "When listing tables or checking table properties"
+        trigger_phrases:
+          - "list tables"
+          - "show tables"
+          - "what tables exist"
+        freshness: live
+        search_strategy: "Execute SHOW TABLES via the SQL API"
+        example_questions:
+          - "What tables are available?"
+          - "Show me all tables in the database"
+
+    ViewsResponse:
+      type: object
+      properties: *statement_response_properties
+      x-airbyte-entity-name: views
+      x-airbyte-ai-hints:
+        summary: "Snowflake views including materialized views"
+        when_to_use: "When listing views or checking view definitions"
+        trigger_phrases:
+          - "list views"
+          - "show views"
+          - "what views exist"
+        freshness: live
+        search_strategy: "Execute SHOW VIEWS via the SQL API"
+        example_questions:
+          - "What views are defined?"
+          - "Show all views in the schema"
+
+    WarehousesResponse:
+      type: object
+      properties: *statement_response_properties
+      x-airbyte-entity-name: warehouses
+      x-airbyte-ai-hints:
+        summary: "Snowflake virtual warehouses with state, size, and configuration"
+        when_to_use: "When listing warehouses or checking warehouse status"
+        trigger_phrases:
+          - "list warehouses"
+          - "show warehouses"
+          - "warehouse status"
+        freshness: live
+        search_strategy: "Execute SHOW WAREHOUSES via the SQL API"
+        example_questions:
+          - "What warehouses are configured?"
+          - "Which warehouses are running?"
+
+    ColumnsResponse:
+      type: object
+      properties: *statement_response_properties
+      x-airbyte-entity-name: columns
+      x-airbyte-ai-hints:
+        summary: "Snowflake table and view columns with data types and metadata"
+        when_to_use: "When listing columns or inspecting table schema"
+        trigger_phrases:
+          - "list columns"
+          - "show columns"
+          - "what columns exist"
+          - "table schema"
+        freshness: live
+        search_strategy: "Execute SHOW COLUMNS via the SQL API"
+        example_questions:
+          - "What columns does this table have?"
+          - "Show me the column definitions"
+
+    ResultPartitionResponse:
+      type: object
+      properties: *statement_response_properties
+      x-airbyte-entity-name: result_partitions
+      x-airbyte-ai-hints:
+        summary: "Continuation helper for additional Snowflake list result partitions"
+        when_to_use: >-
+          Use only after a Snowflake list response includes a next_page_url or
+          multiple resultSetMetaData.partitionInfo entries. The original list
+          response contains partition 0; request partition 1 or higher here to
+          fetch more rows for the same SHOW result set.
+        trigger_phrases:
+          - "next partition"
+          - "more Snowflake results"
+          - "continue pagination"
+          - "fetch the next page"
+        freshness: live
+        search_strategy: >-
+          Reuse the statement_handle and request_id returned in the prior list
+          action metadata, then call this get action with the next partition
+          number. Do not use this entity to execute new SQL or discover
+          metadata from scratch.
+        example_questions:
+          - "Fetch the next Snowflake result partition"
+          - "Continue the previous Snowflake columns listing"
+
+security:
+  - snowflakePAT: []

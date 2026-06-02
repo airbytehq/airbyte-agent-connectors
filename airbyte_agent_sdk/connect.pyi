@@ -50,6 +50,7 @@ from airbyte_agent_sdk.connectors.sentry import SentryConnector
 from airbyte_agent_sdk.connectors.shopify import ShopifyConnector
 from airbyte_agent_sdk.connectors.slack import SlackConnector
 from airbyte_agent_sdk.connectors.snapchat_marketing import SnapchatMarketingConnector
+from airbyte_agent_sdk.connectors.snowflake import SnowflakeConnector
 from airbyte_agent_sdk.connectors.stripe import StripeConnector
 from airbyte_agent_sdk.connectors.tiktok_marketing import TiktokMarketingConnector
 from airbyte_agent_sdk.connectors.twilio import TwilioConnector
@@ -617,6 +618,19 @@ def connect(
     organization_id: str | None = ...,
     auth_config: AirbyteAuthConfig | None = ...,
 ) -> SnapchatMarketingConnector: ...
+
+
+@overload
+def connect(
+    connector_name: Literal["snowflake"],
+    *,
+    client_id: str | None = ...,
+    client_secret: str | None = ...,
+    workspace_name: str | None = ...,
+    connector_id: str | None = ...,
+    organization_id: str | None = ...,
+    auth_config: AirbyteAuthConfig | None = ...,
+) -> SnowflakeConnector: ...
 
 
 @overload

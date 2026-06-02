@@ -140,6 +140,12 @@ $defs:
         - type: 'null'
         default: null
         title: Default
+      airbyte_secret:
+        anyOf:
+        - type: boolean
+        - type: 'null'
+        default: null
+        title: Airbyte Secret
     title: AuthConfigFieldSpec
     type: object
   AuthConfigSpec:
