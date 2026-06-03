@@ -3,14 +3,50 @@
   "class_name": "JiraConnector",
   "package_name": "airbyte_agent_sdk.connectors.jira",
   "install_package": "airbyte-agent-sdk",
-  "yaml_version": "1.1.9",
+  "yaml_version": "1.2.0",
   "api_reference_url": "https://developer.atlassian.com/cloud/jira/platform/rest/v3/intro/",
-  "auth_example": "JiraAuthConfig(username=\"...\", password=\"...\")",
+  "auth_example": "JiraAuthConfig(access_token=\"...\", refresh_token=\"...\", client_id=\"...\", client_secret=\"...\")",
   "auth_import": ", JiraAuthConfig",
   "auth_config": {
     "type_name": "JiraAuthConfig",
     "base_name": "Jira",
     "options": [
+      {
+        "title": "OAuth 2.0 Authentication",
+        "description": "",
+        "fields": [
+          {
+            "name": "access_token",
+            "type": "str",
+            "required": false,
+            "title": "Access Token",
+            "description": "Your Jira Cloud OAuth 2.0 access token"
+          },
+          {
+            "name": "refresh_token",
+            "type": "str",
+            "required": true,
+            "title": "Refresh Token",
+            "description": "Your Jira Cloud OAuth 2.0 refresh token (requires offline_access scope)"
+          },
+          {
+            "name": "client_id",
+            "type": "str",
+            "required": false,
+            "title": "Client ID",
+            "description": "Your Jira OAuth App Client ID from the Atlassian Developer Console"
+          },
+          {
+            "name": "client_secret",
+            "type": "str",
+            "required": false,
+            "title": "Client Secret",
+            "description": "Your Jira OAuth App Client Secret from the Atlassian Developer Console"
+          }
+        ],
+        "type_suffix": "Oauth20Authentication",
+        "scheme_name": "jiraOAuth"
+      },
       {
         "title": "Jira API Token Authentication",
         "description": "Authenticate using your Atlassian account email and API token",
@@ -30,10 +66,11 @@
             "description": "Your Jira API token from https://id.atlassian.com/manage-profile/security/api-tokens"
           }
         ],
-        "type_suffix": "JiraApiTokenAuthentication"
+        "type_suffix": "JiraApiTokenAuthentication",
+        "scheme_name": "basicAuth"
       }
     ],
-    "is_multi_auth": false
+    "is_multi_auth": true
   },
   "replication_config": null,
   "custom_description": "Connector for Jira API",

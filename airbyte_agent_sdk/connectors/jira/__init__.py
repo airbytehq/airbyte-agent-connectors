@@ -7,6 +7,7 @@ Auto-generated from OpenAPI specification.
 from .connector import JiraConnector
 from .models import (
     JiraAuthConfig,
+    JiraOAuthCredentials,
     AirbyteSearchMeta,
     AirbyteSearchResult,
     IssuesSearchData,
@@ -28,6 +29,7 @@ __all__ = [
     "JiraConnector",
     "AirbyteAuthConfig",
     "JiraAuthConfig",
+    "JiraOAuthCredentials",
     "AirbyteSearchMeta",
     "AirbyteSearchResult",
     "IssuesSearchData",

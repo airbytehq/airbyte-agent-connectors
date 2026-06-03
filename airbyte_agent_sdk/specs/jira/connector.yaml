@@ -2,12 +2,12 @@ openapi: 3.1.0
 
 info:
   title: Jira API Connector
-  version: 1.1.9
+  version: 1.2.0
   description: Connector for Jira API
   x-airbyte-connector-name: jira
   x-airbyte-connector-definition-id: 68e63de2-bb83-4c7e-93fa-a8a9051e3993
-  x-airbyte-replication-version: "4.4.1"
-  x-airbyte-replication-compatibility: ">=4.4.1, <5.0.0"
+  x-airbyte-replication-version: "5.1.0"
+  x-airbyte-replication-compatibility: ">=5.1.0, <6.0.0"
   x-airbyte-external-documentation-urls:
     - type: api_reference
       title: Jira API Documentation
@@ -19,8 +19,11 @@ info:
       title: Jira Cloud Platform Changelog
       url: https://developer.atlassian.com/cloud/jira/platform/changelog/
     - type: authentication_guide
-      title: Jira API Authentication
+      title: Jira API Basic Authentication
       url: https://developer.atlassian.com/cloud/jira/platform/basic-auth-for-rest-apis/
+    - type: authentication_guide
+      title: Jira API OAuth 2.0 (3LO)
+      url: https://developer.atlassian.com/cloud/jira/platform/oauth-2-3lo-apps/
     - type: openapi_spec
       title: Jira OpenAPI Specification
       url: https://developer.atlassian.com/cloud/jira/platform/swagger-v3.v3.json
@@ -583,6 +586,7 @@ servers:
         format: "{value}.atlassian.net"
 
 security:
+  - jiraOAuth: []
   - basicAuth: []
 
 paths:
@@ -1751,6 +1755,189 @@ paths:
 
 components:
   securitySchemes:
+    jiraOAuth:
+      type: oauth2
+      x-airbyte-untested: true
+      description: Jira Cloud OAuth 2.0 (3LO) authentication for accessing Jira APIs on behalf of a user
+      flows:
+        authorizationCode:
+          authorizationUrl: https://auth.atlassian.com/authorize
+          tokenUrl: https://auth.atlassian.com/oauth/token
+          refreshUrl: https://auth.atlassian.com/oauth/token
+          scopes:
+            read:jira-work: Read project and issue data including comments, worklogs, and transitions
+            read:jql:jira: Search for issues using JQL
+            read:group:jira: Read group information
+            read:project-role:jira: Read project role information
+            read:issue-details:jira: Read issue details including comments and worklogs
+            read:status:jira: Read status information
+            read:jira-user: Read user information
+            read:user:jira: Read user details
+            read:avatar:jira: Read avatar images
+            read:webhook:jira: Read webhook information
+            read:project-category:jira: Read project category information
+            read:screenable-field:jira: Read screenable field information
+            read:screen-field:jira: Read screen field information
+            offline_access: Obtain refresh tokens for long-lived access
+            read:board-scope:jira-software: Read board scope configuration
+            read:project:jira: Read project information
+            read:sprint:jira-software: Read sprint information
+            read:application-role:jira: Read application role information
+            read:field-configuration:jira: Read field configuration information
+            read:notification-scheme:jira: Read notification scheme information
+            read:issue-security-scheme:jira: Read issue security scheme information
+            read:issue-security-level:jira: Read issue security level information
+            read:issue-type-scheme:jira: Read issue type scheme information
+            read:issue-type-screen-scheme:jira: Read issue type screen scheme information
+            read:permission-scheme:jira: Read permission scheme information
+            read:screen:jira: Read screen information
+            read:screen-scheme:jira: Read screen scheme information
+            read:screen-tab:jira: Read screen tab information
+            read:workflow:jira: Read workflow information
+            read:workflow-scheme:jira: Read workflow scheme information
+            read:project.email:jira: Read project email configuration
+            read:custom-field-contextual-configuration:jira: Read custom field contextual configuration
+            manage:jira-configuration: Manage Jira configuration
+      x-airbyte-oauth-scopes:
+        - scope: "offline_access"
+          mode: read_write
+          entities:
+            - issue_comments
+            - issue_fields
+            - issue_links
+            - issue_transitions
+            - issue_worklogs
+            - issues
+            - issues_assignee
+            - projects
+            - users
+        - scope: "read:issue-details:jira"
+          mode: read
+          entities:
+            - issues
+        - scope: "read:avatar:jira"
+          mode: read
+          entities:
+            - issues
+            - projects
+            - issue_comments
+            - users
+            - issue_fields
+            - issue_worklogs
+        - scope: "read:field-configuration:jira"
+          mode: read
+          entities:
+            - issues
+            - issue_fields
+        - scope: "read:jira-work"
+          mode: read
+          entities:
+            - issues
+            - projects
+            - issue_comments
+            - issue_fields
+            - issue_worklogs
+            - issue_transitions
+            - issue_links
+        - scope: "read:project:jira"
+          mode: read
+          entities:
+            - projects
+            - issue_comments
+            - issue_fields
+        - scope: "read:user:jira"
+          mode: read
+          entities:
+            - projects
+            - users
+            - issue_comments
+            - issue_worklogs
+        - scope: "read:application-role:jira"
+          mode: read
+          entities:
+            - projects
+            - users
+        - scope: "read:group:jira"
+          mode: read
+          entities:
+            - projects
+            - users
+            - issue_comments
+            - issue_worklogs
+        - scope: "read:project-category:jira"
+          mode: read
+          entities:
+            - projects
+            - issue_fields
+        - scope: "read:jira-user"
+          mode: read
+          entities:
+            - users
+        - scope: "read:project-role:jira"
+          mode: read
+          entities:
+            - issue_comments
+            - issue_worklogs
+        - scope: "write:jira-work"
+          mode: write
+          entities:
+            - issue_comments
+            - issue_worklogs
+            - issue_transitions
+            - issue_links
+            - issues_assignee
+      x-airbyte-token-refresh:
+        auth_style: body
+        body_format: form
+      x-airbyte-oauth-credentials:
+        title: Jira OAuth App Credentials
+        description: Provide your own Jira OAuth app credentials to override the default Airbyte-managed ones.
+        properties:
+          client_id:
+            type: string
+            title: Client ID
+            description: Your Jira OAuth app's client ID
+          client_secret:
+            type: string
+            title: Client Secret
+            description: Your Jira OAuth app's client secret
+        required:
+        - client_id
+        - client_secret
+      x-airbyte-auth-config:
+        title: "OAuth 2.0 Authentication"
+        type: object
+        required:
+          - refresh_token
+        properties:
+          access_token:
+            type: string
+            title: "Access Token"
+            description: "Your Jira Cloud OAuth 2.0 access token"
+          refresh_token:
+            type: string
+            title: "Refresh Token"
+            description: "Your Jira Cloud OAuth 2.0 refresh token (requires offline_access scope)"
+          client_id:
+            type: string
+            title: "Client ID"
+            description: "Your Jira OAuth App Client ID from the Atlassian Developer Console"
+          client_secret:
+            type: string
+            title: "Client Secret"
+            description: "Your Jira OAuth App Client Secret from the Atlassian Developer Console"
+        auth_mapping:
+          access_token: "${access_token}"
+          refresh_token: "${refresh_token}"
+          client_id: "${client_id}"
+          client_secret: "${client_secret}"
+        replication_auth_key_mapping:
+          credentials.client_id: "client_id"
+          credentials.client_secret: "client_secret"
+          credentials.refresh_token: "refresh_token"
+        replication_auth_key_constants:
+          credentials.auth_type: "OAuth2.0"
+
     basicAuth:
       type: http
       scheme: basic

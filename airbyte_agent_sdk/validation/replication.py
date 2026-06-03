@@ -865,10 +865,12 @@ def fetch_airbyte_manifest(connector_name: str) -> dict[str, Any] | None:
     return fetch_manifest_resolved(connector_name)
 
 
-def _normalize_auth_type(auth_type: str) -> str:
+def _normalize_auth_type(auth_type: str, option_key: str | None = None) -> str:
     """Normalize auth type names to canonical form.
 
-    Maps various naming conventions to: oauth2, bearer, basic, api_key
+    Maps various naming conventions to: oauth2, bearer, basic, api_key.
+
+    CustomAuthenticator defer to the SelectiveAuthenticator option_key.
     """
     auth_type_lower = auth_type.lower()
 
@@ -889,6 +891,18 @@ def _normalize_auth_type(auth_type: str) -> str:
         return "api_key"
     if auth_type_lower == "apikeyauthenticator":
         return "api_key"
+
+    # CustomAuthenticator only: defer to the SelectiveAuthenticator option_key
+    if auth_type_lower == "customauthenticator" and option_key:
+        option_key_lower = option_key.lower()
+        if "oauth" in option_key_lower:
+            return "oauth2"
+        if "bearer" in option_key_lower:
+            return "bearer"
+        if "basic" in option_key_lower:
+            return "basic"
+        if "api" in option_key_lower and "key" in option_key_lower:
+            return "api_key"
 
     return auth_type_lower
 
@@ -972,7 +986,7 @@ def _extract_auth_from_authenticator(
                 if ref_def:
                     _extract_auth_from_authenticator(ref_def, auth_types, auth_option_keys, defs, key)
     elif auth_type:
-        normalized = _normalize_auth_type(auth_type)
+        normalized = _normalize_auth_type(auth_type, option_key)
         auth_types.add(normalized)
         # Store the option key if provided and not already set
         if option_key and normalized not in auth_option_keys:

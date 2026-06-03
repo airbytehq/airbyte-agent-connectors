@@ -70,6 +70,7 @@ from .types import (
     IssueWorklogsSearchFilter,
     IssueWorklogsSearchQuery,
 )
+from .models import JiraOauth20AuthenticationAuthConfig, JiraJiraApiTokenAuthenticationAuthConfig
 from .models import JiraAuthConfig
 
 # Import response models and envelope models at runtime
@@ -126,8 +127,8 @@ class JiraConnector:
     """
 
     connector_name = "jira"
-    connector_version = "1.1.9"
-    sdk_version = "0.1.221"
+    connector_version = "1.2.0"
+    sdk_version = "0.1.222"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -186,7 +187,7 @@ class JiraConnector:
     }
 
     # Accepted auth_config types for isinstance validation
-    _ACCEPTED_AUTH_TYPES = (JiraAuthConfig, AirbyteAuthConfig)
+    _ACCEPTED_AUTH_TYPES = (JiraOauth20AuthenticationAuthConfig, JiraJiraApiTokenAuthenticationAuthConfig, AirbyteAuthConfig)
 
     def __init__(
         self,
@@ -207,7 +208,7 @@ class JiraConnector:
                 Example: lambda tokens: save_to_database(tokens)            subdomain: Your Jira Cloud subdomain
         Examples:
             # Local mode (direct API calls)
-            connector = JiraConnector(auth_config=JiraAuthConfig(username="...", password="..."))
+            connector = JiraConnector(auth_config=JiraAuthConfig(access_token="...", refresh_token="...", client_id="...", client_secret="..."))
             # Hosted mode with explicit connector_id (no lookup needed)
             connector = JiraConnector(
                 auth_config=AirbyteAuthConfig(
@@ -271,9 +272,18 @@ class JiraConnector:
             if subdomain:
                 config_values["subdomain"] = subdomain
 
+            # Multi-auth connector: detect auth scheme from auth_config type
+            auth_scheme: str | None = None
+            if auth_config:
+                if isinstance(auth_config, JiraOauth20AuthenticationAuthConfig):
+                    auth_scheme = "jiraOAuth"
+                if isinstance(auth_config, JiraJiraApiTokenAuthenticationAuthConfig):
+                    auth_scheme = "basicAuth"
+
             self._executor = LocalExecutor(
                 model=JiraConnectorModel,
                 auth_config=auth_config.model_dump() if auth_config else None,
+                auth_scheme=auth_scheme,
                 config_values=config_values,
                 on_token_refresh=on_token_refresh
             )

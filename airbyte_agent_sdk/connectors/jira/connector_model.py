@@ -10,6 +10,7 @@ from __future__ import annotations
 from airbyte_agent_sdk.types import (
     Action,
     AuthConfig,
+    AuthOption,
     AuthType,
     ConnectorModel,
     EndpointDefinition,
@@ -35,30 +36,82 @@ from uuid import (
 JiraConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('68e63de2-bb83-4c7e-93fa-a8a9051e3993'),
     name='jira',
-    version='1.1.9',
+    version='1.2.0',
     base_url='https://{subdomain}.atlassian.net',
     auth=AuthConfig(
-        type=AuthType.BASIC,
-        user_config_spec=AuthConfigSpec(
-            title='Jira API Token Authentication',
-            description='Authenticate using your Atlassian account email and API token',
-            type='object',
-            required=['username', 'password'],
-            properties={
-                'username': AuthConfigFieldSpec(
-                    title='Email Address',
-                    description='Your Atlassian account email address',
-                    format='email',
+        options=[
+            AuthOption(
+                scheme_name='jiraOAuth',
+                type=AuthType.OAUTH2,
+                config={
+                    'header': 'Authorization',
+                    'prefix': 'Bearer',
+                    'refresh_url': 'https://auth.atlassian.com/oauth/token',
+                    'auth_style': 'body',
+                    'body_format': 'form',
+                },
+                user_config_spec=AuthConfigSpec(
+                    title='OAuth 2.0 Authentication',
+                    type='object',
+                    required=['refresh_token'],
+                    properties={
+                        'access_token': AuthConfigFieldSpec(
+                            title='Access Token',
+                            description='Your Jira Cloud OAuth 2.0 access token',
+                        ),
+                        'refresh_token': AuthConfigFieldSpec(
+                            title='Refresh Token',
+                            description='Your Jira Cloud OAuth 2.0 refresh token (requires offline_access scope)',
+                        ),
+                        'client_id': AuthConfigFieldSpec(
+                            title='Client ID',
+                            description='Your Jira OAuth App Client ID from the Atlassian Developer Console',
+                        ),
+                        'client_secret': AuthConfigFieldSpec(
+                            title='Client Secret',
+                            description='Your Jira OAuth App Client Secret from the Atlassian Developer Console',
+                        ),
+                    },
+                    auth_mapping={
+                        'access_token': '${access_token}',
+                        'refresh_token': '${refresh_token}',
+                        'client_id': '${client_id}',
+                        'client_secret': '${client_secret}',
+                    },
+                    replication_auth_key_mapping={
+                        'credentials.client_id': 'client_id',
+                        'credentials.client_secret': 'client_secret',
+                        'credentials.refresh_token': 'refresh_token',
+                    },
+                    replication_auth_key_constants={'credentials.auth_type': 'OAuth2.0'},
                 ),
-                'password': AuthConfigFieldSpec(
-                    title='API Token',
-                    description='Your Jira API token from https://id.atlassian.com/manage-profile/security/api-tokens',
+                untested=True,
+            ),
+            AuthOption(
+                scheme_name='basicAuth',
+                type=AuthType.BASIC,
+                user_config_spec=AuthConfigSpec(
+                    title='Jira API Token Authentication',
+                    description='Authenticate using your Atlassian account email and API token',
+                    type='object',
+                    required=['username', 'password'],
+                    properties={
+                        'username': AuthConfigFieldSpec(
+                            title='Email Address',
+                            description='Your Atlassian account email address',
+                            format='email',
+                        ),
+                        'password': AuthConfigFieldSpec(
+                            title='API Token',
+                            description='Your Jira API token from https://id.atlassian.com/manage-profile/security/api-tokens',
+                        ),
+                    },
+                    auth_mapping={'username': '${username}', 'password': '${password}'},
+                    replication_auth_key_mapping={'credentials.email': 'username', 'credentials.api_token': 'password'},
+                    replication_auth_key_constants={'credentials.auth_type': 'API Token'},
                 ),
-            },
-            auth_mapping={'username': '${username}', 'password': '${password}'},
-            replication_auth_key_mapping={'credentials.email': 'username', 'credentials.api_token': 'password'},
-            replication_auth_key_constants={'credentials.auth_type': 'API Token'},
-        ),
+            ),
+        ],
     ),
     entities=[
         EntityDefinition(
