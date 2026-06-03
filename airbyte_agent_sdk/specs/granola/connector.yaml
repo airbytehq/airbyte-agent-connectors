@@ -29,7 +29,7 @@ info:
       - "Update an existing note"
       - "Share a note with someone"
   x-airbyte-context-store:
-    disable_compaction: true
+    disable_compaction: false
     entities:
       - entity: notes
         x-airbyte-name: detailed_notes
