@@ -11,8 +11,8 @@ info:
     token for authentication. All data retrieval is read-only.
   x-airbyte-connector-name: google-ads
   x-airbyte-connector-definition-id: 253487c0-2246-43ba-a21f-5116b20a2c50
-  x-airbyte-replication-version: "4.2.6"
-  x-airbyte-replication-compatibility: ">=4.2.6, <5.0.0"
+  x-airbyte-replication-version: "6.0.0"
+  x-airbyte-replication-compatibility: ">=6.0.0, <7.0.0"
   x-airbyte-external-documentation-urls:
     - title: Google Ads API Reference
       type: api_reference
@@ -226,12 +226,6 @@ info:
           - name: campaign_budget.amount_micros
             type: ["null", "integer"]
             description: Campaign budget amount in micros
-          - name: campaign.start_date
-            type: ["null", "string"]
-            description: Campaign start date
-          - name: campaign.end_date
-            type: ["null", "string"]
-            description: Campaign end date
           - name: campaign.serving_status
             type: ["null", "string"]
             description: Campaign serving status
@@ -621,8 +615,6 @@ paths:
                       campaign.bidding_strategy_type,
                       campaign.campaign_budget,
                       campaign_budget.amount_micros,
-                      campaign.start_date,
-                      campaign.end_date,
                       campaign.serving_status,
                       campaign.resource_name,
                       campaign.labels,

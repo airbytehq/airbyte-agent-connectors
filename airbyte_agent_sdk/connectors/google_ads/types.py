@@ -505,10 +505,6 @@ class CampaignsSearchFilter(TypedDict, total=False):
     """Campaign budget resource name"""
     campaign_budget_amount_micros: int | None
     """Campaign budget amount in micros"""
-    campaign_start_date: str | None
-    """Campaign start date"""
-    campaign_end_date: str | None
-    """Campaign end date"""
     campaign_serving_status: str | None
     """Campaign serving status"""
     campaign_resource_name: str | None
@@ -569,10 +565,6 @@ class CampaignsInFilter(TypedDict, total=False):
     """Campaign budget resource name"""
     campaign_budget_amount_micros: list[int]
     """Campaign budget amount in micros"""
-    campaign_start_date: list[str]
-    """Campaign start date"""
-    campaign_end_date: list[str]
-    """Campaign end date"""
     campaign_serving_status: list[str]
     """Campaign serving status"""
     campaign_resource_name: list[str]
@@ -633,10 +625,6 @@ class CampaignsAnyValueFilter(TypedDict, total=False):
     """Campaign budget resource name"""
     campaign_budget_amount_micros: Any
     """Campaign budget amount in micros"""
-    campaign_start_date: Any
-    """Campaign start date"""
-    campaign_end_date: Any
-    """Campaign end date"""
     campaign_serving_status: Any
     """Campaign serving status"""
     campaign_resource_name: Any
@@ -697,10 +685,6 @@ class CampaignsStringFilter(TypedDict, total=False):
     """Campaign budget resource name"""
     campaign_budget_amount_micros: str
     """Campaign budget amount in micros"""
-    campaign_start_date: str
-    """Campaign start date"""
-    campaign_end_date: str
-    """Campaign end date"""
     campaign_serving_status: str
     """Campaign serving status"""
     campaign_resource_name: str
@@ -761,10 +745,6 @@ class CampaignsSortFilter(TypedDict, total=False):
     """Campaign budget resource name"""
     campaign_budget_amount_micros: AirbyteSortOrder
     """Campaign budget amount in micros"""
-    campaign_start_date: AirbyteSortOrder
-    """Campaign start date"""
-    campaign_end_date: AirbyteSortOrder
-    """Campaign end date"""
     campaign_serving_status: AirbyteSortOrder
     """Campaign serving status"""
     campaign_resource_name: AirbyteSortOrder

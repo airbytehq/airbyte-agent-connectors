@@ -324,14 +324,14 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
                     path_params_schema={
                         'customer_id': {'type': 'string', 'required': True},
                     },
-                    request_body_defaults={'query': 'SELECT\n  campaign.id,\n  campaign.name,\n  campaign.status,\n  campaign.advertising_channel_type,\n  campaign.advertising_channel_sub_type,\n  campaign.bidding_strategy,\n  campaign.bidding_strategy_type,\n  campaign.campaign_budget,\n  campaign_budget.amount_micros,\n  campaign.start_date,\n  campaign.end_date,\n  campaign.serving_status,\n  campaign.resource_name,\n  campaign.labels,\n  campaign.network_settings.target_google_search,\n  campaign.network_settings.target_search_network,\n  campaign.network_settings.target_content_network,\n  campaign.network_settings.target_partner_search_network\nFROM campaign'},
+                    request_body_defaults={'query': 'SELECT\n  campaign.id,\n  campaign.name,\n  campaign.status,\n  campaign.advertising_channel_type,\n  campaign.advertising_channel_sub_type,\n  campaign.bidding_strategy,\n  campaign.bidding_strategy_type,\n  campaign.campaign_budget,\n  campaign_budget.amount_micros,\n  campaign.serving_status,\n  campaign.resource_name,\n  campaign.labels,\n  campaign.network_settings.target_google_search,\n  campaign.network_settings.target_search_network,\n  campaign.network_settings.target_content_network,\n  campaign.network_settings.target_partner_search_network\nFROM campaign'},
                     request_schema={
                         'type': 'object',
                         'properties': {
                             'query': {
                                 'type': 'string',
                                 'description': 'GAQL query for campaigns',
-                                'default': 'SELECT\n  campaign.id,\n  campaign.name,\n  campaign.status,\n  campaign.advertising_channel_type,\n  campaign.advertising_channel_sub_type,\n  campaign.bidding_strategy,\n  campaign.bidding_strategy_type,\n  campaign.campaign_budget,\n  campaign_budget.amount_micros,\n  campaign.start_date,\n  campaign.end_date,\n  campaign.serving_status,\n  campaign.resource_name,\n  campaign.labels,\n  campaign.network_settings.target_google_search,\n  campaign.network_settings.target_search_network,\n  campaign.network_settings.target_content_network,\n  campaign.network_settings.target_partner_search_network\nFROM campaign',
+                                'default': 'SELECT\n  campaign.id,\n  campaign.name,\n  campaign.status,\n  campaign.advertising_channel_type,\n  campaign.advertising_channel_sub_type,\n  campaign.bidding_strategy,\n  campaign.bidding_strategy_type,\n  campaign.campaign_budget,\n  campaign_budget.amount_micros,\n  campaign.serving_status,\n  campaign.resource_name,\n  campaign.labels,\n  campaign.network_settings.target_google_search,\n  campaign.network_settings.target_search_network,\n  campaign.network_settings.target_content_network,\n  campaign.network_settings.target_partner_search_network\nFROM campaign',
                             },
                             'pageToken': {'type': 'string', 'description': 'Token for pagination'},
                             'pageSize': {'type': 'integer', 'description': 'Number of results per page (max 10000)'},
@@ -1869,16 +1869,6 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
                         description='Campaign budget amount in micros',
                     ),
                     CacheFieldConfig(
-                        name='campaign.start_date',
-                        type=['null', 'string'],
-                        description='Campaign start date',
-                    ),
-                    CacheFieldConfig(
-                        name='campaign.end_date',
-                        type=['null', 'string'],
-                        description='Campaign end date',
-                    ),
-                    CacheFieldConfig(
                         name='campaign.serving_status',
                         type=['null', 'string'],
                         description='Campaign serving status',
@@ -2322,8 +2312,6 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
             'campaign.bidding_strategy_type',
             'campaign.campaign_budget',
             'campaign_budget.amount_micros',
-            'campaign.start_date',
-            'campaign.end_date',
             'campaign.serving_status',
             'campaign.resource_name',
             'campaign.labels',

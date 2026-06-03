@@ -197,98 +197,6 @@ class TranscriptsResponse(BaseModel):
     records: PaginationRecords | None = Field(default=None)
     request_id: str | None = Field(default=None, alias="requestId")
 
-class ExtensiveCallPartiesItemContextItemObjectsItemFieldsItem(BaseModel):
-    """Nested schema for ExtensiveCallPartiesItemContextItemObjectsItem.fields_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: str | None = Field(default=None, description="Field name")
-    """Field name"""
-    value: Any | None = Field(default=None, description="Field value")
-    """Field value"""
-
-class ExtensiveCallPartiesItemContextItemObjectsItem(BaseModel):
-    """Nested schema for ExtensiveCallPartiesItemContextItem.objects_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    object_type: str | None = Field(default=None, alias="objectType", description="CRM object type (Account, Contact, Opportunity, Lead)")
-    """CRM object type (Account, Contact, Opportunity, Lead)"""
-    object_id: str | None = Field(default=None, alias="objectId", description="CRM record ID")
-    """CRM record ID"""
-    fields: list[ExtensiveCallPartiesItemContextItemObjectsItemFieldsItem] | None = Field(default=None, description="CRM field values")
-    """CRM field values"""
-
-class ExtensiveCallPartiesItemContextItem(BaseModel):
-    """Nested schema for ExtensiveCallPartiesItem.context_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    system: str | None = Field(default=None, description="CRM system name (e.g., Salesforce, HubSpot)")
-    """CRM system name (e.g., Salesforce, HubSpot)"""
-    objects: list[ExtensiveCallPartiesItemContextItemObjectsItem] | None = Field(default=None, description="CRM objects linked to this participant")
-    """CRM objects linked to this participant"""
-
-class ExtensiveCallPartiesItem(BaseModel):
-    """Nested schema for ExtensiveCall.parties_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: str | None = Field(default=None, description="Party ID")
-    """Party ID"""
-    email_address: str | None = Field(default=None, alias="emailAddress", description="Email address")
-    """Email address"""
-    name: str | None = Field(default=None, description="Full name")
-    """Full name"""
-    title: str | None = Field(default=None, description="Job title")
-    """Job title"""
-    user_id: str | None = Field(default=None, alias="userId", description="Gong user ID if internal")
-    """Gong user ID if internal"""
-    speaker_id: str | None | None = Field(default=None, alias="speakerId", description="Speaker ID for transcript matching")
-    """Speaker ID for transcript matching"""
-    affiliation: str | None = Field(default=None, description="Internal or External")
-    """Internal or External"""
-    methods: list[str] | None = Field(default=None, description="Contact methods")
-    """Contact methods"""
-    phone_number: str | None = Field(default=None, alias="phoneNumber", description="Phone number")
-    """Phone number"""
-    context: list[ExtensiveCallPartiesItemContextItem] | None = Field(default=None, description="CRM context data linked to this participant")
-    """CRM context data linked to this participant"""
-
-class ExtensiveCallContentTrackersItem(BaseModel):
-    """Nested schema for ExtensiveCallContent.trackers_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: str | None = Field(default=None)
-    name: str | None = Field(default=None)
-    count: int | None = Field(default=None)
-    type_: str | None = Field(default=None, alias="type")
-    occurrences: list[dict[str, Any]] | None = Field(default=None)
-
-class ExtensiveCallContentTopicsItem(BaseModel):
-    """Nested schema for ExtensiveCallContent.topics_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: str | None = Field(default=None)
-    duration: float | None = Field(default=None)
-
-class ExtensiveCallContent(BaseModel):
-    """Content data including topics and trackers"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    topics: list[ExtensiveCallContentTopicsItem] | None = Field(default=None)
-    trackers: list[ExtensiveCallContentTrackersItem] | None = Field(default=None)
-    points_of_interest: dict[str, Any] | None = Field(default=None, alias="pointsOfInterest")
-
-class ExtensiveCallCollaboration(BaseModel):
-    """Collaboration data"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    public_comments: list[dict[str, Any]] | None = Field(default=None, alias="publicComments")
-
-class ExtensiveCallMedia(BaseModel):
-    """Media URLs"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    audio_url: str | None = Field(default=None, alias="audioUrl")
-    video_url: str | None = Field(default=None, alias="videoUrl")
-
 class ExtensiveCallInteractionQuestions(BaseModel):
     """Nested schema for ExtensiveCallInteraction.questions"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -356,6 +264,98 @@ class ExtensiveCallMetadata(BaseModel):
     """Meeting URL"""
     calendar_event_id: str | None | None = Field(default=None, alias="calendarEventId", description="Calendar event ID")
     """Calendar event ID"""
+
+class ExtensiveCallMedia(BaseModel):
+    """Media URLs"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    audio_url: str | None = Field(default=None, alias="audioUrl")
+    video_url: str | None = Field(default=None, alias="videoUrl")
+
+class ExtensiveCallCollaboration(BaseModel):
+    """Collaboration data"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    public_comments: list[dict[str, Any]] | None = Field(default=None, alias="publicComments")
+
+class ExtensiveCallContentTopicsItem(BaseModel):
+    """Nested schema for ExtensiveCallContent.topics_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: str | None = Field(default=None)
+    duration: float | None = Field(default=None)
+
+class ExtensiveCallContentTrackersItem(BaseModel):
+    """Nested schema for ExtensiveCallContent.trackers_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    count: int | None = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    occurrences: list[dict[str, Any]] | None = Field(default=None)
+
+class ExtensiveCallContent(BaseModel):
+    """Content data including topics and trackers"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    topics: list[ExtensiveCallContentTopicsItem] | None = Field(default=None)
+    trackers: list[ExtensiveCallContentTrackersItem] | None = Field(default=None)
+    points_of_interest: dict[str, Any] | None = Field(default=None, alias="pointsOfInterest")
+
+class ExtensiveCallPartiesItemContextItemObjectsItemFieldsItem(BaseModel):
+    """Nested schema for ExtensiveCallPartiesItemContextItemObjectsItem.fields_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: str | None = Field(default=None, description="Field name")
+    """Field name"""
+    value: Any | None = Field(default=None, description="Field value")
+    """Field value"""
+
+class ExtensiveCallPartiesItemContextItemObjectsItem(BaseModel):
+    """Nested schema for ExtensiveCallPartiesItemContextItem.objects_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    object_type: str | None = Field(default=None, alias="objectType", description="CRM object type (Account, Contact, Opportunity, Lead)")
+    """CRM object type (Account, Contact, Opportunity, Lead)"""
+    object_id: str | None = Field(default=None, alias="objectId", description="CRM record ID")
+    """CRM record ID"""
+    fields: list[ExtensiveCallPartiesItemContextItemObjectsItemFieldsItem] | None = Field(default=None, description="CRM field values")
+    """CRM field values"""
+
+class ExtensiveCallPartiesItemContextItem(BaseModel):
+    """Nested schema for ExtensiveCallPartiesItem.context_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    system: str | None = Field(default=None, description="CRM system name (e.g., Salesforce, HubSpot)")
+    """CRM system name (e.g., Salesforce, HubSpot)"""
+    objects: list[ExtensiveCallPartiesItemContextItemObjectsItem] | None = Field(default=None, description="CRM objects linked to this participant")
+    """CRM objects linked to this participant"""
+
+class ExtensiveCallPartiesItem(BaseModel):
+    """Nested schema for ExtensiveCall.parties_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None, description="Party ID")
+    """Party ID"""
+    email_address: str | None = Field(default=None, alias="emailAddress", description="Email address")
+    """Email address"""
+    name: str | None = Field(default=None, description="Full name")
+    """Full name"""
+    title: str | None = Field(default=None, description="Job title")
+    """Job title"""
+    user_id: str | None = Field(default=None, alias="userId", description="Gong user ID if internal")
+    """Gong user ID if internal"""
+    speaker_id: str | None | None = Field(default=None, alias="speakerId", description="Speaker ID for transcript matching")
+    """Speaker ID for transcript matching"""
+    affiliation: str | None = Field(default=None, description="Internal or External")
+    """Internal or External"""
+    methods: list[str] | None = Field(default=None, description="Contact methods")
+    """Contact methods"""
+    phone_number: str | None = Field(default=None, alias="phoneNumber", description="Phone number")
+    """Phone number"""
+    context: list[ExtensiveCallPartiesItemContextItem] | None = Field(default=None, description="CRM context data linked to this participant")
+    """CRM context data linked to this participant"""
 
 class ExtensiveCall(BaseModel):
     """Detailed call object with extended information"""

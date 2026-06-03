@@ -13,8 +13,8 @@ info:
     '
   x-airbyte-connector-name: facebook-marketing
   x-airbyte-connector-definition-id: e7778cfc-e97c-4458-9ecb-b4f2bba8946c
-  x-airbyte-replication-version: "5.2.12"
-  x-airbyte-replication-compatibility: ">=5.2.12, <6.0.0"
+  x-airbyte-replication-version: "5.2.13"
+  x-airbyte-replication-compatibility: ">=5.2.13, <6.0.0"
   x-airbyte-external-documentation-urls:
   - title: Facebook Marketing API Reference
     type: api_reference
