@@ -11,8 +11,9 @@ info:
     with other tools. This connector provides read access to users, channels, channel members, channel
     messages, and threads for workspace analytics. It also supports write operations including sending,
     updating, deleting, and scheduling messages, sending ephemeral messages, creating and renaming
-    channels, archiving channels, removing users from channels, setting channel topics and purposes,
-    adding and removing reactions, pinning messages, adding bookmarks, and inviting users to channels.
+    channels, archiving channels, joining channels, removing users from channels, setting channel topics
+    and purposes, adding and removing reactions, pinning messages, adding bookmarks, and inviting users
+    to channels.
   x-airbyte-connector-name: slack
   x-airbyte-connector-definition-id: c2281cee-86f9-4a86-bb48-d23286b4c7bd
   x-airbyte-replication-version: "3.2.8"
@@ -50,6 +51,8 @@ info:
       - "Remove a user from the #team channel"
       - "Pin the latest important message in a channel"
       - "Add a bookmark link to a channel"
+      - "Join the #announcements channel"
+      - "Have the bot join a public channel"
     search:
       - "What messages were posted in channel {channel_id} last week?"
       - "Show me the conversation history for channel {channel_id}"
@@ -1483,6 +1486,41 @@ paths:
         "404":
           description: Channel or user not found
 
+  "/conversations.join":
+    post:
+      summary: Join a channel
+      description: Joins an existing public channel. The calling bot or user token will be added as a member of the channel.
+      operationId: createChannelJoin
+      x-airbyte-entity: channel_joins
+      x-airbyte-action: create
+      x-airbyte-ai-hints:
+        summary: "Join Slack channels"
+        when_to_use: "When the user wants the bot to join a public channel"
+        trigger_phrases: ["join channel", "join a channel", "enter channel", "add bot to channel"]
+        freshness: live
+        search_strategy: "Use channel_joins.create to join a public channel. Required param: channel (the channel ID to join)."
+        example_questions:
+          - "Join the #announcements channel"
+          - "Have the bot join a public channel"
+      x-airbyte-record-extractor: $.channel
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChannelJoinParams"
+      responses:
+        "200":
+          description: Channel joined successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChannelJoinResponse"
+        "400":
+          description: Invalid input - channel not found or cannot be joined
+        "403":
+          description: Permission denied - missing channels:join scope or channel is private
+
   "/pins.add":
     post:
       summary: Pin a message to a channel
@@ -1603,6 +1641,7 @@ components:
             reactions:write: Add and remove emoji reactions to messages
             pins:write: Pin and unpin messages in channels
             bookmarks:write: Add and manage channel bookmarks
+            channels:join: Join public channels in a workspace
       x-airbyte-oauth-scopes:
         - scope: "users:read"
           mode: read
@@ -1686,6 +1725,10 @@ components:
           mode: write
           entities:
             - bookmarks
+        - scope: "channels:join"
+          mode: write
+          entities:
+            - channel_joins
       x-airbyte-auth-config:
         title: "OAuth 2.0 Authentication"
         type: object
@@ -2992,6 +3035,39 @@ components:
         errors:
           type: [object, "null"]
           description: Error details, empty object on success
+
+    # Channel Join Schemas
+    ChannelJoinParams:
+      type: object
+      description: Parameters for joining a channel
+      required:
+        - channel
+      properties:
+        channel:
+          type: string
+          description: ID of the channel to join
+
+    ChannelJoinResponse:
+      type: object
+      description: Response from joining a channel
+      properties:
+        ok:
+          type: boolean
+          description: Whether the request was successful
+        channel:
+          $ref: "#/components/schemas/Channel"
+        warning:
+          type: string
+          description: Warning message if applicable
+        response_metadata:
+          type: object
+          description: Additional response metadata
+          properties:
+            warnings:
+              type: array
+              items:
+                type: string
+              description: List of warning messages
 
     # Pin Schemas
     PinAddParams:

@@ -149,6 +149,10 @@ class ChannelKicksCreateParams(TypedDict):
     channel: str
     user: str
 
+class ChannelJoinsCreateParams(TypedDict):
+    """Parameters for channel_joins.create operation"""
+    channel: str
+
 class PinsCreateParams(TypedDict):
     """Parameters for pins.create operation"""
     channel: str

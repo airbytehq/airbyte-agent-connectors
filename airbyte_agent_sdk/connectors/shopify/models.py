@@ -327,22 +327,6 @@ class OrderList(BaseModel):
 
     orders: list[Order] | None = Field(default=None)
 
-class ProductImage(BaseModel):
-    """A product image"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: int
-    product_id: int | None = Field(default=None)
-    position: int | None = Field(default=None)
-    created_at: str | None = Field(default=None)
-    updated_at: str | None = Field(default=None)
-    alt: str | None = Field(default=None)
-    width: int | None = Field(default=None)
-    height: int | None = Field(default=None)
-    src: str | None = Field(default=None)
-    variant_ids: list[int] | None = Field(default=None)
-    admin_graphql_api_id: str | None = Field(default=None)
-
 class ProductVariant(BaseModel):
     """A product variant"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -372,6 +356,22 @@ class ProductVariant(BaseModel):
     inventory_quantity: int | None = Field(default=None)
     old_inventory_quantity: int | None = Field(default=None)
     requires_shipping: bool | None = Field(default=None)
+    admin_graphql_api_id: str | None = Field(default=None)
+
+class ProductImage(BaseModel):
+    """A product image"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int
+    product_id: int | None = Field(default=None)
+    position: int | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
+    alt: str | None = Field(default=None)
+    width: int | None = Field(default=None)
+    height: int | None = Field(default=None)
+    src: str | None = Field(default=None)
+    variant_ids: list[int] | None = Field(default=None)
     admin_graphql_api_id: str | None = Field(default=None)
 
 class Product(BaseModel):

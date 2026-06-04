@@ -21,6 +21,7 @@ from .types import (
     BookmarksCreateParams,
     ChannelArchivesCreateParams,
     ChannelInvitesCreateParams,
+    ChannelJoinsCreateParams,
     ChannelKicksCreateParams,
     ChannelMessagesListParams,
     ChannelPurposesCreateParams,
@@ -105,7 +106,7 @@ class SlackConnector:
 
     connector_name = "slack"
     connector_version = "0.1.21"
-    sdk_version = "0.1.225"
+    sdk_version = "0.1.226"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -129,6 +130,7 @@ class SlackConnector:
         ("messages", "delete"): None,
         ("channel_archives", "create"): None,
         ("channel_kicks", "create"): None,
+        ("channel_joins", "create"): None,
         ("pins", "create"): None,
         ("bookmarks", "create"): None,
     }
@@ -156,6 +158,7 @@ class SlackConnector:
         ('messages', 'delete'): {'channel': 'channel', 'ts': 'ts'},
         ('channel_archives', 'create'): {'channel': 'channel'},
         ('channel_kicks', 'create'): {'channel': 'channel', 'user': 'user'},
+        ('channel_joins', 'create'): {'channel': 'channel'},
         ('pins', 'create'): {'channel': 'channel', 'timestamp': 'timestamp'},
         ('bookmarks', 'create'): {'channel_id': 'channel_id', 'title': 'title', 'type': 'type', 'link': 'link', 'emoji': 'emoji'},
     }
@@ -275,6 +278,7 @@ class SlackConnector:
         self.scheduled_messages = ScheduledMessagesQuery(self)
         self.channel_archives = ChannelArchivesQuery(self)
         self.channel_kicks = ChannelKicksQuery(self)
+        self.channel_joins = ChannelJoinsQuery(self)
         self.pins = PinsQuery(self)
         self.bookmarks = BookmarksQuery(self)
 
@@ -519,6 +523,18 @@ class SlackConnector:
         exclude_fields: list[str] | None = ...,
         skip_truncation: bool = ...
     ) -> "ChannelKickResponse": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["channel_joins"],
+        action: Literal["create"],
+        params: "ChannelJoinsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "Channel": ...
 
     @overload
     async def execute(
@@ -1908,6 +1924,40 @@ class ChannelKicksQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("channel_kicks", "create", params)
+        return result
+
+
+
+class ChannelJoinsQuery:
+    """
+    Query class for ChannelJoins entity operations.
+    """
+
+    def __init__(self, connector: SlackConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def create(
+        self,
+        channel: str,
+        **kwargs
+    ) -> Channel:
+        """
+        Joins an existing public channel. The calling bot or user token will be added as a member of the channel.
+
+        Args:
+            channel: ID of the channel to join
+            **kwargs: Additional parameters
+
+        Returns:
+            Channel
+        """
+        params = {k: v for k, v in {
+            "channel": channel,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("channel_joins", "create", params)
         return result
 
 

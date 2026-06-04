@@ -591,6 +591,28 @@ class ChannelKickResponse(BaseModel):
     ok: bool | None = Field(default=None)
     errors: dict[str, Any] | None = Field(default=None)
 
+class ChannelJoinParams(BaseModel):
+    """Parameters for joining a channel"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    channel: str
+
+class ChannelJoinResponseResponseMetadata(BaseModel):
+    """Additional response metadata"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    warnings: list[str] | None = Field(default=None, description="List of warning messages")
+    """List of warning messages"""
+
+class ChannelJoinResponse(BaseModel):
+    """Response from joining a channel"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    ok: bool | None = Field(default=None)
+    channel: Channel | None = Field(default=None)
+    warning: str | None = Field(default=None)
+    response_metadata: ChannelJoinResponseResponseMetadata | None = Field(default=None)
+
 class PinAddParams(BaseModel):
     """Parameters for pinning a message to a channel"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
