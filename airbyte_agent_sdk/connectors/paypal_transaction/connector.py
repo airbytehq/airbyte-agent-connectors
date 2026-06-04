@@ -97,7 +97,7 @@ class PaypalTransactionConnector:
 
     connector_name = "paypal-transaction"
     connector_version = "1.0.3"
-    sdk_version = "0.1.224"
+    sdk_version = "0.1.225"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
