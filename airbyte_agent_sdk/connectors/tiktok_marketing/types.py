@@ -61,6 +61,19 @@ class CreativeAssetsVideosListParams(TypedDict):
     page: NotRequired[int]
     page_size: NotRequired[int]
 
+class SparkAdsListParams(TypedDict):
+    """Parameters for spark_ads.list operation"""
+    advertiser_id: str
+    page: NotRequired[int]
+    page_size: NotRequired[int]
+
+class CatalogsListParams(TypedDict):
+    """Parameters for catalogs.list operation"""
+    advertiser_id: str
+    bc_id: NotRequired[str]
+    page: NotRequired[int]
+    page_size: NotRequired[int]
+
 class AdvertisersReportsDailyListParams(TypedDict):
     """Parameters for advertisers_reports_daily.list operation"""
     advertiser_id: str
@@ -1981,6 +1994,161 @@ class CreativeAssetsVideosSearchQuery(TypedDict, total=False):
     """Search query for creative_assets_videos entity."""
     filter: CreativeAssetsVideosCondition
     sort: list[CreativeAssetsVideosSortFilter]
+
+
+# ===== SPARK_ADS SEARCH TYPES =====
+
+class SparkAdsSearchFilter(TypedDict, total=False):
+    """Available fields for filtering spark_ads search queries."""
+    item_info: dict[str, Any] | None
+    """Information about the Spark Ads post including item_id, auth_code, text, status, and item_type."""
+    user_info: dict[str, Any] | None
+    """Information about the TikTok account including tiktok_name, identity_id, and identity_type."""
+    auth_info: dict[str, Any] | None
+    """Authorization details including invite_start_time, auth_start_time, auth_end_time, and ad_auth_status."""
+    video_info: dict[str, Any] | None
+    """Video post details including duration, preview_url, poster_url, height, width, and size."""
+
+
+class SparkAdsInFilter(TypedDict, total=False):
+    """Available fields for 'in' condition (values are lists)."""
+    item_info: list[dict[str, Any]]
+    """Information about the Spark Ads post including item_id, auth_code, text, status, and item_type."""
+    user_info: list[dict[str, Any]]
+    """Information about the TikTok account including tiktok_name, identity_id, and identity_type."""
+    auth_info: list[dict[str, Any]]
+    """Authorization details including invite_start_time, auth_start_time, auth_end_time, and ad_auth_status."""
+    video_info: list[dict[str, Any]]
+    """Video post details including duration, preview_url, poster_url, height, width, and size."""
+
+
+class SparkAdsAnyValueFilter(TypedDict, total=False):
+    """Available fields with Any value type. Used for 'contains' and 'any' conditions."""
+    item_info: Any
+    """Information about the Spark Ads post including item_id, auth_code, text, status, and item_type."""
+    user_info: Any
+    """Information about the TikTok account including tiktok_name, identity_id, and identity_type."""
+    auth_info: Any
+    """Authorization details including invite_start_time, auth_start_time, auth_end_time, and ad_auth_status."""
+    video_info: Any
+    """Video post details including duration, preview_url, poster_url, height, width, and size."""
+
+
+class SparkAdsStringFilter(TypedDict, total=False):
+    """String fields for text search conditions (like, fuzzy, keyword)."""
+    item_info: str
+    """Information about the Spark Ads post including item_id, auth_code, text, status, and item_type."""
+    user_info: str
+    """Information about the TikTok account including tiktok_name, identity_id, and identity_type."""
+    auth_info: str
+    """Authorization details including invite_start_time, auth_start_time, auth_end_time, and ad_auth_status."""
+    video_info: str
+    """Video post details including duration, preview_url, poster_url, height, width, and size."""
+
+
+class SparkAdsSortFilter(TypedDict, total=False):
+    """Available fields for sorting spark_ads search results."""
+    item_info: AirbyteSortOrder
+    """Information about the Spark Ads post including item_id, auth_code, text, status, and item_type."""
+    user_info: AirbyteSortOrder
+    """Information about the TikTok account including tiktok_name, identity_id, and identity_type."""
+    auth_info: AirbyteSortOrder
+    """Authorization details including invite_start_time, auth_start_time, auth_end_time, and ad_auth_status."""
+    video_info: AirbyteSortOrder
+    """Video post details including duration, preview_url, poster_url, height, width, and size."""
+
+
+# Entity-specific condition types for spark_ads
+class SparkAdsEqCondition(TypedDict, total=False):
+    """Equal to: field equals value."""
+    eq: SparkAdsSearchFilter
+
+
+class SparkAdsNeqCondition(TypedDict, total=False):
+    """Not equal to: field does not equal value."""
+    neq: SparkAdsSearchFilter
+
+
+class SparkAdsGtCondition(TypedDict, total=False):
+    """Greater than: field > value."""
+    gt: SparkAdsSearchFilter
+
+
+class SparkAdsGteCondition(TypedDict, total=False):
+    """Greater than or equal: field >= value."""
+    gte: SparkAdsSearchFilter
+
+
+class SparkAdsLtCondition(TypedDict, total=False):
+    """Less than: field < value."""
+    lt: SparkAdsSearchFilter
+
+
+class SparkAdsLteCondition(TypedDict, total=False):
+    """Less than or equal: field <= value."""
+    lte: SparkAdsSearchFilter
+
+
+class SparkAdsLikeCondition(TypedDict, total=False):
+    """Partial string match with % wildcards."""
+    like: SparkAdsStringFilter
+
+
+class SparkAdsFuzzyCondition(TypedDict, total=False):
+    """Ordered word text match (case-insensitive)."""
+    fuzzy: SparkAdsStringFilter
+
+
+class SparkAdsKeywordCondition(TypedDict, total=False):
+    """Keyword text match (any word present)."""
+    keyword: SparkAdsStringFilter
+
+
+class SparkAdsContainsCondition(TypedDict, total=False):
+    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    contains: SparkAdsAnyValueFilter
+
+
+# Reserved keyword conditions using functional TypedDict syntax
+SparkAdsInCondition = TypedDict("SparkAdsInCondition", {"in": SparkAdsInFilter}, total=False)
+"""In list: field value is in list. Example: {"in": {"status": ["active", "pending"]}}"""
+
+SparkAdsNotCondition = TypedDict("SparkAdsNotCondition", {"not": "SparkAdsCondition"}, total=False)
+"""Negates the nested condition."""
+
+SparkAdsAndCondition = TypedDict("SparkAdsAndCondition", {"and": "list[SparkAdsCondition]"}, total=False)
+"""True if all nested conditions are true."""
+
+SparkAdsOrCondition = TypedDict("SparkAdsOrCondition", {"or": "list[SparkAdsCondition]"}, total=False)
+"""True if any nested condition is true."""
+
+SparkAdsAnyCondition = TypedDict("SparkAdsAnyCondition", {"any": SparkAdsAnyValueFilter}, total=False)
+"""Match if ANY element in array field matches nested condition. Example: {"any": {"addresses": {"eq": {"state": "CA"}}}}"""
+
+# Union of all spark_ads condition types
+SparkAdsCondition = (
+    SparkAdsEqCondition
+    | SparkAdsNeqCondition
+    | SparkAdsGtCondition
+    | SparkAdsGteCondition
+    | SparkAdsLtCondition
+    | SparkAdsLteCondition
+    | SparkAdsInCondition
+    | SparkAdsLikeCondition
+    | SparkAdsFuzzyCondition
+    | SparkAdsKeywordCondition
+    | SparkAdsContainsCondition
+    | SparkAdsNotCondition
+    | SparkAdsAndCondition
+    | SparkAdsOrCondition
+    | SparkAdsAnyCondition
+)
+
+
+class SparkAdsSearchQuery(TypedDict, total=False):
+    """Search query for spark_ads entity."""
+    filter: SparkAdsCondition
+    sort: list[SparkAdsSortFilter]
 
 
 # ===== ADVERTISERS_REPORTS_DAILY SEARCH TYPES =====

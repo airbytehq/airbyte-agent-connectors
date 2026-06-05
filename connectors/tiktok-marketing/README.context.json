@@ -44,8 +44,8 @@
       }
     ]
   },
-  "custom_description": "Connector for the TikTok Marketing API (Business API v1.3). Provides access to advertiser accounts, campaigns, ad groups, ads, audiences, creative assets (images and videos), and daily performance reports at the advertiser, campaign, ad group, and ad levels. Requires an Access Token from the TikTok for Business platform. All list operations require an advertiser_id parameter to scope results to a specific advertiser account.",
-  "supported_questions": "- List all my TikTok advertisers\n- Show me all campaigns for my advertiser account\n- List all ad groups\n- Show me all ads\n- List my custom audiences\n- Show me all creative asset images\n- List creative asset videos\n- Show me daily ad performance reports\n- Get campaign performance metrics for the last 30 days\n- Show me advertiser spend reports\n- Which campaigns have the highest budget?\n- Find all paused ad groups\n- What ads were created last month?\n- Show campaigns with lifetime budget mode\n- Which ads had the most impressions yesterday?\n- What is my total ad spend this month?\n- Which campaigns have the highest click-through rate?",
+  "custom_description": "Connector for the TikTok Marketing API (Business API v1.3). Provides access to advertiser accounts, campaigns, ad groups, ads, audiences, creative assets (images and videos), Spark Ads, product catalogs, and daily performance reports at the advertiser, campaign, ad group, and ad levels. Requires an Access Token from the TikTok for Business platform. All list operations require an advertiser_id parameter to scope results to a specific advertiser account.",
+  "supported_questions": "- List all my TikTok advertisers\n- Show me all campaigns for my advertiser account\n- List all ad groups\n- Show me all ads\n- List my custom audiences\n- Show me all creative asset images\n- List creative asset videos\n- Show me daily ad performance reports\n- Get campaign performance metrics for the last 30 days\n- Show me advertiser spend reports\n- List all Spark Ad posts\n- Show me my product catalogs\n- Which campaigns have the highest budget?\n- Find all paused ad groups\n- What ads were created last month?\n- Show campaigns with lifetime budget mode\n- Which ads had the most impressions yesterday?\n- What is my total ad spend this month?\n- Which campaigns have the highest click-through rate?\n- Which Spark Ads are currently authorized?\n- Find catalogs with the most products",
   "unsupported_questions": "- Create a new campaign\n- Update ad group targeting\n- Delete an ad",
   "first_operation": {
     "method_name": "list_advertisers",
@@ -683,6 +683,183 @@
         },
         "needs_envelope": true,
         "record_type": "list[CreativeAssetVideo]",
+        "meta_fields": [
+          {
+            "name": "page_info",
+            "python_name": "page_info",
+            "type": "dict[str, Any]",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "total_number": {
+                  "type": "integer"
+                },
+                "page": {
+                  "type": "integer"
+                },
+                "page_size": {
+                  "type": "integer"
+                },
+                "total_page": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "spark_ads": [
+      {
+        "method_name": "list_spark_ads",
+        "http_method": "get",
+        "path": "/tt_video/list/",
+        "entity": "spark_ads",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "advertiser_id",
+            "python_name": "advertiser_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Advertiser ID",
+            "is_deep_object": false
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number",
+            "is_deep_object": false
+          },
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50,
+              "default": 20
+            },
+            "required": null,
+            "description": "Number of items per page",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "SparkAdsListParams",
+        "response_type": "SparkAdsListResult",
+        "description": "Get Spark Ad posts that have been authorized to an ad account",
+        "record_extractor": "$.data.list",
+        "meta_extractor": {
+          "page_info": "$.data.page_info"
+        },
+        "needs_envelope": true,
+        "record_type": "list[SparkAd]",
+        "meta_fields": [
+          {
+            "name": "page_info",
+            "python_name": "page_info",
+            "type": "dict[str, Any]",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "total_number": {
+                  "type": "integer"
+                },
+                "page": {
+                  "type": "integer"
+                },
+                "page_size": {
+                  "type": "integer"
+                },
+                "total_page": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "catalogs": [
+      {
+        "method_name": "list_catalogs",
+        "http_method": "get",
+        "path": "/catalog/get/",
+        "entity": "catalogs",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "advertiser_id",
+            "python_name": "advertiser_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Advertiser ID",
+            "is_deep_object": false
+          },
+          {
+            "name": "bc_id",
+            "python_name": "bc_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Business Center ID. Required by the TikTok API to scope catalog results.",
+            "is_deep_object": false
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number",
+            "is_deep_object": false
+          },
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 100
+            },
+            "required": null,
+            "description": "Number of items per page",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CatalogsListParams",
+        "response_type": "CatalogsListResult",
+        "description": "Get product catalogs for an advertiser",
+        "record_extractor": "$.data.list",
+        "meta_extractor": {
+          "page_info": "$.data.page_info"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Catalog]",
         "meta_fields": [
           {
             "name": "page_info",
@@ -2444,6 +2621,57 @@
           "example_value_json": "0",
           "json_example_value": 0,
           "description": "Width of the video in pixels."
+        }
+      ]
+    },
+    "spark_ads": {
+      "entity": "spark_ads",
+      "data_type_name": "SparkAdsSearchData",
+      "filter_type_name": "SparkAdsSearchFilter",
+      "in_filter_type_name": "SparkAdsInFilter",
+      "any_value_filter_type_name": "SparkAdsAnyValueFilter",
+      "string_filter_type_name": "SparkAdsStringFilter",
+      "sort_filter_type_name": "SparkAdsSortFilter",
+      "result_type_name": "SparkAdsSearchResult",
+      "query_type_name": "SparkAdsSearchQuery",
+      "condition_prefix": "SparkAds",
+      "condition_type_name": "SparkAdsCondition",
+      "fields": [
+        {
+          "name": "item_info",
+          "python_name": "item_info",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "json_example_value": {},
+          "description": "Information about the Spark Ads post including item_id, auth_code, text, status, and item_type."
+        },
+        {
+          "name": "user_info",
+          "python_name": "user_info",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "json_example_value": {},
+          "description": "Information about the TikTok account including tiktok_name, identity_id, and identity_type."
+        },
+        {
+          "name": "auth_info",
+          "python_name": "auth_info",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "json_example_value": {},
+          "description": "Authorization details including invite_start_time, auth_start_time, auth_end_time, and ad_auth_status."
+        },
+        {
+          "name": "video_info",
+          "python_name": "video_info",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "json_example_value": {},
+          "description": "Video post details including duration, preview_url, poster_url, height, width, and size."
         }
       ]
     },

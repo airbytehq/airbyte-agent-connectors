@@ -27,8 +27,10 @@ from .types import (
     AudiencesListParams,
     CampaignsListParams,
     CampaignsReportsDailyListParams,
+    CatalogsListParams,
     CreativeAssetsImagesListParams,
     CreativeAssetsVideosListParams,
+    SparkAdsListParams,
     AirbyteSearchParams,
     AdvertisersSearchFilter,
     AdvertisersSearchQuery,
@@ -44,6 +46,8 @@ from .types import (
     CreativeAssetsImagesSearchQuery,
     CreativeAssetsVideosSearchFilter,
     CreativeAssetsVideosSearchQuery,
+    SparkAdsSearchFilter,
+    SparkAdsSearchQuery,
     AdvertisersReportsDailySearchFilter,
     AdvertisersReportsDailySearchQuery,
     CampaignsReportsDailySearchFilter,
@@ -69,6 +73,8 @@ from .models import (
     AudiencesListResult,
     CreativeAssetsImagesListResult,
     CreativeAssetsVideosListResult,
+    SparkAdsListResult,
+    CatalogsListResult,
     AdvertisersReportsDailyListResult,
     CampaignsReportsDailyListResult,
     AdGroupsReportsDailyListResult,
@@ -82,8 +88,10 @@ from .models import (
     Audience,
     Campaign,
     CampaignsReportDaily,
+    Catalog,
     CreativeAssetImage,
     CreativeAssetVideo,
+    SparkAd,
     AirbyteSearchMeta,
     AirbyteSearchResult,
     AdvertisersSearchData,
@@ -100,6 +108,8 @@ from .models import (
     CreativeAssetsImagesSearchResult,
     CreativeAssetsVideosSearchData,
     CreativeAssetsVideosSearchResult,
+    SparkAdsSearchData,
+    SparkAdsSearchResult,
     AdvertisersReportsDailySearchData,
     AdvertisersReportsDailySearchResult,
     CampaignsReportsDailySearchData,
@@ -125,7 +135,7 @@ class TiktokMarketingConnector:
 
     connector_name = "tiktok-marketing"
     connector_version = "1.1.6"
-    sdk_version = "0.1.226"
+    sdk_version = "0.1.227"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -136,6 +146,8 @@ class TiktokMarketingConnector:
         ("audiences", "list"): True,
         ("creative_assets_images", "list"): True,
         ("creative_assets_videos", "list"): True,
+        ("spark_ads", "list"): True,
+        ("catalogs", "list"): True,
         ("advertisers_reports_daily", "list"): True,
         ("campaigns_reports_daily", "list"): True,
         ("ad_groups_reports_daily", "list"): True,
@@ -152,6 +164,8 @@ class TiktokMarketingConnector:
         ('audiences', 'list'): {'advertiser_id': 'advertiser_id', 'page': 'page', 'page_size': 'page_size'},
         ('creative_assets_images', 'list'): {'advertiser_id': 'advertiser_id', 'page': 'page', 'page_size': 'page_size'},
         ('creative_assets_videos', 'list'): {'advertiser_id': 'advertiser_id', 'page': 'page', 'page_size': 'page_size'},
+        ('spark_ads', 'list'): {'advertiser_id': 'advertiser_id', 'page': 'page', 'page_size': 'page_size'},
+        ('catalogs', 'list'): {'advertiser_id': 'advertiser_id', 'bc_id': 'bc_id', 'page': 'page', 'page_size': 'page_size'},
         ('advertisers_reports_daily', 'list'): {'advertiser_id': 'advertiser_id', 'service_type': 'service_type', 'report_type': 'report_type', 'data_level': 'data_level', 'dimensions': 'dimensions', 'metrics': 'metrics', 'start_date': 'start_date', 'end_date': 'end_date', 'page': 'page', 'page_size': 'page_size'},
         ('campaigns_reports_daily', 'list'): {'advertiser_id': 'advertiser_id', 'service_type': 'service_type', 'report_type': 'report_type', 'data_level': 'data_level', 'dimensions': 'dimensions', 'metrics': 'metrics', 'start_date': 'start_date', 'end_date': 'end_date', 'page': 'page', 'page_size': 'page_size'},
         ('ad_groups_reports_daily', 'list'): {'advertiser_id': 'advertiser_id', 'service_type': 'service_type', 'report_type': 'report_type', 'data_level': 'data_level', 'dimensions': 'dimensions', 'metrics': 'metrics', 'start_date': 'start_date', 'end_date': 'end_date', 'page': 'page', 'page_size': 'page_size'},
@@ -258,6 +272,8 @@ class TiktokMarketingConnector:
         self.audiences = AudiencesQuery(self)
         self.creative_assets_images = CreativeAssetsImagesQuery(self)
         self.creative_assets_videos = CreativeAssetsVideosQuery(self)
+        self.spark_ads = SparkAdsQuery(self)
+        self.catalogs = CatalogsQuery(self)
         self.advertisers_reports_daily = AdvertisersReportsDailyQuery(self)
         self.campaigns_reports_daily = CampaignsReportsDailyQuery(self)
         self.ad_groups_reports_daily = AdGroupsReportsDailyQuery(self)
@@ -348,6 +364,30 @@ class TiktokMarketingConnector:
         exclude_fields: list[str] | None = ...,
         skip_truncation: bool = ...
     ) -> "CreativeAssetsVideosListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["spark_ads"],
+        action: Literal["list"],
+        params: "SparkAdsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "SparkAdsListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["catalogs"],
+        action: Literal["list"],
+        params: "CatalogsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "CatalogsListResult": ...
 
     @overload
     async def execute(
@@ -1469,6 +1509,155 @@ class CreativeAssetsVideosQuery:
                 took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
             ),
         )
+
+class SparkAdsQuery:
+    """
+    Query class for SparkAds entity operations.
+    """
+
+    def __init__(self, connector: TiktokMarketingConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        advertiser_id: str,
+        page: int | None = None,
+        page_size: int | None = None,
+        **kwargs
+    ) -> SparkAdsListResult:
+        """
+        Get Spark Ad posts that have been authorized to an ad account
+
+        Args:
+            advertiser_id: Advertiser ID
+            page: Page number
+            page_size: Number of items per page
+            **kwargs: Additional parameters
+
+        Returns:
+            SparkAdsListResult
+        """
+        params = {k: v for k, v in {
+            "advertiser_id": advertiser_id,
+            "page": page,
+            "page_size": page_size,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("spark_ads", "list", params)
+        # Cast generic envelope to concrete typed result
+        return SparkAdsListResult(
+            data=result.data,
+            meta=getattr(result, "meta", None)
+        )
+
+
+
+    async def context_store_search(
+        self,
+        query: SparkAdsSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> SparkAdsSearchResult:
+        """
+        Search spark_ads records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (SparkAdsSearchFilter):
+        - item_info: Information about the Spark Ads post including item_id, auth_code, text, status, and item_type.
+        - user_info: Information about the TikTok account including tiktok_name, identity_id, and identity_type.
+        - auth_info: Authorization details including invite_start_time, auth_start_time, auth_end_time, and ad_auth_status.
+        - video_info: Video post details including duration, preview_url, poster_url, height, width, and size.
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's meta.cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            SparkAdsSearchResult with typed records, pagination metadata, and optional search metadata
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("spark_ads", "context_store_search", params)
+
+        # Parse response into typed result
+        meta_data = result.get("meta")
+        return SparkAdsSearchResult(
+            data=[
+                SparkAdsSearchData(**row)
+                for row in result.get("data", [])
+                if isinstance(row, dict)
+            ],
+            meta=AirbyteSearchMeta(
+                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
+                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
+                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
+            ),
+        )
+
+class CatalogsQuery:
+    """
+    Query class for Catalogs entity operations.
+    """
+
+    def __init__(self, connector: TiktokMarketingConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        advertiser_id: str,
+        bc_id: str | None = None,
+        page: int | None = None,
+        page_size: int | None = None,
+        **kwargs
+    ) -> CatalogsListResult:
+        """
+        Get product catalogs for an advertiser
+
+        Args:
+            advertiser_id: Advertiser ID
+            bc_id: Business Center ID. Required by the TikTok API to scope catalog results.
+            page: Page number
+            page_size: Number of items per page
+            **kwargs: Additional parameters
+
+        Returns:
+            CatalogsListResult
+        """
+        params = {k: v for k, v in {
+            "advertiser_id": advertiser_id,
+            "bc_id": bc_id,
+            "page": page,
+            "page_size": page_size,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("catalogs", "list", params)
+        # Cast generic envelope to concrete typed result
+        return CatalogsListResult(
+            data=result.data,
+            meta=getattr(result, "meta", None)
+        )
+
+
 
 class AdvertisersReportsDailyQuery:
     """

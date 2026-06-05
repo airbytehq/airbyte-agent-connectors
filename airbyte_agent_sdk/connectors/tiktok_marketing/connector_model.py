@@ -2475,6 +2475,490 @@ TiktokMarketingConnectorModel: ConnectorModel = ConnectorModel(
             },
         ),
         EntityDefinition(
+            name='spark_ads',
+            stream_name='spark_ads',
+            actions=[Action.LIST],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/tt_video/list/',
+                    action=Action.LIST,
+                    description='Get Spark Ad posts that have been authorized to an ad account',
+                    query_params=['advertiser_id', 'page', 'page_size'],
+                    query_params_schema={
+                        'advertiser_id': {'type': 'string', 'required': True},
+                        'page': {
+                            'type': 'integer',
+                            'required': False,
+                            'default': 1,
+                            'minimum': 1,
+                        },
+                        'page_size': {
+                            'type': 'integer',
+                            'required': False,
+                            'default': 20,
+                            'minimum': 1,
+                            'maximum': 50,
+                        },
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'code': {'type': 'integer'},
+                            'message': {'type': 'string'},
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'list': {
+                                        'type': 'array',
+                                        'items': {
+                                            'type': 'object',
+                                            'description': 'TikTok Spark Ad post authorization',
+                                            'properties': {
+                                                'item_info': {
+                                                    'type': ['null', 'object'],
+                                                    'description': 'Information about the Spark Ads post',
+                                                    'properties': {
+                                                        'item_id': {
+                                                            'type': ['null', 'string'],
+                                                            'description': 'The ID of the Spark Ads post',
+                                                        },
+                                                        'auth_code': {
+                                                            'type': ['null', 'string'],
+                                                            'description': 'The authorization code for the Spark Ads post',
+                                                        },
+                                                        'text': {
+                                                            'type': ['null', 'string'],
+                                                            'description': 'The description of the Spark Ads post',
+                                                        },
+                                                        'status': {
+                                                            'type': ['null', 'string'],
+                                                            'description': 'Item status (e.g. HESITATE_RECOMMEND)',
+                                                        },
+                                                        'item_type': {
+                                                            'type': ['null', 'string'],
+                                                            'description': 'The type of Spark Ads post (VIDEO or CAROUSEL)',
+                                                        },
+                                                    },
+                                                },
+                                                'user_info': {
+                                                    'type': ['null', 'object'],
+                                                    'description': 'Information about the TikTok account',
+                                                    'properties': {
+                                                        'tiktok_name': {
+                                                            'type': ['null', 'string'],
+                                                            'description': 'The user name of the TikTok account',
+                                                        },
+                                                        'identity_id': {
+                                                            'type': ['null', 'string'],
+                                                            'description': 'Identity ID',
+                                                        },
+                                                        'identity_type': {
+                                                            'type': ['null', 'string'],
+                                                            'description': 'Identity type',
+                                                        },
+                                                    },
+                                                },
+                                                'auth_info': {
+                                                    'type': ['null', 'object'],
+                                                    'description': 'Information about the authorization',
+                                                    'properties': {
+                                                        'invite_start_time': {
+                                                            'type': ['null', 'string'],
+                                                            'description': 'The time when the authorization starts (UTC+0)',
+                                                        },
+                                                        'auth_start_time': {
+                                                            'type': ['null', 'string'],
+                                                            'description': 'The time when the authorization code becomes valid (UTC+0)',
+                                                        },
+                                                        'auth_end_time': {
+                                                            'type': ['null', 'string'],
+                                                            'description': 'The time when the authorization code expires (UTC+0)',
+                                                        },
+                                                        'ad_auth_status': {
+                                                            'type': ['null', 'string'],
+                                                            'description': 'The authorization status (e.g. AUTHORIZED)',
+                                                        },
+                                                    },
+                                                },
+                                                'video_info': {
+                                                    'type': ['null', 'object'],
+                                                    'description': 'Information about the video post',
+                                                    'properties': {
+                                                        'duration': {
+                                                            'type': ['null', 'number'],
+                                                            'description': 'The duration of the video, in seconds',
+                                                        },
+                                                        'preview_url': {
+                                                            'type': ['null', 'string'],
+                                                            'description': 'The preview URL for the video',
+                                                        },
+                                                        'poster_url': {
+                                                            'type': ['null', 'string'],
+                                                            'description': 'The URL to the video poster',
+                                                        },
+                                                        'height': {
+                                                            'type': ['null', 'integer'],
+                                                            'description': 'The height of the video',
+                                                        },
+                                                        'width': {
+                                                            'type': ['null', 'integer'],
+                                                            'description': 'The width of the video',
+                                                        },
+                                                        'size': {
+                                                            'type': ['null', 'integer'],
+                                                            'description': 'The size of the video, in bytes',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            'x-airbyte-entity-name': 'spark_ads',
+                                            'x-airbyte-stream-name': 'spark_ads',
+                                            'x-airbyte-ai-hints': {
+                                                'summary': 'Spark Ad posts authorized to an ad account for use as ad creatives',
+                                                'when_to_use': 'Questions about Spark Ads, authorized TikTok posts used as ads',
+                                                'trigger_phrases': [
+                                                    'spark ad',
+                                                    'spark ads',
+                                                    'authorized post',
+                                                    'organic post ad',
+                                                ],
+                                                'freshness': 'live',
+                                                'example_questions': ['List all Spark Ad posts', 'Which Spark Ads are currently authorized?'],
+                                                'search_strategy': 'Filter by advertiser',
+                                            },
+                                        },
+                                    },
+                                    'page_info': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'total_number': {'type': 'integer'},
+                                            'page': {'type': 'integer'},
+                                            'page_size': {'type': 'integer'},
+                                            'total_page': {'type': 'integer'},
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    record_extractor='$.data.list',
+                    meta_extractor={'page_info': '$.data.page_info'},
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'TikTok Spark Ad post authorization',
+                'properties': {
+                    'item_info': {
+                        'type': ['null', 'object'],
+                        'description': 'Information about the Spark Ads post',
+                        'properties': {
+                            'item_id': {
+                                'type': ['null', 'string'],
+                                'description': 'The ID of the Spark Ads post',
+                            },
+                            'auth_code': {
+                                'type': ['null', 'string'],
+                                'description': 'The authorization code for the Spark Ads post',
+                            },
+                            'text': {
+                                'type': ['null', 'string'],
+                                'description': 'The description of the Spark Ads post',
+                            },
+                            'status': {
+                                'type': ['null', 'string'],
+                                'description': 'Item status (e.g. HESITATE_RECOMMEND)',
+                            },
+                            'item_type': {
+                                'type': ['null', 'string'],
+                                'description': 'The type of Spark Ads post (VIDEO or CAROUSEL)',
+                            },
+                        },
+                    },
+                    'user_info': {
+                        'type': ['null', 'object'],
+                        'description': 'Information about the TikTok account',
+                        'properties': {
+                            'tiktok_name': {
+                                'type': ['null', 'string'],
+                                'description': 'The user name of the TikTok account',
+                            },
+                            'identity_id': {
+                                'type': ['null', 'string'],
+                                'description': 'Identity ID',
+                            },
+                            'identity_type': {
+                                'type': ['null', 'string'],
+                                'description': 'Identity type',
+                            },
+                        },
+                    },
+                    'auth_info': {
+                        'type': ['null', 'object'],
+                        'description': 'Information about the authorization',
+                        'properties': {
+                            'invite_start_time': {
+                                'type': ['null', 'string'],
+                                'description': 'The time when the authorization starts (UTC+0)',
+                            },
+                            'auth_start_time': {
+                                'type': ['null', 'string'],
+                                'description': 'The time when the authorization code becomes valid (UTC+0)',
+                            },
+                            'auth_end_time': {
+                                'type': ['null', 'string'],
+                                'description': 'The time when the authorization code expires (UTC+0)',
+                            },
+                            'ad_auth_status': {
+                                'type': ['null', 'string'],
+                                'description': 'The authorization status (e.g. AUTHORIZED)',
+                            },
+                        },
+                    },
+                    'video_info': {
+                        'type': ['null', 'object'],
+                        'description': 'Information about the video post',
+                        'properties': {
+                            'duration': {
+                                'type': ['null', 'number'],
+                                'description': 'The duration of the video, in seconds',
+                            },
+                            'preview_url': {
+                                'type': ['null', 'string'],
+                                'description': 'The preview URL for the video',
+                            },
+                            'poster_url': {
+                                'type': ['null', 'string'],
+                                'description': 'The URL to the video poster',
+                            },
+                            'height': {
+                                'type': ['null', 'integer'],
+                                'description': 'The height of the video',
+                            },
+                            'width': {
+                                'type': ['null', 'integer'],
+                                'description': 'The width of the video',
+                            },
+                            'size': {
+                                'type': ['null', 'integer'],
+                                'description': 'The size of the video, in bytes',
+                            },
+                        },
+                    },
+                },
+                'x-airbyte-entity-name': 'spark_ads',
+                'x-airbyte-stream-name': 'spark_ads',
+                'x-airbyte-ai-hints': {
+                    'summary': 'Spark Ad posts authorized to an ad account for use as ad creatives',
+                    'when_to_use': 'Questions about Spark Ads, authorized TikTok posts used as ads',
+                    'trigger_phrases': [
+                        'spark ad',
+                        'spark ads',
+                        'authorized post',
+                        'organic post ad',
+                    ],
+                    'freshness': 'live',
+                    'example_questions': ['List all Spark Ad posts', 'Which Spark Ads are currently authorized?'],
+                    'search_strategy': 'Filter by advertiser',
+                },
+            },
+            ai_hints={
+                'summary': 'Spark Ad posts authorized to an ad account for use as ad creatives',
+                'when_to_use': 'Questions about Spark Ads, authorized TikTok posts used as ads',
+                'trigger_phrases': [
+                    'spark ad',
+                    'spark ads',
+                    'authorized post',
+                    'organic post ad',
+                ],
+                'freshness': 'live',
+                'example_questions': ['List all Spark Ad posts', 'Which Spark Ads are currently authorized?'],
+                'search_strategy': 'Filter by advertiser',
+            },
+        ),
+        EntityDefinition(
+            name='catalogs',
+            stream_name='catalogs',
+            actions=[Action.LIST],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/catalog/get/',
+                    action=Action.LIST,
+                    description='Get product catalogs for an advertiser',
+                    query_params=[
+                        'advertiser_id',
+                        'bc_id',
+                        'page',
+                        'page_size',
+                    ],
+                    query_params_schema={
+                        'advertiser_id': {'type': 'string', 'required': True},
+                        'bc_id': {'type': 'string', 'required': False},
+                        'page': {
+                            'type': 'integer',
+                            'required': False,
+                            'default': 1,
+                            'minimum': 1,
+                        },
+                        'page_size': {
+                            'type': 'integer',
+                            'required': False,
+                            'default': 100,
+                            'minimum': 1,
+                            'maximum': 100,
+                        },
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'code': {'type': 'integer'},
+                            'message': {'type': 'string'},
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'list': {
+                                        'type': 'array',
+                                        'items': {
+                                            'type': 'object',
+                                            'description': 'TikTok product catalog',
+                                            'properties': {
+                                                'catalog_id': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Unique identifier for the product catalog',
+                                                },
+                                                'catalog_name': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'The name of the product catalog',
+                                                },
+                                                'advertiser_id': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'The unique identifier of the advertiser',
+                                                },
+                                                'catalog_type': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'The type of the product catalog',
+                                                },
+                                                'catalog_status': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'The current status of the product catalog',
+                                                },
+                                                'product_count': {
+                                                    'type': ['null', 'integer'],
+                                                    'description': 'The number of products in the catalog',
+                                                },
+                                                'create_time': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Timestamp when the catalog was created',
+                                                },
+                                                'modify_time': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Timestamp when the catalog was last modified',
+                                                },
+                                            },
+                                            'x-airbyte-entity-name': 'catalogs',
+                                            'x-airbyte-stream-name': 'catalogs',
+                                            'x-airbyte-ai-hints': {
+                                                'summary': 'Product catalogs for TikTok dynamic product ads and commerce',
+                                                'when_to_use': 'Questions about product catalogs, catalog management, or product feeds',
+                                                'trigger_phrases': [
+                                                    'product catalog',
+                                                    'catalog',
+                                                    'product feed',
+                                                    'dynamic product',
+                                                ],
+                                                'freshness': 'live',
+                                                'example_questions': ['Show me my product catalogs', 'Find catalogs with the most products'],
+                                                'search_strategy': 'Filter by advertiser',
+                                            },
+                                        },
+                                    },
+                                    'page_info': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'total_number': {'type': 'integer'},
+                                            'page': {'type': 'integer'},
+                                            'page_size': {'type': 'integer'},
+                                            'total_page': {'type': 'integer'},
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    record_extractor='$.data.list',
+                    meta_extractor={'page_info': '$.data.page_info'},
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'TikTok product catalog',
+                'properties': {
+                    'catalog_id': {
+                        'type': ['null', 'string'],
+                        'description': 'Unique identifier for the product catalog',
+                    },
+                    'catalog_name': {
+                        'type': ['null', 'string'],
+                        'description': 'The name of the product catalog',
+                    },
+                    'advertiser_id': {
+                        'type': ['null', 'string'],
+                        'description': 'The unique identifier of the advertiser',
+                    },
+                    'catalog_type': {
+                        'type': ['null', 'string'],
+                        'description': 'The type of the product catalog',
+                    },
+                    'catalog_status': {
+                        'type': ['null', 'string'],
+                        'description': 'The current status of the product catalog',
+                    },
+                    'product_count': {
+                        'type': ['null', 'integer'],
+                        'description': 'The number of products in the catalog',
+                    },
+                    'create_time': {
+                        'type': ['null', 'string'],
+                        'description': 'Timestamp when the catalog was created',
+                    },
+                    'modify_time': {
+                        'type': ['null', 'string'],
+                        'description': 'Timestamp when the catalog was last modified',
+                    },
+                },
+                'x-airbyte-entity-name': 'catalogs',
+                'x-airbyte-stream-name': 'catalogs',
+                'x-airbyte-ai-hints': {
+                    'summary': 'Product catalogs for TikTok dynamic product ads and commerce',
+                    'when_to_use': 'Questions about product catalogs, catalog management, or product feeds',
+                    'trigger_phrases': [
+                        'product catalog',
+                        'catalog',
+                        'product feed',
+                        'dynamic product',
+                    ],
+                    'freshness': 'live',
+                    'example_questions': ['Show me my product catalogs', 'Find catalogs with the most products'],
+                    'search_strategy': 'Filter by advertiser',
+                },
+            },
+            ai_hints={
+                'summary': 'Product catalogs for TikTok dynamic product ads and commerce',
+                'when_to_use': 'Questions about product catalogs, catalog management, or product feeds',
+                'trigger_phrases': [
+                    'product catalog',
+                    'catalog',
+                    'product feed',
+                    'dynamic product',
+                ],
+                'freshness': 'live',
+                'example_questions': ['Show me my product catalogs', 'Find catalogs with the most products'],
+                'search_strategy': 'Filter by advertiser',
+            },
+        ),
+        EntityDefinition(
             name='advertisers_reports_daily',
             stream_name='advertisers_reports_daily',
             actions=[Action.LIST],
@@ -4922,6 +5406,32 @@ TiktokMarketingConnectorModel: ConnectorModel = ConnectorModel(
                 ],
             ),
             CacheEntityConfig(
+                entity='spark_ads',
+                x_airbyte_name='spark_ads',
+                fields=[
+                    CacheFieldConfig(
+                        name='item_info',
+                        type=['null', 'object'],
+                        description='Information about the Spark Ads post including item_id, auth_code, text, status, and item_type.',
+                    ),
+                    CacheFieldConfig(
+                        name='user_info',
+                        type=['null', 'object'],
+                        description='Information about the TikTok account including tiktok_name, identity_id, and identity_type.',
+                    ),
+                    CacheFieldConfig(
+                        name='auth_info',
+                        type=['null', 'object'],
+                        description='Authorization details including invite_start_time, auth_start_time, auth_end_time, and ad_auth_status.',
+                    ),
+                    CacheFieldConfig(
+                        name='video_info',
+                        type=['null', 'object'],
+                        description='Video post details including duration, preview_url, poster_url, height, width, and size.',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
                 entity='advertisers_reports_daily',
                 suggested=True,
                 x_airbyte_name='advertisers_reports_daily',
@@ -5872,6 +6382,12 @@ TiktokMarketingConnectorModel: ConnectorModel = ConnectorModel(
             'video_id',
             'width',
         ],
+        'spark_ads': [
+            'item_info',
+            'user_info',
+            'auth_info',
+            'video_info',
+        ],
         'advertisers_reports_daily': [
             'advertiser_id',
             'stat_time_day',
@@ -6053,6 +6569,8 @@ TiktokMarketingConnectorModel: ConnectorModel = ConnectorModel(
             'Show me daily ad performance reports',
             'Get campaign performance metrics for the last 30 days',
             'Show me advertiser spend reports',
+            'List all Spark Ad posts',
+            'Show me my product catalogs',
         ],
         context_store_search=[
             'Which campaigns have the highest budget?',
@@ -6062,6 +6580,8 @@ TiktokMarketingConnectorModel: ConnectorModel = ConnectorModel(
             'Which ads had the most impressions yesterday?',
             'What is my total ad spend this month?',
             'Which campaigns have the highest click-through rate?',
+            'Which Spark Ads are currently authorized?',
+            'Find catalogs with the most products',
         ],
         search=[
             'Which campaigns have the highest budget?',
@@ -6071,6 +6591,8 @@ TiktokMarketingConnectorModel: ConnectorModel = ConnectorModel(
             'Which ads had the most impressions yesterday?',
             'What is my total ad spend this month?',
             'Which campaigns have the highest click-through rate?',
+            'Which Spark Ads are currently authorized?',
+            'Find catalogs with the most products',
         ],
         unsupported=['Create a new campaign', 'Update ad group targeting', 'Delete an ad'],
     ),

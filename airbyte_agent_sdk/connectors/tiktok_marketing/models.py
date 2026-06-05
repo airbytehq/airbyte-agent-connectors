@@ -314,6 +314,84 @@ class CreativeAssetVideo(BaseModel):
     fix_task_id: str | None = Field(default=None)
     flaw_types: list[Any] | None = Field(default=None)
 
+class SparkAdAuthInfo(BaseModel):
+    """Information about the authorization"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    invite_start_time: str | None | None = Field(default=None, description="The time when the authorization starts (UTC+0)")
+    """The time when the authorization starts (UTC+0)"""
+    auth_start_time: str | None | None = Field(default=None, description="The time when the authorization code becomes valid (UTC+0)")
+    """The time when the authorization code becomes valid (UTC+0)"""
+    auth_end_time: str | None | None = Field(default=None, description="The time when the authorization code expires (UTC+0)")
+    """The time when the authorization code expires (UTC+0)"""
+    ad_auth_status: str | None | None = Field(default=None, description="The authorization status (e.g. AUTHORIZED)")
+    """The authorization status (e.g. AUTHORIZED)"""
+
+class SparkAdVideoInfo(BaseModel):
+    """Information about the video post"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    duration: float | None | None = Field(default=None, description="The duration of the video, in seconds")
+    """The duration of the video, in seconds"""
+    preview_url: str | None | None = Field(default=None, description="The preview URL for the video")
+    """The preview URL for the video"""
+    poster_url: str | None | None = Field(default=None, description="The URL to the video poster")
+    """The URL to the video poster"""
+    height: int | None | None = Field(default=None, description="The height of the video")
+    """The height of the video"""
+    width: int | None | None = Field(default=None, description="The width of the video")
+    """The width of the video"""
+    size: int | None | None = Field(default=None, description="The size of the video, in bytes")
+    """The size of the video, in bytes"""
+
+class SparkAdItemInfo(BaseModel):
+    """Information about the Spark Ads post"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    item_id: str | None | None = Field(default=None, description="The ID of the Spark Ads post")
+    """The ID of the Spark Ads post"""
+    auth_code: str | None | None = Field(default=None, description="The authorization code for the Spark Ads post")
+    """The authorization code for the Spark Ads post"""
+    text: str | None | None = Field(default=None, description="The description of the Spark Ads post")
+    """The description of the Spark Ads post"""
+    status: str | None | None = Field(default=None, description="Item status (e.g. HESITATE_RECOMMEND)")
+    """Item status (e.g. HESITATE_RECOMMEND)"""
+    item_type: str | None | None = Field(default=None, description="The type of Spark Ads post (VIDEO or CAROUSEL)")
+    """The type of Spark Ads post (VIDEO or CAROUSEL)"""
+
+class SparkAdUserInfo(BaseModel):
+    """Information about the TikTok account"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    tiktok_name: str | None | None = Field(default=None, description="The user name of the TikTok account")
+    """The user name of the TikTok account"""
+    identity_id: str | None | None = Field(default=None, description="Identity ID")
+    """Identity ID"""
+    identity_type: str | None | None = Field(default=None, description="Identity type")
+    """Identity type"""
+
+class SparkAd(BaseModel):
+    """TikTok Spark Ad post authorization"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    item_info: SparkAdItemInfo | None = Field(default=None)
+    user_info: SparkAdUserInfo | None = Field(default=None)
+    auth_info: SparkAdAuthInfo | None = Field(default=None)
+    video_info: SparkAdVideoInfo | None = Field(default=None)
+
+class Catalog(BaseModel):
+    """TikTok product catalog"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    catalog_id: str | None = Field(default=None)
+    catalog_name: str | None = Field(default=None)
+    advertiser_id: str | None = Field(default=None)
+    catalog_type: str | None = Field(default=None)
+    catalog_status: str | None = Field(default=None)
+    product_count: int | None = Field(default=None)
+    create_time: str | None = Field(default=None)
+    modify_time: str | None = Field(default=None)
+
 class AdvertisersReportDaily(BaseModel):
     """Daily performance report at the advertiser level"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -535,6 +613,18 @@ class CreativeAssetsImagesListResultMeta(BaseModel):
 
 class CreativeAssetsVideosListResultMeta(BaseModel):
     """Metadata for creative_assets_videos.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    page_info: dict[str, Any] | None = Field(default=None)
+
+class SparkAdsListResultMeta(BaseModel):
+    """Metadata for spark_ads.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    page_info: dict[str, Any] | None = Field(default=None)
+
+class CatalogsListResultMeta(BaseModel):
+    """Metadata for catalogs.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     page_info: dict[str, Any] | None = Field(default=None)
@@ -866,6 +956,20 @@ class CreativeAssetsVideosSearchData(BaseModel):
     """ID of the video."""
     width: int | None = None
     """Width of the video in pixels."""
+
+
+class SparkAdsSearchData(BaseModel):
+    """Search result data for spark_ads entity."""
+    model_config = ConfigDict(extra="allow")
+
+    item_info: dict[str, Any] | None = None
+    """Information about the Spark Ads post including item_id, auth_code, text, status, and item_type."""
+    user_info: dict[str, Any] | None = None
+    """Information about the TikTok account including tiktok_name, identity_id, and identity_type."""
+    auth_info: dict[str, Any] | None = None
+    """Authorization details including invite_start_time, auth_start_time, auth_end_time, and ad_auth_status."""
+    video_info: dict[str, Any] | None = None
+    """Video post details including duration, preview_url, poster_url, height, width, and size."""
 
 
 class AdvertisersReportsDailySearchData(BaseModel):
@@ -1259,6 +1363,9 @@ CreativeAssetsImagesSearchResult = AirbyteSearchResult[CreativeAssetsImagesSearc
 CreativeAssetsVideosSearchResult = AirbyteSearchResult[CreativeAssetsVideosSearchData]
 """Search result type for creative_assets_videos entity."""
 
+SparkAdsSearchResult = AirbyteSearchResult[SparkAdsSearchData]
+"""Search result type for spark_ads entity."""
+
 AdvertisersReportsDailySearchResult = AirbyteSearchResult[AdvertisersReportsDailySearchData]
 """Search result type for advertisers_reports_daily entity."""
 
@@ -1298,6 +1405,12 @@ CreativeAssetsImagesListResult = TiktokMarketingExecuteResultWithMeta[list[Creat
 
 CreativeAssetsVideosListResult = TiktokMarketingExecuteResultWithMeta[list[CreativeAssetVideo], CreativeAssetsVideosListResultMeta]
 """Result type for creative_assets_videos.list operation with data and metadata."""
+
+SparkAdsListResult = TiktokMarketingExecuteResultWithMeta[list[SparkAd], SparkAdsListResultMeta]
+"""Result type for spark_ads.list operation with data and metadata."""
+
+CatalogsListResult = TiktokMarketingExecuteResultWithMeta[list[Catalog], CatalogsListResultMeta]
+"""Result type for catalogs.list operation with data and metadata."""
 
 AdvertisersReportsDailyListResult = TiktokMarketingExecuteResultWithMeta[list[AdvertisersReportDaily], AdvertisersReportsDailyListResultMeta]
 """Result type for advertisers_reports_daily.list operation with data and metadata."""
