@@ -16,6 +16,21 @@ from pydantic_core import Url
 from airbyte_agent_sdk.schema.extensions import CacheConfig, EntityRelationshipConfig, ReplicationConfig, RetryConfig, ScopingParamConfig
 
 
+class RuntimeMode(StrEnum):
+    """Runtime mode declared in `x-airbyte-runtime-mode`.
+
+    Each connector definition version has exactly one runtime mode:
+
+    * `direct_only` — direct SDK/API actions only; no Context Store.
+    * `context_store_only` — Context Store/search only; no direct actions.
+    * `direct_and_context_store` — both direct actions and Context Store.
+    """
+
+    DIRECT_ONLY = "direct_only"
+    CONTEXT_STORE_ONLY = "context_store_only"
+    DIRECT_AND_CONTEXT_STORE = "direct_and_context_store"
+
+
 class ExampleQuestions(BaseModel):
     """
     Example questions for AI connector documentation.
@@ -227,6 +242,15 @@ class Info(BaseModel):
         alias="x-airbyte-skip-context-store",
         description="Reason why this connector does not define x-airbyte-context-store. "
         "Connectors must have either x-airbyte-context-store or x-airbyte-skip-context-store with a justification.",
+    )
+    x_airbyte_runtime_mode: RuntimeMode | None = Field(
+        default=None,
+        alias="x-airbyte-runtime-mode",
+        description="Runtime mode for the connector definition. "
+        "Declares which execution mode the connector supports: "
+        "`direct_only` (SDK/API actions only), `context_store_only` (Context Store search only), "
+        "or `direct_and_context_store` (both). "
+        "Missing means legacy behaviour (inferred from template mode).",
     )
     x_airbyte_response_error_check: ResponseErrorCheck | None = Field(
         default=None,

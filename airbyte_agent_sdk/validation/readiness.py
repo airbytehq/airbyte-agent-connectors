@@ -20,6 +20,7 @@ from airbyte_agent_sdk.connector_model_loader import (
     ConnectorModelLoaderError,
     load_connector_model,
 )
+from airbyte_agent_sdk.schema.base import RuntimeMode
 from airbyte_agent_sdk.testing.spec_loader import load_test_spec
 from airbyte_agent_sdk.types import Action, ConnectorModel, EndpointDefinition
 from airbyte_agent_sdk.utils import infer_auth_scheme_name
@@ -940,6 +941,81 @@ def _meta_extractor_has_pagination_field(meta: Dict[str, str] | None) -> bool:
     return False
 
 
+_VALID_RUNTIME_MODES = {m.value for m in RuntimeMode}
+
+_REPLICATION_METADATA_KEYS = (
+    "x-airbyte-replication-config",
+    "x-airbyte-replication-version",
+    "x-airbyte-replication-compatibility",
+)
+
+
+def _check_runtime_mode(raw_spec: dict[str, Any]) -> tuple[list[str], list[str], bool, bool]:
+    """Validate `x-airbyte-runtime-mode` in the connector spec.
+
+    Returns `(errors, warnings, is_direct_only, has_explicit_mode)`.
+
+    * `is_direct_only` — True when the declared mode is `direct_only`,
+      meaning replication / context-store checks should be skipped.
+    * `has_explicit_mode` — True when the field is present (even if invalid),
+      so callers can distinguish "legacy / not declared" from "declared".
+    """
+    errors: list[str] = []
+    warnings: list[str] = []
+    is_direct_only = False
+    has_explicit_mode = False
+
+    info = raw_spec.get("info", {})
+    raw_mode = info.get("x-airbyte-runtime-mode")
+
+    if raw_mode is None:
+        return errors, warnings, is_direct_only, has_explicit_mode
+
+    has_explicit_mode = True
+
+    # --- structural checks ---
+    if not isinstance(raw_mode, str):
+        errors.append(f"x-airbyte-runtime-mode must be a string. Got {type(raw_mode).__name__}.")
+        return errors, warnings, is_direct_only, has_explicit_mode
+
+    if raw_mode not in _VALID_RUNTIME_MODES:
+        errors.append(f"x-airbyte-runtime-mode has unknown value: {raw_mode!r}. Allowed: {sorted(_VALID_RUNTIME_MODES)}.")
+        return errors, warnings, is_direct_only, has_explicit_mode
+
+    # --- semantic checks per mode ---
+    if raw_mode == RuntimeMode.DIRECT_ONLY:
+        is_direct_only = True
+        skip_cs = info.get("x-airbyte-skip-context-store")
+        if not skip_cs:
+            errors.append("x-airbyte-runtime-mode: direct_only requires x-airbyte-skip-context-store " "with a non-empty justification.")
+        elif isinstance(skip_cs, str) and not skip_cs.strip():
+            errors.append("x-airbyte-skip-context-store is set but empty. Provide a non-empty justification for direct_only connectors.")
+        cs_config = info.get("x-airbyte-context-store")
+        if cs_config is not None:
+            errors.append(
+                "x-airbyte-runtime-mode: direct_only must not declare x-airbyte-context-store. "
+                "Either remove x-airbyte-context-store or change runtime mode."
+            )
+        present_repl = [k for k in _REPLICATION_METADATA_KEYS if info.get(k) is not None]
+        if present_repl:
+            errors.append(f"x-airbyte-runtime-mode: direct_only must not declare replication metadata. " f"Remove: {', '.join(present_repl)}.")
+
+    elif raw_mode in (RuntimeMode.CONTEXT_STORE_ONLY, RuntimeMode.DIRECT_AND_CONTEXT_STORE):
+        cs_config = info.get("x-airbyte-context-store")
+        if cs_config is None:
+            errors.append(f"x-airbyte-runtime-mode: {raw_mode} requires x-airbyte-context-store with entity definitions.")
+        elif isinstance(cs_config, dict) and not cs_config.get("entities"):
+            errors.append(f"x-airbyte-runtime-mode: {raw_mode}: x-airbyte-context-store.entities is empty. Declare at least one entity.")
+        skip_cs = info.get("x-airbyte-skip-context-store")
+        if skip_cs is not None:
+            errors.append(
+                f"x-airbyte-runtime-mode: {raw_mode} must not declare x-airbyte-skip-context-store. "
+                "Remove x-airbyte-skip-context-store when the connector supports Context Store."
+            )
+
+    return errors, warnings, is_direct_only, has_explicit_mode
+
+
 def _check_cache_entity_fields(raw_spec: Dict[str, Any]) -> Tuple[List[str], List[str]]:
     """Validate that each x-airbyte-context-store entity declares at least one searchable field.
 
@@ -1355,21 +1431,33 @@ def validate_connector_readiness(connector_dir: str | Path) -> Dict[str, Any]:
                 }
             )
 
+    # Validate x-airbyte-runtime-mode (structural + semantic)
+    capability_errors, capability_warnings, is_direct_only, has_explicit_mode = _check_runtime_mode(raw_spec)
+    total_errors += len(capability_errors)
+    total_warnings += len(capability_warnings)
+
     # Validate replication compatibility with Airbyte
-    replication_result = validate_replication_compatibility(
-        connector_yaml_path=config_file,
-        connector_def=raw_spec,
-    )
-
-    # Merge replication errors/warnings into totals
-    replication_errors = replication_result.get("errors", [])
-    replication_warnings = replication_result.get("warnings", [])
-
-    # All agent connectors must have a replication counterpart in the Airbyte registry
-    if not replication_result.get("registry_found", False):
-        replication_errors.append(
-            "No replication connector found in Airbyte registry. " "All agent connectors must have a corresponding replication connector."
+    # Direct-only connectors intentionally have no Airbyte replication counterpart,
+    # so skip replication validation entirely for them.
+    if is_direct_only:
+        replication_result: Dict[str, Any] = {"errors": [], "warnings": [], "registry_found": True}
+        replication_errors: list[str] = []
+        replication_warnings: list[str] = []
+    else:
+        replication_result = validate_replication_compatibility(
+            connector_yaml_path=config_file,
+            connector_def=raw_spec,
         )
+
+        # Merge replication errors/warnings into totals
+        replication_errors = replication_result.get("errors", [])
+        replication_warnings = replication_result.get("warnings", [])
+
+        # All agent connectors must have a replication counterpart in the Airbyte registry
+        if not replication_result.get("registry_found", False):
+            replication_errors.append(
+                "No replication connector found in Airbyte registry. " "All agent connectors must have a corresponding replication connector."
+            )
 
     total_errors += len(replication_errors)
     total_warnings += len(replication_warnings)
@@ -1386,23 +1474,26 @@ def validate_connector_readiness(connector_dir: str | Path) -> Dict[str, Any]:
         replication_warnings.append(drift_warning)
         total_warnings += 1
 
-    # Check x-airbyte-context-store presence (must have context-store or explicit skip reason)
+    # Check x-airbyte-context-store presence (must have context-store or explicit skip reason).
+    # Explicit runtime modes already validate CS presence/entities in _check_runtime_mode,
+    # so this generic check only runs for legacy connectors (no explicit mode declared).
     info_section = raw_spec.get("info", {})
     cache_config = info_section.get("x-airbyte-context-store")
     skip_context_store = info_section.get("x-airbyte-skip-context-store")
     cache_presence_errors: list[str] = []
-    if cache_config is None and not skip_context_store:
-        cache_presence_errors.append(
-            "Connector is missing x-airbyte-context-store. "
-            "Either add x-airbyte-context-store with entity definitions to enable api_search, "
-            "or add x-airbyte-skip-context-store with a justification to opt out."
-        )
-    elif cache_config is not None and not cache_config.get("entities"):
-        cache_presence_errors.append(
-            "x-airbyte-context-store.entities is empty. "
-            "Either declare at least one entity with searchable fields, "
-            "or remove x-airbyte-context-store and add x-airbyte-skip-context-store with a justification to opt out."
-        )
+    if not has_explicit_mode:
+        if cache_config is None and not skip_context_store:
+            cache_presence_errors.append(
+                "Connector is missing x-airbyte-context-store. "
+                "Either add x-airbyte-context-store with entity definitions to enable api_search, "
+                "or add x-airbyte-skip-context-store with a justification to opt out."
+            )
+        elif cache_config is not None and not cache_config.get("entities"):
+            cache_presence_errors.append(
+                "x-airbyte-context-store.entities is empty. "
+                "Either declare at least one entity with searchable fields, "
+                "or remove x-airbyte-context-store and add x-airbyte-skip-context-store with a justification to opt out."
+            )
     total_errors += len(cache_presence_errors)
 
     # Require x-airbyte-name on every context-store entity.
@@ -1435,8 +1526,8 @@ def validate_connector_readiness(connector_dir: str | Path) -> Dict[str, Any]:
                 )
     total_errors += len(cache_name_errors)
 
-    # Validate x-airbyte-context-store entities against manifest (skip if opted out)
-    if not skip_context_store:
+    # Validate x-airbyte-context-store entities against manifest (skip if opted out or direct-only)
+    if not skip_context_store and not is_direct_only:
         cache_result = validate_cache_against_manifest(
             connector_yaml_path=config_file,
             connector_def=raw_spec,
@@ -1478,7 +1569,7 @@ def validate_connector_readiness(connector_dir: str | Path) -> Dict[str, Any]:
     total_errors += len(cache_field_errors)
     total_warnings += len(cache_field_warnings)
 
-    # Update success criteria to include replication, cache, auth scheme, and coverage validation
+    # Update success criteria to include replication, cache, auth scheme, capability, and coverage validation
     success = (
         operations_missing_cassettes == 0
         and cassettes_invalid == 0
@@ -1488,6 +1579,7 @@ def validate_connector_readiness(connector_dir: str | Path) -> Dict[str, Any]:
         and len(cache_name_errors) == 0
         and len(cache_errors) == 0
         and len(cache_field_errors) == 0
+        and len(capability_errors) == 0
         and auth_valid
         and len(relationship_coverage_errors) == 0
         and len(list_pagination_errors) == 0
@@ -1512,14 +1604,16 @@ def validate_connector_readiness(connector_dir: str | Path) -> Dict[str, Any]:
             "to enable reliable health checks."
         )
 
-    # Add cache presence errors to readiness_errors
-    readiness_errors = list(relationship_coverage_errors)  # copy to avoid mutating original
+    # Add capability and cache presence errors to readiness_errors
+    readiness_errors = list(capability_errors)
+    readiness_errors.extend(relationship_coverage_errors)
     readiness_errors.extend(cache_presence_errors)
     readiness_errors.extend(cache_name_errors)
     readiness_errors.extend(list_pagination_errors)
     readiness_errors.extend(cache_field_errors)
 
     # Add coverage warnings to readiness_warnings (errors already counted above)
+    readiness_warnings.extend(capability_warnings)
     readiness_warnings.extend(relationship_coverage_warnings)
     readiness_warnings.extend(header_param_warnings)
     readiness_warnings.extend(scoping_key_warnings)

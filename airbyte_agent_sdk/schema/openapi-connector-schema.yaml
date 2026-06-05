@@ -926,6 +926,15 @@ $defs:
           Connectors must have either x-airbyte-context-store or x-airbyte-skip-context-store
           with a justification.
         title: X-Airbyte-Skip-Context-Store
+      x-airbyte-runtime-mode:
+        anyOf:
+        - $ref: '#/$defs/RuntimeMode'
+        - type: 'null'
+        default: null
+        description: 'Runtime mode for the connector definition. Declares which execution
+          mode the connector supports: `direct_only` (SDK/API actions only), `context_store_only`
+          (Context Store search only), or `direct_and_context_store` (both). Missing
+          means legacy behaviour (inferred from template mode).'
       x-airbyte-response-error-check:
         anyOf:
         - $ref: '#/$defs/ResponseErrorCheck'
@@ -1785,6 +1794,24 @@ $defs:
         type: string
     title: RetryConfig
     type: object
+  RuntimeMode:
+    description: 'Runtime mode declared in `x-airbyte-runtime-mode`.
+
+
+      Each connector definition version has exactly one runtime mode:
+
+
+      * `direct_only` — direct SDK/API actions only; no Context Store.
+
+      * `context_store_only` — Context Store/search only; no direct actions.
+
+      * `direct_and_context_store` — both direct actions and Context Store.'
+    enum:
+    - direct_only
+    - context_store_only
+    - direct_and_context_store
+    title: RuntimeMode
+    type: string
   Schema:
     additionalProperties: false
     description: 'JSON Schema definition for data models.

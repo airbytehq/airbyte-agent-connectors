@@ -206,13 +206,6 @@ class TicketsList(BaseModel):
     paging: Paging | None = Field(default=None)
     total: int | None = Field(default=None)
 
-class SchemaLabels(BaseModel):
-    """Display labels"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    singular: str | None = Field(default=None)
-    plural: str | None = Field(default=None)
-
 class SchemaAssociationsItem(BaseModel):
     """Nested schema for Schema.associations_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -265,6 +258,13 @@ class SchemaPropertiesItem(BaseModel):
     updated_user_id: str | None = Field(default=None, alias="updatedUserId")
     show_currency_symbol: bool | None = Field(default=None, alias="showCurrencySymbol")
     modification_metadata: SchemaPropertiesItemModificationmetadata | None = Field(default=None, alias="modificationMetadata")
+
+class SchemaLabels(BaseModel):
+    """Display labels"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    singular: str | None = Field(default=None)
+    plural: str | None = Field(default=None)
 
 class Schema(BaseModel):
     """Custom object schema definition"""
