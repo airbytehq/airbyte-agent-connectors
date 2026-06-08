@@ -74,7 +74,7 @@ info:
     target_key: siteUrl
     cardinality: many_to_one
   x-airbyte-context-store:
-    disable_compaction: true
+    disable_compaction: false
     entities:
     - entity: sites
       x-airbyte-name: sites
