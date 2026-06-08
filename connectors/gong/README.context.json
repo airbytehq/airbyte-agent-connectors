@@ -2111,6 +2111,48 @@
           "description": "Type indicating the visibility permissions for the answered scorecard."
         }
       ]
+    },
+    "call_transcripts": {
+      "entity": "call_transcripts",
+      "data_type_name": "CallTranscriptsSearchData",
+      "filter_type_name": "CallTranscriptsSearchFilter",
+      "in_filter_type_name": "CallTranscriptsInFilter",
+      "any_value_filter_type_name": "CallTranscriptsAnyValueFilter",
+      "string_filter_type_name": "CallTranscriptsStringFilter",
+      "sort_filter_type_name": "CallTranscriptsSortFilter",
+      "result_type_name": "CallTranscriptsSearchResult",
+      "query_type_name": "CallTranscriptsSearchQuery",
+      "condition_prefix": "CallTranscripts",
+      "condition_type_name": "CallTranscriptsCondition",
+      "fields": [
+        {
+          "name": "callId",
+          "python_name": "call_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Unique identifier for the call."
+        },
+        {
+          "name": "started",
+          "python_name": "started",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Timestamp the call started. Filterable for narrowing transcript search by call time."
+        },
+        {
+          "name": "transcript",
+          "python_name": "transcript",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "json_example_value": [],
+          "description": "Gong transcript speaker turns."
+        }
+      ]
     }
   }
 }

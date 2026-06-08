@@ -1417,6 +1417,151 @@ class StatsActivityScorecardsSearchQuery(TypedDict, total=False):
     sort: list[StatsActivityScorecardsSortFilter]
 
 
+# ===== CALL_TRANSCRIPTS SEARCH TYPES =====
+
+class CallTranscriptsSearchFilter(TypedDict, total=False):
+    """Available fields for filtering call_transcripts search queries."""
+    call_id: str | None
+    """Unique identifier for the call."""
+    started: str | None
+    """Timestamp the call started. Filterable for narrowing transcript search by call time."""
+    transcript: list[Any] | None
+    """Gong transcript speaker turns."""
+
+
+class CallTranscriptsInFilter(TypedDict, total=False):
+    """Available fields for 'in' condition (values are lists)."""
+    call_id: list[str]
+    """Unique identifier for the call."""
+    started: list[str]
+    """Timestamp the call started. Filterable for narrowing transcript search by call time."""
+    transcript: list[list[Any]]
+    """Gong transcript speaker turns."""
+
+
+class CallTranscriptsAnyValueFilter(TypedDict, total=False):
+    """Available fields with Any value type. Used for 'contains' and 'any' conditions."""
+    call_id: Any
+    """Unique identifier for the call."""
+    started: Any
+    """Timestamp the call started. Filterable for narrowing transcript search by call time."""
+    transcript: Any
+    """Gong transcript speaker turns."""
+
+
+class CallTranscriptsStringFilter(TypedDict, total=False):
+    """String fields for text search conditions (like, fuzzy, keyword)."""
+    call_id: str
+    """Unique identifier for the call."""
+    started: str
+    """Timestamp the call started. Filterable for narrowing transcript search by call time."""
+    transcript: str
+    """Gong transcript speaker turns."""
+
+
+class CallTranscriptsSortFilter(TypedDict, total=False):
+    """Available fields for sorting call_transcripts search results."""
+    call_id: AirbyteSortOrder
+    """Unique identifier for the call."""
+    started: AirbyteSortOrder
+    """Timestamp the call started. Filterable for narrowing transcript search by call time."""
+    transcript: AirbyteSortOrder
+    """Gong transcript speaker turns."""
+
+
+# Entity-specific condition types for call_transcripts
+class CallTranscriptsEqCondition(TypedDict, total=False):
+    """Equal to: field equals value."""
+    eq: CallTranscriptsSearchFilter
+
+
+class CallTranscriptsNeqCondition(TypedDict, total=False):
+    """Not equal to: field does not equal value."""
+    neq: CallTranscriptsSearchFilter
+
+
+class CallTranscriptsGtCondition(TypedDict, total=False):
+    """Greater than: field > value."""
+    gt: CallTranscriptsSearchFilter
+
+
+class CallTranscriptsGteCondition(TypedDict, total=False):
+    """Greater than or equal: field >= value."""
+    gte: CallTranscriptsSearchFilter
+
+
+class CallTranscriptsLtCondition(TypedDict, total=False):
+    """Less than: field < value."""
+    lt: CallTranscriptsSearchFilter
+
+
+class CallTranscriptsLteCondition(TypedDict, total=False):
+    """Less than or equal: field <= value."""
+    lte: CallTranscriptsSearchFilter
+
+
+class CallTranscriptsLikeCondition(TypedDict, total=False):
+    """Partial string match with % wildcards."""
+    like: CallTranscriptsStringFilter
+
+
+class CallTranscriptsFuzzyCondition(TypedDict, total=False):
+    """Ordered word text match (case-insensitive)."""
+    fuzzy: CallTranscriptsStringFilter
+
+
+class CallTranscriptsKeywordCondition(TypedDict, total=False):
+    """Keyword text match (any word present)."""
+    keyword: CallTranscriptsStringFilter
+
+
+class CallTranscriptsContainsCondition(TypedDict, total=False):
+    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    contains: CallTranscriptsAnyValueFilter
+
+
+# Reserved keyword conditions using functional TypedDict syntax
+CallTranscriptsInCondition = TypedDict("CallTranscriptsInCondition", {"in": CallTranscriptsInFilter}, total=False)
+"""In list: field value is in list. Example: {"in": {"status": ["active", "pending"]}}"""
+
+CallTranscriptsNotCondition = TypedDict("CallTranscriptsNotCondition", {"not": "CallTranscriptsCondition"}, total=False)
+"""Negates the nested condition."""
+
+CallTranscriptsAndCondition = TypedDict("CallTranscriptsAndCondition", {"and": "list[CallTranscriptsCondition]"}, total=False)
+"""True if all nested conditions are true."""
+
+CallTranscriptsOrCondition = TypedDict("CallTranscriptsOrCondition", {"or": "list[CallTranscriptsCondition]"}, total=False)
+"""True if any nested condition is true."""
+
+CallTranscriptsAnyCondition = TypedDict("CallTranscriptsAnyCondition", {"any": CallTranscriptsAnyValueFilter}, total=False)
+"""Match if ANY element in array field matches nested condition. Example: {"any": {"addresses": {"eq": {"state": "CA"}}}}"""
+
+# Union of all call_transcripts condition types
+CallTranscriptsCondition = (
+    CallTranscriptsEqCondition
+    | CallTranscriptsNeqCondition
+    | CallTranscriptsGtCondition
+    | CallTranscriptsGteCondition
+    | CallTranscriptsLtCondition
+    | CallTranscriptsLteCondition
+    | CallTranscriptsInCondition
+    | CallTranscriptsLikeCondition
+    | CallTranscriptsFuzzyCondition
+    | CallTranscriptsKeywordCondition
+    | CallTranscriptsContainsCondition
+    | CallTranscriptsNotCondition
+    | CallTranscriptsAndCondition
+    | CallTranscriptsOrCondition
+    | CallTranscriptsAnyCondition
+)
+
+
+class CallTranscriptsSearchQuery(TypedDict, total=False):
+    """Search query for call_transcripts entity."""
+    filter: CallTranscriptsCondition
+    sort: list[CallTranscriptsSortFilter]
+
+
 
 # ===== SEARCH PARAMS =====
 

@@ -3912,6 +3912,28 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                     ),
                 ],
             ),
+            CacheEntityConfig(
+                entity='call_transcripts',
+                suggested=True,
+                x_airbyte_name='callTranscripts',
+                fields=[
+                    CacheFieldConfig(
+                        name='callId',
+                        type=['null', 'string'],
+                        description='Unique identifier for the call.',
+                    ),
+                    CacheFieldConfig(
+                        name='started',
+                        type=['null', 'string'],
+                        description='Timestamp the call started. Filterable for narrowing transcript search by call time.',
+                    ),
+                    CacheFieldConfig(
+                        name='transcript',
+                        type=['null', 'array'],
+                        description='Gong transcript speaker turns.',
+                    ),
+                ],
+            ),
         ],
     ),
     search_field_paths={
@@ -4042,6 +4064,12 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
             'scorecardId',
             'scorecardName',
             'visibilityType',
+        ],
+        'call_transcripts': [
+            'callId',
+            'started',
+            'transcript',
+            'transcript[]',
         ],
     },
     example_questions=ExampleQuestions(

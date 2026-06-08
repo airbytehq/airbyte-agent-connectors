@@ -19,6 +19,8 @@ from .models import (
     SettingsScorecardsSearchResult,
     StatsActivityScorecardsSearchData,
     StatsActivityScorecardsSearchResult,
+    CallTranscriptsSearchData,
+    CallTranscriptsSearchResult,
 )
 from airbyte_agent_sdk.types import AirbyteAuthConfig
 
@@ -38,4 +40,6 @@ __all__ = [
     "SettingsScorecardsSearchResult",
     "StatsActivityScorecardsSearchData",
     "StatsActivityScorecardsSearchResult",
+    "CallTranscriptsSearchData",
+    "CallTranscriptsSearchResult",
 ]

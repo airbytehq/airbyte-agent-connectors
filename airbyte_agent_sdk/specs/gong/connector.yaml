@@ -546,6 +546,25 @@ info:
               - 'null'
               - string
             description: Type indicating the visibility permissions for the answered scorecard.
+      - entity: call_transcripts
+        x-airbyte-name: callTranscripts
+        suggested: true
+        fields:
+          - name: callId
+            type:
+              - 'null'
+              - string
+            description: Unique identifier for the call.
+          - name: started
+            type:
+              - 'null'
+              - string
+            description: Timestamp the call started. Filterable for narrowing transcript search by call time.
+          - name: transcript
+            type:
+              - 'null'
+              - array
+            description: Gong transcript speaker turns.
 
   x-airbyte-entity-relationships:
     - source_entity: library_folders
