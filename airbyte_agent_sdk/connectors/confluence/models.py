@@ -67,22 +67,14 @@ class SpacesList(BaseModel):
     results: list[Space] | None = Field(default=None)
     links: SpacesListLinks | None = Field(default=None, alias="_links")
 
-class PageVersion(BaseModel):
-    """Version information"""
+class PageBody(BaseModel):
+    """Page body content"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    created_at: str | None = Field(default=None, alias="createdAt", description="Version creation timestamp")
-    """Version creation timestamp"""
-    message: str | None = Field(default=None, description="Version message")
-    """Version message"""
-    number: int | None = Field(default=None, description="Version number")
-    """Version number"""
-    minor_edit: bool | None = Field(default=None, alias="minorEdit", description="Whether this was a minor edit")
-    """Whether this was a minor edit"""
-    author_id: str | None = Field(default=None, alias="authorId", description="ID of the version author")
-    """ID of the version author"""
-    ncs_step_version: Any | None = Field(default=None, alias="ncsStepVersion", description="NCS step version")
-    """NCS step version"""
+    storage: dict[str, Any] | None = Field(default=None, description="Storage format body")
+    """Storage format body"""
+    atlas_doc_format: dict[str, Any] | None = Field(default=None, description="Atlas doc format body")
+    """Atlas doc format body"""
 
 class PageLinks(BaseModel):
     """Links related to the page"""
@@ -99,14 +91,22 @@ class PageLinks(BaseModel):
     base: str | None = Field(default=None, description="Base URL")
     """Base URL"""
 
-class PageBody(BaseModel):
-    """Page body content"""
+class PageVersion(BaseModel):
+    """Version information"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    storage: dict[str, Any] | None = Field(default=None, description="Storage format body")
-    """Storage format body"""
-    atlas_doc_format: dict[str, Any] | None = Field(default=None, description="Atlas doc format body")
-    """Atlas doc format body"""
+    created_at: str | None = Field(default=None, alias="createdAt", description="Version creation timestamp")
+    """Version creation timestamp"""
+    message: str | None = Field(default=None, description="Version message")
+    """Version message"""
+    number: int | None = Field(default=None, description="Version number")
+    """Version number"""
+    minor_edit: bool | None = Field(default=None, alias="minorEdit", description="Whether this was a minor edit")
+    """Whether this was a minor edit"""
+    author_id: str | None = Field(default=None, alias="authorId", description="ID of the version author")
+    """ID of the version author"""
+    ncs_step_version: Any | None = Field(default=None, alias="ncsStepVersion", description="NCS step version")
+    """NCS step version"""
 
 class Page(BaseModel):
     """Confluence page object"""
@@ -143,6 +143,15 @@ class PagesList(BaseModel):
     results: list[Page] | None = Field(default=None)
     links: PagesListLinks | None = Field(default=None, alias="_links")
 
+class BlogPostBody(BaseModel):
+    """Blog post body content"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    storage: dict[str, Any] | None = Field(default=None, description="Storage format body")
+    """Storage format body"""
+    atlas_doc_format: dict[str, Any] | None = Field(default=None, description="Atlas doc format body")
+    """Atlas doc format body"""
+
 class BlogPostVersion(BaseModel):
     """Version information"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -174,15 +183,6 @@ class BlogPostLinks(BaseModel):
     """Tiny UI link"""
     base: str | None = Field(default=None, description="Base URL")
     """Base URL"""
-
-class BlogPostBody(BaseModel):
-    """Blog post body content"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    storage: dict[str, Any] | None = Field(default=None, description="Storage format body")
-    """Storage format body"""
-    atlas_doc_format: dict[str, Any] | None = Field(default=None, description="Atlas doc format body")
-    """Atlas doc format body"""
 
 class BlogPost(BaseModel):
     """Confluence blog post object"""
