@@ -107,6 +107,39 @@ EXECUTE_INSTRUCTIONS = (
     "\n\n" + FILTER_OPERATORS + "\n\n" + ID_RESOLUTION + "\n\n" + PAGINATION + "\n\n" + DATE_RANGES
 )
 
+# ALPHA semantic-search alternate syntax. Currently scoped to the Gong call_transcripts
+# entity / transcript field; the gating identifiers below mirror the backend
+# (app.core.search.motherduck_embedding_jobs). The note is defined once here so every
+# describe/tool surface advertises identical wording. Lines carry no leading indent so
+# callers can indent to match their surrounding block.
+SEMANTIC_SEARCH_ALPHA_CONNECTOR_NAME = "gong"
+SEMANTIC_SEARCH_ALPHA_ENTITY_NAME = "call_transcripts"
+SEMANTIC_SEARCH_ALPHA_FIELD = "transcript"
+SEMANTIC_SEARCH_ALPHA_NOTE = (
+    "- context_store_search(semantic={field, prompt, filter?, context_size?}, fields?, limit?)\n"
+    "  ALPHA — subject to change. Semantic (similarity) search over the 'transcript' field of Gong call transcripts.\n"
+    "  Embeds `prompt` and returns relevance-ranked hits shaped as {entity, metadata}: `entity` has the call fields "
+    "(callId, started); `metadata` has the similarity `score`, the matched `context` text, and per-turn attribution (speakerId, topic).\n"
+    "  Semantic and `query` are mutually exclusive — pass one or the other. Results are ordered by similarity, so `sort` is not supported.\n"
+    "  Put any filter in `semantic.filter`; it takes the same shape and operators as `query.filter`.\n"
+    "  `context_size` is the number of characters of surrounding transcript returned per hit; "
+    "it defaults to the full embedded window (2048 characters) and cannot exceed it."
+)
+
+
+def is_semantic_search_alpha_target(connector_name: str | None, entity_name: str | None) -> bool:
+    """Whether the ALPHA semantic-search note applies to this connector/entity pairing."""
+    if not connector_name or not entity_name:
+        return False
+    return connector_name.lower() == SEMANTIC_SEARCH_ALPHA_CONNECTOR_NAME and entity_name == SEMANTIC_SEARCH_ALPHA_ENTITY_NAME
+
+
+def semantic_search_alpha_lines(connector_name: str | None, entity_name: str | None, indent: str = "      ") -> list[str]:
+    """Return indented ALPHA semantic-search note lines, or empty when ungated."""
+    if not is_semantic_search_alpha_target(connector_name, entity_name):
+        return []
+    return [f"{indent}{line}" for line in SEMANTIC_SEARCH_ALPHA_NOTE.split("\n")]
+
 
 def _simplify_type(type_value: str | list[str]) -> str:
     """Simplify JSON Schema type to display string. ['null', 'string'] → 'string'."""
@@ -613,6 +646,8 @@ def generate_tool_description(
     # at the first empty line and only keeps the initial section.
 
     # Entity/action parameter details (including pagination params like limit, starting_after)
+    info = getattr(getattr(model, "openapi_spec", None), "info", None)
+    connector_name = getattr(info, "x_airbyte_connector_name", None)
     search_field_paths = _collect_search_field_paths(model)
     entity_field_schemas = _collect_entity_field_schemas(model)
     _, rels_by_entity = _build_relationship_index(model.entities)
@@ -695,6 +730,7 @@ def generate_tool_description(
         if entity.name in search_field_paths:
             search_sig = _format_search_param_signature()
             lines.append(f"      - context_store_search{search_sig}")
+            lines.extend(semantic_search_alpha_lines(connector_name, entity.name))
 
         # Searchable fields sub-section (nested paths for search queries)
         entity_search_fields = search_field_paths.get(entity.name)
