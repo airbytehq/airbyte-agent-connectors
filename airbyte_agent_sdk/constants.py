@@ -54,6 +54,17 @@ MILLISECONDS_PER_SECOND = 1000
 """Conversion factor from seconds to milliseconds."""
 
 # ============================================================================
+# Execution
+# ============================================================================
+
+INTENT_MAX_LENGTH = 512
+"""Maximum length of the execution ``intent`` string.
+
+Mirrors the backend request-schema cap so oversized intents fail locally
+instead of after an HTTP round trip.
+"""
+
+# ============================================================================
 # Retry and Backoff Defaults
 # ============================================================================
 

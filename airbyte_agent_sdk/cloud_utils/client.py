@@ -8,6 +8,7 @@ from typing import Any
 
 import httpx
 
+from airbyte_agent_sdk.constants import INTENT_MAX_LENGTH
 from airbyte_agent_sdk.errors import ConnectorAmbiguityError, ConnectorNotFoundError
 from airbyte_agent_sdk.http.exceptions import (
     AuthenticationError,
@@ -282,6 +283,7 @@ class AirbyteCloudClient:
         select_fields: list[str] | None = None,
         exclude_fields: list[str] | None = None,
         skip_truncation: bool = True,
+        intent: str | None = None,
     ) -> dict[str, Any]:
         """Execute a connector operation.
 
@@ -293,11 +295,13 @@ class AirbyteCloudClient:
             select_fields: Optional allowlist of dot-notation fields to include
             exclude_fields: Optional blocklist of dot-notation fields to remove
             skip_truncation: Disable long-text truncation for collection actions
+            intent: Optional short description of why this execution is being performed (max 512 chars)
 
         Returns:
             Raw JSON response dict from the API
 
         Raises:
+            ValueError: If intent exceeds 512 characters
             AuthenticationError: If API returns 401/403
             RateLimitError: If API returns 429
             ConnectorValidationError: If API returns 400/422 (retryable by LLM)
@@ -312,6 +316,9 @@ class AirbyteCloudClient:
                 params={"limit": 10}
             )
         """
+        if intent is not None and len(intent) > INTENT_MAX_LENGTH:
+            raise ValueError(f"intent must be at most {INTENT_MAX_LENGTH} characters, got {len(intent)}")
+
         token = await self.get_bearer_token()
         url = f"{self.API_BASE_URL}/api/v1/integrations/connectors/{connector_id}/execute"
         headers = self._build_headers(token=token)
@@ -326,6 +333,8 @@ class AirbyteCloudClient:
             request_body["select_fields"] = select_fields
         if exclude_fields is not None:
             request_body["exclude_fields"] = exclude_fields
+        if intent is not None:
+            request_body["intent"] = intent
 
         response = await self._http_client.post(url, json=request_body, headers=headers)
         _raise_with_body(response)

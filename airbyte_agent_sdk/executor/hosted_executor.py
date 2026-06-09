@@ -152,6 +152,7 @@ class HostedExecutor:
         select_fields: list[str] | None = None,
         exclude_fields: list[str] | None = None,
         skip_truncation: bool = True,
+        intent: str | None = None,
     ) -> ExecutionResult: ...
 
     async def execute(
@@ -163,6 +164,7 @@ class HostedExecutor:
         select_fields: list[str] | None = None,
         exclude_fields: list[str] | None = None,
         skip_truncation: bool = True,
+        intent: str | None = None,
     ) -> ExecutionResult:
         """Execute connector via cloud API (ExecutorProtocol implementation).
 
@@ -184,6 +186,8 @@ class HostedExecutor:
                 (only with string form)
             skip_truncation: Disable long-text truncation for collection actions
                 (only with string form)
+            intent: Optional short description of why this execution is being
+                performed, max 512 chars (only with string form)
 
         Returns:
             ExecutionResult with success/failure status
@@ -219,10 +223,18 @@ class HostedExecutor:
                 select_fields=select_fields,
                 exclude_fields=exclude_fields,
                 skip_truncation=skip_truncation,
+                intent=intent,
             )
         else:
-            if action is not None or params is not None or select_fields is not None or exclude_fields is not None or skip_truncation is not True:
-                raise TypeError("Cannot pass action, params, field selection, or truncation options when using ExecutionConfig")
+            if (
+                action is not None
+                or params is not None
+                or select_fields is not None
+                or exclude_fields is not None
+                or skip_truncation is not True
+                or intent is not None
+            ):
+                raise TypeError("Cannot pass action, params, field selection, truncation, or intent options when using ExecutionConfig")
             config = config_or_entity
         tracer = trace.get_tracer("airbyte.connector-sdk.executor.hosted")
 
@@ -262,6 +274,7 @@ class HostedExecutor:
                     select_fields=config.select_fields,
                     exclude_fields=config.exclude_fields,
                     skip_truncation=config.skip_truncation,
+                    intent=config.intent,
                 )
 
                 # Step 4: Parse the response into ExecutionResult

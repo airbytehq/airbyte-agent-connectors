@@ -6,6 +6,7 @@ from collections.abc import AsyncIterator
 from dataclasses import dataclass, field
 from typing import Any, Protocol, runtime_checkable
 
+from airbyte_agent_sdk.constants import INTENT_MAX_LENGTH
 from airbyte_agent_sdk.errors import AirbyteError
 from airbyte_agent_sdk.types import Action
 
@@ -28,6 +29,7 @@ class ExecutionConfig:
         select_fields: Optional allowlist of dot-notation fields to include
         exclude_fields: Optional blocklist of dot-notation fields to remove
         skip_truncation: Disable long-text truncation for collection actions
+        intent: Optional short description of why this execution is being performed (max 512 chars)
 
     Example:
         config = ExecutionConfig(
@@ -43,6 +45,11 @@ class ExecutionConfig:
     select_fields: list[str] | None = field(default=None, kw_only=True)
     exclude_fields: list[str] | None = field(default=None, kw_only=True)
     skip_truncation: bool = field(default=True, kw_only=True)
+    intent: str | None = field(default=None, kw_only=True)
+
+    def __post_init__(self) -> None:
+        if self.intent is not None and len(self.intent) > INTENT_MAX_LENGTH:
+            raise ValueError(f"intent must be at most {INTENT_MAX_LENGTH} characters, got {len(self.intent)}")
 
 
 @dataclass
