@@ -117,55 +117,6 @@ class OrderAddress(BaseModel):
     latitude: float | None = Field(default=None)
     longitude: float | None = Field(default=None)
 
-class Transaction(BaseModel):
-    """An order transaction"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: int
-    order_id: int | None = Field(default=None)
-    kind: str | None = Field(default=None)
-    gateway: str | None = Field(default=None)
-    status: str | None = Field(default=None)
-    message: str | None = Field(default=None)
-    created_at: str | None = Field(default=None)
-    test: bool | None = Field(default=None)
-    authorization: str | None = Field(default=None)
-    location_id: int | None = Field(default=None)
-    user_id: int | None = Field(default=None)
-    parent_id: int | None = Field(default=None)
-    processed_at: str | None = Field(default=None)
-    device_id: int | None = Field(default=None)
-    error_code: str | None = Field(default=None)
-    source_name: str | None = Field(default=None)
-    receipt: dict[str, Any] | None = Field(default=None)
-    currency_exchange_adjustment: dict[str, Any] | None = Field(default=None)
-    amount: str | None = Field(default=None)
-    currency: str | None = Field(default=None)
-    payment_id: str | None = Field(default=None)
-    total_unsettled_set: dict[str, Any] | None = Field(default=None)
-    manual_payment_gateway: bool | None = Field(default=None)
-    admin_graphql_api_id: str | None = Field(default=None)
-
-class Refund(BaseModel):
-    """An order refund"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: int
-    order_id: int | None = Field(default=None)
-    created_at: str | None = Field(default=None)
-    note: str | None = Field(default=None)
-    user_id: int | None = Field(default=None)
-    processed_at: str | None = Field(default=None)
-    restock: bool | None = Field(default=None)
-    duties: list[dict[str, Any]] | None = Field(default=None)
-    total_duties_set: dict[str, Any] | None = Field(default=None)
-    return_: dict[str, Any] | None = Field(default=None, alias="return")
-    refund_line_items: list[dict[str, Any]] | None = Field(default=None)
-    transactions: list[Transaction] | None = Field(default=None)
-    order_adjustments: list[dict[str, Any]] | None = Field(default=None)
-    admin_graphql_api_id: str | None = Field(default=None)
-    refund_shipping_lines: list[dict[str, Any]] | None = Field(default=None)
-
 class LineItem(BaseModel):
     """LineItem type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -222,6 +173,55 @@ class Fulfillment(BaseModel):
     receipt: dict[str, Any] | None = Field(default=None)
     name: str | None = Field(default=None)
     admin_graphql_api_id: str | None = Field(default=None)
+
+class Transaction(BaseModel):
+    """An order transaction"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int
+    order_id: int | None = Field(default=None)
+    kind: str | None = Field(default=None)
+    gateway: str | None = Field(default=None)
+    status: str | None = Field(default=None)
+    message: str | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    test: bool | None = Field(default=None)
+    authorization: str | None = Field(default=None)
+    location_id: int | None = Field(default=None)
+    user_id: int | None = Field(default=None)
+    parent_id: int | None = Field(default=None)
+    processed_at: str | None = Field(default=None)
+    device_id: int | None = Field(default=None)
+    error_code: str | None = Field(default=None)
+    source_name: str | None = Field(default=None)
+    receipt: dict[str, Any] | None = Field(default=None)
+    currency_exchange_adjustment: dict[str, Any] | None = Field(default=None)
+    amount: str | None = Field(default=None)
+    currency: str | None = Field(default=None)
+    payment_id: str | None = Field(default=None)
+    total_unsettled_set: dict[str, Any] | None = Field(default=None)
+    manual_payment_gateway: bool | None = Field(default=None)
+    admin_graphql_api_id: str | None = Field(default=None)
+
+class Refund(BaseModel):
+    """An order refund"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int
+    order_id: int | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    note: str | None = Field(default=None)
+    user_id: int | None = Field(default=None)
+    processed_at: str | None = Field(default=None)
+    restock: bool | None = Field(default=None)
+    duties: list[dict[str, Any]] | None = Field(default=None)
+    total_duties_set: dict[str, Any] | None = Field(default=None)
+    return_: dict[str, Any] | None = Field(default=None, alias="return")
+    refund_line_items: list[dict[str, Any]] | None = Field(default=None)
+    transactions: list[Transaction] | None = Field(default=None)
+    order_adjustments: list[dict[str, Any]] | None = Field(default=None)
+    admin_graphql_api_id: str | None = Field(default=None)
+    refund_shipping_lines: list[dict[str, Any]] | None = Field(default=None)
 
 class Order(BaseModel):
     """A Shopify order"""
@@ -1623,6 +1623,54 @@ class OrderRefundsSearchData(BaseModel):
     """ISO 8601 timestamp when the refund was processed"""
 
 
+class OrdersSearchData(BaseModel):
+    """Search result data for orders entity."""
+    model_config = ConfigDict(extra="allow")
+
+    id: int | None = None
+    """Unique identifier for the order"""
+    name: str | None = None
+    """Shopify-assigned display name for the order (e.g. `#1001`)"""
+    email: str | None = None
+    """Email address associated with the order"""
+    phone: str | None = None
+    """Phone number associated with the order"""
+    order_number: int | None = None
+    """Sequential order number displayed in the Shopify admin"""
+    financial_status: str | None = None
+    """Payment status of the order (e.g. `paid`, `pending`, `refunded`, `partially_refunded`)"""
+    fulfillment_status: str | None = None
+    """Fulfillment status of the order (e.g. `fulfilled`, `partial`, `null` for unfulfilled)"""
+    currency: str | None = None
+    """ISO 4217 currency code for the order totals"""
+    total_price: str | None = None
+    """Total price of the order including taxes and discounts"""
+    subtotal_price: str | None = None
+    """Subtotal of the order before shipping and taxes"""
+    total_tax: str | None = None
+    """Total tax amount applied to the order"""
+    total_discounts: str | None = None
+    """Total discount amount applied to the order"""
+    total_weight: int | None = None
+    """Total weight of all items in the order, in grams"""
+    cancel_reason: str | None = None
+    """Reason the order was cancelled, if applicable"""
+    cancelled_at: str | None = None
+    """ISO 8601 timestamp when the order was cancelled, if applicable"""
+    closed_at: str | None = None
+    """ISO 8601 timestamp when the order was closed, if applicable"""
+    tags: str | None = None
+    """Comma-separated tags attached to the order"""
+    note: str | None = None
+    """Merchant-provided note on the order"""
+    processed_at: str | None = None
+    """ISO 8601 timestamp when the order was processed"""
+    created_at: str | None = None
+    """ISO 8601 timestamp when the order was created"""
+    updated_at: str | None = None
+    """ISO 8601 timestamp when the order was last updated"""
+
+
 class PriceRulesSearchData(BaseModel):
     """Search result data for price_rules entity."""
     model_config = ConfigDict(extra="allow")
@@ -1673,6 +1721,36 @@ class ProductImagesSearchData(BaseModel):
     """ISO 8601 timestamp when the image was created"""
     updated_at: str | None = None
     """ISO 8601 timestamp when the image was last updated"""
+
+
+class ProductsSearchData(BaseModel):
+    """Search result data for products entity."""
+    model_config = ConfigDict(extra="allow")
+
+    id: int | None = None
+    """Unique identifier for the product"""
+    title: str | None = None
+    """Product title"""
+    body_html: str | None = None
+    """Product description in HTML"""
+    vendor: str | None = None
+    """Product vendor or manufacturer"""
+    product_type: str | None = None
+    """Product type used for categorization"""
+    handle: str | None = None
+    """URL-friendly handle for the product"""
+    status: str | None = None
+    """Product status (`active`, `archived`, or `draft`)"""
+    tags: str | None = None
+    """Comma-separated tags attached to the product"""
+    published_scope: str | None = None
+    """Publishing scope (`web` or `global`)"""
+    published_at: str | None = None
+    """ISO 8601 timestamp when the product was published"""
+    created_at: str | None = None
+    """ISO 8601 timestamp when the product was created"""
+    updated_at: str | None = None
+    """ISO 8601 timestamp when the product was last updated"""
 
 
 class ProductVariantsSearchData(BaseModel):
@@ -1863,11 +1941,17 @@ MetafieldSmartCollectionsSearchResult = AirbyteSearchResult[MetafieldSmartCollec
 OrderRefundsSearchResult = AirbyteSearchResult[OrderRefundsSearchData]
 """Search result type for order_refunds entity."""
 
+OrdersSearchResult = AirbyteSearchResult[OrdersSearchData]
+"""Search result type for orders entity."""
+
 PriceRulesSearchResult = AirbyteSearchResult[PriceRulesSearchData]
 """Search result type for price_rules entity."""
 
 ProductImagesSearchResult = AirbyteSearchResult[ProductImagesSearchData]
 """Search result type for product_images entity."""
+
+ProductsSearchResult = AirbyteSearchResult[ProductsSearchData]
+"""Search result type for products entity."""
 
 ProductVariantsSearchResult = AirbyteSearchResult[ProductVariantsSearchData]
 """Search result type for product_variants entity."""

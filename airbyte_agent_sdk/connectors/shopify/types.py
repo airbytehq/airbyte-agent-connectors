@@ -4764,6 +4764,331 @@ class OrderRefundsSearchQuery(TypedDict, total=False):
     sort: list[OrderRefundsSortFilter]
 
 
+# ===== ORDERS SEARCH TYPES =====
+
+class OrdersSearchFilter(TypedDict, total=False):
+    """Available fields for filtering orders search queries."""
+    id: int | None
+    """Unique identifier for the order"""
+    name: str | None
+    """Shopify-assigned display name for the order (e.g. `#1001`)"""
+    email: str | None
+    """Email address associated with the order"""
+    phone: str | None
+    """Phone number associated with the order"""
+    order_number: int | None
+    """Sequential order number displayed in the Shopify admin"""
+    financial_status: str | None
+    """Payment status of the order (e.g. `paid`, `pending`, `refunded`, `partially_refunded`)"""
+    fulfillment_status: str | None
+    """Fulfillment status of the order (e.g. `fulfilled`, `partial`, `null` for unfulfilled)"""
+    currency: str | None
+    """ISO 4217 currency code for the order totals"""
+    total_price: str | None
+    """Total price of the order including taxes and discounts"""
+    subtotal_price: str | None
+    """Subtotal of the order before shipping and taxes"""
+    total_tax: str | None
+    """Total tax amount applied to the order"""
+    total_discounts: str | None
+    """Total discount amount applied to the order"""
+    total_weight: int | None
+    """Total weight of all items in the order, in grams"""
+    cancel_reason: str | None
+    """Reason the order was cancelled, if applicable"""
+    cancelled_at: str | None
+    """ISO 8601 timestamp when the order was cancelled, if applicable"""
+    closed_at: str | None
+    """ISO 8601 timestamp when the order was closed, if applicable"""
+    tags: str | None
+    """Comma-separated tags attached to the order"""
+    note: str | None
+    """Merchant-provided note on the order"""
+    processed_at: str | None
+    """ISO 8601 timestamp when the order was processed"""
+    created_at: str | None
+    """ISO 8601 timestamp when the order was created"""
+    updated_at: str | None
+    """ISO 8601 timestamp when the order was last updated"""
+
+
+class OrdersInFilter(TypedDict, total=False):
+    """Available fields for 'in' condition (values are lists)."""
+    id: list[int]
+    """Unique identifier for the order"""
+    name: list[str]
+    """Shopify-assigned display name for the order (e.g. `#1001`)"""
+    email: list[str]
+    """Email address associated with the order"""
+    phone: list[str]
+    """Phone number associated with the order"""
+    order_number: list[int]
+    """Sequential order number displayed in the Shopify admin"""
+    financial_status: list[str]
+    """Payment status of the order (e.g. `paid`, `pending`, `refunded`, `partially_refunded`)"""
+    fulfillment_status: list[str]
+    """Fulfillment status of the order (e.g. `fulfilled`, `partial`, `null` for unfulfilled)"""
+    currency: list[str]
+    """ISO 4217 currency code for the order totals"""
+    total_price: list[str]
+    """Total price of the order including taxes and discounts"""
+    subtotal_price: list[str]
+    """Subtotal of the order before shipping and taxes"""
+    total_tax: list[str]
+    """Total tax amount applied to the order"""
+    total_discounts: list[str]
+    """Total discount amount applied to the order"""
+    total_weight: list[int]
+    """Total weight of all items in the order, in grams"""
+    cancel_reason: list[str]
+    """Reason the order was cancelled, if applicable"""
+    cancelled_at: list[str]
+    """ISO 8601 timestamp when the order was cancelled, if applicable"""
+    closed_at: list[str]
+    """ISO 8601 timestamp when the order was closed, if applicable"""
+    tags: list[str]
+    """Comma-separated tags attached to the order"""
+    note: list[str]
+    """Merchant-provided note on the order"""
+    processed_at: list[str]
+    """ISO 8601 timestamp when the order was processed"""
+    created_at: list[str]
+    """ISO 8601 timestamp when the order was created"""
+    updated_at: list[str]
+    """ISO 8601 timestamp when the order was last updated"""
+
+
+class OrdersAnyValueFilter(TypedDict, total=False):
+    """Available fields with Any value type. Used for 'contains' and 'any' conditions."""
+    id: Any
+    """Unique identifier for the order"""
+    name: Any
+    """Shopify-assigned display name for the order (e.g. `#1001`)"""
+    email: Any
+    """Email address associated with the order"""
+    phone: Any
+    """Phone number associated with the order"""
+    order_number: Any
+    """Sequential order number displayed in the Shopify admin"""
+    financial_status: Any
+    """Payment status of the order (e.g. `paid`, `pending`, `refunded`, `partially_refunded`)"""
+    fulfillment_status: Any
+    """Fulfillment status of the order (e.g. `fulfilled`, `partial`, `null` for unfulfilled)"""
+    currency: Any
+    """ISO 4217 currency code for the order totals"""
+    total_price: Any
+    """Total price of the order including taxes and discounts"""
+    subtotal_price: Any
+    """Subtotal of the order before shipping and taxes"""
+    total_tax: Any
+    """Total tax amount applied to the order"""
+    total_discounts: Any
+    """Total discount amount applied to the order"""
+    total_weight: Any
+    """Total weight of all items in the order, in grams"""
+    cancel_reason: Any
+    """Reason the order was cancelled, if applicable"""
+    cancelled_at: Any
+    """ISO 8601 timestamp when the order was cancelled, if applicable"""
+    closed_at: Any
+    """ISO 8601 timestamp when the order was closed, if applicable"""
+    tags: Any
+    """Comma-separated tags attached to the order"""
+    note: Any
+    """Merchant-provided note on the order"""
+    processed_at: Any
+    """ISO 8601 timestamp when the order was processed"""
+    created_at: Any
+    """ISO 8601 timestamp when the order was created"""
+    updated_at: Any
+    """ISO 8601 timestamp when the order was last updated"""
+
+
+class OrdersStringFilter(TypedDict, total=False):
+    """String fields for text search conditions (like, fuzzy, keyword)."""
+    id: str
+    """Unique identifier for the order"""
+    name: str
+    """Shopify-assigned display name for the order (e.g. `#1001`)"""
+    email: str
+    """Email address associated with the order"""
+    phone: str
+    """Phone number associated with the order"""
+    order_number: str
+    """Sequential order number displayed in the Shopify admin"""
+    financial_status: str
+    """Payment status of the order (e.g. `paid`, `pending`, `refunded`, `partially_refunded`)"""
+    fulfillment_status: str
+    """Fulfillment status of the order (e.g. `fulfilled`, `partial`, `null` for unfulfilled)"""
+    currency: str
+    """ISO 4217 currency code for the order totals"""
+    total_price: str
+    """Total price of the order including taxes and discounts"""
+    subtotal_price: str
+    """Subtotal of the order before shipping and taxes"""
+    total_tax: str
+    """Total tax amount applied to the order"""
+    total_discounts: str
+    """Total discount amount applied to the order"""
+    total_weight: str
+    """Total weight of all items in the order, in grams"""
+    cancel_reason: str
+    """Reason the order was cancelled, if applicable"""
+    cancelled_at: str
+    """ISO 8601 timestamp when the order was cancelled, if applicable"""
+    closed_at: str
+    """ISO 8601 timestamp when the order was closed, if applicable"""
+    tags: str
+    """Comma-separated tags attached to the order"""
+    note: str
+    """Merchant-provided note on the order"""
+    processed_at: str
+    """ISO 8601 timestamp when the order was processed"""
+    created_at: str
+    """ISO 8601 timestamp when the order was created"""
+    updated_at: str
+    """ISO 8601 timestamp when the order was last updated"""
+
+
+class OrdersSortFilter(TypedDict, total=False):
+    """Available fields for sorting orders search results."""
+    id: AirbyteSortOrder
+    """Unique identifier for the order"""
+    name: AirbyteSortOrder
+    """Shopify-assigned display name for the order (e.g. `#1001`)"""
+    email: AirbyteSortOrder
+    """Email address associated with the order"""
+    phone: AirbyteSortOrder
+    """Phone number associated with the order"""
+    order_number: AirbyteSortOrder
+    """Sequential order number displayed in the Shopify admin"""
+    financial_status: AirbyteSortOrder
+    """Payment status of the order (e.g. `paid`, `pending`, `refunded`, `partially_refunded`)"""
+    fulfillment_status: AirbyteSortOrder
+    """Fulfillment status of the order (e.g. `fulfilled`, `partial`, `null` for unfulfilled)"""
+    currency: AirbyteSortOrder
+    """ISO 4217 currency code for the order totals"""
+    total_price: AirbyteSortOrder
+    """Total price of the order including taxes and discounts"""
+    subtotal_price: AirbyteSortOrder
+    """Subtotal of the order before shipping and taxes"""
+    total_tax: AirbyteSortOrder
+    """Total tax amount applied to the order"""
+    total_discounts: AirbyteSortOrder
+    """Total discount amount applied to the order"""
+    total_weight: AirbyteSortOrder
+    """Total weight of all items in the order, in grams"""
+    cancel_reason: AirbyteSortOrder
+    """Reason the order was cancelled, if applicable"""
+    cancelled_at: AirbyteSortOrder
+    """ISO 8601 timestamp when the order was cancelled, if applicable"""
+    closed_at: AirbyteSortOrder
+    """ISO 8601 timestamp when the order was closed, if applicable"""
+    tags: AirbyteSortOrder
+    """Comma-separated tags attached to the order"""
+    note: AirbyteSortOrder
+    """Merchant-provided note on the order"""
+    processed_at: AirbyteSortOrder
+    """ISO 8601 timestamp when the order was processed"""
+    created_at: AirbyteSortOrder
+    """ISO 8601 timestamp when the order was created"""
+    updated_at: AirbyteSortOrder
+    """ISO 8601 timestamp when the order was last updated"""
+
+
+# Entity-specific condition types for orders
+class OrdersEqCondition(TypedDict, total=False):
+    """Equal to: field equals value."""
+    eq: OrdersSearchFilter
+
+
+class OrdersNeqCondition(TypedDict, total=False):
+    """Not equal to: field does not equal value."""
+    neq: OrdersSearchFilter
+
+
+class OrdersGtCondition(TypedDict, total=False):
+    """Greater than: field > value."""
+    gt: OrdersSearchFilter
+
+
+class OrdersGteCondition(TypedDict, total=False):
+    """Greater than or equal: field >= value."""
+    gte: OrdersSearchFilter
+
+
+class OrdersLtCondition(TypedDict, total=False):
+    """Less than: field < value."""
+    lt: OrdersSearchFilter
+
+
+class OrdersLteCondition(TypedDict, total=False):
+    """Less than or equal: field <= value."""
+    lte: OrdersSearchFilter
+
+
+class OrdersLikeCondition(TypedDict, total=False):
+    """Partial string match with % wildcards."""
+    like: OrdersStringFilter
+
+
+class OrdersFuzzyCondition(TypedDict, total=False):
+    """Ordered word text match (case-insensitive)."""
+    fuzzy: OrdersStringFilter
+
+
+class OrdersKeywordCondition(TypedDict, total=False):
+    """Keyword text match (any word present)."""
+    keyword: OrdersStringFilter
+
+
+class OrdersContainsCondition(TypedDict, total=False):
+    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    contains: OrdersAnyValueFilter
+
+
+# Reserved keyword conditions using functional TypedDict syntax
+OrdersInCondition = TypedDict("OrdersInCondition", {"in": OrdersInFilter}, total=False)
+"""In list: field value is in list. Example: {"in": {"status": ["active", "pending"]}}"""
+
+OrdersNotCondition = TypedDict("OrdersNotCondition", {"not": "OrdersCondition"}, total=False)
+"""Negates the nested condition."""
+
+OrdersAndCondition = TypedDict("OrdersAndCondition", {"and": "list[OrdersCondition]"}, total=False)
+"""True if all nested conditions are true."""
+
+OrdersOrCondition = TypedDict("OrdersOrCondition", {"or": "list[OrdersCondition]"}, total=False)
+"""True if any nested condition is true."""
+
+OrdersAnyCondition = TypedDict("OrdersAnyCondition", {"any": OrdersAnyValueFilter}, total=False)
+"""Match if ANY element in array field matches nested condition. Example: {"any": {"addresses": {"eq": {"state": "CA"}}}}"""
+
+# Union of all orders condition types
+OrdersCondition = (
+    OrdersEqCondition
+    | OrdersNeqCondition
+    | OrdersGtCondition
+    | OrdersGteCondition
+    | OrdersLtCondition
+    | OrdersLteCondition
+    | OrdersInCondition
+    | OrdersLikeCondition
+    | OrdersFuzzyCondition
+    | OrdersKeywordCondition
+    | OrdersContainsCondition
+    | OrdersNotCondition
+    | OrdersAndCondition
+    | OrdersOrCondition
+    | OrdersAnyCondition
+)
+
+
+class OrdersSearchQuery(TypedDict, total=False):
+    """Search query for orders entity."""
+    filter: OrdersCondition
+    sort: list[OrdersSortFilter]
+
+
 # ===== PRICE_RULES SEARCH TYPES =====
 
 class PriceRulesSearchFilter(TypedDict, total=False):
@@ -5192,6 +5517,241 @@ class ProductImagesSearchQuery(TypedDict, total=False):
     """Search query for product_images entity."""
     filter: ProductImagesCondition
     sort: list[ProductImagesSortFilter]
+
+
+# ===== PRODUCTS SEARCH TYPES =====
+
+class ProductsSearchFilter(TypedDict, total=False):
+    """Available fields for filtering products search queries."""
+    id: int | None
+    """Unique identifier for the product"""
+    title: str | None
+    """Product title"""
+    body_html: str | None
+    """Product description in HTML"""
+    vendor: str | None
+    """Product vendor or manufacturer"""
+    product_type: str | None
+    """Product type used for categorization"""
+    handle: str | None
+    """URL-friendly handle for the product"""
+    status: str | None
+    """Product status (`active`, `archived`, or `draft`)"""
+    tags: str | None
+    """Comma-separated tags attached to the product"""
+    published_scope: str | None
+    """Publishing scope (`web` or `global`)"""
+    published_at: str | None
+    """ISO 8601 timestamp when the product was published"""
+    created_at: str | None
+    """ISO 8601 timestamp when the product was created"""
+    updated_at: str | None
+    """ISO 8601 timestamp when the product was last updated"""
+
+
+class ProductsInFilter(TypedDict, total=False):
+    """Available fields for 'in' condition (values are lists)."""
+    id: list[int]
+    """Unique identifier for the product"""
+    title: list[str]
+    """Product title"""
+    body_html: list[str]
+    """Product description in HTML"""
+    vendor: list[str]
+    """Product vendor or manufacturer"""
+    product_type: list[str]
+    """Product type used for categorization"""
+    handle: list[str]
+    """URL-friendly handle for the product"""
+    status: list[str]
+    """Product status (`active`, `archived`, or `draft`)"""
+    tags: list[str]
+    """Comma-separated tags attached to the product"""
+    published_scope: list[str]
+    """Publishing scope (`web` or `global`)"""
+    published_at: list[str]
+    """ISO 8601 timestamp when the product was published"""
+    created_at: list[str]
+    """ISO 8601 timestamp when the product was created"""
+    updated_at: list[str]
+    """ISO 8601 timestamp when the product was last updated"""
+
+
+class ProductsAnyValueFilter(TypedDict, total=False):
+    """Available fields with Any value type. Used for 'contains' and 'any' conditions."""
+    id: Any
+    """Unique identifier for the product"""
+    title: Any
+    """Product title"""
+    body_html: Any
+    """Product description in HTML"""
+    vendor: Any
+    """Product vendor or manufacturer"""
+    product_type: Any
+    """Product type used for categorization"""
+    handle: Any
+    """URL-friendly handle for the product"""
+    status: Any
+    """Product status (`active`, `archived`, or `draft`)"""
+    tags: Any
+    """Comma-separated tags attached to the product"""
+    published_scope: Any
+    """Publishing scope (`web` or `global`)"""
+    published_at: Any
+    """ISO 8601 timestamp when the product was published"""
+    created_at: Any
+    """ISO 8601 timestamp when the product was created"""
+    updated_at: Any
+    """ISO 8601 timestamp when the product was last updated"""
+
+
+class ProductsStringFilter(TypedDict, total=False):
+    """String fields for text search conditions (like, fuzzy, keyword)."""
+    id: str
+    """Unique identifier for the product"""
+    title: str
+    """Product title"""
+    body_html: str
+    """Product description in HTML"""
+    vendor: str
+    """Product vendor or manufacturer"""
+    product_type: str
+    """Product type used for categorization"""
+    handle: str
+    """URL-friendly handle for the product"""
+    status: str
+    """Product status (`active`, `archived`, or `draft`)"""
+    tags: str
+    """Comma-separated tags attached to the product"""
+    published_scope: str
+    """Publishing scope (`web` or `global`)"""
+    published_at: str
+    """ISO 8601 timestamp when the product was published"""
+    created_at: str
+    """ISO 8601 timestamp when the product was created"""
+    updated_at: str
+    """ISO 8601 timestamp when the product was last updated"""
+
+
+class ProductsSortFilter(TypedDict, total=False):
+    """Available fields for sorting products search results."""
+    id: AirbyteSortOrder
+    """Unique identifier for the product"""
+    title: AirbyteSortOrder
+    """Product title"""
+    body_html: AirbyteSortOrder
+    """Product description in HTML"""
+    vendor: AirbyteSortOrder
+    """Product vendor or manufacturer"""
+    product_type: AirbyteSortOrder
+    """Product type used for categorization"""
+    handle: AirbyteSortOrder
+    """URL-friendly handle for the product"""
+    status: AirbyteSortOrder
+    """Product status (`active`, `archived`, or `draft`)"""
+    tags: AirbyteSortOrder
+    """Comma-separated tags attached to the product"""
+    published_scope: AirbyteSortOrder
+    """Publishing scope (`web` or `global`)"""
+    published_at: AirbyteSortOrder
+    """ISO 8601 timestamp when the product was published"""
+    created_at: AirbyteSortOrder
+    """ISO 8601 timestamp when the product was created"""
+    updated_at: AirbyteSortOrder
+    """ISO 8601 timestamp when the product was last updated"""
+
+
+# Entity-specific condition types for products
+class ProductsEqCondition(TypedDict, total=False):
+    """Equal to: field equals value."""
+    eq: ProductsSearchFilter
+
+
+class ProductsNeqCondition(TypedDict, total=False):
+    """Not equal to: field does not equal value."""
+    neq: ProductsSearchFilter
+
+
+class ProductsGtCondition(TypedDict, total=False):
+    """Greater than: field > value."""
+    gt: ProductsSearchFilter
+
+
+class ProductsGteCondition(TypedDict, total=False):
+    """Greater than or equal: field >= value."""
+    gte: ProductsSearchFilter
+
+
+class ProductsLtCondition(TypedDict, total=False):
+    """Less than: field < value."""
+    lt: ProductsSearchFilter
+
+
+class ProductsLteCondition(TypedDict, total=False):
+    """Less than or equal: field <= value."""
+    lte: ProductsSearchFilter
+
+
+class ProductsLikeCondition(TypedDict, total=False):
+    """Partial string match with % wildcards."""
+    like: ProductsStringFilter
+
+
+class ProductsFuzzyCondition(TypedDict, total=False):
+    """Ordered word text match (case-insensitive)."""
+    fuzzy: ProductsStringFilter
+
+
+class ProductsKeywordCondition(TypedDict, total=False):
+    """Keyword text match (any word present)."""
+    keyword: ProductsStringFilter
+
+
+class ProductsContainsCondition(TypedDict, total=False):
+    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    contains: ProductsAnyValueFilter
+
+
+# Reserved keyword conditions using functional TypedDict syntax
+ProductsInCondition = TypedDict("ProductsInCondition", {"in": ProductsInFilter}, total=False)
+"""In list: field value is in list. Example: {"in": {"status": ["active", "pending"]}}"""
+
+ProductsNotCondition = TypedDict("ProductsNotCondition", {"not": "ProductsCondition"}, total=False)
+"""Negates the nested condition."""
+
+ProductsAndCondition = TypedDict("ProductsAndCondition", {"and": "list[ProductsCondition]"}, total=False)
+"""True if all nested conditions are true."""
+
+ProductsOrCondition = TypedDict("ProductsOrCondition", {"or": "list[ProductsCondition]"}, total=False)
+"""True if any nested condition is true."""
+
+ProductsAnyCondition = TypedDict("ProductsAnyCondition", {"any": ProductsAnyValueFilter}, total=False)
+"""Match if ANY element in array field matches nested condition. Example: {"any": {"addresses": {"eq": {"state": "CA"}}}}"""
+
+# Union of all products condition types
+ProductsCondition = (
+    ProductsEqCondition
+    | ProductsNeqCondition
+    | ProductsGtCondition
+    | ProductsGteCondition
+    | ProductsLtCondition
+    | ProductsLteCondition
+    | ProductsInCondition
+    | ProductsLikeCondition
+    | ProductsFuzzyCondition
+    | ProductsKeywordCondition
+    | ProductsContainsCondition
+    | ProductsNotCondition
+    | ProductsAndCondition
+    | ProductsOrCondition
+    | ProductsAnyCondition
+)
+
+
+class ProductsSearchQuery(TypedDict, total=False):
+    """Search query for products entity."""
+    filter: ProductsCondition
+    sort: list[ProductsSortFilter]
 
 
 # ===== PRODUCT_VARIANTS SEARCH TYPES =====

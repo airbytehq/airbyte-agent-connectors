@@ -791,6 +791,73 @@ info:
           - name: processed_at
             type: ["null", "string"]
             description: "ISO 8601 timestamp when the refund was processed"
+      - entity: orders
+        suggested: true
+        x-airbyte-name: orders
+        fields:
+          - name: id
+            type: ["null", "integer"]
+            description: "Unique identifier for the order"
+          - name: name
+            type: ["null", "string"]
+            description: "Shopify-assigned display name for the order (e.g. `#1001`)"
+          - name: email
+            type: ["null", "string"]
+            description: "Email address associated with the order"
+          - name: phone
+            type: ["null", "string"]
+            description: "Phone number associated with the order"
+          - name: order_number
+            type: ["null", "integer"]
+            description: "Sequential order number displayed in the Shopify admin"
+          - name: financial_status
+            type: ["null", "string"]
+            description: "Payment status of the order (e.g. `paid`, `pending`, `refunded`, `partially_refunded`)"
+          - name: fulfillment_status
+            type: ["null", "string"]
+            description: "Fulfillment status of the order (e.g. `fulfilled`, `partial`, `null` for unfulfilled)"
+          - name: currency
+            type: ["null", "string"]
+            description: "ISO 4217 currency code for the order totals"
+          - name: total_price
+            type: ["null", "string"]
+            description: "Total price of the order including taxes and discounts"
+          - name: subtotal_price
+            type: ["null", "string"]
+            description: "Subtotal of the order before shipping and taxes"
+          - name: total_tax
+            type: ["null", "string"]
+            description: "Total tax amount applied to the order"
+          - name: total_discounts
+            type: ["null", "string"]
+            description: "Total discount amount applied to the order"
+          - name: total_weight
+            type: ["null", "integer"]
+            description: "Total weight of all items in the order, in grams"
+          - name: cancel_reason
+            type: ["null", "string"]
+            description: "Reason the order was cancelled, if applicable"
+          - name: cancelled_at
+            type: ["null", "string"]
+            description: "ISO 8601 timestamp when the order was cancelled, if applicable"
+          - name: closed_at
+            type: ["null", "string"]
+            description: "ISO 8601 timestamp when the order was closed, if applicable"
+          - name: tags
+            type: ["null", "string"]
+            description: "Comma-separated tags attached to the order"
+          - name: note
+            type: ["null", "string"]
+            description: "Merchant-provided note on the order"
+          - name: processed_at
+            type: ["null", "string"]
+            description: "ISO 8601 timestamp when the order was processed"
+          - name: created_at
+            type: ["null", "string"]
+            description: "ISO 8601 timestamp when the order was created"
+          - name: updated_at
+            type: ["null", "string"]
+            description: "ISO 8601 timestamp when the order was last updated"
       - entity: price_rules
         x-airbyte-name: price_rules
         fields:
@@ -857,6 +924,46 @@ info:
           - name: updated_at
             type: ["null", "string"]
             description: "ISO 8601 timestamp when the image was last updated"
+      - entity: products
+        suggested: true
+        x-airbyte-name: products
+        fields:
+          - name: id
+            type: ["null", "integer"]
+            description: "Unique identifier for the product"
+          - name: title
+            type: ["null", "string"]
+            description: "Product title"
+          - name: body_html
+            type: ["null", "string"]
+            description: "Product description in HTML"
+          - name: vendor
+            type: ["null", "string"]
+            description: "Product vendor or manufacturer"
+          - name: product_type
+            type: ["null", "string"]
+            description: "Product type used for categorization"
+          - name: handle
+            type: ["null", "string"]
+            description: "URL-friendly handle for the product"
+          - name: status
+            type: ["null", "string"]
+            description: "Product status (`active`, `archived`, or `draft`)"
+          - name: tags
+            type: ["null", "string"]
+            description: "Comma-separated tags attached to the product"
+          - name: published_scope
+            type: ["null", "string"]
+            description: "Publishing scope (`web` or `global`)"
+          - name: published_at
+            type: ["null", "string"]
+            description: "ISO 8601 timestamp when the product was published"
+          - name: created_at
+            type: ["null", "string"]
+            description: "ISO 8601 timestamp when the product was created"
+          - name: updated_at
+            type: ["null", "string"]
+            description: "ISO 8601 timestamp when the product was last updated"
       - entity: product_variants
         suggested: true
         x-airbyte-name: product_variants

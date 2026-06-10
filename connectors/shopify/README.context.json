@@ -5433,6 +5433,210 @@
         }
       ]
     },
+    "orders": {
+      "entity": "orders",
+      "data_type_name": "OrdersSearchData",
+      "filter_type_name": "OrdersSearchFilter",
+      "in_filter_type_name": "OrdersInFilter",
+      "any_value_filter_type_name": "OrdersAnyValueFilter",
+      "string_filter_type_name": "OrdersStringFilter",
+      "sort_filter_type_name": "OrdersSortFilter",
+      "result_type_name": "OrdersSearchResult",
+      "query_type_name": "OrdersSearchQuery",
+      "condition_prefix": "Orders",
+      "condition_type_name": "OrdersCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "json_example_value": 0,
+          "description": "Unique identifier for the order"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Shopify-assigned display name for the order (e.g. `#1001`)"
+        },
+        {
+          "name": "email",
+          "python_name": "email",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Email address associated with the order"
+        },
+        {
+          "name": "phone",
+          "python_name": "phone",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Phone number associated with the order"
+        },
+        {
+          "name": "order_number",
+          "python_name": "order_number",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "json_example_value": 0,
+          "description": "Sequential order number displayed in the Shopify admin"
+        },
+        {
+          "name": "financial_status",
+          "python_name": "financial_status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Payment status of the order (e.g. `paid`, `pending`, `refunded`, `partially_refunded`)"
+        },
+        {
+          "name": "fulfillment_status",
+          "python_name": "fulfillment_status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Fulfillment status of the order (e.g. `fulfilled`, `partial`, `null` for unfulfilled)"
+        },
+        {
+          "name": "currency",
+          "python_name": "currency",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "ISO 4217 currency code for the order totals"
+        },
+        {
+          "name": "total_price",
+          "python_name": "total_price",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Total price of the order including taxes and discounts"
+        },
+        {
+          "name": "subtotal_price",
+          "python_name": "subtotal_price",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Subtotal of the order before shipping and taxes"
+        },
+        {
+          "name": "total_tax",
+          "python_name": "total_tax",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Total tax amount applied to the order"
+        },
+        {
+          "name": "total_discounts",
+          "python_name": "total_discounts",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Total discount amount applied to the order"
+        },
+        {
+          "name": "total_weight",
+          "python_name": "total_weight",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "json_example_value": 0,
+          "description": "Total weight of all items in the order, in grams"
+        },
+        {
+          "name": "cancel_reason",
+          "python_name": "cancel_reason",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Reason the order was cancelled, if applicable"
+        },
+        {
+          "name": "cancelled_at",
+          "python_name": "cancelled_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "ISO 8601 timestamp when the order was cancelled, if applicable"
+        },
+        {
+          "name": "closed_at",
+          "python_name": "closed_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "ISO 8601 timestamp when the order was closed, if applicable"
+        },
+        {
+          "name": "tags",
+          "python_name": "tags",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Comma-separated tags attached to the order"
+        },
+        {
+          "name": "note",
+          "python_name": "note",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Merchant-provided note on the order"
+        },
+        {
+          "name": "processed_at",
+          "python_name": "processed_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "ISO 8601 timestamp when the order was processed"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "ISO 8601 timestamp when the order was created"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "ISO 8601 timestamp when the order was last updated"
+        }
+      ]
+    },
     "price_rules": {
       "entity": "price_rules",
       "data_type_name": "PriceRulesSearchData",
@@ -5640,6 +5844,129 @@
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the image was last updated"
+        }
+      ]
+    },
+    "products": {
+      "entity": "products",
+      "data_type_name": "ProductsSearchData",
+      "filter_type_name": "ProductsSearchFilter",
+      "in_filter_type_name": "ProductsInFilter",
+      "any_value_filter_type_name": "ProductsAnyValueFilter",
+      "string_filter_type_name": "ProductsStringFilter",
+      "sort_filter_type_name": "ProductsSortFilter",
+      "result_type_name": "ProductsSearchResult",
+      "query_type_name": "ProductsSearchQuery",
+      "condition_prefix": "Products",
+      "condition_type_name": "ProductsCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "json_example_value": 0,
+          "description": "Unique identifier for the product"
+        },
+        {
+          "name": "title",
+          "python_name": "title",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Product title"
+        },
+        {
+          "name": "body_html",
+          "python_name": "body_html",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Product description in HTML"
+        },
+        {
+          "name": "vendor",
+          "python_name": "vendor",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Product vendor or manufacturer"
+        },
+        {
+          "name": "product_type",
+          "python_name": "product_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Product type used for categorization"
+        },
+        {
+          "name": "handle",
+          "python_name": "handle",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "URL-friendly handle for the product"
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Product status (`active`, `archived`, or `draft`)"
+        },
+        {
+          "name": "tags",
+          "python_name": "tags",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Comma-separated tags attached to the product"
+        },
+        {
+          "name": "published_scope",
+          "python_name": "published_scope",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Publishing scope (`web` or `global`)"
+        },
+        {
+          "name": "published_at",
+          "python_name": "published_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "ISO 8601 timestamp when the product was published"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "ISO 8601 timestamp when the product was created"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "ISO 8601 timestamp when the product was last updated"
         }
       ]
     },
