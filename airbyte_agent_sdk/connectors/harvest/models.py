@@ -289,15 +289,6 @@ class TimeEntryProject(BaseModel):
     name: str | None | None = Field(default=None, description="Project name")
     """Project name"""
 
-class TimeEntryClient(BaseModel):
-    """The client associated with the time entry"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: int | None | None = Field(default=None, description="Client ID")
-    """Client ID"""
-    name: str | None | None = Field(default=None, description="Client name")
-    """Client name"""
-
 class TimeEntryInvoice(BaseModel):
     """The invoice associated with the time entry"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -306,6 +297,15 @@ class TimeEntryInvoice(BaseModel):
     """Invoice ID"""
     number: str | None | None = Field(default=None, description="Invoice number")
     """Invoice number"""
+
+class TimeEntryClient(BaseModel):
+    """The client associated with the time entry"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int | None | None = Field(default=None, description="Client ID")
+    """Client ID"""
+    name: str | None | None = Field(default=None, description="Client name")
+    """Client name"""
 
 class TimeEntryTask(BaseModel):
     """The task associated with the time entry"""

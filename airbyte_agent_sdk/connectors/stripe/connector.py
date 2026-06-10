@@ -164,7 +164,7 @@ class StripeConnector:
 
     connector_name = "stripe"
     connector_version = "0.1.13"
-    sdk_version = "0.1.234"
+    sdk_version = "0.1.235"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {

@@ -979,7 +979,7 @@ info:
             type: ["null", "string"]
             description: "ISO 8601 timestamp when the transaction was processed"
 servers:
-- url: https://{shop}.myshopify.com/admin/api/2025-01
+- url: https://{shop}.myshopify.com/admin/api/2025-10
   description: Shopify Admin REST API Server
   variables:
     shop:
