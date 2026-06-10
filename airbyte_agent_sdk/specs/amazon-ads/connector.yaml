@@ -14,8 +14,8 @@ info:
     analyzing advertising campaigns across different marketplaces.
   x-airbyte-connector-name: amazon-ads
   x-airbyte-connector-definition-id: c6b0a29e-1da9-4512-9002-7bfd0cba2246
-  x-airbyte-replication-version: "8.1.0"
-  x-airbyte-replication-compatibility: ">=8.1.0, <9.0.0"
+  x-airbyte-replication-version: "8.1.1"
+  x-airbyte-replication-compatibility: ">=8.1.1, <9.0.0"
   x-airbyte-external-documentation-urls:
     - type: api_reference
       title: Amazon Ads API Documentation

@@ -10,8 +10,8 @@ info:
     updates, workspaces, and activity logs via the Monday.com GraphQL API (v2).
   x-airbyte-connector-name: monday
   x-airbyte-connector-definition-id: 80a54ea2-9959-4040-aac1-eee42423ec9b
-  x-airbyte-replication-version: "2.5.8"
-  x-airbyte-replication-compatibility: ">=2.5.8, <3.0.0"
+  x-airbyte-replication-version: "2.5.9"
+  x-airbyte-replication-compatibility: ">=2.5.9, <3.0.0"
   x-airbyte-replication-config:
     title: Replication Configuration
     description: Settings for data replication from Monday.com.

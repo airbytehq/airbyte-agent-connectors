@@ -12,8 +12,8 @@ info:
     advertiser_id parameter to scope results to a specific advertiser account.
   x-airbyte-connector-name: tiktok-marketing
   x-airbyte-connector-definition-id: 4bfac00d-ce15-44ff-95b9-9e3c3e8fbd35
-  x-airbyte-replication-version: "5.0.9"
-  x-airbyte-replication-compatibility: ">=5.0.9, <6.0.0"
+  x-airbyte-replication-version: "5.0.10"
+  x-airbyte-replication-compatibility: ">=5.0.10, <6.0.0"
   x-airbyte-external-documentation-urls:
     - type: api_reference
       title: TikTok Business API Documentation

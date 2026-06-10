@@ -14,8 +14,8 @@ info:
     workspace settings.
   x-airbyte-connector-name: customer-io
   x-airbyte-connector-definition-id: 34f697bc-b989-4eda-b06f-d0f39b88825b
-  x-airbyte-replication-version: "0.4.2"
-  x-airbyte-replication-compatibility: ">=0.4.2, <1.0.0"
+  x-airbyte-replication-version: "0.4.3"
+  x-airbyte-replication-compatibility: ">=0.4.3, <1.0.0"
   x-airbyte-external-documentation-urls:
     - type: api_reference
       title: Customer.io App API Documentation

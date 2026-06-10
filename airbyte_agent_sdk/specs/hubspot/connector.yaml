@@ -12,8 +12,8 @@ info:
     tickets, and custom objects for customer relationship management and sales analytics.
   x-airbyte-connector-name: hubspot
   x-airbyte-connector-definition-id: 36c891d9-4bd9-43ac-bad2-10e12756272c
-  x-airbyte-replication-version: "6.6.0"
-  x-airbyte-replication-compatibility: ">=6.6.0, <7.0.0"
+  x-airbyte-replication-version: "6.6.1"
+  x-airbyte-replication-compatibility: ">=6.6.1, <7.0.0"
   x-airbyte-external-documentation-urls:
   - type: api_reference
     title: HubSpot API Documentation

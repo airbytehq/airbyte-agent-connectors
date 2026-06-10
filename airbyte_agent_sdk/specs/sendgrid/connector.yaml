@@ -10,8 +10,8 @@ info:
     global suppressions, suppression groups, and suppression group members).
   x-airbyte-connector-name: sendgrid
   x-airbyte-connector-definition-id: fbb5fbe2-16ad-4cf4-af7d-ff9d9c316c87
-  x-airbyte-replication-version: "1.3.32"
-  x-airbyte-replication-compatibility: ">=1.3.32, <2.0.0"
+  x-airbyte-replication-version: "1.3.33"
+  x-airbyte-replication-compatibility: ">=1.3.33, <2.0.0"
   x-airbyte-external-documentation-urls:
     - type: api_reference
       title: SendGrid v3 API Reference

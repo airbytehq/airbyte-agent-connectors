@@ -11,8 +11,8 @@ info:
     key / consumer secret for authentication.
   x-airbyte-connector-name: woocommerce
   x-airbyte-connector-definition-id: 2a2552ca-9f78-4c1c-9eb7-4d0dc66d72df
-  x-airbyte-replication-version: "0.5.38"
-  x-airbyte-replication-compatibility: ">=0.5.38, <1.0.0"
+  x-airbyte-replication-version: "0.5.39"
+  x-airbyte-replication-compatibility: ">=0.5.39, <1.0.0"
   x-airbyte-external-documentation-urls:
   - type: api_reference
     title: WooCommerce REST API Documentation

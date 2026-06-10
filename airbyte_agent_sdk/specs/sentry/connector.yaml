@@ -10,8 +10,8 @@ info:
     about error tracking data, project configurations, and software releases.
   x-airbyte-connector-name: sentry
   x-airbyte-connector-definition-id: cdaf146a-9b75-49fd-9dd2-9d64a0bb4781
-  x-airbyte-replication-version: "0.9.23"
-  x-airbyte-replication-compatibility: ">=0.9.23, <1.0.0"
+  x-airbyte-replication-version: "0.9.24"
+  x-airbyte-replication-compatibility: ">=0.9.24, <1.0.0"
   x-airbyte-external-documentation-urls:
   - type: api_reference
     title: Sentry API Documentation
