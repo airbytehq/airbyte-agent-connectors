@@ -139,8 +139,24 @@ class HostedExecutor:
             organization_id=resolved_organization_id,
         )
 
+    async def _resolve_connector_id(self) -> str:
+        if self._connector_id is not None:
+            return self._connector_id
+        connector_id = await self._cloud_client.get_connector_id(
+            workspace_name=self._workspace_name,  # type: ignore[arg-type]
+            connector_definition_id=self._connector_definition_id,  # type: ignore[arg-type]
+        )
+        self._connector_id = connector_id
+        return connector_id
+
     @overload
-    async def execute(self, config: ExecutionConfig) -> ExecutionResult: ...
+    async def execute(self, config_or_entity: ExecutionConfig) -> ExecutionResult: ...
+
+    @overload
+    async def execute(self, *, config: ExecutionConfig) -> ExecutionResult: ...
+
+    @overload
+    async def execute(self, *, config_or_entity: ExecutionConfig) -> ExecutionResult: ...
 
     @overload
     async def execute(
@@ -155,12 +171,40 @@ class HostedExecutor:
         intent: str | None = None,
     ) -> ExecutionResult: ...
 
+    @overload
     async def execute(
         self,
-        config_or_entity: ExecutionConfig | str,
-        action: str | None = None,
         *,
+        config_or_entity: str,
+        action: str,
         params: dict[str, Any] | None = None,
+        select_fields: list[str] | None = None,
+        exclude_fields: list[str] | None = None,
+        skip_truncation: bool = True,
+        intent: str | None = None,
+    ) -> ExecutionResult: ...
+
+    @overload
+    async def execute(
+        self,
+        *,
+        entity: str,
+        action: str,
+        params: dict[str, Any] | None = None,
+        select_fields: list[str] | None = None,
+        exclude_fields: list[str] | None = None,
+        skip_truncation: bool = True,
+        intent: str | None = None,
+    ) -> ExecutionResult: ...
+
+    async def execute(
+        self,
+        *args: ExecutionConfig | str,
+        config_or_entity: ExecutionConfig | str | None = None,
+        config: ExecutionConfig | None = None,
+        params: dict[str, Any] | None = None,
+        entity: str | None = None,
+        action: str | None = None,
         select_fields: list[str] | None = None,
         exclude_fields: list[str] | None = None,
         skip_truncation: bool = True,
@@ -168,8 +212,8 @@ class HostedExecutor:
     ) -> ExecutionResult:
         """Execute connector via cloud API (ExecutorProtocol implementation).
 
-        Accepts either an :class:`ExecutionConfig` or positional ``(entity, action)``
-        strings with an optional ``params`` keyword argument.
+        Accepts either an :class:`ExecutionConfig`, positional ``(entity, action)``
+        strings, or keyword ``entity=...``/``action=...`` strings.
 
         Flow:
         1. Use provided connector_id or look up from workspace_name + definition_id
@@ -177,7 +221,10 @@ class HostedExecutor:
         3. Parse the response into ExecutionResult
 
         Args:
-            config_or_entity: ExecutionConfig object *or* entity name string
+            config_or_entity: Backward-compatible alias for either an
+                ExecutionConfig object or entity name string.
+            config: ExecutionConfig object
+            entity: Entity name string, or an ExecutionConfig when passed positionally
             action: Action string (required when entity is a string)
             params: Optional parameters dict (only with string form)
             select_fields: Optional allowlist of dot-notation fields to include
@@ -213,11 +260,33 @@ class HostedExecutor:
             # Shorthand form:
             result = await executor.execute("customers", "list", params={"limit": 10})
         """
-        if isinstance(config_or_entity, str):
+        if len(args) > 2:
+            raise TypeError("execute accepts at most two positional arguments")
+        keyword_selector_count = sum(value is not None for value in (config_or_entity, config, entity))
+        if args and keyword_selector_count:
+            raise TypeError("Pass either positional arguments or config_or_entity/config/entity keywords, not both")
+        if len(args) == 2:
+            selected_config_or_entity = args[0]
+            if action is not None:
+                raise TypeError("Pass action either positionally or by keyword, not both")
+            if not isinstance(args[1], str):
+                raise TypeError("action must be a string")
+            action = args[1]
+        elif len(args) == 1:
+            selected_config_or_entity = args[0]
+            if not isinstance(selected_config_or_entity, str) and action is not None:
+                raise TypeError("Cannot pass action, params, field selection, truncation, or intent options when using ExecutionConfig")
+        else:
+            if keyword_selector_count > 1:
+                raise TypeError("Pass only one of config_or_entity, config, or entity")
+            selected_config_or_entity = config_or_entity if config_or_entity is not None else config if config is not None else entity
+        if selected_config_or_entity is None:
+            raise TypeError("Either config_or_entity, config, or entity is required")
+        if isinstance(selected_config_or_entity, str):
             if action is None:
                 raise TypeError("action is required when passing entity as a string")
-            config = ExecutionConfig(
-                entity=config_or_entity,
+            execution_config = ExecutionConfig(
+                entity=selected_config_or_entity,
                 action=action,
                 params=params,
                 select_fields=select_fields,
@@ -235,46 +304,38 @@ class HostedExecutor:
                 or intent is not None
             ):
                 raise TypeError("Cannot pass action, params, field selection, truncation, or intent options when using ExecutionConfig")
-            config = config_or_entity
+            execution_config = selected_config_or_entity
         tracer = trace.get_tracer("airbyte.connector-sdk.executor.hosted")
 
         with tracer.start_as_current_span("airbyte.hosted_executor.execute") as span:
             # Add span attributes for observability
             if self._connector_definition_id:
                 span.set_attribute("connector.definition_id", self._connector_definition_id)
-            span.set_attribute("connector.entity", config.entity)
-            span.set_attribute("connector.action", config.action)
+            span.set_attribute("connector.entity", execution_config.entity)
+            span.set_attribute("connector.action", execution_config.action)
             if self._workspace_name:
                 span.set_attribute("workspace.name", self._workspace_name)
             if self._organization_id:
                 span.set_attribute("organization.id", self._organization_id)
-            if config.params:
+            if execution_config.params:
                 # Only add non-sensitive param keys
-                span.set_attribute("connector.param_keys", list(config.params.keys()))
+                span.set_attribute("connector.param_keys", list(execution_config.params.keys()))
 
             try:
-                # Use provided connector_id or look it up
-                if self._connector_id:
-                    connector_id = self._connector_id
-                else:
-                    # Look up connector by workspace_name + definition_id
-                    connector_id = await self._cloud_client.get_connector_id(
-                        workspace_name=self._workspace_name,  # type: ignore[arg-type]
-                        connector_definition_id=self._connector_definition_id,  # type: ignore[arg-type]
-                    )
+                connector_id = await self._resolve_connector_id()
 
                 span.set_attribute("connector.connector_id", connector_id)
 
                 # Step 3: Execute the connector via the cloud API
                 response = await self._cloud_client.execute_connector(
                     connector_id=connector_id,
-                    entity=config.entity,
-                    action=config.action,
-                    params=config.params,
-                    select_fields=config.select_fields,
-                    exclude_fields=config.exclude_fields,
-                    skip_truncation=config.skip_truncation,
-                    intent=config.intent,
+                    entity=execution_config.entity,
+                    action=execution_config.action,
+                    params=execution_config.params,
+                    select_fields=execution_config.select_fields,
+                    exclude_fields=execution_config.exclude_fields,
+                    skip_truncation=execution_config.skip_truncation,
+                    intent=execution_config.intent,
                 )
 
                 # Step 4: Parse the response into ExecutionResult
@@ -290,6 +351,15 @@ class HostedExecutor:
                 span.set_attribute("connector.error_type", type(e).__name__)
                 span.record_exception(e)
                 raise
+
+    async def inspect_connector(self) -> dict[str, Any]:
+        """Inspect hosted connector metadata and readiness."""
+        connector_id = await self._resolve_connector_id()
+        return await self._cloud_client.inspect_connector(connector_id)
+
+    async def read_skill_docs(self, id: str, section: str | None = None) -> dict[str, Any]:
+        """Read hosted skill docs by skill ID."""
+        return await self._cloud_client.read_skill_docs(id=id, section=section)
 
     async def check(self) -> ExecutionResult:
         """Perform a health check by executing a lightweight operation.

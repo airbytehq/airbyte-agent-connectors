@@ -140,6 +140,7 @@ from .http.exceptions import (
     TimeoutError,
 )
 from .registry import list_connectors
+from .tools import ConnectorDocsProvider, ConnectorTools, build_connector_tools
 from .translation import DEFAULT_MAX_OUTPUT_CHARS, translate_exceptions
 from .types import AirbyteAuthConfig
 from .utils import save_download
@@ -184,6 +185,9 @@ __all__ = [
     # Utilities
     "save_download",
     "configure",
+    "ConnectorDocsProvider",
+    "ConnectorTools",
+    "build_connector_tools",
     # Tool exception translation
     "translate_exceptions",
     "DEFAULT_MAX_OUTPUT_CHARS",
@@ -202,6 +206,7 @@ __pdoc__ = {
     "cli": False,
     # Internal runtime helpers surfaced only for SDK-internal consumers
     "introspection": False,
+    "skill_docs_renderer": False,
     "extensions": False,
     "auth_template": False,
     "secrets": False,

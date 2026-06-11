@@ -54,15 +54,6 @@ class CurrentUser(BaseModel):
     id: str
     name: str | None = Field(default=None)
 
-class AdLabel(BaseModel):
-    """AdLabel type definition"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: str | None = Field(default=None)
-    name: str | None = Field(default=None)
-    created_time: str | None = Field(default=None)
-    updated_time: str | None = Field(default=None)
-
 class IssueInfo(BaseModel):
     """IssueInfo type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -72,6 +63,15 @@ class IssueInfo(BaseModel):
     error_summary: str | None = Field(default=None)
     error_type: str | None = Field(default=None)
     level: str | None = Field(default=None)
+
+class AdLabel(BaseModel):
+    """AdLabel type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    created_time: str | None = Field(default=None)
+    updated_time: str | None = Field(default=None)
 
 class Campaign(BaseModel):
     """Facebook Ad Campaign"""
@@ -689,24 +689,6 @@ class AdUpdateParams(BaseModel):
     tracking_specs: str | None = Field(default=None)
     bid_amount: str | None = Field(default=None)
 
-class AdLibraryAdSpend(BaseModel):
-    """Amount spent on the ad as a range"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    lower_bound: int | None | None = Field(default=None, description="Lower bound of spend")
-    """Lower bound of spend"""
-    upper_bound: int | None | None = Field(default=None, description="Upper bound of spend")
-    """Upper bound of spend"""
-
-class AdLibraryAdImpressions(BaseModel):
-    """Number of impressions as a range"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    lower_bound: int | None | None = Field(default=None, description="Lower bound of impressions")
-    """Lower bound of impressions"""
-    upper_bound: int | None | None = Field(default=None, description="Upper bound of impressions")
-    """Upper bound of impressions"""
-
 class AdLibraryAdEstimatedAudienceSize(BaseModel):
     """Estimated audience size range"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -725,6 +707,15 @@ class AdLibraryAdDeliveryByRegionItem(BaseModel):
     percentage: str | None | None = Field(default=None, description="Percentage of audience in this region")
     """Percentage of audience in this region"""
 
+class AdLibraryAdImpressions(BaseModel):
+    """Number of impressions as a range"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    lower_bound: int | None | None = Field(default=None, description="Lower bound of impressions")
+    """Lower bound of impressions"""
+    upper_bound: int | None | None = Field(default=None, description="Upper bound of impressions")
+    """Upper bound of impressions"""
+
 class AdLibraryAdDemographicDistributionItem(BaseModel):
     """Nested schema for AdLibraryAd.demographic_distribution_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -735,6 +726,15 @@ class AdLibraryAdDemographicDistributionItem(BaseModel):
     """Gender category"""
     percentage: str | None | None = Field(default=None, description="Percentage of audience in this demographic")
     """Percentage of audience in this demographic"""
+
+class AdLibraryAdSpend(BaseModel):
+    """Amount spent on the ad as a range"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    lower_bound: int | None | None = Field(default=None, description="Lower bound of spend")
+    """Lower bound of spend"""
+    upper_bound: int | None | None = Field(default=None, description="Upper bound of spend")
+    """Upper bound of spend"""
 
 class AdLibraryAd(BaseModel):
     """An archived ad from the Facebook Ad Library, containing ad creative content, delivery information, spend data, and demographic reach breakdowns."""

@@ -37,6 +37,14 @@ class BasesList(BaseModel):
     bases: list[Base] | None = Field(default=None)
     offset: str | None = Field(default=None)
 
+class View(BaseModel):
+    """A view in a table"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+
 class TableField(BaseModel):
     """A field (column) in a table"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -45,14 +53,6 @@ class TableField(BaseModel):
     name: str | None = Field(default=None)
     type_: str | None = Field(default=None, alias="type")
     options: dict[str, Any] | None = Field(default=None)
-
-class View(BaseModel):
-    """A view in a table"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: str | None = Field(default=None)
-    name: str | None = Field(default=None)
-    type_: str | None = Field(default=None, alias="type")
 
 class Table(BaseModel):
     """A table within an Airtable base"""

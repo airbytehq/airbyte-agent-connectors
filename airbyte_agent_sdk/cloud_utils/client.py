@@ -341,6 +341,27 @@ class AirbyteCloudClient:
 
         return response.json()
 
+    async def inspect_connector(self, connector_id: str) -> dict[str, Any]:
+        """Inspect connector metadata and readiness."""
+        token = await self.get_bearer_token()
+        url = f"{self.API_BASE_URL}/api/v1/integrations/connectors/{connector_id}/inspect"
+        headers = self._build_headers(token=token)
+        response = await self._http_client.get(url, headers=headers)
+        _raise_with_body(response)
+        return response.json()
+
+    async def read_skill_docs(self, id: str, section: str | None = None) -> dict[str, Any]:
+        """Read hosted skill docs for a connector or static skill."""
+        token = await self.get_bearer_token()
+        url = f"{self.API_BASE_URL}/api/v1/skills/docs"
+        headers = self._build_headers(token=token)
+        params: dict[str, str] = {"id": id}
+        if section is not None:
+            params["section"] = section
+        response = await self._http_client.get(url, params=params, headers=headers)
+        _raise_with_body(response)
+        return response.json()
+
     async def list_workspace_connectors(self, workspace_name: str) -> list[dict[str, Any]]:
         """List connector instances for a workspace.
 
