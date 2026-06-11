@@ -18,14 +18,44 @@ Full documentation is available at [docs.airbyte.com/ai-agents/about/](https://d
 
 ## Tool integration
 
-The SDK ships two decorators for turning a connector call into an LLM tool with retry-aware exception translation, output-size guards, and framework-specific error signalling.
+The SDK ships a hosted tool builder and two decorators for turning connector calls into LLM tools with retry-aware exception translation, output-size guards, and framework-specific error signalling.
 
+- **`build_connector_tools(connector, framework="...")`** — preferred for hosted connector agents. Returns `inspect_connector`, `read_skill_docs`, and `execute` callables bound to one connector. Hosted connectors, or local connectors passed an explicit `docs_provider`, use outline-only guidance and tell the agent to inspect/read docs before execution; local/offline connectors without a docs provider keep generated YAML-derived rich docs. Pass `use_progressive_docs=False` to make `tools.as_list()` expose only `execute` with the legacy rich description.
 - **`@<Connector>.tool_utils`** — preferred for typed connectors. Auto-detects the installed framework (pydantic-ai, LangChain, OpenAI Agents, or FastMCP) and composes [`translate_exceptions`](https://airbytehq.github.io/airbyte-embedded/airbyte_agent_sdk/translation.html) under the hood. Pass `framework="..."` to override auto-detection. Forwards `update_docstring`, `max_output_chars`, `framework`, `internal_retries`, `should_internal_retry`, and `exhausted_runtime_failure_message`.
 - **`@translate_exceptions`** — same translation behaviour for any callable that is not a generated `Connector` (custom helpers, eval harnesses, ad-hoc tools).
 
-Both decorators preserve sync/async, `__name__`, and `__doc__`. Transient runtime failures (429/5xx, network, timeout) can be retried silently via `internal_retries=N` on **either** decorator. Output exceeding `max_output_chars` (default 100 KB) is converted to the framework's retry signal so the LLM can narrow the query.
+The builder and decorators preserve async callables, `__name__`, and `__doc__`. Transient runtime failures (429/5xx, network, timeout) can be retried silently via `internal_retries=N`. Output exceeding `max_output_chars` (default 100 KB) is converted to the framework's retry signal so the LLM can narrow the query.
 
 > **Pick one decorator per tool.** Stacking `@translate_exceptions` over `@<Connector>.tool_utils` (or vice versa) is detected at decoration time: the inner layer is preserved and the outer layer logs a warning and short-circuits, so double-translation is impossible.
+
+### Hosted connector tools
+
+```python
+from pydantic_ai import Agent
+from airbyte_agent_sdk import build_connector_tools
+from airbyte_agent_sdk.connectors.stripe import StripeConnector
+from airbyte_agent_sdk.types import AirbyteAuthConfig
+
+stripe = StripeConnector(
+    auth_config=AirbyteAuthConfig(
+        airbyte_client_id="client_abc123",
+        airbyte_client_secret="secret_xyz789",
+        connector_id="src_123",
+    )
+)
+tools = build_connector_tools(stripe, framework="pydantic_ai")
+
+agent = Agent("openai:gpt-4o", tools=tools.as_list())
+```
+
+The model-facing docs flow is `inspect_connector()` -> `read_skill_docs()` -> `read_skill_docs(section="...")` -> `execute(...)`. The docs tool binds the hosted `docs_skill_id` internally, so the model only passes an optional `section`.
+
+To opt out of the progressive inspect/docs flow:
+
+```python
+tools = build_connector_tools(stripe, framework="pydantic_ai", use_progressive_docs=False)
+agent = Agent("openai:gpt-4o", tools=tools.as_list())  # exposes execute only
+```
 
 ### pydantic-ai
 
