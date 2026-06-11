@@ -609,6 +609,7 @@ GranolaConnectorModel: ConnectorModel = ConnectorModel(
         entities=[
             CacheEntityConfig(
                 entity='notes',
+                suggested=True,
                 x_airbyte_name='detailed_notes',
                 fields=[
                     CacheFieldConfig(

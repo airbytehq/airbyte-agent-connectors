@@ -33,6 +33,7 @@ info:
     entities:
       - entity: notes
         x-airbyte-name: detailed_notes
+        suggested: true
         fields:
           - name: id
             type:
