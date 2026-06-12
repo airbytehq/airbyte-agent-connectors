@@ -23,14 +23,44 @@
             "description": "Your Shopify Admin API access token"
           }
         ],
-        "type_suffix": "AccessTokenAuthentication"
+        "type_suffix": "AccessTokenAuthentication",
+        "scheme_name": "shopifyAccessToken"
+      },
+      {
+        "title": "OAuth2",
+        "description": "",
+        "fields": [
+          {
+            "name": "client_id",
+            "type": "str",
+            "required": false,
+            "title": "Client ID",
+            "description": "Your Shopify OAuth2 application client ID"
+          },
+          {
+            "name": "client_secret",
+            "type": "str",
+            "required": false,
+            "title": "Client Secret",
+            "description": "Your Shopify OAuth2 application client secret"
+          },
+          {
+            "name": "access_token",
+            "type": "str",
+            "required": true,
+            "title": "Access Token",
+            "description": "Your Shopify OAuth2 access token"
+          }
+        ],
+        "type_suffix": "Oauth2",
+        "scheme_name": "shopifyOAuth"
       }
     ],
-    "is_multi_auth": false
+    "is_multi_auth": true
   },
   "replication_config": null,
   "custom_description": "Shopify is an e-commerce platform that enables businesses to create online stores,\nmanage products, process orders, and handle customer relationships. This connector\nprovides access to Shopify Admin REST API for reading store data including customers,\norders, products, inventory, and more.\n",
-  "supported_questions": "- List all customers in my Shopify store\n- Show me details for a recent customer\n- What products do I have in my store?\n- List all locations for my store\n- Show me inventory levels for a recent location\n- Show me all draft orders\n- List all custom collections in my store\n- Show me details for a recent order\n- Show me product variants for a recent product\n- Show me orders from the last 30 days\n- Show me abandoned checkouts from this week\n- What price rules are currently active?",
+  "supported_questions": "- List all customers in my Shopify store\n- Show me details for a recent customer\n- What products do I have in my store?\n- List all locations for my store\n- Show me inventory levels for a recent location\n- Show me all draft orders\n- List all custom collections in my store\n- Show me details for a recent order\n- Show me product variants for a recent product\n- Show me orders from the last 30 days\n- Show me abandoned checkouts from this week\n- What price rules are currently active?\n- Show me all pages on my store\n- List all blog articles\n- Are there any open disputes?",
   "unsupported_questions": "- Create a new customer in Shopify\n- Update product pricing\n- Delete an order\n- Process a refund\n- Send shipping notification to customer\n- Create a new discount code",
   "first_operation": {
     "method_name": "customers__list",
@@ -3399,6 +3429,791 @@
         "meta_fields": null,
         "is_download": false
       }
+    ],
+    "pages": [
+      {
+        "method_name": "pages__list",
+        "http_method": "get",
+        "path": "/pages.json",
+        "entity": "pages",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 50
+            },
+            "required": null,
+            "description": "Maximum number of results to return (max 250)",
+            "is_deep_object": false
+          },
+          {
+            "name": "since_id",
+            "python_name": "since_id",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "Restrict results to after the specified ID",
+            "is_deep_object": false
+          },
+          {
+            "name": "created_at_min",
+            "python_name": "created_at_min",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Show pages created after date (ISO 8601 format)",
+            "is_deep_object": false
+          },
+          {
+            "name": "created_at_max",
+            "python_name": "created_at_max",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Show pages created before date (ISO 8601 format)",
+            "is_deep_object": false
+          },
+          {
+            "name": "updated_at_min",
+            "python_name": "updated_at_min",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Show pages last updated after date (ISO 8601 format)",
+            "is_deep_object": false
+          },
+          {
+            "name": "updated_at_max",
+            "python_name": "updated_at_max",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Show pages last updated before date (ISO 8601 format)",
+            "is_deep_object": false
+          },
+          {
+            "name": "published_status",
+            "python_name": "published_status",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "published",
+                "unpublished",
+                "any"
+              ],
+              "default": "any"
+            },
+            "required": null,
+            "description": "Filter by published status (published, unpublished, any)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "PagesListParams",
+        "response_type": "PagesListResult",
+        "description": "Returns a list of static pages for the store",
+        "record_extractor": "$.pages",
+        "meta_extractor": {
+          "next_page_url": "@link.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Page]",
+        "meta_fields": [
+          {
+            "name": "next_page_url",
+            "python_name": "next_page_url",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "pages__get",
+        "http_method": "get",
+        "path": "/pages/{page_id}.json",
+        "entity": "pages",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "page_id",
+            "python_name": "page_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The page ID"
+          }
+        ],
+        "params_type_name": "PagesGetParams",
+        "response_type": "Page",
+        "description": "Retrieves a single page by ID",
+        "record_extractor": "$.page",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Page",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "blogs": [
+      {
+        "method_name": "blogs__list",
+        "http_method": "get",
+        "path": "/blogs.json",
+        "entity": "blogs",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 50
+            },
+            "required": null,
+            "description": "Maximum number of results to return (max 250)",
+            "is_deep_object": false
+          },
+          {
+            "name": "since_id",
+            "python_name": "since_id",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "Restrict results to after the specified ID",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "BlogsListParams",
+        "response_type": "BlogsListResult",
+        "description": "Returns a list of blogs for the store",
+        "record_extractor": "$.blogs",
+        "meta_extractor": {
+          "next_page_url": "@link.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Blog]",
+        "meta_fields": [
+          {
+            "name": "next_page_url",
+            "python_name": "next_page_url",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "blogs__get",
+        "http_method": "get",
+        "path": "/blogs/{blog_id}.json",
+        "entity": "blogs",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "blog_id",
+            "python_name": "blog_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The blog ID"
+          }
+        ],
+        "params_type_name": "BlogsGetParams",
+        "response_type": "Blog",
+        "description": "Retrieves a single blog by ID",
+        "record_extractor": "$.blog",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Blog",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "articles": [
+      {
+        "method_name": "articles__list",
+        "http_method": "get",
+        "path": "/blogs/{blog_id}/articles.json",
+        "entity": "articles",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "blog_id",
+            "python_name": "blog_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The blog ID"
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 50
+            },
+            "required": null,
+            "description": "Maximum number of results to return (max 250)",
+            "is_deep_object": false
+          },
+          {
+            "name": "since_id",
+            "python_name": "since_id",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "Restrict results to after the specified ID",
+            "is_deep_object": false
+          },
+          {
+            "name": "created_at_min",
+            "python_name": "created_at_min",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Show articles created after date (ISO 8601 format)",
+            "is_deep_object": false
+          },
+          {
+            "name": "created_at_max",
+            "python_name": "created_at_max",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Show articles created before date (ISO 8601 format)",
+            "is_deep_object": false
+          },
+          {
+            "name": "updated_at_min",
+            "python_name": "updated_at_min",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Show articles last updated after date (ISO 8601 format)",
+            "is_deep_object": false
+          },
+          {
+            "name": "updated_at_max",
+            "python_name": "updated_at_max",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Show articles last updated before date (ISO 8601 format)",
+            "is_deep_object": false
+          },
+          {
+            "name": "published_status",
+            "python_name": "published_status",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "published",
+                "unpublished",
+                "any"
+              ],
+              "default": "any"
+            },
+            "required": null,
+            "description": "Filter by published status (published, unpublished, any)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ArticlesListParams",
+        "response_type": "ArticlesListResult",
+        "description": "Returns a list of articles from a specific blog",
+        "record_extractor": "$.articles",
+        "meta_extractor": {
+          "next_page_url": "@link.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Article]",
+        "meta_fields": [
+          {
+            "name": "next_page_url",
+            "python_name": "next_page_url",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "articles__get",
+        "http_method": "get",
+        "path": "/blogs/{blog_id}/articles/{article_id}.json",
+        "entity": "articles",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "blog_id",
+            "python_name": "blog_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The blog ID"
+          },
+          {
+            "name": "article_id",
+            "python_name": "article_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The article ID"
+          }
+        ],
+        "params_type_name": "ArticlesGetParams",
+        "response_type": "Article",
+        "description": "Retrieves a single article by ID from a blog",
+        "record_extractor": "$.article",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Article",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "balance_transactions": [
+      {
+        "method_name": "balance_transactions__list",
+        "http_method": "get",
+        "path": "/shopify_payments/balance/transactions.json",
+        "entity": "balance_transactions",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 50
+            },
+            "required": null,
+            "description": "Maximum number of results to return (max 250)",
+            "is_deep_object": false
+          },
+          {
+            "name": "since_id",
+            "python_name": "since_id",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "Restrict results to after the specified ID",
+            "is_deep_object": false
+          },
+          {
+            "name": "payout_id",
+            "python_name": "payout_id",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "Filter to transactions in a specific payout",
+            "is_deep_object": false
+          },
+          {
+            "name": "payout_status",
+            "python_name": "payout_status",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "scheduled",
+                "in_transit",
+                "paid",
+                "failed",
+                "canceled"
+              ]
+            },
+            "required": null,
+            "description": "Filter by payout status",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "BalanceTransactionsListParams",
+        "response_type": "BalanceTransactionsListResult",
+        "description": "Returns a list of Shopify Payments balance transactions",
+        "record_extractor": "$.transactions",
+        "meta_extractor": {
+          "next_page_url": "@link.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[BalanceTransaction]",
+        "meta_fields": [
+          {
+            "name": "next_page_url",
+            "python_name": "next_page_url",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "disputes": [
+      {
+        "method_name": "disputes__list",
+        "http_method": "get",
+        "path": "/shopify_payments/disputes.json",
+        "entity": "disputes",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 50
+            },
+            "required": null,
+            "description": "Maximum number of results to return (max 250)",
+            "is_deep_object": false
+          },
+          {
+            "name": "since_id",
+            "python_name": "since_id",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "Restrict results to after the specified ID",
+            "is_deep_object": false
+          },
+          {
+            "name": "status",
+            "python_name": "status",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "needs_response",
+                "under_review",
+                "charge_refunded",
+                "accepted",
+                "won",
+                "lost"
+              ]
+            },
+            "required": null,
+            "description": "Filter by dispute status",
+            "is_deep_object": false
+          },
+          {
+            "name": "initiated_at",
+            "python_name": "initiated_at",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Filter by initiated date (ISO 8601 format)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "DisputesListParams",
+        "response_type": "DisputesListResult",
+        "description": "Returns a list of Shopify Payments disputes (chargebacks and inquiries)",
+        "record_extractor": "$.disputes",
+        "meta_extractor": {
+          "next_page_url": "@link.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Dispute]",
+        "meta_fields": [
+          {
+            "name": "next_page_url",
+            "python_name": "next_page_url",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "disputes__get",
+        "http_method": "get",
+        "path": "/shopify_payments/disputes/{dispute_id}.json",
+        "entity": "disputes",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "dispute_id",
+            "python_name": "dispute_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The dispute ID"
+          }
+        ],
+        "params_type_name": "DisputesGetParams",
+        "response_type": "Dispute",
+        "description": "Retrieves a single Shopify Payments dispute by ID",
+        "record_extractor": "$.dispute",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Dispute",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "metafield_pages": [
+      {
+        "method_name": "metafield_pages__list",
+        "http_method": "get",
+        "path": "/pages/{page_id}/metafields.json",
+        "entity": "metafield_pages",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "page_id",
+            "python_name": "page_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The page ID"
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 50
+            },
+            "required": null,
+            "description": "Maximum number of results to return (max 250)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "MetafieldPagesListParams",
+        "response_type": "MetafieldPagesListResult",
+        "description": "Returns a list of metafields for a specific page",
+        "record_extractor": "$.metafields",
+        "meta_extractor": {
+          "next_page_url": "@link.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Metafield]",
+        "meta_fields": [
+          {
+            "name": "next_page_url",
+            "python_name": "next_page_url",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "metafield_blogs": [
+      {
+        "method_name": "metafield_blogs__list",
+        "http_method": "get",
+        "path": "/blogs/{blog_id}/metafields.json",
+        "entity": "metafield_blogs",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "blog_id",
+            "python_name": "blog_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The blog ID"
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 50
+            },
+            "required": null,
+            "description": "Maximum number of results to return (max 250)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "MetafieldBlogsListParams",
+        "response_type": "MetafieldBlogsListResult",
+        "description": "Returns a list of metafields for a specific blog",
+        "record_extractor": "$.metafields",
+        "meta_extractor": {
+          "next_page_url": "@link.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Metafield]",
+        "meta_fields": [
+          {
+            "name": "next_page_url",
+            "python_name": "next_page_url",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "metafield_articles": [
+      {
+        "method_name": "metafield_articles__list",
+        "http_method": "get",
+        "path": "/blogs/{blog_id}/articles/{article_id}/metafields.json",
+        "entity": "metafield_articles",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "blog_id",
+            "python_name": "blog_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The blog ID"
+          },
+          {
+            "name": "article_id",
+            "python_name": "article_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The article ID"
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 50
+            },
+            "required": null,
+            "description": "Maximum number of results to return (max 250)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "MetafieldArticlesListParams",
+        "response_type": "MetafieldArticlesListResult",
+        "description": "Returns a list of metafields for a specific article",
+        "record_extractor": "$.metafields",
+        "meta_extractor": {
+          "next_page_url": "@link.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Metafield]",
+        "meta_fields": [
+          {
+            "name": "next_page_url",
+            "python_name": "next_page_url",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "is_download": false
+      }
     ]
   },
   "search_schemas": {
@@ -6351,6 +7166,828 @@
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the transaction was processed"
+        }
+      ]
+    },
+    "pages": {
+      "entity": "pages",
+      "data_type_name": "PagesSearchData",
+      "filter_type_name": "PagesSearchFilter",
+      "in_filter_type_name": "PagesInFilter",
+      "any_value_filter_type_name": "PagesAnyValueFilter",
+      "string_filter_type_name": "PagesStringFilter",
+      "sort_filter_type_name": "PagesSortFilter",
+      "result_type_name": "PagesSearchResult",
+      "query_type_name": "PagesSearchQuery",
+      "condition_prefix": "Pages",
+      "condition_type_name": "PagesCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "json_example_value": 0,
+          "description": "Unique identifier for the page"
+        },
+        {
+          "name": "title",
+          "python_name": "title",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Title of the page"
+        },
+        {
+          "name": "handle",
+          "python_name": "handle",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "URL-friendly handle for the page"
+        },
+        {
+          "name": "author",
+          "python_name": "author",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Name of the page author"
+        },
+        {
+          "name": "body_html",
+          "python_name": "body_html",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "HTML content of the page"
+        },
+        {
+          "name": "published_at",
+          "python_name": "published_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "ISO 8601 timestamp when the page was published"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "ISO 8601 timestamp when the page was created"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "ISO 8601 timestamp when the page was last updated"
+        }
+      ]
+    },
+    "blogs": {
+      "entity": "blogs",
+      "data_type_name": "BlogsSearchData",
+      "filter_type_name": "BlogsSearchFilter",
+      "in_filter_type_name": "BlogsInFilter",
+      "any_value_filter_type_name": "BlogsAnyValueFilter",
+      "string_filter_type_name": "BlogsStringFilter",
+      "sort_filter_type_name": "BlogsSortFilter",
+      "result_type_name": "BlogsSearchResult",
+      "query_type_name": "BlogsSearchQuery",
+      "condition_prefix": "Blogs",
+      "condition_type_name": "BlogsCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "json_example_value": 0,
+          "description": "Unique identifier for the blog"
+        },
+        {
+          "name": "title",
+          "python_name": "title",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Title of the blog"
+        },
+        {
+          "name": "handle",
+          "python_name": "handle",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "URL-friendly handle for the blog"
+        },
+        {
+          "name": "commentable",
+          "python_name": "commentable",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Whether readers can post comments (no, moderate, yes)"
+        },
+        {
+          "name": "tags",
+          "python_name": "tags",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Comma-separated tags from the blog's articles"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "ISO 8601 timestamp when the blog was created"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "ISO 8601 timestamp when the blog was last updated"
+        }
+      ]
+    },
+    "articles": {
+      "entity": "articles",
+      "data_type_name": "ArticlesSearchData",
+      "filter_type_name": "ArticlesSearchFilter",
+      "in_filter_type_name": "ArticlesInFilter",
+      "any_value_filter_type_name": "ArticlesAnyValueFilter",
+      "string_filter_type_name": "ArticlesStringFilter",
+      "sort_filter_type_name": "ArticlesSortFilter",
+      "result_type_name": "ArticlesSearchResult",
+      "query_type_name": "ArticlesSearchQuery",
+      "condition_prefix": "Articles",
+      "condition_type_name": "ArticlesCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "json_example_value": 0,
+          "description": "Unique identifier for the article"
+        },
+        {
+          "name": "title",
+          "python_name": "title",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Title of the article"
+        },
+        {
+          "name": "handle",
+          "python_name": "handle",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "URL-friendly handle for the article"
+        },
+        {
+          "name": "author",
+          "python_name": "author",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Name of the author of the article"
+        },
+        {
+          "name": "blog_id",
+          "python_name": "blog_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "json_example_value": 0,
+          "description": "Identifier of the blog the article belongs to"
+        },
+        {
+          "name": "body_html",
+          "python_name": "body_html",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "HTML content of the article body"
+        },
+        {
+          "name": "summary_html",
+          "python_name": "summary_html",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Summary of the article in HTML"
+        },
+        {
+          "name": "tags",
+          "python_name": "tags",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Comma-separated list of tags for the article"
+        },
+        {
+          "name": "published_at",
+          "python_name": "published_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "ISO 8601 timestamp when the article was published"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "ISO 8601 timestamp when the article was created"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "ISO 8601 timestamp when the article was last updated"
+        }
+      ]
+    },
+    "balance_transactions": {
+      "entity": "balance_transactions",
+      "data_type_name": "BalanceTransactionsSearchData",
+      "filter_type_name": "BalanceTransactionsSearchFilter",
+      "in_filter_type_name": "BalanceTransactionsInFilter",
+      "any_value_filter_type_name": "BalanceTransactionsAnyValueFilter",
+      "string_filter_type_name": "BalanceTransactionsStringFilter",
+      "sort_filter_type_name": "BalanceTransactionsSortFilter",
+      "result_type_name": "BalanceTransactionsSearchResult",
+      "query_type_name": "BalanceTransactionsSearchQuery",
+      "condition_prefix": "BalanceTransactions",
+      "condition_type_name": "BalanceTransactionsCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "json_example_value": 0,
+          "description": "Unique identifier of the balance transaction"
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Type of the transaction (charge, refund, dispute, reserve, adjustment, credit, debit, payout, etc.)"
+        },
+        {
+          "name": "amount",
+          "python_name": "amount",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Gross amount of the transaction"
+        },
+        {
+          "name": "fee",
+          "python_name": "fee",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Total fees deducted from the transaction"
+        },
+        {
+          "name": "net",
+          "python_name": "net",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Net amount of the transaction"
+        },
+        {
+          "name": "currency",
+          "python_name": "currency",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "ISO 4217 currency code of the transaction"
+        },
+        {
+          "name": "payout_id",
+          "python_name": "payout_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "json_example_value": 0,
+          "description": "Identifier of the payout the transaction was paid out in"
+        },
+        {
+          "name": "payout_status",
+          "python_name": "payout_status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Status of the associated payout"
+        },
+        {
+          "name": "source_type",
+          "python_name": "source_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Type of the resource that led to this transaction"
+        },
+        {
+          "name": "source_order_id",
+          "python_name": "source_order_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "json_example_value": 0,
+          "description": "Identifier of the source order, if applicable"
+        },
+        {
+          "name": "processed_at",
+          "python_name": "processed_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "ISO 8601 timestamp when the transaction was processed"
+        }
+      ]
+    },
+    "disputes": {
+      "entity": "disputes",
+      "data_type_name": "DisputesSearchData",
+      "filter_type_name": "DisputesSearchFilter",
+      "in_filter_type_name": "DisputesInFilter",
+      "any_value_filter_type_name": "DisputesAnyValueFilter",
+      "string_filter_type_name": "DisputesStringFilter",
+      "sort_filter_type_name": "DisputesSortFilter",
+      "result_type_name": "DisputesSearchResult",
+      "query_type_name": "DisputesSearchQuery",
+      "condition_prefix": "Disputes",
+      "condition_type_name": "DisputesCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "json_example_value": 0,
+          "description": "Unique identifier for the dispute"
+        },
+        {
+          "name": "order_id",
+          "python_name": "order_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "json_example_value": 0,
+          "description": "Identifier of the order the dispute belongs to"
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Whether the dispute is an inquiry or chargeback"
+        },
+        {
+          "name": "amount",
+          "python_name": "amount",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Disputed amount"
+        },
+        {
+          "name": "currency",
+          "python_name": "currency",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "ISO 4217 currency code of the dispute amount"
+        },
+        {
+          "name": "reason",
+          "python_name": "reason",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Reason for the dispute provided by the cardholder's bank"
+        },
+        {
+          "name": "network_reason_code",
+          "python_name": "network_reason_code",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Network reason code from the cardholder's bank"
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Current state of the dispute (needs_response, under_review, charge_refunded, accepted, won, lost)"
+        },
+        {
+          "name": "evidence_due_by",
+          "python_name": "evidence_due_by",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "ISO 8601 deadline for evidence submission"
+        },
+        {
+          "name": "initiated_at",
+          "python_name": "initiated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "ISO 8601 timestamp when the dispute was initiated"
+        },
+        {
+          "name": "finalized_on",
+          "python_name": "finalized_on",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "ISO 8601 timestamp when the dispute was resolved"
+        }
+      ]
+    },
+    "metafield_pages": {
+      "entity": "metafield_pages",
+      "data_type_name": "MetafieldPagesSearchData",
+      "filter_type_name": "MetafieldPagesSearchFilter",
+      "in_filter_type_name": "MetafieldPagesInFilter",
+      "any_value_filter_type_name": "MetafieldPagesAnyValueFilter",
+      "string_filter_type_name": "MetafieldPagesStringFilter",
+      "sort_filter_type_name": "MetafieldPagesSortFilter",
+      "result_type_name": "MetafieldPagesSearchResult",
+      "query_type_name": "MetafieldPagesSearchQuery",
+      "condition_prefix": "MetafieldPages",
+      "condition_type_name": "MetafieldPagesCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "json_example_value": 0,
+          "description": "Unique identifier for the metafield"
+        },
+        {
+          "name": "namespace",
+          "python_name": "namespace",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Container namespace for the metafield"
+        },
+        {
+          "name": "key",
+          "python_name": "key",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Identifier key for the metafield"
+        },
+        {
+          "name": "value",
+          "python_name": "value",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "The metafield value"
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "The metafield's information type"
+        },
+        {
+          "name": "description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Human-readable description of the metafield"
+        },
+        {
+          "name": "owner_id",
+          "python_name": "owner_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "json_example_value": 0,
+          "description": "Identifier of the page that owns this metafield"
+        },
+        {
+          "name": "owner_resource",
+          "python_name": "owner_resource",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Resource type that owns this metafield (e.g. `page`)"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "ISO 8601 timestamp when the metafield was created"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "ISO 8601 timestamp when the metafield was last updated"
+        }
+      ]
+    },
+    "metafield_blogs": {
+      "entity": "metafield_blogs",
+      "data_type_name": "MetafieldBlogsSearchData",
+      "filter_type_name": "MetafieldBlogsSearchFilter",
+      "in_filter_type_name": "MetafieldBlogsInFilter",
+      "any_value_filter_type_name": "MetafieldBlogsAnyValueFilter",
+      "string_filter_type_name": "MetafieldBlogsStringFilter",
+      "sort_filter_type_name": "MetafieldBlogsSortFilter",
+      "result_type_name": "MetafieldBlogsSearchResult",
+      "query_type_name": "MetafieldBlogsSearchQuery",
+      "condition_prefix": "MetafieldBlogs",
+      "condition_type_name": "MetafieldBlogsCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "json_example_value": 0,
+          "description": "Unique identifier for the metafield"
+        },
+        {
+          "name": "namespace",
+          "python_name": "namespace",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Container namespace for the metafield"
+        },
+        {
+          "name": "key",
+          "python_name": "key",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Identifier key for the metafield"
+        },
+        {
+          "name": "value",
+          "python_name": "value",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "The metafield value"
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "The metafield's information type"
+        },
+        {
+          "name": "description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Human-readable description of the metafield"
+        },
+        {
+          "name": "owner_id",
+          "python_name": "owner_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "json_example_value": 0,
+          "description": "Identifier of the blog that owns this metafield"
+        },
+        {
+          "name": "owner_resource",
+          "python_name": "owner_resource",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Resource type that owns this metafield (e.g. `blog`)"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "ISO 8601 timestamp when the metafield was created"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "ISO 8601 timestamp when the metafield was last updated"
+        }
+      ]
+    },
+    "metafield_articles": {
+      "entity": "metafield_articles",
+      "data_type_name": "MetafieldArticlesSearchData",
+      "filter_type_name": "MetafieldArticlesSearchFilter",
+      "in_filter_type_name": "MetafieldArticlesInFilter",
+      "any_value_filter_type_name": "MetafieldArticlesAnyValueFilter",
+      "string_filter_type_name": "MetafieldArticlesStringFilter",
+      "sort_filter_type_name": "MetafieldArticlesSortFilter",
+      "result_type_name": "MetafieldArticlesSearchResult",
+      "query_type_name": "MetafieldArticlesSearchQuery",
+      "condition_prefix": "MetafieldArticles",
+      "condition_type_name": "MetafieldArticlesCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "json_example_value": 0,
+          "description": "Unique identifier for the metafield"
+        },
+        {
+          "name": "namespace",
+          "python_name": "namespace",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Container namespace for the metafield"
+        },
+        {
+          "name": "key",
+          "python_name": "key",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Identifier key for the metafield"
+        },
+        {
+          "name": "value",
+          "python_name": "value",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "The metafield value"
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "The metafield's information type"
+        },
+        {
+          "name": "description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Human-readable description of the metafield"
+        },
+        {
+          "name": "owner_id",
+          "python_name": "owner_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "json_example_value": 0,
+          "description": "Identifier of the article that owns this metafield"
+        },
+        {
+          "name": "owner_resource",
+          "python_name": "owner_resource",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Resource type that owns this metafield (e.g. `article`)"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "ISO 8601 timestamp when the metafield was created"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "ISO 8601 timestamp when the metafield was last updated"
         }
       ]
     }

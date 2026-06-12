@@ -802,6 +802,16 @@ def _parse_oauth2_config(scheme: Any) -> dict[str, str]:
         if body_format:
             config["body_format"] = body_format
 
+        # Allow overriding the header and prefix for APIs that use non-standard
+        # token delivery (e.g., Shopify uses X-Shopify-Access-Token without prefix)
+        header = x_token_refresh.get("header")
+        if header:
+            config["header"] = header
+
+        prefix = x_token_refresh.get("prefix")
+        if prefix is not None:
+            config["prefix"] = prefix
+
     # Extract token_extract fields from x-airbyte-token-extract extension
     x_token_extract = getattr(scheme, "x_airbyte_token_extract", None)
     if x_token_extract:

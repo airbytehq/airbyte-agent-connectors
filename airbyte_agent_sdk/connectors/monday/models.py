@@ -77,6 +77,12 @@ class BoardGroupsItem(BaseModel):
     position: str | None | None = Field(default=None)
     title: str | None | None = Field(default=None)
 
+class BoardCreator(BaseModel):
+    """Board creator"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None | None = Field(default=None)
+
 class BoardViewsItem(BaseModel):
     """Nested schema for Board.views_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -87,8 +93,17 @@ class BoardViewsItem(BaseModel):
     type_: str | None | None = Field(default=None, alias="type")
     view_specific_data_str: str | None | None = Field(default=None)
 
-class BoardOwnersItem(BaseModel):
-    """Nested schema for Board.owners_item"""
+class BoardWorkspace(BaseModel):
+    """Workspace the board belongs to"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None | None = Field(default=None)
+    name: str | None | None = Field(default=None)
+    kind: str | None | None = Field(default=None)
+    description: str | None | None = Field(default=None)
+
+class BoardTagsItem(BaseModel):
+    """Nested schema for Board.tags_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     id: str | None | None = Field(default=None)
@@ -105,20 +120,8 @@ class BoardColumnsItem(BaseModel):
     type_: str | None | None = Field(default=None, alias="type")
     width: int | None | None = Field(default=None)
 
-class BoardTagsItem(BaseModel):
-    """Nested schema for Board.tags_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: str | None | None = Field(default=None)
-
-class BoardCreator(BaseModel):
-    """Board creator"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: str | None | None = Field(default=None)
-
-class BoardTopGroup(BaseModel):
-    """Top group on the board"""
+class BoardOwnersItem(BaseModel):
+    """Nested schema for Board.owners_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     id: str | None | None = Field(default=None)
@@ -129,14 +132,11 @@ class BoardSubscribersItem(BaseModel):
 
     id: str | None | None = Field(default=None)
 
-class BoardWorkspace(BaseModel):
-    """Workspace the board belongs to"""
+class BoardTopGroup(BaseModel):
+    """Top group on the board"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     id: str | None | None = Field(default=None)
-    name: str | None | None = Field(default=None)
-    kind: str | None | None = Field(default=None)
-    description: str | None | None = Field(default=None)
 
 class Board(BaseModel):
     """Monday.com board object"""
@@ -159,12 +159,6 @@ class Board(BaseModel):
     top_group: BoardTopGroup | None = Field(default=None)
     views: list[BoardViewsItem | None] | None = Field(default=None)
     workspace: BoardWorkspace | None = Field(default=None)
-
-class ItemGroup(BaseModel):
-    """Group the item belongs to"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: str | None | None = Field(default=None)
 
 class ItemParentItem(BaseModel):
     """Parent item (for subitems)"""
@@ -193,6 +187,12 @@ class ItemBoard(BaseModel):
 
     id: str | None | None = Field(default=None)
     name: str | None | None = Field(default=None)
+
+class ItemGroup(BaseModel):
+    """Group the item belongs to"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None | None = Field(default=None)
 
 class Item(BaseModel):
     """Monday.com item object"""
@@ -279,12 +279,6 @@ class Update(BaseModel):
     replies: list[UpdateRepliesItem | None] | None = Field(default=None)
     assets: list[UpdateAssetsItem | None] | None = Field(default=None)
 
-class WorkspaceUsersSubscribersItem(BaseModel):
-    """Nested schema for Workspace.users_subscribers_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: str | None | None = Field(default=None)
-
 class WorkspaceAccountProduct(BaseModel):
     """Account product info"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -306,8 +300,8 @@ class WorkspaceTeamsSubscribersItem(BaseModel):
     id: str | None | None = Field(default=None)
     name: str | None | None = Field(default=None)
 
-class WorkspaceOwnersSubscribersItem(BaseModel):
-    """Nested schema for Workspace.owners_subscribers_item"""
+class WorkspaceUsersSubscribersItem(BaseModel):
+    """Nested schema for Workspace.users_subscribers_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     id: str | None | None = Field(default=None)
@@ -324,6 +318,12 @@ class WorkspaceSettings(BaseModel):
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     icon: WorkspaceSettingsIcon | None | None = Field(default=None)
+
+class WorkspaceOwnersSubscribersItem(BaseModel):
+    """Nested schema for Workspace.owners_subscribers_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None | None = Field(default=None)
 
 class Workspace(BaseModel):
     """Monday.com workspace object"""

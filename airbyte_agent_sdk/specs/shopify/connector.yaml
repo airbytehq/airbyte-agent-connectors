@@ -42,6 +42,9 @@ info:
     - "Show me orders from the last 30 days"
     - "Show me abandoned checkouts from this week"
     - "What price rules are currently active?"
+    - "Show me all pages on my store"
+    - "List all blog articles"
+    - "Are there any open disputes?"
     unsupported:
     - "Create a new customer in Shopify"
     - "Update product pricing"
@@ -53,9 +56,6 @@ info:
   - customer_journey_summary
   - order_agreements
   - transactions_graphql
-  x-airbyte-skip-auth-methods:
-  - oauth2
-
   x-airbyte-entity-relationships:
   - source_entity: product_variants
     target_entity: products
@@ -145,6 +145,41 @@ info:
   - source_entity: fulfillment_orders
     target_entity: orders
     foreign_key: order_id
+    target_key: id
+    cardinality: many_to_one
+  - source_entity: articles
+    target_entity: blogs
+    foreign_key: blog_id
+    target_key: id
+    cardinality: many_to_one
+  - source_entity: metafield_pages
+    target_entity: pages
+    foreign_key: page_id
+    target_key: id
+    cardinality: many_to_one
+  - source_entity: metafield_blogs
+    target_entity: blogs
+    foreign_key: blog_id
+    target_key: id
+    cardinality: many_to_one
+  - source_entity: metafield_articles
+    target_entity: blogs
+    foreign_key: blog_id
+    target_key: id
+    cardinality: many_to_one
+  - source_entity: metafield_articles
+    target_entity: articles
+    foreign_key: article_id
+    target_key: id
+    cardinality: many_to_one
+  - source_entity: disputes
+    target_entity: orders
+    foreign_key: order_id
+    target_key: id
+    cardinality: many_to_one
+  - source_entity: balance_transactions
+    target_entity: orders
+    foreign_key: source_order_id
     target_key: id
     cardinality: many_to_one
   x-airbyte-context-store:
@@ -1085,6 +1120,265 @@ info:
           - name: processed_at
             type: ["null", "string"]
             description: "ISO 8601 timestamp when the transaction was processed"
+      - entity: pages
+        x-airbyte-name: pages
+        fields:
+          - name: id
+            type: ["null", "integer"]
+            description: "Unique identifier for the page"
+          - name: title
+            type: ["null", "string"]
+            description: "Title of the page"
+          - name: handle
+            type: ["null", "string"]
+            description: "URL-friendly handle for the page"
+          - name: author
+            type: ["null", "string"]
+            description: "Name of the page author"
+          - name: body_html
+            type: ["null", "string"]
+            description: "HTML content of the page"
+          - name: published_at
+            type: ["null", "string"]
+            description: "ISO 8601 timestamp when the page was published"
+          - name: created_at
+            type: ["null", "string"]
+            description: "ISO 8601 timestamp when the page was created"
+          - name: updated_at
+            type: ["null", "string"]
+            description: "ISO 8601 timestamp when the page was last updated"
+      - entity: blogs
+        x-airbyte-name: blogs
+        fields:
+          - name: id
+            type: ["null", "integer"]
+            description: "Unique identifier for the blog"
+          - name: title
+            type: ["null", "string"]
+            description: "Title of the blog"
+          - name: handle
+            type: ["null", "string"]
+            description: "URL-friendly handle for the blog"
+          - name: commentable
+            type: ["null", "string"]
+            description: "Whether readers can post comments (no, moderate, yes)"
+          - name: tags
+            type: ["null", "string"]
+            description: "Comma-separated tags from the blog's articles"
+          - name: created_at
+            type: ["null", "string"]
+            description: "ISO 8601 timestamp when the blog was created"
+          - name: updated_at
+            type: ["null", "string"]
+            description: "ISO 8601 timestamp when the blog was last updated"
+      - entity: articles
+        x-airbyte-name: articles
+        fields:
+          - name: id
+            type: ["null", "integer"]
+            description: "Unique identifier for the article"
+          - name: title
+            type: ["null", "string"]
+            description: "Title of the article"
+          - name: handle
+            type: ["null", "string"]
+            description: "URL-friendly handle for the article"
+          - name: author
+            type: ["null", "string"]
+            description: "Name of the author of the article"
+          - name: blog_id
+            type: ["null", "integer"]
+            description: "Identifier of the blog the article belongs to"
+          - name: body_html
+            type: ["null", "string"]
+            description: "HTML content of the article body"
+          - name: summary_html
+            type: ["null", "string"]
+            description: "Summary of the article in HTML"
+          - name: tags
+            type: ["null", "string"]
+            description: "Comma-separated list of tags for the article"
+          - name: published_at
+            type: ["null", "string"]
+            description: "ISO 8601 timestamp when the article was published"
+          - name: created_at
+            type: ["null", "string"]
+            description: "ISO 8601 timestamp when the article was created"
+          - name: updated_at
+            type: ["null", "string"]
+            description: "ISO 8601 timestamp when the article was last updated"
+      - entity: balance_transactions
+        x-airbyte-name: balance_transactions
+        fields:
+          - name: id
+            type: ["null", "integer"]
+            description: "Unique identifier of the balance transaction"
+          - name: type
+            type: ["null", "string"]
+            description: "Type of the transaction (charge, refund, dispute, reserve, adjustment, credit, debit, payout, etc.)"
+          - name: amount
+            type: ["null", "string"]
+            description: "Gross amount of the transaction"
+          - name: fee
+            type: ["null", "string"]
+            description: "Total fees deducted from the transaction"
+          - name: net
+            type: ["null", "string"]
+            description: "Net amount of the transaction"
+          - name: currency
+            type: ["null", "string"]
+            description: "ISO 4217 currency code of the transaction"
+          - name: payout_id
+            type: ["null", "integer"]
+            description: "Identifier of the payout the transaction was paid out in"
+          - name: payout_status
+            type: ["null", "string"]
+            description: "Status of the associated payout"
+          - name: source_type
+            type: ["null", "string"]
+            description: "Type of the resource that led to this transaction"
+          - name: source_order_id
+            type: ["null", "integer"]
+            description: "Identifier of the source order, if applicable"
+          - name: processed_at
+            type: ["null", "string"]
+            description: "ISO 8601 timestamp when the transaction was processed"
+      - entity: disputes
+        x-airbyte-name: disputes
+        fields:
+          - name: id
+            type: ["null", "integer"]
+            description: "Unique identifier for the dispute"
+          - name: order_id
+            type: ["null", "integer"]
+            description: "Identifier of the order the dispute belongs to"
+          - name: type
+            type: ["null", "string"]
+            description: "Whether the dispute is an inquiry or chargeback"
+          - name: amount
+            type: ["null", "string"]
+            description: "Disputed amount"
+          - name: currency
+            type: ["null", "string"]
+            description: "ISO 4217 currency code of the dispute amount"
+          - name: reason
+            type: ["null", "string"]
+            description: "Reason for the dispute provided by the cardholder's bank"
+          - name: network_reason_code
+            type: ["null", "string"]
+            description: "Network reason code from the cardholder's bank"
+          - name: status
+            type: ["null", "string"]
+            description: "Current state of the dispute (needs_response, under_review, charge_refunded, accepted, won, lost)"
+          - name: evidence_due_by
+            type: ["null", "string"]
+            description: "ISO 8601 deadline for evidence submission"
+          - name: initiated_at
+            type: ["null", "string"]
+            description: "ISO 8601 timestamp when the dispute was initiated"
+          - name: finalized_on
+            type: ["null", "string"]
+            description: "ISO 8601 timestamp when the dispute was resolved"
+      - entity: metafield_pages
+        x-airbyte-name: metafield_pages
+        fields:
+          - name: id
+            type: ["null", "integer"]
+            description: "Unique identifier for the metafield"
+          - name: namespace
+            type: ["null", "string"]
+            description: "Container namespace for the metafield"
+          - name: key
+            type: ["null", "string"]
+            description: "Identifier key for the metafield"
+          - name: value
+            type: ["null", "string"]
+            description: "The metafield value"
+          - name: type
+            type: ["null", "string"]
+            description: "The metafield's information type"
+          - name: description
+            type: ["null", "string"]
+            description: "Human-readable description of the metafield"
+          - name: owner_id
+            type: ["null", "integer"]
+            description: "Identifier of the page that owns this metafield"
+          - name: owner_resource
+            type: ["null", "string"]
+            description: "Resource type that owns this metafield (e.g. `page`)"
+          - name: created_at
+            type: ["null", "string"]
+            description: "ISO 8601 timestamp when the metafield was created"
+          - name: updated_at
+            type: ["null", "string"]
+            description: "ISO 8601 timestamp when the metafield was last updated"
+      - entity: metafield_blogs
+        x-airbyte-name: metafield_blogs
+        fields:
+          - name: id
+            type: ["null", "integer"]
+            description: "Unique identifier for the metafield"
+          - name: namespace
+            type: ["null", "string"]
+            description: "Container namespace for the metafield"
+          - name: key
+            type: ["null", "string"]
+            description: "Identifier key for the metafield"
+          - name: value
+            type: ["null", "string"]
+            description: "The metafield value"
+          - name: type
+            type: ["null", "string"]
+            description: "The metafield's information type"
+          - name: description
+            type: ["null", "string"]
+            description: "Human-readable description of the metafield"
+          - name: owner_id
+            type: ["null", "integer"]
+            description: "Identifier of the blog that owns this metafield"
+          - name: owner_resource
+            type: ["null", "string"]
+            description: "Resource type that owns this metafield (e.g. `blog`)"
+          - name: created_at
+            type: ["null", "string"]
+            description: "ISO 8601 timestamp when the metafield was created"
+          - name: updated_at
+            type: ["null", "string"]
+            description: "ISO 8601 timestamp when the metafield was last updated"
+      - entity: metafield_articles
+        x-airbyte-name: metafield_articles
+        fields:
+          - name: id
+            type: ["null", "integer"]
+            description: "Unique identifier for the metafield"
+          - name: namespace
+            type: ["null", "string"]
+            description: "Container namespace for the metafield"
+          - name: key
+            type: ["null", "string"]
+            description: "Identifier key for the metafield"
+          - name: value
+            type: ["null", "string"]
+            description: "The metafield value"
+          - name: type
+            type: ["null", "string"]
+            description: "The metafield's information type"
+          - name: description
+            type: ["null", "string"]
+            description: "Human-readable description of the metafield"
+          - name: owner_id
+            type: ["null", "integer"]
+            description: "Identifier of the article that owns this metafield"
+          - name: owner_resource
+            type: ["null", "string"]
+            description: "Resource type that owns this metafield (e.g. `article`)"
+          - name: created_at
+            type: ["null", "string"]
+            description: "ISO 8601 timestamp when the metafield was created"
+          - name: updated_at
+            type: ["null", "string"]
+            description: "ISO 8601 timestamp when the metafield was last updated"
+
 servers:
 - url: https://{shop}.myshopify.com/admin/api/2025-10
   description: Shopify Admin REST API Server
@@ -1096,6 +1390,7 @@ servers:
     shop: shop
 
 security:
+- shopifyOAuth: []
 - shopifyAccessToken: []
 
 paths:
@@ -3216,6 +3511,525 @@ paths:
                   fulfillment_order:
                     $ref: "#/components/schemas/FulfillmentOrder"
 
+  /pages.json:
+    get:
+      summary: List all pages
+      description: Returns a list of static pages for the store
+      operationId: Pages_List
+      x-airbyte-entity: pages
+      x-airbyte-action: list
+      x-airbyte-untested: true
+      x-airbyte-record-extractor: $.pages
+      x-airbyte-meta-extractor:
+        next_page_url: "@link.next"
+      tags:
+      - Pages
+      parameters:
+      - name: limit
+        in: query
+        description: Maximum number of results to return (max 250)
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 250
+          default: 50
+      - name: since_id
+        in: query
+        description: Restrict results to after the specified ID
+        schema:
+          type: integer
+      - name: created_at_min
+        in: query
+        description: Show pages created after date (ISO 8601 format)
+        schema:
+          type: string
+          format: date-time
+      - name: created_at_max
+        in: query
+        description: Show pages created before date (ISO 8601 format)
+        schema:
+          type: string
+          format: date-time
+      - name: updated_at_min
+        in: query
+        description: Show pages last updated after date (ISO 8601 format)
+        schema:
+          type: string
+          format: date-time
+      - name: updated_at_max
+        in: query
+        description: Show pages last updated before date (ISO 8601 format)
+        schema:
+          type: string
+          format: date-time
+      - name: published_status
+        in: query
+        description: "Filter by published status (published, unpublished, any)"
+        schema:
+          type: string
+          enum:
+          - published
+          - unpublished
+          - any
+          default: any
+      responses:
+        "200":
+          description: List of pages
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PageList"
+
+  /pages/{page_id}.json:
+    get:
+      summary: Get a page
+      description: Retrieves a single page by ID
+      operationId: Pages_Get
+      x-airbyte-entity: pages
+      x-airbyte-action: get
+      x-airbyte-untested: true
+      x-airbyte-record-extractor: $.page
+      tags:
+      - Pages
+      parameters:
+      - name: page_id
+        in: path
+        required: true
+        description: The page ID
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Page retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  page:
+                    $ref: "#/components/schemas/Page"
+
+  /blogs.json:
+    get:
+      summary: List all blogs
+      description: Returns a list of blogs for the store
+      operationId: Blogs_List
+      x-airbyte-entity: blogs
+      x-airbyte-action: list
+      x-airbyte-untested: true
+      x-airbyte-record-extractor: $.blogs
+      x-airbyte-meta-extractor:
+        next_page_url: "@link.next"
+      tags:
+      - Blogs
+      parameters:
+      - name: limit
+        in: query
+        description: Maximum number of results to return (max 250)
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 250
+          default: 50
+      - name: since_id
+        in: query
+        description: Restrict results to after the specified ID
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: List of blogs
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BlogList"
+
+  /blogs/{blog_id}.json:
+    get:
+      summary: Get a blog
+      description: Retrieves a single blog by ID
+      operationId: Blogs_Get
+      x-airbyte-entity: blogs
+      x-airbyte-action: get
+      x-airbyte-untested: true
+      x-airbyte-record-extractor: $.blog
+      tags:
+      - Blogs
+      parameters:
+      - name: blog_id
+        in: path
+        required: true
+        description: The blog ID
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Blog retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  blog:
+                    $ref: "#/components/schemas/Blog"
+
+  /blogs/{blog_id}/articles.json:
+    get:
+      summary: List all articles for a blog
+      description: Returns a list of articles from a specific blog
+      operationId: Articles_List
+      x-airbyte-entity: articles
+      x-airbyte-action: list
+      x-airbyte-untested: true
+      x-airbyte-record-extractor: $.articles
+      x-airbyte-meta-extractor:
+        next_page_url: "@link.next"
+      tags:
+      - Articles
+      parameters:
+      - name: blog_id
+        in: path
+        required: true
+        description: The blog ID
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        description: Maximum number of results to return (max 250)
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 250
+          default: 50
+      - name: since_id
+        in: query
+        description: Restrict results to after the specified ID
+        schema:
+          type: integer
+      - name: created_at_min
+        in: query
+        description: Show articles created after date (ISO 8601 format)
+        schema:
+          type: string
+          format: date-time
+      - name: created_at_max
+        in: query
+        description: Show articles created before date (ISO 8601 format)
+        schema:
+          type: string
+          format: date-time
+      - name: updated_at_min
+        in: query
+        description: Show articles last updated after date (ISO 8601 format)
+        schema:
+          type: string
+          format: date-time
+      - name: updated_at_max
+        in: query
+        description: Show articles last updated before date (ISO 8601 format)
+        schema:
+          type: string
+          format: date-time
+      - name: published_status
+        in: query
+        description: "Filter by published status (published, unpublished, any)"
+        schema:
+          type: string
+          enum:
+          - published
+          - unpublished
+          - any
+          default: any
+      responses:
+        "200":
+          description: List of articles
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ArticleList"
+
+  /blogs/{blog_id}/articles/{article_id}.json:
+    get:
+      summary: Get an article
+      description: Retrieves a single article by ID from a blog
+      operationId: Articles_Get
+      x-airbyte-entity: articles
+      x-airbyte-action: get
+      x-airbyte-untested: true
+      x-airbyte-record-extractor: $.article
+      tags:
+      - Articles
+      parameters:
+      - name: blog_id
+        in: path
+        required: true
+        description: The blog ID
+        schema:
+          type: integer
+      - name: article_id
+        in: path
+        required: true
+        description: The article ID
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Article retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  article:
+                    $ref: "#/components/schemas/Article"
+
+  /shopify_payments/balance/transactions.json:
+    get:
+      summary: List all balance transactions
+      description: Returns a list of Shopify Payments balance transactions
+      operationId: BalanceTransactions_List
+      x-airbyte-entity: balance_transactions
+      x-airbyte-action: list
+      x-airbyte-untested: true
+      x-airbyte-record-extractor: $.transactions
+      x-airbyte-meta-extractor:
+        next_page_url: "@link.next"
+      tags:
+      - BalanceTransactions
+      parameters:
+      - name: limit
+        in: query
+        description: Maximum number of results to return (max 250)
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 250
+          default: 50
+      - name: since_id
+        in: query
+        description: Restrict results to after the specified ID
+        schema:
+          type: integer
+      - name: payout_id
+        in: query
+        description: Filter to transactions in a specific payout
+        schema:
+          type: integer
+      - name: payout_status
+        in: query
+        description: Filter by payout status
+        schema:
+          type: string
+          enum:
+          - scheduled
+          - in_transit
+          - paid
+          - failed
+          - canceled
+      responses:
+        "200":
+          description: List of balance transactions
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BalanceTransactionList"
+
+  /shopify_payments/disputes.json:
+    get:
+      summary: List all disputes
+      description: Returns a list of Shopify Payments disputes (chargebacks and inquiries)
+      operationId: Disputes_List
+      x-airbyte-entity: disputes
+      x-airbyte-action: list
+      x-airbyte-untested: true
+      x-airbyte-record-extractor: $.disputes
+      x-airbyte-meta-extractor:
+        next_page_url: "@link.next"
+      tags:
+      - Disputes
+      parameters:
+      - name: limit
+        in: query
+        description: Maximum number of results to return (max 250)
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 250
+          default: 50
+      - name: since_id
+        in: query
+        description: Restrict results to after the specified ID
+        schema:
+          type: integer
+      - name: status
+        in: query
+        description: Filter by dispute status
+        schema:
+          type: string
+          enum:
+          - needs_response
+          - under_review
+          - charge_refunded
+          - accepted
+          - won
+          - lost
+      - name: initiated_at
+        in: query
+        description: Filter by initiated date (ISO 8601 format)
+        schema:
+          type: string
+          format: date-time
+      responses:
+        "200":
+          description: List of disputes
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DisputeList"
+
+  /shopify_payments/disputes/{dispute_id}.json:
+    get:
+      summary: Get a dispute
+      description: Retrieves a single Shopify Payments dispute by ID
+      operationId: Disputes_Get
+      x-airbyte-entity: disputes
+      x-airbyte-action: get
+      x-airbyte-untested: true
+      x-airbyte-record-extractor: $.dispute
+      tags:
+      - Disputes
+      parameters:
+      - name: dispute_id
+        in: path
+        required: true
+        description: The dispute ID
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Dispute retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  dispute:
+                    $ref: "#/components/schemas/Dispute"
+
+  /pages/{page_id}/metafields.json:
+    get:
+      summary: List metafields for a page
+      description: Returns a list of metafields for a specific page
+      operationId: MetafieldPages_List
+      x-airbyte-entity: metafield_pages
+      x-airbyte-action: list
+      x-airbyte-untested: true
+      x-airbyte-record-extractor: $.metafields
+      x-airbyte-meta-extractor:
+        next_page_url: "@link.next"
+      tags:
+      - Metafields
+      parameters:
+      - name: page_id
+        in: path
+        required: true
+        description: The page ID
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        description: Maximum number of results to return (max 250)
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 250
+          default: 50
+      responses:
+        "200":
+          description: List of metafields for the page
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MetafieldList"
+
+  /blogs/{blog_id}/metafields.json:
+    get:
+      summary: List metafields for a blog
+      description: Returns a list of metafields for a specific blog
+      operationId: MetafieldBlogs_List
+      x-airbyte-entity: metafield_blogs
+      x-airbyte-action: list
+      x-airbyte-untested: true
+      x-airbyte-record-extractor: $.metafields
+      x-airbyte-meta-extractor:
+        next_page_url: "@link.next"
+      tags:
+      - Metafields
+      parameters:
+      - name: blog_id
+        in: path
+        required: true
+        description: The blog ID
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        description: Maximum number of results to return (max 250)
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 250
+          default: 50
+      responses:
+        "200":
+          description: List of metafields for the blog
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MetafieldList"
+
+  /blogs/{blog_id}/articles/{article_id}/metafields.json:
+    get:
+      summary: List metafields for an article
+      description: Returns a list of metafields for a specific article
+      operationId: MetafieldArticles_List
+      x-airbyte-entity: metafield_articles
+      x-airbyte-action: list
+      x-airbyte-untested: true
+      x-airbyte-record-extractor: $.metafields
+      x-airbyte-meta-extractor:
+        next_page_url: "@link.next"
+      tags:
+      - Metafields
+      parameters:
+      - name: blog_id
+        in: path
+        required: true
+        description: The blog ID
+        schema:
+          type: integer
+      - name: article_id
+        in: path
+        required: true
+        description: The article ID
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        description: Maximum number of results to return (max 250)
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 250
+          default: 50
+      responses:
+        "200":
+          description: List of metafields for the article
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MetafieldList"
+
 components:
   securitySchemes:
     shopifyAccessToken:
@@ -3239,6 +4053,153 @@ components:
           credentials.api_password: "api_key"
         replication_auth_key_constants:
           credentials.auth_method: "api_password"
+
+    shopifyOAuth:
+      type: oauth2
+      x-airbyte-untested: true
+      description: Shopify OAuth 2.0 authentication
+      flows:
+        authorizationCode:
+          authorizationUrl: https://{{shop}}.myshopify.com/admin/oauth/authorize
+          tokenUrl: https://{{shop}}.myshopify.com/admin/oauth/access_token
+          scopes:
+            read_customers: Read customers and customer addresses
+            read_orders: Read orders, fulfillments, refunds, and transactions
+            read_draft_orders: Read draft orders
+            read_products: Read products, variants, images, collections, and collects
+            read_content: Read pages and page metafields
+            read_price_rules: Read price rules
+            read_discounts: Read discount codes
+            read_locations: Read locations
+            read_inventory: Read inventory items and levels
+            read_merchant_managed_fulfillment_orders: Read fulfillment orders
+            read_shopify_payments_payouts: Read balance transactions and disputes
+            read_online_store_pages: Read blogs, articles, and their metafields
+            read_shipping: Read countries
+      x-airbyte-oauth-scopes:
+        - scope: "read_customers"
+          mode: read
+          description: Read customers and customer addresses
+          entities:
+            - customers
+            - customer_address
+            - metafield_customers
+        - scope: "read_orders"
+          mode: read
+          description: Read orders, fulfillments, refunds, and transactions
+          entities:
+            - orders
+            - fulfillments
+            - order_refunds
+            - transactions
+            - abandoned_checkouts
+            - tender_transactions
+            - metafield_orders
+        - scope: "read_draft_orders"
+          mode: read
+          description: Read draft orders
+          entities:
+            - draft_orders
+            - metafield_draft_orders
+        - scope: "read_products"
+          mode: read
+          description: Read products, variants, images, collections, collects, and shop info
+          entities:
+            - products
+            - product_variants
+            - product_images
+            - custom_collections
+            - smart_collections
+            - collects
+            - shop
+            - metafield_products
+            - metafield_product_variants
+            - metafield_product_images
+            - metafield_smart_collections
+            - metafield_shops
+        - scope: "read_content"
+          mode: read
+          description: Read pages and page metafields
+          entities:
+            - pages
+            - metafield_pages
+        - scope: "read_price_rules"
+          mode: read
+          description: Read price rules
+          entities:
+            - price_rules
+        - scope: "read_discounts"
+          mode: read
+          description: Read discount codes
+          entities:
+            - discount_codes
+        - scope: "read_locations"
+          mode: read
+          description: Read locations
+          entities:
+            - locations
+            - metafield_locations
+        - scope: "read_inventory"
+          mode: read
+          description: Read inventory items and levels
+          entities:
+            - inventory_items
+            - inventory_levels
+        - scope: "read_merchant_managed_fulfillment_orders"
+          mode: read
+          description: Read fulfillment orders
+          entities:
+            - fulfillment_orders
+        - scope: "read_shopify_payments_payouts"
+          mode: read
+          description: Read Shopify Payments balance transactions and disputes
+          entities:
+            - balance_transactions
+            - disputes
+        - scope: "read_online_store_pages"
+          mode: read
+          description: Read blogs, articles, and their metafields
+          entities:
+            - blogs
+            - articles
+            - metafield_blogs
+            - metafield_articles
+        - scope: "read_shipping"
+          mode: read
+          description: Read countries
+          entities:
+            - countries
+      x-airbyte-token-refresh:
+        header: "X-Shopify-Access-Token"
+        prefix: ""
+      x-airbyte-auth-config:
+        title: "OAuth2"
+        type: object
+        required:
+        - access_token
+        properties:
+          client_id:
+            type: string
+            title: "Client ID"
+            description: "Your Shopify OAuth2 application client ID"
+          client_secret:
+            type: string
+            title: "Client Secret"
+            description: "Your Shopify OAuth2 application client secret"
+          access_token:
+            type: string
+            title: "Access Token"
+            description: "Your Shopify OAuth2 access token"
+        auth_mapping:
+          access_token: "${access_token}"
+          client_id: "${client_id}"
+          client_secret: "${client_secret}"
+        replication_auth_key_mapping:
+          credentials.client_id: "client_id"
+          credentials.client_secret: "client_secret"
+          credentials.access_token: "access_token"
+        replication_auth_key_constants:
+          credentials.auth_method: "oauth2.0"
 
   schemas:
     Customer:
@@ -5242,6 +6203,346 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Country"
+
+    Page:
+      type: object
+      x-airbyte-entity-name: pages
+      x-airbyte-stream-name: pages
+      x-airbyte-ai-hints:
+        summary: "Static HTML pages on the Shopify store (About Us, Contact, FAQ, etc.)"
+        when_to_use: "Questions about store pages, static content, or published page info"
+        trigger_phrases: ["page", "static page", "about page", "contact page"]
+        freshness: static
+        search_strategy: "List all pages or filter by title/handle"
+        example_questions:
+          - "What pages are published on my store?"
+          - "Show me the About Us page content"
+      description: A static page on the store
+      required:
+      - id
+      properties:
+        id:
+          type: integer
+          description: Page ID
+        title:
+          type: [string, "null"]
+          description: Title of the page
+        handle:
+          type: [string, "null"]
+          description: URL-friendly handle
+        body_html:
+          type: [string, "null"]
+          description: HTML content of the page
+        author:
+          type: [string, "null"]
+          description: Name of the page author
+        template_suffix:
+          type: [string, "null"]
+          description: Template suffix for custom page templates
+        published_at:
+          type: [string, "null"]
+          format: date-time
+          description: When the page was published
+        created_at:
+          type: [string, "null"]
+          format: date-time
+        updated_at:
+          type: [string, "null"]
+          format: date-time
+        admin_graphql_api_id:
+          type: [string, "null"]
+
+    PageList:
+      type: object
+      properties:
+        pages:
+          type: array
+          items:
+            $ref: "#/components/schemas/Page"
+
+    Blog:
+      type: object
+      x-airbyte-entity-name: blogs
+      x-airbyte-stream-name: blogs
+      x-airbyte-ai-hints:
+        summary: "Blogs on the Shopify store that contain articles (blog posts)"
+        when_to_use: "Questions about store blogs, blog configuration, or blog listing"
+        trigger_phrases: ["blog", "blog list", "store blog"]
+        freshness: static
+        search_strategy: "List all blogs"
+        example_questions:
+          - "What blogs are on my store?"
+          - "Show me the blog configuration"
+      description: A blog on the store
+      required:
+      - id
+      properties:
+        id:
+          type: integer
+          description: Blog ID
+        title:
+          type: [string, "null"]
+          description: Title of the blog
+        handle:
+          type: [string, "null"]
+          description: URL-friendly handle
+        commentable:
+          type: [string, "null"]
+          description: Comment policy (no, moderate, yes)
+        feedburner:
+          type: [string, "null"]
+          description: FeedBurner URL if enabled
+        feedburner_location:
+          type: [string, "null"]
+          description: FeedBurner location URL
+        tags:
+          type: [string, "null"]
+          description: Comma-separated tags from the blog's articles
+        template_suffix:
+          type: [string, "null"]
+          description: Template suffix for custom blog templates
+        created_at:
+          type: [string, "null"]
+          format: date-time
+        updated_at:
+          type: [string, "null"]
+          format: date-time
+        admin_graphql_api_id:
+          type: [string, "null"]
+
+    BlogList:
+      type: object
+      properties:
+        blogs:
+          type: array
+          items:
+            $ref: "#/components/schemas/Blog"
+
+    Article:
+      type: object
+      x-airbyte-entity-name: articles
+      x-airbyte-stream-name: articles
+      x-airbyte-ai-hints:
+        summary: "Blog articles (posts) on the Shopify store"
+        when_to_use: "Questions about blog posts, article content, or article authors"
+        trigger_phrases: ["article", "blog post", "blog article"]
+        freshness: live
+        search_strategy: "List articles by blog or filter by author/tag"
+        example_questions:
+          - "What articles are in my blog?"
+          - "Show me the latest blog posts"
+      description: A blog article (post)
+      required:
+      - id
+      properties:
+        id:
+          type: integer
+          description: Article ID
+        title:
+          type: [string, "null"]
+          description: Title of the article
+        handle:
+          type: [string, "null"]
+          description: URL-friendly handle
+        author:
+          type: [string, "null"]
+          description: Name of the article author
+        blog_id:
+          type: [integer, "null"]
+          description: ID of the blog this article belongs to
+        body_html:
+          type: [string, "null"]
+          description: HTML content of the article body
+        summary_html:
+          type: [string, "null"]
+          description: Summary HTML displayed on listing pages
+        tags:
+          type: [string, "null"]
+          description: Comma-separated tags
+        template_suffix:
+          type: [string, "null"]
+          description: Template suffix for custom article templates
+        published_at:
+          type: [string, "null"]
+          format: date-time
+          description: When the article was published
+        user_id:
+          type: [integer, "null"]
+          description: ID of the user who authored the article
+        image:
+          oneOf:
+          - type: object
+            properties:
+              src:
+                type: [string, "null"]
+              alt:
+                type: [string, "null"]
+              width:
+                type: [integer, "null"]
+              height:
+                type: [integer, "null"]
+              created_at:
+                type: [string, "null"]
+                format: date-time
+          - type: "null"
+        created_at:
+          type: [string, "null"]
+          format: date-time
+        updated_at:
+          type: [string, "null"]
+          format: date-time
+        admin_graphql_api_id:
+          type: [string, "null"]
+
+    ArticleList:
+      type: object
+      properties:
+        articles:
+          type: array
+          items:
+            $ref: "#/components/schemas/Article"
+
+    BalanceTransaction:
+      type: object
+      x-airbyte-entity-name: balance_transactions
+      x-airbyte-stream-name: balance_transactions
+      x-airbyte-ai-hints:
+        summary: "Shopify Payments balance transactions — the canonical ledger of all money movement"
+        when_to_use: "Questions about payment ledger entries, charges, fees, refunds, payouts, or financial reconciliation"
+        trigger_phrases: ["balance transaction", "payment ledger", "shopify payment", "payout transaction"]
+        freshness: live
+        search_strategy: "List balance transactions, optionally filter by payout"
+        example_questions:
+          - "Show me recent Shopify Payments balance transactions"
+          - "What transactions are in the latest payout?"
+      description: A Shopify Payments balance transaction
+      required:
+      - id
+      properties:
+        id:
+          type: integer
+          description: Balance transaction ID
+        type:
+          type: [string, "null"]
+          description: Transaction type (charge, refund, dispute, reserve, adjustment, credit, debit, payout, etc.)
+        test:
+          type: [boolean, "null"]
+          description: Whether this was a test mode transaction
+        payout_id:
+          type: [integer, "null"]
+          description: ID of the payout this transaction belongs to
+        payout_status:
+          type: [string, "null"]
+          description: Status of the associated payout
+        currency:
+          type: [string, "null"]
+          description: ISO 4217 currency code
+        amount:
+          type: [string, "null"]
+          description: Gross amount
+        fee:
+          type: [string, "null"]
+          description: Total fees deducted
+        net:
+          type: [string, "null"]
+          description: Net amount after fees
+        source_id:
+          type: [integer, "null"]
+          description: ID of the source resource
+        source_type:
+          type: [string, "null"]
+          description: Type of the source resource
+        source_order_id:
+          type: [integer, "null"]
+          description: Order ID if applicable
+        source_order_transaction_id:
+          type: [integer, "null"]
+          description: Order transaction ID if applicable
+        processed_at:
+          type: [string, "null"]
+          format: date-time
+          description: When the transaction was processed
+        adjustment_order_transactions:
+          type: [array, "null"]
+          items:
+            type: object
+        adjustment_reason:
+          type: [string, "null"]
+          description: Reason for adjustment if applicable
+
+    BalanceTransactionList:
+      type: object
+      properties:
+        transactions:
+          type: array
+          items:
+            $ref: "#/components/schemas/BalanceTransaction"
+
+    Dispute:
+      type: object
+      x-airbyte-entity-name: disputes
+      x-airbyte-stream-name: disputes
+      x-airbyte-ai-hints:
+        summary: "Shopify Payments disputes — chargebacks and inquiries from cardholders"
+        when_to_use: "Questions about chargebacks, payment disputes, or cardholder claims"
+        trigger_phrases: ["dispute", "chargeback", "inquiry", "payment dispute"]
+        freshness: live
+        search_strategy: "List disputes, filter by status or date"
+        example_questions:
+          - "Are there any open disputes?"
+          - "Show me recent chargebacks"
+      description: A Shopify Payments dispute
+      required:
+      - id
+      properties:
+        id:
+          type: integer
+          description: Dispute ID
+        order_id:
+          type: [integer, "null"]
+          description: ID of the disputed order
+        type:
+          type: [string, "null"]
+          description: Whether this is an inquiry or chargeback
+        amount:
+          type: [string, "null"]
+          description: Disputed amount
+        currency:
+          type: [string, "null"]
+          description: ISO 4217 currency code
+        reason:
+          type: [string, "null"]
+          description: Reason for the dispute
+        network_reason_code:
+          type: [string, "null"]
+          description: Network reason code from the bank
+        status:
+          type: [string, "null"]
+          description: Current dispute status (needs_response, under_review, charge_refunded, accepted, won, lost)
+        evidence_due_by:
+          type: [string, "null"]
+          format: date-time
+          description: Deadline for evidence submission
+        evidence_sent_on:
+          type: [string, "null"]
+          format: date-time
+          description: When evidence was submitted
+        finalized_on:
+          type: [string, "null"]
+          format: date-time
+          description: When the dispute was resolved
+        initiated_at:
+          type: [string, "null"]
+          format: date-time
+          description: When the dispute was initiated
+
+    DisputeList:
+      type: object
+      properties:
+        disputes:
+          type: array
+          items:
+            $ref: "#/components/schemas/Dispute"
 
     Metafield:
       type: object

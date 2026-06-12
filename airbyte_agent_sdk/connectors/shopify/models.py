@@ -9,16 +9,31 @@ from __future__ import annotations
 
 from pydantic import BaseModel, ConfigDict, Field
 from typing import TypeVar, Generic, Any
+from typing import Optional
 
-# Authentication configuration
+# Authentication configuration - multiple options available
 
-class ShopifyAuthConfig(BaseModel):
+class ShopifyAccessTokenAuthenticationAuthConfig(BaseModel):
     """Access Token Authentication"""
 
     model_config = ConfigDict(extra="forbid")
 
     api_key: str
     """Your Shopify Admin API access token"""
+
+class ShopifyOauth2AuthConfig(BaseModel):
+    """OAuth2"""
+
+    model_config = ConfigDict(extra="forbid")
+
+    client_id: Optional[str] = None
+    """Your Shopify OAuth2 application client ID"""
+    client_secret: Optional[str] = None
+    """Your Shopify OAuth2 application client secret"""
+    access_token: str
+    """Your Shopify OAuth2 access token"""
+
+ShopifyAuthConfig = ShopifyAccessTokenAuthenticationAuthConfig | ShopifyOauth2AuthConfig
 
 # ===== RESPONSE TYPE DEFINITIONS (PYDANTIC) =====
 
@@ -851,6 +866,125 @@ class CountryList(BaseModel):
 
     countries: list[Country] | None = Field(default=None)
 
+class Page(BaseModel):
+    """A static page on the store"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int
+    title: str | None = Field(default=None)
+    handle: str | None = Field(default=None)
+    body_html: str | None = Field(default=None)
+    author: str | None = Field(default=None)
+    template_suffix: str | None = Field(default=None)
+    published_at: str | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
+    admin_graphql_api_id: str | None = Field(default=None)
+
+class PageList(BaseModel):
+    """PageList type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    pages: list[Page] | None = Field(default=None)
+
+class Blog(BaseModel):
+    """A blog on the store"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int
+    title: str | None = Field(default=None)
+    handle: str | None = Field(default=None)
+    commentable: str | None = Field(default=None)
+    feedburner: str | None = Field(default=None)
+    feedburner_location: str | None = Field(default=None)
+    tags: str | None = Field(default=None)
+    template_suffix: str | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
+    admin_graphql_api_id: str | None = Field(default=None)
+
+class BlogList(BaseModel):
+    """BlogList type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    blogs: list[Blog] | None = Field(default=None)
+
+class Article(BaseModel):
+    """A blog article (post)"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int
+    title: str | None = Field(default=None)
+    handle: str | None = Field(default=None)
+    author: str | None = Field(default=None)
+    blog_id: int | None = Field(default=None)
+    body_html: str | None = Field(default=None)
+    summary_html: str | None = Field(default=None)
+    tags: str | None = Field(default=None)
+    template_suffix: str | None = Field(default=None)
+    published_at: str | None = Field(default=None)
+    user_id: int | None = Field(default=None)
+    image: Any | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
+    admin_graphql_api_id: str | None = Field(default=None)
+
+class ArticleList(BaseModel):
+    """ArticleList type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    articles: list[Article] | None = Field(default=None)
+
+class BalanceTransaction(BaseModel):
+    """A Shopify Payments balance transaction"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int
+    type_: str | None = Field(default=None, alias="type")
+    test: bool | None = Field(default=None)
+    payout_id: int | None = Field(default=None)
+    payout_status: str | None = Field(default=None)
+    currency: str | None = Field(default=None)
+    amount: str | None = Field(default=None)
+    fee: str | None = Field(default=None)
+    net: str | None = Field(default=None)
+    source_id: int | None = Field(default=None)
+    source_type: str | None = Field(default=None)
+    source_order_id: int | None = Field(default=None)
+    source_order_transaction_id: int | None = Field(default=None)
+    processed_at: str | None = Field(default=None)
+    adjustment_order_transactions: list[dict[str, Any]] | None = Field(default=None)
+    adjustment_reason: str | None = Field(default=None)
+
+class BalanceTransactionList(BaseModel):
+    """BalanceTransactionList type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    transactions: list[BalanceTransaction] | None = Field(default=None)
+
+class Dispute(BaseModel):
+    """A Shopify Payments dispute"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int
+    order_id: int | None = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    amount: str | None = Field(default=None)
+    currency: str | None = Field(default=None)
+    reason: str | None = Field(default=None)
+    network_reason_code: str | None = Field(default=None)
+    status: str | None = Field(default=None)
+    evidence_due_by: str | None = Field(default=None)
+    evidence_sent_on: str | None = Field(default=None)
+    finalized_on: str | None = Field(default=None)
+    initiated_at: str | None = Field(default=None)
+
+class DisputeList(BaseModel):
+    """DisputeList type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    disputes: list[Dispute] | None = Field(default=None)
+
 class Metafield(BaseModel):
     """A metafield"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -1058,6 +1192,54 @@ class CustomerAddressListResultMeta(BaseModel):
 
 class FulfillmentOrdersListResultMeta(BaseModel):
     """Metadata for fulfillment_orders.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next_page_url: str | None = Field(default=None)
+
+class PagesListResultMeta(BaseModel):
+    """Metadata for pages.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next_page_url: str | None = Field(default=None)
+
+class BlogsListResultMeta(BaseModel):
+    """Metadata for blogs.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next_page_url: str | None = Field(default=None)
+
+class ArticlesListResultMeta(BaseModel):
+    """Metadata for articles.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next_page_url: str | None = Field(default=None)
+
+class BalanceTransactionsListResultMeta(BaseModel):
+    """Metadata for balance_transactions.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next_page_url: str | None = Field(default=None)
+
+class DisputesListResultMeta(BaseModel):
+    """Metadata for disputes.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next_page_url: str | None = Field(default=None)
+
+class MetafieldPagesListResultMeta(BaseModel):
+    """Metadata for metafield_pages.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next_page_url: str | None = Field(default=None)
+
+class MetafieldBlogsListResultMeta(BaseModel):
+    """Metadata for metafield_blogs.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next_page_url: str | None = Field(default=None)
+
+class MetafieldArticlesListResultMeta(BaseModel):
+    """Metadata for metafield_articles.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next_page_url: str | None = Field(default=None)
@@ -1849,6 +2031,210 @@ class TenderTransactionsSearchData(BaseModel):
     """ISO 8601 timestamp when the transaction was processed"""
 
 
+class PagesSearchData(BaseModel):
+    """Search result data for pages entity."""
+    model_config = ConfigDict(extra="allow")
+
+    id: int | None = None
+    """Unique identifier for the page"""
+    title: str | None = None
+    """Title of the page"""
+    handle: str | None = None
+    """URL-friendly handle for the page"""
+    author: str | None = None
+    """Name of the page author"""
+    body_html: str | None = None
+    """HTML content of the page"""
+    published_at: str | None = None
+    """ISO 8601 timestamp when the page was published"""
+    created_at: str | None = None
+    """ISO 8601 timestamp when the page was created"""
+    updated_at: str | None = None
+    """ISO 8601 timestamp when the page was last updated"""
+
+
+class BlogsSearchData(BaseModel):
+    """Search result data for blogs entity."""
+    model_config = ConfigDict(extra="allow")
+
+    id: int | None = None
+    """Unique identifier for the blog"""
+    title: str | None = None
+    """Title of the blog"""
+    handle: str | None = None
+    """URL-friendly handle for the blog"""
+    commentable: str | None = None
+    """Whether readers can post comments (no, moderate, yes)"""
+    tags: str | None = None
+    """Comma-separated tags from the blog's articles"""
+    created_at: str | None = None
+    """ISO 8601 timestamp when the blog was created"""
+    updated_at: str | None = None
+    """ISO 8601 timestamp when the blog was last updated"""
+
+
+class ArticlesSearchData(BaseModel):
+    """Search result data for articles entity."""
+    model_config = ConfigDict(extra="allow")
+
+    id: int | None = None
+    """Unique identifier for the article"""
+    title: str | None = None
+    """Title of the article"""
+    handle: str | None = None
+    """URL-friendly handle for the article"""
+    author: str | None = None
+    """Name of the author of the article"""
+    blog_id: int | None = None
+    """Identifier of the blog the article belongs to"""
+    body_html: str | None = None
+    """HTML content of the article body"""
+    summary_html: str | None = None
+    """Summary of the article in HTML"""
+    tags: str | None = None
+    """Comma-separated list of tags for the article"""
+    published_at: str | None = None
+    """ISO 8601 timestamp when the article was published"""
+    created_at: str | None = None
+    """ISO 8601 timestamp when the article was created"""
+    updated_at: str | None = None
+    """ISO 8601 timestamp when the article was last updated"""
+
+
+class BalanceTransactionsSearchData(BaseModel):
+    """Search result data for balance_transactions entity."""
+    model_config = ConfigDict(extra="allow")
+
+    id: int | None = None
+    """Unique identifier of the balance transaction"""
+    type_: str | None = None
+    """Type of the transaction (charge, refund, dispute, reserve, adjustment, credit, debit, payout, etc.)"""
+    amount: str | None = None
+    """Gross amount of the transaction"""
+    fee: str | None = None
+    """Total fees deducted from the transaction"""
+    net: str | None = None
+    """Net amount of the transaction"""
+    currency: str | None = None
+    """ISO 4217 currency code of the transaction"""
+    payout_id: int | None = None
+    """Identifier of the payout the transaction was paid out in"""
+    payout_status: str | None = None
+    """Status of the associated payout"""
+    source_type: str | None = None
+    """Type of the resource that led to this transaction"""
+    source_order_id: int | None = None
+    """Identifier of the source order, if applicable"""
+    processed_at: str | None = None
+    """ISO 8601 timestamp when the transaction was processed"""
+
+
+class DisputesSearchData(BaseModel):
+    """Search result data for disputes entity."""
+    model_config = ConfigDict(extra="allow")
+
+    id: int | None = None
+    """Unique identifier for the dispute"""
+    order_id: int | None = None
+    """Identifier of the order the dispute belongs to"""
+    type_: str | None = None
+    """Whether the dispute is an inquiry or chargeback"""
+    amount: str | None = None
+    """Disputed amount"""
+    currency: str | None = None
+    """ISO 4217 currency code of the dispute amount"""
+    reason: str | None = None
+    """Reason for the dispute provided by the cardholder's bank"""
+    network_reason_code: str | None = None
+    """Network reason code from the cardholder's bank"""
+    status: str | None = None
+    """Current state of the dispute (needs_response, under_review, charge_refunded, accepted, won, lost)"""
+    evidence_due_by: str | None = None
+    """ISO 8601 deadline for evidence submission"""
+    initiated_at: str | None = None
+    """ISO 8601 timestamp when the dispute was initiated"""
+    finalized_on: str | None = None
+    """ISO 8601 timestamp when the dispute was resolved"""
+
+
+class MetafieldPagesSearchData(BaseModel):
+    """Search result data for metafield_pages entity."""
+    model_config = ConfigDict(extra="allow")
+
+    id: int | None = None
+    """Unique identifier for the metafield"""
+    namespace: str | None = None
+    """Container namespace for the metafield"""
+    key: str | None = None
+    """Identifier key for the metafield"""
+    value: str | None = None
+    """The metafield value"""
+    type_: str | None = None
+    """The metafield's information type"""
+    description: str | None = None
+    """Human-readable description of the metafield"""
+    owner_id: int | None = None
+    """Identifier of the page that owns this metafield"""
+    owner_resource: str | None = None
+    """Resource type that owns this metafield (e.g. `page`)"""
+    created_at: str | None = None
+    """ISO 8601 timestamp when the metafield was created"""
+    updated_at: str | None = None
+    """ISO 8601 timestamp when the metafield was last updated"""
+
+
+class MetafieldBlogsSearchData(BaseModel):
+    """Search result data for metafield_blogs entity."""
+    model_config = ConfigDict(extra="allow")
+
+    id: int | None = None
+    """Unique identifier for the metafield"""
+    namespace: str | None = None
+    """Container namespace for the metafield"""
+    key: str | None = None
+    """Identifier key for the metafield"""
+    value: str | None = None
+    """The metafield value"""
+    type_: str | None = None
+    """The metafield's information type"""
+    description: str | None = None
+    """Human-readable description of the metafield"""
+    owner_id: int | None = None
+    """Identifier of the blog that owns this metafield"""
+    owner_resource: str | None = None
+    """Resource type that owns this metafield (e.g. `blog`)"""
+    created_at: str | None = None
+    """ISO 8601 timestamp when the metafield was created"""
+    updated_at: str | None = None
+    """ISO 8601 timestamp when the metafield was last updated"""
+
+
+class MetafieldArticlesSearchData(BaseModel):
+    """Search result data for metafield_articles entity."""
+    model_config = ConfigDict(extra="allow")
+
+    id: int | None = None
+    """Unique identifier for the metafield"""
+    namespace: str | None = None
+    """Container namespace for the metafield"""
+    key: str | None = None
+    """Identifier key for the metafield"""
+    value: str | None = None
+    """The metafield value"""
+    type_: str | None = None
+    """The metafield's information type"""
+    description: str | None = None
+    """Human-readable description of the metafield"""
+    owner_id: int | None = None
+    """Identifier of the article that owns this metafield"""
+    owner_resource: str | None = None
+    """Resource type that owns this metafield (e.g. `article`)"""
+    created_at: str | None = None
+    """ISO 8601 timestamp when the metafield was created"""
+    updated_at: str | None = None
+    """ISO 8601 timestamp when the metafield was last updated"""
+
+
 # ===== GENERIC SEARCH RESULT TYPES =====
 
 class AirbyteSearchMeta(BaseModel):
@@ -1965,6 +2351,30 @@ SmartCollectionsSearchResult = AirbyteSearchResult[SmartCollectionsSearchData]
 TenderTransactionsSearchResult = AirbyteSearchResult[TenderTransactionsSearchData]
 """Search result type for tender_transactions entity."""
 
+PagesSearchResult = AirbyteSearchResult[PagesSearchData]
+"""Search result type for pages entity."""
+
+BlogsSearchResult = AirbyteSearchResult[BlogsSearchData]
+"""Search result type for blogs entity."""
+
+ArticlesSearchResult = AirbyteSearchResult[ArticlesSearchData]
+"""Search result type for articles entity."""
+
+BalanceTransactionsSearchResult = AirbyteSearchResult[BalanceTransactionsSearchData]
+"""Search result type for balance_transactions entity."""
+
+DisputesSearchResult = AirbyteSearchResult[DisputesSearchData]
+"""Search result type for disputes entity."""
+
+MetafieldPagesSearchResult = AirbyteSearchResult[MetafieldPagesSearchData]
+"""Search result type for metafield_pages entity."""
+
+MetafieldBlogsSearchResult = AirbyteSearchResult[MetafieldBlogsSearchData]
+"""Search result type for metafield_blogs entity."""
+
+MetafieldArticlesSearchResult = AirbyteSearchResult[MetafieldArticlesSearchData]
+"""Search result type for metafield_articles entity."""
+
 
 
 # ===== OPERATION RESULT TYPE ALIASES =====
@@ -2064,4 +2474,28 @@ CustomerAddressListResult = ShopifyExecuteResultWithMeta[list[CustomerAddress], 
 
 FulfillmentOrdersListResult = ShopifyExecuteResultWithMeta[list[FulfillmentOrder], FulfillmentOrdersListResultMeta]
 """Result type for fulfillment_orders.list operation with data and metadata."""
+
+PagesListResult = ShopifyExecuteResultWithMeta[list[Page], PagesListResultMeta]
+"""Result type for pages.list operation with data and metadata."""
+
+BlogsListResult = ShopifyExecuteResultWithMeta[list[Blog], BlogsListResultMeta]
+"""Result type for blogs.list operation with data and metadata."""
+
+ArticlesListResult = ShopifyExecuteResultWithMeta[list[Article], ArticlesListResultMeta]
+"""Result type for articles.list operation with data and metadata."""
+
+BalanceTransactionsListResult = ShopifyExecuteResultWithMeta[list[BalanceTransaction], BalanceTransactionsListResultMeta]
+"""Result type for balance_transactions.list operation with data and metadata."""
+
+DisputesListResult = ShopifyExecuteResultWithMeta[list[Dispute], DisputesListResultMeta]
+"""Result type for disputes.list operation with data and metadata."""
+
+MetafieldPagesListResult = ShopifyExecuteResultWithMeta[list[Metafield], MetafieldPagesListResultMeta]
+"""Result type for metafield_pages.list operation with data and metadata."""
+
+MetafieldBlogsListResult = ShopifyExecuteResultWithMeta[list[Metafield], MetafieldBlogsListResultMeta]
+"""Result type for metafield_blogs.list operation with data and metadata."""
+
+MetafieldArticlesListResult = ShopifyExecuteResultWithMeta[list[Metafield], MetafieldArticlesListResultMeta]
+"""Result type for metafield_articles.list operation with data and metadata."""
 

@@ -19,6 +19,11 @@ from airbyte_agent_sdk.translation import DEFAULT_MAX_OUTPUT_CHARS, FrameworkNam
 from airbyte_agent_sdk.types import AirbyteAuthConfig
 from .types import (
     AbandonedCheckoutsListParams,
+    ArticlesGetParams,
+    ArticlesListParams,
+    BalanceTransactionsListParams,
+    BlogsGetParams,
+    BlogsListParams,
     CollectsGetParams,
     CollectsListParams,
     CountriesGetParams,
@@ -31,6 +36,8 @@ from .types import (
     CustomersListParams,
     DiscountCodesGetParams,
     DiscountCodesListParams,
+    DisputesGetParams,
+    DisputesListParams,
     DraftOrdersGetParams,
     DraftOrdersListParams,
     FulfillmentOrdersGetParams,
@@ -42,10 +49,13 @@ from .types import (
     InventoryLevelsListParams,
     LocationsGetParams,
     LocationsListParams,
+    MetafieldArticlesListParams,
+    MetafieldBlogsListParams,
     MetafieldCustomersListParams,
     MetafieldDraftOrdersListParams,
     MetafieldLocationsListParams,
     MetafieldOrdersListParams,
+    MetafieldPagesListParams,
     MetafieldProductImagesListParams,
     MetafieldProductVariantsListParams,
     MetafieldProductsListParams,
@@ -56,6 +66,8 @@ from .types import (
     OrderRefundsListParams,
     OrdersGetParams,
     OrdersListParams,
+    PagesGetParams,
+    PagesListParams,
     PriceRulesGetParams,
     PriceRulesListParams,
     ProductImagesGetParams,
@@ -131,7 +143,24 @@ from .types import (
     SmartCollectionsSearchQuery,
     TenderTransactionsSearchFilter,
     TenderTransactionsSearchQuery,
+    PagesSearchFilter,
+    PagesSearchQuery,
+    BlogsSearchFilter,
+    BlogsSearchQuery,
+    ArticlesSearchFilter,
+    ArticlesSearchQuery,
+    BalanceTransactionsSearchFilter,
+    BalanceTransactionsSearchQuery,
+    DisputesSearchFilter,
+    DisputesSearchQuery,
+    MetafieldPagesSearchFilter,
+    MetafieldPagesSearchQuery,
+    MetafieldBlogsSearchFilter,
+    MetafieldBlogsSearchQuery,
+    MetafieldArticlesSearchFilter,
+    MetafieldArticlesSearchQuery,
 )
+from .models import ShopifyAccessTokenAuthenticationAuthConfig, ShopifyOauth2AuthConfig
 from .models import ShopifyAuthConfig
 
 # Import response models and envelope models at runtime
@@ -170,13 +199,25 @@ from .models import (
     MetafieldProductImagesListResult,
     CustomerAddressListResult,
     FulfillmentOrdersListResult,
+    PagesListResult,
+    BlogsListResult,
+    ArticlesListResult,
+    BalanceTransactionsListResult,
+    DisputesListResult,
+    MetafieldPagesListResult,
+    MetafieldBlogsListResult,
+    MetafieldArticlesListResult,
     AbandonedCheckout,
+    Article,
+    BalanceTransaction,
+    Blog,
     Collect,
     Country,
     CustomCollection,
     Customer,
     CustomerAddress,
     DiscountCode,
+    Dispute,
     DraftOrder,
     Fulfillment,
     FulfillmentOrder,
@@ -185,6 +226,7 @@ from .models import (
     Location,
     Metafield,
     Order,
+    Page,
     PriceRule,
     Product,
     ProductImage,
@@ -256,6 +298,22 @@ from .models import (
     SmartCollectionsSearchResult,
     TenderTransactionsSearchData,
     TenderTransactionsSearchResult,
+    PagesSearchData,
+    PagesSearchResult,
+    BlogsSearchData,
+    BlogsSearchResult,
+    ArticlesSearchData,
+    ArticlesSearchResult,
+    BalanceTransactionsSearchData,
+    BalanceTransactionsSearchResult,
+    DisputesSearchData,
+    DisputesSearchResult,
+    MetafieldPagesSearchData,
+    MetafieldPagesSearchResult,
+    MetafieldBlogsSearchData,
+    MetafieldBlogsSearchResult,
+    MetafieldArticlesSearchData,
+    MetafieldArticlesSearchResult,
 )
 
 # TypeVar for decorator type preservation
@@ -273,7 +331,7 @@ class ShopifyConnector:
 
     connector_name = "shopify"
     connector_version = "0.1.13"
-    sdk_version = "0.1.239"
+    sdk_version = "0.1.240"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -329,6 +387,18 @@ class ShopifyConnector:
         ("customer_address", "get"): None,
         ("fulfillment_orders", "list"): True,
         ("fulfillment_orders", "get"): None,
+        ("pages", "list"): True,
+        ("pages", "get"): None,
+        ("blogs", "list"): True,
+        ("blogs", "get"): None,
+        ("articles", "list"): True,
+        ("articles", "get"): None,
+        ("balance_transactions", "list"): True,
+        ("disputes", "list"): True,
+        ("disputes", "get"): None,
+        ("metafield_pages", "list"): True,
+        ("metafield_blogs", "list"): True,
+        ("metafield_articles", "list"): True,
     }
 
     # Map of (entity, action) -> {python_param_name: api_param_name}
@@ -384,10 +454,22 @@ class ShopifyConnector:
         ('customer_address', 'get'): {'customer_id': 'customer_id', 'address_id': 'address_id'},
         ('fulfillment_orders', 'list'): {'order_id': 'order_id'},
         ('fulfillment_orders', 'get'): {'fulfillment_order_id': 'fulfillment_order_id'},
+        ('pages', 'list'): {'limit': 'limit', 'since_id': 'since_id', 'created_at_min': 'created_at_min', 'created_at_max': 'created_at_max', 'updated_at_min': 'updated_at_min', 'updated_at_max': 'updated_at_max', 'published_status': 'published_status'},
+        ('pages', 'get'): {'page_id': 'page_id'},
+        ('blogs', 'list'): {'limit': 'limit', 'since_id': 'since_id'},
+        ('blogs', 'get'): {'blog_id': 'blog_id'},
+        ('articles', 'list'): {'blog_id': 'blog_id', 'limit': 'limit', 'since_id': 'since_id', 'created_at_min': 'created_at_min', 'created_at_max': 'created_at_max', 'updated_at_min': 'updated_at_min', 'updated_at_max': 'updated_at_max', 'published_status': 'published_status'},
+        ('articles', 'get'): {'blog_id': 'blog_id', 'article_id': 'article_id'},
+        ('balance_transactions', 'list'): {'limit': 'limit', 'since_id': 'since_id', 'payout_id': 'payout_id', 'payout_status': 'payout_status'},
+        ('disputes', 'list'): {'limit': 'limit', 'since_id': 'since_id', 'status': 'status', 'initiated_at': 'initiated_at'},
+        ('disputes', 'get'): {'dispute_id': 'dispute_id'},
+        ('metafield_pages', 'list'): {'page_id': 'page_id', 'limit': 'limit'},
+        ('metafield_blogs', 'list'): {'blog_id': 'blog_id', 'limit': 'limit'},
+        ('metafield_articles', 'list'): {'blog_id': 'blog_id', 'article_id': 'article_id', 'limit': 'limit'},
     }
 
     # Accepted auth_config types for isinstance validation
-    _ACCEPTED_AUTH_TYPES = (ShopifyAuthConfig, AirbyteAuthConfig)
+    _ACCEPTED_AUTH_TYPES = (ShopifyAccessTokenAuthenticationAuthConfig, ShopifyOauth2AuthConfig, AirbyteAuthConfig)
 
     def __init__(
         self,
@@ -472,9 +554,18 @@ class ShopifyConnector:
             if shop:
                 config_values["shop"] = shop
 
+            # Multi-auth connector: detect auth scheme from auth_config type
+            auth_scheme: str | None = None
+            if auth_config:
+                if isinstance(auth_config, ShopifyAccessTokenAuthenticationAuthConfig):
+                    auth_scheme = "shopifyAccessToken"
+                if isinstance(auth_config, ShopifyOauth2AuthConfig):
+                    auth_scheme = "shopifyOAuth"
+
             self._executor = LocalExecutor(
                 model=ShopifyConnectorModel,
                 auth_config=auth_config.model_dump() if auth_config else None,
+                auth_scheme=auth_scheme,
                 config_values=config_values,
                 on_token_refresh=on_token_refresh
             )
@@ -518,6 +609,14 @@ class ShopifyConnector:
         self.metafield_product_images = MetafieldProductImagesQuery(self)
         self.customer_address = CustomerAddressQuery(self)
         self.fulfillment_orders = FulfillmentOrdersQuery(self)
+        self.pages = PagesQuery(self)
+        self.blogs = BlogsQuery(self)
+        self.articles = ArticlesQuery(self)
+        self.balance_transactions = BalanceTransactionsQuery(self)
+        self.disputes = DisputesQuery(self)
+        self.metafield_pages = MetafieldPagesQuery(self)
+        self.metafield_blogs = MetafieldBlogsQuery(self)
+        self.metafield_articles = MetafieldArticlesQuery(self)
 
     # ===== TYPED EXECUTE METHOD (Recommended Interface) =====
 
@@ -1144,6 +1243,150 @@ class ShopifyConnector:
         exclude_fields: list[str] | None = ...,
         skip_truncation: bool = ...
     ) -> "FulfillmentOrder": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["pages"],
+        action: Literal["list"],
+        params: "PagesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "PagesListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["pages"],
+        action: Literal["get"],
+        params: "PagesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "Page": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["blogs"],
+        action: Literal["list"],
+        params: "BlogsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "BlogsListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["blogs"],
+        action: Literal["get"],
+        params: "BlogsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "Blog": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["articles"],
+        action: Literal["list"],
+        params: "ArticlesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "ArticlesListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["articles"],
+        action: Literal["get"],
+        params: "ArticlesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "Article": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["balance_transactions"],
+        action: Literal["list"],
+        params: "BalanceTransactionsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "BalanceTransactionsListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["disputes"],
+        action: Literal["list"],
+        params: "DisputesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "DisputesListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["disputes"],
+        action: Literal["get"],
+        params: "DisputesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "Dispute": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["metafield_pages"],
+        action: Literal["list"],
+        params: "MetafieldPagesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "MetafieldPagesListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["metafield_blogs"],
+        action: Literal["list"],
+        params: "MetafieldBlogsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "MetafieldBlogsListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["metafield_articles"],
+        action: Literal["list"],
+        params: "MetafieldArticlesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "MetafieldArticlesListResult": ...
 
 
     @overload
@@ -5350,6 +5593,995 @@ class FulfillmentOrdersQuery:
         return FulfillmentOrdersSearchResult(
             data=[
                 FulfillmentOrdersSearchData(**row)
+                for row in result.get("data", [])
+                if isinstance(row, dict)
+            ],
+            meta=AirbyteSearchMeta(
+                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
+                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
+                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
+            ),
+        )
+
+class PagesQuery:
+    """
+    Query class for Pages entity operations.
+    """
+
+    def __init__(self, connector: ShopifyConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        limit: int | None = None,
+        since_id: int | None = None,
+        created_at_min: str | None = None,
+        created_at_max: str | None = None,
+        updated_at_min: str | None = None,
+        updated_at_max: str | None = None,
+        published_status: str | None = None,
+        **kwargs
+    ) -> PagesListResult:
+        """
+        Returns a list of static pages for the store
+
+        Args:
+            limit: Maximum number of results to return (max 250)
+            since_id: Restrict results to after the specified ID
+            created_at_min: Show pages created after date (ISO 8601 format)
+            created_at_max: Show pages created before date (ISO 8601 format)
+            updated_at_min: Show pages last updated after date (ISO 8601 format)
+            updated_at_max: Show pages last updated before date (ISO 8601 format)
+            published_status: Filter by published status (published, unpublished, any)
+            **kwargs: Additional parameters
+
+        Returns:
+            PagesListResult
+        """
+        params = {k: v for k, v in {
+            "limit": limit,
+            "since_id": since_id,
+            "created_at_min": created_at_min,
+            "created_at_max": created_at_max,
+            "updated_at_min": updated_at_min,
+            "updated_at_max": updated_at_max,
+            "published_status": published_status,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("pages", "list", params)
+        # Cast generic envelope to concrete typed result
+        return PagesListResult(
+            data=result.data,
+            meta=getattr(result, "meta", None)
+        )
+
+
+
+    async def get(
+        self,
+        page_id: str,
+        **kwargs
+    ) -> Page:
+        """
+        Retrieves a single page by ID
+
+        Args:
+            page_id: The page ID
+            **kwargs: Additional parameters
+
+        Returns:
+            Page
+        """
+        params = {k: v for k, v in {
+            "page_id": page_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("pages", "get", params)
+        return result
+
+
+
+    async def context_store_search(
+        self,
+        query: PagesSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> PagesSearchResult:
+        """
+        Search pages records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (PagesSearchFilter):
+        - id: Unique identifier for the page
+        - title: Title of the page
+        - handle: URL-friendly handle for the page
+        - author: Name of the page author
+        - body_html: HTML content of the page
+        - published_at: ISO 8601 timestamp when the page was published
+        - created_at: ISO 8601 timestamp when the page was created
+        - updated_at: ISO 8601 timestamp when the page was last updated
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's meta.cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            PagesSearchResult with typed records, pagination metadata, and optional search metadata
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("pages", "context_store_search", params)
+
+        # Parse response into typed result
+        meta_data = result.get("meta")
+        return PagesSearchResult(
+            data=[
+                PagesSearchData(**row)
+                for row in result.get("data", [])
+                if isinstance(row, dict)
+            ],
+            meta=AirbyteSearchMeta(
+                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
+                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
+                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
+            ),
+        )
+
+class BlogsQuery:
+    """
+    Query class for Blogs entity operations.
+    """
+
+    def __init__(self, connector: ShopifyConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        limit: int | None = None,
+        since_id: int | None = None,
+        **kwargs
+    ) -> BlogsListResult:
+        """
+        Returns a list of blogs for the store
+
+        Args:
+            limit: Maximum number of results to return (max 250)
+            since_id: Restrict results to after the specified ID
+            **kwargs: Additional parameters
+
+        Returns:
+            BlogsListResult
+        """
+        params = {k: v for k, v in {
+            "limit": limit,
+            "since_id": since_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("blogs", "list", params)
+        # Cast generic envelope to concrete typed result
+        return BlogsListResult(
+            data=result.data,
+            meta=getattr(result, "meta", None)
+        )
+
+
+
+    async def get(
+        self,
+        blog_id: str,
+        **kwargs
+    ) -> Blog:
+        """
+        Retrieves a single blog by ID
+
+        Args:
+            blog_id: The blog ID
+            **kwargs: Additional parameters
+
+        Returns:
+            Blog
+        """
+        params = {k: v for k, v in {
+            "blog_id": blog_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("blogs", "get", params)
+        return result
+
+
+
+    async def context_store_search(
+        self,
+        query: BlogsSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> BlogsSearchResult:
+        """
+        Search blogs records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (BlogsSearchFilter):
+        - id: Unique identifier for the blog
+        - title: Title of the blog
+        - handle: URL-friendly handle for the blog
+        - commentable: Whether readers can post comments (no, moderate, yes)
+        - tags: Comma-separated tags from the blog's articles
+        - created_at: ISO 8601 timestamp when the blog was created
+        - updated_at: ISO 8601 timestamp when the blog was last updated
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's meta.cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            BlogsSearchResult with typed records, pagination metadata, and optional search metadata
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("blogs", "context_store_search", params)
+
+        # Parse response into typed result
+        meta_data = result.get("meta")
+        return BlogsSearchResult(
+            data=[
+                BlogsSearchData(**row)
+                for row in result.get("data", [])
+                if isinstance(row, dict)
+            ],
+            meta=AirbyteSearchMeta(
+                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
+                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
+                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
+            ),
+        )
+
+class ArticlesQuery:
+    """
+    Query class for Articles entity operations.
+    """
+
+    def __init__(self, connector: ShopifyConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        blog_id: str,
+        limit: int | None = None,
+        since_id: int | None = None,
+        created_at_min: str | None = None,
+        created_at_max: str | None = None,
+        updated_at_min: str | None = None,
+        updated_at_max: str | None = None,
+        published_status: str | None = None,
+        **kwargs
+    ) -> ArticlesListResult:
+        """
+        Returns a list of articles from a specific blog
+
+        Args:
+            blog_id: The blog ID
+            limit: Maximum number of results to return (max 250)
+            since_id: Restrict results to after the specified ID
+            created_at_min: Show articles created after date (ISO 8601 format)
+            created_at_max: Show articles created before date (ISO 8601 format)
+            updated_at_min: Show articles last updated after date (ISO 8601 format)
+            updated_at_max: Show articles last updated before date (ISO 8601 format)
+            published_status: Filter by published status (published, unpublished, any)
+            **kwargs: Additional parameters
+
+        Returns:
+            ArticlesListResult
+        """
+        params = {k: v for k, v in {
+            "blog_id": blog_id,
+            "limit": limit,
+            "since_id": since_id,
+            "created_at_min": created_at_min,
+            "created_at_max": created_at_max,
+            "updated_at_min": updated_at_min,
+            "updated_at_max": updated_at_max,
+            "published_status": published_status,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("articles", "list", params)
+        # Cast generic envelope to concrete typed result
+        return ArticlesListResult(
+            data=result.data,
+            meta=getattr(result, "meta", None)
+        )
+
+
+
+    async def get(
+        self,
+        blog_id: str,
+        article_id: str,
+        **kwargs
+    ) -> Article:
+        """
+        Retrieves a single article by ID from a blog
+
+        Args:
+            blog_id: The blog ID
+            article_id: The article ID
+            **kwargs: Additional parameters
+
+        Returns:
+            Article
+        """
+        params = {k: v for k, v in {
+            "blog_id": blog_id,
+            "article_id": article_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("articles", "get", params)
+        return result
+
+
+
+    async def context_store_search(
+        self,
+        query: ArticlesSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> ArticlesSearchResult:
+        """
+        Search articles records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (ArticlesSearchFilter):
+        - id: Unique identifier for the article
+        - title: Title of the article
+        - handle: URL-friendly handle for the article
+        - author: Name of the author of the article
+        - blog_id: Identifier of the blog the article belongs to
+        - body_html: HTML content of the article body
+        - summary_html: Summary of the article in HTML
+        - tags: Comma-separated list of tags for the article
+        - published_at: ISO 8601 timestamp when the article was published
+        - created_at: ISO 8601 timestamp when the article was created
+        - updated_at: ISO 8601 timestamp when the article was last updated
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's meta.cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            ArticlesSearchResult with typed records, pagination metadata, and optional search metadata
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("articles", "context_store_search", params)
+
+        # Parse response into typed result
+        meta_data = result.get("meta")
+        return ArticlesSearchResult(
+            data=[
+                ArticlesSearchData(**row)
+                for row in result.get("data", [])
+                if isinstance(row, dict)
+            ],
+            meta=AirbyteSearchMeta(
+                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
+                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
+                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
+            ),
+        )
+
+class BalanceTransactionsQuery:
+    """
+    Query class for BalanceTransactions entity operations.
+    """
+
+    def __init__(self, connector: ShopifyConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        limit: int | None = None,
+        since_id: int | None = None,
+        payout_id: int | None = None,
+        payout_status: str | None = None,
+        **kwargs
+    ) -> BalanceTransactionsListResult:
+        """
+        Returns a list of Shopify Payments balance transactions
+
+        Args:
+            limit: Maximum number of results to return (max 250)
+            since_id: Restrict results to after the specified ID
+            payout_id: Filter to transactions in a specific payout
+            payout_status: Filter by payout status
+            **kwargs: Additional parameters
+
+        Returns:
+            BalanceTransactionsListResult
+        """
+        params = {k: v for k, v in {
+            "limit": limit,
+            "since_id": since_id,
+            "payout_id": payout_id,
+            "payout_status": payout_status,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("balance_transactions", "list", params)
+        # Cast generic envelope to concrete typed result
+        return BalanceTransactionsListResult(
+            data=result.data,
+            meta=getattr(result, "meta", None)
+        )
+
+
+
+    async def context_store_search(
+        self,
+        query: BalanceTransactionsSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> BalanceTransactionsSearchResult:
+        """
+        Search balance_transactions records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (BalanceTransactionsSearchFilter):
+        - id: Unique identifier of the balance transaction
+        - type_: Type of the transaction (charge, refund, dispute, reserve, adjustment, credit, debit, payout, etc.)
+        - amount: Gross amount of the transaction
+        - fee: Total fees deducted from the transaction
+        - net: Net amount of the transaction
+        - currency: ISO 4217 currency code of the transaction
+        - payout_id: Identifier of the payout the transaction was paid out in
+        - payout_status: Status of the associated payout
+        - source_type: Type of the resource that led to this transaction
+        - source_order_id: Identifier of the source order, if applicable
+        - processed_at: ISO 8601 timestamp when the transaction was processed
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's meta.cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            BalanceTransactionsSearchResult with typed records, pagination metadata, and optional search metadata
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("balance_transactions", "context_store_search", params)
+
+        # Parse response into typed result
+        meta_data = result.get("meta")
+        return BalanceTransactionsSearchResult(
+            data=[
+                BalanceTransactionsSearchData(**row)
+                for row in result.get("data", [])
+                if isinstance(row, dict)
+            ],
+            meta=AirbyteSearchMeta(
+                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
+                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
+                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
+            ),
+        )
+
+class DisputesQuery:
+    """
+    Query class for Disputes entity operations.
+    """
+
+    def __init__(self, connector: ShopifyConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        limit: int | None = None,
+        since_id: int | None = None,
+        status: str | None = None,
+        initiated_at: str | None = None,
+        **kwargs
+    ) -> DisputesListResult:
+        """
+        Returns a list of Shopify Payments disputes (chargebacks and inquiries)
+
+        Args:
+            limit: Maximum number of results to return (max 250)
+            since_id: Restrict results to after the specified ID
+            status: Filter by dispute status
+            initiated_at: Filter by initiated date (ISO 8601 format)
+            **kwargs: Additional parameters
+
+        Returns:
+            DisputesListResult
+        """
+        params = {k: v for k, v in {
+            "limit": limit,
+            "since_id": since_id,
+            "status": status,
+            "initiated_at": initiated_at,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("disputes", "list", params)
+        # Cast generic envelope to concrete typed result
+        return DisputesListResult(
+            data=result.data,
+            meta=getattr(result, "meta", None)
+        )
+
+
+
+    async def get(
+        self,
+        dispute_id: str,
+        **kwargs
+    ) -> Dispute:
+        """
+        Retrieves a single Shopify Payments dispute by ID
+
+        Args:
+            dispute_id: The dispute ID
+            **kwargs: Additional parameters
+
+        Returns:
+            Dispute
+        """
+        params = {k: v for k, v in {
+            "dispute_id": dispute_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("disputes", "get", params)
+        return result
+
+
+
+    async def context_store_search(
+        self,
+        query: DisputesSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> DisputesSearchResult:
+        """
+        Search disputes records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (DisputesSearchFilter):
+        - id: Unique identifier for the dispute
+        - order_id: Identifier of the order the dispute belongs to
+        - type_: Whether the dispute is an inquiry or chargeback
+        - amount: Disputed amount
+        - currency: ISO 4217 currency code of the dispute amount
+        - reason: Reason for the dispute provided by the cardholder's bank
+        - network_reason_code: Network reason code from the cardholder's bank
+        - status: Current state of the dispute (needs_response, under_review, charge_refunded, accepted, won, lost)
+        - evidence_due_by: ISO 8601 deadline for evidence submission
+        - initiated_at: ISO 8601 timestamp when the dispute was initiated
+        - finalized_on: ISO 8601 timestamp when the dispute was resolved
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's meta.cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            DisputesSearchResult with typed records, pagination metadata, and optional search metadata
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("disputes", "context_store_search", params)
+
+        # Parse response into typed result
+        meta_data = result.get("meta")
+        return DisputesSearchResult(
+            data=[
+                DisputesSearchData(**row)
+                for row in result.get("data", [])
+                if isinstance(row, dict)
+            ],
+            meta=AirbyteSearchMeta(
+                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
+                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
+                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
+            ),
+        )
+
+class MetafieldPagesQuery:
+    """
+    Query class for MetafieldPages entity operations.
+    """
+
+    def __init__(self, connector: ShopifyConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        page_id: str,
+        limit: int | None = None,
+        **kwargs
+    ) -> MetafieldPagesListResult:
+        """
+        Returns a list of metafields for a specific page
+
+        Args:
+            page_id: The page ID
+            limit: Maximum number of results to return (max 250)
+            **kwargs: Additional parameters
+
+        Returns:
+            MetafieldPagesListResult
+        """
+        params = {k: v for k, v in {
+            "page_id": page_id,
+            "limit": limit,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("metafield_pages", "list", params)
+        # Cast generic envelope to concrete typed result
+        return MetafieldPagesListResult(
+            data=result.data,
+            meta=getattr(result, "meta", None)
+        )
+
+
+
+    async def context_store_search(
+        self,
+        query: MetafieldPagesSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> MetafieldPagesSearchResult:
+        """
+        Search metafield_pages records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (MetafieldPagesSearchFilter):
+        - id: Unique identifier for the metafield
+        - namespace: Container namespace for the metafield
+        - key: Identifier key for the metafield
+        - value: The metafield value
+        - type_: The metafield's information type
+        - description: Human-readable description of the metafield
+        - owner_id: Identifier of the page that owns this metafield
+        - owner_resource: Resource type that owns this metafield (e.g. `page`)
+        - created_at: ISO 8601 timestamp when the metafield was created
+        - updated_at: ISO 8601 timestamp when the metafield was last updated
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's meta.cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            MetafieldPagesSearchResult with typed records, pagination metadata, and optional search metadata
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("metafield_pages", "context_store_search", params)
+
+        # Parse response into typed result
+        meta_data = result.get("meta")
+        return MetafieldPagesSearchResult(
+            data=[
+                MetafieldPagesSearchData(**row)
+                for row in result.get("data", [])
+                if isinstance(row, dict)
+            ],
+            meta=AirbyteSearchMeta(
+                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
+                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
+                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
+            ),
+        )
+
+class MetafieldBlogsQuery:
+    """
+    Query class for MetafieldBlogs entity operations.
+    """
+
+    def __init__(self, connector: ShopifyConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        blog_id: str,
+        limit: int | None = None,
+        **kwargs
+    ) -> MetafieldBlogsListResult:
+        """
+        Returns a list of metafields for a specific blog
+
+        Args:
+            blog_id: The blog ID
+            limit: Maximum number of results to return (max 250)
+            **kwargs: Additional parameters
+
+        Returns:
+            MetafieldBlogsListResult
+        """
+        params = {k: v for k, v in {
+            "blog_id": blog_id,
+            "limit": limit,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("metafield_blogs", "list", params)
+        # Cast generic envelope to concrete typed result
+        return MetafieldBlogsListResult(
+            data=result.data,
+            meta=getattr(result, "meta", None)
+        )
+
+
+
+    async def context_store_search(
+        self,
+        query: MetafieldBlogsSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> MetafieldBlogsSearchResult:
+        """
+        Search metafield_blogs records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (MetafieldBlogsSearchFilter):
+        - id: Unique identifier for the metafield
+        - namespace: Container namespace for the metafield
+        - key: Identifier key for the metafield
+        - value: The metafield value
+        - type_: The metafield's information type
+        - description: Human-readable description of the metafield
+        - owner_id: Identifier of the blog that owns this metafield
+        - owner_resource: Resource type that owns this metafield (e.g. `blog`)
+        - created_at: ISO 8601 timestamp when the metafield was created
+        - updated_at: ISO 8601 timestamp when the metafield was last updated
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's meta.cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            MetafieldBlogsSearchResult with typed records, pagination metadata, and optional search metadata
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("metafield_blogs", "context_store_search", params)
+
+        # Parse response into typed result
+        meta_data = result.get("meta")
+        return MetafieldBlogsSearchResult(
+            data=[
+                MetafieldBlogsSearchData(**row)
+                for row in result.get("data", [])
+                if isinstance(row, dict)
+            ],
+            meta=AirbyteSearchMeta(
+                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
+                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
+                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
+            ),
+        )
+
+class MetafieldArticlesQuery:
+    """
+    Query class for MetafieldArticles entity operations.
+    """
+
+    def __init__(self, connector: ShopifyConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        blog_id: str,
+        article_id: str,
+        limit: int | None = None,
+        **kwargs
+    ) -> MetafieldArticlesListResult:
+        """
+        Returns a list of metafields for a specific article
+
+        Args:
+            blog_id: The blog ID
+            article_id: The article ID
+            limit: Maximum number of results to return (max 250)
+            **kwargs: Additional parameters
+
+        Returns:
+            MetafieldArticlesListResult
+        """
+        params = {k: v for k, v in {
+            "blog_id": blog_id,
+            "article_id": article_id,
+            "limit": limit,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("metafield_articles", "list", params)
+        # Cast generic envelope to concrete typed result
+        return MetafieldArticlesListResult(
+            data=result.data,
+            meta=getattr(result, "meta", None)
+        )
+
+
+
+    async def context_store_search(
+        self,
+        query: MetafieldArticlesSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> MetafieldArticlesSearchResult:
+        """
+        Search metafield_articles records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (MetafieldArticlesSearchFilter):
+        - id: Unique identifier for the metafield
+        - namespace: Container namespace for the metafield
+        - key: Identifier key for the metafield
+        - value: The metafield value
+        - type_: The metafield's information type
+        - description: Human-readable description of the metafield
+        - owner_id: Identifier of the article that owns this metafield
+        - owner_resource: Resource type that owns this metafield (e.g. `article`)
+        - created_at: ISO 8601 timestamp when the metafield was created
+        - updated_at: ISO 8601 timestamp when the metafield was last updated
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's meta.cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            MetafieldArticlesSearchResult with typed records, pagination metadata, and optional search metadata
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("metafield_articles", "context_store_search", params)
+
+        # Parse response into typed result
+        meta_data = result.get("meta")
+        return MetafieldArticlesSearchResult(
+            data=[
+                MetafieldArticlesSearchData(**row)
                 for row in result.get("data", [])
                 if isinstance(row, dict)
             ],

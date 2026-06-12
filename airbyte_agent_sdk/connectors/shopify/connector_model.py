@@ -10,6 +10,7 @@ from __future__ import annotations
 from airbyte_agent_sdk.types import (
     Action,
     AuthConfig,
+    AuthOption,
     AuthType,
     ConnectorModel,
     EndpointDefinition,
@@ -38,22 +39,63 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
     version='0.1.13',
     base_url='https://{shop}.myshopify.com/admin/api/2025-10',
     auth=AuthConfig(
-        type=AuthType.API_KEY,
-        config={'header': 'X-Shopify-Access-Token', 'in': 'header'},
-        user_config_spec=AuthConfigSpec(
-            title='Access Token Authentication',
-            type='object',
-            required=['api_key'],
-            properties={
-                'api_key': AuthConfigFieldSpec(
-                    title='Access Token',
-                    description='Your Shopify Admin API access token',
+        options=[
+            AuthOption(
+                scheme_name='shopifyAccessToken',
+                type=AuthType.API_KEY,
+                config={'header': 'X-Shopify-Access-Token', 'in': 'header'},
+                user_config_spec=AuthConfigSpec(
+                    title='Access Token Authentication',
+                    type='object',
+                    required=['api_key'],
+                    properties={
+                        'api_key': AuthConfigFieldSpec(
+                            title='Access Token',
+                            description='Your Shopify Admin API access token',
+                        ),
+                    },
+                    auth_mapping={'api_key': '${api_key}'},
+                    replication_auth_key_mapping={'credentials.api_password': 'api_key'},
+                    replication_auth_key_constants={'credentials.auth_method': 'api_password'},
                 ),
-            },
-            auth_mapping={'api_key': '${api_key}'},
-            replication_auth_key_mapping={'credentials.api_password': 'api_key'},
-            replication_auth_key_constants={'credentials.auth_method': 'api_password'},
-        ),
+            ),
+            AuthOption(
+                scheme_name='shopifyOAuth',
+                type=AuthType.OAUTH2,
+                config={'header': 'X-Shopify-Access-Token', 'prefix': ''},
+                user_config_spec=AuthConfigSpec(
+                    title='OAuth2',
+                    type='object',
+                    required=['access_token'],
+                    properties={
+                        'client_id': AuthConfigFieldSpec(
+                            title='Client ID',
+                            description='Your Shopify OAuth2 application client ID',
+                        ),
+                        'client_secret': AuthConfigFieldSpec(
+                            title='Client Secret',
+                            description='Your Shopify OAuth2 application client secret',
+                        ),
+                        'access_token': AuthConfigFieldSpec(
+                            title='Access Token',
+                            description='Your Shopify OAuth2 access token',
+                        ),
+                    },
+                    auth_mapping={
+                        'access_token': '${access_token}',
+                        'client_id': '${client_id}',
+                        'client_secret': '${client_secret}',
+                    },
+                    replication_auth_key_mapping={
+                        'credentials.client_id': 'client_id',
+                        'credentials.client_secret': 'client_secret',
+                        'credentials.access_token': 'access_token',
+                    },
+                    replication_auth_key_constants={'credentials.auth_method': 'oauth2.0'},
+                ),
+                untested=True,
+            ),
+        ],
     ),
     entities=[
         EntityDefinition(
@@ -12987,6 +13029,1767 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                 ),
             ],
         ),
+        EntityDefinition(
+            name='pages',
+            stream_name='pages',
+            actions=[Action.LIST, Action.GET],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/pages.json',
+                    action=Action.LIST,
+                    description='Returns a list of static pages for the store',
+                    query_params=[
+                        'limit',
+                        'since_id',
+                        'created_at_min',
+                        'created_at_max',
+                        'updated_at_min',
+                        'updated_at_max',
+                        'published_status',
+                    ],
+                    query_params_schema={
+                        'limit': {
+                            'type': 'integer',
+                            'required': False,
+                            'default': 50,
+                            'minimum': 1,
+                            'maximum': 250,
+                        },
+                        'since_id': {'type': 'integer', 'required': False},
+                        'created_at_min': {
+                            'type': 'string',
+                            'required': False,
+                            'format': 'date-time',
+                        },
+                        'created_at_max': {
+                            'type': 'string',
+                            'required': False,
+                            'format': 'date-time',
+                        },
+                        'updated_at_min': {
+                            'type': 'string',
+                            'required': False,
+                            'format': 'date-time',
+                        },
+                        'updated_at_max': {
+                            'type': 'string',
+                            'required': False,
+                            'format': 'date-time',
+                        },
+                        'published_status': {
+                            'type': 'string',
+                            'required': False,
+                            'default': 'any',
+                            'enum': ['published', 'unpublished', 'any'],
+                        },
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'pages': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'A static page on the store',
+                                    'properties': {
+                                        'id': {'type': 'integer', 'description': 'Page ID'},
+                                        'title': {
+                                            'type': ['string', 'null'],
+                                            'description': 'Title of the page',
+                                        },
+                                        'handle': {
+                                            'type': ['string', 'null'],
+                                            'description': 'URL-friendly handle',
+                                        },
+                                        'body_html': {
+                                            'type': ['string', 'null'],
+                                            'description': 'HTML content of the page',
+                                        },
+                                        'author': {
+                                            'type': ['string', 'null'],
+                                            'description': 'Name of the page author',
+                                        },
+                                        'template_suffix': {
+                                            'type': ['string', 'null'],
+                                            'description': 'Template suffix for custom page templates',
+                                        },
+                                        'published_at': {
+                                            'type': ['string', 'null'],
+                                            'format': 'date-time',
+                                            'description': 'When the page was published',
+                                        },
+                                        'created_at': {
+                                            'type': ['string', 'null'],
+                                            'format': 'date-time',
+                                        },
+                                        'updated_at': {
+                                            'type': ['string', 'null'],
+                                            'format': 'date-time',
+                                        },
+                                        'admin_graphql_api_id': {
+                                            'type': ['string', 'null'],
+                                        },
+                                    },
+                                    'required': ['id'],
+                                    'x-airbyte-entity-name': 'pages',
+                                    'x-airbyte-stream-name': 'pages',
+                                    'x-airbyte-ai-hints': {
+                                        'summary': 'Static HTML pages on the Shopify store (About Us, Contact, FAQ, etc.)',
+                                        'when_to_use': 'Questions about store pages, static content, or published page info',
+                                        'trigger_phrases': [
+                                            'page',
+                                            'static page',
+                                            'about page',
+                                            'contact page',
+                                        ],
+                                        'freshness': 'static',
+                                        'example_questions': ['What pages are published on my store?', 'Show me the About Us page content'],
+                                        'search_strategy': 'List all pages or filter by title/handle',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    record_extractor='$.pages',
+                    meta_extractor={'next_page_url': '@link.next'},
+                    untested=True,
+                ),
+                Action.GET: EndpointDefinition(
+                    method='GET',
+                    path='/pages/{page_id}.json',
+                    action=Action.GET,
+                    description='Retrieves a single page by ID',
+                    path_params=['page_id'],
+                    path_params_schema={
+                        'page_id': {'type': 'integer', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'page': {
+                                'type': 'object',
+                                'description': 'A static page on the store',
+                                'properties': {
+                                    'id': {'type': 'integer', 'description': 'Page ID'},
+                                    'title': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Title of the page',
+                                    },
+                                    'handle': {
+                                        'type': ['string', 'null'],
+                                        'description': 'URL-friendly handle',
+                                    },
+                                    'body_html': {
+                                        'type': ['string', 'null'],
+                                        'description': 'HTML content of the page',
+                                    },
+                                    'author': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Name of the page author',
+                                    },
+                                    'template_suffix': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Template suffix for custom page templates',
+                                    },
+                                    'published_at': {
+                                        'type': ['string', 'null'],
+                                        'format': 'date-time',
+                                        'description': 'When the page was published',
+                                    },
+                                    'created_at': {
+                                        'type': ['string', 'null'],
+                                        'format': 'date-time',
+                                    },
+                                    'updated_at': {
+                                        'type': ['string', 'null'],
+                                        'format': 'date-time',
+                                    },
+                                    'admin_graphql_api_id': {
+                                        'type': ['string', 'null'],
+                                    },
+                                },
+                                'required': ['id'],
+                                'x-airbyte-entity-name': 'pages',
+                                'x-airbyte-stream-name': 'pages',
+                                'x-airbyte-ai-hints': {
+                                    'summary': 'Static HTML pages on the Shopify store (About Us, Contact, FAQ, etc.)',
+                                    'when_to_use': 'Questions about store pages, static content, or published page info',
+                                    'trigger_phrases': [
+                                        'page',
+                                        'static page',
+                                        'about page',
+                                        'contact page',
+                                    ],
+                                    'freshness': 'static',
+                                    'example_questions': ['What pages are published on my store?', 'Show me the About Us page content'],
+                                    'search_strategy': 'List all pages or filter by title/handle',
+                                },
+                            },
+                        },
+                    },
+                    record_extractor='$.page',
+                    untested=True,
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'A static page on the store',
+                'properties': {
+                    'id': {'type': 'integer', 'description': 'Page ID'},
+                    'title': {
+                        'type': ['string', 'null'],
+                        'description': 'Title of the page',
+                    },
+                    'handle': {
+                        'type': ['string', 'null'],
+                        'description': 'URL-friendly handle',
+                    },
+                    'body_html': {
+                        'type': ['string', 'null'],
+                        'description': 'HTML content of the page',
+                    },
+                    'author': {
+                        'type': ['string', 'null'],
+                        'description': 'Name of the page author',
+                    },
+                    'template_suffix': {
+                        'type': ['string', 'null'],
+                        'description': 'Template suffix for custom page templates',
+                    },
+                    'published_at': {
+                        'type': ['string', 'null'],
+                        'format': 'date-time',
+                        'description': 'When the page was published',
+                    },
+                    'created_at': {
+                        'type': ['string', 'null'],
+                        'format': 'date-time',
+                    },
+                    'updated_at': {
+                        'type': ['string', 'null'],
+                        'format': 'date-time',
+                    },
+                    'admin_graphql_api_id': {
+                        'type': ['string', 'null'],
+                    },
+                },
+                'required': ['id'],
+                'x-airbyte-entity-name': 'pages',
+                'x-airbyte-stream-name': 'pages',
+                'x-airbyte-ai-hints': {
+                    'summary': 'Static HTML pages on the Shopify store (About Us, Contact, FAQ, etc.)',
+                    'when_to_use': 'Questions about store pages, static content, or published page info',
+                    'trigger_phrases': [
+                        'page',
+                        'static page',
+                        'about page',
+                        'contact page',
+                    ],
+                    'freshness': 'static',
+                    'example_questions': ['What pages are published on my store?', 'Show me the About Us page content'],
+                    'search_strategy': 'List all pages or filter by title/handle',
+                },
+            },
+            ai_hints={
+                'summary': 'Static HTML pages on the Shopify store (About Us, Contact, FAQ, etc.)',
+                'when_to_use': 'Questions about store pages, static content, or published page info',
+                'trigger_phrases': [
+                    'page',
+                    'static page',
+                    'about page',
+                    'contact page',
+                ],
+                'freshness': 'static',
+                'example_questions': ['What pages are published on my store?', 'Show me the About Us page content'],
+                'search_strategy': 'List all pages or filter by title/handle',
+            },
+        ),
+        EntityDefinition(
+            name='blogs',
+            stream_name='blogs',
+            actions=[Action.LIST, Action.GET],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/blogs.json',
+                    action=Action.LIST,
+                    description='Returns a list of blogs for the store',
+                    query_params=['limit', 'since_id'],
+                    query_params_schema={
+                        'limit': {
+                            'type': 'integer',
+                            'required': False,
+                            'default': 50,
+                            'minimum': 1,
+                            'maximum': 250,
+                        },
+                        'since_id': {'type': 'integer', 'required': False},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'blogs': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'A blog on the store',
+                                    'properties': {
+                                        'id': {'type': 'integer', 'description': 'Blog ID'},
+                                        'title': {
+                                            'type': ['string', 'null'],
+                                            'description': 'Title of the blog',
+                                        },
+                                        'handle': {
+                                            'type': ['string', 'null'],
+                                            'description': 'URL-friendly handle',
+                                        },
+                                        'commentable': {
+                                            'type': ['string', 'null'],
+                                            'description': 'Comment policy (no, moderate, yes)',
+                                        },
+                                        'feedburner': {
+                                            'type': ['string', 'null'],
+                                            'description': 'FeedBurner URL if enabled',
+                                        },
+                                        'feedburner_location': {
+                                            'type': ['string', 'null'],
+                                            'description': 'FeedBurner location URL',
+                                        },
+                                        'tags': {
+                                            'type': ['string', 'null'],
+                                            'description': "Comma-separated tags from the blog's articles",
+                                        },
+                                        'template_suffix': {
+                                            'type': ['string', 'null'],
+                                            'description': 'Template suffix for custom blog templates',
+                                        },
+                                        'created_at': {
+                                            'type': ['string', 'null'],
+                                            'format': 'date-time',
+                                        },
+                                        'updated_at': {
+                                            'type': ['string', 'null'],
+                                            'format': 'date-time',
+                                        },
+                                        'admin_graphql_api_id': {
+                                            'type': ['string', 'null'],
+                                        },
+                                    },
+                                    'required': ['id'],
+                                    'x-airbyte-entity-name': 'blogs',
+                                    'x-airbyte-stream-name': 'blogs',
+                                    'x-airbyte-ai-hints': {
+                                        'summary': 'Blogs on the Shopify store that contain articles (blog posts)',
+                                        'when_to_use': 'Questions about store blogs, blog configuration, or blog listing',
+                                        'trigger_phrases': ['blog', 'blog list', 'store blog'],
+                                        'freshness': 'static',
+                                        'example_questions': ['What blogs are on my store?', 'Show me the blog configuration'],
+                                        'search_strategy': 'List all blogs',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    record_extractor='$.blogs',
+                    meta_extractor={'next_page_url': '@link.next'},
+                    untested=True,
+                ),
+                Action.GET: EndpointDefinition(
+                    method='GET',
+                    path='/blogs/{blog_id}.json',
+                    action=Action.GET,
+                    description='Retrieves a single blog by ID',
+                    path_params=['blog_id'],
+                    path_params_schema={
+                        'blog_id': {'type': 'integer', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'blog': {
+                                'type': 'object',
+                                'description': 'A blog on the store',
+                                'properties': {
+                                    'id': {'type': 'integer', 'description': 'Blog ID'},
+                                    'title': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Title of the blog',
+                                    },
+                                    'handle': {
+                                        'type': ['string', 'null'],
+                                        'description': 'URL-friendly handle',
+                                    },
+                                    'commentable': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Comment policy (no, moderate, yes)',
+                                    },
+                                    'feedburner': {
+                                        'type': ['string', 'null'],
+                                        'description': 'FeedBurner URL if enabled',
+                                    },
+                                    'feedburner_location': {
+                                        'type': ['string', 'null'],
+                                        'description': 'FeedBurner location URL',
+                                    },
+                                    'tags': {
+                                        'type': ['string', 'null'],
+                                        'description': "Comma-separated tags from the blog's articles",
+                                    },
+                                    'template_suffix': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Template suffix for custom blog templates',
+                                    },
+                                    'created_at': {
+                                        'type': ['string', 'null'],
+                                        'format': 'date-time',
+                                    },
+                                    'updated_at': {
+                                        'type': ['string', 'null'],
+                                        'format': 'date-time',
+                                    },
+                                    'admin_graphql_api_id': {
+                                        'type': ['string', 'null'],
+                                    },
+                                },
+                                'required': ['id'],
+                                'x-airbyte-entity-name': 'blogs',
+                                'x-airbyte-stream-name': 'blogs',
+                                'x-airbyte-ai-hints': {
+                                    'summary': 'Blogs on the Shopify store that contain articles (blog posts)',
+                                    'when_to_use': 'Questions about store blogs, blog configuration, or blog listing',
+                                    'trigger_phrases': ['blog', 'blog list', 'store blog'],
+                                    'freshness': 'static',
+                                    'example_questions': ['What blogs are on my store?', 'Show me the blog configuration'],
+                                    'search_strategy': 'List all blogs',
+                                },
+                            },
+                        },
+                    },
+                    record_extractor='$.blog',
+                    untested=True,
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'A blog on the store',
+                'properties': {
+                    'id': {'type': 'integer', 'description': 'Blog ID'},
+                    'title': {
+                        'type': ['string', 'null'],
+                        'description': 'Title of the blog',
+                    },
+                    'handle': {
+                        'type': ['string', 'null'],
+                        'description': 'URL-friendly handle',
+                    },
+                    'commentable': {
+                        'type': ['string', 'null'],
+                        'description': 'Comment policy (no, moderate, yes)',
+                    },
+                    'feedburner': {
+                        'type': ['string', 'null'],
+                        'description': 'FeedBurner URL if enabled',
+                    },
+                    'feedburner_location': {
+                        'type': ['string', 'null'],
+                        'description': 'FeedBurner location URL',
+                    },
+                    'tags': {
+                        'type': ['string', 'null'],
+                        'description': "Comma-separated tags from the blog's articles",
+                    },
+                    'template_suffix': {
+                        'type': ['string', 'null'],
+                        'description': 'Template suffix for custom blog templates',
+                    },
+                    'created_at': {
+                        'type': ['string', 'null'],
+                        'format': 'date-time',
+                    },
+                    'updated_at': {
+                        'type': ['string', 'null'],
+                        'format': 'date-time',
+                    },
+                    'admin_graphql_api_id': {
+                        'type': ['string', 'null'],
+                    },
+                },
+                'required': ['id'],
+                'x-airbyte-entity-name': 'blogs',
+                'x-airbyte-stream-name': 'blogs',
+                'x-airbyte-ai-hints': {
+                    'summary': 'Blogs on the Shopify store that contain articles (blog posts)',
+                    'when_to_use': 'Questions about store blogs, blog configuration, or blog listing',
+                    'trigger_phrases': ['blog', 'blog list', 'store blog'],
+                    'freshness': 'static',
+                    'example_questions': ['What blogs are on my store?', 'Show me the blog configuration'],
+                    'search_strategy': 'List all blogs',
+                },
+            },
+            ai_hints={
+                'summary': 'Blogs on the Shopify store that contain articles (blog posts)',
+                'when_to_use': 'Questions about store blogs, blog configuration, or blog listing',
+                'trigger_phrases': ['blog', 'blog list', 'store blog'],
+                'freshness': 'static',
+                'example_questions': ['What blogs are on my store?', 'Show me the blog configuration'],
+                'search_strategy': 'List all blogs',
+            },
+        ),
+        EntityDefinition(
+            name='articles',
+            stream_name='articles',
+            actions=[Action.LIST, Action.GET],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/blogs/{blog_id}/articles.json',
+                    action=Action.LIST,
+                    description='Returns a list of articles from a specific blog',
+                    query_params=[
+                        'limit',
+                        'since_id',
+                        'created_at_min',
+                        'created_at_max',
+                        'updated_at_min',
+                        'updated_at_max',
+                        'published_status',
+                    ],
+                    query_params_schema={
+                        'limit': {
+                            'type': 'integer',
+                            'required': False,
+                            'default': 50,
+                            'minimum': 1,
+                            'maximum': 250,
+                        },
+                        'since_id': {'type': 'integer', 'required': False},
+                        'created_at_min': {
+                            'type': 'string',
+                            'required': False,
+                            'format': 'date-time',
+                        },
+                        'created_at_max': {
+                            'type': 'string',
+                            'required': False,
+                            'format': 'date-time',
+                        },
+                        'updated_at_min': {
+                            'type': 'string',
+                            'required': False,
+                            'format': 'date-time',
+                        },
+                        'updated_at_max': {
+                            'type': 'string',
+                            'required': False,
+                            'format': 'date-time',
+                        },
+                        'published_status': {
+                            'type': 'string',
+                            'required': False,
+                            'default': 'any',
+                            'enum': ['published', 'unpublished', 'any'],
+                        },
+                    },
+                    path_params=['blog_id'],
+                    path_params_schema={
+                        'blog_id': {'type': 'integer', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'articles': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'A blog article (post)',
+                                    'properties': {
+                                        'id': {'type': 'integer', 'description': 'Article ID'},
+                                        'title': {
+                                            'type': ['string', 'null'],
+                                            'description': 'Title of the article',
+                                        },
+                                        'handle': {
+                                            'type': ['string', 'null'],
+                                            'description': 'URL-friendly handle',
+                                        },
+                                        'author': {
+                                            'type': ['string', 'null'],
+                                            'description': 'Name of the article author',
+                                        },
+                                        'blog_id': {
+                                            'type': ['integer', 'null'],
+                                            'description': 'ID of the blog this article belongs to',
+                                        },
+                                        'body_html': {
+                                            'type': ['string', 'null'],
+                                            'description': 'HTML content of the article body',
+                                        },
+                                        'summary_html': {
+                                            'type': ['string', 'null'],
+                                            'description': 'Summary HTML displayed on listing pages',
+                                        },
+                                        'tags': {
+                                            'type': ['string', 'null'],
+                                            'description': 'Comma-separated tags',
+                                        },
+                                        'template_suffix': {
+                                            'type': ['string', 'null'],
+                                            'description': 'Template suffix for custom article templates',
+                                        },
+                                        'published_at': {
+                                            'type': ['string', 'null'],
+                                            'format': 'date-time',
+                                            'description': 'When the article was published',
+                                        },
+                                        'user_id': {
+                                            'type': ['integer', 'null'],
+                                            'description': 'ID of the user who authored the article',
+                                        },
+                                        'image': {
+                                            'oneOf': [
+                                                {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'src': {
+                                                            'type': ['string', 'null'],
+                                                        },
+                                                        'alt': {
+                                                            'type': ['string', 'null'],
+                                                        },
+                                                        'width': {
+                                                            'type': ['integer', 'null'],
+                                                        },
+                                                        'height': {
+                                                            'type': ['integer', 'null'],
+                                                        },
+                                                        'created_at': {
+                                                            'type': ['string', 'null'],
+                                                            'format': 'date-time',
+                                                        },
+                                                    },
+                                                },
+                                                {'type': 'null'},
+                                            ],
+                                        },
+                                        'created_at': {
+                                            'type': ['string', 'null'],
+                                            'format': 'date-time',
+                                        },
+                                        'updated_at': {
+                                            'type': ['string', 'null'],
+                                            'format': 'date-time',
+                                        },
+                                        'admin_graphql_api_id': {
+                                            'type': ['string', 'null'],
+                                        },
+                                    },
+                                    'required': ['id'],
+                                    'x-airbyte-entity-name': 'articles',
+                                    'x-airbyte-stream-name': 'articles',
+                                    'x-airbyte-ai-hints': {
+                                        'summary': 'Blog articles (posts) on the Shopify store',
+                                        'when_to_use': 'Questions about blog posts, article content, or article authors',
+                                        'trigger_phrases': ['article', 'blog post', 'blog article'],
+                                        'freshness': 'live',
+                                        'example_questions': ['What articles are in my blog?', 'Show me the latest blog posts'],
+                                        'search_strategy': 'List articles by blog or filter by author/tag',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    record_extractor='$.articles',
+                    meta_extractor={'next_page_url': '@link.next'},
+                    untested=True,
+                ),
+                Action.GET: EndpointDefinition(
+                    method='GET',
+                    path='/blogs/{blog_id}/articles/{article_id}.json',
+                    action=Action.GET,
+                    description='Retrieves a single article by ID from a blog',
+                    path_params=['blog_id', 'article_id'],
+                    path_params_schema={
+                        'blog_id': {'type': 'integer', 'required': True},
+                        'article_id': {'type': 'integer', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'article': {
+                                'type': 'object',
+                                'description': 'A blog article (post)',
+                                'properties': {
+                                    'id': {'type': 'integer', 'description': 'Article ID'},
+                                    'title': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Title of the article',
+                                    },
+                                    'handle': {
+                                        'type': ['string', 'null'],
+                                        'description': 'URL-friendly handle',
+                                    },
+                                    'author': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Name of the article author',
+                                    },
+                                    'blog_id': {
+                                        'type': ['integer', 'null'],
+                                        'description': 'ID of the blog this article belongs to',
+                                    },
+                                    'body_html': {
+                                        'type': ['string', 'null'],
+                                        'description': 'HTML content of the article body',
+                                    },
+                                    'summary_html': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Summary HTML displayed on listing pages',
+                                    },
+                                    'tags': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Comma-separated tags',
+                                    },
+                                    'template_suffix': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Template suffix for custom article templates',
+                                    },
+                                    'published_at': {
+                                        'type': ['string', 'null'],
+                                        'format': 'date-time',
+                                        'description': 'When the article was published',
+                                    },
+                                    'user_id': {
+                                        'type': ['integer', 'null'],
+                                        'description': 'ID of the user who authored the article',
+                                    },
+                                    'image': {
+                                        'oneOf': [
+                                            {
+                                                'type': 'object',
+                                                'properties': {
+                                                    'src': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'alt': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'width': {
+                                                        'type': ['integer', 'null'],
+                                                    },
+                                                    'height': {
+                                                        'type': ['integer', 'null'],
+                                                    },
+                                                    'created_at': {
+                                                        'type': ['string', 'null'],
+                                                        'format': 'date-time',
+                                                    },
+                                                },
+                                            },
+                                            {'type': 'null'},
+                                        ],
+                                    },
+                                    'created_at': {
+                                        'type': ['string', 'null'],
+                                        'format': 'date-time',
+                                    },
+                                    'updated_at': {
+                                        'type': ['string', 'null'],
+                                        'format': 'date-time',
+                                    },
+                                    'admin_graphql_api_id': {
+                                        'type': ['string', 'null'],
+                                    },
+                                },
+                                'required': ['id'],
+                                'x-airbyte-entity-name': 'articles',
+                                'x-airbyte-stream-name': 'articles',
+                                'x-airbyte-ai-hints': {
+                                    'summary': 'Blog articles (posts) on the Shopify store',
+                                    'when_to_use': 'Questions about blog posts, article content, or article authors',
+                                    'trigger_phrases': ['article', 'blog post', 'blog article'],
+                                    'freshness': 'live',
+                                    'example_questions': ['What articles are in my blog?', 'Show me the latest blog posts'],
+                                    'search_strategy': 'List articles by blog or filter by author/tag',
+                                },
+                            },
+                        },
+                    },
+                    record_extractor='$.article',
+                    untested=True,
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'A blog article (post)',
+                'properties': {
+                    'id': {'type': 'integer', 'description': 'Article ID'},
+                    'title': {
+                        'type': ['string', 'null'],
+                        'description': 'Title of the article',
+                    },
+                    'handle': {
+                        'type': ['string', 'null'],
+                        'description': 'URL-friendly handle',
+                    },
+                    'author': {
+                        'type': ['string', 'null'],
+                        'description': 'Name of the article author',
+                    },
+                    'blog_id': {
+                        'type': ['integer', 'null'],
+                        'description': 'ID of the blog this article belongs to',
+                    },
+                    'body_html': {
+                        'type': ['string', 'null'],
+                        'description': 'HTML content of the article body',
+                    },
+                    'summary_html': {
+                        'type': ['string', 'null'],
+                        'description': 'Summary HTML displayed on listing pages',
+                    },
+                    'tags': {
+                        'type': ['string', 'null'],
+                        'description': 'Comma-separated tags',
+                    },
+                    'template_suffix': {
+                        'type': ['string', 'null'],
+                        'description': 'Template suffix for custom article templates',
+                    },
+                    'published_at': {
+                        'type': ['string', 'null'],
+                        'format': 'date-time',
+                        'description': 'When the article was published',
+                    },
+                    'user_id': {
+                        'type': ['integer', 'null'],
+                        'description': 'ID of the user who authored the article',
+                    },
+                    'image': {
+                        'oneOf': [
+                            {
+                                'type': 'object',
+                                'properties': {
+                                    'src': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'alt': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'width': {
+                                        'type': ['integer', 'null'],
+                                    },
+                                    'height': {
+                                        'type': ['integer', 'null'],
+                                    },
+                                    'created_at': {
+                                        'type': ['string', 'null'],
+                                        'format': 'date-time',
+                                    },
+                                },
+                            },
+                            {'type': 'null'},
+                        ],
+                    },
+                    'created_at': {
+                        'type': ['string', 'null'],
+                        'format': 'date-time',
+                    },
+                    'updated_at': {
+                        'type': ['string', 'null'],
+                        'format': 'date-time',
+                    },
+                    'admin_graphql_api_id': {
+                        'type': ['string', 'null'],
+                    },
+                },
+                'required': ['id'],
+                'x-airbyte-entity-name': 'articles',
+                'x-airbyte-stream-name': 'articles',
+                'x-airbyte-ai-hints': {
+                    'summary': 'Blog articles (posts) on the Shopify store',
+                    'when_to_use': 'Questions about blog posts, article content, or article authors',
+                    'trigger_phrases': ['article', 'blog post', 'blog article'],
+                    'freshness': 'live',
+                    'example_questions': ['What articles are in my blog?', 'Show me the latest blog posts'],
+                    'search_strategy': 'List articles by blog or filter by author/tag',
+                },
+            },
+            ai_hints={
+                'summary': 'Blog articles (posts) on the Shopify store',
+                'when_to_use': 'Questions about blog posts, article content, or article authors',
+                'trigger_phrases': ['article', 'blog post', 'blog article'],
+                'freshness': 'live',
+                'example_questions': ['What articles are in my blog?', 'Show me the latest blog posts'],
+                'search_strategy': 'List articles by blog or filter by author/tag',
+            },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='articles',
+                    target_entity='blogs',
+                    foreign_key='blog_id',
+                    cardinality='many_to_one',
+                ),
+            ],
+        ),
+        EntityDefinition(
+            name='balance_transactions',
+            stream_name='balance_transactions',
+            actions=[Action.LIST],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/shopify_payments/balance/transactions.json',
+                    action=Action.LIST,
+                    description='Returns a list of Shopify Payments balance transactions',
+                    query_params=[
+                        'limit',
+                        'since_id',
+                        'payout_id',
+                        'payout_status',
+                    ],
+                    query_params_schema={
+                        'limit': {
+                            'type': 'integer',
+                            'required': False,
+                            'default': 50,
+                            'minimum': 1,
+                            'maximum': 250,
+                        },
+                        'since_id': {'type': 'integer', 'required': False},
+                        'payout_id': {'type': 'integer', 'required': False},
+                        'payout_status': {
+                            'type': 'string',
+                            'required': False,
+                            'enum': [
+                                'scheduled',
+                                'in_transit',
+                                'paid',
+                                'failed',
+                                'canceled',
+                            ],
+                        },
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'transactions': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'A Shopify Payments balance transaction',
+                                    'properties': {
+                                        'id': {'type': 'integer', 'description': 'Balance transaction ID'},
+                                        'type': {
+                                            'type': ['string', 'null'],
+                                            'description': 'Transaction type (charge, refund, dispute, reserve, adjustment, credit, debit, payout, etc.)',
+                                        },
+                                        'test': {
+                                            'type': ['boolean', 'null'],
+                                            'description': 'Whether this was a test mode transaction',
+                                        },
+                                        'payout_id': {
+                                            'type': ['integer', 'null'],
+                                            'description': 'ID of the payout this transaction belongs to',
+                                        },
+                                        'payout_status': {
+                                            'type': ['string', 'null'],
+                                            'description': 'Status of the associated payout',
+                                        },
+                                        'currency': {
+                                            'type': ['string', 'null'],
+                                            'description': 'ISO 4217 currency code',
+                                        },
+                                        'amount': {
+                                            'type': ['string', 'null'],
+                                            'description': 'Gross amount',
+                                        },
+                                        'fee': {
+                                            'type': ['string', 'null'],
+                                            'description': 'Total fees deducted',
+                                        },
+                                        'net': {
+                                            'type': ['string', 'null'],
+                                            'description': 'Net amount after fees',
+                                        },
+                                        'source_id': {
+                                            'type': ['integer', 'null'],
+                                            'description': 'ID of the source resource',
+                                        },
+                                        'source_type': {
+                                            'type': ['string', 'null'],
+                                            'description': 'Type of the source resource',
+                                        },
+                                        'source_order_id': {
+                                            'type': ['integer', 'null'],
+                                            'description': 'Order ID if applicable',
+                                        },
+                                        'source_order_transaction_id': {
+                                            'type': ['integer', 'null'],
+                                            'description': 'Order transaction ID if applicable',
+                                        },
+                                        'processed_at': {
+                                            'type': ['string', 'null'],
+                                            'format': 'date-time',
+                                            'description': 'When the transaction was processed',
+                                        },
+                                        'adjustment_order_transactions': {
+                                            'type': ['array', 'null'],
+                                            'items': {'type': 'object'},
+                                        },
+                                        'adjustment_reason': {
+                                            'type': ['string', 'null'],
+                                            'description': 'Reason for adjustment if applicable',
+                                        },
+                                    },
+                                    'required': ['id'],
+                                    'x-airbyte-entity-name': 'balance_transactions',
+                                    'x-airbyte-stream-name': 'balance_transactions',
+                                    'x-airbyte-ai-hints': {
+                                        'summary': 'Shopify Payments balance transactions — the canonical ledger of all money movement',
+                                        'when_to_use': 'Questions about payment ledger entries, charges, fees, refunds, payouts, or financial reconciliation',
+                                        'trigger_phrases': [
+                                            'balance transaction',
+                                            'payment ledger',
+                                            'shopify payment',
+                                            'payout transaction',
+                                        ],
+                                        'freshness': 'live',
+                                        'example_questions': ['Show me recent Shopify Payments balance transactions', 'What transactions are in the latest payout?'],
+                                        'search_strategy': 'List balance transactions, optionally filter by payout',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    record_extractor='$.transactions',
+                    meta_extractor={'next_page_url': '@link.next'},
+                    untested=True,
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'A Shopify Payments balance transaction',
+                'properties': {
+                    'id': {'type': 'integer', 'description': 'Balance transaction ID'},
+                    'type': {
+                        'type': ['string', 'null'],
+                        'description': 'Transaction type (charge, refund, dispute, reserve, adjustment, credit, debit, payout, etc.)',
+                    },
+                    'test': {
+                        'type': ['boolean', 'null'],
+                        'description': 'Whether this was a test mode transaction',
+                    },
+                    'payout_id': {
+                        'type': ['integer', 'null'],
+                        'description': 'ID of the payout this transaction belongs to',
+                    },
+                    'payout_status': {
+                        'type': ['string', 'null'],
+                        'description': 'Status of the associated payout',
+                    },
+                    'currency': {
+                        'type': ['string', 'null'],
+                        'description': 'ISO 4217 currency code',
+                    },
+                    'amount': {
+                        'type': ['string', 'null'],
+                        'description': 'Gross amount',
+                    },
+                    'fee': {
+                        'type': ['string', 'null'],
+                        'description': 'Total fees deducted',
+                    },
+                    'net': {
+                        'type': ['string', 'null'],
+                        'description': 'Net amount after fees',
+                    },
+                    'source_id': {
+                        'type': ['integer', 'null'],
+                        'description': 'ID of the source resource',
+                    },
+                    'source_type': {
+                        'type': ['string', 'null'],
+                        'description': 'Type of the source resource',
+                    },
+                    'source_order_id': {
+                        'type': ['integer', 'null'],
+                        'description': 'Order ID if applicable',
+                    },
+                    'source_order_transaction_id': {
+                        'type': ['integer', 'null'],
+                        'description': 'Order transaction ID if applicable',
+                    },
+                    'processed_at': {
+                        'type': ['string', 'null'],
+                        'format': 'date-time',
+                        'description': 'When the transaction was processed',
+                    },
+                    'adjustment_order_transactions': {
+                        'type': ['array', 'null'],
+                        'items': {'type': 'object'},
+                    },
+                    'adjustment_reason': {
+                        'type': ['string', 'null'],
+                        'description': 'Reason for adjustment if applicable',
+                    },
+                },
+                'required': ['id'],
+                'x-airbyte-entity-name': 'balance_transactions',
+                'x-airbyte-stream-name': 'balance_transactions',
+                'x-airbyte-ai-hints': {
+                    'summary': 'Shopify Payments balance transactions — the canonical ledger of all money movement',
+                    'when_to_use': 'Questions about payment ledger entries, charges, fees, refunds, payouts, or financial reconciliation',
+                    'trigger_phrases': [
+                        'balance transaction',
+                        'payment ledger',
+                        'shopify payment',
+                        'payout transaction',
+                    ],
+                    'freshness': 'live',
+                    'example_questions': ['Show me recent Shopify Payments balance transactions', 'What transactions are in the latest payout?'],
+                    'search_strategy': 'List balance transactions, optionally filter by payout',
+                },
+            },
+            ai_hints={
+                'summary': 'Shopify Payments balance transactions — the canonical ledger of all money movement',
+                'when_to_use': 'Questions about payment ledger entries, charges, fees, refunds, payouts, or financial reconciliation',
+                'trigger_phrases': [
+                    'balance transaction',
+                    'payment ledger',
+                    'shopify payment',
+                    'payout transaction',
+                ],
+                'freshness': 'live',
+                'example_questions': ['Show me recent Shopify Payments balance transactions', 'What transactions are in the latest payout?'],
+                'search_strategy': 'List balance transactions, optionally filter by payout',
+            },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='balance_transactions',
+                    target_entity='orders',
+                    foreign_key='source_order_id',
+                    cardinality='many_to_one',
+                ),
+            ],
+        ),
+        EntityDefinition(
+            name='disputes',
+            stream_name='disputes',
+            actions=[Action.LIST, Action.GET],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/shopify_payments/disputes.json',
+                    action=Action.LIST,
+                    description='Returns a list of Shopify Payments disputes (chargebacks and inquiries)',
+                    query_params=[
+                        'limit',
+                        'since_id',
+                        'status',
+                        'initiated_at',
+                    ],
+                    query_params_schema={
+                        'limit': {
+                            'type': 'integer',
+                            'required': False,
+                            'default': 50,
+                            'minimum': 1,
+                            'maximum': 250,
+                        },
+                        'since_id': {'type': 'integer', 'required': False},
+                        'status': {
+                            'type': 'string',
+                            'required': False,
+                            'enum': [
+                                'needs_response',
+                                'under_review',
+                                'charge_refunded',
+                                'accepted',
+                                'won',
+                                'lost',
+                            ],
+                        },
+                        'initiated_at': {
+                            'type': 'string',
+                            'required': False,
+                            'format': 'date-time',
+                        },
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'disputes': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'A Shopify Payments dispute',
+                                    'properties': {
+                                        'id': {'type': 'integer', 'description': 'Dispute ID'},
+                                        'order_id': {
+                                            'type': ['integer', 'null'],
+                                            'description': 'ID of the disputed order',
+                                        },
+                                        'type': {
+                                            'type': ['string', 'null'],
+                                            'description': 'Whether this is an inquiry or chargeback',
+                                        },
+                                        'amount': {
+                                            'type': ['string', 'null'],
+                                            'description': 'Disputed amount',
+                                        },
+                                        'currency': {
+                                            'type': ['string', 'null'],
+                                            'description': 'ISO 4217 currency code',
+                                        },
+                                        'reason': {
+                                            'type': ['string', 'null'],
+                                            'description': 'Reason for the dispute',
+                                        },
+                                        'network_reason_code': {
+                                            'type': ['string', 'null'],
+                                            'description': 'Network reason code from the bank',
+                                        },
+                                        'status': {
+                                            'type': ['string', 'null'],
+                                            'description': 'Current dispute status (needs_response, under_review, charge_refunded, accepted, won, lost)',
+                                        },
+                                        'evidence_due_by': {
+                                            'type': ['string', 'null'],
+                                            'format': 'date-time',
+                                            'description': 'Deadline for evidence submission',
+                                        },
+                                        'evidence_sent_on': {
+                                            'type': ['string', 'null'],
+                                            'format': 'date-time',
+                                            'description': 'When evidence was submitted',
+                                        },
+                                        'finalized_on': {
+                                            'type': ['string', 'null'],
+                                            'format': 'date-time',
+                                            'description': 'When the dispute was resolved',
+                                        },
+                                        'initiated_at': {
+                                            'type': ['string', 'null'],
+                                            'format': 'date-time',
+                                            'description': 'When the dispute was initiated',
+                                        },
+                                    },
+                                    'required': ['id'],
+                                    'x-airbyte-entity-name': 'disputes',
+                                    'x-airbyte-stream-name': 'disputes',
+                                    'x-airbyte-ai-hints': {
+                                        'summary': 'Shopify Payments disputes — chargebacks and inquiries from cardholders',
+                                        'when_to_use': 'Questions about chargebacks, payment disputes, or cardholder claims',
+                                        'trigger_phrases': [
+                                            'dispute',
+                                            'chargeback',
+                                            'inquiry',
+                                            'payment dispute',
+                                        ],
+                                        'freshness': 'live',
+                                        'example_questions': ['Are there any open disputes?', 'Show me recent chargebacks'],
+                                        'search_strategy': 'List disputes, filter by status or date',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    record_extractor='$.disputes',
+                    meta_extractor={'next_page_url': '@link.next'},
+                    untested=True,
+                ),
+                Action.GET: EndpointDefinition(
+                    method='GET',
+                    path='/shopify_payments/disputes/{dispute_id}.json',
+                    action=Action.GET,
+                    description='Retrieves a single Shopify Payments dispute by ID',
+                    path_params=['dispute_id'],
+                    path_params_schema={
+                        'dispute_id': {'type': 'integer', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'dispute': {
+                                'type': 'object',
+                                'description': 'A Shopify Payments dispute',
+                                'properties': {
+                                    'id': {'type': 'integer', 'description': 'Dispute ID'},
+                                    'order_id': {
+                                        'type': ['integer', 'null'],
+                                        'description': 'ID of the disputed order',
+                                    },
+                                    'type': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Whether this is an inquiry or chargeback',
+                                    },
+                                    'amount': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Disputed amount',
+                                    },
+                                    'currency': {
+                                        'type': ['string', 'null'],
+                                        'description': 'ISO 4217 currency code',
+                                    },
+                                    'reason': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Reason for the dispute',
+                                    },
+                                    'network_reason_code': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Network reason code from the bank',
+                                    },
+                                    'status': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Current dispute status (needs_response, under_review, charge_refunded, accepted, won, lost)',
+                                    },
+                                    'evidence_due_by': {
+                                        'type': ['string', 'null'],
+                                        'format': 'date-time',
+                                        'description': 'Deadline for evidence submission',
+                                    },
+                                    'evidence_sent_on': {
+                                        'type': ['string', 'null'],
+                                        'format': 'date-time',
+                                        'description': 'When evidence was submitted',
+                                    },
+                                    'finalized_on': {
+                                        'type': ['string', 'null'],
+                                        'format': 'date-time',
+                                        'description': 'When the dispute was resolved',
+                                    },
+                                    'initiated_at': {
+                                        'type': ['string', 'null'],
+                                        'format': 'date-time',
+                                        'description': 'When the dispute was initiated',
+                                    },
+                                },
+                                'required': ['id'],
+                                'x-airbyte-entity-name': 'disputes',
+                                'x-airbyte-stream-name': 'disputes',
+                                'x-airbyte-ai-hints': {
+                                    'summary': 'Shopify Payments disputes — chargebacks and inquiries from cardholders',
+                                    'when_to_use': 'Questions about chargebacks, payment disputes, or cardholder claims',
+                                    'trigger_phrases': [
+                                        'dispute',
+                                        'chargeback',
+                                        'inquiry',
+                                        'payment dispute',
+                                    ],
+                                    'freshness': 'live',
+                                    'example_questions': ['Are there any open disputes?', 'Show me recent chargebacks'],
+                                    'search_strategy': 'List disputes, filter by status or date',
+                                },
+                            },
+                        },
+                    },
+                    record_extractor='$.dispute',
+                    untested=True,
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'A Shopify Payments dispute',
+                'properties': {
+                    'id': {'type': 'integer', 'description': 'Dispute ID'},
+                    'order_id': {
+                        'type': ['integer', 'null'],
+                        'description': 'ID of the disputed order',
+                    },
+                    'type': {
+                        'type': ['string', 'null'],
+                        'description': 'Whether this is an inquiry or chargeback',
+                    },
+                    'amount': {
+                        'type': ['string', 'null'],
+                        'description': 'Disputed amount',
+                    },
+                    'currency': {
+                        'type': ['string', 'null'],
+                        'description': 'ISO 4217 currency code',
+                    },
+                    'reason': {
+                        'type': ['string', 'null'],
+                        'description': 'Reason for the dispute',
+                    },
+                    'network_reason_code': {
+                        'type': ['string', 'null'],
+                        'description': 'Network reason code from the bank',
+                    },
+                    'status': {
+                        'type': ['string', 'null'],
+                        'description': 'Current dispute status (needs_response, under_review, charge_refunded, accepted, won, lost)',
+                    },
+                    'evidence_due_by': {
+                        'type': ['string', 'null'],
+                        'format': 'date-time',
+                        'description': 'Deadline for evidence submission',
+                    },
+                    'evidence_sent_on': {
+                        'type': ['string', 'null'],
+                        'format': 'date-time',
+                        'description': 'When evidence was submitted',
+                    },
+                    'finalized_on': {
+                        'type': ['string', 'null'],
+                        'format': 'date-time',
+                        'description': 'When the dispute was resolved',
+                    },
+                    'initiated_at': {
+                        'type': ['string', 'null'],
+                        'format': 'date-time',
+                        'description': 'When the dispute was initiated',
+                    },
+                },
+                'required': ['id'],
+                'x-airbyte-entity-name': 'disputes',
+                'x-airbyte-stream-name': 'disputes',
+                'x-airbyte-ai-hints': {
+                    'summary': 'Shopify Payments disputes — chargebacks and inquiries from cardholders',
+                    'when_to_use': 'Questions about chargebacks, payment disputes, or cardholder claims',
+                    'trigger_phrases': [
+                        'dispute',
+                        'chargeback',
+                        'inquiry',
+                        'payment dispute',
+                    ],
+                    'freshness': 'live',
+                    'example_questions': ['Are there any open disputes?', 'Show me recent chargebacks'],
+                    'search_strategy': 'List disputes, filter by status or date',
+                },
+            },
+            ai_hints={
+                'summary': 'Shopify Payments disputes — chargebacks and inquiries from cardholders',
+                'when_to_use': 'Questions about chargebacks, payment disputes, or cardholder claims',
+                'trigger_phrases': [
+                    'dispute',
+                    'chargeback',
+                    'inquiry',
+                    'payment dispute',
+                ],
+                'freshness': 'live',
+                'example_questions': ['Are there any open disputes?', 'Show me recent chargebacks'],
+                'search_strategy': 'List disputes, filter by status or date',
+            },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='disputes',
+                    target_entity='orders',
+                    foreign_key='order_id',
+                    cardinality='many_to_one',
+                ),
+            ],
+        ),
+        EntityDefinition(
+            name='metafield_pages',
+            actions=[Action.LIST],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/pages/{page_id}/metafields.json',
+                    action=Action.LIST,
+                    description='Returns a list of metafields for a specific page',
+                    query_params=['limit'],
+                    query_params_schema={
+                        'limit': {
+                            'type': 'integer',
+                            'required': False,
+                            'default': 50,
+                            'minimum': 1,
+                            'maximum': 250,
+                        },
+                    },
+                    path_params=['page_id'],
+                    path_params_schema={
+                        'page_id': {'type': 'integer', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'metafields': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'A metafield',
+                                    'properties': {
+                                        'id': {'type': 'integer', 'description': 'Metafield ID'},
+                                        'namespace': {
+                                            'type': ['string', 'null'],
+                                        },
+                                        'key': {
+                                            'type': ['string', 'null'],
+                                        },
+                                        'value': {
+                                            'type': [
+                                                'string',
+                                                'integer',
+                                                'boolean',
+                                                'null',
+                                            ],
+                                            'description': 'The metafield value (can be string, integer, or boolean depending on type)',
+                                        },
+                                        'type': {
+                                            'type': ['string', 'null'],
+                                        },
+                                        'description': {
+                                            'type': ['string', 'null'],
+                                        },
+                                        'owner_id': {
+                                            'type': ['integer', 'null'],
+                                        },
+                                        'created_at': {
+                                            'type': ['string', 'null'],
+                                            'format': 'date-time',
+                                        },
+                                        'updated_at': {
+                                            'type': ['string', 'null'],
+                                            'format': 'date-time',
+                                        },
+                                        'owner_resource': {
+                                            'type': ['string', 'null'],
+                                        },
+                                        'admin_graphql_api_id': {
+                                            'type': ['string', 'null'],
+                                        },
+                                    },
+                                    'required': ['id'],
+                                    'x-airbyte-entity-name': 'metafields',
+                                    'x-airbyte-stream-name': 'metafields',
+                                    'x-airbyte-ai-hints': {
+                                        'summary': 'Custom metafields storing additional data on Shopify resources',
+                                        'when_to_use': 'Questions about custom metadata or extended fields on resources',
+                                        'trigger_phrases': ['metafield', 'custom field', 'metadata'],
+                                        'freshness': 'live',
+                                        'example_questions': ['What metafields are on a product?'],
+                                        'search_strategy': 'Filter by resource type and namespace',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    record_extractor='$.metafields',
+                    meta_extractor={'next_page_url': '@link.next'},
+                    untested=True,
+                ),
+            },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='metafield_pages',
+                    target_entity='pages',
+                    foreign_key='page_id',
+                    cardinality='many_to_one',
+                ),
+            ],
+        ),
+        EntityDefinition(
+            name='metafield_blogs',
+            actions=[Action.LIST],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/blogs/{blog_id}/metafields.json',
+                    action=Action.LIST,
+                    description='Returns a list of metafields for a specific blog',
+                    query_params=['limit'],
+                    query_params_schema={
+                        'limit': {
+                            'type': 'integer',
+                            'required': False,
+                            'default': 50,
+                            'minimum': 1,
+                            'maximum': 250,
+                        },
+                    },
+                    path_params=['blog_id'],
+                    path_params_schema={
+                        'blog_id': {'type': 'integer', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'metafields': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'A metafield',
+                                    'properties': {
+                                        'id': {'type': 'integer', 'description': 'Metafield ID'},
+                                        'namespace': {
+                                            'type': ['string', 'null'],
+                                        },
+                                        'key': {
+                                            'type': ['string', 'null'],
+                                        },
+                                        'value': {
+                                            'type': [
+                                                'string',
+                                                'integer',
+                                                'boolean',
+                                                'null',
+                                            ],
+                                            'description': 'The metafield value (can be string, integer, or boolean depending on type)',
+                                        },
+                                        'type': {
+                                            'type': ['string', 'null'],
+                                        },
+                                        'description': {
+                                            'type': ['string', 'null'],
+                                        },
+                                        'owner_id': {
+                                            'type': ['integer', 'null'],
+                                        },
+                                        'created_at': {
+                                            'type': ['string', 'null'],
+                                            'format': 'date-time',
+                                        },
+                                        'updated_at': {
+                                            'type': ['string', 'null'],
+                                            'format': 'date-time',
+                                        },
+                                        'owner_resource': {
+                                            'type': ['string', 'null'],
+                                        },
+                                        'admin_graphql_api_id': {
+                                            'type': ['string', 'null'],
+                                        },
+                                    },
+                                    'required': ['id'],
+                                    'x-airbyte-entity-name': 'metafields',
+                                    'x-airbyte-stream-name': 'metafields',
+                                    'x-airbyte-ai-hints': {
+                                        'summary': 'Custom metafields storing additional data on Shopify resources',
+                                        'when_to_use': 'Questions about custom metadata or extended fields on resources',
+                                        'trigger_phrases': ['metafield', 'custom field', 'metadata'],
+                                        'freshness': 'live',
+                                        'example_questions': ['What metafields are on a product?'],
+                                        'search_strategy': 'Filter by resource type and namespace',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    record_extractor='$.metafields',
+                    meta_extractor={'next_page_url': '@link.next'},
+                    untested=True,
+                ),
+            },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='metafield_blogs',
+                    target_entity='blogs',
+                    foreign_key='blog_id',
+                    cardinality='many_to_one',
+                ),
+            ],
+        ),
+        EntityDefinition(
+            name='metafield_articles',
+            actions=[Action.LIST],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/blogs/{blog_id}/articles/{article_id}/metafields.json',
+                    action=Action.LIST,
+                    description='Returns a list of metafields for a specific article',
+                    query_params=['limit'],
+                    query_params_schema={
+                        'limit': {
+                            'type': 'integer',
+                            'required': False,
+                            'default': 50,
+                            'minimum': 1,
+                            'maximum': 250,
+                        },
+                    },
+                    path_params=['blog_id', 'article_id'],
+                    path_params_schema={
+                        'blog_id': {'type': 'integer', 'required': True},
+                        'article_id': {'type': 'integer', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'metafields': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'A metafield',
+                                    'properties': {
+                                        'id': {'type': 'integer', 'description': 'Metafield ID'},
+                                        'namespace': {
+                                            'type': ['string', 'null'],
+                                        },
+                                        'key': {
+                                            'type': ['string', 'null'],
+                                        },
+                                        'value': {
+                                            'type': [
+                                                'string',
+                                                'integer',
+                                                'boolean',
+                                                'null',
+                                            ],
+                                            'description': 'The metafield value (can be string, integer, or boolean depending on type)',
+                                        },
+                                        'type': {
+                                            'type': ['string', 'null'],
+                                        },
+                                        'description': {
+                                            'type': ['string', 'null'],
+                                        },
+                                        'owner_id': {
+                                            'type': ['integer', 'null'],
+                                        },
+                                        'created_at': {
+                                            'type': ['string', 'null'],
+                                            'format': 'date-time',
+                                        },
+                                        'updated_at': {
+                                            'type': ['string', 'null'],
+                                            'format': 'date-time',
+                                        },
+                                        'owner_resource': {
+                                            'type': ['string', 'null'],
+                                        },
+                                        'admin_graphql_api_id': {
+                                            'type': ['string', 'null'],
+                                        },
+                                    },
+                                    'required': ['id'],
+                                    'x-airbyte-entity-name': 'metafields',
+                                    'x-airbyte-stream-name': 'metafields',
+                                    'x-airbyte-ai-hints': {
+                                        'summary': 'Custom metafields storing additional data on Shopify resources',
+                                        'when_to_use': 'Questions about custom metadata or extended fields on resources',
+                                        'trigger_phrases': ['metafield', 'custom field', 'metadata'],
+                                        'freshness': 'live',
+                                        'example_questions': ['What metafields are on a product?'],
+                                        'search_strategy': 'Filter by resource type and namespace',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    record_extractor='$.metafields',
+                    meta_extractor={'next_page_url': '@link.next'},
+                    untested=True,
+                ),
+            },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='metafield_articles',
+                    target_entity='blogs',
+                    foreign_key='blog_id',
+                    cardinality='many_to_one',
+                ),
+                EntityRelationshipConfig(
+                    source_entity='metafield_articles',
+                    target_entity='articles',
+                    foreign_key='article_id',
+                    cardinality='many_to_one',
+                ),
+            ],
+        ),
     ],
     context_store=CacheConfig(
         entities=[
@@ -14571,6 +16374,444 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                     ),
                 ],
             ),
+            CacheEntityConfig(
+                entity='pages',
+                x_airbyte_name='pages',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the page',
+                    ),
+                    CacheFieldConfig(
+                        name='title',
+                        type=['null', 'string'],
+                        description='Title of the page',
+                    ),
+                    CacheFieldConfig(
+                        name='handle',
+                        type=['null', 'string'],
+                        description='URL-friendly handle for the page',
+                    ),
+                    CacheFieldConfig(
+                        name='author',
+                        type=['null', 'string'],
+                        description='Name of the page author',
+                    ),
+                    CacheFieldConfig(
+                        name='body_html',
+                        type=['null', 'string'],
+                        description='HTML content of the page',
+                    ),
+                    CacheFieldConfig(
+                        name='published_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the page was published',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the page was created',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the page was last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='blogs',
+                x_airbyte_name='blogs',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the blog',
+                    ),
+                    CacheFieldConfig(
+                        name='title',
+                        type=['null', 'string'],
+                        description='Title of the blog',
+                    ),
+                    CacheFieldConfig(
+                        name='handle',
+                        type=['null', 'string'],
+                        description='URL-friendly handle for the blog',
+                    ),
+                    CacheFieldConfig(
+                        name='commentable',
+                        type=['null', 'string'],
+                        description='Whether readers can post comments (no, moderate, yes)',
+                    ),
+                    CacheFieldConfig(
+                        name='tags',
+                        type=['null', 'string'],
+                        description="Comma-separated tags from the blog's articles",
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the blog was created',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the blog was last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='articles',
+                x_airbyte_name='articles',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the article',
+                    ),
+                    CacheFieldConfig(
+                        name='title',
+                        type=['null', 'string'],
+                        description='Title of the article',
+                    ),
+                    CacheFieldConfig(
+                        name='handle',
+                        type=['null', 'string'],
+                        description='URL-friendly handle for the article',
+                    ),
+                    CacheFieldConfig(
+                        name='author',
+                        type=['null', 'string'],
+                        description='Name of the author of the article',
+                    ),
+                    CacheFieldConfig(
+                        name='blog_id',
+                        type=['null', 'integer'],
+                        description='Identifier of the blog the article belongs to',
+                    ),
+                    CacheFieldConfig(
+                        name='body_html',
+                        type=['null', 'string'],
+                        description='HTML content of the article body',
+                    ),
+                    CacheFieldConfig(
+                        name='summary_html',
+                        type=['null', 'string'],
+                        description='Summary of the article in HTML',
+                    ),
+                    CacheFieldConfig(
+                        name='tags',
+                        type=['null', 'string'],
+                        description='Comma-separated list of tags for the article',
+                    ),
+                    CacheFieldConfig(
+                        name='published_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the article was published',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the article was created',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the article was last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='balance_transactions',
+                x_airbyte_name='balance_transactions',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier of the balance transaction',
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description='Type of the transaction (charge, refund, dispute, reserve, adjustment, credit, debit, payout, etc.)',
+                    ),
+                    CacheFieldConfig(
+                        name='amount',
+                        type=['null', 'string'],
+                        description='Gross amount of the transaction',
+                    ),
+                    CacheFieldConfig(
+                        name='fee',
+                        type=['null', 'string'],
+                        description='Total fees deducted from the transaction',
+                    ),
+                    CacheFieldConfig(
+                        name='net',
+                        type=['null', 'string'],
+                        description='Net amount of the transaction',
+                    ),
+                    CacheFieldConfig(
+                        name='currency',
+                        type=['null', 'string'],
+                        description='ISO 4217 currency code of the transaction',
+                    ),
+                    CacheFieldConfig(
+                        name='payout_id',
+                        type=['null', 'integer'],
+                        description='Identifier of the payout the transaction was paid out in',
+                    ),
+                    CacheFieldConfig(
+                        name='payout_status',
+                        type=['null', 'string'],
+                        description='Status of the associated payout',
+                    ),
+                    CacheFieldConfig(
+                        name='source_type',
+                        type=['null', 'string'],
+                        description='Type of the resource that led to this transaction',
+                    ),
+                    CacheFieldConfig(
+                        name='source_order_id',
+                        type=['null', 'integer'],
+                        description='Identifier of the source order, if applicable',
+                    ),
+                    CacheFieldConfig(
+                        name='processed_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the transaction was processed',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='disputes',
+                x_airbyte_name='disputes',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the dispute',
+                    ),
+                    CacheFieldConfig(
+                        name='order_id',
+                        type=['null', 'integer'],
+                        description='Identifier of the order the dispute belongs to',
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description='Whether the dispute is an inquiry or chargeback',
+                    ),
+                    CacheFieldConfig(
+                        name='amount',
+                        type=['null', 'string'],
+                        description='Disputed amount',
+                    ),
+                    CacheFieldConfig(
+                        name='currency',
+                        type=['null', 'string'],
+                        description='ISO 4217 currency code of the dispute amount',
+                    ),
+                    CacheFieldConfig(
+                        name='reason',
+                        type=['null', 'string'],
+                        description="Reason for the dispute provided by the cardholder's bank",
+                    ),
+                    CacheFieldConfig(
+                        name='network_reason_code',
+                        type=['null', 'string'],
+                        description="Network reason code from the cardholder's bank",
+                    ),
+                    CacheFieldConfig(
+                        name='status',
+                        type=['null', 'string'],
+                        description='Current state of the dispute (needs_response, under_review, charge_refunded, accepted, won, lost)',
+                    ),
+                    CacheFieldConfig(
+                        name='evidence_due_by',
+                        type=['null', 'string'],
+                        description='ISO 8601 deadline for evidence submission',
+                    ),
+                    CacheFieldConfig(
+                        name='initiated_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the dispute was initiated',
+                    ),
+                    CacheFieldConfig(
+                        name='finalized_on',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the dispute was resolved',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='metafield_pages',
+                x_airbyte_name='metafield_pages',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='namespace',
+                        type=['null', 'string'],
+                        description='Container namespace for the metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='key',
+                        type=['null', 'string'],
+                        description='Identifier key for the metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='value',
+                        type=['null', 'string'],
+                        description='The metafield value',
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description="The metafield's information type",
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='Human-readable description of the metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='owner_id',
+                        type=['null', 'integer'],
+                        description='Identifier of the page that owns this metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='owner_resource',
+                        type=['null', 'string'],
+                        description='Resource type that owns this metafield (e.g. `page`)',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the metafield was created',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the metafield was last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='metafield_blogs',
+                x_airbyte_name='metafield_blogs',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='namespace',
+                        type=['null', 'string'],
+                        description='Container namespace for the metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='key',
+                        type=['null', 'string'],
+                        description='Identifier key for the metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='value',
+                        type=['null', 'string'],
+                        description='The metafield value',
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description="The metafield's information type",
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='Human-readable description of the metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='owner_id',
+                        type=['null', 'integer'],
+                        description='Identifier of the blog that owns this metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='owner_resource',
+                        type=['null', 'string'],
+                        description='Resource type that owns this metafield (e.g. `blog`)',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the metafield was created',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the metafield was last updated',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='metafield_articles',
+                x_airbyte_name='metafield_articles',
+                fields=[
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'integer'],
+                        description='Unique identifier for the metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='namespace',
+                        type=['null', 'string'],
+                        description='Container namespace for the metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='key',
+                        type=['null', 'string'],
+                        description='Identifier key for the metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='value',
+                        type=['null', 'string'],
+                        description='The metafield value',
+                    ),
+                    CacheFieldConfig(
+                        name='type',
+                        type=['null', 'string'],
+                        description="The metafield's information type",
+                    ),
+                    CacheFieldConfig(
+                        name='description',
+                        type=['null', 'string'],
+                        description='Human-readable description of the metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='owner_id',
+                        type=['null', 'integer'],
+                        description='Identifier of the article that owns this metafield',
+                    ),
+                    CacheFieldConfig(
+                        name='owner_resource',
+                        type=['null', 'string'],
+                        description='Resource type that owns this metafield (e.g. `article`)',
+                    ),
+                    CacheFieldConfig(
+                        name='created_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the metafield was created',
+                    ),
+                    CacheFieldConfig(
+                        name='updated_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp when the metafield was last updated',
+                    ),
+                ],
+            ),
         ],
     ),
     search_field_paths={
@@ -14912,6 +17153,100 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
             'test',
             'processed_at',
         ],
+        'pages': [
+            'id',
+            'title',
+            'handle',
+            'author',
+            'body_html',
+            'published_at',
+            'created_at',
+            'updated_at',
+        ],
+        'blogs': [
+            'id',
+            'title',
+            'handle',
+            'commentable',
+            'tags',
+            'created_at',
+            'updated_at',
+        ],
+        'articles': [
+            'id',
+            'title',
+            'handle',
+            'author',
+            'blog_id',
+            'body_html',
+            'summary_html',
+            'tags',
+            'published_at',
+            'created_at',
+            'updated_at',
+        ],
+        'balance_transactions': [
+            'id',
+            'type',
+            'amount',
+            'fee',
+            'net',
+            'currency',
+            'payout_id',
+            'payout_status',
+            'source_type',
+            'source_order_id',
+            'processed_at',
+        ],
+        'disputes': [
+            'id',
+            'order_id',
+            'type',
+            'amount',
+            'currency',
+            'reason',
+            'network_reason_code',
+            'status',
+            'evidence_due_by',
+            'initiated_at',
+            'finalized_on',
+        ],
+        'metafield_pages': [
+            'id',
+            'namespace',
+            'key',
+            'value',
+            'type',
+            'description',
+            'owner_id',
+            'owner_resource',
+            'created_at',
+            'updated_at',
+        ],
+        'metafield_blogs': [
+            'id',
+            'namespace',
+            'key',
+            'value',
+            'type',
+            'description',
+            'owner_id',
+            'owner_resource',
+            'created_at',
+            'updated_at',
+        ],
+        'metafield_articles': [
+            'id',
+            'namespace',
+            'key',
+            'value',
+            'type',
+            'description',
+            'owner_id',
+            'owner_resource',
+            'created_at',
+            'updated_at',
+        ],
     },
     example_questions=ExampleQuestions(
         direct=[
@@ -14925,8 +17260,22 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
             'Show me details for a recent order',
             'Show me product variants for a recent product',
         ],
-        context_store_search=['Show me orders from the last 30 days', 'Show me abandoned checkouts from this week', 'What price rules are currently active?'],
-        search=['Show me orders from the last 30 days', 'Show me abandoned checkouts from this week', 'What price rules are currently active?'],
+        context_store_search=[
+            'Show me orders from the last 30 days',
+            'Show me abandoned checkouts from this week',
+            'What price rules are currently active?',
+            'Show me all pages on my store',
+            'List all blog articles',
+            'Are there any open disputes?',
+        ],
+        search=[
+            'Show me orders from the last 30 days',
+            'Show me abandoned checkouts from this week',
+            'What price rules are currently active?',
+            'Show me all pages on my store',
+            'List all blog articles',
+            'Are there any open disputes?',
+        ],
         unsupported=[
             'Create a new customer in Shopify',
             'Update product pricing',

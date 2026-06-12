@@ -339,6 +339,79 @@ class FulfillmentOrdersGetParams(TypedDict):
     """Parameters for fulfillment_orders.get operation"""
     fulfillment_order_id: str
 
+class PagesListParams(TypedDict):
+    """Parameters for pages.list operation"""
+    limit: NotRequired[int]
+    since_id: NotRequired[int]
+    created_at_min: NotRequired[str]
+    created_at_max: NotRequired[str]
+    updated_at_min: NotRequired[str]
+    updated_at_max: NotRequired[str]
+    published_status: NotRequired[str]
+
+class PagesGetParams(TypedDict):
+    """Parameters for pages.get operation"""
+    page_id: str
+
+class BlogsListParams(TypedDict):
+    """Parameters for blogs.list operation"""
+    limit: NotRequired[int]
+    since_id: NotRequired[int]
+
+class BlogsGetParams(TypedDict):
+    """Parameters for blogs.get operation"""
+    blog_id: str
+
+class ArticlesListParams(TypedDict):
+    """Parameters for articles.list operation"""
+    blog_id: str
+    limit: NotRequired[int]
+    since_id: NotRequired[int]
+    created_at_min: NotRequired[str]
+    created_at_max: NotRequired[str]
+    updated_at_min: NotRequired[str]
+    updated_at_max: NotRequired[str]
+    published_status: NotRequired[str]
+
+class ArticlesGetParams(TypedDict):
+    """Parameters for articles.get operation"""
+    blog_id: str
+    article_id: str
+
+class BalanceTransactionsListParams(TypedDict):
+    """Parameters for balance_transactions.list operation"""
+    limit: NotRequired[int]
+    since_id: NotRequired[int]
+    payout_id: NotRequired[int]
+    payout_status: NotRequired[str]
+
+class DisputesListParams(TypedDict):
+    """Parameters for disputes.list operation"""
+    limit: NotRequired[int]
+    since_id: NotRequired[int]
+    status: NotRequired[str]
+    initiated_at: NotRequired[str]
+
+class DisputesGetParams(TypedDict):
+    """Parameters for disputes.get operation"""
+    dispute_id: str
+
+class MetafieldPagesListParams(TypedDict):
+    """Parameters for metafield_pages.list operation"""
+    page_id: str
+    limit: NotRequired[int]
+
+class MetafieldBlogsListParams(TypedDict):
+    """Parameters for metafield_blogs.list operation"""
+    blog_id: str
+    limit: NotRequired[int]
+
+class MetafieldArticlesListParams(TypedDict):
+    """Parameters for metafield_articles.list operation"""
+    blog_id: str
+    article_id: str
+    limit: NotRequired[int]
+
 # ===== SEARCH TYPES =====
 
 # Sort specification
@@ -6572,6 +6645,1706 @@ class TenderTransactionsSearchQuery(TypedDict, total=False):
     """Search query for tender_transactions entity."""
     filter: TenderTransactionsCondition
     sort: list[TenderTransactionsSortFilter]
+
+
+# ===== PAGES SEARCH TYPES =====
+
+class PagesSearchFilter(TypedDict, total=False):
+    """Available fields for filtering pages search queries."""
+    id: int | None
+    """Unique identifier for the page"""
+    title: str | None
+    """Title of the page"""
+    handle: str | None
+    """URL-friendly handle for the page"""
+    author: str | None
+    """Name of the page author"""
+    body_html: str | None
+    """HTML content of the page"""
+    published_at: str | None
+    """ISO 8601 timestamp when the page was published"""
+    created_at: str | None
+    """ISO 8601 timestamp when the page was created"""
+    updated_at: str | None
+    """ISO 8601 timestamp when the page was last updated"""
+
+
+class PagesInFilter(TypedDict, total=False):
+    """Available fields for 'in' condition (values are lists)."""
+    id: list[int]
+    """Unique identifier for the page"""
+    title: list[str]
+    """Title of the page"""
+    handle: list[str]
+    """URL-friendly handle for the page"""
+    author: list[str]
+    """Name of the page author"""
+    body_html: list[str]
+    """HTML content of the page"""
+    published_at: list[str]
+    """ISO 8601 timestamp when the page was published"""
+    created_at: list[str]
+    """ISO 8601 timestamp when the page was created"""
+    updated_at: list[str]
+    """ISO 8601 timestamp when the page was last updated"""
+
+
+class PagesAnyValueFilter(TypedDict, total=False):
+    """Available fields with Any value type. Used for 'contains' and 'any' conditions."""
+    id: Any
+    """Unique identifier for the page"""
+    title: Any
+    """Title of the page"""
+    handle: Any
+    """URL-friendly handle for the page"""
+    author: Any
+    """Name of the page author"""
+    body_html: Any
+    """HTML content of the page"""
+    published_at: Any
+    """ISO 8601 timestamp when the page was published"""
+    created_at: Any
+    """ISO 8601 timestamp when the page was created"""
+    updated_at: Any
+    """ISO 8601 timestamp when the page was last updated"""
+
+
+class PagesStringFilter(TypedDict, total=False):
+    """String fields for text search conditions (like, fuzzy, keyword)."""
+    id: str
+    """Unique identifier for the page"""
+    title: str
+    """Title of the page"""
+    handle: str
+    """URL-friendly handle for the page"""
+    author: str
+    """Name of the page author"""
+    body_html: str
+    """HTML content of the page"""
+    published_at: str
+    """ISO 8601 timestamp when the page was published"""
+    created_at: str
+    """ISO 8601 timestamp when the page was created"""
+    updated_at: str
+    """ISO 8601 timestamp when the page was last updated"""
+
+
+class PagesSortFilter(TypedDict, total=False):
+    """Available fields for sorting pages search results."""
+    id: AirbyteSortOrder
+    """Unique identifier for the page"""
+    title: AirbyteSortOrder
+    """Title of the page"""
+    handle: AirbyteSortOrder
+    """URL-friendly handle for the page"""
+    author: AirbyteSortOrder
+    """Name of the page author"""
+    body_html: AirbyteSortOrder
+    """HTML content of the page"""
+    published_at: AirbyteSortOrder
+    """ISO 8601 timestamp when the page was published"""
+    created_at: AirbyteSortOrder
+    """ISO 8601 timestamp when the page was created"""
+    updated_at: AirbyteSortOrder
+    """ISO 8601 timestamp when the page was last updated"""
+
+
+# Entity-specific condition types for pages
+class PagesEqCondition(TypedDict, total=False):
+    """Equal to: field equals value."""
+    eq: PagesSearchFilter
+
+
+class PagesNeqCondition(TypedDict, total=False):
+    """Not equal to: field does not equal value."""
+    neq: PagesSearchFilter
+
+
+class PagesGtCondition(TypedDict, total=False):
+    """Greater than: field > value."""
+    gt: PagesSearchFilter
+
+
+class PagesGteCondition(TypedDict, total=False):
+    """Greater than or equal: field >= value."""
+    gte: PagesSearchFilter
+
+
+class PagesLtCondition(TypedDict, total=False):
+    """Less than: field < value."""
+    lt: PagesSearchFilter
+
+
+class PagesLteCondition(TypedDict, total=False):
+    """Less than or equal: field <= value."""
+    lte: PagesSearchFilter
+
+
+class PagesLikeCondition(TypedDict, total=False):
+    """Partial string match with % wildcards."""
+    like: PagesStringFilter
+
+
+class PagesFuzzyCondition(TypedDict, total=False):
+    """Ordered word text match (case-insensitive)."""
+    fuzzy: PagesStringFilter
+
+
+class PagesKeywordCondition(TypedDict, total=False):
+    """Keyword text match (any word present)."""
+    keyword: PagesStringFilter
+
+
+class PagesContainsCondition(TypedDict, total=False):
+    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    contains: PagesAnyValueFilter
+
+
+# Reserved keyword conditions using functional TypedDict syntax
+PagesInCondition = TypedDict("PagesInCondition", {"in": PagesInFilter}, total=False)
+"""In list: field value is in list. Example: {"in": {"status": ["active", "pending"]}}"""
+
+PagesNotCondition = TypedDict("PagesNotCondition", {"not": "PagesCondition"}, total=False)
+"""Negates the nested condition."""
+
+PagesAndCondition = TypedDict("PagesAndCondition", {"and": "list[PagesCondition]"}, total=False)
+"""True if all nested conditions are true."""
+
+PagesOrCondition = TypedDict("PagesOrCondition", {"or": "list[PagesCondition]"}, total=False)
+"""True if any nested condition is true."""
+
+PagesAnyCondition = TypedDict("PagesAnyCondition", {"any": PagesAnyValueFilter}, total=False)
+"""Match if ANY element in array field matches nested condition. Example: {"any": {"addresses": {"eq": {"state": "CA"}}}}"""
+
+# Union of all pages condition types
+PagesCondition = (
+    PagesEqCondition
+    | PagesNeqCondition
+    | PagesGtCondition
+    | PagesGteCondition
+    | PagesLtCondition
+    | PagesLteCondition
+    | PagesInCondition
+    | PagesLikeCondition
+    | PagesFuzzyCondition
+    | PagesKeywordCondition
+    | PagesContainsCondition
+    | PagesNotCondition
+    | PagesAndCondition
+    | PagesOrCondition
+    | PagesAnyCondition
+)
+
+
+class PagesSearchQuery(TypedDict, total=False):
+    """Search query for pages entity."""
+    filter: PagesCondition
+    sort: list[PagesSortFilter]
+
+
+# ===== BLOGS SEARCH TYPES =====
+
+class BlogsSearchFilter(TypedDict, total=False):
+    """Available fields for filtering blogs search queries."""
+    id: int | None
+    """Unique identifier for the blog"""
+    title: str | None
+    """Title of the blog"""
+    handle: str | None
+    """URL-friendly handle for the blog"""
+    commentable: str | None
+    """Whether readers can post comments (no, moderate, yes)"""
+    tags: str | None
+    """Comma-separated tags from the blog's articles"""
+    created_at: str | None
+    """ISO 8601 timestamp when the blog was created"""
+    updated_at: str | None
+    """ISO 8601 timestamp when the blog was last updated"""
+
+
+class BlogsInFilter(TypedDict, total=False):
+    """Available fields for 'in' condition (values are lists)."""
+    id: list[int]
+    """Unique identifier for the blog"""
+    title: list[str]
+    """Title of the blog"""
+    handle: list[str]
+    """URL-friendly handle for the blog"""
+    commentable: list[str]
+    """Whether readers can post comments (no, moderate, yes)"""
+    tags: list[str]
+    """Comma-separated tags from the blog's articles"""
+    created_at: list[str]
+    """ISO 8601 timestamp when the blog was created"""
+    updated_at: list[str]
+    """ISO 8601 timestamp when the blog was last updated"""
+
+
+class BlogsAnyValueFilter(TypedDict, total=False):
+    """Available fields with Any value type. Used for 'contains' and 'any' conditions."""
+    id: Any
+    """Unique identifier for the blog"""
+    title: Any
+    """Title of the blog"""
+    handle: Any
+    """URL-friendly handle for the blog"""
+    commentable: Any
+    """Whether readers can post comments (no, moderate, yes)"""
+    tags: Any
+    """Comma-separated tags from the blog's articles"""
+    created_at: Any
+    """ISO 8601 timestamp when the blog was created"""
+    updated_at: Any
+    """ISO 8601 timestamp when the blog was last updated"""
+
+
+class BlogsStringFilter(TypedDict, total=False):
+    """String fields for text search conditions (like, fuzzy, keyword)."""
+    id: str
+    """Unique identifier for the blog"""
+    title: str
+    """Title of the blog"""
+    handle: str
+    """URL-friendly handle for the blog"""
+    commentable: str
+    """Whether readers can post comments (no, moderate, yes)"""
+    tags: str
+    """Comma-separated tags from the blog's articles"""
+    created_at: str
+    """ISO 8601 timestamp when the blog was created"""
+    updated_at: str
+    """ISO 8601 timestamp when the blog was last updated"""
+
+
+class BlogsSortFilter(TypedDict, total=False):
+    """Available fields for sorting blogs search results."""
+    id: AirbyteSortOrder
+    """Unique identifier for the blog"""
+    title: AirbyteSortOrder
+    """Title of the blog"""
+    handle: AirbyteSortOrder
+    """URL-friendly handle for the blog"""
+    commentable: AirbyteSortOrder
+    """Whether readers can post comments (no, moderate, yes)"""
+    tags: AirbyteSortOrder
+    """Comma-separated tags from the blog's articles"""
+    created_at: AirbyteSortOrder
+    """ISO 8601 timestamp when the blog was created"""
+    updated_at: AirbyteSortOrder
+    """ISO 8601 timestamp when the blog was last updated"""
+
+
+# Entity-specific condition types for blogs
+class BlogsEqCondition(TypedDict, total=False):
+    """Equal to: field equals value."""
+    eq: BlogsSearchFilter
+
+
+class BlogsNeqCondition(TypedDict, total=False):
+    """Not equal to: field does not equal value."""
+    neq: BlogsSearchFilter
+
+
+class BlogsGtCondition(TypedDict, total=False):
+    """Greater than: field > value."""
+    gt: BlogsSearchFilter
+
+
+class BlogsGteCondition(TypedDict, total=False):
+    """Greater than or equal: field >= value."""
+    gte: BlogsSearchFilter
+
+
+class BlogsLtCondition(TypedDict, total=False):
+    """Less than: field < value."""
+    lt: BlogsSearchFilter
+
+
+class BlogsLteCondition(TypedDict, total=False):
+    """Less than or equal: field <= value."""
+    lte: BlogsSearchFilter
+
+
+class BlogsLikeCondition(TypedDict, total=False):
+    """Partial string match with % wildcards."""
+    like: BlogsStringFilter
+
+
+class BlogsFuzzyCondition(TypedDict, total=False):
+    """Ordered word text match (case-insensitive)."""
+    fuzzy: BlogsStringFilter
+
+
+class BlogsKeywordCondition(TypedDict, total=False):
+    """Keyword text match (any word present)."""
+    keyword: BlogsStringFilter
+
+
+class BlogsContainsCondition(TypedDict, total=False):
+    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    contains: BlogsAnyValueFilter
+
+
+# Reserved keyword conditions using functional TypedDict syntax
+BlogsInCondition = TypedDict("BlogsInCondition", {"in": BlogsInFilter}, total=False)
+"""In list: field value is in list. Example: {"in": {"status": ["active", "pending"]}}"""
+
+BlogsNotCondition = TypedDict("BlogsNotCondition", {"not": "BlogsCondition"}, total=False)
+"""Negates the nested condition."""
+
+BlogsAndCondition = TypedDict("BlogsAndCondition", {"and": "list[BlogsCondition]"}, total=False)
+"""True if all nested conditions are true."""
+
+BlogsOrCondition = TypedDict("BlogsOrCondition", {"or": "list[BlogsCondition]"}, total=False)
+"""True if any nested condition is true."""
+
+BlogsAnyCondition = TypedDict("BlogsAnyCondition", {"any": BlogsAnyValueFilter}, total=False)
+"""Match if ANY element in array field matches nested condition. Example: {"any": {"addresses": {"eq": {"state": "CA"}}}}"""
+
+# Union of all blogs condition types
+BlogsCondition = (
+    BlogsEqCondition
+    | BlogsNeqCondition
+    | BlogsGtCondition
+    | BlogsGteCondition
+    | BlogsLtCondition
+    | BlogsLteCondition
+    | BlogsInCondition
+    | BlogsLikeCondition
+    | BlogsFuzzyCondition
+    | BlogsKeywordCondition
+    | BlogsContainsCondition
+    | BlogsNotCondition
+    | BlogsAndCondition
+    | BlogsOrCondition
+    | BlogsAnyCondition
+)
+
+
+class BlogsSearchQuery(TypedDict, total=False):
+    """Search query for blogs entity."""
+    filter: BlogsCondition
+    sort: list[BlogsSortFilter]
+
+
+# ===== ARTICLES SEARCH TYPES =====
+
+class ArticlesSearchFilter(TypedDict, total=False):
+    """Available fields for filtering articles search queries."""
+    id: int | None
+    """Unique identifier for the article"""
+    title: str | None
+    """Title of the article"""
+    handle: str | None
+    """URL-friendly handle for the article"""
+    author: str | None
+    """Name of the author of the article"""
+    blog_id: int | None
+    """Identifier of the blog the article belongs to"""
+    body_html: str | None
+    """HTML content of the article body"""
+    summary_html: str | None
+    """Summary of the article in HTML"""
+    tags: str | None
+    """Comma-separated list of tags for the article"""
+    published_at: str | None
+    """ISO 8601 timestamp when the article was published"""
+    created_at: str | None
+    """ISO 8601 timestamp when the article was created"""
+    updated_at: str | None
+    """ISO 8601 timestamp when the article was last updated"""
+
+
+class ArticlesInFilter(TypedDict, total=False):
+    """Available fields for 'in' condition (values are lists)."""
+    id: list[int]
+    """Unique identifier for the article"""
+    title: list[str]
+    """Title of the article"""
+    handle: list[str]
+    """URL-friendly handle for the article"""
+    author: list[str]
+    """Name of the author of the article"""
+    blog_id: list[int]
+    """Identifier of the blog the article belongs to"""
+    body_html: list[str]
+    """HTML content of the article body"""
+    summary_html: list[str]
+    """Summary of the article in HTML"""
+    tags: list[str]
+    """Comma-separated list of tags for the article"""
+    published_at: list[str]
+    """ISO 8601 timestamp when the article was published"""
+    created_at: list[str]
+    """ISO 8601 timestamp when the article was created"""
+    updated_at: list[str]
+    """ISO 8601 timestamp when the article was last updated"""
+
+
+class ArticlesAnyValueFilter(TypedDict, total=False):
+    """Available fields with Any value type. Used for 'contains' and 'any' conditions."""
+    id: Any
+    """Unique identifier for the article"""
+    title: Any
+    """Title of the article"""
+    handle: Any
+    """URL-friendly handle for the article"""
+    author: Any
+    """Name of the author of the article"""
+    blog_id: Any
+    """Identifier of the blog the article belongs to"""
+    body_html: Any
+    """HTML content of the article body"""
+    summary_html: Any
+    """Summary of the article in HTML"""
+    tags: Any
+    """Comma-separated list of tags for the article"""
+    published_at: Any
+    """ISO 8601 timestamp when the article was published"""
+    created_at: Any
+    """ISO 8601 timestamp when the article was created"""
+    updated_at: Any
+    """ISO 8601 timestamp when the article was last updated"""
+
+
+class ArticlesStringFilter(TypedDict, total=False):
+    """String fields for text search conditions (like, fuzzy, keyword)."""
+    id: str
+    """Unique identifier for the article"""
+    title: str
+    """Title of the article"""
+    handle: str
+    """URL-friendly handle for the article"""
+    author: str
+    """Name of the author of the article"""
+    blog_id: str
+    """Identifier of the blog the article belongs to"""
+    body_html: str
+    """HTML content of the article body"""
+    summary_html: str
+    """Summary of the article in HTML"""
+    tags: str
+    """Comma-separated list of tags for the article"""
+    published_at: str
+    """ISO 8601 timestamp when the article was published"""
+    created_at: str
+    """ISO 8601 timestamp when the article was created"""
+    updated_at: str
+    """ISO 8601 timestamp when the article was last updated"""
+
+
+class ArticlesSortFilter(TypedDict, total=False):
+    """Available fields for sorting articles search results."""
+    id: AirbyteSortOrder
+    """Unique identifier for the article"""
+    title: AirbyteSortOrder
+    """Title of the article"""
+    handle: AirbyteSortOrder
+    """URL-friendly handle for the article"""
+    author: AirbyteSortOrder
+    """Name of the author of the article"""
+    blog_id: AirbyteSortOrder
+    """Identifier of the blog the article belongs to"""
+    body_html: AirbyteSortOrder
+    """HTML content of the article body"""
+    summary_html: AirbyteSortOrder
+    """Summary of the article in HTML"""
+    tags: AirbyteSortOrder
+    """Comma-separated list of tags for the article"""
+    published_at: AirbyteSortOrder
+    """ISO 8601 timestamp when the article was published"""
+    created_at: AirbyteSortOrder
+    """ISO 8601 timestamp when the article was created"""
+    updated_at: AirbyteSortOrder
+    """ISO 8601 timestamp when the article was last updated"""
+
+
+# Entity-specific condition types for articles
+class ArticlesEqCondition(TypedDict, total=False):
+    """Equal to: field equals value."""
+    eq: ArticlesSearchFilter
+
+
+class ArticlesNeqCondition(TypedDict, total=False):
+    """Not equal to: field does not equal value."""
+    neq: ArticlesSearchFilter
+
+
+class ArticlesGtCondition(TypedDict, total=False):
+    """Greater than: field > value."""
+    gt: ArticlesSearchFilter
+
+
+class ArticlesGteCondition(TypedDict, total=False):
+    """Greater than or equal: field >= value."""
+    gte: ArticlesSearchFilter
+
+
+class ArticlesLtCondition(TypedDict, total=False):
+    """Less than: field < value."""
+    lt: ArticlesSearchFilter
+
+
+class ArticlesLteCondition(TypedDict, total=False):
+    """Less than or equal: field <= value."""
+    lte: ArticlesSearchFilter
+
+
+class ArticlesLikeCondition(TypedDict, total=False):
+    """Partial string match with % wildcards."""
+    like: ArticlesStringFilter
+
+
+class ArticlesFuzzyCondition(TypedDict, total=False):
+    """Ordered word text match (case-insensitive)."""
+    fuzzy: ArticlesStringFilter
+
+
+class ArticlesKeywordCondition(TypedDict, total=False):
+    """Keyword text match (any word present)."""
+    keyword: ArticlesStringFilter
+
+
+class ArticlesContainsCondition(TypedDict, total=False):
+    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    contains: ArticlesAnyValueFilter
+
+
+# Reserved keyword conditions using functional TypedDict syntax
+ArticlesInCondition = TypedDict("ArticlesInCondition", {"in": ArticlesInFilter}, total=False)
+"""In list: field value is in list. Example: {"in": {"status": ["active", "pending"]}}"""
+
+ArticlesNotCondition = TypedDict("ArticlesNotCondition", {"not": "ArticlesCondition"}, total=False)
+"""Negates the nested condition."""
+
+ArticlesAndCondition = TypedDict("ArticlesAndCondition", {"and": "list[ArticlesCondition]"}, total=False)
+"""True if all nested conditions are true."""
+
+ArticlesOrCondition = TypedDict("ArticlesOrCondition", {"or": "list[ArticlesCondition]"}, total=False)
+"""True if any nested condition is true."""
+
+ArticlesAnyCondition = TypedDict("ArticlesAnyCondition", {"any": ArticlesAnyValueFilter}, total=False)
+"""Match if ANY element in array field matches nested condition. Example: {"any": {"addresses": {"eq": {"state": "CA"}}}}"""
+
+# Union of all articles condition types
+ArticlesCondition = (
+    ArticlesEqCondition
+    | ArticlesNeqCondition
+    | ArticlesGtCondition
+    | ArticlesGteCondition
+    | ArticlesLtCondition
+    | ArticlesLteCondition
+    | ArticlesInCondition
+    | ArticlesLikeCondition
+    | ArticlesFuzzyCondition
+    | ArticlesKeywordCondition
+    | ArticlesContainsCondition
+    | ArticlesNotCondition
+    | ArticlesAndCondition
+    | ArticlesOrCondition
+    | ArticlesAnyCondition
+)
+
+
+class ArticlesSearchQuery(TypedDict, total=False):
+    """Search query for articles entity."""
+    filter: ArticlesCondition
+    sort: list[ArticlesSortFilter]
+
+
+# ===== BALANCE_TRANSACTIONS SEARCH TYPES =====
+
+class BalanceTransactionsSearchFilter(TypedDict, total=False):
+    """Available fields for filtering balance_transactions search queries."""
+    id: int | None
+    """Unique identifier of the balance transaction"""
+    type_: str | None
+    """Type of the transaction (charge, refund, dispute, reserve, adjustment, credit, debit, payout, etc.)"""
+    amount: str | None
+    """Gross amount of the transaction"""
+    fee: str | None
+    """Total fees deducted from the transaction"""
+    net: str | None
+    """Net amount of the transaction"""
+    currency: str | None
+    """ISO 4217 currency code of the transaction"""
+    payout_id: int | None
+    """Identifier of the payout the transaction was paid out in"""
+    payout_status: str | None
+    """Status of the associated payout"""
+    source_type: str | None
+    """Type of the resource that led to this transaction"""
+    source_order_id: int | None
+    """Identifier of the source order, if applicable"""
+    processed_at: str | None
+    """ISO 8601 timestamp when the transaction was processed"""
+
+
+class BalanceTransactionsInFilter(TypedDict, total=False):
+    """Available fields for 'in' condition (values are lists)."""
+    id: list[int]
+    """Unique identifier of the balance transaction"""
+    type_: list[str]
+    """Type of the transaction (charge, refund, dispute, reserve, adjustment, credit, debit, payout, etc.)"""
+    amount: list[str]
+    """Gross amount of the transaction"""
+    fee: list[str]
+    """Total fees deducted from the transaction"""
+    net: list[str]
+    """Net amount of the transaction"""
+    currency: list[str]
+    """ISO 4217 currency code of the transaction"""
+    payout_id: list[int]
+    """Identifier of the payout the transaction was paid out in"""
+    payout_status: list[str]
+    """Status of the associated payout"""
+    source_type: list[str]
+    """Type of the resource that led to this transaction"""
+    source_order_id: list[int]
+    """Identifier of the source order, if applicable"""
+    processed_at: list[str]
+    """ISO 8601 timestamp when the transaction was processed"""
+
+
+class BalanceTransactionsAnyValueFilter(TypedDict, total=False):
+    """Available fields with Any value type. Used for 'contains' and 'any' conditions."""
+    id: Any
+    """Unique identifier of the balance transaction"""
+    type_: Any
+    """Type of the transaction (charge, refund, dispute, reserve, adjustment, credit, debit, payout, etc.)"""
+    amount: Any
+    """Gross amount of the transaction"""
+    fee: Any
+    """Total fees deducted from the transaction"""
+    net: Any
+    """Net amount of the transaction"""
+    currency: Any
+    """ISO 4217 currency code of the transaction"""
+    payout_id: Any
+    """Identifier of the payout the transaction was paid out in"""
+    payout_status: Any
+    """Status of the associated payout"""
+    source_type: Any
+    """Type of the resource that led to this transaction"""
+    source_order_id: Any
+    """Identifier of the source order, if applicable"""
+    processed_at: Any
+    """ISO 8601 timestamp when the transaction was processed"""
+
+
+class BalanceTransactionsStringFilter(TypedDict, total=False):
+    """String fields for text search conditions (like, fuzzy, keyword)."""
+    id: str
+    """Unique identifier of the balance transaction"""
+    type_: str
+    """Type of the transaction (charge, refund, dispute, reserve, adjustment, credit, debit, payout, etc.)"""
+    amount: str
+    """Gross amount of the transaction"""
+    fee: str
+    """Total fees deducted from the transaction"""
+    net: str
+    """Net amount of the transaction"""
+    currency: str
+    """ISO 4217 currency code of the transaction"""
+    payout_id: str
+    """Identifier of the payout the transaction was paid out in"""
+    payout_status: str
+    """Status of the associated payout"""
+    source_type: str
+    """Type of the resource that led to this transaction"""
+    source_order_id: str
+    """Identifier of the source order, if applicable"""
+    processed_at: str
+    """ISO 8601 timestamp when the transaction was processed"""
+
+
+class BalanceTransactionsSortFilter(TypedDict, total=False):
+    """Available fields for sorting balance_transactions search results."""
+    id: AirbyteSortOrder
+    """Unique identifier of the balance transaction"""
+    type_: AirbyteSortOrder
+    """Type of the transaction (charge, refund, dispute, reserve, adjustment, credit, debit, payout, etc.)"""
+    amount: AirbyteSortOrder
+    """Gross amount of the transaction"""
+    fee: AirbyteSortOrder
+    """Total fees deducted from the transaction"""
+    net: AirbyteSortOrder
+    """Net amount of the transaction"""
+    currency: AirbyteSortOrder
+    """ISO 4217 currency code of the transaction"""
+    payout_id: AirbyteSortOrder
+    """Identifier of the payout the transaction was paid out in"""
+    payout_status: AirbyteSortOrder
+    """Status of the associated payout"""
+    source_type: AirbyteSortOrder
+    """Type of the resource that led to this transaction"""
+    source_order_id: AirbyteSortOrder
+    """Identifier of the source order, if applicable"""
+    processed_at: AirbyteSortOrder
+    """ISO 8601 timestamp when the transaction was processed"""
+
+
+# Entity-specific condition types for balance_transactions
+class BalanceTransactionsEqCondition(TypedDict, total=False):
+    """Equal to: field equals value."""
+    eq: BalanceTransactionsSearchFilter
+
+
+class BalanceTransactionsNeqCondition(TypedDict, total=False):
+    """Not equal to: field does not equal value."""
+    neq: BalanceTransactionsSearchFilter
+
+
+class BalanceTransactionsGtCondition(TypedDict, total=False):
+    """Greater than: field > value."""
+    gt: BalanceTransactionsSearchFilter
+
+
+class BalanceTransactionsGteCondition(TypedDict, total=False):
+    """Greater than or equal: field >= value."""
+    gte: BalanceTransactionsSearchFilter
+
+
+class BalanceTransactionsLtCondition(TypedDict, total=False):
+    """Less than: field < value."""
+    lt: BalanceTransactionsSearchFilter
+
+
+class BalanceTransactionsLteCondition(TypedDict, total=False):
+    """Less than or equal: field <= value."""
+    lte: BalanceTransactionsSearchFilter
+
+
+class BalanceTransactionsLikeCondition(TypedDict, total=False):
+    """Partial string match with % wildcards."""
+    like: BalanceTransactionsStringFilter
+
+
+class BalanceTransactionsFuzzyCondition(TypedDict, total=False):
+    """Ordered word text match (case-insensitive)."""
+    fuzzy: BalanceTransactionsStringFilter
+
+
+class BalanceTransactionsKeywordCondition(TypedDict, total=False):
+    """Keyword text match (any word present)."""
+    keyword: BalanceTransactionsStringFilter
+
+
+class BalanceTransactionsContainsCondition(TypedDict, total=False):
+    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    contains: BalanceTransactionsAnyValueFilter
+
+
+# Reserved keyword conditions using functional TypedDict syntax
+BalanceTransactionsInCondition = TypedDict("BalanceTransactionsInCondition", {"in": BalanceTransactionsInFilter}, total=False)
+"""In list: field value is in list. Example: {"in": {"status": ["active", "pending"]}}"""
+
+BalanceTransactionsNotCondition = TypedDict("BalanceTransactionsNotCondition", {"not": "BalanceTransactionsCondition"}, total=False)
+"""Negates the nested condition."""
+
+BalanceTransactionsAndCondition = TypedDict("BalanceTransactionsAndCondition", {"and": "list[BalanceTransactionsCondition]"}, total=False)
+"""True if all nested conditions are true."""
+
+BalanceTransactionsOrCondition = TypedDict("BalanceTransactionsOrCondition", {"or": "list[BalanceTransactionsCondition]"}, total=False)
+"""True if any nested condition is true."""
+
+BalanceTransactionsAnyCondition = TypedDict("BalanceTransactionsAnyCondition", {"any": BalanceTransactionsAnyValueFilter}, total=False)
+"""Match if ANY element in array field matches nested condition. Example: {"any": {"addresses": {"eq": {"state": "CA"}}}}"""
+
+# Union of all balance_transactions condition types
+BalanceTransactionsCondition = (
+    BalanceTransactionsEqCondition
+    | BalanceTransactionsNeqCondition
+    | BalanceTransactionsGtCondition
+    | BalanceTransactionsGteCondition
+    | BalanceTransactionsLtCondition
+    | BalanceTransactionsLteCondition
+    | BalanceTransactionsInCondition
+    | BalanceTransactionsLikeCondition
+    | BalanceTransactionsFuzzyCondition
+    | BalanceTransactionsKeywordCondition
+    | BalanceTransactionsContainsCondition
+    | BalanceTransactionsNotCondition
+    | BalanceTransactionsAndCondition
+    | BalanceTransactionsOrCondition
+    | BalanceTransactionsAnyCondition
+)
+
+
+class BalanceTransactionsSearchQuery(TypedDict, total=False):
+    """Search query for balance_transactions entity."""
+    filter: BalanceTransactionsCondition
+    sort: list[BalanceTransactionsSortFilter]
+
+
+# ===== DISPUTES SEARCH TYPES =====
+
+class DisputesSearchFilter(TypedDict, total=False):
+    """Available fields for filtering disputes search queries."""
+    id: int | None
+    """Unique identifier for the dispute"""
+    order_id: int | None
+    """Identifier of the order the dispute belongs to"""
+    type_: str | None
+    """Whether the dispute is an inquiry or chargeback"""
+    amount: str | None
+    """Disputed amount"""
+    currency: str | None
+    """ISO 4217 currency code of the dispute amount"""
+    reason: str | None
+    """Reason for the dispute provided by the cardholder's bank"""
+    network_reason_code: str | None
+    """Network reason code from the cardholder's bank"""
+    status: str | None
+    """Current state of the dispute (needs_response, under_review, charge_refunded, accepted, won, lost)"""
+    evidence_due_by: str | None
+    """ISO 8601 deadline for evidence submission"""
+    initiated_at: str | None
+    """ISO 8601 timestamp when the dispute was initiated"""
+    finalized_on: str | None
+    """ISO 8601 timestamp when the dispute was resolved"""
+
+
+class DisputesInFilter(TypedDict, total=False):
+    """Available fields for 'in' condition (values are lists)."""
+    id: list[int]
+    """Unique identifier for the dispute"""
+    order_id: list[int]
+    """Identifier of the order the dispute belongs to"""
+    type_: list[str]
+    """Whether the dispute is an inquiry or chargeback"""
+    amount: list[str]
+    """Disputed amount"""
+    currency: list[str]
+    """ISO 4217 currency code of the dispute amount"""
+    reason: list[str]
+    """Reason for the dispute provided by the cardholder's bank"""
+    network_reason_code: list[str]
+    """Network reason code from the cardholder's bank"""
+    status: list[str]
+    """Current state of the dispute (needs_response, under_review, charge_refunded, accepted, won, lost)"""
+    evidence_due_by: list[str]
+    """ISO 8601 deadline for evidence submission"""
+    initiated_at: list[str]
+    """ISO 8601 timestamp when the dispute was initiated"""
+    finalized_on: list[str]
+    """ISO 8601 timestamp when the dispute was resolved"""
+
+
+class DisputesAnyValueFilter(TypedDict, total=False):
+    """Available fields with Any value type. Used for 'contains' and 'any' conditions."""
+    id: Any
+    """Unique identifier for the dispute"""
+    order_id: Any
+    """Identifier of the order the dispute belongs to"""
+    type_: Any
+    """Whether the dispute is an inquiry or chargeback"""
+    amount: Any
+    """Disputed amount"""
+    currency: Any
+    """ISO 4217 currency code of the dispute amount"""
+    reason: Any
+    """Reason for the dispute provided by the cardholder's bank"""
+    network_reason_code: Any
+    """Network reason code from the cardholder's bank"""
+    status: Any
+    """Current state of the dispute (needs_response, under_review, charge_refunded, accepted, won, lost)"""
+    evidence_due_by: Any
+    """ISO 8601 deadline for evidence submission"""
+    initiated_at: Any
+    """ISO 8601 timestamp when the dispute was initiated"""
+    finalized_on: Any
+    """ISO 8601 timestamp when the dispute was resolved"""
+
+
+class DisputesStringFilter(TypedDict, total=False):
+    """String fields for text search conditions (like, fuzzy, keyword)."""
+    id: str
+    """Unique identifier for the dispute"""
+    order_id: str
+    """Identifier of the order the dispute belongs to"""
+    type_: str
+    """Whether the dispute is an inquiry or chargeback"""
+    amount: str
+    """Disputed amount"""
+    currency: str
+    """ISO 4217 currency code of the dispute amount"""
+    reason: str
+    """Reason for the dispute provided by the cardholder's bank"""
+    network_reason_code: str
+    """Network reason code from the cardholder's bank"""
+    status: str
+    """Current state of the dispute (needs_response, under_review, charge_refunded, accepted, won, lost)"""
+    evidence_due_by: str
+    """ISO 8601 deadline for evidence submission"""
+    initiated_at: str
+    """ISO 8601 timestamp when the dispute was initiated"""
+    finalized_on: str
+    """ISO 8601 timestamp when the dispute was resolved"""
+
+
+class DisputesSortFilter(TypedDict, total=False):
+    """Available fields for sorting disputes search results."""
+    id: AirbyteSortOrder
+    """Unique identifier for the dispute"""
+    order_id: AirbyteSortOrder
+    """Identifier of the order the dispute belongs to"""
+    type_: AirbyteSortOrder
+    """Whether the dispute is an inquiry or chargeback"""
+    amount: AirbyteSortOrder
+    """Disputed amount"""
+    currency: AirbyteSortOrder
+    """ISO 4217 currency code of the dispute amount"""
+    reason: AirbyteSortOrder
+    """Reason for the dispute provided by the cardholder's bank"""
+    network_reason_code: AirbyteSortOrder
+    """Network reason code from the cardholder's bank"""
+    status: AirbyteSortOrder
+    """Current state of the dispute (needs_response, under_review, charge_refunded, accepted, won, lost)"""
+    evidence_due_by: AirbyteSortOrder
+    """ISO 8601 deadline for evidence submission"""
+    initiated_at: AirbyteSortOrder
+    """ISO 8601 timestamp when the dispute was initiated"""
+    finalized_on: AirbyteSortOrder
+    """ISO 8601 timestamp when the dispute was resolved"""
+
+
+# Entity-specific condition types for disputes
+class DisputesEqCondition(TypedDict, total=False):
+    """Equal to: field equals value."""
+    eq: DisputesSearchFilter
+
+
+class DisputesNeqCondition(TypedDict, total=False):
+    """Not equal to: field does not equal value."""
+    neq: DisputesSearchFilter
+
+
+class DisputesGtCondition(TypedDict, total=False):
+    """Greater than: field > value."""
+    gt: DisputesSearchFilter
+
+
+class DisputesGteCondition(TypedDict, total=False):
+    """Greater than or equal: field >= value."""
+    gte: DisputesSearchFilter
+
+
+class DisputesLtCondition(TypedDict, total=False):
+    """Less than: field < value."""
+    lt: DisputesSearchFilter
+
+
+class DisputesLteCondition(TypedDict, total=False):
+    """Less than or equal: field <= value."""
+    lte: DisputesSearchFilter
+
+
+class DisputesLikeCondition(TypedDict, total=False):
+    """Partial string match with % wildcards."""
+    like: DisputesStringFilter
+
+
+class DisputesFuzzyCondition(TypedDict, total=False):
+    """Ordered word text match (case-insensitive)."""
+    fuzzy: DisputesStringFilter
+
+
+class DisputesKeywordCondition(TypedDict, total=False):
+    """Keyword text match (any word present)."""
+    keyword: DisputesStringFilter
+
+
+class DisputesContainsCondition(TypedDict, total=False):
+    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    contains: DisputesAnyValueFilter
+
+
+# Reserved keyword conditions using functional TypedDict syntax
+DisputesInCondition = TypedDict("DisputesInCondition", {"in": DisputesInFilter}, total=False)
+"""In list: field value is in list. Example: {"in": {"status": ["active", "pending"]}}"""
+
+DisputesNotCondition = TypedDict("DisputesNotCondition", {"not": "DisputesCondition"}, total=False)
+"""Negates the nested condition."""
+
+DisputesAndCondition = TypedDict("DisputesAndCondition", {"and": "list[DisputesCondition]"}, total=False)
+"""True if all nested conditions are true."""
+
+DisputesOrCondition = TypedDict("DisputesOrCondition", {"or": "list[DisputesCondition]"}, total=False)
+"""True if any nested condition is true."""
+
+DisputesAnyCondition = TypedDict("DisputesAnyCondition", {"any": DisputesAnyValueFilter}, total=False)
+"""Match if ANY element in array field matches nested condition. Example: {"any": {"addresses": {"eq": {"state": "CA"}}}}"""
+
+# Union of all disputes condition types
+DisputesCondition = (
+    DisputesEqCondition
+    | DisputesNeqCondition
+    | DisputesGtCondition
+    | DisputesGteCondition
+    | DisputesLtCondition
+    | DisputesLteCondition
+    | DisputesInCondition
+    | DisputesLikeCondition
+    | DisputesFuzzyCondition
+    | DisputesKeywordCondition
+    | DisputesContainsCondition
+    | DisputesNotCondition
+    | DisputesAndCondition
+    | DisputesOrCondition
+    | DisputesAnyCondition
+)
+
+
+class DisputesSearchQuery(TypedDict, total=False):
+    """Search query for disputes entity."""
+    filter: DisputesCondition
+    sort: list[DisputesSortFilter]
+
+
+# ===== METAFIELD_PAGES SEARCH TYPES =====
+
+class MetafieldPagesSearchFilter(TypedDict, total=False):
+    """Available fields for filtering metafield_pages search queries."""
+    id: int | None
+    """Unique identifier for the metafield"""
+    namespace: str | None
+    """Container namespace for the metafield"""
+    key: str | None
+    """Identifier key for the metafield"""
+    value: str | None
+    """The metafield value"""
+    type_: str | None
+    """The metafield's information type"""
+    description: str | None
+    """Human-readable description of the metafield"""
+    owner_id: int | None
+    """Identifier of the page that owns this metafield"""
+    owner_resource: str | None
+    """Resource type that owns this metafield (e.g. `page`)"""
+    created_at: str | None
+    """ISO 8601 timestamp when the metafield was created"""
+    updated_at: str | None
+    """ISO 8601 timestamp when the metafield was last updated"""
+
+
+class MetafieldPagesInFilter(TypedDict, total=False):
+    """Available fields for 'in' condition (values are lists)."""
+    id: list[int]
+    """Unique identifier for the metafield"""
+    namespace: list[str]
+    """Container namespace for the metafield"""
+    key: list[str]
+    """Identifier key for the metafield"""
+    value: list[str]
+    """The metafield value"""
+    type_: list[str]
+    """The metafield's information type"""
+    description: list[str]
+    """Human-readable description of the metafield"""
+    owner_id: list[int]
+    """Identifier of the page that owns this metafield"""
+    owner_resource: list[str]
+    """Resource type that owns this metafield (e.g. `page`)"""
+    created_at: list[str]
+    """ISO 8601 timestamp when the metafield was created"""
+    updated_at: list[str]
+    """ISO 8601 timestamp when the metafield was last updated"""
+
+
+class MetafieldPagesAnyValueFilter(TypedDict, total=False):
+    """Available fields with Any value type. Used for 'contains' and 'any' conditions."""
+    id: Any
+    """Unique identifier for the metafield"""
+    namespace: Any
+    """Container namespace for the metafield"""
+    key: Any
+    """Identifier key for the metafield"""
+    value: Any
+    """The metafield value"""
+    type_: Any
+    """The metafield's information type"""
+    description: Any
+    """Human-readable description of the metafield"""
+    owner_id: Any
+    """Identifier of the page that owns this metafield"""
+    owner_resource: Any
+    """Resource type that owns this metafield (e.g. `page`)"""
+    created_at: Any
+    """ISO 8601 timestamp when the metafield was created"""
+    updated_at: Any
+    """ISO 8601 timestamp when the metafield was last updated"""
+
+
+class MetafieldPagesStringFilter(TypedDict, total=False):
+    """String fields for text search conditions (like, fuzzy, keyword)."""
+    id: str
+    """Unique identifier for the metafield"""
+    namespace: str
+    """Container namespace for the metafield"""
+    key: str
+    """Identifier key for the metafield"""
+    value: str
+    """The metafield value"""
+    type_: str
+    """The metafield's information type"""
+    description: str
+    """Human-readable description of the metafield"""
+    owner_id: str
+    """Identifier of the page that owns this metafield"""
+    owner_resource: str
+    """Resource type that owns this metafield (e.g. `page`)"""
+    created_at: str
+    """ISO 8601 timestamp when the metafield was created"""
+    updated_at: str
+    """ISO 8601 timestamp when the metafield was last updated"""
+
+
+class MetafieldPagesSortFilter(TypedDict, total=False):
+    """Available fields for sorting metafield_pages search results."""
+    id: AirbyteSortOrder
+    """Unique identifier for the metafield"""
+    namespace: AirbyteSortOrder
+    """Container namespace for the metafield"""
+    key: AirbyteSortOrder
+    """Identifier key for the metafield"""
+    value: AirbyteSortOrder
+    """The metafield value"""
+    type_: AirbyteSortOrder
+    """The metafield's information type"""
+    description: AirbyteSortOrder
+    """Human-readable description of the metafield"""
+    owner_id: AirbyteSortOrder
+    """Identifier of the page that owns this metafield"""
+    owner_resource: AirbyteSortOrder
+    """Resource type that owns this metafield (e.g. `page`)"""
+    created_at: AirbyteSortOrder
+    """ISO 8601 timestamp when the metafield was created"""
+    updated_at: AirbyteSortOrder
+    """ISO 8601 timestamp when the metafield was last updated"""
+
+
+# Entity-specific condition types for metafield_pages
+class MetafieldPagesEqCondition(TypedDict, total=False):
+    """Equal to: field equals value."""
+    eq: MetafieldPagesSearchFilter
+
+
+class MetafieldPagesNeqCondition(TypedDict, total=False):
+    """Not equal to: field does not equal value."""
+    neq: MetafieldPagesSearchFilter
+
+
+class MetafieldPagesGtCondition(TypedDict, total=False):
+    """Greater than: field > value."""
+    gt: MetafieldPagesSearchFilter
+
+
+class MetafieldPagesGteCondition(TypedDict, total=False):
+    """Greater than or equal: field >= value."""
+    gte: MetafieldPagesSearchFilter
+
+
+class MetafieldPagesLtCondition(TypedDict, total=False):
+    """Less than: field < value."""
+    lt: MetafieldPagesSearchFilter
+
+
+class MetafieldPagesLteCondition(TypedDict, total=False):
+    """Less than or equal: field <= value."""
+    lte: MetafieldPagesSearchFilter
+
+
+class MetafieldPagesLikeCondition(TypedDict, total=False):
+    """Partial string match with % wildcards."""
+    like: MetafieldPagesStringFilter
+
+
+class MetafieldPagesFuzzyCondition(TypedDict, total=False):
+    """Ordered word text match (case-insensitive)."""
+    fuzzy: MetafieldPagesStringFilter
+
+
+class MetafieldPagesKeywordCondition(TypedDict, total=False):
+    """Keyword text match (any word present)."""
+    keyword: MetafieldPagesStringFilter
+
+
+class MetafieldPagesContainsCondition(TypedDict, total=False):
+    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    contains: MetafieldPagesAnyValueFilter
+
+
+# Reserved keyword conditions using functional TypedDict syntax
+MetafieldPagesInCondition = TypedDict("MetafieldPagesInCondition", {"in": MetafieldPagesInFilter}, total=False)
+"""In list: field value is in list. Example: {"in": {"status": ["active", "pending"]}}"""
+
+MetafieldPagesNotCondition = TypedDict("MetafieldPagesNotCondition", {"not": "MetafieldPagesCondition"}, total=False)
+"""Negates the nested condition."""
+
+MetafieldPagesAndCondition = TypedDict("MetafieldPagesAndCondition", {"and": "list[MetafieldPagesCondition]"}, total=False)
+"""True if all nested conditions are true."""
+
+MetafieldPagesOrCondition = TypedDict("MetafieldPagesOrCondition", {"or": "list[MetafieldPagesCondition]"}, total=False)
+"""True if any nested condition is true."""
+
+MetafieldPagesAnyCondition = TypedDict("MetafieldPagesAnyCondition", {"any": MetafieldPagesAnyValueFilter}, total=False)
+"""Match if ANY element in array field matches nested condition. Example: {"any": {"addresses": {"eq": {"state": "CA"}}}}"""
+
+# Union of all metafield_pages condition types
+MetafieldPagesCondition = (
+    MetafieldPagesEqCondition
+    | MetafieldPagesNeqCondition
+    | MetafieldPagesGtCondition
+    | MetafieldPagesGteCondition
+    | MetafieldPagesLtCondition
+    | MetafieldPagesLteCondition
+    | MetafieldPagesInCondition
+    | MetafieldPagesLikeCondition
+    | MetafieldPagesFuzzyCondition
+    | MetafieldPagesKeywordCondition
+    | MetafieldPagesContainsCondition
+    | MetafieldPagesNotCondition
+    | MetafieldPagesAndCondition
+    | MetafieldPagesOrCondition
+    | MetafieldPagesAnyCondition
+)
+
+
+class MetafieldPagesSearchQuery(TypedDict, total=False):
+    """Search query for metafield_pages entity."""
+    filter: MetafieldPagesCondition
+    sort: list[MetafieldPagesSortFilter]
+
+
+# ===== METAFIELD_BLOGS SEARCH TYPES =====
+
+class MetafieldBlogsSearchFilter(TypedDict, total=False):
+    """Available fields for filtering metafield_blogs search queries."""
+    id: int | None
+    """Unique identifier for the metafield"""
+    namespace: str | None
+    """Container namespace for the metafield"""
+    key: str | None
+    """Identifier key for the metafield"""
+    value: str | None
+    """The metafield value"""
+    type_: str | None
+    """The metafield's information type"""
+    description: str | None
+    """Human-readable description of the metafield"""
+    owner_id: int | None
+    """Identifier of the blog that owns this metafield"""
+    owner_resource: str | None
+    """Resource type that owns this metafield (e.g. `blog`)"""
+    created_at: str | None
+    """ISO 8601 timestamp when the metafield was created"""
+    updated_at: str | None
+    """ISO 8601 timestamp when the metafield was last updated"""
+
+
+class MetafieldBlogsInFilter(TypedDict, total=False):
+    """Available fields for 'in' condition (values are lists)."""
+    id: list[int]
+    """Unique identifier for the metafield"""
+    namespace: list[str]
+    """Container namespace for the metafield"""
+    key: list[str]
+    """Identifier key for the metafield"""
+    value: list[str]
+    """The metafield value"""
+    type_: list[str]
+    """The metafield's information type"""
+    description: list[str]
+    """Human-readable description of the metafield"""
+    owner_id: list[int]
+    """Identifier of the blog that owns this metafield"""
+    owner_resource: list[str]
+    """Resource type that owns this metafield (e.g. `blog`)"""
+    created_at: list[str]
+    """ISO 8601 timestamp when the metafield was created"""
+    updated_at: list[str]
+    """ISO 8601 timestamp when the metafield was last updated"""
+
+
+class MetafieldBlogsAnyValueFilter(TypedDict, total=False):
+    """Available fields with Any value type. Used for 'contains' and 'any' conditions."""
+    id: Any
+    """Unique identifier for the metafield"""
+    namespace: Any
+    """Container namespace for the metafield"""
+    key: Any
+    """Identifier key for the metafield"""
+    value: Any
+    """The metafield value"""
+    type_: Any
+    """The metafield's information type"""
+    description: Any
+    """Human-readable description of the metafield"""
+    owner_id: Any
+    """Identifier of the blog that owns this metafield"""
+    owner_resource: Any
+    """Resource type that owns this metafield (e.g. `blog`)"""
+    created_at: Any
+    """ISO 8601 timestamp when the metafield was created"""
+    updated_at: Any
+    """ISO 8601 timestamp when the metafield was last updated"""
+
+
+class MetafieldBlogsStringFilter(TypedDict, total=False):
+    """String fields for text search conditions (like, fuzzy, keyword)."""
+    id: str
+    """Unique identifier for the metafield"""
+    namespace: str
+    """Container namespace for the metafield"""
+    key: str
+    """Identifier key for the metafield"""
+    value: str
+    """The metafield value"""
+    type_: str
+    """The metafield's information type"""
+    description: str
+    """Human-readable description of the metafield"""
+    owner_id: str
+    """Identifier of the blog that owns this metafield"""
+    owner_resource: str
+    """Resource type that owns this metafield (e.g. `blog`)"""
+    created_at: str
+    """ISO 8601 timestamp when the metafield was created"""
+    updated_at: str
+    """ISO 8601 timestamp when the metafield was last updated"""
+
+
+class MetafieldBlogsSortFilter(TypedDict, total=False):
+    """Available fields for sorting metafield_blogs search results."""
+    id: AirbyteSortOrder
+    """Unique identifier for the metafield"""
+    namespace: AirbyteSortOrder
+    """Container namespace for the metafield"""
+    key: AirbyteSortOrder
+    """Identifier key for the metafield"""
+    value: AirbyteSortOrder
+    """The metafield value"""
+    type_: AirbyteSortOrder
+    """The metafield's information type"""
+    description: AirbyteSortOrder
+    """Human-readable description of the metafield"""
+    owner_id: AirbyteSortOrder
+    """Identifier of the blog that owns this metafield"""
+    owner_resource: AirbyteSortOrder
+    """Resource type that owns this metafield (e.g. `blog`)"""
+    created_at: AirbyteSortOrder
+    """ISO 8601 timestamp when the metafield was created"""
+    updated_at: AirbyteSortOrder
+    """ISO 8601 timestamp when the metafield was last updated"""
+
+
+# Entity-specific condition types for metafield_blogs
+class MetafieldBlogsEqCondition(TypedDict, total=False):
+    """Equal to: field equals value."""
+    eq: MetafieldBlogsSearchFilter
+
+
+class MetafieldBlogsNeqCondition(TypedDict, total=False):
+    """Not equal to: field does not equal value."""
+    neq: MetafieldBlogsSearchFilter
+
+
+class MetafieldBlogsGtCondition(TypedDict, total=False):
+    """Greater than: field > value."""
+    gt: MetafieldBlogsSearchFilter
+
+
+class MetafieldBlogsGteCondition(TypedDict, total=False):
+    """Greater than or equal: field >= value."""
+    gte: MetafieldBlogsSearchFilter
+
+
+class MetafieldBlogsLtCondition(TypedDict, total=False):
+    """Less than: field < value."""
+    lt: MetafieldBlogsSearchFilter
+
+
+class MetafieldBlogsLteCondition(TypedDict, total=False):
+    """Less than or equal: field <= value."""
+    lte: MetafieldBlogsSearchFilter
+
+
+class MetafieldBlogsLikeCondition(TypedDict, total=False):
+    """Partial string match with % wildcards."""
+    like: MetafieldBlogsStringFilter
+
+
+class MetafieldBlogsFuzzyCondition(TypedDict, total=False):
+    """Ordered word text match (case-insensitive)."""
+    fuzzy: MetafieldBlogsStringFilter
+
+
+class MetafieldBlogsKeywordCondition(TypedDict, total=False):
+    """Keyword text match (any word present)."""
+    keyword: MetafieldBlogsStringFilter
+
+
+class MetafieldBlogsContainsCondition(TypedDict, total=False):
+    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    contains: MetafieldBlogsAnyValueFilter
+
+
+# Reserved keyword conditions using functional TypedDict syntax
+MetafieldBlogsInCondition = TypedDict("MetafieldBlogsInCondition", {"in": MetafieldBlogsInFilter}, total=False)
+"""In list: field value is in list. Example: {"in": {"status": ["active", "pending"]}}"""
+
+MetafieldBlogsNotCondition = TypedDict("MetafieldBlogsNotCondition", {"not": "MetafieldBlogsCondition"}, total=False)
+"""Negates the nested condition."""
+
+MetafieldBlogsAndCondition = TypedDict("MetafieldBlogsAndCondition", {"and": "list[MetafieldBlogsCondition]"}, total=False)
+"""True if all nested conditions are true."""
+
+MetafieldBlogsOrCondition = TypedDict("MetafieldBlogsOrCondition", {"or": "list[MetafieldBlogsCondition]"}, total=False)
+"""True if any nested condition is true."""
+
+MetafieldBlogsAnyCondition = TypedDict("MetafieldBlogsAnyCondition", {"any": MetafieldBlogsAnyValueFilter}, total=False)
+"""Match if ANY element in array field matches nested condition. Example: {"any": {"addresses": {"eq": {"state": "CA"}}}}"""
+
+# Union of all metafield_blogs condition types
+MetafieldBlogsCondition = (
+    MetafieldBlogsEqCondition
+    | MetafieldBlogsNeqCondition
+    | MetafieldBlogsGtCondition
+    | MetafieldBlogsGteCondition
+    | MetafieldBlogsLtCondition
+    | MetafieldBlogsLteCondition
+    | MetafieldBlogsInCondition
+    | MetafieldBlogsLikeCondition
+    | MetafieldBlogsFuzzyCondition
+    | MetafieldBlogsKeywordCondition
+    | MetafieldBlogsContainsCondition
+    | MetafieldBlogsNotCondition
+    | MetafieldBlogsAndCondition
+    | MetafieldBlogsOrCondition
+    | MetafieldBlogsAnyCondition
+)
+
+
+class MetafieldBlogsSearchQuery(TypedDict, total=False):
+    """Search query for metafield_blogs entity."""
+    filter: MetafieldBlogsCondition
+    sort: list[MetafieldBlogsSortFilter]
+
+
+# ===== METAFIELD_ARTICLES SEARCH TYPES =====
+
+class MetafieldArticlesSearchFilter(TypedDict, total=False):
+    """Available fields for filtering metafield_articles search queries."""
+    id: int | None
+    """Unique identifier for the metafield"""
+    namespace: str | None
+    """Container namespace for the metafield"""
+    key: str | None
+    """Identifier key for the metafield"""
+    value: str | None
+    """The metafield value"""
+    type_: str | None
+    """The metafield's information type"""
+    description: str | None
+    """Human-readable description of the metafield"""
+    owner_id: int | None
+    """Identifier of the article that owns this metafield"""
+    owner_resource: str | None
+    """Resource type that owns this metafield (e.g. `article`)"""
+    created_at: str | None
+    """ISO 8601 timestamp when the metafield was created"""
+    updated_at: str | None
+    """ISO 8601 timestamp when the metafield was last updated"""
+
+
+class MetafieldArticlesInFilter(TypedDict, total=False):
+    """Available fields for 'in' condition (values are lists)."""
+    id: list[int]
+    """Unique identifier for the metafield"""
+    namespace: list[str]
+    """Container namespace for the metafield"""
+    key: list[str]
+    """Identifier key for the metafield"""
+    value: list[str]
+    """The metafield value"""
+    type_: list[str]
+    """The metafield's information type"""
+    description: list[str]
+    """Human-readable description of the metafield"""
+    owner_id: list[int]
+    """Identifier of the article that owns this metafield"""
+    owner_resource: list[str]
+    """Resource type that owns this metafield (e.g. `article`)"""
+    created_at: list[str]
+    """ISO 8601 timestamp when the metafield was created"""
+    updated_at: list[str]
+    """ISO 8601 timestamp when the metafield was last updated"""
+
+
+class MetafieldArticlesAnyValueFilter(TypedDict, total=False):
+    """Available fields with Any value type. Used for 'contains' and 'any' conditions."""
+    id: Any
+    """Unique identifier for the metafield"""
+    namespace: Any
+    """Container namespace for the metafield"""
+    key: Any
+    """Identifier key for the metafield"""
+    value: Any
+    """The metafield value"""
+    type_: Any
+    """The metafield's information type"""
+    description: Any
+    """Human-readable description of the metafield"""
+    owner_id: Any
+    """Identifier of the article that owns this metafield"""
+    owner_resource: Any
+    """Resource type that owns this metafield (e.g. `article`)"""
+    created_at: Any
+    """ISO 8601 timestamp when the metafield was created"""
+    updated_at: Any
+    """ISO 8601 timestamp when the metafield was last updated"""
+
+
+class MetafieldArticlesStringFilter(TypedDict, total=False):
+    """String fields for text search conditions (like, fuzzy, keyword)."""
+    id: str
+    """Unique identifier for the metafield"""
+    namespace: str
+    """Container namespace for the metafield"""
+    key: str
+    """Identifier key for the metafield"""
+    value: str
+    """The metafield value"""
+    type_: str
+    """The metafield's information type"""
+    description: str
+    """Human-readable description of the metafield"""
+    owner_id: str
+    """Identifier of the article that owns this metafield"""
+    owner_resource: str
+    """Resource type that owns this metafield (e.g. `article`)"""
+    created_at: str
+    """ISO 8601 timestamp when the metafield was created"""
+    updated_at: str
+    """ISO 8601 timestamp when the metafield was last updated"""
+
+
+class MetafieldArticlesSortFilter(TypedDict, total=False):
+    """Available fields for sorting metafield_articles search results."""
+    id: AirbyteSortOrder
+    """Unique identifier for the metafield"""
+    namespace: AirbyteSortOrder
+    """Container namespace for the metafield"""
+    key: AirbyteSortOrder
+    """Identifier key for the metafield"""
+    value: AirbyteSortOrder
+    """The metafield value"""
+    type_: AirbyteSortOrder
+    """The metafield's information type"""
+    description: AirbyteSortOrder
+    """Human-readable description of the metafield"""
+    owner_id: AirbyteSortOrder
+    """Identifier of the article that owns this metafield"""
+    owner_resource: AirbyteSortOrder
+    """Resource type that owns this metafield (e.g. `article`)"""
+    created_at: AirbyteSortOrder
+    """ISO 8601 timestamp when the metafield was created"""
+    updated_at: AirbyteSortOrder
+    """ISO 8601 timestamp when the metafield was last updated"""
+
+
+# Entity-specific condition types for metafield_articles
+class MetafieldArticlesEqCondition(TypedDict, total=False):
+    """Equal to: field equals value."""
+    eq: MetafieldArticlesSearchFilter
+
+
+class MetafieldArticlesNeqCondition(TypedDict, total=False):
+    """Not equal to: field does not equal value."""
+    neq: MetafieldArticlesSearchFilter
+
+
+class MetafieldArticlesGtCondition(TypedDict, total=False):
+    """Greater than: field > value."""
+    gt: MetafieldArticlesSearchFilter
+
+
+class MetafieldArticlesGteCondition(TypedDict, total=False):
+    """Greater than or equal: field >= value."""
+    gte: MetafieldArticlesSearchFilter
+
+
+class MetafieldArticlesLtCondition(TypedDict, total=False):
+    """Less than: field < value."""
+    lt: MetafieldArticlesSearchFilter
+
+
+class MetafieldArticlesLteCondition(TypedDict, total=False):
+    """Less than or equal: field <= value."""
+    lte: MetafieldArticlesSearchFilter
+
+
+class MetafieldArticlesLikeCondition(TypedDict, total=False):
+    """Partial string match with % wildcards."""
+    like: MetafieldArticlesStringFilter
+
+
+class MetafieldArticlesFuzzyCondition(TypedDict, total=False):
+    """Ordered word text match (case-insensitive)."""
+    fuzzy: MetafieldArticlesStringFilter
+
+
+class MetafieldArticlesKeywordCondition(TypedDict, total=False):
+    """Keyword text match (any word present)."""
+    keyword: MetafieldArticlesStringFilter
+
+
+class MetafieldArticlesContainsCondition(TypedDict, total=False):
+    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    contains: MetafieldArticlesAnyValueFilter
+
+
+# Reserved keyword conditions using functional TypedDict syntax
+MetafieldArticlesInCondition = TypedDict("MetafieldArticlesInCondition", {"in": MetafieldArticlesInFilter}, total=False)
+"""In list: field value is in list. Example: {"in": {"status": ["active", "pending"]}}"""
+
+MetafieldArticlesNotCondition = TypedDict("MetafieldArticlesNotCondition", {"not": "MetafieldArticlesCondition"}, total=False)
+"""Negates the nested condition."""
+
+MetafieldArticlesAndCondition = TypedDict("MetafieldArticlesAndCondition", {"and": "list[MetafieldArticlesCondition]"}, total=False)
+"""True if all nested conditions are true."""
+
+MetafieldArticlesOrCondition = TypedDict("MetafieldArticlesOrCondition", {"or": "list[MetafieldArticlesCondition]"}, total=False)
+"""True if any nested condition is true."""
+
+MetafieldArticlesAnyCondition = TypedDict("MetafieldArticlesAnyCondition", {"any": MetafieldArticlesAnyValueFilter}, total=False)
+"""Match if ANY element in array field matches nested condition. Example: {"any": {"addresses": {"eq": {"state": "CA"}}}}"""
+
+# Union of all metafield_articles condition types
+MetafieldArticlesCondition = (
+    MetafieldArticlesEqCondition
+    | MetafieldArticlesNeqCondition
+    | MetafieldArticlesGtCondition
+    | MetafieldArticlesGteCondition
+    | MetafieldArticlesLtCondition
+    | MetafieldArticlesLteCondition
+    | MetafieldArticlesInCondition
+    | MetafieldArticlesLikeCondition
+    | MetafieldArticlesFuzzyCondition
+    | MetafieldArticlesKeywordCondition
+    | MetafieldArticlesContainsCondition
+    | MetafieldArticlesNotCondition
+    | MetafieldArticlesAndCondition
+    | MetafieldArticlesOrCondition
+    | MetafieldArticlesAnyCondition
+)
+
+
+class MetafieldArticlesSearchQuery(TypedDict, total=False):
+    """Search query for metafield_articles entity."""
+    filter: MetafieldArticlesCondition
+    sort: list[MetafieldArticlesSortFilter]
 
 
 
