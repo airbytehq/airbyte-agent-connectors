@@ -40,6 +40,8 @@ _PROGRESSIVE_EXECUTE_DESCRIPTION_SUFFIX = [
 
 
 class ConnectorDocsProvider(Protocol):
+    """Provider of connector inspection and skill-doc endpoints."""
+
     async def inspect_connector(self) -> dict[str, Any]: ...
 
     async def read_skill_docs(self, id: str, section: str | None = None) -> dict[str, Any]: ...
