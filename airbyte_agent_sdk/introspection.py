@@ -120,10 +120,13 @@ SEMANTIC_SEARCH_ALPHA_NOTE = (
     "  ALPHA — subject to change. Semantic (similarity) search over the 'transcript' field of Gong call transcripts.\n"
     "  Embeds `prompt` and returns relevance-ranked hits shaped as {entity, metadata}: `entity` has the call fields "
     "(callId, started); `metadata` has the similarity `score`, the matched `context` text, and per-turn attribution (speakerId, topic).\n"
-    "  Semantic and `query` are mutually exclusive — pass one or the other. Results are ordered by similarity, so `sort` is not supported.\n"
-    "  Put any filter in `semantic.filter`; it takes the same shape and operators as `query.filter`.\n"
-    "  `context_size` is the number of characters of surrounding transcript returned per hit; "
-    "it defaults to the full embedded window (2048 characters) and cannot exceed it."
+    "  `query` and `semantic` are mutually exclusive — never pass both in the same request. "
+    "Results are ordered by similarity, so `sort` is not supported.\n"
+    "  When using `semantic`, any filter must go inside `semantic.filter` (same shape/operators as `query.filter`). "
+    "A top-level `query.filter` is ignored when `semantic` is present.\n"
+    "  `context_size` controls how many characters of surrounding transcript are returned per hit "
+    "(default: full 2048-char window, maximum: 2048). Set it large enough for summarization and "
+    "reasoning about follow-up searches so you avoid unnecessary extra calls."
 )
 
 
