@@ -3935,6 +3935,7 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                 ],
             ),
         ],
+        disable_compaction=True,
     ),
     search_field_paths={
         'users': [

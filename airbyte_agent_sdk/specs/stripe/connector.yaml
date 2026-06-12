@@ -55,7 +55,7 @@ info:
     unsupported:
       - "Send a payment reminder to {customer}"
   x-airbyte-context-store:
-    disable_compaction: false
+    disable_compaction: true
     entities:
         - entity: charges
           x-airbyte-name: charges

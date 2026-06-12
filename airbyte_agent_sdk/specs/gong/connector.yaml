@@ -47,7 +47,7 @@ info:
       title: Gong Technical Release Notes
       url: https://help.gong.io/docs/release-notes
   x-airbyte-context-store:
-    disable_compaction: false
+    disable_compaction: true
     entities:
       - entity: users
         x-airbyte-name: users
