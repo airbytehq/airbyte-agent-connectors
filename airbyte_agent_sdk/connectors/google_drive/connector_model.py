@@ -5968,7 +5968,11 @@ GoogleDriveConnectorModel: ConnectorModel = ConnectorModel(
                         'restrictToMyDrive',
                     ],
                     query_params_schema={
-                        'pageToken': {'type': 'string', 'required': False},
+                        'pageToken': {
+                            'type': 'string',
+                            'required': True,
+                            'description': 'Required. Obtain by calling the changes_start_page_token entity GET action first.',
+                        },
                         'pageSize': {
                             'type': 'integer',
                             'required': False,
@@ -6873,6 +6877,7 @@ GoogleDriveConnectorModel: ConnectorModel = ConnectorModel(
                     'freshness': 'live',
                     'example_questions': ['What files changed recently in Google Drive?'],
                     'search_strategy': 'Filter by date range',
+                    'prerequisites': 'Must first call changes_start_page_token GET to obtain the required pageToken parameter.',
                 },
             },
             ai_hints={
@@ -6882,7 +6887,17 @@ GoogleDriveConnectorModel: ConnectorModel = ConnectorModel(
                 'freshness': 'live',
                 'example_questions': ['What files changed recently in Google Drive?'],
                 'search_strategy': 'Filter by date range',
+                'prerequisites': 'Must first call changes_start_page_token GET to obtain the required pageToken parameter.',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='changes',
+                    target_entity='changes_start_page_token',
+                    foreign_key='pageToken',
+                    cardinality='many_to_one',
+                    description='changes requires a pageToken obtained from changes_start_page_token',
+                ),
+            ],
         ),
         EntityDefinition(
             name='changes_start_page_token',
