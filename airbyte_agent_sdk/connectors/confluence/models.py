@@ -67,6 +67,23 @@ class SpacesList(BaseModel):
     results: list[Space] | None = Field(default=None)
     links: SpacesListLinks | None = Field(default=None, alias="_links")
 
+class PageVersion(BaseModel):
+    """Version information"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    created_at: str | None = Field(default=None, alias="createdAt", description="Version creation timestamp")
+    """Version creation timestamp"""
+    message: str | None = Field(default=None, description="Version message")
+    """Version message"""
+    number: int | None = Field(default=None, description="Version number")
+    """Version number"""
+    minor_edit: bool | None = Field(default=None, alias="minorEdit", description="Whether this was a minor edit")
+    """Whether this was a minor edit"""
+    author_id: str | None = Field(default=None, alias="authorId", description="ID of the version author")
+    """ID of the version author"""
+    ncs_step_version: Any | None = Field(default=None, alias="ncsStepVersion", description="NCS step version")
+    """NCS step version"""
+
 class PageBody(BaseModel):
     """Page body content"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -90,23 +107,6 @@ class PageLinks(BaseModel):
     """Tiny UI link"""
     base: str | None = Field(default=None, description="Base URL")
     """Base URL"""
-
-class PageVersion(BaseModel):
-    """Version information"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    created_at: str | None = Field(default=None, alias="createdAt", description="Version creation timestamp")
-    """Version creation timestamp"""
-    message: str | None = Field(default=None, description="Version message")
-    """Version message"""
-    number: int | None = Field(default=None, description="Version number")
-    """Version number"""
-    minor_edit: bool | None = Field(default=None, alias="minorEdit", description="Whether this was a minor edit")
-    """Whether this was a minor edit"""
-    author_id: str | None = Field(default=None, alias="authorId", description="ID of the version author")
-    """ID of the version author"""
-    ncs_step_version: Any | None = Field(default=None, alias="ncsStepVersion", description="NCS step version")
-    """NCS step version"""
 
 class Page(BaseModel):
     """Confluence page object"""
@@ -143,22 +143,14 @@ class PagesList(BaseModel):
     results: list[Page] | None = Field(default=None)
     links: PagesListLinks | None = Field(default=None, alias="_links")
 
-class BlogPostVersion(BaseModel):
-    """Version information"""
+class BlogPostBody(BaseModel):
+    """Blog post body content"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    created_at: str | None = Field(default=None, alias="createdAt", description="Version creation timestamp")
-    """Version creation timestamp"""
-    message: str | None = Field(default=None, description="Version message")
-    """Version message"""
-    number: int | None = Field(default=None, description="Version number")
-    """Version number"""
-    minor_edit: bool | None = Field(default=None, alias="minorEdit", description="Whether this was a minor edit")
-    """Whether this was a minor edit"""
-    author_id: str | None = Field(default=None, alias="authorId", description="ID of the version author")
-    """ID of the version author"""
-    ncs_step_version: Any | None = Field(default=None, alias="ncsStepVersion", description="NCS step version")
-    """NCS step version"""
+    storage: dict[str, Any] | None = Field(default=None, description="Storage format body")
+    """Storage format body"""
+    atlas_doc_format: dict[str, Any] | None = Field(default=None, description="Atlas doc format body")
+    """Atlas doc format body"""
 
 class BlogPostLinks(BaseModel):
     """Links related to the blog post"""
@@ -175,14 +167,22 @@ class BlogPostLinks(BaseModel):
     base: str | None = Field(default=None, description="Base URL")
     """Base URL"""
 
-class BlogPostBody(BaseModel):
-    """Blog post body content"""
+class BlogPostVersion(BaseModel):
+    """Version information"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    storage: dict[str, Any] | None = Field(default=None, description="Storage format body")
-    """Storage format body"""
-    atlas_doc_format: dict[str, Any] | None = Field(default=None, description="Atlas doc format body")
-    """Atlas doc format body"""
+    created_at: str | None = Field(default=None, alias="createdAt", description="Version creation timestamp")
+    """Version creation timestamp"""
+    message: str | None = Field(default=None, description="Version message")
+    """Version message"""
+    number: int | None = Field(default=None, description="Version number")
+    """Version number"""
+    minor_edit: bool | None = Field(default=None, alias="minorEdit", description="Whether this was a minor edit")
+    """Whether this was a minor edit"""
+    author_id: str | None = Field(default=None, alias="authorId", description="ID of the version author")
+    """ID of the version author"""
+    ncs_step_version: Any | None = Field(default=None, alias="ncsStepVersion", description="NCS step version")
+    """NCS step version"""
 
 class BlogPost(BaseModel):
     """Confluence blog post object"""
@@ -252,6 +252,15 @@ class GroupsList(BaseModel):
     size: int | None = Field(default=None)
     links: GroupsListLinks | None = Field(default=None, alias="_links")
 
+class AuditRecordAssociatedobjectsItem(BaseModel):
+    """Nested schema for AuditRecord.associatedObjects_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: str | None = Field(default=None, description="Name of the associated object")
+    """Name of the associated object"""
+    object_type: str | None = Field(default=None, alias="objectType", description="Type of the associated object")
+    """Type of the associated object"""
+
 class AuditRecordAffectedobject(BaseModel):
     """Object affected by the audit event"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -279,15 +288,6 @@ class AuditRecordAuthor(BaseModel):
     """Whether the author is an external collaborator"""
     operations: Any | None = Field(default=None, description="Operations available for the author")
     """Operations available for the author"""
-
-class AuditRecordAssociatedobjectsItem(BaseModel):
-    """Nested schema for AuditRecord.associatedObjects_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: str | None = Field(default=None, description="Name of the associated object")
-    """Name of the associated object"""
-    object_type: str | None = Field(default=None, alias="objectType", description="Type of the associated object")
-    """Type of the associated object"""
 
 class AuditRecord(BaseModel):
     """Confluence audit record"""
