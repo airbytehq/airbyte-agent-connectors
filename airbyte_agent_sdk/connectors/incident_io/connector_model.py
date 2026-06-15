@@ -4453,6 +4453,281 @@ IncidentIoConnectorModel: ConnectorModel = ConnectorModel(
                 'search_strategy': 'Search by name',
             },
         ),
+        EntityDefinition(
+            name='teams',
+            stream_name='teams',
+            actions=[Action.LIST, Action.GET],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/v3/teams',
+                    action=Action.LIST,
+                    description='List all teams in the organisation with cursor-based pagination.',
+                    query_params=['page_size', 'after'],
+                    query_params_schema={
+                        'page_size': {
+                            'type': 'integer',
+                            'required': False,
+                            'default': 25,
+                            'minimum': 1,
+                            'maximum': 250,
+                        },
+                        'after': {'type': 'string', 'required': False},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'teams': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'A team in incident.io',
+                                    'properties': {
+                                        'id': {'type': 'string', 'description': 'Unique ID of the team'},
+                                        'name': {
+                                            'type': ['null', 'string'],
+                                            'description': 'Name of the team',
+                                        },
+                                        'catalog_entry': {
+                                            'type': ['null', 'object'],
+                                            'description': 'Associated catalog entry for enrichment',
+                                            'properties': {
+                                                'id': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'ID of the catalog entry',
+                                                },
+                                                'name': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Name of the catalog entry',
+                                                },
+                                            },
+                                        },
+                                        'members': {
+                                            'type': ['null', 'array'],
+                                            'description': 'Members of the team',
+                                            'items': {
+                                                'type': 'object',
+                                                'properties': {
+                                                    'id': {
+                                                        'type': ['null', 'string'],
+                                                        'description': 'Unique identifier of the user',
+                                                    },
+                                                    'name': {
+                                                        'type': ['null', 'string'],
+                                                        'description': 'Name of the user',
+                                                    },
+                                                    'email': {
+                                                        'type': ['null', 'string'],
+                                                        'description': 'Email address of the user',
+                                                    },
+                                                    'slack_user_id': {
+                                                        'type': ['null', 'string'],
+                                                        'description': 'Slack ID of the user',
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                    'required': ['id'],
+                                    'x-airbyte-entity-name': 'teams',
+                                    'x-airbyte-stream-name': 'teams',
+                                    'x-airbyte-ai-hints': {
+                                        'summary': 'Teams in incident.io with members and catalog entry associations',
+                                        'when_to_use': 'Questions about teams, team members, or team associations',
+                                        'trigger_phrases': [
+                                            'team',
+                                            'teams',
+                                            'team members',
+                                            'group',
+                                        ],
+                                        'freshness': 'live',
+                                        'example_questions': ['What teams exist?', 'Who are the members of each team?'],
+                                        'search_strategy': 'Search by name',
+                                    },
+                                },
+                            },
+                            'pagination_meta': {
+                                'type': 'object',
+                                'description': 'Cursor-based pagination metadata',
+                                'properties': {
+                                    'after': {
+                                        'type': ['null', 'string'],
+                                        'description': 'Cursor to pass as the after parameter to get the next page',
+                                    },
+                                    'page_size': {
+                                        'type': ['null', 'integer'],
+                                        'description': 'Maximum number of results per page',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    record_extractor='$.teams',
+                    meta_extractor={'next_cursor': '$.pagination_meta.after'},
+                ),
+                Action.GET: EndpointDefinition(
+                    method='GET',
+                    path='/v3/teams/{id}',
+                    action=Action.GET,
+                    description='Get a single team by ID.',
+                    path_params=['id'],
+                    path_params_schema={
+                        'id': {'type': 'string', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'team': {
+                                'type': 'object',
+                                'description': 'A team in incident.io',
+                                'properties': {
+                                    'id': {'type': 'string', 'description': 'Unique ID of the team'},
+                                    'name': {
+                                        'type': ['null', 'string'],
+                                        'description': 'Name of the team',
+                                    },
+                                    'catalog_entry': {
+                                        'type': ['null', 'object'],
+                                        'description': 'Associated catalog entry for enrichment',
+                                        'properties': {
+                                            'id': {
+                                                'type': ['null', 'string'],
+                                                'description': 'ID of the catalog entry',
+                                            },
+                                            'name': {
+                                                'type': ['null', 'string'],
+                                                'description': 'Name of the catalog entry',
+                                            },
+                                        },
+                                    },
+                                    'members': {
+                                        'type': ['null', 'array'],
+                                        'description': 'Members of the team',
+                                        'items': {
+                                            'type': 'object',
+                                            'properties': {
+                                                'id': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Unique identifier of the user',
+                                                },
+                                                'name': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Name of the user',
+                                                },
+                                                'email': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Email address of the user',
+                                                },
+                                                'slack_user_id': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Slack ID of the user',
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                                'required': ['id'],
+                                'x-airbyte-entity-name': 'teams',
+                                'x-airbyte-stream-name': 'teams',
+                                'x-airbyte-ai-hints': {
+                                    'summary': 'Teams in incident.io with members and catalog entry associations',
+                                    'when_to_use': 'Questions about teams, team members, or team associations',
+                                    'trigger_phrases': [
+                                        'team',
+                                        'teams',
+                                        'team members',
+                                        'group',
+                                    ],
+                                    'freshness': 'live',
+                                    'example_questions': ['What teams exist?', 'Who are the members of each team?'],
+                                    'search_strategy': 'Search by name',
+                                },
+                            },
+                        },
+                    },
+                    record_extractor='$.team',
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'A team in incident.io',
+                'properties': {
+                    'id': {'type': 'string', 'description': 'Unique ID of the team'},
+                    'name': {
+                        'type': ['null', 'string'],
+                        'description': 'Name of the team',
+                    },
+                    'catalog_entry': {
+                        'type': ['null', 'object'],
+                        'description': 'Associated catalog entry for enrichment',
+                        'properties': {
+                            'id': {
+                                'type': ['null', 'string'],
+                                'description': 'ID of the catalog entry',
+                            },
+                            'name': {
+                                'type': ['null', 'string'],
+                                'description': 'Name of the catalog entry',
+                            },
+                        },
+                    },
+                    'members': {
+                        'type': ['null', 'array'],
+                        'description': 'Members of the team',
+                        'items': {
+                            'type': 'object',
+                            'properties': {
+                                'id': {
+                                    'type': ['null', 'string'],
+                                    'description': 'Unique identifier of the user',
+                                },
+                                'name': {
+                                    'type': ['null', 'string'],
+                                    'description': 'Name of the user',
+                                },
+                                'email': {
+                                    'type': ['null', 'string'],
+                                    'description': 'Email address of the user',
+                                },
+                                'slack_user_id': {
+                                    'type': ['null', 'string'],
+                                    'description': 'Slack ID of the user',
+                                },
+                            },
+                        },
+                    },
+                },
+                'required': ['id'],
+                'x-airbyte-entity-name': 'teams',
+                'x-airbyte-stream-name': 'teams',
+                'x-airbyte-ai-hints': {
+                    'summary': 'Teams in incident.io with members and catalog entry associations',
+                    'when_to_use': 'Questions about teams, team members, or team associations',
+                    'trigger_phrases': [
+                        'team',
+                        'teams',
+                        'team members',
+                        'group',
+                    ],
+                    'freshness': 'live',
+                    'example_questions': ['What teams exist?', 'Who are the members of each team?'],
+                    'search_strategy': 'Search by name',
+                },
+            },
+            ai_hints={
+                'summary': 'Teams in incident.io with members and catalog entry associations',
+                'when_to_use': 'Questions about teams, team members, or team associations',
+                'trigger_phrases': [
+                    'team',
+                    'teams',
+                    'team members',
+                    'group',
+                ],
+                'freshness': 'live',
+                'example_questions': ['What teams exist?', 'Who are the members of each team?'],
+                'search_strategy': 'Search by name',
+            },
+        ),
     ],
     context_store=CacheConfig(
         entities=[
@@ -5589,6 +5864,7 @@ IncidentIoConnectorModel: ConnectorModel = ConnectorModel(
             'List all severities',
             'Show all incident statuses',
             'List all custom fields',
+            'List all teams',
         ],
         context_store_search=[
             'Which incidents were created this week?',

@@ -29,8 +29,8 @@
     "is_multi_auth": false
   },
   "replication_config": null,
-  "custom_description": "Connect to the incident.io API to access incident management data including\nincidents, alerts, escalations, users, schedules, and more. incident.io is an\non-call, status pages, and incident response platform. This connector provides\nread-only access to core incident management entities via the v1 and v2 APIs.\nRequires an API key from your incident.io dashboard (Pro plan or above).\n",
-  "supported_questions": "- List all incidents\n- Show all open incidents\n- List all alerts\n- Show all users\n- List all escalations\n- Show all on-call schedules\n- List all severities\n- Show all incident statuses\n- List all custom fields\n- Which incidents were created this week?\n- What are the most recent high-severity incidents?\n- Who is currently on-call?\n- How many incidents are in triage status?\n- What incidents were updated today?",
+  "custom_description": "Connect to the incident.io API to access incident management data including\nincidents, alerts, escalations, users, teams, schedules, and more. incident.io is an\non-call, status pages, and incident response platform. This connector provides\nread-only access to core incident management entities via the v1, v2, and v3 APIs.\nRequires an API key from your incident.io dashboard (Pro plan or above).\n",
+  "supported_questions": "- List all incidents\n- Show all open incidents\n- List all alerts\n- Show all users\n- List all escalations\n- Show all on-call schedules\n- List all severities\n- Show all incident statuses\n- List all custom fields\n- List all teams\n- Which incidents were created this week?\n- What are the most recent high-severity incidents?\n- Who is currently on-call?\n- How many incidents are in triage status?\n- What incidents were updated today?",
   "unsupported_questions": "- Create a new incident\n- Update an incident's severity\n- Delete an alert\n- Assign someone to an incident role",
   "first_operation": {
     "method_name": "list_incidents",
@@ -869,6 +869,94 @@
         "meta_extractor": null,
         "needs_envelope": null,
         "record_type": "Schedule",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "teams": [
+      {
+        "method_name": "list_teams",
+        "http_method": "get",
+        "path": "/v3/teams",
+        "entity": "teams",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 25
+            },
+            "required": false,
+            "description": "Number of teams per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor for the next page of results",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "TeamsListParams",
+        "response_type": "TeamsListResult",
+        "description": "List all teams in the organisation with cursor-based pagination.",
+        "record_extractor": "$.teams",
+        "meta_extractor": {
+          "next_cursor": "$.pagination_meta.after"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Team]",
+        "meta_fields": [
+          {
+            "name": "next_cursor",
+            "python_name": "next_cursor",
+            "type": "str",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ],
+              "description": "Cursor to pass as the after parameter to get the next page"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_team",
+        "http_method": "get",
+        "path": "/v3/teams/{id}",
+        "entity": "teams",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Team ID"
+          }
+        ],
+        "params_type_name": "TeamsGetParams",
+        "response_type": "Team",
+        "description": "Get a single team by ID.",
+        "record_extractor": "$.team",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Team",
         "meta_fields": null,
         "is_download": false
       }

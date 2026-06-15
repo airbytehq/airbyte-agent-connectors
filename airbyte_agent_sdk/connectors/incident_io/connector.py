@@ -39,6 +39,8 @@ from .types import (
     SchedulesListParams,
     SeveritiesGetParams,
     SeveritiesListParams,
+    TeamsGetParams,
+    TeamsListParams,
     UsersGetParams,
     UsersListParams,
     AirbyteSearchParams,
@@ -86,6 +88,7 @@ from .models import (
     CustomFieldsListResult,
     CatalogTypesListResult,
     SchedulesListResult,
+    TeamsListResult,
     Alert,
     CatalogType,
     CustomField,
@@ -97,6 +100,7 @@ from .models import (
     IncidentUpdate,
     Schedule,
     Severity,
+    Team,
     User,
     AirbyteSearchMeta,
     AirbyteSearchResult,
@@ -141,7 +145,7 @@ class IncidentIoConnector:
 
     connector_name = "incident-io"
     connector_version = "1.0.4"
-    sdk_version = "0.1.242"
+    sdk_version = "0.1.243"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -168,6 +172,8 @@ class IncidentIoConnector:
         ("catalog_types", "get"): None,
         ("schedules", "list"): True,
         ("schedules", "get"): None,
+        ("teams", "list"): True,
+        ("teams", "get"): None,
     }
 
     # Map of (entity, action) -> {python_param_name: api_param_name}
@@ -190,6 +196,8 @@ class IncidentIoConnector:
         ('catalog_types', 'get'): {'id': 'id'},
         ('schedules', 'list'): {'page_size': 'page_size', 'after': 'after'},
         ('schedules', 'get'): {'id': 'id'},
+        ('teams', 'list'): {'page_size': 'page_size', 'after': 'after'},
+        ('teams', 'get'): {'id': 'id'},
     }
 
     # Accepted auth_config types for isinstance validation
@@ -297,6 +305,7 @@ class IncidentIoConnector:
         self.custom_fields = CustomFieldsQuery(self)
         self.catalog_types = CatalogTypesQuery(self)
         self.schedules = SchedulesQuery(self)
+        self.teams = TeamsQuery(self)
 
     # ===== TYPED EXECUTE METHOD (Recommended Interface) =====
 
@@ -575,6 +584,30 @@ class IncidentIoConnector:
         exclude_fields: list[str] | None = ...,
         skip_truncation: bool = ...
     ) -> "Schedule": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["teams"],
+        action: Literal["list"],
+        params: "TeamsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "TeamsListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["teams"],
+        action: Literal["get"],
+        params: "TeamsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "Team": ...
 
 
     @overload
@@ -2328,3 +2361,69 @@ class SchedulesQuery:
                 took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
             ),
         )
+
+class TeamsQuery:
+    """
+    Query class for Teams entity operations.
+    """
+
+    def __init__(self, connector: IncidentIoConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        page_size: int | None = None,
+        after: str | None = None,
+        **kwargs
+    ) -> TeamsListResult:
+        """
+        List all teams in the organisation with cursor-based pagination.
+
+        Args:
+            page_size: Number of teams per page
+            after: Cursor for the next page of results
+            **kwargs: Additional parameters
+
+        Returns:
+            TeamsListResult
+        """
+        params = {k: v for k, v in {
+            "page_size": page_size,
+            "after": after,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("teams", "list", params)
+        # Cast generic envelope to concrete typed result
+        return TeamsListResult(
+            data=result.data,
+            meta=getattr(result, "meta", None)
+        )
+
+
+
+    async def get(
+        self,
+        id: str | None = None,
+        **kwargs
+    ) -> Team:
+        """
+        Get a single team by ID.
+
+        Args:
+            id: Team ID
+            **kwargs: Additional parameters
+
+        Returns:
+            Team
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("teams", "get", params)
+        return result
+
+

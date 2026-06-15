@@ -117,6 +117,15 @@ class SchedulesGetParams(TypedDict):
     """Parameters for schedules.get operation"""
     id: str
 
+class TeamsListParams(TypedDict):
+    """Parameters for teams.list operation"""
+    page_size: NotRequired[int]
+    after: NotRequired[str]
+
+class TeamsGetParams(TypedDict):
+    """Parameters for teams.get operation"""
+    id: str
+
 # ===== SEARCH TYPES =====
 
 # Sort specification
