@@ -1,5 +1,5 @@
 """
-Airtable connector.
+Exa connector.
 """
 
 from __future__ import annotations
@@ -13,40 +13,29 @@ except ImportError:
 
 from pydantic import BaseModel
 
-from .connector_model import AirtableConnectorModel
+from .connector_model import ExaConnectorModel
 from airbyte_agent_sdk.introspection import describe_entities, generate_tool_description
 from airbyte_agent_sdk.translation import DEFAULT_MAX_OUTPUT_CHARS, FrameworkName, translate_exceptions
 from airbyte_agent_sdk.types import AirbyteAuthConfig
 from .types import (
-    BasesListParams,
-    RecordsGetParams,
-    RecordsListParams,
-    TablesListParams,
-    AirbyteSearchParams,
-    BasesSearchFilter,
-    BasesSearchQuery,
-    TablesSearchFilter,
-    TablesSearchQuery,
+    ContentsListParams,
+    ContentsListParamsSummary,
+    SearchResultsListParams,
+    SearchResultsListParamsContents,
+    SimilarResultsListParams,
+    SimilarResultsListParamsContents,
 )
-from .models import AirtableAuthConfig
+from .models import ExaAuthConfig
 
 # Import response models and envelope models at runtime
 from .models import (
-    AirtableCheckResult,
-    AirtableExecuteResult,
-    AirtableExecuteResultWithMeta,
-    BasesListResult,
-    TablesListResult,
-    RecordsListResult,
-    Base,
-    Record,
-    Table,
-    AirbyteSearchMeta,
-    AirbyteSearchResult,
-    BasesSearchData,
-    BasesSearchResult,
-    TablesSearchData,
-    TablesSearchResult,
+    ExaCheckResult,
+    ExaExecuteResult,
+    ExaExecuteResultWithMeta,
+    SearchResultsListResult,
+    ContentsListResult,
+    SimilarResultsListResult,
+    SearchResult,
 )
 
 # TypeVar for decorator type preservation
@@ -55,46 +44,44 @@ _F = TypeVar("_F", bound=Callable[..., Any])
 
 
 
-class AirtableConnector:
+class ExaConnector:
     """
-    Type-safe Airtable API connector.
+    Type-safe Exa API connector.
 
     Auto-generated from OpenAPI specification with full type safety.
     """
 
-    connector_name = "airtable"
-    connector_version = "1.0.8"
+    connector_name = "exa"
+    connector_version = "1.0.0"
     sdk_version = "0.1.245"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
-        ("bases", "list"): True,
-        ("tables", "list"): True,
-        ("records", "list"): True,
-        ("records", "get"): None,
+        ("search_results", "list"): True,
+        ("contents", "list"): True,
+        ("similar_results", "list"): True,
     }
 
     # Map of (entity, action) -> {python_param_name: api_param_name}
     # Used to convert snake_case TypedDict keys to API parameter names in execute()
     _PARAM_MAP = {
-        ('bases', 'list'): {'offset': 'offset'},
-        ('tables', 'list'): {'base_id': 'base_id'},
-        ('records', 'list'): {'base_id': 'base_id', 'table_id_or_name': 'table_id_or_name', 'offset': 'offset', 'page_size': 'pageSize', 'view': 'view', 'filter_by_formula': 'filterByFormula', 'sort': 'sort'},
-        ('records', 'get'): {'base_id': 'base_id', 'table_id_or_name': 'table_id_or_name', 'record_id': 'record_id'},
+        ('search_results', 'list'): {'query': 'query', 'type': 'type', 'category': 'category', 'num_results': 'numResults', 'include_domains': 'includeDomains', 'exclude_domains': 'excludeDomains', 'start_published_date': 'startPublishedDate', 'end_published_date': 'endPublishedDate', 'start_crawl_date': 'startCrawlDate', 'end_crawl_date': 'endCrawlDate', 'contents': 'contents', 'moderation': 'moderation'},
+        ('contents', 'list'): {'urls': 'urls', 'text': 'text', 'highlights': 'highlights', 'summary': 'summary'},
+        ('similar_results', 'list'): {'url': 'url', 'num_results': 'numResults', 'include_domains': 'includeDomains', 'exclude_domains': 'excludeDomains', 'start_published_date': 'startPublishedDate', 'end_published_date': 'endPublishedDate', 'start_crawl_date': 'startCrawlDate', 'end_crawl_date': 'endCrawlDate', 'contents': 'contents'},
     }
 
     # Accepted auth_config types for isinstance validation
-    _ACCEPTED_AUTH_TYPES = (AirtableAuthConfig, AirbyteAuthConfig)
+    _ACCEPTED_AUTH_TYPES = (ExaAuthConfig, AirbyteAuthConfig)
 
     def __init__(
         self,
-        auth_config: AirtableAuthConfig | AirbyteAuthConfig | BaseModel | None = None,
+        auth_config: ExaAuthConfig | AirbyteAuthConfig | BaseModel | None = None,
         on_token_refresh: Any | None = None    ):
         """
-        Initialize a new airtable connector instance.
+        Initialize a new exa connector instance.
 
         Supports both local and hosted execution modes:
-        - Local mode: Provide connector-specific auth config (e.g., AirtableAuthConfig)
+        - Local mode: Provide connector-specific auth config (e.g., ExaAuthConfig)
         - Hosted mode: Provide `AirbyteAuthConfig` with client credentials and either `connector_id` or `workspace_name`
 
         Args:
@@ -104,9 +91,9 @@ class AirtableConnector:
                 Example: lambda tokens: save_to_database(tokens)
         Examples:
             # Local mode (direct API calls)
-            connector = AirtableConnector(auth_config=AirtableAuthConfig(personal_access_token="..."))
+            connector = ExaConnector(auth_config=ExaAuthConfig(api_key="..."))
             # Hosted mode with explicit connector_id (no lookup needed)
-            connector = AirtableConnector(
+            connector = ExaConnector(
                 auth_config=AirbyteAuthConfig(
                     airbyte_client_id="client_abc123",
                     airbyte_client_secret="secret_xyz789",
@@ -115,7 +102,7 @@ class AirtableConnector:
             )
 
             # Hosted mode with lookup by workspace_name
-            connector = AirtableConnector(
+            connector = ExaConnector(
                 auth_config=AirbyteAuthConfig(
                     workspace_name="user-123",
                     organization_id="00000000-0000-0000-0000-000000000123",
@@ -150,15 +137,15 @@ class AirtableConnector:
                 connector_id=auth_config.connector_id,
                 workspace_name=auth_config.workspace_name or "default",
                 organization_id=auth_config.organization_id,
-                connector_definition_id=str(AirtableConnectorModel.id),
-                model=AirtableConnectorModel,
+                connector_definition_id=str(ExaConnectorModel.id),
+                model=ExaConnectorModel,
             )
         else:
             # Local mode: auth_config required (must be connector-specific auth type)
             if not auth_config:
                 raise ValueError(
                     "Either provide AirbyteAuthConfig with client credentials for hosted mode, "
-                    "or AirtableAuthConfig for local mode"
+                    "or ExaAuthConfig for local mode"
                 )
 
             from airbyte_agent_sdk.executor import LocalExecutor
@@ -167,7 +154,7 @@ class AirtableConnector:
             config_values = None
 
             self._executor = LocalExecutor(
-                model=AirtableConnectorModel,
+                model=ExaConnectorModel,
                 auth_config=auth_config.model_dump() if auth_config else None,
                 config_values=config_values,
                 on_token_refresh=on_token_refresh
@@ -176,77 +163,65 @@ class AirtableConnector:
             # Update base_url with server variables if provided
 
         # Initialize entity query objects
-        self.bases = BasesQuery(self)
-        self.tables = TablesQuery(self)
-        self.records = RecordsQuery(self)
+        self.search_results = SearchResultsQuery(self)
+        self.contents = ContentsQuery(self)
+        self.similar_results = SimilarResultsQuery(self)
 
     # ===== TYPED EXECUTE METHOD (Recommended Interface) =====
 
     @overload
     async def execute(
         self,
-        entity: Literal["bases"],
+        entity: Literal["search_results"],
         action: Literal["list"],
-        params: "BasesListParams",
+        params: "SearchResultsListParams",
         *,
         select_fields: list[str] | None = ...,
         exclude_fields: list[str] | None = ...,
         skip_truncation: bool = ...
-    ) -> "BasesListResult": ...
+    ) -> "SearchResultsListResult": ...
 
     @overload
     async def execute(
         self,
-        entity: Literal["tables"],
+        entity: Literal["contents"],
         action: Literal["list"],
-        params: "TablesListParams",
+        params: "ContentsListParams",
         *,
         select_fields: list[str] | None = ...,
         exclude_fields: list[str] | None = ...,
         skip_truncation: bool = ...
-    ) -> "TablesListResult": ...
+    ) -> "ContentsListResult": ...
 
     @overload
     async def execute(
         self,
-        entity: Literal["records"],
+        entity: Literal["similar_results"],
         action: Literal["list"],
-        params: "RecordsListParams",
+        params: "SimilarResultsListParams",
         *,
         select_fields: list[str] | None = ...,
         exclude_fields: list[str] | None = ...,
         skip_truncation: bool = ...
-    ) -> "RecordsListResult": ...
-
-    @overload
-    async def execute(
-        self,
-        entity: Literal["records"],
-        action: Literal["get"],
-        params: "RecordsGetParams",
-        *,
-        select_fields: list[str] | None = ...,
-        exclude_fields: list[str] | None = ...,
-        skip_truncation: bool = ...
-    ) -> "Record": ...
+    ) -> "SimilarResultsListResult": ...
 
 
     @overload
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get", "context_store_search"],
+        action: Literal["list"],
         params: Mapping[str, Any],
         *,
         select_fields: list[str] | None = ...,
         exclude_fields: list[str] | None = ...,
         skip_truncation: bool = ...
-    ) -> AirtableExecuteResult[Any] | AirtableExecuteResultWithMeta[Any, Any] | Any: ...
+    ) -> ExaExecuteResult[Any] | ExaExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get", "context_store_search"],
+        action: Literal["list"],
         params: Mapping[str, Any] | None = None,
         *,
         select_fields: list[str] | None = None,
@@ -309,19 +284,19 @@ class AirtableConnector:
         if has_extractors:
             # With extractors - return Pydantic envelope with data and meta
             if result.meta is not None:
-                return AirtableExecuteResultWithMeta[Any, Any](
+                return ExaExecuteResultWithMeta[Any, Any](
                     data=result.data,
                     meta=result.meta
                 )
             else:
-                return AirtableExecuteResult[Any](data=result.data)
+                return ExaExecuteResult[Any](data=result.data)
         else:
             # No extractors - return raw response data
             return result.data
 
     # ===== HEALTH CHECK METHOD =====
 
-    async def check(self) -> AirtableCheckResult:
+    async def check(self) -> ExaCheckResult:
         """
         Perform a health check to verify connectivity and credentials.
 
@@ -329,7 +304,7 @@ class AirtableConnector:
         the connector can communicate with the API and credentials are valid.
 
         Returns:
-            AirtableCheckResult with status ("healthy" or "unhealthy") and optional error message
+            ExaCheckResult with status ("healthy" or "unhealthy") and optional error message
 
         Example:
             result = await connector.check()
@@ -341,14 +316,14 @@ class AirtableConnector:
         result = await self._executor.check()
 
         if result.success and isinstance(result.data, dict):
-            return AirtableCheckResult(
+            return ExaCheckResult(
                 status=result.data.get("status", "unhealthy"),
                 error=result.data.get("error"),
                 checked_entity=result.data.get("checked_entity"),
                 checked_action=result.data.get("checked_action"),
             )
         else:
-            return AirtableCheckResult(
+            return ExaCheckResult(
                 status="unhealthy",
                 error=result.error or "Unknown error during health check",
             )
@@ -377,17 +352,17 @@ class AirtableConnector:
 
         Usage:
             @mcp.tool()
-            @AirtableConnector.tool_utils
+            @ExaConnector.tool_utils
             async def execute(entity: str, action: str, params: dict):
                 ...
 
             @mcp.tool()
-            @AirtableConnector.tool_utils(update_docstring=False, max_output_chars=None)
+            @ExaConnector.tool_utils(update_docstring=False, max_output_chars=None)
             async def execute(entity: str, action: str, params: dict):
                 ...
 
             @mcp.tool()
-            @AirtableConnector.tool_utils(framework="pydantic_ai", internal_retries=2)
+            @ExaConnector.tool_utils(framework="pydantic_ai", internal_retries=2)
             async def execute(entity: str, action: str, params: dict):
                 ...
 
@@ -414,7 +389,7 @@ class AirtableConnector:
         def decorate(inner: _F) -> _F:
             if update_docstring:
                 description = generate_tool_description(
-                    AirtableConnectorModel,
+                    ExaConnectorModel,
                 )
                 original_doc = inner.__doc__ or ""
                 if original_doc.strip():
@@ -456,7 +431,7 @@ class AirtableConnector:
             for entity in entities:
                 print(f"{entity['entity_name']}: {entity['available_actions']}")
         """
-        return describe_entities(AirtableConnectorModel)
+        return describe_entities(ExaConnectorModel)
 
     def entity_schema(self, entity: str) -> dict[str, Any] | None:
         """
@@ -474,13 +449,13 @@ class AirtableConnector:
                 print(f"Contact properties: {list(schema.get('properties', {}).keys())}")
         """
         entity_def = next(
-            (e for e in AirtableConnectorModel.entities if e.name == entity),
+            (e for e in ExaConnectorModel.entities if e.name == entity),
             None
         )
         if entity_def is None:
             logging.getLogger(__name__).warning(
                 f"Entity '{entity}' not found. Available entities: "
-                f"{[e.name for e in AirtableConnectorModel.entities]}"
+                f"{[e.name for e in ExaConnectorModel.entities]}"
             )
         return entity_def.entity_schema if entity_def else None
 
@@ -511,280 +486,189 @@ class AirtableConnector:
 
 
 
-class BasesQuery:
+class SearchResultsQuery:
     """
-    Query class for Bases entity operations.
+    Query class for SearchResults entity operations.
     """
 
-    def __init__(self, connector: AirtableConnector):
+    def __init__(self, connector: ExaConnector):
         """Initialize query with connector reference."""
         self._connector = connector
 
     async def list(
         self,
-        offset: str | None = None,
+        query: str,
+        type: str | None = None,
+        category: str | None = None,
+        num_results: int | None = None,
+        include_domains: list[str] | None = None,
+        exclude_domains: list[str] | None = None,
+        start_published_date: str | None = None,
+        end_published_date: str | None = None,
+        start_crawl_date: str | None = None,
+        end_crawl_date: str | None = None,
+        contents: SearchResultsListParamsContents | None = None,
+        moderation: bool | None = None,
         **kwargs
-    ) -> BasesListResult:
+    ) -> SearchResultsListResult:
         """
-        Returns a list of all bases the user has access to
+        Perform a search with an Exa prompt-engineered query and retrieve a list
+of relevant results. Optionally request contents (text, highlights, summary)
+inline with the search results. Supports filtering by domain, date, category,
+and number of results.
+
 
         Args:
-            offset: Pagination offset from previous response
+            query: The search query string.
+            type: The type of search. auto intelligently selects the best mode, instant provides lowest latency, fast uses lower-latency models, deep-lite provides lightweight synthesis, deep performs in-depth research with synthesis, and deep-reasoning adds more reasoning for complex searches.
+            category: A data category to focus on for improved result quality.
+            num_results: Number of results to return (max 100).
+            include_domains: List of domains to include. If specified, results will only come from these domains.
+            exclude_domains: List of domains to exclude. If specified, no results will be returned from these domains.
+            start_published_date: Only return links published after this date. ISO 8601 format.
+            end_published_date: Only return links published before this date. ISO 8601 format.
+            start_crawl_date: Only return links crawled by Exa after this date. ISO 8601 format.
+            end_crawl_date: Only return links crawled by Exa before this date. ISO 8601 format.
+            contents: Options for requesting page contents inline with search results.
+            moderation: Enable content moderation to filter unsafe content.
             **kwargs: Additional parameters
 
         Returns:
-            BasesListResult
+            SearchResultsListResult
         """
         params = {k: v for k, v in {
-            "offset": offset,
+            "query": query,
+            "type": type,
+            "category": category,
+            "numResults": num_results,
+            "includeDomains": include_domains,
+            "excludeDomains": exclude_domains,
+            "startPublishedDate": start_published_date,
+            "endPublishedDate": end_published_date,
+            "startCrawlDate": start_crawl_date,
+            "endCrawlDate": end_crawl_date,
+            "contents": contents,
+            "moderation": moderation,
             **kwargs
         }.items() if v is not None}
 
-        result = await self._connector.execute("bases", "list", params)
+        result = await self._connector.execute("search_results", "list", params)
         # Cast generic envelope to concrete typed result
-        return BasesListResult(
-            data=result.data,
-            meta=getattr(result, "meta", None)
-        )
-
-
-
-    async def context_store_search(
-        self,
-        query: BasesSearchQuery,
-        limit: int | None = None,
-        cursor: str | None = None,
-        fields: list[list[str]] | None = None,
-    ) -> BasesSearchResult:
-        """
-        Search bases records from Airbyte cache.
-
-        This operation searches cached data from Airbyte syncs.
-        Only available in hosted execution mode.
-
-        Available filter fields (BasesSearchFilter):
-        - id: Unique identifier for the base
-        - name: Name of the base
-        - permission_level: Permission level for the base
-
-        Args:
-            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
-                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
-            limit: Maximum results to return (default 1000)
-            cursor: Pagination cursor from previous response's meta.cursor
-            fields: Field paths to include in results. Each path is a list of keys for nested access.
-                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
-
-        Returns:
-            BasesSearchResult with typed records, pagination metadata, and optional search metadata
-
-        Raises:
-            NotImplementedError: If called in local execution mode
-        """
-        params: dict[str, Any] = {"query": query}
-        if limit is not None:
-            params["limit"] = limit
-        if cursor is not None:
-            params["cursor"] = cursor
-        if fields is not None:
-            params["fields"] = fields
-
-        result = await self._connector.execute("bases", "context_store_search", params)
-
-        # Parse response into typed result
-        meta_data = result.get("meta")
-        return BasesSearchResult(
-            data=[
-                BasesSearchData(**row)
-                for row in result.get("data", [])
-                if isinstance(row, dict)
-            ],
-            meta=AirbyteSearchMeta(
-                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
-                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
-                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
-            ),
-        )
-
-class TablesQuery:
-    """
-    Query class for Tables entity operations.
-    """
-
-    def __init__(self, connector: AirtableConnector):
-        """Initialize query with connector reference."""
-        self._connector = connector
-
-    async def list(
-        self,
-        base_id: str,
-        **kwargs
-    ) -> TablesListResult:
-        """
-        Returns a list of all tables in the specified base with their schema information
-
-        Args:
-            base_id: The ID of the base
-            **kwargs: Additional parameters
-
-        Returns:
-            TablesListResult
-        """
-        params = {k: v for k, v in {
-            "base_id": base_id,
-            **kwargs
-        }.items() if v is not None}
-
-        result = await self._connector.execute("tables", "list", params)
-        # Cast generic envelope to concrete typed result
-        return TablesListResult(
+        return SearchResultsListResult(
             data=result.data
         )
 
 
 
-    async def context_store_search(
-        self,
-        query: TablesSearchQuery,
-        limit: int | None = None,
-        cursor: str | None = None,
-        fields: list[list[str]] | None = None,
-    ) -> TablesSearchResult:
-        """
-        Search tables records from Airbyte cache.
-
-        This operation searches cached data from Airbyte syncs.
-        Only available in hosted execution mode.
-
-        Available filter fields (TablesSearchFilter):
-        - id: Unique identifier for the table
-        - name: Name of the table
-        - primary_field_id: ID of the primary field
-        - fields: List of fields in the table
-        - views: List of views in the table
-
-        Args:
-            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
-                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
-            limit: Maximum results to return (default 1000)
-            cursor: Pagination cursor from previous response's meta.cursor
-            fields: Field paths to include in results. Each path is a list of keys for nested access.
-                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
-
-        Returns:
-            TablesSearchResult with typed records, pagination metadata, and optional search metadata
-
-        Raises:
-            NotImplementedError: If called in local execution mode
-        """
-        params: dict[str, Any] = {"query": query}
-        if limit is not None:
-            params["limit"] = limit
-        if cursor is not None:
-            params["cursor"] = cursor
-        if fields is not None:
-            params["fields"] = fields
-
-        result = await self._connector.execute("tables", "context_store_search", params)
-
-        # Parse response into typed result
-        meta_data = result.get("meta")
-        return TablesSearchResult(
-            data=[
-                TablesSearchData(**row)
-                for row in result.get("data", [])
-                if isinstance(row, dict)
-            ],
-            meta=AirbyteSearchMeta(
-                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
-                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
-                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
-            ),
-        )
-
-class RecordsQuery:
+class ContentsQuery:
     """
-    Query class for Records entity operations.
+    Query class for Contents entity operations.
     """
 
-    def __init__(self, connector: AirtableConnector):
+    def __init__(self, connector: ExaConnector):
         """Initialize query with connector reference."""
         self._connector = connector
 
     async def list(
         self,
-        base_id: str,
-        table_id_or_name: str,
-        offset: str | None = None,
-        page_size: int | None = None,
-        view: str | None = None,
-        filter_by_formula: str | None = None,
-        sort: str | None = None,
+        urls: list[str],
+        text: Any | None = None,
+        highlights: Any | None = None,
+        summary: ContentsListParamsSummary | None = None,
         **kwargs
-    ) -> RecordsListResult:
+    ) -> ContentsListResult:
         """
-        Returns a paginated list of records from the specified table
+        Get the full page contents, summaries, and metadata for a list of URLs.
+Returns instant results from Exa's cache, with automatic live crawling
+as fallback for uncached pages. Use this to retrieve text, highlights,
+and summaries for specific URLs.
+
 
         Args:
-            base_id: The ID of the base
-            table_id_or_name: The ID or name of the table
-            offset: Pagination offset from previous response
-            page_size: Number of records per page (max 100)
-            view: Name or ID of a view to filter records
-            filter_by_formula: Airtable formula to filter records
-            sort: Sort configuration as JSON array
+            urls: Array of URLs to retrieve contents for.
+            text: Text extraction options. Pass true for defaults or an object for advanced options.
+            highlights: Highlight extraction options. Pass true for defaults or an object for advanced options.
+            summary: Summary generation options.
             **kwargs: Additional parameters
 
         Returns:
-            RecordsListResult
+            ContentsListResult
         """
         params = {k: v for k, v in {
-            "base_id": base_id,
-            "table_id_or_name": table_id_or_name,
-            "offset": offset,
-            "pageSize": page_size,
-            "view": view,
-            "filterByFormula": filter_by_formula,
-            "sort": sort,
+            "urls": urls,
+            "text": text,
+            "highlights": highlights,
+            "summary": summary,
             **kwargs
         }.items() if v is not None}
 
-        result = await self._connector.execute("records", "list", params)
+        result = await self._connector.execute("contents", "list", params)
         # Cast generic envelope to concrete typed result
-        return RecordsListResult(
-            data=result.data,
-            meta=getattr(result, "meta", None)
+        return ContentsListResult(
+            data=result.data
         )
 
 
 
-    async def get(
+class SimilarResultsQuery:
+    """
+    Query class for SimilarResults entity operations.
+    """
+
+    def __init__(self, connector: ExaConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
         self,
-        base_id: str,
-        table_id_or_name: str,
-        record_id: str,
+        url: str,
+        num_results: int | None = None,
+        include_domains: list[str] | None = None,
+        exclude_domains: list[str] | None = None,
+        start_published_date: str | None = None,
+        end_published_date: str | None = None,
+        start_crawl_date: str | None = None,
+        end_crawl_date: str | None = None,
+        contents: SimilarResultsListParamsContents | None = None,
         **kwargs
-    ) -> Record:
+    ) -> SimilarResultsListResult:
         """
-        Returns a single record by ID from the specified table
+        Find web pages similar to a given URL. Uses Exa's embeddings to find
+semantically similar content. Supports filtering by domains and dates.
+
 
         Args:
-            base_id: The ID of the base
-            table_id_or_name: The ID or name of the table
-            record_id: The ID of the record
+            url: The URL to find similar pages for.
+            num_results: Number of similar results to return (max 100).
+            include_domains: List of domains to include. If specified, results will only come from these domains.
+            exclude_domains: List of domains to exclude. If specified, no results will be returned from these domains.
+            start_published_date: Only return links published after this date. ISO 8601 format.
+            end_published_date: Only return links published before this date. ISO 8601 format.
+            start_crawl_date: Only return links crawled by Exa after this date. ISO 8601 format.
+            end_crawl_date: Only return links crawled by Exa before this date. ISO 8601 format.
+            contents: Options for requesting page contents inline with similar page results.
             **kwargs: Additional parameters
 
         Returns:
-            Record
+            SimilarResultsListResult
         """
         params = {k: v for k, v in {
-            "base_id": base_id,
-            "table_id_or_name": table_id_or_name,
-            "record_id": record_id,
+            "url": url,
+            "numResults": num_results,
+            "includeDomains": include_domains,
+            "excludeDomains": exclude_domains,
+            "startPublishedDate": start_published_date,
+            "endPublishedDate": end_published_date,
+            "startCrawlDate": start_crawl_date,
+            "endCrawlDate": end_crawl_date,
+            "contents": contents,
             **kwargs
         }.items() if v is not None}
 
-        result = await self._connector.execute("records", "get", params)
-        return result
+        result = await self._connector.execute("similar_results", "list", params)
+        # Cast generic envelope to concrete typed result
+        return SimilarResultsListResult(
+            data=result.data
+        )
 
 
