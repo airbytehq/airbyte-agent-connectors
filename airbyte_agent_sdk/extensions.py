@@ -45,6 +45,30 @@ Example:
     ```
 """
 
+AIRBYTE_CONNECTOR_DISPLAY_NAME = "x-airbyte-connector-display-name"
+"""
+Extension: x-airbyte-connector-display-name
+Location: OpenAPI Info object
+Type: string
+Required: No
+
+Description:
+    Optional human-facing display name for the connector. When present, this is the
+    preferred name for UI rendering. When absent, x-airbyte-connector-name is used.
+
+    x-airbyte-connector-name remains the stable connector identity used for registry
+    keys, generated package/tool naming, docs, and direct execution.
+
+Example:
+    ```yaml
+    info:
+      title: Exa API
+      version: 1.0.0
+      x-airbyte-connector-name: exa
+      x-airbyte-connector-display-name: Exa
+    ```
+"""
+
 AIRBYTE_EXTERNAL_DOCUMENTATION_URLS = "x-airbyte-external-documentation-urls"
 """
 Extension: x-airbyte-external-documentation-urls

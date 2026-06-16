@@ -784,7 +784,8 @@ $defs:
       Python-level validator and is NOT expressible in JSON Schema, so external\n\
       consumers validating directly against the published YAML (where\n`additionalProperties:\
       \ true` for `Info`) will not see it.\n\nExtensions:\n- x-airbyte-connector-name:\
-      \ Name of the connector (Airbyte extension)\n- x-airbyte-connector-definition-id:\
+      \ Name of the connector (Airbyte extension)\n- x-airbyte-connector-display-name:\
+      \ Optional display name for UI rendering (Airbyte extension)\n- x-airbyte-connector-definition-id:\
       \ UUID of the connector (Airbyte extension)\n- x-airbyte-external-documentation-urls:\
       \ List of external documentation URLs (Airbyte extension)\n- x-airbyte-retry-config:\
       \ Retry configuration for transient errors (Airbyte extension)\n- x-airbyte-example-questions:\
@@ -831,6 +832,12 @@ $defs:
         - type: 'null'
         default: null
         title: X-Airbyte-Connector-Name
+      x-airbyte-connector-display-name:
+        anyOf:
+        - type: string
+        - type: 'null'
+        default: null
+        title: X-Airbyte-Connector-Display-Name
       x-airbyte-connector-definition-id:
         anyOf:
         - format: uuid

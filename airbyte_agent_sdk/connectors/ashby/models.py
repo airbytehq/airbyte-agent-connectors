@@ -32,22 +32,6 @@ class AshbyReplicationConfig(BaseModel):
 
 # ===== RESPONSE TYPE DEFINITIONS (PYDANTIC) =====
 
-class CandidateEmailaddressesItem(BaseModel):
-    """Nested schema for Candidate.emailAddresses_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    value: str | None | None = Field(default=None)
-    type_: str | None | None = Field(default=None, alias="type")
-    is_primary: bool | None | None = Field(default=None, alias="isPrimary")
-
-class CandidatePhonenumbersItem(BaseModel):
-    """Nested schema for Candidate.phoneNumbers_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    value: str | None | None = Field(default=None)
-    type_: str | None | None = Field(default=None, alias="type")
-    is_primary: bool | None | None = Field(default=None, alias="isPrimary")
-
 class CandidateTagsItem(BaseModel):
     """Nested schema for Candidate.tags_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -62,6 +46,22 @@ class CandidateSociallinksItem(BaseModel):
 
     type_: str | None | None = Field(default=None, alias="type")
     url: str | None | None = Field(default=None)
+
+class CandidatePhonenumbersItem(BaseModel):
+    """Nested schema for Candidate.phoneNumbers_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    value: str | None | None = Field(default=None)
+    type_: str | None | None = Field(default=None, alias="type")
+    is_primary: bool | None | None = Field(default=None, alias="isPrimary")
+
+class CandidateEmailaddressesItem(BaseModel):
+    """Nested schema for Candidate.emailAddresses_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    value: str | None | None = Field(default=None)
+    type_: str | None | None = Field(default=None, alias="type")
+    is_primary: bool | None | None = Field(default=None, alias="isPrimary")
 
 class Candidate(BaseModel):
     """Candidate object"""
