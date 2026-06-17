@@ -10,6 +10,7 @@ info:
     read-only access to core incident management entities via the v1, v2, and v3 APIs.
     Requires an API key from your incident.io dashboard (Pro plan or above).
   x-airbyte-connector-name: incident-io
+  x-airbyte-connector-display-name: Incident.io
   x-airbyte-connector-definition-id: 7926da90-399e-4f9f-9833-52d8dc3fcb29
   x-airbyte-replication-version: "0.1.28"
   x-airbyte-replication-compatibility: ">=0.1.28, <1.0.0"

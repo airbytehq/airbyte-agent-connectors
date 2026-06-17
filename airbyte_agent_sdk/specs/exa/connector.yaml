@@ -9,6 +9,7 @@ info:
     Exa's search, contents retrieval, and find-similar endpoints. All endpoints use
     POST requests with JSON bodies. Requires an Exa API key from dashboard.exa.ai.
   x-airbyte-connector-name: exa
+  x-airbyte-connector-display-name: Exa
   x-airbyte-connector-definition-id: 7c3acca3-8781-4a4b-bb10-fd2e4500da18
   x-airbyte-platform-availability:
     state: experimental
