@@ -42,15 +42,15 @@ class AccountVersion(BaseModel):
 
     version_tag: str | None | None = Field(default=None, alias="versionTag")
 
-class AccountChangeauditstampsCreated(BaseModel):
-    """Nested schema for AccountChangeauditstamps.created"""
+class AccountChangeauditstampsLastmodified(BaseModel):
+    """Nested schema for AccountChangeauditstamps.lastModified"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     actor: str | None | None = Field(default=None)
     time: int | None | None = Field(default=None)
 
-class AccountChangeauditstampsLastmodified(BaseModel):
-    """Nested schema for AccountChangeauditstamps.lastModified"""
+class AccountChangeauditstampsCreated(BaseModel):
+    """Nested schema for AccountChangeauditstamps.created"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     actor: str | None | None = Field(default=None)
@@ -96,15 +96,15 @@ class AccountsList(BaseModel):
     elements: list[Account] | None = Field(default=None)
     metadata: AccountsListMetadata | None = Field(default=None)
 
-class AccountUserChangeauditstampsLastmodified(BaseModel):
-    """Nested schema for AccountUserChangeauditstamps.lastModified"""
+class AccountUserChangeauditstampsCreated(BaseModel):
+    """Nested schema for AccountUserChangeauditstamps.created"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     actor: str | None | None = Field(default=None)
     time: int | None | None = Field(default=None)
 
-class AccountUserChangeauditstampsCreated(BaseModel):
-    """Nested schema for AccountUserChangeauditstamps.created"""
+class AccountUserChangeauditstampsLastmodified(BaseModel):
+    """Nested schema for AccountUserChangeauditstamps.lastModified"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     actor: str | None | None = Field(default=None)
@@ -139,26 +139,12 @@ class AccountUsersList(BaseModel):
     elements: list[AccountUser] | None = Field(default=None)
     metadata: AccountUsersListMetadata | None = Field(default=None)
 
-class CampaignUnitcost(BaseModel):
-    """Cost per unit (bid amount)"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    amount: str | None | None = Field(default=None)
-    currency_code: str | None | None = Field(default=None, alias="currencyCode")
-
 class CampaignLocale(BaseModel):
     """Campaign locale settings"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     country: str | None | None = Field(default=None)
     language: str | None | None = Field(default=None)
-
-class CampaignDailybudget(BaseModel):
-    """Daily budget configuration"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    amount: str | None | None = Field(default=None)
-    currency_code: str | None | None = Field(default=None, alias="currencyCode")
 
 class CampaignRunschedule(BaseModel):
     """Campaign run schedule"""
@@ -173,6 +159,12 @@ class CampaignTotalbudget(BaseModel):
 
     amount: str | None | None = Field(default=None)
     currency_code: str | None | None = Field(default=None, alias="currencyCode")
+
+class CampaignVersion(BaseModel):
+    """Version information"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    version_tag: str | None | None = Field(default=None, alias="versionTag")
 
 class CampaignChangeauditstampsCreated(BaseModel):
     """Nested schema for CampaignChangeauditstamps.created"""
@@ -195,11 +187,19 @@ class CampaignChangeauditstamps(BaseModel):
     created: CampaignChangeauditstampsCreated | None | None = Field(default=None)
     last_modified: CampaignChangeauditstampsLastmodified | None | None = Field(default=None, alias="lastModified")
 
-class CampaignVersion(BaseModel):
-    """Version information"""
+class CampaignUnitcost(BaseModel):
+    """Cost per unit (bid amount)"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    version_tag: str | None | None = Field(default=None, alias="versionTag")
+    amount: str | None | None = Field(default=None)
+    currency_code: str | None | None = Field(default=None, alias="currencyCode")
+
+class CampaignDailybudget(BaseModel):
+    """Daily budget configuration"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    amount: str | None | None = Field(default=None)
+    currency_code: str | None | None = Field(default=None, alias="currencyCode")
 
 class Campaign(BaseModel):
     """LinkedIn ad campaign object"""
@@ -255,15 +255,15 @@ class CampaignGroupTotalbudget(BaseModel):
     amount: str | None | None = Field(default=None)
     currency_code: str | None | None = Field(default=None, alias="currencyCode")
 
-class CampaignGroupChangeauditstampsCreated(BaseModel):
-    """Nested schema for CampaignGroupChangeauditstamps.created"""
+class CampaignGroupChangeauditstampsLastmodified(BaseModel):
+    """Nested schema for CampaignGroupChangeauditstamps.lastModified"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     actor: str | None | None = Field(default=None)
     time: int | None | None = Field(default=None)
 
-class CampaignGroupChangeauditstampsLastmodified(BaseModel):
-    """Nested schema for CampaignGroupChangeauditstamps.lastModified"""
+class CampaignGroupChangeauditstampsCreated(BaseModel):
+    """Nested schema for CampaignGroupChangeauditstamps.created"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     actor: str | None | None = Field(default=None)

@@ -11,9 +11,6 @@ info:
   x-airbyte-connector-name: exa
   x-airbyte-connector-display-name: Exa
   x-airbyte-connector-definition-id: 7c3acca3-8781-4a4b-bb10-fd2e4500da18
-  x-airbyte-platform-availability:
-    state: experimental
-    reason: Requires additional QA testing
   x-airbyte-runtime-mode: direct_only
   x-airbyte-skip-context-store: "Search-only API with no persistent data to replicate. All endpoints are stateless POST queries returning ephemeral results."
   x-airbyte-external-documentation-urls:
