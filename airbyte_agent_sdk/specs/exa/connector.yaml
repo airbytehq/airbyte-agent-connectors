@@ -288,6 +288,8 @@ components:
           minItems: 1
           maxItems: 100
           description: Array of URLs to retrieve contents for.
+          x-airbyte-probe-default:
+            - "https://airbyte.io"
         text:
           oneOf:
             - type: boolean
@@ -371,6 +373,7 @@ components:
         url:
           type: string
           description: The URL to find similar pages for.
+          x-airbyte-probe-default: "https://airbyte.io"
         numResults:
           type: integer
           minimum: 1

@@ -390,6 +390,9 @@ ExaConnectorModel: ConnectorModel = ConnectorModel(
                         'highlights',
                         'summary',
                     ],
+                    request_body_probe_defaults={
+                        'urls': ['https://airbyte.io'],
+                    },
                     request_schema={
                         'type': 'object',
                         'properties': {
@@ -399,6 +402,7 @@ ExaConnectorModel: ConnectorModel = ConnectorModel(
                                 'minItems': 1,
                                 'maxItems': 100,
                                 'description': 'Array of URLs to retrieve contents for.',
+                                'x-airbyte-probe-default': ['https://airbyte.io'],
                             },
                             'text': {
                                 'oneOf': [
@@ -656,10 +660,15 @@ ExaConnectorModel: ConnectorModel = ConnectorModel(
                         'contents',
                     ],
                     request_body_defaults={'numResults': 10},
+                    request_body_probe_defaults={'url': 'https://airbyte.io'},
                     request_schema={
                         'type': 'object',
                         'properties': {
-                            'url': {'type': 'string', 'description': 'The URL to find similar pages for.'},
+                            'url': {
+                                'type': 'string',
+                                'description': 'The URL to find similar pages for.',
+                                'x-airbyte-probe-default': 'https://airbyte.io',
+                            },
                             'numResults': {
                                 'type': 'integer',
                                 'minimum': 1,
