@@ -522,7 +522,10 @@ class BearerAuthStrategy(AuthStrategy):
         token_value = extract_secret_value(token)
 
         # Inject into headers
-        headers[header_name] = f"{prefix} {token_value}"
+        if prefix:
+            headers[header_name] = f"{prefix} {token_value}"
+        else:
+            headers[header_name] = token_value
 
         additional_headers = config.get("additional_headers")
         if additional_headers:
@@ -647,7 +650,10 @@ class OAuth2AuthStrategy(AuthStrategy):
         token_value = extract_secret_value(access_token)
 
         # Inject OAuth2 Bearer token
-        headers[header_name] = f"{prefix} {token_value}"
+        if prefix:
+            headers[header_name] = f"{prefix} {token_value}"
+        else:
+            headers[header_name] = token_value
 
         # Inject additional headers if configured
         additional_headers = config.get("additional_headers")
