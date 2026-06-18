@@ -143,6 +143,15 @@ class PagesList(BaseModel):
     results: list[Page] | None = Field(default=None)
     links: PagesListLinks | None = Field(default=None, alias="_links")
 
+class BlogPostBody(BaseModel):
+    """Blog post body content"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    storage: dict[str, Any] | None = Field(default=None, description="Storage format body")
+    """Storage format body"""
+    atlas_doc_format: dict[str, Any] | None = Field(default=None, description="Atlas doc format body")
+    """Atlas doc format body"""
+
 class BlogPostVersion(BaseModel):
     """Version information"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -174,15 +183,6 @@ class BlogPostLinks(BaseModel):
     """Tiny UI link"""
     base: str | None = Field(default=None, description="Base URL")
     """Base URL"""
-
-class BlogPostBody(BaseModel):
-    """Blog post body content"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    storage: dict[str, Any] | None = Field(default=None, description="Storage format body")
-    """Storage format body"""
-    atlas_doc_format: dict[str, Any] | None = Field(default=None, description="Atlas doc format body")
-    """Atlas doc format body"""
 
 class BlogPost(BaseModel):
     """Confluence blog post object"""
