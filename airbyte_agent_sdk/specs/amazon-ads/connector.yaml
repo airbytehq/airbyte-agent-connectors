@@ -56,6 +56,58 @@ info:
     - sponsored_brands_report_stream
     - sponsored_products_report_stream
 
+  x-airbyte-entity-relationships:
+    - source_entity: portfolios
+      target_entity: profiles
+      foreign_key: Amazon-Advertising-API-Scope
+      target_key: profileId
+      cardinality: many_to_one
+    - source_entity: sponsored_product_campaigns
+      target_entity: profiles
+      foreign_key: Amazon-Advertising-API-Scope
+      target_key: profileId
+      cardinality: many_to_one
+    - source_entity: sponsored_product_ad_groups
+      target_entity: profiles
+      foreign_key: Amazon-Advertising-API-Scope
+      target_key: profileId
+      cardinality: many_to_one
+    - source_entity: sponsored_product_keywords
+      target_entity: profiles
+      foreign_key: Amazon-Advertising-API-Scope
+      target_key: profileId
+      cardinality: many_to_one
+    - source_entity: sponsored_product_product_ads
+      target_entity: profiles
+      foreign_key: Amazon-Advertising-API-Scope
+      target_key: profileId
+      cardinality: many_to_one
+    - source_entity: sponsored_product_targets
+      target_entity: profiles
+      foreign_key: Amazon-Advertising-API-Scope
+      target_key: profileId
+      cardinality: many_to_one
+    - source_entity: sponsored_product_negative_keywords
+      target_entity: profiles
+      foreign_key: Amazon-Advertising-API-Scope
+      target_key: profileId
+      cardinality: many_to_one
+    - source_entity: sponsored_product_negative_targets
+      target_entity: profiles
+      foreign_key: Amazon-Advertising-API-Scope
+      target_key: profileId
+      cardinality: many_to_one
+    - source_entity: sponsored_brands_campaigns
+      target_entity: profiles
+      foreign_key: Amazon-Advertising-API-Scope
+      target_key: profileId
+      cardinality: many_to_one
+    - source_entity: sponsored_brands_ad_groups
+      target_entity: profiles
+      foreign_key: Amazon-Advertising-API-Scope
+      target_key: profileId
+      cardinality: many_to_one
+
   x-airbyte-context-store:
     disable_compaction: true
     entities:

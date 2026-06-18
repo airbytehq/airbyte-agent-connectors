@@ -24,6 +24,7 @@ from airbyte_agent_sdk.schema.extensions import (
     CacheEntityConfig,
     CacheFieldConfig,
     CacheFieldProperty,
+    EntityRelationshipConfig,
 )
 from airbyte_agent_sdk.schema.base import (
     ExampleQuestions,
@@ -680,6 +681,15 @@ AmazonAdsConnectorModel: ConnectorModel = ConnectorModel(
                 'example_questions': ['List all portfolios for one of my profiles', 'Which portfolios are within budget?'],
                 'search_strategy': 'The Amazon-Advertising-API-Scope header is required and must be set to a profileId obtained from listing profiles. First list profiles to get available profileId values, then use a profileId as the Scope header value to list portfolios for that profile.',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='portfolios',
+                    target_entity='profiles',
+                    foreign_key='Amazon-Advertising-API-Scope',
+                    target_key='profileId',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='sponsored_product_campaigns',
@@ -1267,6 +1277,15 @@ AmazonAdsConnectorModel: ConnectorModel = ConnectorModel(
                 'example_questions': ['Show me all sponsored product campaigns', 'What campaigns are currently enabled?', 'Find campaigns with a specific targeting type'],
                 'search_strategy': 'The Amazon-Advertising-API-Scope header is required and must be set to a profileId obtained from listing profiles. First list profiles to get available profileId values, then use a profileId as the Scope header value to list campaigns for that profile.',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='sponsored_product_campaigns',
+                    target_entity='profiles',
+                    foreign_key='Amazon-Advertising-API-Scope',
+                    target_key='profileId',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='sponsored_product_ad_groups',
@@ -1466,6 +1485,15 @@ AmazonAdsConnectorModel: ConnectorModel = ConnectorModel(
                 'example_questions': ['Show me all ad groups in my sponsored product campaigns', 'What ad groups are currently enabled?', 'What is the default bid for my ad groups?'],
                 'search_strategy': 'The Amazon-Advertising-API-Scope header is required and must be set to a profileId obtained from listing profiles. First list profiles to get available profileId values, then use a profileId as the Scope header value to list ad groups for that profile.',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='sponsored_product_ad_groups',
+                    target_entity='profiles',
+                    foreign_key='Amazon-Advertising-API-Scope',
+                    target_key='profileId',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='sponsored_product_keywords',
@@ -1703,6 +1731,15 @@ AmazonAdsConnectorModel: ConnectorModel = ConnectorModel(
                 'example_questions': ['Show me all keywords in my sponsored product campaigns', 'What keywords are currently active?', 'What match types are my keywords using?'],
                 'search_strategy': 'The Amazon-Advertising-API-Scope header is required and must be set to a profileId obtained from listing profiles. First list profiles to get available profileId values, then use a profileId as the Scope header value to list keywords for that profile.',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='sponsored_product_keywords',
+                    target_entity='profiles',
+                    foreign_key='Amazon-Advertising-API-Scope',
+                    target_key='profileId',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='sponsored_product_product_ads',
@@ -1916,6 +1953,15 @@ AmazonAdsConnectorModel: ConnectorModel = ConnectorModel(
                 'example_questions': ['Show me all product ads in my campaigns', 'What ASINs am I currently advertising?', 'Which product ads are enabled?'],
                 'search_strategy': 'The Amazon-Advertising-API-Scope header is required and must be set to a profileId obtained from listing profiles. First list profiles to get available profileId values, then use a profileId as the Scope header value to list product ads for that profile.',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='sponsored_product_product_ads',
+                    target_entity='profiles',
+                    foreign_key='Amazon-Advertising-API-Scope',
+                    target_key='profileId',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='sponsored_product_targets',
@@ -2197,6 +2243,15 @@ AmazonAdsConnectorModel: ConnectorModel = ConnectorModel(
                 'example_questions': ['Show me all targeting clauses in my campaigns', 'What products am I targeting?', 'What are my targeting bids?'],
                 'search_strategy': 'The Amazon-Advertising-API-Scope header is required and must be set to a profileId obtained from listing profiles. First list profiles to get available profileId values, then use a profileId as the Scope header value to list targets for that profile.',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='sponsored_product_targets',
+                    target_entity='profiles',
+                    foreign_key='Amazon-Advertising-API-Scope',
+                    target_key='profileId',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='sponsored_product_negative_keywords',
@@ -2419,6 +2474,15 @@ AmazonAdsConnectorModel: ConnectorModel = ConnectorModel(
                 'example_questions': ['Show me all negative keywords in my campaigns', 'What search terms am I excluding?', 'Which ad groups have negative keywords?'],
                 'search_strategy': 'The Amazon-Advertising-API-Scope header is required and must be set to a profileId obtained from listing profiles. First list profiles to get available profileId values, then use a profileId as the Scope header value to list negative keywords for that profile.',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='sponsored_product_negative_keywords',
+                    target_entity='profiles',
+                    foreign_key='Amazon-Advertising-API-Scope',
+                    target_key='profileId',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='sponsored_product_negative_targets',
@@ -2689,6 +2753,15 @@ AmazonAdsConnectorModel: ConnectorModel = ConnectorModel(
                 'example_questions': ['Show me all negative targeting clauses', 'What products or categories am I excluding from targeting?'],
                 'search_strategy': 'The Amazon-Advertising-API-Scope header is required and must be set to a profileId obtained from listing profiles. First list profiles to get available profileId values, then use a profileId as the Scope header value to list negative targets for that profile.',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='sponsored_product_negative_targets',
+                    target_entity='profiles',
+                    foreign_key='Amazon-Advertising-API-Scope',
+                    target_key='profileId',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='sponsored_brands_campaigns',
@@ -2963,6 +3036,15 @@ AmazonAdsConnectorModel: ConnectorModel = ConnectorModel(
                 'example_questions': ['Show me all sponsored brands campaigns', 'What SB campaigns are currently running?', 'What are my sponsored brands campaign budgets?'],
                 'search_strategy': 'The Amazon-Advertising-API-Scope header is required and must be set to a profileId obtained from listing profiles. First list profiles to get available profileId values, then use a profileId as the Scope header value to list SB campaigns for that profile.',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='sponsored_brands_campaigns',
+                    target_entity='profiles',
+                    foreign_key='Amazon-Advertising-API-Scope',
+                    target_key='profileId',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='sponsored_brands_ad_groups',
@@ -3144,6 +3226,15 @@ AmazonAdsConnectorModel: ConnectorModel = ConnectorModel(
                 'example_questions': ['Show me all ad groups in my sponsored brands campaigns', 'What are my SB ad group bids?'],
                 'search_strategy': 'The Amazon-Advertising-API-Scope header is required and must be set to a profileId obtained from listing profiles. First list profiles to get available profileId values, then use a profileId as the Scope header value to list SB ad groups for that profile.',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='sponsored_brands_ad_groups',
+                    target_entity='profiles',
+                    foreign_key='Amazon-Advertising-API-Scope',
+                    target_key='profileId',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
     ],
     context_store=CacheConfig(
