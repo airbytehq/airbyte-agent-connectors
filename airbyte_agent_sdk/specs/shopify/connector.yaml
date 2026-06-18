@@ -9,9 +9,6 @@ info:
     orders, products, inventory, and more.
   x-airbyte-connector-name: shopify
   x-airbyte-connector-definition-id: 9da77001-af33-4bcd-be46-6252bf9342b9
-  x-airbyte-platform-availability:
-    state: experimental
-    reason: Requires additional QA testing
   x-airbyte-replication-version: "3.4.0"
   x-airbyte-replication-compatibility: ">=3.4.0, <4.0.0"
   x-airbyte-external-documentation-urls:
