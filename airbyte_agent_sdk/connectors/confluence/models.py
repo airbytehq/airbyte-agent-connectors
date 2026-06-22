@@ -143,6 +143,15 @@ class PagesList(BaseModel):
     results: list[Page] | None = Field(default=None)
     links: PagesListLinks | None = Field(default=None, alias="_links")
 
+class BlogPostBody(BaseModel):
+    """Blog post body content"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    storage: dict[str, Any] | None = Field(default=None, description="Storage format body")
+    """Storage format body"""
+    atlas_doc_format: dict[str, Any] | None = Field(default=None, description="Atlas doc format body")
+    """Atlas doc format body"""
+
 class BlogPostVersion(BaseModel):
     """Version information"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -159,15 +168,6 @@ class BlogPostVersion(BaseModel):
     """ID of the version author"""
     ncs_step_version: Any | None = Field(default=None, alias="ncsStepVersion", description="NCS step version")
     """NCS step version"""
-
-class BlogPostBody(BaseModel):
-    """Blog post body content"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    storage: dict[str, Any] | None = Field(default=None, description="Storage format body")
-    """Storage format body"""
-    atlas_doc_format: dict[str, Any] | None = Field(default=None, description="Atlas doc format body")
-    """Atlas doc format body"""
 
 class BlogPostLinks(BaseModel):
     """Links related to the blog post"""
@@ -252,14 +252,14 @@ class GroupsList(BaseModel):
     size: int | None = Field(default=None)
     links: GroupsListLinks | None = Field(default=None, alias="_links")
 
-class AuditRecordAffectedobject(BaseModel):
-    """Object affected by the audit event"""
+class AuditRecordAssociatedobjectsItem(BaseModel):
+    """Nested schema for AuditRecord.associatedObjects_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    name: str | None = Field(default=None, description="Name of the affected object")
-    """Name of the affected object"""
-    object_type: str | None = Field(default=None, alias="objectType", description="Type of the affected object")
-    """Type of the affected object"""
+    name: str | None = Field(default=None, description="Name of the associated object")
+    """Name of the associated object"""
+    object_type: str | None = Field(default=None, alias="objectType", description="Type of the associated object")
+    """Type of the associated object"""
 
 class AuditRecordAuthor(BaseModel):
     """User who triggered the audit event"""
@@ -280,14 +280,14 @@ class AuditRecordAuthor(BaseModel):
     operations: Any | None = Field(default=None, description="Operations available for the author")
     """Operations available for the author"""
 
-class AuditRecordAssociatedobjectsItem(BaseModel):
-    """Nested schema for AuditRecord.associatedObjects_item"""
+class AuditRecordAffectedobject(BaseModel):
+    """Object affected by the audit event"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    name: str | None = Field(default=None, description="Name of the associated object")
-    """Name of the associated object"""
-    object_type: str | None = Field(default=None, alias="objectType", description="Type of the associated object")
-    """Type of the associated object"""
+    name: str | None = Field(default=None, description="Name of the affected object")
+    """Name of the affected object"""
+    object_type: str | None = Field(default=None, alias="objectType", description="Type of the affected object")
+    """Type of the affected object"""
 
 class AuditRecord(BaseModel):
     """Confluence audit record"""

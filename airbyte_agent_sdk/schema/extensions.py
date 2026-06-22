@@ -79,6 +79,174 @@ class CacheFieldProperty(BaseModel):
     properties: dict[str, "CacheFieldProperty"] | None = None
 
 
+class SemanticSampling(BaseModel):
+    """
+    Sampling configuration for semantic search (the `sampling` block).
+
+    Declares how a decoded field value is split into discrete units that get
+    embedded. The `sample_type` makes the cardinality intent explicit:
+
+    - ``element``: the field value is a structured collection; ``sample_path``
+      anchors each unit and ``text_path`` selects the text leaves under that
+      anchor.
+    - ``regex``: the decoded text is split into units with ``split_pattern``.
+    - ``whole``: the decoded value is a single unit (optionally with ``text_path``
+      to pull text leaves out of a structured value).
+
+    Used inside x-airbyte-semantic-search on a context-store field.
+    """
+
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+
+    sample_type: Literal["element", "regex", "whole"] = Field(
+        description="Explicit cardinality intent for how the field value is split into units.",
+    )
+    unit_label: str = Field(
+        default="chunk",
+        description="Names the unit; drives table/column naming. Defaults to 'chunk'.",
+    )
+    sample_path: str | None = Field(
+        default=None,
+        description="element: anchor (relative to the field value) for each unit.",
+    )
+    text_path: str | None = Field(
+        default=None,
+        description="element/whole: path to text leaves under the anchor.",
+    )
+    stitch: str = Field(
+        default="\n",
+        description="Separator used to join multiple text leaves into a unit's text. Defaults to '\\n'.",
+    )
+    split_pattern: str | None = Field(
+        default=None,
+        description="regex: boundary pattern used to split the decoded text into samples.",
+    )
+
+
+class SemanticWindowing(BaseModel):
+    """
+    Windowing configuration for semantic search (the `windowing` block).
+
+    Controls how much surrounding context is embedded alongside each unit.
+    When ``context_max_chars`` is 0 or omitted, only the unit itself is embedded.
+
+    Used inside x-airbyte-semantic-search on a context-store field.
+    """
+
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+
+    context_max_chars: int = Field(
+        default=0,
+        ge=0,
+        description="Max characters of surrounding context to embed. 0/omitted => embed the unit only.",
+    )
+    context_boundary: Literal["whole_unit", "char", "regex"] = Field(
+        default="whole_unit",
+        description="How context is bounded around a unit. Defaults to 'whole_unit'.",
+    )
+    context_boundary_pattern: str | None = Field(
+        default=None,
+        description="Boundary pattern used when context_boundary is 'regex'.",
+    )
+
+
+class SemanticEmbedding(BaseModel):
+    """
+    Embedding configuration for semantic search (the `embedding` block).
+
+    Used inside x-airbyte-semantic-search on a context-store field.
+    """
+
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+
+    model: str = Field(
+        description="Embedding model identifier (e.g. 'text-embedding-3-small').",
+    )
+
+
+class SemanticMetadataField(BaseModel):
+    """
+    A single metadata field carried alongside each embedded unit.
+
+    ``type`` MUST be ``string`` or ``array``. ``array`` is required when the
+    metadata ``path`` resolves below the sample anchor (cardinality > 1 per
+    unit) -- i.e. when the path yields multiple values for a single unit.
+
+    Used inside x-airbyte-semantic-search on a context-store field.
+    """
+
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+
+    name: str = Field(description="Metadata column name.")
+    path: str = Field(
+        description="Path to the metadata value relative to the sample anchor (a leading '/' resolves from the record root).",
+    )
+    type: Literal["string", "array"] = Field(
+        default="string",
+        description="Metadata value type. Use 'array' when the path resolves below the sample anchor (cardinality > 1 per unit); 'string' otherwise.",
+    )
+
+
+class SemanticSearchConfig(BaseModel):
+    """
+    Semantic search configuration extension (x-airbyte-semantic-search).
+
+    Declares, per context-store field, how the raw field value is decoded,
+    split into units, windowed, embedded, and what metadata travels with each
+    unit. This is the annotation contract consumed by the semantic search
+    engine.
+
+    Example YAML usage (on a context-store field):
+        x-airbyte-semantic-search:
+          content_type: json
+          sampling:
+            sample_type: element
+            unit_label: speaker_turn
+            sample_path: "[]"
+            text_path: "sentences[].text"
+            stitch: "\\n"
+          windowing:
+            context_max_chars: 2048
+            context_boundary: whole_unit
+          embedding:
+            model: text-embedding-3-small
+          metadata:
+            - { name: speakerId, path: "speakerId", type: string }
+            - { name: callId, path: "/callId", type: string }
+    """
+
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+
+    content_type: Literal["json", "html", "xhtml_storage", "adf", "markdown", "plaintext"] = Field(
+        description="How to decode the raw field value before sampling.",
+    )
+    sampling: SemanticSampling
+    windowing: SemanticWindowing = Field(default_factory=SemanticWindowing)
+    embedding: SemanticEmbedding
+    metadata: list[SemanticMetadataField] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def validate_sampling_consistency(self) -> "SemanticSearchConfig":
+        """Validate sample_type-specific field requirements at parse time."""
+        sampling = self.sampling
+        sample_type = sampling.sample_type
+        if sample_type == "element":
+            if not sampling.sample_path or not sampling.text_path:
+                raise ValueError("x-airbyte-semantic-search: sampling.sample_type 'element' requires both 'sample_path' and 'text_path'.")
+        elif sample_type == "regex":
+            if not sampling.split_pattern:
+                raise ValueError("x-airbyte-semantic-search: sampling.sample_type 'regex' requires 'split_pattern'.")
+        elif sample_type == "whole":
+            if sampling.sample_path or sampling.split_pattern:
+                raise ValueError(
+                    "x-airbyte-semantic-search: sampling.sample_type 'whole' must not set "
+                    "'sample_path' or 'split_pattern' (only an optional 'text_path' is allowed)."
+                )
+        if self.windowing.context_boundary == "regex" and not self.windowing.context_boundary_pattern:
+            raise ValueError("x-airbyte-semantic-search: windowing.context_boundary 'regex' requires 'context_boundary_pattern'.")
+        return self
+
+
 class CacheFieldConfig(BaseModel):
     """
     Field configuration for cache mapping.
@@ -99,6 +267,13 @@ class CacheFieldConfig(BaseModel):
     type: str | list[str]
     description: str
     properties: dict[str, CacheFieldProperty] | None = None
+    x_airbyte_semantic_search: SemanticSearchConfig | None = Field(
+        default=None,
+        alias="x-airbyte-semantic-search",
+        description="Semantic search annotation for this field (dormant contract; "
+        "describes how the field value is decoded, sampled, windowed, embedded, "
+        "and what metadata travels with each unit).",
+    )
 
     @property
     def cache_name(self) -> str:

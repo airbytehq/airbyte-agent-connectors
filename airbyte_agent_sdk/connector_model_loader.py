@@ -263,6 +263,48 @@ def _extract_search_field_paths(spec: OpenAPIConnector) -> dict[str, list[str]]:
     return search_fields
 
 
+def _extract_semantic_search_fields(spec: OpenAPIConnector) -> dict[str, dict[str, Any]]:
+    """Propagate x-airbyte-semantic-search annotations into the runtime model.
+
+    Parse-through only: returns a mapping of user-facing entity name -> field
+    name -> SemanticSearchConfig. Not consumed by any engine in Phase 1.
+
+    `spec` is always a parsed ``OpenAPIConnector``, so entities/fields are
+    Pydantic models -- model-only ``getattr`` access is sufficient here. The
+    dict-vs-model fallbacks in the sibling ``_extract_search_field_paths`` are
+    legacy defensive handling, not a contract this needs to mirror.
+    """
+    cache_config = getattr(spec.info, "x_airbyte_context_store", None)
+    entities = getattr(cache_config, "entities", None)
+    if not isinstance(entities, list):
+        return {}
+
+    semantic_fields: dict[str, dict[str, Any]] = {}
+    for entity in entities:
+        entity_name = getattr(entity, "entity", None)
+        if not isinstance(entity_name, str) or not entity_name:
+            continue
+
+        fields = getattr(entity, "fields", None)
+        if not isinstance(fields, list):
+            continue
+
+        field_configs: dict[str, Any] = {}
+        for field in fields:
+            semantic = getattr(field, "x_airbyte_semantic_search", None)
+            if semantic is None:
+                continue
+            field_name = getattr(field, "name", None)
+            if not isinstance(field_name, str) or not field_name:
+                continue
+            field_configs[field_name] = semantic
+
+        if field_configs:
+            semantic_fields[entity_name] = field_configs
+
+    return semantic_fields
+
+
 def parse_openapi_spec(raw_config: dict) -> OpenAPIConnector:
     """Parse OpenAPI specification from YAML.
 
@@ -664,6 +706,7 @@ def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel
         raise InvalidOpenAPIError("Missing required x-airbyte-connector-definition-id field")
 
     search_field_paths = _extract_search_field_paths(spec)
+    semantic_search_fields = _extract_semantic_search_fields(spec)
 
     # Extract example questions from spec (serialized separately from openapi_spec)
     example_questions = getattr(spec.info, "x_airbyte_example_questions", None)
@@ -680,6 +723,7 @@ def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel
         retry_config=retry_config,
         context_store=spec.info.x_airbyte_context_store,
         search_field_paths=search_field_paths,
+        semantic_search_fields=semantic_search_fields,
         example_questions=example_questions,
         server_variable_defaults=server_variable_defaults,
         scoping=scoping,

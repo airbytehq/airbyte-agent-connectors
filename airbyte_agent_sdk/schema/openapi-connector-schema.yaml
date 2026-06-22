@@ -366,6 +366,14 @@ $defs:
         - type: 'null'
         default: null
         title: Properties
+      x-airbyte-semantic-search:
+        anyOf:
+        - $ref: '#/$defs/SemanticSearchConfig'
+        - type: 'null'
+        default: null
+        description: Semantic search annotation for this field (dormant contract;
+          describes how the field value is decoded, sampled, windowed, embedded, and
+          what metadata travels with each unit).
     required:
     - name
     - type
@@ -2164,6 +2172,198 @@ $defs:
     required:
     - type
     title: SecurityScheme
+    type: object
+  SemanticEmbedding:
+    additionalProperties: false
+    description: 'Embedding configuration for semantic search (the `embedding` block).
+
+
+      Used inside x-airbyte-semantic-search on a context-store field.'
+    properties:
+      model:
+        description: Embedding model identifier (e.g. 'text-embedding-3-small').
+        title: Model
+        type: string
+    required:
+    - model
+    title: SemanticEmbedding
+    type: object
+  SemanticMetadataField:
+    additionalProperties: false
+    description: 'A single metadata field carried alongside each embedded unit.
+
+
+      ``type`` MUST be ``string`` or ``array``. ``array`` is required when the
+
+      metadata ``path`` resolves below the sample anchor (cardinality > 1 per
+
+      unit) -- i.e. when the path yields multiple values for a single unit.
+
+
+      Used inside x-airbyte-semantic-search on a context-store field.'
+    properties:
+      name:
+        description: Metadata column name.
+        title: Name
+        type: string
+      path:
+        description: Path to the metadata value relative to the sample anchor (a leading
+          '/' resolves from the record root).
+        title: Path
+        type: string
+      type:
+        default: string
+        description: Metadata value type. Use 'array' when the path resolves below
+          the sample anchor (cardinality > 1 per unit); 'string' otherwise.
+        enum:
+        - string
+        - array
+        title: Type
+        type: string
+    required:
+    - name
+    - path
+    title: SemanticMetadataField
+    type: object
+  SemanticSampling:
+    additionalProperties: false
+    description: "Sampling configuration for semantic search (the `sampling` block).\n\
+      \nDeclares how a decoded field value is split into discrete units that get\n\
+      embedded. The `sample_type` makes the cardinality intent explicit:\n\n- ``element``:\
+      \ the field value is a structured collection; ``sample_path``\n  anchors each\
+      \ unit and ``text_path`` selects the text leaves under that\n  anchor.\n- ``regex``:\
+      \ the decoded text is split into units with ``split_pattern``.\n- ``whole``:\
+      \ the decoded value is a single unit (optionally with ``text_path``\n  to pull\
+      \ text leaves out of a structured value).\n\nUsed inside x-airbyte-semantic-search\
+      \ on a context-store field."
+    properties:
+      sample_type:
+        description: Explicit cardinality intent for how the field value is split
+          into units.
+        enum:
+        - element
+        - regex
+        - whole
+        title: Sample Type
+        type: string
+      unit_label:
+        default: chunk
+        description: Names the unit; drives table/column naming. Defaults to 'chunk'.
+        title: Unit Label
+        type: string
+      sample_path:
+        anyOf:
+        - type: string
+        - type: 'null'
+        default: null
+        description: 'element: anchor (relative to the field value) for each unit.'
+        title: Sample Path
+      text_path:
+        anyOf:
+        - type: string
+        - type: 'null'
+        default: null
+        description: 'element/whole: path to text leaves under the anchor.'
+        title: Text Path
+      stitch:
+        default: '
+
+          '
+        description: Separator used to join multiple text leaves into a unit's text.
+          Defaults to '\n'.
+        title: Stitch
+        type: string
+      split_pattern:
+        anyOf:
+        - type: string
+        - type: 'null'
+        default: null
+        description: 'regex: boundary pattern used to split the decoded text into
+          samples.'
+        title: Split Pattern
+    required:
+    - sample_type
+    title: SemanticSampling
+    type: object
+  SemanticSearchConfig:
+    additionalProperties: false
+    description: "Semantic search configuration extension (x-airbyte-semantic-search).\n\
+      \nDeclares, per context-store field, how the raw field value is decoded,\nsplit\
+      \ into units, windowed, embedded, and what metadata travels with each\nunit.\
+      \ This is the annotation contract consumed by the semantic search\nengine.\n\
+      \nExample YAML usage (on a context-store field):\n    x-airbyte-semantic-search:\n\
+      \      content_type: json\n      sampling:\n        sample_type: element\n \
+      \       unit_label: speaker_turn\n        sample_path: \"[]\"\n        text_path:\
+      \ \"sentences[].text\"\n        stitch: \"\\n\"\n      windowing:\n        context_max_chars:\
+      \ 2048\n        context_boundary: whole_unit\n      embedding:\n        model:\
+      \ text-embedding-3-small\n      metadata:\n        - { name: speakerId, path:\
+      \ \"speakerId\", type: string }\n        - { name: callId, path: \"/callId\"\
+      , type: string }"
+    properties:
+      content_type:
+        description: How to decode the raw field value before sampling.
+        enum:
+        - json
+        - html
+        - xhtml_storage
+        - adf
+        - markdown
+        - plaintext
+        title: Content Type
+        type: string
+      sampling:
+        $ref: '#/$defs/SemanticSampling'
+      windowing:
+        $ref: '#/$defs/SemanticWindowing'
+      embedding:
+        $ref: '#/$defs/SemanticEmbedding'
+      metadata:
+        items:
+          $ref: '#/$defs/SemanticMetadataField'
+        title: Metadata
+        type: array
+    required:
+    - content_type
+    - sampling
+    - embedding
+    title: SemanticSearchConfig
+    type: object
+  SemanticWindowing:
+    additionalProperties: false
+    description: 'Windowing configuration for semantic search (the `windowing` block).
+
+
+      Controls how much surrounding context is embedded alongside each unit.
+
+      When ``context_max_chars`` is 0 or omitted, only the unit itself is embedded.
+
+
+      Used inside x-airbyte-semantic-search on a context-store field.'
+    properties:
+      context_max_chars:
+        default: 0
+        description: Max characters of surrounding context to embed. 0/omitted =>
+          embed the unit only.
+        minimum: 0
+        title: Context Max Chars
+        type: integer
+      context_boundary:
+        default: whole_unit
+        description: How context is bounded around a unit. Defaults to 'whole_unit'.
+        enum:
+        - whole_unit
+        - char
+        - regex
+        title: Context Boundary
+        type: string
+      context_boundary_pattern:
+        anyOf:
+        - type: string
+        - type: 'null'
+        default: null
+        description: Boundary pattern used when context_boundary is 'regex'.
+        title: Context Boundary Pattern
+    title: SemanticWindowing
     type: object
   Server:
     additionalProperties: false

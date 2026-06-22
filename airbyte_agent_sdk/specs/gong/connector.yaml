@@ -565,6 +565,16 @@ info:
               - 'null'
               - array
             description: Gong transcript speaker turns.
+            x-airbyte-semantic-search:
+              content_type: json
+              sampling: { sample_type: element, unit_label: speaker_turn, sample_path: "[]", text_path: "sentences[].text", stitch: "\n" }
+              windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+              embedding: { model: text-embedding-3-small }
+              metadata:
+                - { name: speakerId, path: "speakerId", type: string }
+                - { name: topic, path: "topic", type: string }
+                - { name: callId, path: "/callId", type: string }
+                - { name: started, path: "/started", type: string }
 
   x-airbyte-entity-relationships:
     - source_entity: library_folders

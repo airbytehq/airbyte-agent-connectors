@@ -26,6 +26,11 @@ from airbyte_agent_sdk.schema.extensions import (
     CacheFieldConfig,
     CacheFieldProperty,
     EntityRelationshipConfig,
+    SemanticEmbedding,
+    SemanticMetadataField,
+    SemanticSampling,
+    SemanticSearchConfig,
+    SemanticWindowing,
 )
 from airbyte_agent_sdk.schema.base import (
     ExampleQuestions,
@@ -3931,6 +3936,39 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                         name='transcript',
                         type=['null', 'array'],
                         description='Gong transcript speaker turns.',
+                        x_airbyte_semantic_search=SemanticSearchConfig(
+                            content_type='json',
+                            sampling=SemanticSampling(
+                                sample_type='element',
+                                unit_label='speaker_turn',
+                                sample_path='[]',
+                                text_path='sentences[].text',
+                            ),
+                            windowing=SemanticWindowing(
+                                context_max_chars=2048,
+                            ),
+                            embedding=SemanticEmbedding(
+                                model='text-embedding-3-small',
+                            ),
+                            metadata=[
+                                SemanticMetadataField(
+                                    name='speakerId',
+                                    path='speakerId',
+                                ),
+                                SemanticMetadataField(
+                                    name='topic',
+                                    path='topic',
+                                ),
+                                SemanticMetadataField(
+                                    name='callId',
+                                    path='/callId',
+                                ),
+                                SemanticMetadataField(
+                                    name='started',
+                                    path='/started',
+                                ),
+                            ],
+                        ),
                     ),
                 ],
             ),
@@ -4072,6 +4110,43 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
             'transcript',
             'transcript[]',
         ],
+    },
+    semantic_search_fields={
+        'call_transcripts': {
+            'transcript': SemanticSearchConfig(
+                content_type='json',
+                sampling=SemanticSampling(
+                    sample_type='element',
+                    unit_label='speaker_turn',
+                    sample_path='[]',
+                    text_path='sentences[].text',
+                ),
+                windowing=SemanticWindowing(
+                    context_max_chars=2048,
+                ),
+                embedding=SemanticEmbedding(
+                    model='text-embedding-3-small',
+                ),
+                metadata=[
+                    SemanticMetadataField(
+                        name='speakerId',
+                        path='speakerId',
+                    ),
+                    SemanticMetadataField(
+                        name='topic',
+                        path='topic',
+                    ),
+                    SemanticMetadataField(
+                        name='callId',
+                        path='/callId',
+                    ),
+                    SemanticMetadataField(
+                        name='started',
+                        path='/started',
+                    ),
+                ],
+            ),
+        },
     },
     example_questions=ExampleQuestions(
         direct=[
