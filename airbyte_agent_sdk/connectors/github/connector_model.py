@@ -4009,11 +4009,6 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                         type=['null', 'string'],
                         description='Branch name (e.g. `main`, `feature/foo`)',
                     ),
-                    CacheFieldConfig(
-                        name='prefix',
-                        type=['null', 'string'],
-                        description='Git ref prefix for the branch (typically `refs/heads/`)',
-                    ),
                 ],
             ),
             CacheEntityConfig(
@@ -4023,11 +4018,13 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                 fields=[
                     CacheFieldConfig(
                         name='id',
+                        x_airbyte_name='node_id',
                         type=['null', 'string'],
                         description='GraphQL node ID of the comment',
                     ),
                     CacheFieldConfig(
                         name='databaseId',
+                        x_airbyte_name='id',
                         type=['null', 'integer'],
                         description='REST API numeric identifier for the comment',
                     ),
@@ -4038,23 +4035,21 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                     ),
                     CacheFieldConfig(
                         name='createdAt',
+                        x_airbyte_name='created_at',
                         type=['null', 'string'],
                         description='ISO 8601 timestamp when the comment was created',
                     ),
                     CacheFieldConfig(
                         name='updatedAt',
+                        x_airbyte_name='updated_at',
                         type=['null', 'string'],
                         description='ISO 8601 timestamp when the comment was last updated',
                     ),
                     CacheFieldConfig(
                         name='url',
+                        x_airbyte_name='html_url',
                         type=['null', 'string'],
                         description='Permalink to the comment on GitHub',
-                    ),
-                    CacheFieldConfig(
-                        name='isMinimized',
-                        type=['null', 'boolean'],
-                        description='Whether the comment has been hidden/collapsed',
                     ),
                 ],
             ),
@@ -4063,54 +4058,21 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                 x_airbyte_name='commits',
                 fields=[
                     CacheFieldConfig(
-                        name='oid',
+                        name='sha',
                         type=['null', 'string'],
                         description='Full Git commit SHA',
                     ),
                     CacheFieldConfig(
-                        name='abbreviatedOid',
-                        type=['null', 'string'],
-                        description='Abbreviated Git commit SHA (typically 7 characters)',
-                    ),
-                    CacheFieldConfig(
-                        name='messageHeadline',
-                        type=['null', 'string'],
-                        description='First line of the commit message',
-                    ),
-                    CacheFieldConfig(
-                        name='message',
-                        type=['null', 'string'],
-                        description='Full commit message',
-                    ),
-                    CacheFieldConfig(
-                        name='committedDate',
-                        type=['null', 'string'],
-                        description='ISO 8601 timestamp when the commit was applied to its tree',
-                    ),
-                    CacheFieldConfig(
-                        name='authoredDate',
-                        type=['null', 'string'],
-                        description='ISO 8601 timestamp when the commit was originally authored',
-                    ),
-                    CacheFieldConfig(
-                        name='additions',
-                        type=['null', 'integer'],
-                        description='Number of lines added across all files in the commit',
-                    ),
-                    CacheFieldConfig(
-                        name='deletions',
-                        type=['null', 'integer'],
-                        description='Number of lines deleted across all files in the commit',
-                    ),
-                    CacheFieldConfig(
-                        name='changedFiles',
-                        type=['null', 'integer'],
-                        description='Number of files changed in the commit',
-                    ),
-                    CacheFieldConfig(
                         name='url',
+                        x_airbyte_name='html_url',
                         type=['null', 'string'],
                         description='Permalink to the commit on GitHub',
+                    ),
+                    CacheFieldConfig(
+                        name='createdAt',
+                        x_airbyte_name='created_at',
+                        type=['null', 'string'],
+                        description='ISO 8601 timestamp of the commit',
                     ),
                 ],
             ),
@@ -4133,11 +4095,13 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                 fields=[
                     CacheFieldConfig(
                         name='id',
+                        x_airbyte_name='node_id',
                         type=['null', 'string'],
                         description='GraphQL node ID of the issue',
                     ),
                     CacheFieldConfig(
                         name='databaseId',
+                        x_airbyte_name='id',
                         type=['null', 'integer'],
                         description='REST API numeric identifier for the issue',
                     ),
@@ -4154,25 +4118,29 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                     CacheFieldConfig(
                         name='state',
                         type=['null', 'string'],
-                        description='Issue state: `OPEN` or `CLOSED`',
+                        description='Issue state in the cache: lowercase `open` or `closed`',
                     ),
                     CacheFieldConfig(
                         name='stateReason',
+                        x_airbyte_name='state_reason',
                         type=['null', 'string'],
-                        description='Reason the issue is in its current state (e.g. `COMPLETED`, `NOT_PLANNED`)',
+                        description='Reason the issue is in its current state (e.g. `completed`, `not_planned`, `reopened`). Cached values are lowercase.',
                     ),
                     CacheFieldConfig(
                         name='createdAt',
+                        x_airbyte_name='created_at',
                         type=['null', 'string'],
                         description='ISO 8601 timestamp when the issue was created',
                     ),
                     CacheFieldConfig(
                         name='updatedAt',
+                        x_airbyte_name='updated_at',
                         type=['null', 'string'],
                         description='ISO 8601 timestamp when the issue was last updated',
                     ),
                     CacheFieldConfig(
                         name='closedAt',
+                        x_airbyte_name='closed_at',
                         type=['null', 'string'],
                         description='ISO 8601 timestamp when the issue was closed, if applicable',
                     ),
@@ -4183,6 +4151,7 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                     ),
                     CacheFieldConfig(
                         name='url',
+                        x_airbyte_name='html_url',
                         type=['null', 'string'],
                         description='Permalink to the issue on GitHub',
                     ),
@@ -4194,6 +4163,7 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                 fields=[
                     CacheFieldConfig(
                         name='id',
+                        x_airbyte_name='node_id',
                         type=['null', 'string'],
                         description='GraphQL node ID of the label',
                     ),
@@ -4213,14 +4183,9 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                         description='Short description of what the label is used for',
                     ),
                     CacheFieldConfig(
-                        name='createdAt',
-                        type=['null', 'string'],
-                        description='ISO 8601 timestamp when the label was created',
-                    ),
-                    CacheFieldConfig(
                         name='url',
                         type=['null', 'string'],
-                        description='Permalink to the label on GitHub',
+                        description='API URL to the label resource',
                     ),
                 ],
             ),
@@ -4230,6 +4195,7 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                 fields=[
                     CacheFieldConfig(
                         name='id',
+                        x_airbyte_name='node_id',
                         type=['null', 'string'],
                         description='GraphQL node ID of the milestone',
                     ),
@@ -4251,32 +4217,31 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                     CacheFieldConfig(
                         name='state',
                         type=['null', 'string'],
-                        description='Milestone state: `OPEN` or `CLOSED`',
+                        description='Milestone state in the cache: lowercase `open` or `closed`',
                     ),
                     CacheFieldConfig(
                         name='dueOn',
+                        x_airbyte_name='due_on',
                         type=['null', 'string'],
                         description="ISO 8601 timestamp for the milestone's due date, if set",
                     ),
                     CacheFieldConfig(
                         name='closedAt',
+                        x_airbyte_name='closed_at',
                         type=['null', 'string'],
                         description='ISO 8601 timestamp when the milestone was closed, if applicable',
                     ),
                     CacheFieldConfig(
                         name='createdAt',
+                        x_airbyte_name='created_at',
                         type=['null', 'string'],
                         description='ISO 8601 timestamp when the milestone was created',
                     ),
                     CacheFieldConfig(
                         name='updatedAt',
+                        x_airbyte_name='updated_at',
                         type=['null', 'string'],
                         description='ISO 8601 timestamp when the milestone was last updated',
-                    ),
-                    CacheFieldConfig(
-                        name='progressPercentage',
-                        type=['null', 'number'],
-                        description='Percentage of associated issues/PRs that are closed',
                     ),
                 ],
             ),
@@ -4286,11 +4251,13 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                 fields=[
                     CacheFieldConfig(
                         name='id',
+                        x_airbyte_name='node_id',
                         type=['null', 'string'],
                         description='GraphQL node ID of the organization',
                     ),
                     CacheFieldConfig(
                         name='databaseId',
+                        x_airbyte_name='id',
                         type=['null', 'integer'],
                         description='REST API numeric identifier for the organization',
                     ),
@@ -4321,11 +4288,13 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                     ),
                     CacheFieldConfig(
                         name='isVerified',
+                        x_airbyte_name='is_verified',
                         type=['null', 'boolean'],
                         description='Whether the organization has a verified domain',
                     ),
                     CacheFieldConfig(
                         name='createdAt',
+                        x_airbyte_name='created_at',
                         type=['null', 'string'],
                         description='ISO 8601 timestamp when the organization was created',
                     ),
@@ -4349,6 +4318,7 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                 fields=[
                     CacheFieldConfig(
                         name='id',
+                        x_airbyte_name='node_id',
                         type=['null', 'string'],
                         description='GraphQL node ID of the project',
                     ),
@@ -4364,6 +4334,7 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                     ),
                     CacheFieldConfig(
                         name='shortDescription',
+                        x_airbyte_name='short_description',
                         type=['null', 'string'],
                         description='Short description displayed on the project summary',
                     ),
@@ -4384,11 +4355,13 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                     ),
                     CacheFieldConfig(
                         name='createdAt',
+                        x_airbyte_name='created_at',
                         type=['null', 'string'],
                         description='ISO 8601 timestamp when the project was created',
                     ),
                     CacheFieldConfig(
                         name='updatedAt',
+                        x_airbyte_name='updated_at',
                         type=['null', 'string'],
                         description='ISO 8601 timestamp when the project was last updated',
                     ),
@@ -4401,11 +4374,13 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                 fields=[
                     CacheFieldConfig(
                         name='id',
+                        x_airbyte_name='node_id',
                         type=['null', 'string'],
                         description='GraphQL node ID of the pull request',
                     ),
                     CacheFieldConfig(
                         name='databaseId',
+                        x_airbyte_name='id',
                         type=['null', 'integer'],
                         description='REST API numeric identifier for the pull request',
                     ),
@@ -4422,50 +4397,41 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                     CacheFieldConfig(
                         name='state',
                         type=['null', 'string'],
-                        description='Pull request state: `OPEN`, `CLOSED`, or `MERGED`',
+                        description='Pull request state in the cache: lowercase `open` or `closed` (REST API has no `merged` state; check `mergedAt` to distinguish merged PRs)',
                     ),
                     CacheFieldConfig(
                         name='isDraft',
+                        x_airbyte_name='draft',
                         type=['null', 'boolean'],
                         description='Whether the pull request is still a draft',
                     ),
                     CacheFieldConfig(
-                        name='merged',
-                        type=['null', 'boolean'],
-                        description='Whether the pull request has been merged',
-                    ),
-                    CacheFieldConfig(
                         name='createdAt',
+                        x_airbyte_name='created_at',
                         type=['null', 'string'],
                         description='ISO 8601 timestamp when the pull request was created',
                     ),
                     CacheFieldConfig(
                         name='updatedAt',
+                        x_airbyte_name='updated_at',
                         type=['null', 'string'],
                         description='ISO 8601 timestamp when the pull request was last updated',
                     ),
                     CacheFieldConfig(
                         name='closedAt',
+                        x_airbyte_name='closed_at',
                         type=['null', 'string'],
                         description='ISO 8601 timestamp when the pull request was closed, if applicable',
                     ),
                     CacheFieldConfig(
                         name='mergedAt',
+                        x_airbyte_name='merged_at',
                         type=['null', 'string'],
                         description='ISO 8601 timestamp when the pull request was merged, if applicable',
                     ),
                     CacheFieldConfig(
-                        name='baseRefName',
-                        type=['null', 'string'],
-                        description='Name of the branch being merged into',
-                    ),
-                    CacheFieldConfig(
-                        name='headRefName',
-                        type=['null', 'string'],
-                        description='Name of the branch with the proposed changes',
-                    ),
-                    CacheFieldConfig(
                         name='url',
+                        x_airbyte_name='html_url',
                         type=['null', 'string'],
                         description='Permalink to the pull request on GitHub',
                     ),
@@ -4477,11 +4443,13 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                 fields=[
                     CacheFieldConfig(
                         name='id',
+                        x_airbyte_name='node_id',
                         type=['null', 'string'],
                         description='GraphQL node ID of the release',
                     ),
                     CacheFieldConfig(
                         name='databaseId',
+                        x_airbyte_name='id',
                         type=['null', 'integer'],
                         description='REST API numeric identifier for the release',
                     ),
@@ -4492,36 +4460,43 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                     ),
                     CacheFieldConfig(
                         name='tagName',
+                        x_airbyte_name='tag_name',
                         type=['null', 'string'],
                         description='Git tag the release points at (e.g. `v1.2.3`)',
                     ),
                     CacheFieldConfig(
                         name='description',
+                        x_airbyte_name='body',
                         type=['null', 'string'],
                         description='Markdown body / release notes',
                     ),
                     CacheFieldConfig(
                         name='publishedAt',
+                        x_airbyte_name='published_at',
                         type=['null', 'string'],
                         description='ISO 8601 timestamp when the release was published',
                     ),
                     CacheFieldConfig(
                         name='createdAt',
+                        x_airbyte_name='created_at',
                         type=['null', 'string'],
                         description='ISO 8601 timestamp when the release was created',
                     ),
                     CacheFieldConfig(
                         name='isPrerelease',
+                        x_airbyte_name='prerelease',
                         type=['null', 'boolean'],
                         description='Whether the release is marked as a pre-release',
                     ),
                     CacheFieldConfig(
                         name='isDraft',
+                        x_airbyte_name='draft',
                         type=['null', 'boolean'],
                         description='Whether the release is still a draft and not published',
                     ),
                     CacheFieldConfig(
                         name='url',
+                        x_airbyte_name='html_url',
                         type=['null', 'string'],
                         description='Permalink to the release on GitHub',
                     ),
@@ -4534,6 +4509,7 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                 fields=[
                     CacheFieldConfig(
                         name='id',
+                        x_airbyte_name='node_id',
                         type=['null', 'string'],
                         description='GraphQL node ID of the repository',
                     ),
@@ -4544,6 +4520,7 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                     ),
                     CacheFieldConfig(
                         name='nameWithOwner',
+                        x_airbyte_name='full_name',
                         type=['null', 'string'],
                         description='Fully-qualified `owner/name` identifier for the repository',
                     ),
@@ -4554,46 +4531,55 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                     ),
                     CacheFieldConfig(
                         name='url',
+                        x_airbyte_name='html_url',
                         type=['null', 'string'],
                         description='Canonical GitHub URL for the repository',
                     ),
                     CacheFieldConfig(
                         name='createdAt',
+                        x_airbyte_name='created_at',
                         type=['null', 'string'],
                         description='ISO 8601 timestamp when the repository was created',
                     ),
                     CacheFieldConfig(
                         name='updatedAt',
+                        x_airbyte_name='updated_at',
                         type=['null', 'string'],
                         description='ISO 8601 timestamp when the repository was last updated',
                     ),
                     CacheFieldConfig(
                         name='pushedAt',
+                        x_airbyte_name='pushed_at',
                         type=['null', 'string'],
                         description='ISO 8601 timestamp of the most recent push to the repository',
                     ),
                     CacheFieldConfig(
                         name='forkCount',
+                        x_airbyte_name='forks_count',
                         type=['null', 'integer'],
                         description='Number of forks of the repository',
                     ),
                     CacheFieldConfig(
                         name='stargazerCount',
+                        x_airbyte_name='stargazers_count',
                         type=['null', 'integer'],
                         description='Number of users who have starred the repository',
                     ),
                     CacheFieldConfig(
                         name='isPrivate',
+                        x_airbyte_name='private',
                         type=['null', 'boolean'],
                         description='Whether the repository is private',
                     ),
                     CacheFieldConfig(
                         name='isFork',
+                        x_airbyte_name='fork',
                         type=['null', 'boolean'],
                         description='Whether the repository is a fork of another repository',
                     ),
                     CacheFieldConfig(
                         name='isArchived',
+                        x_airbyte_name='archived',
                         type=['null', 'boolean'],
                         description='Whether the repository has been archived',
                     ),
@@ -4605,18 +4591,20 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                 fields=[
                     CacheFieldConfig(
                         name='id',
+                        x_airbyte_name='node_id',
                         type=['null', 'string'],
                         description='GraphQL node ID of the review',
                     ),
                     CacheFieldConfig(
                         name='databaseId',
+                        x_airbyte_name='id',
                         type=['null', 'integer'],
                         description='REST API numeric identifier for the review',
                     ),
                     CacheFieldConfig(
                         name='state',
                         type=['null', 'string'],
-                        description='Review state: `PENDING`, `COMMENTED`, `APPROVED`, `CHANGES_REQUESTED`, or `DISMISSED`',
+                        description='Review state in the cache: `PENDING`, `COMMENTED`, `APPROVED`, `CHANGES_REQUESTED`, or `DISMISSED`',
                     ),
                     CacheFieldConfig(
                         name='body',
@@ -4625,21 +4613,25 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                     ),
                     CacheFieldConfig(
                         name='submittedAt',
+                        x_airbyte_name='submitted_at',
                         type=['null', 'string'],
                         description='ISO 8601 timestamp when the review was submitted',
                     ),
                     CacheFieldConfig(
                         name='createdAt',
+                        x_airbyte_name='created_at',
                         type=['null', 'string'],
                         description='ISO 8601 timestamp when the review was created',
                     ),
                     CacheFieldConfig(
                         name='updatedAt',
+                        x_airbyte_name='updated_at',
                         type=['null', 'string'],
                         description='ISO 8601 timestamp when the review was last updated',
                     ),
                     CacheFieldConfig(
                         name='url',
+                        x_airbyte_name='html_url',
                         type=['null', 'string'],
                         description='Permalink to the review on GitHub',
                     ),
@@ -4651,6 +4643,7 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                 fields=[
                     CacheFieldConfig(
                         name='starredAt',
+                        x_airbyte_name='starred_at',
                         type=['null', 'string'],
                         description='ISO 8601 timestamp when the user starred the repository',
                     ),
@@ -4665,11 +4658,6 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                         type=['null', 'string'],
                         description='Tag name (e.g. `v1.2.3`)',
                     ),
-                    CacheFieldConfig(
-                        name='prefix',
-                        type=['null', 'string'],
-                        description='Git ref prefix for the tag (typically `refs/tags/`)',
-                    ),
                 ],
             ),
             CacheEntityConfig(
@@ -4678,11 +4666,13 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                 fields=[
                     CacheFieldConfig(
                         name='id',
+                        x_airbyte_name='node_id',
                         type=['null', 'string'],
                         description='GraphQL node ID of the team',
                     ),
                     CacheFieldConfig(
                         name='databaseId',
+                        x_airbyte_name='id',
                         type=['null', 'integer'],
                         description='REST API numeric identifier for the team',
                     ),
@@ -4704,22 +4694,13 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                     CacheFieldConfig(
                         name='privacy',
                         type=['null', 'string'],
-                        description='Team visibility: `SECRET` or `VISIBLE`',
+                        description='Team visibility: `secret` or `closed` (REST API values)',
                     ),
                     CacheFieldConfig(
                         name='url',
+                        x_airbyte_name='html_url',
                         type=['null', 'string'],
                         description='Permalink to the team on GitHub',
-                    ),
-                    CacheFieldConfig(
-                        name='createdAt',
-                        type=['null', 'string'],
-                        description='ISO 8601 timestamp when the team was created',
-                    ),
-                    CacheFieldConfig(
-                        name='updatedAt',
-                        type=['null', 'string'],
-                        description='ISO 8601 timestamp when the team was last updated',
                     ),
                 ],
             ),
@@ -4730,11 +4711,13 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                 fields=[
                     CacheFieldConfig(
                         name='id',
+                        x_airbyte_name='node_id',
                         type=['null', 'string'],
                         description='GraphQL node ID of the user',
                     ),
                     CacheFieldConfig(
                         name='databaseId',
+                        x_airbyte_name='id',
                         type=['null', 'integer'],
                         description='REST API numeric identifier for the user',
                     ),
@@ -4744,44 +4727,10 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                         description='User login/handle',
                     ),
                     CacheFieldConfig(
-                        name='name',
-                        type=['null', 'string'],
-                        description='Public display name of the user, if set',
-                    ),
-                    CacheFieldConfig(
-                        name='email',
-                        type=['null', 'string'],
-                        description='Public email address of the user, if set',
-                    ),
-                    CacheFieldConfig(
-                        name='company',
-                        type=['null', 'string'],
-                        description='Public company affiliation of the user, if set',
-                    ),
-                    CacheFieldConfig(
-                        name='location',
-                        type=['null', 'string'],
-                        description='Public location of the user, if set',
-                    ),
-                    CacheFieldConfig(
-                        name='twitterUsername',
-                        type=['null', 'string'],
-                        description='Public Twitter/X username of the user, if set',
-                    ),
-                    CacheFieldConfig(
                         name='url',
+                        x_airbyte_name='html_url',
                         type=['null', 'string'],
                         description="Permalink to the user's profile on GitHub",
-                    ),
-                    CacheFieldConfig(
-                        name='createdAt',
-                        type=['null', 'string'],
-                        description='ISO 8601 timestamp when the user account was created',
-                    ),
-                    CacheFieldConfig(
-                        name='isHireable',
-                        type=['null', 'boolean'],
-                        description='Whether the user has marked themselves as available for hire',
                     ),
                 ],
             ),
@@ -4797,7 +4746,7 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
         flush_batch_size_mb=10,
     ),
     search_field_paths={
-        'branches': ['name', 'prefix'],
+        'branches': ['name'],
         'comments': [
             'id',
             'databaseId',
@@ -4805,20 +4754,8 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
             'createdAt',
             'updatedAt',
             'url',
-            'isMinimized',
         ],
-        'commits': [
-            'oid',
-            'abbreviatedOid',
-            'messageHeadline',
-            'message',
-            'committedDate',
-            'authoredDate',
-            'additions',
-            'deletions',
-            'changedFiles',
-            'url',
-        ],
+        'commits': ['sha', 'url', 'createdAt'],
         'issues': [
             'id',
             'databaseId',
@@ -4837,7 +4774,6 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
             'name',
             'color',
             'description',
-            'createdAt',
             'url',
         ],
         'milestones': [
@@ -4850,7 +4786,6 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
             'closedAt',
             'createdAt',
             'updatedAt',
-            'progressPercentage',
         ],
         'organizations': [
             'id',
@@ -4881,13 +4816,10 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
             'title',
             'state',
             'isDraft',
-            'merged',
             'createdAt',
             'updatedAt',
             'closedAt',
             'mergedAt',
-            'baseRefName',
-            'headRefName',
             'url',
         ],
         'releases': [
@@ -4928,7 +4860,7 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
             'url',
         ],
         'stargazers': ['starredAt'],
-        'tags': ['name', 'prefix'],
+        'tags': ['name'],
         'teams': [
             'id',
             'databaseId',
@@ -4937,21 +4869,12 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
             'description',
             'privacy',
             'url',
-            'createdAt',
-            'updatedAt',
         ],
         'users': [
             'id',
             'databaseId',
             'login',
-            'name',
-            'email',
-            'company',
-            'location',
-            'twitterUsername',
             'url',
-            'createdAt',
-            'isHireable',
         ],
     },
     example_questions=ExampleQuestions(

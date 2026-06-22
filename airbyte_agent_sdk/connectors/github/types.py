@@ -396,40 +396,30 @@ class BranchesSearchFilter(TypedDict, total=False):
     """Available fields for filtering branches search queries."""
     name: str | None
     """Branch name (e.g. `main`, `feature/foo`)"""
-    prefix: str | None
-    """Git ref prefix for the branch (typically `refs/heads/`)"""
 
 
 class BranchesInFilter(TypedDict, total=False):
     """Available fields for 'in' condition (values are lists)."""
     name: list[str]
     """Branch name (e.g. `main`, `feature/foo`)"""
-    prefix: list[str]
-    """Git ref prefix for the branch (typically `refs/heads/`)"""
 
 
 class BranchesAnyValueFilter(TypedDict, total=False):
     """Available fields with Any value type. Used for 'contains' and 'any' conditions."""
     name: Any
     """Branch name (e.g. `main`, `feature/foo`)"""
-    prefix: Any
-    """Git ref prefix for the branch (typically `refs/heads/`)"""
 
 
 class BranchesStringFilter(TypedDict, total=False):
     """String fields for text search conditions (like, fuzzy, keyword)."""
     name: str
     """Branch name (e.g. `main`, `feature/foo`)"""
-    prefix: str
-    """Git ref prefix for the branch (typically `refs/heads/`)"""
 
 
 class BranchesSortFilter(TypedDict, total=False):
     """Available fields for sorting branches search results."""
     name: AirbyteSortOrder
     """Branch name (e.g. `main`, `feature/foo`)"""
-    prefix: AirbyteSortOrder
-    """Git ref prefix for the branch (typically `refs/heads/`)"""
 
 
 # Entity-specific condition types for branches
@@ -541,8 +531,6 @@ class CommentsSearchFilter(TypedDict, total=False):
     """ISO 8601 timestamp when the comment was last updated"""
     url: str | None
     """Permalink to the comment on GitHub"""
-    is_minimized: bool | None
-    """Whether the comment has been hidden/collapsed"""
 
 
 class CommentsInFilter(TypedDict, total=False):
@@ -559,8 +547,6 @@ class CommentsInFilter(TypedDict, total=False):
     """ISO 8601 timestamp when the comment was last updated"""
     url: list[str]
     """Permalink to the comment on GitHub"""
-    is_minimized: list[bool]
-    """Whether the comment has been hidden/collapsed"""
 
 
 class CommentsAnyValueFilter(TypedDict, total=False):
@@ -577,8 +563,6 @@ class CommentsAnyValueFilter(TypedDict, total=False):
     """ISO 8601 timestamp when the comment was last updated"""
     url: Any
     """Permalink to the comment on GitHub"""
-    is_minimized: Any
-    """Whether the comment has been hidden/collapsed"""
 
 
 class CommentsStringFilter(TypedDict, total=False):
@@ -595,8 +579,6 @@ class CommentsStringFilter(TypedDict, total=False):
     """ISO 8601 timestamp when the comment was last updated"""
     url: str
     """Permalink to the comment on GitHub"""
-    is_minimized: str
-    """Whether the comment has been hidden/collapsed"""
 
 
 class CommentsSortFilter(TypedDict, total=False):
@@ -613,8 +595,6 @@ class CommentsSortFilter(TypedDict, total=False):
     """ISO 8601 timestamp when the comment was last updated"""
     url: AirbyteSortOrder
     """Permalink to the comment on GitHub"""
-    is_minimized: AirbyteSortOrder
-    """Whether the comment has been hidden/collapsed"""
 
 
 # Entity-specific condition types for comments
@@ -714,122 +694,52 @@ class CommentsSearchQuery(TypedDict, total=False):
 
 class CommitsSearchFilter(TypedDict, total=False):
     """Available fields for filtering commits search queries."""
-    oid: str | None
+    sha: str | None
     """Full Git commit SHA"""
-    abbreviated_oid: str | None
-    """Abbreviated Git commit SHA (typically 7 characters)"""
-    message_headline: str | None
-    """First line of the commit message"""
-    message: str | None
-    """Full commit message"""
-    committed_date: str | None
-    """ISO 8601 timestamp when the commit was applied to its tree"""
-    authored_date: str | None
-    """ISO 8601 timestamp when the commit was originally authored"""
-    additions: int | None
-    """Number of lines added across all files in the commit"""
-    deletions: int | None
-    """Number of lines deleted across all files in the commit"""
-    changed_files: int | None
-    """Number of files changed in the commit"""
     url: str | None
     """Permalink to the commit on GitHub"""
+    created_at: str | None
+    """ISO 8601 timestamp of the commit"""
 
 
 class CommitsInFilter(TypedDict, total=False):
     """Available fields for 'in' condition (values are lists)."""
-    oid: list[str]
+    sha: list[str]
     """Full Git commit SHA"""
-    abbreviated_oid: list[str]
-    """Abbreviated Git commit SHA (typically 7 characters)"""
-    message_headline: list[str]
-    """First line of the commit message"""
-    message: list[str]
-    """Full commit message"""
-    committed_date: list[str]
-    """ISO 8601 timestamp when the commit was applied to its tree"""
-    authored_date: list[str]
-    """ISO 8601 timestamp when the commit was originally authored"""
-    additions: list[int]
-    """Number of lines added across all files in the commit"""
-    deletions: list[int]
-    """Number of lines deleted across all files in the commit"""
-    changed_files: list[int]
-    """Number of files changed in the commit"""
     url: list[str]
     """Permalink to the commit on GitHub"""
+    created_at: list[str]
+    """ISO 8601 timestamp of the commit"""
 
 
 class CommitsAnyValueFilter(TypedDict, total=False):
     """Available fields with Any value type. Used for 'contains' and 'any' conditions."""
-    oid: Any
+    sha: Any
     """Full Git commit SHA"""
-    abbreviated_oid: Any
-    """Abbreviated Git commit SHA (typically 7 characters)"""
-    message_headline: Any
-    """First line of the commit message"""
-    message: Any
-    """Full commit message"""
-    committed_date: Any
-    """ISO 8601 timestamp when the commit was applied to its tree"""
-    authored_date: Any
-    """ISO 8601 timestamp when the commit was originally authored"""
-    additions: Any
-    """Number of lines added across all files in the commit"""
-    deletions: Any
-    """Number of lines deleted across all files in the commit"""
-    changed_files: Any
-    """Number of files changed in the commit"""
     url: Any
     """Permalink to the commit on GitHub"""
+    created_at: Any
+    """ISO 8601 timestamp of the commit"""
 
 
 class CommitsStringFilter(TypedDict, total=False):
     """String fields for text search conditions (like, fuzzy, keyword)."""
-    oid: str
+    sha: str
     """Full Git commit SHA"""
-    abbreviated_oid: str
-    """Abbreviated Git commit SHA (typically 7 characters)"""
-    message_headline: str
-    """First line of the commit message"""
-    message: str
-    """Full commit message"""
-    committed_date: str
-    """ISO 8601 timestamp when the commit was applied to its tree"""
-    authored_date: str
-    """ISO 8601 timestamp when the commit was originally authored"""
-    additions: str
-    """Number of lines added across all files in the commit"""
-    deletions: str
-    """Number of lines deleted across all files in the commit"""
-    changed_files: str
-    """Number of files changed in the commit"""
     url: str
     """Permalink to the commit on GitHub"""
+    created_at: str
+    """ISO 8601 timestamp of the commit"""
 
 
 class CommitsSortFilter(TypedDict, total=False):
     """Available fields for sorting commits search results."""
-    oid: AirbyteSortOrder
+    sha: AirbyteSortOrder
     """Full Git commit SHA"""
-    abbreviated_oid: AirbyteSortOrder
-    """Abbreviated Git commit SHA (typically 7 characters)"""
-    message_headline: AirbyteSortOrder
-    """First line of the commit message"""
-    message: AirbyteSortOrder
-    """Full commit message"""
-    committed_date: AirbyteSortOrder
-    """ISO 8601 timestamp when the commit was applied to its tree"""
-    authored_date: AirbyteSortOrder
-    """ISO 8601 timestamp when the commit was originally authored"""
-    additions: AirbyteSortOrder
-    """Number of lines added across all files in the commit"""
-    deletions: AirbyteSortOrder
-    """Number of lines deleted across all files in the commit"""
-    changed_files: AirbyteSortOrder
-    """Number of files changed in the commit"""
     url: AirbyteSortOrder
     """Permalink to the commit on GitHub"""
+    created_at: AirbyteSortOrder
+    """ISO 8601 timestamp of the commit"""
 
 
 # Entity-specific condition types for commits
@@ -1283,9 +1193,9 @@ class IssuesSearchFilter(TypedDict, total=False):
     title: str | None
     """Issue title"""
     state: str | None
-    """Issue state: `OPEN` or `CLOSED`"""
+    """Issue state in the cache: lowercase `open` or `closed`"""
     state_reason: str | None
-    """Reason the issue is in its current state (e.g. `COMPLETED`, `NOT_PLANNED`)"""
+    """Reason the issue is in its current state (e.g. `completed`, `not_planned`, `reopened`). Cached values are lowercase."""
     created_at: str | None
     """ISO 8601 timestamp when the issue was created"""
     updated_at: str | None
@@ -1309,9 +1219,9 @@ class IssuesInFilter(TypedDict, total=False):
     title: list[str]
     """Issue title"""
     state: list[str]
-    """Issue state: `OPEN` or `CLOSED`"""
+    """Issue state in the cache: lowercase `open` or `closed`"""
     state_reason: list[str]
-    """Reason the issue is in its current state (e.g. `COMPLETED`, `NOT_PLANNED`)"""
+    """Reason the issue is in its current state (e.g. `completed`, `not_planned`, `reopened`). Cached values are lowercase."""
     created_at: list[str]
     """ISO 8601 timestamp when the issue was created"""
     updated_at: list[str]
@@ -1335,9 +1245,9 @@ class IssuesAnyValueFilter(TypedDict, total=False):
     title: Any
     """Issue title"""
     state: Any
-    """Issue state: `OPEN` or `CLOSED`"""
+    """Issue state in the cache: lowercase `open` or `closed`"""
     state_reason: Any
-    """Reason the issue is in its current state (e.g. `COMPLETED`, `NOT_PLANNED`)"""
+    """Reason the issue is in its current state (e.g. `completed`, `not_planned`, `reopened`). Cached values are lowercase."""
     created_at: Any
     """ISO 8601 timestamp when the issue was created"""
     updated_at: Any
@@ -1361,9 +1271,9 @@ class IssuesStringFilter(TypedDict, total=False):
     title: str
     """Issue title"""
     state: str
-    """Issue state: `OPEN` or `CLOSED`"""
+    """Issue state in the cache: lowercase `open` or `closed`"""
     state_reason: str
-    """Reason the issue is in its current state (e.g. `COMPLETED`, `NOT_PLANNED`)"""
+    """Reason the issue is in its current state (e.g. `completed`, `not_planned`, `reopened`). Cached values are lowercase."""
     created_at: str
     """ISO 8601 timestamp when the issue was created"""
     updated_at: str
@@ -1387,9 +1297,9 @@ class IssuesSortFilter(TypedDict, total=False):
     title: AirbyteSortOrder
     """Issue title"""
     state: AirbyteSortOrder
-    """Issue state: `OPEN` or `CLOSED`"""
+    """Issue state in the cache: lowercase `open` or `closed`"""
     state_reason: AirbyteSortOrder
-    """Reason the issue is in its current state (e.g. `COMPLETED`, `NOT_PLANNED`)"""
+    """Reason the issue is in its current state (e.g. `completed`, `not_planned`, `reopened`). Cached values are lowercase."""
     created_at: AirbyteSortOrder
     """ISO 8601 timestamp when the issue was created"""
     updated_at: AirbyteSortOrder
@@ -1507,10 +1417,8 @@ class LabelsSearchFilter(TypedDict, total=False):
     """Label color as a 6-character hex string without a leading `#`"""
     description: str | None
     """Short description of what the label is used for"""
-    created_at: str | None
-    """ISO 8601 timestamp when the label was created"""
     url: str | None
-    """Permalink to the label on GitHub"""
+    """API URL to the label resource"""
 
 
 class LabelsInFilter(TypedDict, total=False):
@@ -1523,10 +1431,8 @@ class LabelsInFilter(TypedDict, total=False):
     """Label color as a 6-character hex string without a leading `#`"""
     description: list[str]
     """Short description of what the label is used for"""
-    created_at: list[str]
-    """ISO 8601 timestamp when the label was created"""
     url: list[str]
-    """Permalink to the label on GitHub"""
+    """API URL to the label resource"""
 
 
 class LabelsAnyValueFilter(TypedDict, total=False):
@@ -1539,10 +1445,8 @@ class LabelsAnyValueFilter(TypedDict, total=False):
     """Label color as a 6-character hex string without a leading `#`"""
     description: Any
     """Short description of what the label is used for"""
-    created_at: Any
-    """ISO 8601 timestamp when the label was created"""
     url: Any
-    """Permalink to the label on GitHub"""
+    """API URL to the label resource"""
 
 
 class LabelsStringFilter(TypedDict, total=False):
@@ -1555,10 +1459,8 @@ class LabelsStringFilter(TypedDict, total=False):
     """Label color as a 6-character hex string without a leading `#`"""
     description: str
     """Short description of what the label is used for"""
-    created_at: str
-    """ISO 8601 timestamp when the label was created"""
     url: str
-    """Permalink to the label on GitHub"""
+    """API URL to the label resource"""
 
 
 class LabelsSortFilter(TypedDict, total=False):
@@ -1571,10 +1473,8 @@ class LabelsSortFilter(TypedDict, total=False):
     """Label color as a 6-character hex string without a leading `#`"""
     description: AirbyteSortOrder
     """Short description of what the label is used for"""
-    created_at: AirbyteSortOrder
-    """ISO 8601 timestamp when the label was created"""
     url: AirbyteSortOrder
-    """Permalink to the label on GitHub"""
+    """API URL to the label resource"""
 
 
 # Entity-specific condition types for labels
@@ -1683,7 +1583,7 @@ class MilestonesSearchFilter(TypedDict, total=False):
     description: str | None
     """Milestone description"""
     state: str | None
-    """Milestone state: `OPEN` or `CLOSED`"""
+    """Milestone state in the cache: lowercase `open` or `closed`"""
     due_on: str | None
     """ISO 8601 timestamp for the milestone's due date, if set"""
     closed_at: str | None
@@ -1692,8 +1592,6 @@ class MilestonesSearchFilter(TypedDict, total=False):
     """ISO 8601 timestamp when the milestone was created"""
     updated_at: str | None
     """ISO 8601 timestamp when the milestone was last updated"""
-    progress_percentage: float | None
-    """Percentage of associated issues/PRs that are closed"""
 
 
 class MilestonesInFilter(TypedDict, total=False):
@@ -1707,7 +1605,7 @@ class MilestonesInFilter(TypedDict, total=False):
     description: list[str]
     """Milestone description"""
     state: list[str]
-    """Milestone state: `OPEN` or `CLOSED`"""
+    """Milestone state in the cache: lowercase `open` or `closed`"""
     due_on: list[str]
     """ISO 8601 timestamp for the milestone's due date, if set"""
     closed_at: list[str]
@@ -1716,8 +1614,6 @@ class MilestonesInFilter(TypedDict, total=False):
     """ISO 8601 timestamp when the milestone was created"""
     updated_at: list[str]
     """ISO 8601 timestamp when the milestone was last updated"""
-    progress_percentage: list[float]
-    """Percentage of associated issues/PRs that are closed"""
 
 
 class MilestonesAnyValueFilter(TypedDict, total=False):
@@ -1731,7 +1627,7 @@ class MilestonesAnyValueFilter(TypedDict, total=False):
     description: Any
     """Milestone description"""
     state: Any
-    """Milestone state: `OPEN` or `CLOSED`"""
+    """Milestone state in the cache: lowercase `open` or `closed`"""
     due_on: Any
     """ISO 8601 timestamp for the milestone's due date, if set"""
     closed_at: Any
@@ -1740,8 +1636,6 @@ class MilestonesAnyValueFilter(TypedDict, total=False):
     """ISO 8601 timestamp when the milestone was created"""
     updated_at: Any
     """ISO 8601 timestamp when the milestone was last updated"""
-    progress_percentage: Any
-    """Percentage of associated issues/PRs that are closed"""
 
 
 class MilestonesStringFilter(TypedDict, total=False):
@@ -1755,7 +1649,7 @@ class MilestonesStringFilter(TypedDict, total=False):
     description: str
     """Milestone description"""
     state: str
-    """Milestone state: `OPEN` or `CLOSED`"""
+    """Milestone state in the cache: lowercase `open` or `closed`"""
     due_on: str
     """ISO 8601 timestamp for the milestone's due date, if set"""
     closed_at: str
@@ -1764,8 +1658,6 @@ class MilestonesStringFilter(TypedDict, total=False):
     """ISO 8601 timestamp when the milestone was created"""
     updated_at: str
     """ISO 8601 timestamp when the milestone was last updated"""
-    progress_percentage: str
-    """Percentage of associated issues/PRs that are closed"""
 
 
 class MilestonesSortFilter(TypedDict, total=False):
@@ -1779,7 +1671,7 @@ class MilestonesSortFilter(TypedDict, total=False):
     description: AirbyteSortOrder
     """Milestone description"""
     state: AirbyteSortOrder
-    """Milestone state: `OPEN` or `CLOSED`"""
+    """Milestone state in the cache: lowercase `open` or `closed`"""
     due_on: AirbyteSortOrder
     """ISO 8601 timestamp for the milestone's due date, if set"""
     closed_at: AirbyteSortOrder
@@ -1788,8 +1680,6 @@ class MilestonesSortFilter(TypedDict, total=False):
     """ISO 8601 timestamp when the milestone was created"""
     updated_at: AirbyteSortOrder
     """ISO 8601 timestamp when the milestone was last updated"""
-    progress_percentage: AirbyteSortOrder
-    """Percentage of associated issues/PRs that are closed"""
 
 
 # Entity-specific condition types for milestones
@@ -2653,11 +2543,9 @@ class PullRequestsSearchFilter(TypedDict, total=False):
     title: str | None
     """Pull request title"""
     state: str | None
-    """Pull request state: `OPEN`, `CLOSED`, or `MERGED`"""
+    """Pull request state in the cache: lowercase `open` or `closed` (REST API has no `merged` state; check `mergedAt` to distinguish merged PRs)"""
     is_draft: bool | None
     """Whether the pull request is still a draft"""
-    merged: bool | None
-    """Whether the pull request has been merged"""
     created_at: str | None
     """ISO 8601 timestamp when the pull request was created"""
     updated_at: str | None
@@ -2666,10 +2554,6 @@ class PullRequestsSearchFilter(TypedDict, total=False):
     """ISO 8601 timestamp when the pull request was closed, if applicable"""
     merged_at: str | None
     """ISO 8601 timestamp when the pull request was merged, if applicable"""
-    base_ref_name: str | None
-    """Name of the branch being merged into"""
-    head_ref_name: str | None
-    """Name of the branch with the proposed changes"""
     url: str | None
     """Permalink to the pull request on GitHub"""
 
@@ -2685,11 +2569,9 @@ class PullRequestsInFilter(TypedDict, total=False):
     title: list[str]
     """Pull request title"""
     state: list[str]
-    """Pull request state: `OPEN`, `CLOSED`, or `MERGED`"""
+    """Pull request state in the cache: lowercase `open` or `closed` (REST API has no `merged` state; check `mergedAt` to distinguish merged PRs)"""
     is_draft: list[bool]
     """Whether the pull request is still a draft"""
-    merged: list[bool]
-    """Whether the pull request has been merged"""
     created_at: list[str]
     """ISO 8601 timestamp when the pull request was created"""
     updated_at: list[str]
@@ -2698,10 +2580,6 @@ class PullRequestsInFilter(TypedDict, total=False):
     """ISO 8601 timestamp when the pull request was closed, if applicable"""
     merged_at: list[str]
     """ISO 8601 timestamp when the pull request was merged, if applicable"""
-    base_ref_name: list[str]
-    """Name of the branch being merged into"""
-    head_ref_name: list[str]
-    """Name of the branch with the proposed changes"""
     url: list[str]
     """Permalink to the pull request on GitHub"""
 
@@ -2717,11 +2595,9 @@ class PullRequestsAnyValueFilter(TypedDict, total=False):
     title: Any
     """Pull request title"""
     state: Any
-    """Pull request state: `OPEN`, `CLOSED`, or `MERGED`"""
+    """Pull request state in the cache: lowercase `open` or `closed` (REST API has no `merged` state; check `mergedAt` to distinguish merged PRs)"""
     is_draft: Any
     """Whether the pull request is still a draft"""
-    merged: Any
-    """Whether the pull request has been merged"""
     created_at: Any
     """ISO 8601 timestamp when the pull request was created"""
     updated_at: Any
@@ -2730,10 +2606,6 @@ class PullRequestsAnyValueFilter(TypedDict, total=False):
     """ISO 8601 timestamp when the pull request was closed, if applicable"""
     merged_at: Any
     """ISO 8601 timestamp when the pull request was merged, if applicable"""
-    base_ref_name: Any
-    """Name of the branch being merged into"""
-    head_ref_name: Any
-    """Name of the branch with the proposed changes"""
     url: Any
     """Permalink to the pull request on GitHub"""
 
@@ -2749,11 +2621,9 @@ class PullRequestsStringFilter(TypedDict, total=False):
     title: str
     """Pull request title"""
     state: str
-    """Pull request state: `OPEN`, `CLOSED`, or `MERGED`"""
+    """Pull request state in the cache: lowercase `open` or `closed` (REST API has no `merged` state; check `mergedAt` to distinguish merged PRs)"""
     is_draft: str
     """Whether the pull request is still a draft"""
-    merged: str
-    """Whether the pull request has been merged"""
     created_at: str
     """ISO 8601 timestamp when the pull request was created"""
     updated_at: str
@@ -2762,10 +2632,6 @@ class PullRequestsStringFilter(TypedDict, total=False):
     """ISO 8601 timestamp when the pull request was closed, if applicable"""
     merged_at: str
     """ISO 8601 timestamp when the pull request was merged, if applicable"""
-    base_ref_name: str
-    """Name of the branch being merged into"""
-    head_ref_name: str
-    """Name of the branch with the proposed changes"""
     url: str
     """Permalink to the pull request on GitHub"""
 
@@ -2781,11 +2647,9 @@ class PullRequestsSortFilter(TypedDict, total=False):
     title: AirbyteSortOrder
     """Pull request title"""
     state: AirbyteSortOrder
-    """Pull request state: `OPEN`, `CLOSED`, or `MERGED`"""
+    """Pull request state in the cache: lowercase `open` or `closed` (REST API has no `merged` state; check `mergedAt` to distinguish merged PRs)"""
     is_draft: AirbyteSortOrder
     """Whether the pull request is still a draft"""
-    merged: AirbyteSortOrder
-    """Whether the pull request has been merged"""
     created_at: AirbyteSortOrder
     """ISO 8601 timestamp when the pull request was created"""
     updated_at: AirbyteSortOrder
@@ -2794,10 +2658,6 @@ class PullRequestsSortFilter(TypedDict, total=False):
     """ISO 8601 timestamp when the pull request was closed, if applicable"""
     merged_at: AirbyteSortOrder
     """ISO 8601 timestamp when the pull request was merged, if applicable"""
-    base_ref_name: AirbyteSortOrder
-    """Name of the branch being merged into"""
-    head_ref_name: AirbyteSortOrder
-    """Name of the branch with the proposed changes"""
     url: AirbyteSortOrder
     """Permalink to the pull request on GitHub"""
 
@@ -3364,7 +3224,7 @@ class ReviewsSearchFilter(TypedDict, total=False):
     database_id: int | None
     """REST API numeric identifier for the review"""
     state: str | None
-    """Review state: `PENDING`, `COMMENTED`, `APPROVED`, `CHANGES_REQUESTED`, or `DISMISSED`"""
+    """Review state in the cache: `PENDING`, `COMMENTED`, `APPROVED`, `CHANGES_REQUESTED`, or `DISMISSED`"""
     body: str | None
     """Review body text"""
     submitted_at: str | None
@@ -3384,7 +3244,7 @@ class ReviewsInFilter(TypedDict, total=False):
     database_id: list[int]
     """REST API numeric identifier for the review"""
     state: list[str]
-    """Review state: `PENDING`, `COMMENTED`, `APPROVED`, `CHANGES_REQUESTED`, or `DISMISSED`"""
+    """Review state in the cache: `PENDING`, `COMMENTED`, `APPROVED`, `CHANGES_REQUESTED`, or `DISMISSED`"""
     body: list[str]
     """Review body text"""
     submitted_at: list[str]
@@ -3404,7 +3264,7 @@ class ReviewsAnyValueFilter(TypedDict, total=False):
     database_id: Any
     """REST API numeric identifier for the review"""
     state: Any
-    """Review state: `PENDING`, `COMMENTED`, `APPROVED`, `CHANGES_REQUESTED`, or `DISMISSED`"""
+    """Review state in the cache: `PENDING`, `COMMENTED`, `APPROVED`, `CHANGES_REQUESTED`, or `DISMISSED`"""
     body: Any
     """Review body text"""
     submitted_at: Any
@@ -3424,7 +3284,7 @@ class ReviewsStringFilter(TypedDict, total=False):
     database_id: str
     """REST API numeric identifier for the review"""
     state: str
-    """Review state: `PENDING`, `COMMENTED`, `APPROVED`, `CHANGES_REQUESTED`, or `DISMISSED`"""
+    """Review state in the cache: `PENDING`, `COMMENTED`, `APPROVED`, `CHANGES_REQUESTED`, or `DISMISSED`"""
     body: str
     """Review body text"""
     submitted_at: str
@@ -3444,7 +3304,7 @@ class ReviewsSortFilter(TypedDict, total=False):
     database_id: AirbyteSortOrder
     """REST API numeric identifier for the review"""
     state: AirbyteSortOrder
-    """Review state: `PENDING`, `COMMENTED`, `APPROVED`, `CHANGES_REQUESTED`, or `DISMISSED`"""
+    """Review state in the cache: `PENDING`, `COMMENTED`, `APPROVED`, `CHANGES_REQUESTED`, or `DISMISSED`"""
     body: AirbyteSortOrder
     """Review body text"""
     submitted_at: AirbyteSortOrder
@@ -3681,40 +3541,30 @@ class TagsSearchFilter(TypedDict, total=False):
     """Available fields for filtering tags search queries."""
     name: str | None
     """Tag name (e.g. `v1.2.3`)"""
-    prefix: str | None
-    """Git ref prefix for the tag (typically `refs/tags/`)"""
 
 
 class TagsInFilter(TypedDict, total=False):
     """Available fields for 'in' condition (values are lists)."""
     name: list[str]
     """Tag name (e.g. `v1.2.3`)"""
-    prefix: list[str]
-    """Git ref prefix for the tag (typically `refs/tags/`)"""
 
 
 class TagsAnyValueFilter(TypedDict, total=False):
     """Available fields with Any value type. Used for 'contains' and 'any' conditions."""
     name: Any
     """Tag name (e.g. `v1.2.3`)"""
-    prefix: Any
-    """Git ref prefix for the tag (typically `refs/tags/`)"""
 
 
 class TagsStringFilter(TypedDict, total=False):
     """String fields for text search conditions (like, fuzzy, keyword)."""
     name: str
     """Tag name (e.g. `v1.2.3`)"""
-    prefix: str
-    """Git ref prefix for the tag (typically `refs/tags/`)"""
 
 
 class TagsSortFilter(TypedDict, total=False):
     """Available fields for sorting tags search results."""
     name: AirbyteSortOrder
     """Tag name (e.g. `v1.2.3`)"""
-    prefix: AirbyteSortOrder
-    """Git ref prefix for the tag (typically `refs/tags/`)"""
 
 
 # Entity-specific condition types for tags
@@ -3825,13 +3675,9 @@ class TeamsSearchFilter(TypedDict, total=False):
     description: str | None
     """Short description of the team"""
     privacy: str | None
-    """Team visibility: `SECRET` or `VISIBLE`"""
+    """Team visibility: `secret` or `closed` (REST API values)"""
     url: str | None
     """Permalink to the team on GitHub"""
-    created_at: str | None
-    """ISO 8601 timestamp when the team was created"""
-    updated_at: str | None
-    """ISO 8601 timestamp when the team was last updated"""
 
 
 class TeamsInFilter(TypedDict, total=False):
@@ -3847,13 +3693,9 @@ class TeamsInFilter(TypedDict, total=False):
     description: list[str]
     """Short description of the team"""
     privacy: list[str]
-    """Team visibility: `SECRET` or `VISIBLE`"""
+    """Team visibility: `secret` or `closed` (REST API values)"""
     url: list[str]
     """Permalink to the team on GitHub"""
-    created_at: list[str]
-    """ISO 8601 timestamp when the team was created"""
-    updated_at: list[str]
-    """ISO 8601 timestamp when the team was last updated"""
 
 
 class TeamsAnyValueFilter(TypedDict, total=False):
@@ -3869,13 +3711,9 @@ class TeamsAnyValueFilter(TypedDict, total=False):
     description: Any
     """Short description of the team"""
     privacy: Any
-    """Team visibility: `SECRET` or `VISIBLE`"""
+    """Team visibility: `secret` or `closed` (REST API values)"""
     url: Any
     """Permalink to the team on GitHub"""
-    created_at: Any
-    """ISO 8601 timestamp when the team was created"""
-    updated_at: Any
-    """ISO 8601 timestamp when the team was last updated"""
 
 
 class TeamsStringFilter(TypedDict, total=False):
@@ -3891,13 +3729,9 @@ class TeamsStringFilter(TypedDict, total=False):
     description: str
     """Short description of the team"""
     privacy: str
-    """Team visibility: `SECRET` or `VISIBLE`"""
+    """Team visibility: `secret` or `closed` (REST API values)"""
     url: str
     """Permalink to the team on GitHub"""
-    created_at: str
-    """ISO 8601 timestamp when the team was created"""
-    updated_at: str
-    """ISO 8601 timestamp when the team was last updated"""
 
 
 class TeamsSortFilter(TypedDict, total=False):
@@ -3913,13 +3747,9 @@ class TeamsSortFilter(TypedDict, total=False):
     description: AirbyteSortOrder
     """Short description of the team"""
     privacy: AirbyteSortOrder
-    """Team visibility: `SECRET` or `VISIBLE`"""
+    """Team visibility: `secret` or `closed` (REST API values)"""
     url: AirbyteSortOrder
     """Permalink to the team on GitHub"""
-    created_at: AirbyteSortOrder
-    """ISO 8601 timestamp when the team was created"""
-    updated_at: AirbyteSortOrder
-    """ISO 8601 timestamp when the team was last updated"""
 
 
 # Entity-specific condition types for teams
@@ -4025,22 +3855,8 @@ class UsersSearchFilter(TypedDict, total=False):
     """REST API numeric identifier for the user"""
     login: str | None
     """User login/handle"""
-    name: str | None
-    """Public display name of the user, if set"""
-    email: str | None
-    """Public email address of the user, if set"""
-    company: str | None
-    """Public company affiliation of the user, if set"""
-    location: str | None
-    """Public location of the user, if set"""
-    twitter_username: str | None
-    """Public Twitter/X username of the user, if set"""
     url: str | None
     """Permalink to the user's profile on GitHub"""
-    created_at: str | None
-    """ISO 8601 timestamp when the user account was created"""
-    is_hireable: bool | None
-    """Whether the user has marked themselves as available for hire"""
 
 
 class UsersInFilter(TypedDict, total=False):
@@ -4051,22 +3867,8 @@ class UsersInFilter(TypedDict, total=False):
     """REST API numeric identifier for the user"""
     login: list[str]
     """User login/handle"""
-    name: list[str]
-    """Public display name of the user, if set"""
-    email: list[str]
-    """Public email address of the user, if set"""
-    company: list[str]
-    """Public company affiliation of the user, if set"""
-    location: list[str]
-    """Public location of the user, if set"""
-    twitter_username: list[str]
-    """Public Twitter/X username of the user, if set"""
     url: list[str]
     """Permalink to the user's profile on GitHub"""
-    created_at: list[str]
-    """ISO 8601 timestamp when the user account was created"""
-    is_hireable: list[bool]
-    """Whether the user has marked themselves as available for hire"""
 
 
 class UsersAnyValueFilter(TypedDict, total=False):
@@ -4077,22 +3879,8 @@ class UsersAnyValueFilter(TypedDict, total=False):
     """REST API numeric identifier for the user"""
     login: Any
     """User login/handle"""
-    name: Any
-    """Public display name of the user, if set"""
-    email: Any
-    """Public email address of the user, if set"""
-    company: Any
-    """Public company affiliation of the user, if set"""
-    location: Any
-    """Public location of the user, if set"""
-    twitter_username: Any
-    """Public Twitter/X username of the user, if set"""
     url: Any
     """Permalink to the user's profile on GitHub"""
-    created_at: Any
-    """ISO 8601 timestamp when the user account was created"""
-    is_hireable: Any
-    """Whether the user has marked themselves as available for hire"""
 
 
 class UsersStringFilter(TypedDict, total=False):
@@ -4103,22 +3891,8 @@ class UsersStringFilter(TypedDict, total=False):
     """REST API numeric identifier for the user"""
     login: str
     """User login/handle"""
-    name: str
-    """Public display name of the user, if set"""
-    email: str
-    """Public email address of the user, if set"""
-    company: str
-    """Public company affiliation of the user, if set"""
-    location: str
-    """Public location of the user, if set"""
-    twitter_username: str
-    """Public Twitter/X username of the user, if set"""
     url: str
     """Permalink to the user's profile on GitHub"""
-    created_at: str
-    """ISO 8601 timestamp when the user account was created"""
-    is_hireable: str
-    """Whether the user has marked themselves as available for hire"""
 
 
 class UsersSortFilter(TypedDict, total=False):
@@ -4129,22 +3903,8 @@ class UsersSortFilter(TypedDict, total=False):
     """REST API numeric identifier for the user"""
     login: AirbyteSortOrder
     """User login/handle"""
-    name: AirbyteSortOrder
-    """Public display name of the user, if set"""
-    email: AirbyteSortOrder
-    """Public email address of the user, if set"""
-    company: AirbyteSortOrder
-    """Public company affiliation of the user, if set"""
-    location: AirbyteSortOrder
-    """Public location of the user, if set"""
-    twitter_username: AirbyteSortOrder
-    """Public Twitter/X username of the user, if set"""
     url: AirbyteSortOrder
     """Permalink to the user's profile on GitHub"""
-    created_at: AirbyteSortOrder
-    """ISO 8601 timestamp when the user account was created"""
-    is_hireable: AirbyteSortOrder
-    """Whether the user has marked themselves as available for hire"""
 
 
 # Entity-specific condition types for users

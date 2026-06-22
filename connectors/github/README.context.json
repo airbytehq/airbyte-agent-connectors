@@ -4396,15 +4396,6 @@
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
           "description": "Branch name (e.g. `main`, `feature/foo`)"
-        },
-        {
-          "name": "prefix",
-          "python_name": "prefix",
-          "type": "str | None",
-          "json_type": "null | string",
-          "example_value_json": "\"<str>\"",
-          "json_example_value": "<str>",
-          "description": "Git ref prefix for the branch (typically `refs/heads/`)"
         }
       ]
     },
@@ -4474,15 +4465,6 @@
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
           "description": "Permalink to the comment on GitHub"
-        },
-        {
-          "name": "isMinimized",
-          "python_name": "is_minimized",
-          "type": "bool | None",
-          "json_type": "null | boolean",
-          "example_value_json": "True",
-          "json_example_value": true,
-          "description": "Whether the comment has been hidden/collapsed"
         }
       ]
     },
@@ -4500,85 +4482,13 @@
       "condition_type_name": "CommitsCondition",
       "fields": [
         {
-          "name": "oid",
-          "python_name": "oid",
+          "name": "sha",
+          "python_name": "sha",
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
           "description": "Full Git commit SHA"
-        },
-        {
-          "name": "abbreviatedOid",
-          "python_name": "abbreviated_oid",
-          "type": "str | None",
-          "json_type": "null | string",
-          "example_value_json": "\"<str>\"",
-          "json_example_value": "<str>",
-          "description": "Abbreviated Git commit SHA (typically 7 characters)"
-        },
-        {
-          "name": "messageHeadline",
-          "python_name": "message_headline",
-          "type": "str | None",
-          "json_type": "null | string",
-          "example_value_json": "\"<str>\"",
-          "json_example_value": "<str>",
-          "description": "First line of the commit message"
-        },
-        {
-          "name": "message",
-          "python_name": "message",
-          "type": "str | None",
-          "json_type": "null | string",
-          "example_value_json": "\"<str>\"",
-          "json_example_value": "<str>",
-          "description": "Full commit message"
-        },
-        {
-          "name": "committedDate",
-          "python_name": "committed_date",
-          "type": "str | None",
-          "json_type": "null | string",
-          "example_value_json": "\"<str>\"",
-          "json_example_value": "<str>",
-          "description": "ISO 8601 timestamp when the commit was applied to its tree"
-        },
-        {
-          "name": "authoredDate",
-          "python_name": "authored_date",
-          "type": "str | None",
-          "json_type": "null | string",
-          "example_value_json": "\"<str>\"",
-          "json_example_value": "<str>",
-          "description": "ISO 8601 timestamp when the commit was originally authored"
-        },
-        {
-          "name": "additions",
-          "python_name": "additions",
-          "type": "int | None",
-          "json_type": "null | integer",
-          "example_value_json": "0",
-          "json_example_value": 0,
-          "description": "Number of lines added across all files in the commit"
-        },
-        {
-          "name": "deletions",
-          "python_name": "deletions",
-          "type": "int | None",
-          "json_type": "null | integer",
-          "example_value_json": "0",
-          "json_example_value": 0,
-          "description": "Number of lines deleted across all files in the commit"
-        },
-        {
-          "name": "changedFiles",
-          "python_name": "changed_files",
-          "type": "int | None",
-          "json_type": "null | integer",
-          "example_value_json": "0",
-          "json_example_value": 0,
-          "description": "Number of files changed in the commit"
         },
         {
           "name": "url",
@@ -4588,6 +4498,15 @@
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
           "description": "Permalink to the commit on GitHub"
+        },
+        {
+          "name": "createdAt",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "ISO 8601 timestamp of the commit"
         }
       ]
     },
@@ -4689,7 +4608,7 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Issue state: `OPEN` or `CLOSED`"
+          "description": "Issue state in the cache: lowercase `open` or `closed`"
         },
         {
           "name": "stateReason",
@@ -4698,7 +4617,7 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Reason the issue is in its current state (e.g. `COMPLETED`, `NOT_PLANNED`)"
+          "description": "Reason the issue is in its current state (e.g. `completed`, `not_planned`, `reopened`). Cached values are lowercase."
         },
         {
           "name": "createdAt",
@@ -4797,22 +4716,13 @@
           "description": "Short description of what the label is used for"
         },
         {
-          "name": "createdAt",
-          "python_name": "created_at",
-          "type": "str | None",
-          "json_type": "null | string",
-          "example_value_json": "\"<str>\"",
-          "json_example_value": "<str>",
-          "description": "ISO 8601 timestamp when the label was created"
-        },
-        {
           "name": "url",
           "python_name": "url",
           "type": "str | None",
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Permalink to the label on GitHub"
+          "description": "API URL to the label resource"
         }
       ]
     },
@@ -4872,7 +4782,7 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Milestone state: `OPEN` or `CLOSED`"
+          "description": "Milestone state in the cache: lowercase `open` or `closed`"
         },
         {
           "name": "dueOn",
@@ -4909,15 +4819,6 @@
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the milestone was last updated"
-        },
-        {
-          "name": "progressPercentage",
-          "python_name": "progress_percentage",
-          "type": "float | None",
-          "json_type": "null | number",
-          "example_value_json": "0.0",
-          "json_example_value": 0.0,
-          "description": "Percentage of associated issues/PRs that are closed"
         }
       ]
     },
@@ -5211,7 +5112,7 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Pull request state: `OPEN`, `CLOSED`, or `MERGED`"
+          "description": "Pull request state in the cache: lowercase `open` or `closed` (REST API has no `merged` state; check `mergedAt` to distinguish merged PRs)"
         },
         {
           "name": "isDraft",
@@ -5221,15 +5122,6 @@
           "example_value_json": "True",
           "json_example_value": true,
           "description": "Whether the pull request is still a draft"
-        },
-        {
-          "name": "merged",
-          "python_name": "merged",
-          "type": "bool | None",
-          "json_type": "null | boolean",
-          "example_value_json": "True",
-          "json_example_value": true,
-          "description": "Whether the pull request has been merged"
         },
         {
           "name": "createdAt",
@@ -5266,24 +5158,6 @@
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
           "description": "ISO 8601 timestamp when the pull request was merged, if applicable"
-        },
-        {
-          "name": "baseRefName",
-          "python_name": "base_ref_name",
-          "type": "str | None",
-          "json_type": "null | string",
-          "example_value_json": "\"<str>\"",
-          "json_example_value": "<str>",
-          "description": "Name of the branch being merged into"
-        },
-        {
-          "name": "headRefName",
-          "python_name": "head_ref_name",
-          "type": "str | None",
-          "json_type": "null | string",
-          "example_value_json": "\"<str>\"",
-          "json_example_value": "<str>",
-          "description": "Name of the branch with the proposed changes"
         },
         {
           "name": "url",
@@ -5571,7 +5445,7 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Review state: `PENDING`, `COMMENTED`, `APPROVED`, `CHANGES_REQUESTED`, or `DISMISSED`"
+          "description": "Review state in the cache: `PENDING`, `COMMENTED`, `APPROVED`, `CHANGES_REQUESTED`, or `DISMISSED`"
         },
         {
           "name": "body",
@@ -5665,15 +5539,6 @@
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
           "description": "Tag name (e.g. `v1.2.3`)"
-        },
-        {
-          "name": "prefix",
-          "python_name": "prefix",
-          "type": "str | None",
-          "json_type": "null | string",
-          "example_value_json": "\"<str>\"",
-          "json_example_value": "<str>",
-          "description": "Git ref prefix for the tag (typically `refs/tags/`)"
         }
       ]
     },
@@ -5742,7 +5607,7 @@
           "json_type": "null | string",
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
-          "description": "Team visibility: `SECRET` or `VISIBLE`"
+          "description": "Team visibility: `secret` or `closed` (REST API values)"
         },
         {
           "name": "url",
@@ -5752,24 +5617,6 @@
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
           "description": "Permalink to the team on GitHub"
-        },
-        {
-          "name": "createdAt",
-          "python_name": "created_at",
-          "type": "str | None",
-          "json_type": "null | string",
-          "example_value_json": "\"<str>\"",
-          "json_example_value": "<str>",
-          "description": "ISO 8601 timestamp when the team was created"
-        },
-        {
-          "name": "updatedAt",
-          "python_name": "updated_at",
-          "type": "str | None",
-          "json_type": "null | string",
-          "example_value_json": "\"<str>\"",
-          "json_example_value": "<str>",
-          "description": "ISO 8601 timestamp when the team was last updated"
         }
       ]
     },
@@ -5814,51 +5661,6 @@
           "description": "User login/handle"
         },
         {
-          "name": "name",
-          "python_name": "name",
-          "type": "str | None",
-          "json_type": "null | string",
-          "example_value_json": "\"<str>\"",
-          "json_example_value": "<str>",
-          "description": "Public display name of the user, if set"
-        },
-        {
-          "name": "email",
-          "python_name": "email",
-          "type": "str | None",
-          "json_type": "null | string",
-          "example_value_json": "\"<str>\"",
-          "json_example_value": "<str>",
-          "description": "Public email address of the user, if set"
-        },
-        {
-          "name": "company",
-          "python_name": "company",
-          "type": "str | None",
-          "json_type": "null | string",
-          "example_value_json": "\"<str>\"",
-          "json_example_value": "<str>",
-          "description": "Public company affiliation of the user, if set"
-        },
-        {
-          "name": "location",
-          "python_name": "location",
-          "type": "str | None",
-          "json_type": "null | string",
-          "example_value_json": "\"<str>\"",
-          "json_example_value": "<str>",
-          "description": "Public location of the user, if set"
-        },
-        {
-          "name": "twitterUsername",
-          "python_name": "twitter_username",
-          "type": "str | None",
-          "json_type": "null | string",
-          "example_value_json": "\"<str>\"",
-          "json_example_value": "<str>",
-          "description": "Public Twitter/X username of the user, if set"
-        },
-        {
           "name": "url",
           "python_name": "url",
           "type": "str | None",
@@ -5866,24 +5668,6 @@
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
           "description": "Permalink to the user's profile on GitHub"
-        },
-        {
-          "name": "createdAt",
-          "python_name": "created_at",
-          "type": "str | None",
-          "json_type": "null | string",
-          "example_value_json": "\"<str>\"",
-          "json_example_value": "<str>",
-          "description": "ISO 8601 timestamp when the user account was created"
-        },
-        {
-          "name": "isHireable",
-          "python_name": "is_hireable",
-          "type": "bool | None",
-          "json_type": "null | boolean",
-          "example_value_json": "True",
-          "json_example_value": true,
-          "description": "Whether the user has marked themselves as available for hire"
         }
       ]
     },

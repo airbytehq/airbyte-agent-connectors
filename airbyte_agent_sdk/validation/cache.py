@@ -152,7 +152,7 @@ def validate_cache_against_manifest(
 
         if manifest_name not in manifest_streams:
             if manifest_name != entity_name:
-                errors.append(f"Cache entity '{entity_name}' (x-airbyte-name: '{manifest_name}') " f"does not exist as a stream in the manifest")
+                errors.append(f"Cache entity '{entity_name}' (x-airbyte-name: '{manifest_name}') does not exist as a stream in the manifest")
             else:
                 errors.append(f"Cache entity '{entity_name}' does not exist as a stream in the manifest")
             continue
@@ -161,7 +161,7 @@ def validate_cache_against_manifest(
         if not manifest_fields:
             continue
 
-        cache_field_names = {f["name"] for f in entity.get("fields", [])}
+        cache_field_names = {f.get("x-airbyte-name", f["name"]) for f in entity.get("fields", [])}
         extra_fields = cache_field_names - manifest_fields
         if extra_fields:
             errors.append(f"Cache entity '{entity_name}' has fields not in the manifest: {sorted(extra_fields)}")

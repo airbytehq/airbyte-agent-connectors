@@ -125,67 +125,47 @@ info:
           - name: name
             type: ["null", "string"]
             description: "Branch name (e.g. `main`, `feature/foo`)"
-          - name: prefix
-            type: ["null", "string"]
-            description: "Git ref prefix for the branch (typically `refs/heads/`)"
       - entity: comments
         suggested: true
         x-airbyte-name: comments
         fields:
           - name: id
+            x-airbyte-name: node_id
             type: ["null", "string"]
             description: "GraphQL node ID of the comment"
           - name: databaseId
+            x-airbyte-name: id
             type: ["null", "integer"]
             description: "REST API numeric identifier for the comment"
           - name: body
             type: ["null", "string"]
             description: "Markdown body of the comment"
           - name: createdAt
+            x-airbyte-name: created_at
             type: ["null", "string"]
             description: "ISO 8601 timestamp when the comment was created"
           - name: updatedAt
+            x-airbyte-name: updated_at
             type: ["null", "string"]
             description: "ISO 8601 timestamp when the comment was last updated"
           - name: url
+            x-airbyte-name: html_url
             type: ["null", "string"]
             description: "Permalink to the comment on GitHub"
-          - name: isMinimized
-            type: ["null", "boolean"]
-            description: "Whether the comment has been hidden/collapsed"
       - entity: commits
         x-airbyte-name: commits
         fields:
-          - name: oid
+          - name: sha
             type: ["null", "string"]
             description: "Full Git commit SHA"
-          - name: abbreviatedOid
-            type: ["null", "string"]
-            description: "Abbreviated Git commit SHA (typically 7 characters)"
-          - name: messageHeadline
-            type: ["null", "string"]
-            description: "First line of the commit message"
-          - name: message
-            type: ["null", "string"]
-            description: "Full commit message"
-          - name: committedDate
-            type: ["null", "string"]
-            description: "ISO 8601 timestamp when the commit was applied to its tree"
-          - name: authoredDate
-            type: ["null", "string"]
-            description: "ISO 8601 timestamp when the commit was originally authored"
-          - name: additions
-            type: ["null", "integer"]
-            description: "Number of lines added across all files in the commit"
-          - name: deletions
-            type: ["null", "integer"]
-            description: "Number of lines deleted across all files in the commit"
-          - name: changedFiles
-            type: ["null", "integer"]
-            description: "Number of files changed in the commit"
           - name: url
+            x-airbyte-name: html_url
             type: ["null", "string"]
             description: "Permalink to the commit on GitHub"
+          - name: createdAt
+            x-airbyte-name: created_at
+            type: ["null", "string"]
+            description: "ISO 8601 timestamp of the commit"
       - entity: directory_content
         x-airbyte-name: null
         x-airbyte-skip-searchable-fields: "Directory listing endpoint returns tree entries for a specific path, not a record stream with a stable schema; no upstream source-github replication stream exists."
@@ -200,9 +180,11 @@ info:
         x-airbyte-name: issues
         fields:
           - name: id
+            x-airbyte-name: node_id
             type: ["null", "string"]
             description: "GraphQL node ID of the issue"
           - name: databaseId
+            x-airbyte-name: id
             type: ["null", "integer"]
             description: "REST API numeric identifier for the issue"
           - name: number
@@ -213,29 +195,35 @@ info:
             description: "Issue title"
           - name: state
             type: ["null", "string"]
-            description: "Issue state: `OPEN` or `CLOSED`"
+            description: "Issue state in the cache: lowercase `open` or `closed`"
           - name: stateReason
+            x-airbyte-name: state_reason
             type: ["null", "string"]
-            description: "Reason the issue is in its current state (e.g. `COMPLETED`, `NOT_PLANNED`)"
+            description: "Reason the issue is in its current state (e.g. `completed`, `not_planned`, `reopened`). Cached values are lowercase."
           - name: createdAt
+            x-airbyte-name: created_at
             type: ["null", "string"]
             description: "ISO 8601 timestamp when the issue was created"
           - name: updatedAt
+            x-airbyte-name: updated_at
             type: ["null", "string"]
             description: "ISO 8601 timestamp when the issue was last updated"
           - name: closedAt
+            x-airbyte-name: closed_at
             type: ["null", "string"]
             description: "ISO 8601 timestamp when the issue was closed, if applicable"
           - name: locked
             type: ["null", "boolean"]
             description: "Whether the conversation on the issue is locked"
           - name: url
+            x-airbyte-name: html_url
             type: ["null", "string"]
             description: "Permalink to the issue on GitHub"
       - entity: labels
         x-airbyte-name: issue_labels
         fields:
           - name: id
+            x-airbyte-name: node_id
             type: ["null", "string"]
             description: "GraphQL node ID of the label"
           - name: name
@@ -247,16 +235,14 @@ info:
           - name: description
             type: ["null", "string"]
             description: "Short description of what the label is used for"
-          - name: createdAt
-            type: ["null", "string"]
-            description: "ISO 8601 timestamp when the label was created"
           - name: url
             type: ["null", "string"]
-            description: "Permalink to the label on GitHub"
+            description: "API URL to the label resource"
       - entity: milestones
         x-airbyte-name: issue_milestones
         fields:
           - name: id
+            x-airbyte-name: node_id
             type: ["null", "string"]
             description: "GraphQL node ID of the milestone"
           - name: number
@@ -270,29 +256,32 @@ info:
             description: "Milestone description"
           - name: state
             type: ["null", "string"]
-            description: "Milestone state: `OPEN` or `CLOSED`"
+            description: "Milestone state in the cache: lowercase `open` or `closed`"
           - name: dueOn
+            x-airbyte-name: due_on
             type: ["null", "string"]
             description: "ISO 8601 timestamp for the milestone's due date, if set"
           - name: closedAt
+            x-airbyte-name: closed_at
             type: ["null", "string"]
             description: "ISO 8601 timestamp when the milestone was closed, if applicable"
           - name: createdAt
+            x-airbyte-name: created_at
             type: ["null", "string"]
             description: "ISO 8601 timestamp when the milestone was created"
           - name: updatedAt
+            x-airbyte-name: updated_at
             type: ["null", "string"]
             description: "ISO 8601 timestamp when the milestone was last updated"
-          - name: progressPercentage
-            type: ["null", "number"]
-            description: "Percentage of associated issues/PRs that are closed"
       - entity: organizations
         x-airbyte-name: organizations
         fields:
           - name: id
+            x-airbyte-name: node_id
             type: ["null", "string"]
             description: "GraphQL node ID of the organization"
           - name: databaseId
+            x-airbyte-name: id
             type: ["null", "integer"]
             description: "REST API numeric identifier for the organization"
           - name: login
@@ -311,9 +300,11 @@ info:
             type: ["null", "string"]
             description: "Public location of the organization, if set"
           - name: isVerified
+            x-airbyte-name: is_verified
             type: ["null", "boolean"]
             description: "Whether the organization has a verified domain"
           - name: createdAt
+            x-airbyte-name: created_at
             type: ["null", "string"]
             description: "ISO 8601 timestamp when the organization was created"
       - entity: org_repositories
@@ -329,6 +320,7 @@ info:
         x-airbyte-name: projects_v2
         fields:
           - name: id
+            x-airbyte-name: node_id
             type: ["null", "string"]
             description: "GraphQL node ID of the project"
           - name: number
@@ -338,6 +330,7 @@ info:
             type: ["null", "string"]
             description: "Project title"
           - name: shortDescription
+            x-airbyte-name: short_description
             type: ["null", "string"]
             description: "Short description displayed on the project summary"
           - name: url
@@ -350,9 +343,11 @@ info:
             type: ["null", "boolean"]
             description: "Whether the project is publicly visible"
           - name: createdAt
+            x-airbyte-name: created_at
             type: ["null", "string"]
             description: "ISO 8601 timestamp when the project was created"
           - name: updatedAt
+            x-airbyte-name: updated_at
             type: ["null", "string"]
             description: "ISO 8601 timestamp when the project was last updated"
       - entity: pull_requests
@@ -360,9 +355,11 @@ info:
         x-airbyte-name: pull_requests
         fields:
           - name: id
+            x-airbyte-name: node_id
             type: ["null", "string"]
             description: "GraphQL node ID of the pull request"
           - name: databaseId
+            x-airbyte-name: id
             type: ["null", "integer"]
             description: "REST API numeric identifier for the pull request"
           - name: number
@@ -373,65 +370,71 @@ info:
             description: "Pull request title"
           - name: state
             type: ["null", "string"]
-            description: "Pull request state: `OPEN`, `CLOSED`, or `MERGED`"
+            description: "Pull request state in the cache: lowercase `open` or `closed` (REST API has no `merged` state; check `mergedAt` to distinguish merged PRs)"
           - name: isDraft
+            x-airbyte-name: draft
             type: ["null", "boolean"]
             description: "Whether the pull request is still a draft"
-          - name: merged
-            type: ["null", "boolean"]
-            description: "Whether the pull request has been merged"
           - name: createdAt
+            x-airbyte-name: created_at
             type: ["null", "string"]
             description: "ISO 8601 timestamp when the pull request was created"
           - name: updatedAt
+            x-airbyte-name: updated_at
             type: ["null", "string"]
             description: "ISO 8601 timestamp when the pull request was last updated"
           - name: closedAt
+            x-airbyte-name: closed_at
             type: ["null", "string"]
             description: "ISO 8601 timestamp when the pull request was closed, if applicable"
           - name: mergedAt
+            x-airbyte-name: merged_at
             type: ["null", "string"]
             description: "ISO 8601 timestamp when the pull request was merged, if applicable"
-          - name: baseRefName
-            type: ["null", "string"]
-            description: "Name of the branch being merged into"
-          - name: headRefName
-            type: ["null", "string"]
-            description: "Name of the branch with the proposed changes"
           - name: url
+            x-airbyte-name: html_url
             type: ["null", "string"]
             description: "Permalink to the pull request on GitHub"
       - entity: releases
         x-airbyte-name: releases
         fields:
           - name: id
+            x-airbyte-name: node_id
             type: ["null", "string"]
             description: "GraphQL node ID of the release"
           - name: databaseId
+            x-airbyte-name: id
             type: ["null", "integer"]
             description: "REST API numeric identifier for the release"
           - name: name
             type: ["null", "string"]
             description: "Display name of the release"
           - name: tagName
+            x-airbyte-name: tag_name
             type: ["null", "string"]
             description: "Git tag the release points at (e.g. `v1.2.3`)"
           - name: description
+            x-airbyte-name: body
             type: ["null", "string"]
             description: "Markdown body / release notes"
           - name: publishedAt
+            x-airbyte-name: published_at
             type: ["null", "string"]
             description: "ISO 8601 timestamp when the release was published"
           - name: createdAt
+            x-airbyte-name: created_at
             type: ["null", "string"]
             description: "ISO 8601 timestamp when the release was created"
           - name: isPrerelease
+            x-airbyte-name: prerelease
             type: ["null", "boolean"]
             description: "Whether the release is marked as a pre-release"
           - name: isDraft
+            x-airbyte-name: draft
             type: ["null", "boolean"]
             description: "Whether the release is still a draft and not published"
           - name: url
+            x-airbyte-name: html_url
             type: ["null", "string"]
             description: "Permalink to the release on GitHub"
       - entity: repositories
@@ -439,75 +442,93 @@ info:
         x-airbyte-name: repositories
         fields:
           - name: id
+            x-airbyte-name: node_id
             type: ["null", "string"]
             description: "GraphQL node ID of the repository"
           - name: name
             type: ["null", "string"]
             description: "Short repository name (without owner)"
           - name: nameWithOwner
+            x-airbyte-name: full_name
             type: ["null", "string"]
             description: "Fully-qualified `owner/name` identifier for the repository"
           - name: description
             type: ["null", "string"]
             description: "Short description of the repository"
           - name: url
+            x-airbyte-name: html_url
             type: ["null", "string"]
             description: "Canonical GitHub URL for the repository"
           - name: createdAt
+            x-airbyte-name: created_at
             type: ["null", "string"]
             description: "ISO 8601 timestamp when the repository was created"
           - name: updatedAt
+            x-airbyte-name: updated_at
             type: ["null", "string"]
             description: "ISO 8601 timestamp when the repository was last updated"
           - name: pushedAt
+            x-airbyte-name: pushed_at
             type: ["null", "string"]
             description: "ISO 8601 timestamp of the most recent push to the repository"
           - name: forkCount
+            x-airbyte-name: forks_count
             type: ["null", "integer"]
             description: "Number of forks of the repository"
           - name: stargazerCount
+            x-airbyte-name: stargazers_count
             type: ["null", "integer"]
             description: "Number of users who have starred the repository"
           - name: isPrivate
+            x-airbyte-name: private
             type: ["null", "boolean"]
             description: "Whether the repository is private"
           - name: isFork
+            x-airbyte-name: fork
             type: ["null", "boolean"]
             description: "Whether the repository is a fork of another repository"
           - name: isArchived
+            x-airbyte-name: archived
             type: ["null", "boolean"]
             description: "Whether the repository has been archived"
       - entity: reviews
         x-airbyte-name: reviews
         fields:
           - name: id
+            x-airbyte-name: node_id
             type: ["null", "string"]
             description: "GraphQL node ID of the review"
           - name: databaseId
+            x-airbyte-name: id
             type: ["null", "integer"]
             description: "REST API numeric identifier for the review"
           - name: state
             type: ["null", "string"]
-            description: "Review state: `PENDING`, `COMMENTED`, `APPROVED`, `CHANGES_REQUESTED`, or `DISMISSED`"
+            description: "Review state in the cache: `PENDING`, `COMMENTED`, `APPROVED`, `CHANGES_REQUESTED`, or `DISMISSED`"
           - name: body
             type: ["null", "string"]
             description: "Review body text"
           - name: submittedAt
+            x-airbyte-name: submitted_at
             type: ["null", "string"]
             description: "ISO 8601 timestamp when the review was submitted"
           - name: createdAt
+            x-airbyte-name: created_at
             type: ["null", "string"]
             description: "ISO 8601 timestamp when the review was created"
           - name: updatedAt
+            x-airbyte-name: updated_at
             type: ["null", "string"]
             description: "ISO 8601 timestamp when the review was last updated"
           - name: url
+            x-airbyte-name: html_url
             type: ["null", "string"]
             description: "Permalink to the review on GitHub"
       - entity: stargazers
         x-airbyte-name: stargazers
         fields:
           - name: starredAt
+            x-airbyte-name: starred_at
             type: ["null", "string"]
             description: "ISO 8601 timestamp when the user starred the repository"
       - entity: tags
@@ -516,16 +537,15 @@ info:
           - name: name
             type: ["null", "string"]
             description: "Tag name (e.g. `v1.2.3`)"
-          - name: prefix
-            type: ["null", "string"]
-            description: "Git ref prefix for the tag (typically `refs/tags/`)"
       - entity: teams
         x-airbyte-name: teams
         fields:
           - name: id
+            x-airbyte-name: node_id
             type: ["null", "string"]
             description: "GraphQL node ID of the team"
           - name: databaseId
+            x-airbyte-name: id
             type: ["null", "integer"]
             description: "REST API numeric identifier for the team"
           - name: slug
@@ -539,53 +559,30 @@ info:
             description: "Short description of the team"
           - name: privacy
             type: ["null", "string"]
-            description: "Team visibility: `SECRET` or `VISIBLE`"
+            description: "Team visibility: `secret` or `closed` (REST API values)"
           - name: url
+            x-airbyte-name: html_url
             type: ["null", "string"]
             description: "Permalink to the team on GitHub"
-          - name: createdAt
-            type: ["null", "string"]
-            description: "ISO 8601 timestamp when the team was created"
-          - name: updatedAt
-            type: ["null", "string"]
-            description: "ISO 8601 timestamp when the team was last updated"
       - entity: users
         suggested: true
         x-airbyte-name: users
         fields:
           - name: id
+            x-airbyte-name: node_id
             type: ["null", "string"]
             description: "GraphQL node ID of the user"
           - name: databaseId
+            x-airbyte-name: id
             type: ["null", "integer"]
             description: "REST API numeric identifier for the user"
           - name: login
             type: ["null", "string"]
             description: "User login/handle"
-          - name: name
-            type: ["null", "string"]
-            description: "Public display name of the user, if set"
-          - name: email
-            type: ["null", "string"]
-            description: "Public email address of the user, if set"
-          - name: company
-            type: ["null", "string"]
-            description: "Public company affiliation of the user, if set"
-          - name: location
-            type: ["null", "string"]
-            description: "Public location of the user, if set"
-          - name: twitterUsername
-            type: ["null", "string"]
-            description: "Public Twitter/X username of the user, if set"
           - name: url
+            x-airbyte-name: html_url
             type: ["null", "string"]
             description: "Permalink to the user's profile on GitHub"
-          - name: createdAt
-            type: ["null", "string"]
-            description: "ISO 8601 timestamp when the user account was created"
-          - name: isHireable
-            type: ["null", "boolean"]
-            description: "Whether the user has marked themselves as available for hire"
       - entity: viewer
         x-airbyte-name: null
         x-airbyte-skip-searchable-fields: "Singleton endpoint returning the authenticated user's own profile; not a record stream and has no upstream source-github replication equivalent."
