@@ -2,7 +2,7 @@ openapi: 3.1.0
 
 info:
   title: Monday.com API Connector
-  version: 1.0.4
+  version: 2.0.0
   description: >
     Connector for the Monday.com platform API. Monday.com is a work operating system
     that enables teams to build workflows for project management, CRM, software development,
@@ -292,6 +292,12 @@ info:
       - entity: users
         x-airbyte-name: users
         suggested: true
+        # NOTE: This cache entity is validated against the upstream source-monday manifest
+        # in airbytehq/airbyte, which still targets API 2026-01 and has not yet migrated
+        # to the 2026-07 User shape. The new 2026-07 fields (became_active_at,
+        # is_email_confirmed, kind, photo_url, status) are intentionally excluded here
+        # until source-monday ships equivalent replication support; at that point they
+        # should be added back so the semantic cache can populate them.
         fields:
           - name: birthday
             type: ["null", "string"]
@@ -305,30 +311,9 @@ info:
           - name: email
             type: ["null", "string"]
             description: User's email address
-          - name: enabled
-            type: ["null", "boolean"]
-            description: Whether the user account is enabled
           - name: id
             type: ["null", "string"]
             description: Unique user identifier
-          - name: is_admin
-            type: ["null", "boolean"]
-            description: Whether the user is an admin
-          - name: is_guest
-            type: ["null", "boolean"]
-            description: Whether the user is a guest
-          - name: is_pending
-            type: ["null", "boolean"]
-            description: Whether the user is pending
-          - name: is_view_only
-            type: ["null", "boolean"]
-            description: Whether the user is view-only
-          - name: is_verified
-            type: ["null", "boolean"]
-            description: Whether the user is verified
-          - name: join_date
-            type: ["null", "string"]
-            description: When the user joined
           - name: location
             type: ["null", "string"]
             description: User's location
@@ -341,21 +326,6 @@ info:
           - name: phone
             type: ["null", "string"]
             description: User's phone number
-          - name: photo_original
-            type: ["null", "string"]
-            description: URL to original size photo
-          - name: photo_small
-            type: ["null", "string"]
-            description: URL to small photo
-          - name: photo_thumb
-            type: ["null", "string"]
-            description: URL to thumbnail photo
-          - name: photo_thumb_small
-            type: ["null", "string"]
-            description: URL to small thumbnail photo
-          - name: photo_tiny
-            type: ["null", "string"]
-            description: URL to tiny photo
           - name: time_zone_identifier
             type: ["null", "string"]
             description: User's timezone identifier
@@ -366,8 +336,8 @@ info:
             type: ["null", "string"]
             description: User's Monday.com profile URL
           - name: utc_hours_diff
-            type: ["null", "integer"]
-            description: UTC hours difference for the user's timezone
+            type: ["null", "number"]
+            description: UTC hours difference for the user's timezone (Float under API 2026-07)
       - entity: workspaces
         x-airbyte-name: workspaces
         suggested: true
@@ -440,42 +410,57 @@ paths:
       x-airbyte-action: list
       x-airbyte-record-extractor: $.data.users
       x-airbyte-preferred-for-check: true
-      x-airbyte-no-pagination: "Monday.com GraphQL users() field accepts page/limit variables but the response exposes no next-page cursor or total count; pagination termination is derived client-side from page-size exhaustion."
+      x-airbyte-no-pagination: "Monday.com GraphQL users() field accepts page/limit variables but the response exposes no next-page cursor or total count; pagination termination is derived client-side from page-size exhaustion. limit is pinned at the API 2026-07 maximum (1000) per page."
       x-airbyte-path-override:
         path: /v2
+      parameters:
+        - name: page
+          in: query
+          description: Page number for pagination
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          description: Number of users to return per page (API 2026-07 maximum is 1000)
+          schema:
+            type: integer
+            default: 1000
       requestBody:
         x-airbyte-body-type:
           type: graphql
           query: |
-            query {
-              users {
+            query($page: Int, $limit: Int) {
+              users(page: $page, limit: $limit) {
                 id
                 name
                 email
-                enabled
                 birthday
                 country_code
                 created_at
-                join_date
-                is_admin
-                is_guest
-                is_pending
-                is_view_only
-                is_verified
+                kind
+                status
+                is_email_confirmed
+                became_active_at
                 location
                 mobile_phone
                 phone
-                photo_original
-                photo_small
-                photo_thumb
-                photo_thumb_small
-                photo_tiny
+                photo_url {
+                  original
+                  small
+                  thumb
+                  thumb_small
+                  tiny
+                }
                 time_zone_identifier
                 title
                 url
                 utc_hours_diff
               }
             }
+          variables:
+            page: "{{ page }}"
+            limit: "{{ limit }}"
       responses:
         "200":
           description: List of users
@@ -520,24 +505,23 @@ paths:
                 id
                 name
                 email
-                enabled
                 birthday
                 country_code
                 created_at
-                join_date
-                is_admin
-                is_guest
-                is_pending
-                is_view_only
-                is_verified
+                kind
+                status
+                is_email_confirmed
+                became_active_at
                 location
                 mobile_phone
                 phone
-                photo_original
-                photo_small
-                photo_thumb
-                photo_thumb_small
-                photo_tiny
+                photo_url {
+                  original
+                  small
+                  thumb
+                  thumb_small
+                  tiny
+                }
                 time_zone_identifier
                 title
                 url
@@ -1496,6 +1480,8 @@ components:
           access_token: "${access_token}"
           client_id: "${client_id}"
           client_secret: "${client_secret}"
+        additional_headers:
+          API-Version: "2026-07"
         replication_auth_key_mapping:
           credentials.access_token: "access_token"
           credentials.client_id: "client_id"
@@ -1520,6 +1506,8 @@ components:
             description: Your Monday.com personal API token
         auth_mapping:
           token: "${api_key}"
+        additional_headers:
+          API-Version: "2026-07"
         replication_auth_key_mapping:
           credentials.api_token: "api_key"
         replication_auth_key_constants:
@@ -1549,36 +1537,27 @@ components:
         email:
           type: ["null", "string"]
           description: User's email address
-        enabled:
-          type: ["null", "boolean"]
-          description: Whether the user account is enabled
         birthday:
           type: ["null", "string"]
-          description: User's birthday
+          description: User's birthday (ISO8601 date string under API 2026-07)
         country_code:
           type: ["null", "string"]
           description: User's country code
         created_at:
           type: ["null", "string"]
-          description: When the user was created
-        join_date:
+          description: When the user was created (ISO8601 datetime under API 2026-07)
+        kind:
           type: ["null", "string"]
-          description: When the user joined
-        is_admin:
+          description: User kind, e.g. member, admin, guest, view_only. Replaces the legacy is_admin/is_guest/is_view_only booleans removed in API 2026-10.
+        status:
+          type: ["null", "string"]
+          description: User status, e.g. ACTIVE, INACTIVE, PENDING, DISABLED. Replaces the legacy enabled/is_pending booleans removed in API 2026-10.
+        is_email_confirmed:
           type: ["null", "boolean"]
-          description: Whether the user is an admin
-        is_guest:
-          type: ["null", "boolean"]
-          description: Whether the user is a guest
-        is_pending:
-          type: ["null", "boolean"]
-          description: Whether the user is pending
-        is_view_only:
-          type: ["null", "boolean"]
-          description: Whether the user is view-only
-        is_verified:
-          type: ["null", "boolean"]
-          description: Whether the user is verified
+          description: Whether the user's email is confirmed. Replaces the legacy is_verified field removed in API 2026-10.
+        became_active_at:
+          type: ["null", "string"]
+          description: When the user became active. Replaces the legacy join_date field removed in API 2026-10.
         location:
           type: ["null", "string"]
           description: User's location
@@ -1588,21 +1567,25 @@ components:
         phone:
           type: ["null", "string"]
           description: User's phone number
-        photo_original:
-          type: ["null", "string"]
-          description: URL to original size photo
-        photo_small:
-          type: ["null", "string"]
-          description: URL to small photo
-        photo_thumb:
-          type: ["null", "string"]
-          description: URL to thumbnail photo
-        photo_thumb_small:
-          type: ["null", "string"]
-          description: URL to small thumbnail photo
-        photo_tiny:
-          type: ["null", "string"]
-          description: URL to tiny photo
+        photo_url:
+          type: ["null", "object"]
+          description: Nested object containing photo URLs at various sizes. Replaces the legacy photo_* scalar fields removed in API 2026-10.
+          properties:
+            original:
+              type: ["null", "string"]
+              description: URL to original size photo
+            small:
+              type: ["null", "string"]
+              description: URL to small photo
+            thumb:
+              type: ["null", "string"]
+              description: URL to thumbnail photo
+            thumb_small:
+              type: ["null", "string"]
+              description: URL to small thumbnail photo
+            tiny:
+              type: ["null", "string"]
+              description: URL to tiny photo
         time_zone_identifier:
           type: ["null", "string"]
           description: User's timezone identifier
@@ -1613,8 +1596,8 @@ components:
           type: ["null", "string"]
           description: User's Monday.com profile URL
         utc_hours_diff:
-          type: ["null", "integer"]
-          description: UTC hours difference for the user's timezone
+          type: ["null", "number"]
+          description: UTC hours difference for the user's timezone (Float under API 2026-07; may be fractional for zones like India)
 
     Board:
       type: object

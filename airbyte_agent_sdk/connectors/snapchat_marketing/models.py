@@ -126,13 +126,6 @@ class Campaign(BaseModel):
     created_at: str | None = Field(default=None)
     updated_at: str | None = Field(default=None)
 
-class AdSquadTargetingGeosItem(BaseModel):
-    """Nested schema for AdSquadTargeting.geos_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    country_code: str | None = Field(default=None)
-    operation: str | None = Field(default=None)
-
 class AdSquadTargetingAutoExpansionOptionsInterestExpansionOption(BaseModel):
     """Nested schema for AdSquadTargetingAutoExpansionOptions.interest_expansion_option"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -144,6 +137,13 @@ class AdSquadTargetingAutoExpansionOptions(BaseModel):
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     interest_expansion_option: AdSquadTargetingAutoExpansionOptionsInterestExpansionOption | None = Field(default=None)
+
+class AdSquadTargetingGeosItem(BaseModel):
+    """Nested schema for AdSquadTargeting.geos_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    country_code: str | None = Field(default=None)
+    operation: str | None = Field(default=None)
 
 class AdSquadTargeting(BaseModel):
     """Targeting specification"""
@@ -215,12 +215,6 @@ class Ad(BaseModel):
     created_at: str | None = Field(default=None)
     updated_at: str | None = Field(default=None)
 
-class CreativeAdToPlaceProperties(BaseModel):
-    """Ad-to-place properties"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    place_id: str | None = Field(default=None)
-
 class CreativeWebViewProperties(BaseModel):
     """Web view properties"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -230,6 +224,12 @@ class CreativeWebViewProperties(BaseModel):
     deep_link_urls: list[str] | None = Field(default=None)
     url: str | None = Field(default=None)
     use_immersive_mode: bool | None = Field(default=None)
+
+class CreativeAdToPlaceProperties(BaseModel):
+    """Ad-to-place properties"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    place_id: str | None = Field(default=None)
 
 class Creative(BaseModel):
     """Snapchat creative object"""

@@ -108,8 +108,8 @@ class MondayConnector:
     """
 
     connector_name = "monday"
-    connector_version = "1.0.4"
-    sdk_version = "0.1.256"
+    connector_version = "2.0.0"
+    sdk_version = "0.1.257"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -132,6 +132,7 @@ class MondayConnector:
     # Map of (entity, action) -> {python_param_name: api_param_name}
     # Used to convert snake_case TypedDict keys to API parameter names in execute()
     _PARAM_MAP = {
+        ('users', 'list'): {'page': 'page', 'limit': 'limit'},
         ('users', 'get'): {'id': 'id'},
         ('boards', 'get'): {'id': 'id'},
         ('items', 'list'): {'board_id': 'board_id'},
@@ -716,15 +717,24 @@ class UsersQuery:
 
     async def list(
         self,
+        page: int | None = None,
+        limit: int | None = None,
         **kwargs
     ) -> UsersListResult:
         """
         Returns all users in the Monday.com account
 
+        Args:
+            page: Page number for pagination
+            limit: Number of users to return per page (API 2026-07 maximum is 1000)
+            **kwargs: Additional parameters
+
         Returns:
             UsersListResult
         """
         params = {k: v for k, v in {
+            "page": page,
+            "limit": limit,
             **kwargs
         }.items() if v is not None}
 
@@ -779,27 +789,15 @@ class UsersQuery:
         - country_code: User's country code
         - created_at: When the user was created
         - email: User's email address
-        - enabled: Whether the user account is enabled
         - id: Unique user identifier
-        - is_admin: Whether the user is an admin
-        - is_guest: Whether the user is a guest
-        - is_pending: Whether the user is pending
-        - is_view_only: Whether the user is view-only
-        - is_verified: Whether the user is verified
-        - join_date: When the user joined
         - location: User's location
         - mobile_phone: User's mobile phone number
         - name: User's display name
         - phone: User's phone number
-        - photo_original: URL to original size photo
-        - photo_small: URL to small photo
-        - photo_thumb: URL to thumbnail photo
-        - photo_thumb_small: URL to small thumbnail photo
-        - photo_tiny: URL to tiny photo
         - time_zone_identifier: User's timezone identifier
         - title: User's job title
         - url: User's Monday.com profile URL
-        - utc_hours_diff: UTC hours difference for the user's timezone
+        - utc_hours_diff: UTC hours difference for the user's timezone (Float under API 2026-07)
 
         Args:
             query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,

@@ -40,7 +40,7 @@ from uuid import (
 MondayConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('80a54ea2-9959-4040-aac1-eee42423ec9b'),
     name='monday',
-    version='1.0.4',
+    version='2.0.0',
     base_url='https://api.monday.com',
     auth=AuthConfig(
         options=[
@@ -51,6 +51,7 @@ MondayConnectorModel: ConnectorModel = ConnectorModel(
                     'header': 'Authorization',
                     'prefix': 'Bearer',
                     'refresh_url': 'https://auth.monday.com/oauth2/token',
+                    'additional_headers': {'API-Version': '2026-07'},
                 },
                 user_config_spec=AuthConfigSpec(
                     title='OAuth 2.0 Authentication',
@@ -80,13 +81,18 @@ MondayConnectorModel: ConnectorModel = ConnectorModel(
                         'credentials.client_id': 'client_id',
                         'credentials.client_secret': 'client_secret',
                     },
+                    additional_headers={'API-Version': '2026-07'},
                     replication_auth_key_constants={'credentials.auth_type': 'oauth2.0', 'credentials.subdomain': ''},
                 ),
             ),
             AuthOption(
                 scheme_name='mondayApiToken',
                 type=AuthType.BEARER,
-                config={'header': 'Authorization', 'prefix': 'Bearer'},
+                config={
+                    'header': 'Authorization',
+                    'prefix': 'Bearer',
+                    'additional_headers': {'API-Version': '2026-07'},
+                },
                 user_config_spec=AuthConfigSpec(
                     title='API Token Authentication',
                     type='object',
@@ -99,6 +105,7 @@ MondayConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     auth_mapping={'token': '${api_key}'},
                     replication_auth_key_mapping={'credentials.api_token': 'api_key'},
+                    additional_headers={'API-Version': '2026-07'},
                     replication_auth_key_constants={'credentials.auth_type': 'api_token'},
                 ),
             ),
@@ -118,6 +125,19 @@ MondayConnectorModel: ConnectorModel = ConnectorModel(
                     ),
                     action=Action.LIST,
                     description='Returns all users in the Monday.com account',
+                    query_params=['page', 'limit'],
+                    query_params_schema={
+                        'page': {
+                            'type': 'integer',
+                            'required': False,
+                            'default': 1,
+                        },
+                        'limit': {
+                            'type': 'integer',
+                            'required': False,
+                            'default': 1000,
+                        },
+                    },
                     response_schema={
                         'type': 'object',
                         'properties': {
@@ -142,13 +162,9 @@ MondayConnectorModel: ConnectorModel = ConnectorModel(
                                                     'type': ['null', 'string'],
                                                     'description': "User's email address",
                                                 },
-                                                'enabled': {
-                                                    'type': ['null', 'boolean'],
-                                                    'description': 'Whether the user account is enabled',
-                                                },
                                                 'birthday': {
                                                     'type': ['null', 'string'],
-                                                    'description': "User's birthday",
+                                                    'description': "User's birthday (ISO8601 date string under API 2026-07)",
                                                 },
                                                 'country_code': {
                                                     'type': ['null', 'string'],
@@ -156,31 +172,23 @@ MondayConnectorModel: ConnectorModel = ConnectorModel(
                                                 },
                                                 'created_at': {
                                                     'type': ['null', 'string'],
-                                                    'description': 'When the user was created',
+                                                    'description': 'When the user was created (ISO8601 datetime under API 2026-07)',
                                                 },
-                                                'join_date': {
+                                                'kind': {
                                                     'type': ['null', 'string'],
-                                                    'description': 'When the user joined',
+                                                    'description': 'User kind, e.g. member, admin, guest, view_only. Replaces the legacy is_admin/is_guest/is_view_only booleans removed in API 2026-10.',
                                                 },
-                                                'is_admin': {
-                                                    'type': ['null', 'boolean'],
-                                                    'description': 'Whether the user is an admin',
+                                                'status': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'User status, e.g. ACTIVE, INACTIVE, PENDING, DISABLED. Replaces the legacy enabled/is_pending booleans removed in API 2026-10.',
                                                 },
-                                                'is_guest': {
+                                                'is_email_confirmed': {
                                                     'type': ['null', 'boolean'],
-                                                    'description': 'Whether the user is a guest',
+                                                    'description': "Whether the user's email is confirmed. Replaces the legacy is_verified field removed in API 2026-10.",
                                                 },
-                                                'is_pending': {
-                                                    'type': ['null', 'boolean'],
-                                                    'description': 'Whether the user is pending',
-                                                },
-                                                'is_view_only': {
-                                                    'type': ['null', 'boolean'],
-                                                    'description': 'Whether the user is view-only',
-                                                },
-                                                'is_verified': {
-                                                    'type': ['null', 'boolean'],
-                                                    'description': 'Whether the user is verified',
+                                                'became_active_at': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'When the user became active. Replaces the legacy join_date field removed in API 2026-10.',
                                                 },
                                                 'location': {
                                                     'type': ['null', 'string'],
@@ -194,25 +202,31 @@ MondayConnectorModel: ConnectorModel = ConnectorModel(
                                                     'type': ['null', 'string'],
                                                     'description': "User's phone number",
                                                 },
-                                                'photo_original': {
-                                                    'type': ['null', 'string'],
-                                                    'description': 'URL to original size photo',
-                                                },
-                                                'photo_small': {
-                                                    'type': ['null', 'string'],
-                                                    'description': 'URL to small photo',
-                                                },
-                                                'photo_thumb': {
-                                                    'type': ['null', 'string'],
-                                                    'description': 'URL to thumbnail photo',
-                                                },
-                                                'photo_thumb_small': {
-                                                    'type': ['null', 'string'],
-                                                    'description': 'URL to small thumbnail photo',
-                                                },
-                                                'photo_tiny': {
-                                                    'type': ['null', 'string'],
-                                                    'description': 'URL to tiny photo',
+                                                'photo_url': {
+                                                    'type': ['null', 'object'],
+                                                    'description': 'Nested object containing photo URLs at various sizes. Replaces the legacy photo_* scalar fields removed in API 2026-10.',
+                                                    'properties': {
+                                                        'original': {
+                                                            'type': ['null', 'string'],
+                                                            'description': 'URL to original size photo',
+                                                        },
+                                                        'small': {
+                                                            'type': ['null', 'string'],
+                                                            'description': 'URL to small photo',
+                                                        },
+                                                        'thumb': {
+                                                            'type': ['null', 'string'],
+                                                            'description': 'URL to thumbnail photo',
+                                                        },
+                                                        'thumb_small': {
+                                                            'type': ['null', 'string'],
+                                                            'description': 'URL to small thumbnail photo',
+                                                        },
+                                                        'tiny': {
+                                                            'type': ['null', 'string'],
+                                                            'description': 'URL to tiny photo',
+                                                        },
+                                                    },
                                                 },
                                                 'time_zone_identifier': {
                                                     'type': ['null', 'string'],
@@ -227,8 +241,8 @@ MondayConnectorModel: ConnectorModel = ConnectorModel(
                                                     'description': "User's Monday.com profile URL",
                                                 },
                                                 'utc_hours_diff': {
-                                                    'type': ['null', 'integer'],
-                                                    'description': "UTC hours difference for the user's timezone",
+                                                    'type': ['null', 'number'],
+                                                    'description': "UTC hours difference for the user's timezone (Float under API 2026-07; may be fractional for zones like India)",
                                                 },
                                             },
                                             'x-airbyte-entity-name': 'users',
@@ -247,9 +261,13 @@ MondayConnectorModel: ConnectorModel = ConnectorModel(
                             },
                         },
                     },
-                    graphql_body={'type': 'graphql', 'query': 'query {\n  users {\n    id\n    name\n    email\n    enabled\n    birthday\n    country_code\n    created_at\n    join_date\n    is_admin\n    is_guest\n    is_pending\n    is_view_only\n    is_verified\n    location\n    mobile_phone\n    phone\n    photo_original\n    photo_small\n    photo_thumb\n    photo_thumb_small\n    photo_tiny\n    time_zone_identifier\n    title\n    url\n    utc_hours_diff\n  }\n}\n'},
+                    graphql_body={
+                        'type': 'graphql',
+                        'query': 'query($page: Int, $limit: Int) {\n  users(page: $page, limit: $limit) {\n    id\n    name\n    email\n    birthday\n    country_code\n    created_at\n    kind\n    status\n    is_email_confirmed\n    became_active_at\n    location\n    mobile_phone\n    phone\n    photo_url {\n      original\n      small\n      thumb\n      thumb_small\n      tiny\n    }\n    time_zone_identifier\n    title\n    url\n    utc_hours_diff\n  }\n}\n',
+                        'variables': {'page': '{{ page }}', 'limit': '{{ limit }}'},
+                    },
                     record_extractor='$.data.users',
-                    no_pagination='Monday.com GraphQL users() field accepts page/limit variables but the response exposes no next-page cursor or total count; pagination termination is derived client-side from page-size exhaustion.',
+                    no_pagination='Monday.com GraphQL users() field accepts page/limit variables but the response exposes no next-page cursor or total count; pagination termination is derived client-side from page-size exhaustion. limit is pinned at the API 2026-07 maximum (1000) per page.',
                     preferred_for_check=True,
                 ),
                 Action.GET: EndpointDefinition(
@@ -288,13 +306,9 @@ MondayConnectorModel: ConnectorModel = ConnectorModel(
                                                     'type': ['null', 'string'],
                                                     'description': "User's email address",
                                                 },
-                                                'enabled': {
-                                                    'type': ['null', 'boolean'],
-                                                    'description': 'Whether the user account is enabled',
-                                                },
                                                 'birthday': {
                                                     'type': ['null', 'string'],
-                                                    'description': "User's birthday",
+                                                    'description': "User's birthday (ISO8601 date string under API 2026-07)",
                                                 },
                                                 'country_code': {
                                                     'type': ['null', 'string'],
@@ -302,31 +316,23 @@ MondayConnectorModel: ConnectorModel = ConnectorModel(
                                                 },
                                                 'created_at': {
                                                     'type': ['null', 'string'],
-                                                    'description': 'When the user was created',
+                                                    'description': 'When the user was created (ISO8601 datetime under API 2026-07)',
                                                 },
-                                                'join_date': {
+                                                'kind': {
                                                     'type': ['null', 'string'],
-                                                    'description': 'When the user joined',
+                                                    'description': 'User kind, e.g. member, admin, guest, view_only. Replaces the legacy is_admin/is_guest/is_view_only booleans removed in API 2026-10.',
                                                 },
-                                                'is_admin': {
-                                                    'type': ['null', 'boolean'],
-                                                    'description': 'Whether the user is an admin',
+                                                'status': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'User status, e.g. ACTIVE, INACTIVE, PENDING, DISABLED. Replaces the legacy enabled/is_pending booleans removed in API 2026-10.',
                                                 },
-                                                'is_guest': {
+                                                'is_email_confirmed': {
                                                     'type': ['null', 'boolean'],
-                                                    'description': 'Whether the user is a guest',
+                                                    'description': "Whether the user's email is confirmed. Replaces the legacy is_verified field removed in API 2026-10.",
                                                 },
-                                                'is_pending': {
-                                                    'type': ['null', 'boolean'],
-                                                    'description': 'Whether the user is pending',
-                                                },
-                                                'is_view_only': {
-                                                    'type': ['null', 'boolean'],
-                                                    'description': 'Whether the user is view-only',
-                                                },
-                                                'is_verified': {
-                                                    'type': ['null', 'boolean'],
-                                                    'description': 'Whether the user is verified',
+                                                'became_active_at': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'When the user became active. Replaces the legacy join_date field removed in API 2026-10.',
                                                 },
                                                 'location': {
                                                     'type': ['null', 'string'],
@@ -340,25 +346,31 @@ MondayConnectorModel: ConnectorModel = ConnectorModel(
                                                     'type': ['null', 'string'],
                                                     'description': "User's phone number",
                                                 },
-                                                'photo_original': {
-                                                    'type': ['null', 'string'],
-                                                    'description': 'URL to original size photo',
-                                                },
-                                                'photo_small': {
-                                                    'type': ['null', 'string'],
-                                                    'description': 'URL to small photo',
-                                                },
-                                                'photo_thumb': {
-                                                    'type': ['null', 'string'],
-                                                    'description': 'URL to thumbnail photo',
-                                                },
-                                                'photo_thumb_small': {
-                                                    'type': ['null', 'string'],
-                                                    'description': 'URL to small thumbnail photo',
-                                                },
-                                                'photo_tiny': {
-                                                    'type': ['null', 'string'],
-                                                    'description': 'URL to tiny photo',
+                                                'photo_url': {
+                                                    'type': ['null', 'object'],
+                                                    'description': 'Nested object containing photo URLs at various sizes. Replaces the legacy photo_* scalar fields removed in API 2026-10.',
+                                                    'properties': {
+                                                        'original': {
+                                                            'type': ['null', 'string'],
+                                                            'description': 'URL to original size photo',
+                                                        },
+                                                        'small': {
+                                                            'type': ['null', 'string'],
+                                                            'description': 'URL to small photo',
+                                                        },
+                                                        'thumb': {
+                                                            'type': ['null', 'string'],
+                                                            'description': 'URL to thumbnail photo',
+                                                        },
+                                                        'thumb_small': {
+                                                            'type': ['null', 'string'],
+                                                            'description': 'URL to small thumbnail photo',
+                                                        },
+                                                        'tiny': {
+                                                            'type': ['null', 'string'],
+                                                            'description': 'URL to tiny photo',
+                                                        },
+                                                    },
                                                 },
                                                 'time_zone_identifier': {
                                                     'type': ['null', 'string'],
@@ -373,8 +385,8 @@ MondayConnectorModel: ConnectorModel = ConnectorModel(
                                                     'description': "User's Monday.com profile URL",
                                                 },
                                                 'utc_hours_diff': {
-                                                    'type': ['null', 'integer'],
-                                                    'description': "UTC hours difference for the user's timezone",
+                                                    'type': ['null', 'number'],
+                                                    'description': "UTC hours difference for the user's timezone (Float under API 2026-07; may be fractional for zones like India)",
                                                 },
                                             },
                                             'x-airbyte-entity-name': 'users',
@@ -395,7 +407,7 @@ MondayConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     graphql_body={
                         'type': 'graphql',
-                        'query': 'query($ids: [ID!]) {\n  users(ids: $ids) {\n    id\n    name\n    email\n    enabled\n    birthday\n    country_code\n    created_at\n    join_date\n    is_admin\n    is_guest\n    is_pending\n    is_view_only\n    is_verified\n    location\n    mobile_phone\n    phone\n    photo_original\n    photo_small\n    photo_thumb\n    photo_thumb_small\n    photo_tiny\n    time_zone_identifier\n    title\n    url\n    utc_hours_diff\n  }\n}\n',
+                        'query': 'query($ids: [ID!]) {\n  users(ids: $ids) {\n    id\n    name\n    email\n    birthday\n    country_code\n    created_at\n    kind\n    status\n    is_email_confirmed\n    became_active_at\n    location\n    mobile_phone\n    phone\n    photo_url {\n      original\n      small\n      thumb\n      thumb_small\n      tiny\n    }\n    time_zone_identifier\n    title\n    url\n    utc_hours_diff\n  }\n}\n',
                         'variables': {'ids': '{{ id }}'},
                     },
                     record_extractor='$.data.users[0]',
@@ -417,13 +429,9 @@ MondayConnectorModel: ConnectorModel = ConnectorModel(
                         'type': ['null', 'string'],
                         'description': "User's email address",
                     },
-                    'enabled': {
-                        'type': ['null', 'boolean'],
-                        'description': 'Whether the user account is enabled',
-                    },
                     'birthday': {
                         'type': ['null', 'string'],
-                        'description': "User's birthday",
+                        'description': "User's birthday (ISO8601 date string under API 2026-07)",
                     },
                     'country_code': {
                         'type': ['null', 'string'],
@@ -431,31 +439,23 @@ MondayConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     'created_at': {
                         'type': ['null', 'string'],
-                        'description': 'When the user was created',
+                        'description': 'When the user was created (ISO8601 datetime under API 2026-07)',
                     },
-                    'join_date': {
+                    'kind': {
                         'type': ['null', 'string'],
-                        'description': 'When the user joined',
+                        'description': 'User kind, e.g. member, admin, guest, view_only. Replaces the legacy is_admin/is_guest/is_view_only booleans removed in API 2026-10.',
                     },
-                    'is_admin': {
-                        'type': ['null', 'boolean'],
-                        'description': 'Whether the user is an admin',
+                    'status': {
+                        'type': ['null', 'string'],
+                        'description': 'User status, e.g. ACTIVE, INACTIVE, PENDING, DISABLED. Replaces the legacy enabled/is_pending booleans removed in API 2026-10.',
                     },
-                    'is_guest': {
+                    'is_email_confirmed': {
                         'type': ['null', 'boolean'],
-                        'description': 'Whether the user is a guest',
+                        'description': "Whether the user's email is confirmed. Replaces the legacy is_verified field removed in API 2026-10.",
                     },
-                    'is_pending': {
-                        'type': ['null', 'boolean'],
-                        'description': 'Whether the user is pending',
-                    },
-                    'is_view_only': {
-                        'type': ['null', 'boolean'],
-                        'description': 'Whether the user is view-only',
-                    },
-                    'is_verified': {
-                        'type': ['null', 'boolean'],
-                        'description': 'Whether the user is verified',
+                    'became_active_at': {
+                        'type': ['null', 'string'],
+                        'description': 'When the user became active. Replaces the legacy join_date field removed in API 2026-10.',
                     },
                     'location': {
                         'type': ['null', 'string'],
@@ -469,25 +469,31 @@ MondayConnectorModel: ConnectorModel = ConnectorModel(
                         'type': ['null', 'string'],
                         'description': "User's phone number",
                     },
-                    'photo_original': {
-                        'type': ['null', 'string'],
-                        'description': 'URL to original size photo',
-                    },
-                    'photo_small': {
-                        'type': ['null', 'string'],
-                        'description': 'URL to small photo',
-                    },
-                    'photo_thumb': {
-                        'type': ['null', 'string'],
-                        'description': 'URL to thumbnail photo',
-                    },
-                    'photo_thumb_small': {
-                        'type': ['null', 'string'],
-                        'description': 'URL to small thumbnail photo',
-                    },
-                    'photo_tiny': {
-                        'type': ['null', 'string'],
-                        'description': 'URL to tiny photo',
+                    'photo_url': {
+                        'type': ['null', 'object'],
+                        'description': 'Nested object containing photo URLs at various sizes. Replaces the legacy photo_* scalar fields removed in API 2026-10.',
+                        'properties': {
+                            'original': {
+                                'type': ['null', 'string'],
+                                'description': 'URL to original size photo',
+                            },
+                            'small': {
+                                'type': ['null', 'string'],
+                                'description': 'URL to small photo',
+                            },
+                            'thumb': {
+                                'type': ['null', 'string'],
+                                'description': 'URL to thumbnail photo',
+                            },
+                            'thumb_small': {
+                                'type': ['null', 'string'],
+                                'description': 'URL to small thumbnail photo',
+                            },
+                            'tiny': {
+                                'type': ['null', 'string'],
+                                'description': 'URL to tiny photo',
+                            },
+                        },
                     },
                     'time_zone_identifier': {
                         'type': ['null', 'string'],
@@ -502,8 +508,8 @@ MondayConnectorModel: ConnectorModel = ConnectorModel(
                         'description': "User's Monday.com profile URL",
                     },
                     'utc_hours_diff': {
-                        'type': ['null', 'integer'],
-                        'description': "UTC hours difference for the user's timezone",
+                        'type': ['null', 'number'],
+                        'description': "UTC hours difference for the user's timezone (Float under API 2026-07; may be fractional for zones like India)",
                     },
                 },
                 'x-airbyte-entity-name': 'users',
@@ -3353,44 +3359,9 @@ MondayConnectorModel: ConnectorModel = ConnectorModel(
                         description="User's email address",
                     ),
                     CacheFieldConfig(
-                        name='enabled',
-                        type=['null', 'boolean'],
-                        description='Whether the user account is enabled',
-                    ),
-                    CacheFieldConfig(
                         name='id',
                         type=['null', 'string'],
                         description='Unique user identifier',
-                    ),
-                    CacheFieldConfig(
-                        name='is_admin',
-                        type=['null', 'boolean'],
-                        description='Whether the user is an admin',
-                    ),
-                    CacheFieldConfig(
-                        name='is_guest',
-                        type=['null', 'boolean'],
-                        description='Whether the user is a guest',
-                    ),
-                    CacheFieldConfig(
-                        name='is_pending',
-                        type=['null', 'boolean'],
-                        description='Whether the user is pending',
-                    ),
-                    CacheFieldConfig(
-                        name='is_view_only',
-                        type=['null', 'boolean'],
-                        description='Whether the user is view-only',
-                    ),
-                    CacheFieldConfig(
-                        name='is_verified',
-                        type=['null', 'boolean'],
-                        description='Whether the user is verified',
-                    ),
-                    CacheFieldConfig(
-                        name='join_date',
-                        type=['null', 'string'],
-                        description='When the user joined',
                     ),
                     CacheFieldConfig(
                         name='location',
@@ -3413,31 +3384,6 @@ MondayConnectorModel: ConnectorModel = ConnectorModel(
                         description="User's phone number",
                     ),
                     CacheFieldConfig(
-                        name='photo_original',
-                        type=['null', 'string'],
-                        description='URL to original size photo',
-                    ),
-                    CacheFieldConfig(
-                        name='photo_small',
-                        type=['null', 'string'],
-                        description='URL to small photo',
-                    ),
-                    CacheFieldConfig(
-                        name='photo_thumb',
-                        type=['null', 'string'],
-                        description='URL to thumbnail photo',
-                    ),
-                    CacheFieldConfig(
-                        name='photo_thumb_small',
-                        type=['null', 'string'],
-                        description='URL to small thumbnail photo',
-                    ),
-                    CacheFieldConfig(
-                        name='photo_tiny',
-                        type=['null', 'string'],
-                        description='URL to tiny photo',
-                    ),
-                    CacheFieldConfig(
                         name='time_zone_identifier',
                         type=['null', 'string'],
                         description="User's timezone identifier",
@@ -3454,8 +3400,8 @@ MondayConnectorModel: ConnectorModel = ConnectorModel(
                     ),
                     CacheFieldConfig(
                         name='utc_hours_diff',
-                        type=['null', 'integer'],
-                        description="UTC hours difference for the user's timezone",
+                        type=['null', 'number'],
+                        description="UTC hours difference for the user's timezone (Float under API 2026-07)",
                     ),
                 ],
             ),
@@ -3647,23 +3593,11 @@ MondayConnectorModel: ConnectorModel = ConnectorModel(
             'country_code',
             'created_at',
             'email',
-            'enabled',
             'id',
-            'is_admin',
-            'is_guest',
-            'is_pending',
-            'is_view_only',
-            'is_verified',
-            'join_date',
             'location',
             'mobile_phone',
             'name',
             'phone',
-            'photo_original',
-            'photo_small',
-            'photo_thumb',
-            'photo_thumb_small',
-            'photo_tiny',
             'time_zone_identifier',
             'title',
             'url',

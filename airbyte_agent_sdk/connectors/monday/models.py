@@ -36,6 +36,21 @@ MondayAuthConfig = MondayOauth20AuthenticationAuthConfig | MondayApiTokenAuthent
 
 # ===== RESPONSE TYPE DEFINITIONS (PYDANTIC) =====
 
+class UserPhotoUrl(BaseModel):
+    """Nested object containing photo URLs at various sizes. Replaces the legacy photo_* scalar fields removed in API 2026-10."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    original: str | None | None = Field(default=None, description="URL to original size photo")
+    """URL to original size photo"""
+    small: str | None | None = Field(default=None, description="URL to small photo")
+    """URL to small photo"""
+    thumb: str | None | None = Field(default=None, description="URL to thumbnail photo")
+    """URL to thumbnail photo"""
+    thumb_small: str | None | None = Field(default=None, description="URL to small thumbnail photo")
+    """URL to small thumbnail photo"""
+    tiny: str | None | None = Field(default=None, description="URL to tiny photo")
+    """URL to tiny photo"""
+
 class User(BaseModel):
     """Monday.com user object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -43,45 +58,37 @@ class User(BaseModel):
     id: str | None = Field(default=None)
     name: str | None = Field(default=None)
     email: str | None = Field(default=None)
-    enabled: bool | None = Field(default=None)
     birthday: str | None = Field(default=None)
     country_code: str | None = Field(default=None)
     created_at: str | None = Field(default=None)
-    join_date: str | None = Field(default=None)
-    is_admin: bool | None = Field(default=None)
-    is_guest: bool | None = Field(default=None)
-    is_pending: bool | None = Field(default=None)
-    is_view_only: bool | None = Field(default=None)
-    is_verified: bool | None = Field(default=None)
+    kind: str | None = Field(default=None)
+    status: str | None = Field(default=None)
+    is_email_confirmed: bool | None = Field(default=None)
+    became_active_at: str | None = Field(default=None)
     location: str | None = Field(default=None)
     mobile_phone: str | None = Field(default=None)
     phone: str | None = Field(default=None)
-    photo_original: str | None = Field(default=None)
-    photo_small: str | None = Field(default=None)
-    photo_thumb: str | None = Field(default=None)
-    photo_thumb_small: str | None = Field(default=None)
-    photo_tiny: str | None = Field(default=None)
+    photo_url: UserPhotoUrl | None = Field(default=None)
     time_zone_identifier: str | None = Field(default=None)
     title: str | None = Field(default=None)
     url: str | None = Field(default=None)
-    utc_hours_diff: int | None = Field(default=None)
+    utc_hours_diff: float | None = Field(default=None)
 
-class BoardCreator(BaseModel):
-    """Board creator"""
+class BoardViewsItem(BaseModel):
+    """Nested schema for Board.views_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     id: str | None | None = Field(default=None)
+    name: str | None | None = Field(default=None)
+    settings_str: str | None | None = Field(default=None)
+    type_: str | None | None = Field(default=None, alias="type")
+    view_specific_data_str: str | None | None = Field(default=None)
 
-class BoardGroupsItem(BaseModel):
-    """Nested schema for Board.groups_item"""
+class BoardOwnersItem(BaseModel):
+    """Nested schema for Board.owners_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    archived: bool | None | None = Field(default=None)
-    color: str | None | None = Field(default=None)
-    deleted: bool | None | None = Field(default=None)
     id: str | None | None = Field(default=None)
-    position: str | None | None = Field(default=None)
-    title: str | None | None = Field(default=None)
 
 class BoardSubscribersItem(BaseModel):
     """Nested schema for Board.subscribers_item"""
@@ -95,15 +102,31 @@ class BoardTopGroup(BaseModel):
 
     id: str | None | None = Field(default=None)
 
-class BoardViewsItem(BaseModel):
-    """Nested schema for Board.views_item"""
+class BoardWorkspace(BaseModel):
+    """Workspace the board belongs to"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     id: str | None | None = Field(default=None)
     name: str | None | None = Field(default=None)
-    settings_str: str | None | None = Field(default=None)
-    type_: str | None | None = Field(default=None, alias="type")
-    view_specific_data_str: str | None | None = Field(default=None)
+    kind: str | None | None = Field(default=None)
+    description: str | None | None = Field(default=None)
+
+class BoardGroupsItem(BaseModel):
+    """Nested schema for Board.groups_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    archived: bool | None | None = Field(default=None)
+    color: str | None | None = Field(default=None)
+    deleted: bool | None | None = Field(default=None)
+    id: str | None | None = Field(default=None)
+    position: str | None | None = Field(default=None)
+    title: str | None | None = Field(default=None)
+
+class BoardTagsItem(BaseModel):
+    """Nested schema for Board.tags_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None | None = Field(default=None)
 
 class BoardColumnsItem(BaseModel):
     """Nested schema for Board.columns_item"""
@@ -117,26 +140,11 @@ class BoardColumnsItem(BaseModel):
     type_: str | None | None = Field(default=None, alias="type")
     width: int | None | None = Field(default=None)
 
-class BoardOwnersItem(BaseModel):
-    """Nested schema for Board.owners_item"""
+class BoardCreator(BaseModel):
+    """Board creator"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     id: str | None | None = Field(default=None)
-
-class BoardTagsItem(BaseModel):
-    """Nested schema for Board.tags_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: str | None | None = Field(default=None)
-
-class BoardWorkspace(BaseModel):
-    """Workspace the board belongs to"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: str | None | None = Field(default=None)
-    name: str | None | None = Field(default=None)
-    kind: str | None | None = Field(default=None)
-    description: str | None | None = Field(default=None)
 
 class Board(BaseModel):
     """Monday.com board object"""
@@ -160,14 +168,11 @@ class Board(BaseModel):
     views: list[BoardViewsItem | None] | None = Field(default=None)
     workspace: BoardWorkspace | None = Field(default=None)
 
-class ItemColumnValuesItem(BaseModel):
-    """Nested schema for Item.column_values_item"""
+class ItemParentItem(BaseModel):
+    """Parent item (for subitems)"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     id: str | None | None = Field(default=None)
-    text: str | None | None = Field(default=None)
-    type_: str | None | None = Field(default=None, alias="type")
-    value: str | None | None = Field(default=None)
 
 class ItemBoard(BaseModel):
     """Board the item belongs to"""
@@ -182,11 +187,14 @@ class ItemSubscribersItem(BaseModel):
 
     id: str | None | None = Field(default=None)
 
-class ItemParentItem(BaseModel):
-    """Parent item (for subitems)"""
+class ItemColumnValuesItem(BaseModel):
+    """Nested schema for Item.column_values_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     id: str | None | None = Field(default=None)
+    text: str | None | None = Field(default=None)
+    type_: str | None | None = Field(default=None, alias="type")
+    value: str | None | None = Field(default=None)
 
 class ItemGroup(BaseModel):
     """Group the item belongs to"""
@@ -279,12 +287,18 @@ class Update(BaseModel):
     replies: list[UpdateRepliesItem | None] | None = Field(default=None)
     assets: list[UpdateAssetsItem | None] | None = Field(default=None)
 
-class WorkspaceAccountProduct(BaseModel):
-    """Account product info"""
+class WorkspaceSettingsIcon(BaseModel):
+    """Nested schema for WorkspaceSettings.icon"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: str | None | None = Field(default=None)
-    kind: str | None | None = Field(default=None)
+    color: str | None | None = Field(default=None)
+    image: str | None | None = Field(default=None)
+
+class WorkspaceSettings(BaseModel):
+    """Workspace settings"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    icon: WorkspaceSettingsIcon | None | None = Field(default=None)
 
 class WorkspaceTeamOwnersSubscribersItem(BaseModel):
     """Nested schema for Workspace.team_owners_subscribers_item"""
@@ -299,18 +313,12 @@ class WorkspaceOwnersSubscribersItem(BaseModel):
 
     id: str | None | None = Field(default=None)
 
-class WorkspaceSettingsIcon(BaseModel):
-    """Nested schema for WorkspaceSettings.icon"""
+class WorkspaceTeamsSubscribersItem(BaseModel):
+    """Nested schema for Workspace.teams_subscribers_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    color: str | None | None = Field(default=None)
-    image: str | None | None = Field(default=None)
-
-class WorkspaceSettings(BaseModel):
-    """Workspace settings"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    icon: WorkspaceSettingsIcon | None | None = Field(default=None)
+    id: str | None | None = Field(default=None)
+    name: str | None | None = Field(default=None)
 
 class WorkspaceUsersSubscribersItem(BaseModel):
     """Nested schema for Workspace.users_subscribers_item"""
@@ -318,12 +326,12 @@ class WorkspaceUsersSubscribersItem(BaseModel):
 
     id: str | None | None = Field(default=None)
 
-class WorkspaceTeamsSubscribersItem(BaseModel):
-    """Nested schema for Workspace.teams_subscribers_item"""
+class WorkspaceAccountProduct(BaseModel):
+    """Account product info"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     id: str | None | None = Field(default=None)
-    name: str | None | None = Field(default=None)
+    kind: str | None | None = Field(default=None)
 
 class Workspace(BaseModel):
     """Monday.com workspace object"""
@@ -573,22 +581,8 @@ class UsersSearchData(BaseModel):
     """When the user was created"""
     email: str | None = None
     """User's email address"""
-    enabled: bool | None = None
-    """Whether the user account is enabled"""
     id: str | None = None
     """Unique user identifier"""
-    is_admin: bool | None = None
-    """Whether the user is an admin"""
-    is_guest: bool | None = None
-    """Whether the user is a guest"""
-    is_pending: bool | None = None
-    """Whether the user is pending"""
-    is_view_only: bool | None = None
-    """Whether the user is view-only"""
-    is_verified: bool | None = None
-    """Whether the user is verified"""
-    join_date: str | None = None
-    """When the user joined"""
     location: str | None = None
     """User's location"""
     mobile_phone: str | None = None
@@ -597,24 +591,14 @@ class UsersSearchData(BaseModel):
     """User's display name"""
     phone: str | None = None
     """User's phone number"""
-    photo_original: str | None = None
-    """URL to original size photo"""
-    photo_small: str | None = None
-    """URL to small photo"""
-    photo_thumb: str | None = None
-    """URL to thumbnail photo"""
-    photo_thumb_small: str | None = None
-    """URL to small thumbnail photo"""
-    photo_tiny: str | None = None
-    """URL to tiny photo"""
     time_zone_identifier: str | None = None
     """User's timezone identifier"""
     title: str | None = None
     """User's job title"""
     url: str | None = None
     """User's Monday.com profile URL"""
-    utc_hours_diff: int | None = None
-    """UTC hours difference for the user's timezone"""
+    utc_hours_diff: float | None = None
+    """UTC hours difference for the user's timezone (Float under API 2026-07)"""
 
 
 class WorkspacesSearchData(BaseModel):

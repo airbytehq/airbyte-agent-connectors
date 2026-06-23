@@ -21,7 +21,8 @@ from typing import Any, Literal
 
 class UsersListParams(TypedDict):
     """Parameters for users.list operation"""
-    pass
+    page: NotRequired[int]
+    limit: NotRequired[int]
 
 class UsersGetParams(TypedDict):
     """Parameters for users.get operation"""
@@ -1373,22 +1374,8 @@ class UsersSearchFilter(TypedDict, total=False):
     """When the user was created"""
     email: str | None
     """User's email address"""
-    enabled: bool | None
-    """Whether the user account is enabled"""
     id: str | None
     """Unique user identifier"""
-    is_admin: bool | None
-    """Whether the user is an admin"""
-    is_guest: bool | None
-    """Whether the user is a guest"""
-    is_pending: bool | None
-    """Whether the user is pending"""
-    is_view_only: bool | None
-    """Whether the user is view-only"""
-    is_verified: bool | None
-    """Whether the user is verified"""
-    join_date: str | None
-    """When the user joined"""
     location: str | None
     """User's location"""
     mobile_phone: str | None
@@ -1397,24 +1384,14 @@ class UsersSearchFilter(TypedDict, total=False):
     """User's display name"""
     phone: str | None
     """User's phone number"""
-    photo_original: str | None
-    """URL to original size photo"""
-    photo_small: str | None
-    """URL to small photo"""
-    photo_thumb: str | None
-    """URL to thumbnail photo"""
-    photo_thumb_small: str | None
-    """URL to small thumbnail photo"""
-    photo_tiny: str | None
-    """URL to tiny photo"""
     time_zone_identifier: str | None
     """User's timezone identifier"""
     title: str | None
     """User's job title"""
     url: str | None
     """User's Monday.com profile URL"""
-    utc_hours_diff: int | None
-    """UTC hours difference for the user's timezone"""
+    utc_hours_diff: float | None
+    """UTC hours difference for the user's timezone (Float under API 2026-07)"""
 
 
 class UsersInFilter(TypedDict, total=False):
@@ -1427,22 +1404,8 @@ class UsersInFilter(TypedDict, total=False):
     """When the user was created"""
     email: list[str]
     """User's email address"""
-    enabled: list[bool]
-    """Whether the user account is enabled"""
     id: list[str]
     """Unique user identifier"""
-    is_admin: list[bool]
-    """Whether the user is an admin"""
-    is_guest: list[bool]
-    """Whether the user is a guest"""
-    is_pending: list[bool]
-    """Whether the user is pending"""
-    is_view_only: list[bool]
-    """Whether the user is view-only"""
-    is_verified: list[bool]
-    """Whether the user is verified"""
-    join_date: list[str]
-    """When the user joined"""
     location: list[str]
     """User's location"""
     mobile_phone: list[str]
@@ -1451,24 +1414,14 @@ class UsersInFilter(TypedDict, total=False):
     """User's display name"""
     phone: list[str]
     """User's phone number"""
-    photo_original: list[str]
-    """URL to original size photo"""
-    photo_small: list[str]
-    """URL to small photo"""
-    photo_thumb: list[str]
-    """URL to thumbnail photo"""
-    photo_thumb_small: list[str]
-    """URL to small thumbnail photo"""
-    photo_tiny: list[str]
-    """URL to tiny photo"""
     time_zone_identifier: list[str]
     """User's timezone identifier"""
     title: list[str]
     """User's job title"""
     url: list[str]
     """User's Monday.com profile URL"""
-    utc_hours_diff: list[int]
-    """UTC hours difference for the user's timezone"""
+    utc_hours_diff: list[float]
+    """UTC hours difference for the user's timezone (Float under API 2026-07)"""
 
 
 class UsersAnyValueFilter(TypedDict, total=False):
@@ -1481,22 +1434,8 @@ class UsersAnyValueFilter(TypedDict, total=False):
     """When the user was created"""
     email: Any
     """User's email address"""
-    enabled: Any
-    """Whether the user account is enabled"""
     id: Any
     """Unique user identifier"""
-    is_admin: Any
-    """Whether the user is an admin"""
-    is_guest: Any
-    """Whether the user is a guest"""
-    is_pending: Any
-    """Whether the user is pending"""
-    is_view_only: Any
-    """Whether the user is view-only"""
-    is_verified: Any
-    """Whether the user is verified"""
-    join_date: Any
-    """When the user joined"""
     location: Any
     """User's location"""
     mobile_phone: Any
@@ -1505,16 +1444,6 @@ class UsersAnyValueFilter(TypedDict, total=False):
     """User's display name"""
     phone: Any
     """User's phone number"""
-    photo_original: Any
-    """URL to original size photo"""
-    photo_small: Any
-    """URL to small photo"""
-    photo_thumb: Any
-    """URL to thumbnail photo"""
-    photo_thumb_small: Any
-    """URL to small thumbnail photo"""
-    photo_tiny: Any
-    """URL to tiny photo"""
     time_zone_identifier: Any
     """User's timezone identifier"""
     title: Any
@@ -1522,7 +1451,7 @@ class UsersAnyValueFilter(TypedDict, total=False):
     url: Any
     """User's Monday.com profile URL"""
     utc_hours_diff: Any
-    """UTC hours difference for the user's timezone"""
+    """UTC hours difference for the user's timezone (Float under API 2026-07)"""
 
 
 class UsersStringFilter(TypedDict, total=False):
@@ -1535,22 +1464,8 @@ class UsersStringFilter(TypedDict, total=False):
     """When the user was created"""
     email: str
     """User's email address"""
-    enabled: str
-    """Whether the user account is enabled"""
     id: str
     """Unique user identifier"""
-    is_admin: str
-    """Whether the user is an admin"""
-    is_guest: str
-    """Whether the user is a guest"""
-    is_pending: str
-    """Whether the user is pending"""
-    is_view_only: str
-    """Whether the user is view-only"""
-    is_verified: str
-    """Whether the user is verified"""
-    join_date: str
-    """When the user joined"""
     location: str
     """User's location"""
     mobile_phone: str
@@ -1559,16 +1474,6 @@ class UsersStringFilter(TypedDict, total=False):
     """User's display name"""
     phone: str
     """User's phone number"""
-    photo_original: str
-    """URL to original size photo"""
-    photo_small: str
-    """URL to small photo"""
-    photo_thumb: str
-    """URL to thumbnail photo"""
-    photo_thumb_small: str
-    """URL to small thumbnail photo"""
-    photo_tiny: str
-    """URL to tiny photo"""
     time_zone_identifier: str
     """User's timezone identifier"""
     title: str
@@ -1576,7 +1481,7 @@ class UsersStringFilter(TypedDict, total=False):
     url: str
     """User's Monday.com profile URL"""
     utc_hours_diff: str
-    """UTC hours difference for the user's timezone"""
+    """UTC hours difference for the user's timezone (Float under API 2026-07)"""
 
 
 class UsersSortFilter(TypedDict, total=False):
@@ -1589,22 +1494,8 @@ class UsersSortFilter(TypedDict, total=False):
     """When the user was created"""
     email: AirbyteSortOrder
     """User's email address"""
-    enabled: AirbyteSortOrder
-    """Whether the user account is enabled"""
     id: AirbyteSortOrder
     """Unique user identifier"""
-    is_admin: AirbyteSortOrder
-    """Whether the user is an admin"""
-    is_guest: AirbyteSortOrder
-    """Whether the user is a guest"""
-    is_pending: AirbyteSortOrder
-    """Whether the user is pending"""
-    is_view_only: AirbyteSortOrder
-    """Whether the user is view-only"""
-    is_verified: AirbyteSortOrder
-    """Whether the user is verified"""
-    join_date: AirbyteSortOrder
-    """When the user joined"""
     location: AirbyteSortOrder
     """User's location"""
     mobile_phone: AirbyteSortOrder
@@ -1613,16 +1504,6 @@ class UsersSortFilter(TypedDict, total=False):
     """User's display name"""
     phone: AirbyteSortOrder
     """User's phone number"""
-    photo_original: AirbyteSortOrder
-    """URL to original size photo"""
-    photo_small: AirbyteSortOrder
-    """URL to small photo"""
-    photo_thumb: AirbyteSortOrder
-    """URL to thumbnail photo"""
-    photo_thumb_small: AirbyteSortOrder
-    """URL to small thumbnail photo"""
-    photo_tiny: AirbyteSortOrder
-    """URL to tiny photo"""
     time_zone_identifier: AirbyteSortOrder
     """User's timezone identifier"""
     title: AirbyteSortOrder
@@ -1630,7 +1511,7 @@ class UsersSortFilter(TypedDict, total=False):
     url: AirbyteSortOrder
     """User's Monday.com profile URL"""
     utc_hours_diff: AirbyteSortOrder
-    """UTC hours difference for the user's timezone"""
+    """UTC hours difference for the user's timezone (Float under API 2026-07)"""
 
 
 # Entity-specific condition types for users

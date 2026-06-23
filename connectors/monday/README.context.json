@@ -3,7 +3,7 @@
   "class_name": "MondayConnector",
   "package_name": "airbyte_agent_sdk.connectors.monday",
   "install_package": "airbyte-agent-sdk",
-  "yaml_version": "1.0.4",
+  "yaml_version": "2.0.0",
   "api_reference_url": "https://developer.monday.com/api-reference/docs",
   "auth_example": "MondayAuthConfig(access_token=\"...\", client_id=\"...\", client_secret=\"...\")",
   "auth_import": ", MondayAuthConfig",
@@ -68,7 +68,32 @@
     "path": "/graphql:users:list",
     "entity": "users",
     "action": "list",
-    "parameters": [],
+    "parameters": [
+      {
+        "name": "page",
+        "python_name": "page",
+        "type": "int",
+        "schema": {
+          "type": "integer",
+          "default": 1
+        },
+        "required": null,
+        "description": "Page number for pagination",
+        "is_deep_object": false
+      },
+      {
+        "name": "limit",
+        "python_name": "limit",
+        "type": "int",
+        "schema": {
+          "type": "integer",
+          "default": 1000
+        },
+        "required": null,
+        "description": "Number of users to return per page (API 2026-07 maximum is 1000)",
+        "is_deep_object": false
+      }
+    ],
     "params_type_name": "UsersListParams",
     "response_type": "UsersListResult",
     "description": "Returns all users in the Monday.com account",
@@ -87,7 +112,32 @@
         "path": "/graphql:users:list",
         "entity": "users",
         "action": "list",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number for pagination",
+            "is_deep_object": false
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "default": 1000
+            },
+            "required": null,
+            "description": "Number of users to return per page (API 2026-07 maximum is 1000)",
+            "is_deep_object": false
+          }
+        ],
         "params_type_name": "UsersListParams",
         "response_type": "UsersListResult",
         "description": "Returns all users in the Monday.com account",
@@ -1128,15 +1178,6 @@
           "description": "User's email address"
         },
         {
-          "name": "enabled",
-          "python_name": "enabled",
-          "type": "bool | None",
-          "json_type": "null | boolean",
-          "example_value_json": "True",
-          "json_example_value": true,
-          "description": "Whether the user account is enabled"
-        },
-        {
           "name": "id",
           "python_name": "id",
           "type": "str | None",
@@ -1144,60 +1185,6 @@
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
           "description": "Unique user identifier"
-        },
-        {
-          "name": "is_admin",
-          "python_name": "is_admin",
-          "type": "bool | None",
-          "json_type": "null | boolean",
-          "example_value_json": "True",
-          "json_example_value": true,
-          "description": "Whether the user is an admin"
-        },
-        {
-          "name": "is_guest",
-          "python_name": "is_guest",
-          "type": "bool | None",
-          "json_type": "null | boolean",
-          "example_value_json": "True",
-          "json_example_value": true,
-          "description": "Whether the user is a guest"
-        },
-        {
-          "name": "is_pending",
-          "python_name": "is_pending",
-          "type": "bool | None",
-          "json_type": "null | boolean",
-          "example_value_json": "True",
-          "json_example_value": true,
-          "description": "Whether the user is pending"
-        },
-        {
-          "name": "is_view_only",
-          "python_name": "is_view_only",
-          "type": "bool | None",
-          "json_type": "null | boolean",
-          "example_value_json": "True",
-          "json_example_value": true,
-          "description": "Whether the user is view-only"
-        },
-        {
-          "name": "is_verified",
-          "python_name": "is_verified",
-          "type": "bool | None",
-          "json_type": "null | boolean",
-          "example_value_json": "True",
-          "json_example_value": true,
-          "description": "Whether the user is verified"
-        },
-        {
-          "name": "join_date",
-          "python_name": "join_date",
-          "type": "str | None",
-          "json_type": "null | string",
-          "example_value_json": "\"<str>\"",
-          "json_example_value": "<str>",
-          "description": "When the user joined"
         },
         {
           "name": "location",
@@ -1236,51 +1223,6 @@
           "description": "User's phone number"
         },
         {
-          "name": "photo_original",
-          "python_name": "photo_original",
-          "type": "str | None",
-          "json_type": "null | string",
-          "example_value_json": "\"<str>\"",
-          "json_example_value": "<str>",
-          "description": "URL to original size photo"
-        },
-        {
-          "name": "photo_small",
-          "python_name": "photo_small",
-          "type": "str | None",
-          "json_type": "null | string",
-          "example_value_json": "\"<str>\"",
-          "json_example_value": "<str>",
-          "description": "URL to small photo"
-        },
-        {
-          "name": "photo_thumb",
-          "python_name": "photo_thumb",
-          "type": "str | None",
-          "json_type": "null | string",
-          "example_value_json": "\"<str>\"",
-          "json_example_value": "<str>",
-          "description": "URL to thumbnail photo"
-        },
-        {
-          "name": "photo_thumb_small",
-          "python_name": "photo_thumb_small",
-          "type": "str | None",
-          "json_type": "null | string",
-          "example_value_json": "\"<str>\"",
-          "json_example_value": "<str>",
-          "description": "URL to small thumbnail photo"
-        },
-        {
-          "name": "photo_tiny",
-          "python_name": "photo_tiny",
-          "type": "str | None",
-          "json_type": "null | string",
-          "example_value_json": "\"<str>\"",
-          "json_example_value": "<str>",
-          "description": "URL to tiny photo"
-        },
-        {
           "name": "time_zone_identifier",
           "python_name": "time_zone_identifier",
           "type": "str | None",
@@ -1310,11 +1252,11 @@
         {
           "name": "utc_hours_diff",
           "python_name": "utc_hours_diff",
-          "type": "int | None",
-          "json_type": "null | integer",
-          "example_value_json": "0",
-          "json_example_value": 0,
-          "description": "UTC hours difference for the user's timezone"
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "json_example_value": 0.0,
+          "description": "UTC hours difference for the user's timezone (Float under API 2026-07)"
         }
       ]
     },
