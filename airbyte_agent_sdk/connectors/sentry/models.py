@@ -93,6 +93,14 @@ class Project(BaseModel):
     avatar: ProjectAvatar | None = Field(default=None)
     organization: ProjectOrganization | None = Field(default=None)
 
+class ProjectDetailTeam(BaseModel):
+    """Primary team for this project."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None | None = Field(default=None)
+    name: str | None | None = Field(default=None)
+    slug: str | None | None = Field(default=None)
+
 class ProjectDetailOrganization(BaseModel):
     """Organization this project belongs to."""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -111,14 +119,6 @@ class ProjectDetailAvatar(BaseModel):
 
 class ProjectDetailTeamsItem(BaseModel):
     """Nested schema for ProjectDetail.teams_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: str | None | None = Field(default=None)
-    name: str | None | None = Field(default=None)
-    slug: str | None | None = Field(default=None)
-
-class ProjectDetailTeam(BaseModel):
-    """Primary team for this project."""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     id: str | None | None = Field(default=None)
@@ -209,14 +209,6 @@ class ProjectDetail(BaseModel):
     highlight_preset: dict[str, Any] | None = Field(default=None, alias="highlightPreset")
     debug_files_role: str | None = Field(default=None, alias="debugFilesRole")
 
-class IssueProject(BaseModel):
-    """Project this issue belongs to."""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: str | None | None = Field(default=None)
-    name: str | None | None = Field(default=None)
-    slug: str | None | None = Field(default=None)
-
 class IssueMetadata(BaseModel):
     """Issue metadata."""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -225,6 +217,14 @@ class IssueMetadata(BaseModel):
     type_: str | None | None = Field(default=None, alias="type")
     value: str | None | None = Field(default=None)
     filename: str | None | None = Field(default=None)
+
+class IssueProject(BaseModel):
+    """Project this issue belongs to."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None | None = Field(default=None)
+    name: str | None | None = Field(default=None)
+    slug: str | None | None = Field(default=None)
 
 class Issue(BaseModel):
     """A Sentry issue (group of similar events)."""
@@ -276,12 +276,6 @@ class EventGroupingconfig(BaseModel):
     id: str | None | None = Field(default=None)
     enhancements: str | None | None = Field(default=None)
 
-class EventMetadata(BaseModel):
-    """Event metadata."""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    title: str | None | None = Field(default=None)
-
 class EventUser(BaseModel):
     """User associated with the event."""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -291,6 +285,12 @@ class EventUser(BaseModel):
     username: str | None | None = Field(default=None)
     name: str | None | None = Field(default=None)
     ip_address: str | None | None = Field(default=None)
+
+class EventMetadata(BaseModel):
+    """Event metadata."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    title: str | None | None = Field(default=None)
 
 class Event(BaseModel):
     """A Sentry event (individual error occurrence)."""
@@ -325,24 +325,6 @@ class Event(BaseModel):
     grouping_config: EventGroupingconfig | None = Field(default=None, alias="groupingConfig")
     meta: dict[str, Any] | None = Field(default=None, alias="_meta")
 
-class ReleaseProjectsItem(BaseModel):
-    """Nested schema for Release.projects_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: int | None | None = Field(default=None)
-    name: str | None | None = Field(default=None)
-    slug: str | None | None = Field(default=None)
-    platform: str | None | None = Field(default=None)
-    new_groups: int | None | None = Field(default=None, alias="newGroups")
-    has_health_data: bool | None | None = Field(default=None, alias="hasHealthData")
-
-class ReleaseAuthorsItem(BaseModel):
-    """Nested schema for Release.authors_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: str | None | None = Field(default=None)
-    email: str | None | None = Field(default=None)
-
 class ReleaseVersioninfoVersion(BaseModel):
     """Nested schema for ReleaseVersioninfo.version"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -363,6 +345,24 @@ class ReleaseVersioninfo(BaseModel):
     description: str | None | None = Field(default=None)
     package: str | None | None = Field(default=None)
     build_hash: str | None | None = Field(default=None, alias="buildHash")
+
+class ReleaseAuthorsItem(BaseModel):
+    """Nested schema for Release.authors_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: str | None | None = Field(default=None)
+    email: str | None | None = Field(default=None)
+
+class ReleaseProjectsItem(BaseModel):
+    """Nested schema for Release.projects_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int | None | None = Field(default=None)
+    name: str | None | None = Field(default=None)
+    slug: str | None | None = Field(default=None)
+    platform: str | None | None = Field(default=None)
+    new_groups: int | None | None = Field(default=None, alias="newGroups")
+    has_health_data: bool | None | None = Field(default=None, alias="hasHealthData")
 
 class Release(BaseModel):
     """A Sentry release."""

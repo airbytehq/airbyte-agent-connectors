@@ -16,6 +16,33 @@ from pydantic import BaseModel, ConfigDict, Field, StrictInt, model_validator
 from airbyte_agent_sdk.schema.interpolation import resolve_interpolated_constants
 
 
+class ExtensionAwareModel(BaseModel):
+    """Base for models that parse registry-authored connector YAML.
+
+    Accepts unknown ``x-*`` extension fields so that newer connector YAMLs
+    (published to the registry independently of the backend) don't break
+    older SDK versions.  Unknown non-extension fields are still rejected
+    to preserve typo detection.
+    """
+
+    model_config = ConfigDict(populate_by_name=True, extra="allow")
+
+    @model_validator(mode="before")
+    @classmethod
+    def _reject_unknown_non_extension_fields(cls, data: Any) -> Any:
+        if not isinstance(data, dict):
+            return data
+        known: set[str] = set()
+        for field_name, field_info in cls.model_fields.items():
+            known.add(field_name)
+            if field_info.alias:
+                known.add(field_info.alias)
+        unknown_standard = sorted(k for k in data if k not in known and not k.startswith("x-"))
+        if unknown_standard:
+            raise ValueError(f"Unknown field(s) in {cls.__name__}: {unknown_standard}. Use an 'x-' prefix for custom extensions.")
+        return data
+
+
 class RetryConfig(BaseModel):
     """
     Configuration for retry strategy with exponential backoff.
@@ -55,7 +82,7 @@ class RetryConfig(BaseModel):
     retry_after_format: Literal["seconds", "milliseconds", "unix_timestamp"] = "seconds"
 
 
-class CacheFieldProperty(BaseModel):
+class CacheFieldProperty(ExtensionAwareModel):
     """
     Nested property definition for object-type cache fields.
 
@@ -72,8 +99,6 @@ class CacheFieldProperty(BaseModel):
             comments:
               type: ['null', 'array']
     """
-
-    model_config = ConfigDict(populate_by_name=True, extra="forbid")
 
     type: str | list[str]
     properties: dict[str, "CacheFieldProperty"] | None = None
@@ -247,7 +272,7 @@ class SemanticSearchConfig(BaseModel):
         return self
 
 
-class CacheFieldConfig(BaseModel):
+class CacheFieldConfig(ExtensionAwareModel):
     """
     Field configuration for cache mapping.
 
@@ -259,8 +284,6 @@ class CacheFieldConfig(BaseModel):
 
     Used in x-airbyte-context-store extension for api_search operations.
     """
-
-    model_config = ConfigDict(populate_by_name=True, extra="forbid")
 
     name: str
     x_airbyte_name: str | None = Field(default=None, alias="x-airbyte-name")
@@ -281,7 +304,7 @@ class CacheFieldConfig(BaseModel):
         return self.x_airbyte_name or self.name
 
 
-class CacheEntityConfig(BaseModel):
+class CacheEntityConfig(ExtensionAwareModel):
     """
     Entity configuration for cache mapping.
 
@@ -290,8 +313,6 @@ class CacheEntityConfig(BaseModel):
 
     Used in x-airbyte-context-store extension for api_search operations.
     """
-
-    model_config = ConfigDict(populate_by_name=True, extra="forbid")
 
     entity: str
     suggested: bool = Field(
@@ -432,7 +453,7 @@ class ReplicationConfig(BaseModel):
         return self
 
 
-class CacheConfig(BaseModel):
+class CacheConfig(ExtensionAwareModel):
     """
     Cache configuration extension (x-airbyte-context-store).
 
@@ -460,8 +481,6 @@ class CacheConfig(BaseModel):
                     type: ["null", "string"]
                     description: "Customer full name"
     """
-
-    model_config = ConfigDict(populate_by_name=True, extra="forbid")
 
     entities: list[CacheEntityConfig]
     disable_compaction: bool = Field(

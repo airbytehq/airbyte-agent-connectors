@@ -11,6 +11,7 @@ from typing import Any, Dict, List, Literal, Union
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from .extensions import ExtensionAwareModel
 from .security import SecurityScheme
 
 
@@ -32,7 +33,7 @@ class AiHints(BaseModel):
     search_strategy: str | None = Field(None, description="Hint for LLMs on how to construct effective search queries for this entity")
 
 
-class Schema(BaseModel):
+class Schema(ExtensionAwareModel):
     """
     JSON Schema definition for data models.
 
@@ -44,8 +45,6 @@ class Schema(BaseModel):
     Extensions:
     - x-airbyte-resource-name: Name of the resource this schema represents (Airbyte extension)
     """
-
-    model_config = ConfigDict(populate_by_name=True, extra="forbid")
 
     # Core JSON Schema fields
     type: str | None = None
@@ -89,14 +88,12 @@ class Schema(BaseModel):
     x_airbyte_ai_hints: AiHints | None = Field(None, alias="x-airbyte-ai-hints")
 
 
-class Parameter(BaseModel):
+class Parameter(ExtensionAwareModel):
     """
     Operation parameter definition.
 
     OpenAPI Reference: https://spec.openapis.org/oas/v3.1.0#parameter-object
     """
-
-    model_config = ConfigDict(populate_by_name=True, extra="forbid")
 
     name: str
     in_: Literal["query", "header", "path", "cookie"] = Field(alias="in")
@@ -231,14 +228,12 @@ class Header(BaseModel):
     example: Any | None = None
 
 
-class Response(BaseModel):
+class Response(ExtensionAwareModel):
     """
     Response definition.
 
     OpenAPI Reference: https://spec.openapis.org/oas/v3.1.0#response-object
     """
-
-    model_config = ConfigDict(populate_by_name=True, extra="forbid")
 
     description: str
     headers: Dict[str, Header] | None = None

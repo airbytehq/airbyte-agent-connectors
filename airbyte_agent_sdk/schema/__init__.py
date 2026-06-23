@@ -26,7 +26,7 @@ from .components import (
     Schema,
 )
 from .connector import ExternalDocs, OpenAPIConnector, Tag
-from .extensions import CacheConfig, EntityRelationshipConfig, RetryConfig, ScopingParamConfig
+from .extensions import CacheConfig, EntityRelationshipConfig, ExtensionAwareModel, RetryConfig, ScopingParamConfig
 from .operations import Operation, PathItem
 from .security import (
     AuthConfigFieldSpec,
@@ -67,6 +67,7 @@ __all__ = [
     "PathItem",
     "Operation",
     # Extension models
+    "ExtensionAwareModel",
     "RetryConfig",
     "CacheConfig",
     "EntityRelationshipConfig",

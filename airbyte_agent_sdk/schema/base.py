@@ -13,7 +13,14 @@ from uuid import UUID
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 from pydantic_core import Url
 
-from airbyte_agent_sdk.schema.extensions import CacheConfig, EntityRelationshipConfig, ReplicationConfig, RetryConfig, ScopingParamConfig
+from airbyte_agent_sdk.schema.extensions import (
+    CacheConfig,
+    EntityRelationshipConfig,
+    ExtensionAwareModel,
+    ReplicationConfig,
+    RetryConfig,
+    ScopingParamConfig,
+)
 
 
 class RuntimeMode(StrEnum):
@@ -144,19 +151,11 @@ class ResponseErrorCheck(BaseModel):
     message_field: str | None = None
 
 
-class Info(BaseModel):
+class Info(ExtensionAwareModel):
     """
     API metadata information.
 
     OpenAPI Reference: https://spec.openapis.org/oas/v3.1.0#info-object
-
-    Unknown `x-*` fields are accepted so that older SDK versions can still parse
-    specs that carry newer Airbyte extensions. Unknown non-extension fields still
-    raise at SDK load time (via `_reject_unknown_non_extension_fields`) — that's
-    where typos in standard OpenAPI keys get caught. Note: this rejection is a
-    Python-level validator and is NOT expressible in JSON Schema, so external
-    consumers validating directly against the published YAML (where
-    `additionalProperties: true` for `Info`) will not see it.
 
     Extensions:
     - x-airbyte-connector-name: Name of the connector (Airbyte extension)
@@ -172,23 +171,6 @@ class Info(BaseModel):
     - x-airbyte-entity-relationships: Entity relationship declarations (Airbyte extension)
     - x-airbyte-scoping: Scoping parameter resolution from config (Airbyte extension)
     """
-
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
-
-    @model_validator(mode="before")
-    @classmethod
-    def _reject_unknown_non_extension_fields(cls, data: Any) -> Any:
-        if not isinstance(data, dict):
-            return data
-        known: set[str] = set()
-        for field_name, field_info in cls.model_fields.items():
-            known.add(field_name)
-            if field_info.alias:
-                known.add(field_info.alias)
-        unknown_standard = sorted(k for k in data if k not in known and not k.startswith("x-"))
-        if unknown_standard:
-            raise ValueError(f"Unknown field(s) in Info: {unknown_standard}. Use an 'x-' prefix for custom extensions.")
-        return data
 
     title: str
     version: str

@@ -8,14 +8,15 @@ References:
 
 from typing import Any, Dict, List
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import Field, model_validator
 
 from ..extensions import AIRBYTE_FILE_URL_DESCRIPTION, ActionTypeLiteral
 from .components import AiHints, Parameter, PathOverrideConfig, RequestBody, Response
+from .extensions import ExtensionAwareModel
 from .security import SecurityRequirement
 
 
-class Operation(BaseModel):
+class Operation(ExtensionAwareModel):
     """
     Single API operation (GET, POST, PUT, PATCH, DELETE, etc.).
 
@@ -29,8 +30,6 @@ class Operation(BaseModel):
     - x-airbyte-ai-hints: AI guidance for this specific operation (Airbyte extension)
 
     """
-
-    model_config = ConfigDict(populate_by_name=True, extra="forbid")
 
     # Standard OpenAPI fields
     tags: List[str] | None = None
@@ -181,14 +180,12 @@ class Operation(BaseModel):
         return self
 
 
-class PathItem(BaseModel):
+class PathItem(ExtensionAwareModel):
     """
     Path item containing operations for different HTTP methods.
 
     OpenAPI Reference: https://spec.openapis.org/oas/v3.1.0#path-item-object
     """
-
-    model_config = ConfigDict(populate_by_name=True, extra="forbid")
 
     # Common fields for all operations
     summary: str | None = None

@@ -278,6 +278,8 @@ $defs:
     - entities
     title: CacheConfig
     type: object
+    patternProperties:
+      ^x-: {}
   CacheEntityConfig:
     additionalProperties: false
     description: 'Entity configuration for cache mapping.
@@ -322,6 +324,8 @@ $defs:
     - entity
     title: CacheEntityConfig
     type: object
+    patternProperties:
+      ^x-: {}
   CacheFieldConfig:
     additionalProperties: false
     description: 'Field configuration for cache mapping.
@@ -380,6 +384,8 @@ $defs:
     - description
     title: CacheFieldConfig
     type: object
+    patternProperties:
+      ^x-: {}
   CacheFieldProperty:
     additionalProperties: false
     description: "Nested property definition for object-type cache fields.\n\nSupports\
@@ -409,6 +415,8 @@ $defs:
     - type
     title: CacheFieldProperty
     type: object
+    patternProperties:
+      ^x-: {}
   Components:
     additionalProperties: false
     description: 'Reusable component definitions.
@@ -783,21 +791,15 @@ $defs:
     title: Header
     type: object
   Info:
-    additionalProperties: true
+    additionalProperties: false
     description: "API metadata information.\n\nOpenAPI Reference: https://spec.openapis.org/oas/v3.1.0#info-object\n\
-      \nUnknown `x-*` fields are accepted so that older SDK versions can still parse\n\
-      specs that carry newer Airbyte extensions. Unknown non-extension fields still\n\
-      raise at SDK load time (via `_reject_unknown_non_extension_fields`) — that's\n\
-      where typos in standard OpenAPI keys get caught. Note: this rejection is a\n\
-      Python-level validator and is NOT expressible in JSON Schema, so external\n\
-      consumers validating directly against the published YAML (where\n`additionalProperties:\
-      \ true` for `Info`) will not see it.\n\nExtensions:\n- x-airbyte-connector-name:\
-      \ Name of the connector (Airbyte extension)\n- x-airbyte-connector-display-name:\
-      \ Optional display name for UI rendering (Airbyte extension)\n- x-airbyte-connector-definition-id:\
-      \ UUID of the connector (Airbyte extension)\n- x-airbyte-external-documentation-urls:\
-      \ List of external documentation URLs (Airbyte extension)\n- x-airbyte-retry-config:\
-      \ Retry configuration for transient errors (Airbyte extension)\n- x-airbyte-example-questions:\
-      \ Example questions for AI connector README (Airbyte extension)\n- x-airbyte-auth-tooltip:\
+      \nExtensions:\n- x-airbyte-connector-name: Name of the connector (Airbyte extension)\n\
+      - x-airbyte-connector-display-name: Optional display name for UI rendering (Airbyte\
+      \ extension)\n- x-airbyte-connector-definition-id: UUID of the connector (Airbyte\
+      \ extension)\n- x-airbyte-external-documentation-urls: List of external documentation\
+      \ URLs (Airbyte extension)\n- x-airbyte-retry-config: Retry configuration for\
+      \ transient errors (Airbyte extension)\n- x-airbyte-example-questions: Example\
+      \ questions for AI connector README (Airbyte extension)\n- x-airbyte-auth-tooltip:\
       \ Short, non-technical multiline string shown to end users in the embedded widget\
       \ to describe\n  how to authenticate the connector (Airbyte extension)\n- x-airbyte-context-store:\
       \ Cache configuration for field mapping between API and cache schemas (Airbyte\
@@ -964,6 +966,8 @@ $defs:
     - x-airbyte-external-documentation-urls
     title: Info
     type: object
+    patternProperties:
+      ^x-: {}
   License:
     additionalProperties: false
     description: 'License information for the API.
@@ -1323,6 +1327,8 @@ $defs:
     - x-airbyte-action
     title: Operation
     type: object
+    patternProperties:
+      ^x-: {}
   Parameter:
     additionalProperties: false
     description: 'Operation parameter definition.
@@ -1409,6 +1415,8 @@ $defs:
     - in
     title: Parameter
     type: object
+    patternProperties:
+      ^x-: {}
   PathItem:
     additionalProperties: false
     description: 'Path item containing operations for different HTTP methods.
@@ -1491,6 +1499,8 @@ $defs:
         title: $Ref
     title: PathItem
     type: object
+    patternProperties:
+      ^x-: {}
   PathOverrideConfig:
     additionalProperties: false
     description: "Path override configuration for x-airbyte-path-override extension.\n\
@@ -1719,6 +1729,8 @@ $defs:
     - description
     title: Response
     type: object
+    patternProperties:
+      ^x-: {}
   ResponseErrorCheck:
     additionalProperties: false
     description: "Configuration for detecting application-level errors returned with\
@@ -2010,6 +2022,8 @@ $defs:
         default: null
     title: Schema
     type: object
+    patternProperties:
+      ^x-: {}
   ScopingParamConfig:
     additionalProperties: false
     description: "Scoping parameter resolution from connector configuration.\n\nDeclares\
