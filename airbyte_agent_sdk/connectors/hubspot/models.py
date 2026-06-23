@@ -242,13 +242,6 @@ class SchemaPropertiesItem(BaseModel):
     show_currency_symbol: bool | None = Field(default=None, alias="showCurrencySymbol")
     modification_metadata: SchemaPropertiesItemModificationmetadata | None = Field(default=None, alias="modificationMetadata")
 
-class SchemaLabels(BaseModel):
-    """Display labels"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    singular: str | None = Field(default=None)
-    plural: str | None = Field(default=None)
-
 class SchemaAssociationsItem(BaseModel):
     """Nested schema for Schema.associations_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -265,6 +258,13 @@ class SchemaAssociationsItem(BaseModel):
     max_from_object_ids: int | None = Field(default=None, alias="maxFromObjectIds")
     created_at: str | None | None = Field(default=None, alias="createdAt")
     updated_at: str | None | None = Field(default=None, alias="updatedAt")
+
+class SchemaLabels(BaseModel):
+    """Display labels"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    singular: str | None = Field(default=None)
+    plural: str | None = Field(default=None)
 
 class Schema(BaseModel):
     """Custom object schema definition"""
