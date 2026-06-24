@@ -1,0 +1,831 @@
+{
+  "connector_name": "exa",
+  "class_name": "ExaConnector",
+  "package_name": "airbyte_agent_sdk.connectors.exa",
+  "install_package": "airbyte-agent-sdk",
+  "yaml_version": "1.0.0",
+  "api_reference_url": "https://docs.exa.ai/reference/getting-started",
+  "auth_example": "ExaAuthConfig(api_key=\"...\")",
+  "auth_import": ", ExaAuthConfig",
+  "auth_config": {
+    "type_name": "ExaAuthConfig",
+    "base_name": "Exa",
+    "options": [
+      {
+        "title": "API Key Authentication",
+        "description": "",
+        "fields": [
+          {
+            "name": "api_key",
+            "type": "str",
+            "required": true,
+            "title": "API Key",
+            "description": "Your Exa API key from dashboard.exa.ai/api-keys"
+          }
+        ],
+        "type_suffix": "ApiKeyAuthentication"
+      }
+    ],
+    "is_multi_auth": false
+  },
+  "replication_config": null,
+  "custom_description": "Exa is an AI-powered search engine that finds the exact content you're looking\nfor on the web using embeddings-based search. This connector provides access to\nExa's search, contents retrieval, and find-similar endpoints. All endpoints use\nPOST requests with JSON bodies. Requires an Exa API key from dashboard.exa.ai.\n",
+  "supported_questions": "- Search for latest news on Airbyte\n- Find web pages similar to https://airbyte.com\n- Get the full text content of https://airbyte.com\n- Search for AI research papers published this year\n- Find company pages related to data integration startups",
+  "unsupported_questions": null,
+  "first_operation": {
+    "method_name": "search_web",
+    "http_method": "post",
+    "path": "/search",
+    "entity": "search_results",
+    "action": "list",
+    "parameters": [
+      {
+        "name": "query",
+        "python_name": "query",
+        "type": "str",
+        "schema": {
+          "type": "string",
+          "default": "latest news on Airbyte",
+          "description": "The search query string."
+        },
+        "required": true,
+        "description": "The search query string."
+      },
+      {
+        "name": "type",
+        "python_name": "type",
+        "type": "str",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "auto",
+            "instant",
+            "fast",
+            "deep-lite",
+            "deep",
+            "deep-reasoning"
+          ],
+          "default": "auto",
+          "description": "The type of search. auto intelligently selects the best mode, instant provides lowest latency, fast uses lower-latency models, deep-lite provides lightweight synthesis, deep performs in-depth research with synthesis, and deep-reasoning adds more reasoning for complex searches."
+        },
+        "required": false,
+        "description": "The type of search. auto intelligently selects the best mode, instant provides lowest latency, fast uses lower-latency models, deep-lite provides lightweight synthesis, deep performs in-depth research with synthesis, and deep-reasoning adds more reasoning for complex searches."
+      },
+      {
+        "name": "category",
+        "python_name": "category",
+        "type": "str",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "company",
+            "research paper",
+            "news",
+            "personal site",
+            "financial report",
+            "people"
+          ],
+          "description": "A data category to focus on for improved result quality."
+        },
+        "required": false,
+        "description": "A data category to focus on for improved result quality."
+      },
+      {
+        "name": "numResults",
+        "python_name": "num_results",
+        "type": "int",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 10,
+          "description": "Number of results to return (max 100)."
+        },
+        "required": false,
+        "description": "Number of results to return (max 100)."
+      },
+      {
+        "name": "includeDomains",
+        "python_name": "include_domains",
+        "type": "list[str]",
+        "schema": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of domains to include. If specified, results will only come from these domains."
+        },
+        "required": false,
+        "description": "List of domains to include. If specified, results will only come from these domains."
+      },
+      {
+        "name": "excludeDomains",
+        "python_name": "exclude_domains",
+        "type": "list[str]",
+        "schema": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of domains to exclude. If specified, no results will be returned from these domains."
+        },
+        "required": false,
+        "description": "List of domains to exclude. If specified, no results will be returned from these domains."
+      },
+      {
+        "name": "startPublishedDate",
+        "python_name": "start_published_date",
+        "type": "str",
+        "schema": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Only return links published after this date. ISO 8601 format."
+        },
+        "required": false,
+        "description": "Only return links published after this date. ISO 8601 format."
+      },
+      {
+        "name": "endPublishedDate",
+        "python_name": "end_published_date",
+        "type": "str",
+        "schema": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Only return links published before this date. ISO 8601 format."
+        },
+        "required": false,
+        "description": "Only return links published before this date. ISO 8601 format."
+      },
+      {
+        "name": "startCrawlDate",
+        "python_name": "start_crawl_date",
+        "type": "str",
+        "schema": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Only return links crawled by Exa after this date. ISO 8601 format."
+        },
+        "required": false,
+        "description": "Only return links crawled by Exa after this date. ISO 8601 format."
+      },
+      {
+        "name": "endCrawlDate",
+        "python_name": "end_crawl_date",
+        "type": "str",
+        "schema": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Only return links crawled by Exa before this date. ISO 8601 format."
+        },
+        "required": false,
+        "description": "Only return links crawled by Exa before this date. ISO 8601 format."
+      },
+      {
+        "name": "contents",
+        "python_name": "contents",
+        "type": "SearchResultsListParamsContents",
+        "schema": {
+          "type": "object",
+          "description": "Options for requesting page contents inline with search results.",
+          "properties": {
+            "text": {
+              "oneOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "maxCharacters": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 10000,
+                      "description": "Maximum character limit for the text."
+                    },
+                    "includeHtmlTags": {
+                      "type": "boolean",
+                      "default": false,
+                      "description": "Include lightweight HTML tags in returned text."
+                    }
+                  }
+                }
+              ],
+              "description": "Text extraction options. Pass true for defaults or an object for advanced options."
+            },
+            "highlights": {
+              "oneOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "query": {
+                      "type": "string",
+                      "description": "Custom query to guide highlight selection."
+                    },
+                    "maxCharacters": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 10000,
+                      "description": "Maximum characters for highlights."
+                    }
+                  }
+                }
+              ],
+              "description": "Highlight extraction options. Pass true for defaults or an object for advanced options."
+            },
+            "summary": {
+              "type": "object",
+              "properties": {
+                "query": {
+                  "type": "string",
+                  "description": "Custom query for the LLM-generated summary."
+                }
+              },
+              "description": "Summary generation options."
+            }
+          }
+        },
+        "required": false,
+        "description": "Options for requesting page contents inline with search results."
+      },
+      {
+        "name": "moderation",
+        "python_name": "moderation",
+        "type": "bool",
+        "schema": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable content moderation to filter unsafe content."
+        },
+        "required": false,
+        "description": "Enable content moderation to filter unsafe content."
+      }
+    ],
+    "params_type_name": "SearchResultsListParams",
+    "response_type": "SearchResultsListResult",
+    "description": "Perform a search with an Exa prompt-engineered query and retrieve a list\nof relevant results. Optionally request contents (text, highlights, summary)\ninline with the search results. Supports filtering by domain, date, category,\nand number of results.\n",
+    "record_extractor": "$.results",
+    "meta_extractor": null,
+    "needs_envelope": true,
+    "record_type": "list[SearchResult]",
+    "meta_fields": null,
+    "is_download": false
+  },
+  "entities_grouped": {
+    "search_results": [
+      {
+        "method_name": "search_web",
+        "http_method": "post",
+        "path": "/search",
+        "entity": "search_results",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "query",
+            "python_name": "query",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "latest news on Airbyte",
+              "description": "The search query string."
+            },
+            "required": true,
+            "description": "The search query string."
+          },
+          {
+            "name": "type",
+            "python_name": "type",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "auto",
+                "instant",
+                "fast",
+                "deep-lite",
+                "deep",
+                "deep-reasoning"
+              ],
+              "default": "auto",
+              "description": "The type of search. auto intelligently selects the best mode, instant provides lowest latency, fast uses lower-latency models, deep-lite provides lightweight synthesis, deep performs in-depth research with synthesis, and deep-reasoning adds more reasoning for complex searches."
+            },
+            "required": false,
+            "description": "The type of search. auto intelligently selects the best mode, instant provides lowest latency, fast uses lower-latency models, deep-lite provides lightweight synthesis, deep performs in-depth research with synthesis, and deep-reasoning adds more reasoning for complex searches."
+          },
+          {
+            "name": "category",
+            "python_name": "category",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "company",
+                "research paper",
+                "news",
+                "personal site",
+                "financial report",
+                "people"
+              ],
+              "description": "A data category to focus on for improved result quality."
+            },
+            "required": false,
+            "description": "A data category to focus on for improved result quality."
+          },
+          {
+            "name": "numResults",
+            "python_name": "num_results",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10,
+              "description": "Number of results to return (max 100)."
+            },
+            "required": false,
+            "description": "Number of results to return (max 100)."
+          },
+          {
+            "name": "includeDomains",
+            "python_name": "include_domains",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "List of domains to include. If specified, results will only come from these domains."
+            },
+            "required": false,
+            "description": "List of domains to include. If specified, results will only come from these domains."
+          },
+          {
+            "name": "excludeDomains",
+            "python_name": "exclude_domains",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "List of domains to exclude. If specified, no results will be returned from these domains."
+            },
+            "required": false,
+            "description": "List of domains to exclude. If specified, no results will be returned from these domains."
+          },
+          {
+            "name": "startPublishedDate",
+            "python_name": "start_published_date",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Only return links published after this date. ISO 8601 format."
+            },
+            "required": false,
+            "description": "Only return links published after this date. ISO 8601 format."
+          },
+          {
+            "name": "endPublishedDate",
+            "python_name": "end_published_date",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Only return links published before this date. ISO 8601 format."
+            },
+            "required": false,
+            "description": "Only return links published before this date. ISO 8601 format."
+          },
+          {
+            "name": "startCrawlDate",
+            "python_name": "start_crawl_date",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Only return links crawled by Exa after this date. ISO 8601 format."
+            },
+            "required": false,
+            "description": "Only return links crawled by Exa after this date. ISO 8601 format."
+          },
+          {
+            "name": "endCrawlDate",
+            "python_name": "end_crawl_date",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Only return links crawled by Exa before this date. ISO 8601 format."
+            },
+            "required": false,
+            "description": "Only return links crawled by Exa before this date. ISO 8601 format."
+          },
+          {
+            "name": "contents",
+            "python_name": "contents",
+            "type": "SearchResultsListParamsContents",
+            "schema": {
+              "type": "object",
+              "description": "Options for requesting page contents inline with search results.",
+              "properties": {
+                "text": {
+                  "oneOf": [
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "maxCharacters": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 10000,
+                          "description": "Maximum character limit for the text."
+                        },
+                        "includeHtmlTags": {
+                          "type": "boolean",
+                          "default": false,
+                          "description": "Include lightweight HTML tags in returned text."
+                        }
+                      }
+                    }
+                  ],
+                  "description": "Text extraction options. Pass true for defaults or an object for advanced options."
+                },
+                "highlights": {
+                  "oneOf": [
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "query": {
+                          "type": "string",
+                          "description": "Custom query to guide highlight selection."
+                        },
+                        "maxCharacters": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 10000,
+                          "description": "Maximum characters for highlights."
+                        }
+                      }
+                    }
+                  ],
+                  "description": "Highlight extraction options. Pass true for defaults or an object for advanced options."
+                },
+                "summary": {
+                  "type": "object",
+                  "properties": {
+                    "query": {
+                      "type": "string",
+                      "description": "Custom query for the LLM-generated summary."
+                    }
+                  },
+                  "description": "Summary generation options."
+                }
+              }
+            },
+            "required": false,
+            "description": "Options for requesting page contents inline with search results."
+          },
+          {
+            "name": "moderation",
+            "python_name": "moderation",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "description": "Enable content moderation to filter unsafe content."
+            },
+            "required": false,
+            "description": "Enable content moderation to filter unsafe content."
+          }
+        ],
+        "params_type_name": "SearchResultsListParams",
+        "response_type": "SearchResultsListResult",
+        "description": "Perform a search with an Exa prompt-engineered query and retrieve a list\nof relevant results. Optionally request contents (text, highlights, summary)\ninline with the search results. Supports filtering by domain, date, category,\nand number of results.\n",
+        "record_extractor": "$.results",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[SearchResult]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "contents": [
+      {
+        "method_name": "get_contents",
+        "http_method": "post",
+        "path": "/contents",
+        "entity": "contents",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "urls",
+            "python_name": "urls",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "maxItems": 100,
+              "description": "Array of URLs to retrieve contents for.",
+              "x-airbyte-probe-default": [
+                "https://airbyte.io"
+              ]
+            },
+            "required": true,
+            "description": "Array of URLs to retrieve contents for."
+          },
+          {
+            "name": "text",
+            "python_name": "text",
+            "type": "Any",
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "maxCharacters": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 10000,
+                      "description": "Maximum character limit for the text."
+                    },
+                    "includeHtmlTags": {
+                      "type": "boolean",
+                      "default": false,
+                      "description": "Include lightweight HTML tags in returned text."
+                    }
+                  }
+                }
+              ],
+              "description": "Text extraction options. Pass true for defaults or an object for advanced options."
+            },
+            "required": false,
+            "description": "Text extraction options. Pass true for defaults or an object for advanced options."
+          },
+          {
+            "name": "highlights",
+            "python_name": "highlights",
+            "type": "Any",
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "query": {
+                      "type": "string",
+                      "description": "Custom query to guide highlight selection."
+                    },
+                    "maxCharacters": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 10000,
+                      "description": "Maximum characters for highlights."
+                    }
+                  }
+                }
+              ],
+              "description": "Highlight extraction options. Pass true for defaults or an object for advanced options."
+            },
+            "required": false,
+            "description": "Highlight extraction options. Pass true for defaults or an object for advanced options."
+          },
+          {
+            "name": "summary",
+            "python_name": "summary",
+            "type": "ContentsListParamsSummary",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "query": {
+                  "type": "string",
+                  "description": "Custom query for the LLM-generated summary."
+                }
+              },
+              "description": "Summary generation options."
+            },
+            "required": false,
+            "description": "Summary generation options."
+          }
+        ],
+        "params_type_name": "ContentsListParams",
+        "response_type": "ContentsListResult",
+        "description": "Get the full page contents, summaries, and metadata for a list of URLs.\nReturns instant results from Exa's cache, with automatic live crawling\nas fallback for uncached pages. Use this to retrieve text, highlights,\nand summaries for specific URLs.\n",
+        "record_extractor": "$.results",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[SearchResult]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "similar_results": [
+      {
+        "method_name": "find_similar",
+        "http_method": "post",
+        "path": "/findSimilar",
+        "entity": "similar_results",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "url",
+            "python_name": "url",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The URL to find similar pages for.",
+              "x-airbyte-probe-default": "https://airbyte.io"
+            },
+            "required": true,
+            "description": "The URL to find similar pages for."
+          },
+          {
+            "name": "numResults",
+            "python_name": "num_results",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10,
+              "description": "Number of similar results to return (max 100)."
+            },
+            "required": false,
+            "description": "Number of similar results to return (max 100)."
+          },
+          {
+            "name": "includeDomains",
+            "python_name": "include_domains",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "List of domains to include. If specified, results will only come from these domains."
+            },
+            "required": false,
+            "description": "List of domains to include. If specified, results will only come from these domains."
+          },
+          {
+            "name": "excludeDomains",
+            "python_name": "exclude_domains",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "List of domains to exclude. If specified, no results will be returned from these domains."
+            },
+            "required": false,
+            "description": "List of domains to exclude. If specified, no results will be returned from these domains."
+          },
+          {
+            "name": "startPublishedDate",
+            "python_name": "start_published_date",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Only return links published after this date. ISO 8601 format."
+            },
+            "required": false,
+            "description": "Only return links published after this date. ISO 8601 format."
+          },
+          {
+            "name": "endPublishedDate",
+            "python_name": "end_published_date",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Only return links published before this date. ISO 8601 format."
+            },
+            "required": false,
+            "description": "Only return links published before this date. ISO 8601 format."
+          },
+          {
+            "name": "startCrawlDate",
+            "python_name": "start_crawl_date",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Only return links crawled by Exa after this date. ISO 8601 format."
+            },
+            "required": false,
+            "description": "Only return links crawled by Exa after this date. ISO 8601 format."
+          },
+          {
+            "name": "endCrawlDate",
+            "python_name": "end_crawl_date",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Only return links crawled by Exa before this date. ISO 8601 format."
+            },
+            "required": false,
+            "description": "Only return links crawled by Exa before this date. ISO 8601 format."
+          },
+          {
+            "name": "contents",
+            "python_name": "contents",
+            "type": "SimilarResultsListParamsContents",
+            "schema": {
+              "type": "object",
+              "description": "Options for requesting page contents inline with similar page results.",
+              "properties": {
+                "text": {
+                  "oneOf": [
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "maxCharacters": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 10000,
+                          "description": "Maximum character limit for the text."
+                        },
+                        "includeHtmlTags": {
+                          "type": "boolean",
+                          "default": false,
+                          "description": "Include lightweight HTML tags in returned text."
+                        }
+                      }
+                    }
+                  ],
+                  "description": "Text extraction options. Pass true for defaults or an object for advanced options."
+                },
+                "highlights": {
+                  "oneOf": [
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "query": {
+                          "type": "string",
+                          "description": "Custom query to guide highlight selection."
+                        },
+                        "maxCharacters": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 10000,
+                          "description": "Maximum characters for highlights."
+                        }
+                      }
+                    }
+                  ],
+                  "description": "Highlight extraction options. Pass true for defaults or an object for advanced options."
+                },
+                "summary": {
+                  "type": "object",
+                  "properties": {
+                    "query": {
+                      "type": "string",
+                      "description": "Custom query for the LLM-generated summary."
+                    }
+                  },
+                  "description": "Summary generation options."
+                }
+              }
+            },
+            "required": false,
+            "description": "Options for requesting page contents inline with similar page results."
+          }
+        ],
+        "params_type_name": "SimilarResultsListParams",
+        "response_type": "SimilarResultsListResult",
+        "description": "Find web pages similar to a given URL. Uses Exa's embeddings to find\nsemantically similar content. Supports filtering by domains and dates.\n",
+        "record_extractor": "$.results",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[SearchResult]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ]
+  },
+  "search_schemas": {}
+}

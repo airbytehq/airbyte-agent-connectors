@@ -1,6 +1,6 @@
-# Snowflake authentication
+# Exa authentication
 
-This page documents the authentication and configuration options for the Snowflake agent connector.
+This page documents the authentication and configuration options for the Exa agent connector.
 
 ## Hosted mode (most cases)
 
@@ -18,15 +18,7 @@ Create a connector with Token credentials.
 
 | Field Name | Type | Required | Description |
 |------------|------|----------|-------------|
-| `programmatic_access_token` | `str` | Yes | Snowflake Programmatic Access Token (PAT) for authentication. Generate one via ALTER USER ADD PROGRAMMATIC ACCESS TOKEN in Snowflake. |
-
-`replication_config` fields you need:
-
-| Field Name | Type | Required | Description |
-|------------|------|----------|-------------|
-| `database` | `str` | Yes | The database for Airbyte to access data. |
-| `warehouse` | `str` | Yes | The warehouse for Airbyte to access data. |
-| `role` | `str` | Yes | The role for Airbyte to access Snowflake. |
+| `api_key` | `str` | Yes | Your Exa API key from dashboard.exa.ai/api-keys |
 
 Example request:
 
@@ -37,15 +29,10 @@ curl -X POST "https://api.airbyte.ai/api/v1/integrations/connectors" \
   -H "Content-Type: application/json" \
   -d '{
     "workspace_name": "<WORKSPACE_NAME>",
-    "connector_type": "Snowflake",
-    "name": "My Snowflake Connector",
+    "connector_type": "Exa",
+    "name": "My Exa Connector",
     "credentials": {
-      "programmatic_access_token": "<Snowflake Programmatic Access Token (PAT) for authentication. Generate one via ALTER USER ADD PROGRAMMATIC ACCESS TOKEN in Snowflake.>"
-    },
-    "replication_config": {
-      "database": "<The database for Airbyte to access data.>",
-      "warehouse": "<The warehouse for Airbyte to access data.>",
-      "role": "<The role for Airbyte to access Snowflake.>"
+      "api_key": "<Your Exa API key from dashboard.exa.ai/api-keys>"
     }
   }'
 ```
@@ -68,7 +55,7 @@ Create the connector. The CLI opens the hosted setup flow:
 ```bash
 airbyte-agent connectors create --json '{
   "workspace": "<your_workspace_name>",
-  "name": "snowflake"
+  "name": "exa"
 }'
 ```
 
@@ -77,7 +64,7 @@ Describe the connector to see its supported entities and actions:
 ```bash
 airbyte-agent connectors describe --json '{
   "workspace": "<your_workspace_name>",
-  "name": "snowflake"
+  "name": "exa"
 }'
 ```
 
@@ -86,7 +73,7 @@ Execute an action:
 ```bash
 airbyte-agent connectors execute --json '{
   "workspace": "<your_workspace_name>",
-  "name": "snowflake",
+  "name": "exa",
   "entity": "<entity>",
   "action": "<action>",
   "params": {}
@@ -95,7 +82,7 @@ airbyte-agent connectors execute --json '{
 
 **Python SDK**
 
-The `connect()` factory returns a fully typed `SnowflakeConnector` and reads `AIRBYTE_CLIENT_ID` / `AIRBYTE_CLIENT_SECRET` from the environment:
+The `connect()` factory returns a fully typed `ExaConnector` and reads `AIRBYTE_CLIENT_ID` / `AIRBYTE_CLIENT_SECRET` from the environment:
 
 
 **Pydantic AI**
@@ -103,15 +90,15 @@ The `connect()` factory returns a fully typed `SnowflakeConnector` and reads `AI
 ```python title="Pydantic AI"
 from pydantic_ai import Agent
 from airbyte_agent_sdk import connect
-from airbyte_agent_sdk.connectors.snowflake import SnowflakeConnector
+from airbyte_agent_sdk.connectors.exa import ExaConnector
 
-connector = connect("snowflake", workspace_name="<your_workspace_name>")
+connector = connect("exa", workspace_name="<your_workspace_name>")
 
 agent = Agent("openai:gpt-4o")
 
 @agent.tool_plain
-@SnowflakeConnector.tool_utils
-async def snowflake_execute(entity: str, action: str, params: dict | None = None):
+@ExaConnector.tool_utils
+async def exa_execute(entity: str, action: str, params: dict | None = None):
     return await connector.execute(entity, action, params or {})
 ```
 
@@ -120,14 +107,14 @@ async def snowflake_execute(entity: str, action: str, params: dict | None = None
 ```python title="LangChain"
 from langchain_core.tools import tool
 from airbyte_agent_sdk import connect
-from airbyte_agent_sdk.connectors.snowflake import SnowflakeConnector
+from airbyte_agent_sdk.connectors.exa import ExaConnector
 
-connector = connect("snowflake", workspace_name="<your_workspace_name>")
+connector = connect("exa", workspace_name="<your_workspace_name>")
 
 @tool
-@SnowflakeConnector.tool_utils
-async def snowflake_execute(entity: str, action: str, params: dict | None = None):
-    """Execute Snowflake connector operations."""
+@ExaConnector.tool_utils
+async def exa_execute(entity: str, action: str, params: dict | None = None):
+    """Execute Exa connector operations."""
     result = await connector.execute(entity, action, params or {})
     # connector.execute returns a Pydantic envelope for typed actions; fall back to raw data otherwise.
     return result.model_dump(mode="json") if hasattr(result, "model_dump") else result
@@ -138,20 +125,20 @@ async def snowflake_execute(entity: str, action: str, params: dict | None = None
 ```python title="OpenAI Agents"
 from agents import Agent, function_tool
 from airbyte_agent_sdk import connect
-from airbyte_agent_sdk.connectors.snowflake import SnowflakeConnector
+from airbyte_agent_sdk.connectors.exa import ExaConnector
 
-connector = connect("snowflake", workspace_name="<your_workspace_name>")
+connector = connect("exa", workspace_name="<your_workspace_name>")
 
 # strict_mode=False because `params: dict` is permissive and the default strict
 # JSON schema rejects objects with additionalProperties.
 @function_tool(strict_mode=False)
-@SnowflakeConnector.tool_utils(framework="openai_agents")
-async def snowflake_execute(entity: str, action: str, params: dict | None = None):
-    """Execute Snowflake connector operations."""
+@ExaConnector.tool_utils(framework="openai_agents")
+async def exa_execute(entity: str, action: str, params: dict | None = None):
+    """Execute Exa connector operations."""
     result = await connector.execute(entity, action, params or {})
     return result.model_dump(mode="json") if hasattr(result, "model_dump") else result
 
-agent = Agent(name="Snowflake Assistant", tools=[snowflake_execute])
+agent = Agent(name="Exa Assistant", tools=[exa_execute])
 ```
 
 **FastMCP**
@@ -159,16 +146,16 @@ agent = Agent(name="Snowflake Assistant", tools=[snowflake_execute])
 ```python title="FastMCP"
 from fastmcp import FastMCP
 from airbyte_agent_sdk import connect
-from airbyte_agent_sdk.connectors.snowflake import SnowflakeConnector
+from airbyte_agent_sdk.connectors.exa import ExaConnector
 
-connector = connect("snowflake", workspace_name="<your_workspace_name>")
+connector = connect("exa", workspace_name="<your_workspace_name>")
 
-mcp = FastMCP("Snowflake Agent")
+mcp = FastMCP("Exa Agent")
 
 @mcp.tool
-@SnowflakeConnector.tool_utils
-async def snowflake_execute(entity: str, action: str, params: dict | None = None):
-    """Execute Snowflake connector operations."""
+@ExaConnector.tool_utils
+async def exa_execute(entity: str, action: str, params: dict | None = None):
+    """Execute Exa connector operations."""
     result = await connector.execute(entity, action, params or {})
     return result.model_dump(mode="json") if hasattr(result, "model_dump") else result
 ```
@@ -178,10 +165,10 @@ Or pass credentials explicitly (equivalent, useful when you're not loading them 
 
 ```python title="Pydantic AI"
 from pydantic_ai import Agent
-from airbyte_agent_sdk.connectors.snowflake import SnowflakeConnector
+from airbyte_agent_sdk.connectors.exa import ExaConnector
 from airbyte_agent_sdk.types import AirbyteAuthConfig
 
-connector = SnowflakeConnector(
+connector = ExaConnector(
     auth_config=AirbyteAuthConfig(
         workspace_name="<your_workspace_name>",
         organization_id="<your_organization_id>",  # Optional for multi-org clients
@@ -193,8 +180,8 @@ connector = SnowflakeConnector(
 agent = Agent("openai:gpt-4o")
 
 @agent.tool_plain
-@SnowflakeConnector.tool_utils
-async def snowflake_execute(entity: str, action: str, params: dict | None = None):
+@ExaConnector.tool_utils
+async def exa_execute(entity: str, action: str, params: dict | None = None):
     return await connector.execute(entity, action, params or {})
 ```
 
@@ -202,10 +189,10 @@ async def snowflake_execute(entity: str, action: str, params: dict | None = None
 
 ```python title="LangChain"
 from langchain_core.tools import tool
-from airbyte_agent_sdk.connectors.snowflake import SnowflakeConnector
+from airbyte_agent_sdk.connectors.exa import ExaConnector
 from airbyte_agent_sdk.types import AirbyteAuthConfig
 
-connector = SnowflakeConnector(
+connector = ExaConnector(
     auth_config=AirbyteAuthConfig(
         workspace_name="<your_workspace_name>",
         organization_id="<your_organization_id>",  # Optional for multi-org clients
@@ -215,9 +202,9 @@ connector = SnowflakeConnector(
 )
 
 @tool
-@SnowflakeConnector.tool_utils
-async def snowflake_execute(entity: str, action: str, params: dict | None = None):
-    """Execute Snowflake connector operations."""
+@ExaConnector.tool_utils
+async def exa_execute(entity: str, action: str, params: dict | None = None):
+    """Execute Exa connector operations."""
     result = await connector.execute(entity, action, params or {})
     # connector.execute returns a Pydantic envelope for typed actions; fall back to raw data otherwise.
     return result.model_dump(mode="json") if hasattr(result, "model_dump") else result
@@ -227,10 +214,10 @@ async def snowflake_execute(entity: str, action: str, params: dict | None = None
 
 ```python title="OpenAI Agents"
 from agents import Agent, function_tool
-from airbyte_agent_sdk.connectors.snowflake import SnowflakeConnector
+from airbyte_agent_sdk.connectors.exa import ExaConnector
 from airbyte_agent_sdk.types import AirbyteAuthConfig
 
-connector = SnowflakeConnector(
+connector = ExaConnector(
     auth_config=AirbyteAuthConfig(
         workspace_name="<your_workspace_name>",
         organization_id="<your_organization_id>",  # Optional for multi-org clients
@@ -242,23 +229,23 @@ connector = SnowflakeConnector(
 # strict_mode=False because `params: dict` is permissive and the default strict
 # JSON schema rejects objects with additionalProperties.
 @function_tool(strict_mode=False)
-@SnowflakeConnector.tool_utils(framework="openai_agents")
-async def snowflake_execute(entity: str, action: str, params: dict | None = None):
-    """Execute Snowflake connector operations."""
+@ExaConnector.tool_utils(framework="openai_agents")
+async def exa_execute(entity: str, action: str, params: dict | None = None):
+    """Execute Exa connector operations."""
     result = await connector.execute(entity, action, params or {})
     return result.model_dump(mode="json") if hasattr(result, "model_dump") else result
 
-agent = Agent(name="Snowflake Assistant", tools=[snowflake_execute])
+agent = Agent(name="Exa Assistant", tools=[exa_execute])
 ```
 
 **FastMCP**
 
 ```python title="FastMCP"
 from fastmcp import FastMCP
-from airbyte_agent_sdk.connectors.snowflake import SnowflakeConnector
+from airbyte_agent_sdk.connectors.exa import ExaConnector
 from airbyte_agent_sdk.types import AirbyteAuthConfig
 
-connector = SnowflakeConnector(
+connector = ExaConnector(
     auth_config=AirbyteAuthConfig(
         workspace_name="<your_workspace_name>",
         organization_id="<your_organization_id>",  # Optional for multi-org clients
@@ -267,12 +254,12 @@ connector = SnowflakeConnector(
     )
 )
 
-mcp = FastMCP("Snowflake Agent")
+mcp = FastMCP("Exa Agent")
 
 @mcp.tool
-@SnowflakeConnector.tool_utils
-async def snowflake_execute(entity: str, action: str, params: dict | None = None):
-    """Execute Snowflake connector operations."""
+@ExaConnector.tool_utils
+async def exa_execute(entity: str, action: str, params: dict | None = None):
+    """Execute Exa connector operations."""
     result = await connector.execute(entity, action, params or {})
     return result.model_dump(mode="json") if hasattr(result, "model_dump") else result
 ```
@@ -301,29 +288,18 @@ This authentication method isn't available for this connector.
 
 | Field Name | Type | Required | Description |
 |------------|------|----------|-------------|
-| `programmatic_access_token` | `str` | Yes | Snowflake Programmatic Access Token (PAT) for authentication. Generate one via ALTER USER ADD PROGRAMMATIC ACCESS TOKEN in Snowflake. |
+| `api_key` | `str` | Yes | Your Exa API key from dashboard.exa.ai/api-keys |
 
 Example request:
 
 ```python
-from airbyte_agent_sdk.connectors.snowflake import SnowflakeConnector
-from airbyte_agent_sdk.connectors.snowflake.models import SnowflakeAuthConfig
+from airbyte_agent_sdk.connectors.exa import ExaConnector
+from airbyte_agent_sdk.connectors.exa.models import ExaAuthConfig
 
-connector = SnowflakeConnector(
-    auth_config=SnowflakeAuthConfig(
-        programmatic_access_token="<Snowflake Programmatic Access Token (PAT) for authentication. Generate one via ALTER USER ADD PROGRAMMATIC ACCESS TOKEN in Snowflake.>"
+connector = ExaConnector(
+    auth_config=ExaAuthConfig(
+        api_key="<Your Exa API key from dashboard.exa.ai/api-keys>"
     )
 )
 ```
 
-## Configuration
-
-The Snowflake connector also needs these configuration values to construct the base API URL.
-
-- **Hosted CLI**: `airbyte-agent connectors create` doesn't currently accept these configuration fields directly. For hosted connectors that need these values, create the connector with the hosted API `replication_config`, then use the CLI for describe and execute operations after creation.
-- **Hosted API**: pass these values in the connector creation `replication_config`.
-- **Open source mode**: provide these values with your local connector setup so the connector can build the correct API base URL.
-
-| Variable | Type | Required | Default | Description |
-|----------|------|----------|---------|-------------|
-| `account` | `string` | Yes | orgname-accountname | Snowflake account identifier in the format orgname-accountname (e.g., myorg-myaccount) |

@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Facebook Marketing API Connector
-  version: 1.0.24
+  version: 1.2.0
   description: 'Facebook Marketing API connector for managing ad campaigns, ad sets, ads, creatives,
 
     and accessing performance insights, pixel configuration, and event quality data.
@@ -13,8 +13,8 @@ info:
     '
   x-airbyte-connector-name: facebook-marketing
   x-airbyte-connector-definition-id: e7778cfc-e97c-4458-9ecb-b4f2bba8946c
-  x-airbyte-replication-version: "5.2.13"
-  x-airbyte-replication-compatibility: ">=5.2.13, <6.0.0"
+  x-airbyte-replication-version: "6.0.0"
+  x-airbyte-replication-compatibility: ">=6.0.0, <7.0.0"
   x-airbyte-external-documentation-urls:
   - title: Facebook Marketing API Reference
     type: api_reference
@@ -63,7 +63,7 @@ info:
   - ads_insights_country
   - ads_insights_platform_and_device
   - ads_insights_region
-  - ads_insights_dma
+  - ads_insights_comscore_market
   - activities
   x-airbyte-skip-auth-methods:
   - oauth2
@@ -489,8 +489,8 @@ info:
         type: ["null", "string"]
         description: Last update time
 servers:
-- url: https://graph.facebook.com/v24.0
-  description: Facebook Graph API v24.0
+- url: https://graph.facebook.com/v25.0
+  description: Facebook Graph API v25.0
 security:
 - facebookOAuth: []
 paths:
@@ -1594,7 +1594,7 @@ components:
       flows:
         authorizationCode:
           authorizationUrl: https://www.facebook.com/dialog/oauth
-          tokenUrl: https://graph.facebook.com/v24.0/oauth/access_token
+          tokenUrl: https://graph.facebook.com/v25.0/oauth/access_token
           scopes:
             ads_management: Manage ads and campaigns
             ads_read: Read ads data

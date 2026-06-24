@@ -1,35 +1,22 @@
-# Airtable
+# Exa
 
-The Airtable agent connector is a Python package that equips AI agents to interact with Airtable through strongly typed, well-documented tools. It's ready to use directly in your Python app, in an agent framework, or exposed through an MCP.
+The Exa agent connector is a Python package that equips AI agents to interact with Exa through strongly typed, well-documented tools. It's ready to use directly in your Python app, in an agent framework, or exposed through an MCP.
 
-Airtable is a cloud-based platform that combines the simplicity of a spreadsheet with the 
-power of a database. This connector provides access to bases, tables, and records for 
-data analysis and workflow automation.
+Exa is an AI-powered search engine that finds the exact content you're looking
+for on the web using embeddings-based search. This connector provides access to
+Exa's search, contents retrieval, and find-similar endpoints. All endpoints use
+POST requests with JSON bodies. Requires an Exa API key from dashboard.exa.ai.
 
 
 ## Example prompts
 
-The Airtable connector is optimized to handle prompts like these.
+The Exa connector is optimized to handle prompts like these.
 
-- List all my Airtable bases
-- What tables are in my first base?
-- Show me the schema for tables in a base
-- List records from a table in my base
-- Show me recent records from a table
-- What fields are in a table?
-- List records where Status is 'Done' in table tblXXX
-- Find records created last week in table tblXXX
-- Show me records updated in the last 30 days in base appXXX
-
-## Unsupported prompts
-
-The Airtable connector isn't currently able to handle prompts like these.
-
-- Create a new record in Airtable
-- Update a record in Airtable
-- Delete a record from Airtable
-- Create a new table
-- Modify table schema
+- Search for latest news on Airbyte
+- Find web pages similar to https://airbyte.com
+- Get the full text content of https://airbyte.com
+- Search for AI research papers published this year
+- Find company pages related to data integration startups
 
 ## Entities and actions
 
@@ -37,18 +24,18 @@ This connector supports the following entities and actions. For more details, se
 
 | Entity | Actions |
 |--------|---------|
-| Bases | [List](./REFERENCE.md#bases-list), [Context Store Search](./REFERENCE.md#bases-context-store-search) |
-| Tables | [List](./REFERENCE.md#tables-list), [Context Store Search](./REFERENCE.md#tables-context-store-search) |
-| Records | [List](./REFERENCE.md#records-list), [Get](./REFERENCE.md#records-get) |
+| Search Results | [List](./REFERENCE.md#search-results-list) |
+| Contents | [List](./REFERENCE.md#contents-list) |
+| Similar Results | [List](./REFERENCE.md#similar-results-list) |
 
 
-## Airtable API docs
+## Exa API docs
 
-See the official [Airtable API reference](https://airtable.com/developers/web/api/introduction).
+See the official [Exa API reference](https://docs.exa.ai/reference/getting-started).
 
 ## Interfaces
 
-Use the Airtable connector through the Airbyte Agent CLI, the Python SDK, or the API.
+Use the Exa connector through the Airbyte Agent CLI, the Python SDK, or the API.
 
 ### CLI
 
@@ -69,7 +56,7 @@ Create the connector. The CLI opens the hosted setup flow:
 ```bash
 airbyte-agent connectors create --json '{
   "workspace": "<your_workspace_name>",
-  "name": "airtable"
+  "name": "exa"
 }'
 ```
 
@@ -78,7 +65,7 @@ Describe the connector to see its supported entities and actions:
 ```bash
 airbyte-agent connectors describe --json '{
   "workspace": "<your_workspace_name>",
-  "name": "airtable"
+  "name": "exa"
 }'
 ```
 
@@ -87,8 +74,8 @@ Execute an action:
 ```bash
 airbyte-agent connectors execute --json '{
   "workspace": "<your_workspace_name>",
-  "name": "airtable",
-  "entity": "bases",
+  "name": "exa",
+  "entity": "search_results",
   "action": "list"
 }'
 ```
@@ -112,7 +99,7 @@ If your Airbyte client can access multiple organizations, also set `organization
 
 This example assumes you've already authenticated your connector with Airbyte. See [Authentication](AUTH.md) to learn more about authenticating. If you need a step-by-step guide, see the [hosted execution tutorial](https://docs.airbyte.com/ai-agents/get-started/developer-quickstart/).
 
-The `connect()` factory returns a fully typed `AirtableConnector` and reads `AIRBYTE_CLIENT_ID` / `AIRBYTE_CLIENT_SECRET` from the environment:
+The `connect()` factory returns a fully typed `ExaConnector` and reads `AIRBYTE_CLIENT_ID` / `AIRBYTE_CLIENT_SECRET` from the environment:
 
 
 **Pydantic AI**
@@ -120,15 +107,15 @@ The `connect()` factory returns a fully typed `AirtableConnector` and reads `AIR
 ```python title="Pydantic AI"
 from pydantic_ai import Agent
 from airbyte_agent_sdk import connect
-from airbyte_agent_sdk.connectors.airtable import AirtableConnector
+from airbyte_agent_sdk.connectors.exa import ExaConnector
 
-connector = connect("airtable", workspace_name="<your_workspace_name>")
+connector = connect("exa", workspace_name="<your_workspace_name>")
 
 agent = Agent("openai:gpt-4o")
 
 @agent.tool_plain
-@AirtableConnector.tool_utils
-async def airtable_execute(entity: str, action: str, params: dict | None = None):
+@ExaConnector.tool_utils
+async def exa_execute(entity: str, action: str, params: dict | None = None):
     return await connector.execute(entity, action, params or {})
 ```
 
@@ -137,14 +124,14 @@ async def airtable_execute(entity: str, action: str, params: dict | None = None)
 ```python title="LangChain"
 from langchain_core.tools import tool
 from airbyte_agent_sdk import connect
-from airbyte_agent_sdk.connectors.airtable import AirtableConnector
+from airbyte_agent_sdk.connectors.exa import ExaConnector
 
-connector = connect("airtable", workspace_name="<your_workspace_name>")
+connector = connect("exa", workspace_name="<your_workspace_name>")
 
 @tool
-@AirtableConnector.tool_utils
-async def airtable_execute(entity: str, action: str, params: dict | None = None):
-    """Execute Airtable connector operations."""
+@ExaConnector.tool_utils
+async def exa_execute(entity: str, action: str, params: dict | None = None):
+    """Execute Exa connector operations."""
     result = await connector.execute(entity, action, params or {})
     # connector.execute returns a Pydantic envelope for typed actions; fall back to raw data otherwise.
     return result.model_dump(mode="json") if hasattr(result, "model_dump") else result
@@ -155,20 +142,20 @@ async def airtable_execute(entity: str, action: str, params: dict | None = None)
 ```python title="OpenAI Agents"
 from agents import Agent, function_tool
 from airbyte_agent_sdk import connect
-from airbyte_agent_sdk.connectors.airtable import AirtableConnector
+from airbyte_agent_sdk.connectors.exa import ExaConnector
 
-connector = connect("airtable", workspace_name="<your_workspace_name>")
+connector = connect("exa", workspace_name="<your_workspace_name>")
 
 # strict_mode=False because `params: dict` is permissive and the default strict
 # JSON schema rejects objects with additionalProperties.
 @function_tool(strict_mode=False)
-@AirtableConnector.tool_utils(framework="openai_agents")
-async def airtable_execute(entity: str, action: str, params: dict | None = None):
-    """Execute Airtable connector operations."""
+@ExaConnector.tool_utils(framework="openai_agents")
+async def exa_execute(entity: str, action: str, params: dict | None = None):
+    """Execute Exa connector operations."""
     result = await connector.execute(entity, action, params or {})
     return result.model_dump(mode="json") if hasattr(result, "model_dump") else result
 
-agent = Agent(name="Airtable Assistant", tools=[airtable_execute])
+agent = Agent(name="Exa Assistant", tools=[exa_execute])
 ```
 
 **FastMCP**
@@ -176,16 +163,16 @@ agent = Agent(name="Airtable Assistant", tools=[airtable_execute])
 ```python title="FastMCP"
 from fastmcp import FastMCP
 from airbyte_agent_sdk import connect
-from airbyte_agent_sdk.connectors.airtable import AirtableConnector
+from airbyte_agent_sdk.connectors.exa import ExaConnector
 
-connector = connect("airtable", workspace_name="<your_workspace_name>")
+connector = connect("exa", workspace_name="<your_workspace_name>")
 
-mcp = FastMCP("Airtable Agent")
+mcp = FastMCP("Exa Agent")
 
 @mcp.tool
-@AirtableConnector.tool_utils
-async def airtable_execute(entity: str, action: str, params: dict | None = None):
-    """Execute Airtable connector operations."""
+@ExaConnector.tool_utils
+async def exa_execute(entity: str, action: str, params: dict | None = None):
+    """Execute Exa connector operations."""
     result = await connector.execute(entity, action, params or {})
     return result.model_dump(mode="json") if hasattr(result, "model_dump") else result
 ```
@@ -196,10 +183,10 @@ Or pass credentials explicitly (equivalent, useful when you're not loading them 
 
 ```python title="Pydantic AI"
 from pydantic_ai import Agent
-from airbyte_agent_sdk.connectors.airtable import AirtableConnector
+from airbyte_agent_sdk.connectors.exa import ExaConnector
 from airbyte_agent_sdk.types import AirbyteAuthConfig
 
-connector = AirtableConnector(
+connector = ExaConnector(
     auth_config=AirbyteAuthConfig(
         workspace_name="<your_workspace_name>",
         organization_id="<your_organization_id>",  # Optional for multi-org clients
@@ -211,8 +198,8 @@ connector = AirtableConnector(
 agent = Agent("openai:gpt-4o")
 
 @agent.tool_plain
-@AirtableConnector.tool_utils
-async def airtable_execute(entity: str, action: str, params: dict | None = None):
+@ExaConnector.tool_utils
+async def exa_execute(entity: str, action: str, params: dict | None = None):
     return await connector.execute(entity, action, params or {})
 ```
 
@@ -220,10 +207,10 @@ async def airtable_execute(entity: str, action: str, params: dict | None = None)
 
 ```python title="LangChain"
 from langchain_core.tools import tool
-from airbyte_agent_sdk.connectors.airtable import AirtableConnector
+from airbyte_agent_sdk.connectors.exa import ExaConnector
 from airbyte_agent_sdk.types import AirbyteAuthConfig
 
-connector = AirtableConnector(
+connector = ExaConnector(
     auth_config=AirbyteAuthConfig(
         workspace_name="<your_workspace_name>",
         organization_id="<your_organization_id>",  # Optional for multi-org clients
@@ -233,9 +220,9 @@ connector = AirtableConnector(
 )
 
 @tool
-@AirtableConnector.tool_utils
-async def airtable_execute(entity: str, action: str, params: dict | None = None):
-    """Execute Airtable connector operations."""
+@ExaConnector.tool_utils
+async def exa_execute(entity: str, action: str, params: dict | None = None):
+    """Execute Exa connector operations."""
     result = await connector.execute(entity, action, params or {})
     # connector.execute returns a Pydantic envelope for typed actions; fall back to raw data otherwise.
     return result.model_dump(mode="json") if hasattr(result, "model_dump") else result
@@ -245,10 +232,10 @@ async def airtable_execute(entity: str, action: str, params: dict | None = None)
 
 ```python title="OpenAI Agents"
 from agents import Agent, function_tool
-from airbyte_agent_sdk.connectors.airtable import AirtableConnector
+from airbyte_agent_sdk.connectors.exa import ExaConnector
 from airbyte_agent_sdk.types import AirbyteAuthConfig
 
-connector = AirtableConnector(
+connector = ExaConnector(
     auth_config=AirbyteAuthConfig(
         workspace_name="<your_workspace_name>",
         organization_id="<your_organization_id>",  # Optional for multi-org clients
@@ -260,23 +247,23 @@ connector = AirtableConnector(
 # strict_mode=False because `params: dict` is permissive and the default strict
 # JSON schema rejects objects with additionalProperties.
 @function_tool(strict_mode=False)
-@AirtableConnector.tool_utils(framework="openai_agents")
-async def airtable_execute(entity: str, action: str, params: dict | None = None):
-    """Execute Airtable connector operations."""
+@ExaConnector.tool_utils(framework="openai_agents")
+async def exa_execute(entity: str, action: str, params: dict | None = None):
+    """Execute Exa connector operations."""
     result = await connector.execute(entity, action, params or {})
     return result.model_dump(mode="json") if hasattr(result, "model_dump") else result
 
-agent = Agent(name="Airtable Assistant", tools=[airtable_execute])
+agent = Agent(name="Exa Assistant", tools=[exa_execute])
 ```
 
 **FastMCP**
 
 ```python title="FastMCP"
 from fastmcp import FastMCP
-from airbyte_agent_sdk.connectors.airtable import AirtableConnector
+from airbyte_agent_sdk.connectors.exa import ExaConnector
 from airbyte_agent_sdk.types import AirbyteAuthConfig
 
-connector = AirtableConnector(
+connector = ExaConnector(
     auth_config=AirbyteAuthConfig(
         workspace_name="<your_workspace_name>",
         organization_id="<your_organization_id>",  # Optional for multi-org clients
@@ -285,12 +272,12 @@ connector = AirtableConnector(
     )
 )
 
-mcp = FastMCP("Airtable Agent")
+mcp = FastMCP("Exa Agent")
 
 @mcp.tool
-@AirtableConnector.tool_utils
-async def airtable_execute(entity: str, action: str, params: dict | None = None):
-    """Execute Airtable connector operations."""
+@ExaConnector.tool_utils
+async def exa_execute(entity: str, action: str, params: dict | None = None):
+    """Execute Exa connector operations."""
     result = await connector.execute(entity, action, params or {})
     return result.model_dump(mode="json") if hasattr(result, "model_dump") else result
 ```
@@ -303,20 +290,20 @@ In open source mode, you provide API credentials directly to the connector.
 
 ```python title="Pydantic AI"
 from pydantic_ai import Agent
-from airbyte_agent_sdk.connectors.airtable import AirtableConnector
-from airbyte_agent_sdk.connectors.airtable.models import AirtableAuthConfig
+from airbyte_agent_sdk.connectors.exa import ExaConnector
+from airbyte_agent_sdk.connectors.exa.models import ExaAuthConfig
 
-connector = AirtableConnector(
-    auth_config=AirtableAuthConfig(
-        personal_access_token="<Airtable Personal Access Token. See https://airtable.com/developers/web/guides/personal-access-tokens>"
+connector = ExaConnector(
+    auth_config=ExaAuthConfig(
+        api_key="<Your Exa API key from dashboard.exa.ai/api-keys>"
     )
 )
 
 agent = Agent("openai:gpt-4o")
 
 @agent.tool_plain
-@AirtableConnector.tool_utils
-async def airtable_execute(entity: str, action: str, params: dict | None = None):
+@ExaConnector.tool_utils
+async def exa_execute(entity: str, action: str, params: dict | None = None):
     return await connector.execute(entity, action, params or {})
 ```
 
@@ -324,19 +311,19 @@ async def airtable_execute(entity: str, action: str, params: dict | None = None)
 
 ```python title="LangChain"
 from langchain_core.tools import tool
-from airbyte_agent_sdk.connectors.airtable import AirtableConnector
-from airbyte_agent_sdk.connectors.airtable.models import AirtableAuthConfig
+from airbyte_agent_sdk.connectors.exa import ExaConnector
+from airbyte_agent_sdk.connectors.exa.models import ExaAuthConfig
 
-connector = AirtableConnector(
-    auth_config=AirtableAuthConfig(
-        personal_access_token="<Airtable Personal Access Token. See https://airtable.com/developers/web/guides/personal-access-tokens>"
+connector = ExaConnector(
+    auth_config=ExaAuthConfig(
+        api_key="<Your Exa API key from dashboard.exa.ai/api-keys>"
     )
 )
 
 @tool
-@AirtableConnector.tool_utils
-async def airtable_execute(entity: str, action: str, params: dict | None = None):
-    """Execute Airtable connector operations."""
+@ExaConnector.tool_utils
+async def exa_execute(entity: str, action: str, params: dict | None = None):
+    """Execute Exa connector operations."""
     result = await connector.execute(entity, action, params or {})
     # connector.execute returns a Pydantic envelope for typed actions; fall back to raw data otherwise.
     return result.model_dump(mode="json") if hasattr(result, "model_dump") else result
@@ -346,46 +333,46 @@ async def airtable_execute(entity: str, action: str, params: dict | None = None)
 
 ```python title="OpenAI Agents"
 from agents import Agent, function_tool
-from airbyte_agent_sdk.connectors.airtable import AirtableConnector
-from airbyte_agent_sdk.connectors.airtable.models import AirtableAuthConfig
+from airbyte_agent_sdk.connectors.exa import ExaConnector
+from airbyte_agent_sdk.connectors.exa.models import ExaAuthConfig
 
-connector = AirtableConnector(
-    auth_config=AirtableAuthConfig(
-        personal_access_token="<Airtable Personal Access Token. See https://airtable.com/developers/web/guides/personal-access-tokens>"
+connector = ExaConnector(
+    auth_config=ExaAuthConfig(
+        api_key="<Your Exa API key from dashboard.exa.ai/api-keys>"
     )
 )
 
 # strict_mode=False because `params: dict` is permissive and the default strict
 # JSON schema rejects objects with additionalProperties.
 @function_tool(strict_mode=False)
-@AirtableConnector.tool_utils(framework="openai_agents")
-async def airtable_execute(entity: str, action: str, params: dict | None = None):
-    """Execute Airtable connector operations."""
+@ExaConnector.tool_utils(framework="openai_agents")
+async def exa_execute(entity: str, action: str, params: dict | None = None):
+    """Execute Exa connector operations."""
     result = await connector.execute(entity, action, params or {})
     return result.model_dump(mode="json") if hasattr(result, "model_dump") else result
 
-agent = Agent(name="Airtable Assistant", tools=[airtable_execute])
+agent = Agent(name="Exa Assistant", tools=[exa_execute])
 ```
 
 **FastMCP**
 
 ```python title="FastMCP"
 from fastmcp import FastMCP
-from airbyte_agent_sdk.connectors.airtable import AirtableConnector
-from airbyte_agent_sdk.connectors.airtable.models import AirtableAuthConfig
+from airbyte_agent_sdk.connectors.exa import ExaConnector
+from airbyte_agent_sdk.connectors.exa.models import ExaAuthConfig
 
-connector = AirtableConnector(
-    auth_config=AirtableAuthConfig(
-        personal_access_token="<Airtable Personal Access Token. See https://airtable.com/developers/web/guides/personal-access-tokens>"
+connector = ExaConnector(
+    auth_config=ExaAuthConfig(
+        api_key="<Your Exa API key from dashboard.exa.ai/api-keys>"
     )
 )
 
-mcp = FastMCP("Airtable Agent")
+mcp = FastMCP("Exa Agent")
 
 @mcp.tool
-@AirtableConnector.tool_utils
-async def airtable_execute(entity: str, action: str, params: dict | None = None):
-    """Execute Airtable connector operations."""
+@ExaConnector.tool_utils
+async def exa_execute(entity: str, action: str, params: dict | None = None):
+    """Execute Exa connector operations."""
     result = await connector.execute(entity, action, params or {})
     return result.model_dump(mode="json") if hasattr(result, "model_dump") else result
 ```
@@ -400,4 +387,4 @@ If your organization restricts access to specific IPs, add the [Airbyte Agents I
 
 ## Version information
 
-**Connector version:** 1.0.8
+**Connector version:** 1.0.0

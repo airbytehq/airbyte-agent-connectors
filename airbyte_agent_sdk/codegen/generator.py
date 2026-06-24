@@ -2384,6 +2384,13 @@ class ConnectorGenerator:
             non_null_types = [t for t in schema_type if t != "null"]
             schema_type = non_null_types[0] if non_null_types else "string"
 
+        if schema_type is None and ("oneOf" in schema or "anyOf" in schema):
+            variants = schema.get("oneOf") or schema.get("anyOf") or []
+            for variant in variants:
+                if variant.get("type") != "null":
+                    return self._schema_to_json_example_value(variant, field_name)
+            return None
+
         if schema_type == "object":
             properties = schema.get("properties", {})
             required = schema.get("required", [])
@@ -2470,6 +2477,12 @@ class ConnectorGenerator:
             if schema.get("format") == "date-time":
                 return '"2025-01-01T00:00:00Z"'
             return '"<str>"'
+        elif schema_type is None and ("oneOf" in schema or "anyOf" in schema):
+            variants = schema.get("oneOf") or schema.get("anyOf") or []
+            for variant in variants:
+                if variant.get("type") != "null":
+                    return self._schema_to_example_value(variant, field_name, base_indent)
+            return "None"
         else:
             raise ValueError(f"Field '{field_name}' has unsupported or missing schema type. Schema: {schema}")
 
