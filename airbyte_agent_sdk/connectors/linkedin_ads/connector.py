@@ -107,8 +107,8 @@ class LinkedinAdsConnector:
     """
 
     connector_name = "linkedin-ads"
-    connector_version = "1.0.5"
-    sdk_version = "0.1.262"
+    connector_version = "1.0.6"
+    sdk_version = "0.1.263"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -706,7 +706,7 @@ class AccountsQuery:
         Returns a list of ad accounts the authenticated user has access to
 
         Args:
-            q: Parameter q
+            q: LinkedIn API finder method for querying ad accounts
             page_size: Number of items per page
             page_token: Token for the next page of results
             **kwargs: Additional parameters
@@ -844,7 +844,7 @@ class AccountUsersQuery:
         Returns a list of users associated with ad accounts
 
         Args:
-            q: Parameter q
+            q: LinkedIn API finder method for querying by account URN
             accounts: Account URN, e.g. urn:li:sponsoredAccount:123456
             count: Number of items per page
             start: Offset for pagination
@@ -949,7 +949,7 @@ class CampaignsQuery:
 
         Args:
             account_id: Ad account ID
-            q: Parameter q
+            q: LinkedIn API finder method for querying campaigns
             page_size: Number of items per page
             page_token: Token for the next page of results
             **kwargs: Additional parameters
@@ -1102,7 +1102,7 @@ class CampaignGroupsQuery:
 
         Args:
             account_id: Ad account ID
-            q: Parameter q
+            q: LinkedIn API finder method for querying campaign groups
             page_size: Number of items per page
             page_token: Token for the next page of results
             **kwargs: Additional parameters
@@ -1241,7 +1241,7 @@ class CreativesQuery:
 
         Args:
             account_id: Ad account ID
-            q: Parameter q
+            q: LinkedIn API finder method for querying creatives
             page_size: Number of items per page
             page_token: Token for the next page of results
             **kwargs: Additional parameters
@@ -1382,7 +1382,7 @@ class ConversionsQuery:
         Returns a list of conversion rules for an ad account
 
         Args:
-            q: Parameter q
+            q: LinkedIn API finder method for querying conversions by account
             account: Account URN, e.g. urn:li:sponsoredAccount:123456
             count: Number of items per page
             start: Offset for pagination
@@ -1525,7 +1525,7 @@ class AdCampaignAnalyticsQuery:
 
 
         Args:
-            q: Parameter q
+            q: LinkedIn API finder method for querying ad analytics
             pivot: Pivot dimension for analytics grouping
             time_granularity: Time granularity for analytics data
             date_range: Date range in LinkedIn format, e.g. (start:(year:2024,month:1,day:1),end:(year:2024,month:12,day:31))
@@ -1671,7 +1671,7 @@ class AdCreativeAnalyticsQuery:
 
 
         Args:
-            q: Parameter q
+            q: LinkedIn API finder method for querying ad analytics
             pivot: Pivot dimension for analytics grouping
             time_granularity: Time granularity for analytics data
             date_range: Date range in LinkedIn format, e.g. (start:(year:2024,month:1,day:1),end:(year:2024,month:12,day:31))
