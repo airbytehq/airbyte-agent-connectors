@@ -89,7 +89,7 @@
   "first_operation": {
     "method_name": "list_accessible_customers",
     "http_method": "get",
-    "path": "/v20/customers:listAccessibleCustomers",
+    "path": "/v23/customers:listAccessibleCustomers",
     "entity": "accessible_customers",
     "action": "list",
     "parameters": [],
@@ -108,7 +108,7 @@
       {
         "method_name": "list_accessible_customers",
         "http_method": "get",
-        "path": "/v20/customers:listAccessibleCustomers",
+        "path": "/v23/customers:listAccessibleCustomers",
         "entity": "accessible_customers",
         "action": "list",
         "parameters": [],
@@ -127,7 +127,7 @@
       {
         "method_name": "list_accounts",
         "http_method": "post",
-        "path": "/v20/customers/{customer_id}/googleAds:search",
+        "path": "/v23/customers/{customer_id}/googleAds:search",
         "entity": "accounts",
         "action": "list",
         "parameters": [
@@ -204,7 +204,7 @@
       {
         "method_name": "list_campaigns",
         "http_method": "post",
-        "path": "/v20/customers/{customer_id}/googleAds:search?entity=campaigns",
+        "path": "/v23/customers/{customer_id}/googleAds:search?entity=campaigns",
         "entity": "campaigns",
         "action": "list",
         "parameters": [
@@ -278,7 +278,7 @@
       {
         "method_name": "update_campaign",
         "http_method": "post",
-        "path": "/v20/customers/{customer_id}/campaigns:mutate",
+        "path": "/v23/customers/{customer_id}/campaigns:mutate",
         "entity": "campaigns",
         "action": "update",
         "parameters": [
@@ -354,7 +354,7 @@
       {
         "method_name": "list_ad_groups",
         "http_method": "post",
-        "path": "/v20/customers/{customer_id}/googleAds:search?entity=ad_groups",
+        "path": "/v23/customers/{customer_id}/googleAds:search?entity=ad_groups",
         "entity": "ad_groups",
         "action": "list",
         "parameters": [
@@ -428,7 +428,7 @@
       {
         "method_name": "update_ad_group",
         "http_method": "post",
-        "path": "/v20/customers/{customer_id}/adGroups:mutate",
+        "path": "/v23/customers/{customer_id}/adGroups:mutate",
         "entity": "ad_groups",
         "action": "update",
         "parameters": [
@@ -508,7 +508,7 @@
       {
         "method_name": "list_ad_group_ads",
         "http_method": "post",
-        "path": "/v20/customers/{customer_id}/googleAds:search?entity=ad_group_ads",
+        "path": "/v23/customers/{customer_id}/googleAds:search?entity=ad_group_ads",
         "entity": "ad_group_ads",
         "action": "list",
         "parameters": [
@@ -584,7 +584,7 @@
       {
         "method_name": "list_campaign_labels",
         "http_method": "post",
-        "path": "/v20/customers/{customer_id}/googleAds:search?entity=campaign_labels",
+        "path": "/v23/customers/{customer_id}/googleAds:search?entity=campaign_labels",
         "entity": "campaign_labels",
         "action": "list",
         "parameters": [
@@ -658,7 +658,7 @@
       {
         "method_name": "create_campaign_label",
         "http_method": "post",
-        "path": "/v20/customers/{customer_id}/campaignLabels:mutate",
+        "path": "/v23/customers/{customer_id}/campaignLabels:mutate",
         "entity": "campaign_labels",
         "action": "create",
         "parameters": [
@@ -723,7 +723,7 @@
       {
         "method_name": "list_ad_group_labels",
         "http_method": "post",
-        "path": "/v20/customers/{customer_id}/googleAds:search?entity=ad_group_labels",
+        "path": "/v23/customers/{customer_id}/googleAds:search?entity=ad_group_labels",
         "entity": "ad_group_labels",
         "action": "list",
         "parameters": [
@@ -797,7 +797,7 @@
       {
         "method_name": "create_ad_group_label",
         "http_method": "post",
-        "path": "/v20/customers/{customer_id}/adGroupLabels:mutate",
+        "path": "/v23/customers/{customer_id}/adGroupLabels:mutate",
         "entity": "ad_group_labels",
         "action": "create",
         "parameters": [
@@ -862,7 +862,7 @@
       {
         "method_name": "list_ad_group_ad_labels",
         "http_method": "post",
-        "path": "/v20/customers/{customer_id}/googleAds:search?entity=ad_group_ad_labels",
+        "path": "/v23/customers/{customer_id}/googleAds:search?entity=ad_group_ad_labels",
         "entity": "ad_group_ad_labels",
         "action": "list",
         "parameters": [
@@ -938,7 +938,7 @@
       {
         "method_name": "create_label",
         "http_method": "post",
-        "path": "/v20/customers/{customer_id}/labels:mutate",
+        "path": "/v23/customers/{customer_id}/labels:mutate",
         "entity": "labels",
         "action": "create",
         "parameters": [

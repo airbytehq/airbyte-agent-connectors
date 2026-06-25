@@ -477,7 +477,7 @@ security:
   - oauth2: []
 
 paths:
-  /v20/customers:listAccessibleCustomers:
+  /v23/customers:listAccessibleCustomers:
     get:
       summary: List accessible customers
       description: >-
@@ -491,7 +491,7 @@ paths:
       x-airbyte-record-transform:
         customer_id: "{{ record.value | replace('customers/', '') }}"
         resource_name: "{{ record.value }}"
-      x-airbyte-no-pagination: "Google Ads GET /v20/customers:listAccessibleCustomers returns the full list of customer resource names directly accessible to the authenticated user in a single response; the endpoint exposes no pagination cursor, offset, or next-page token."
+      x-airbyte-no-pagination: "Google Ads GET /v23/customers:listAccessibleCustomers returns the full list of customer resource names directly accessible to the authenticated user in a single response; the endpoint exposes no pagination cursor, offset, or next-page token."
       parameters: []
       responses:
         "200":
@@ -503,7 +503,7 @@ paths:
         "401":
           description: Unauthorized
 
-  /v20/customers/{customer_id}/googleAds:search:
+  /v23/customers/{customer_id}/googleAds:search:
     post:
       summary: List accounts
       description: >-
@@ -573,7 +573,7 @@ paths:
         "403":
           description: Forbidden
 
-  /v20/customers/{customer_id}/googleAds:search?entity=campaigns:
+  /v23/customers/{customer_id}/googleAds:search?entity=campaigns:
     post:
       summary: List campaigns
       description: >-
@@ -582,7 +582,7 @@ paths:
       x-airbyte-entity: campaigns
       x-airbyte-action: list
       x-airbyte-path-override:
-        path: /v20/customers/{customer_id}/googleAds:search
+        path: /v23/customers/{customer_id}/googleAds:search
       x-airbyte-record-extractor: $.results
       x-airbyte-meta-extractor:
         next_page_token: $.nextPageToken
@@ -641,7 +641,7 @@ paths:
         "403":
           description: Forbidden
 
-  /v20/customers/{customer_id}/googleAds:search?entity=ad_groups:
+  /v23/customers/{customer_id}/googleAds:search?entity=ad_groups:
     post:
       summary: List ad groups
       description: >-
@@ -650,7 +650,7 @@ paths:
       x-airbyte-entity: ad_groups
       x-airbyte-action: list
       x-airbyte-path-override:
-        path: /v20/customers/{customer_id}/googleAds:search
+        path: /v23/customers/{customer_id}/googleAds:search
       x-airbyte-record-extractor: $.results
       x-airbyte-meta-extractor:
         next_page_token: $.nextPageToken
@@ -713,7 +713,7 @@ paths:
         "403":
           description: Forbidden
 
-  /v20/customers/{customer_id}/googleAds:search?entity=ad_group_ads:
+  /v23/customers/{customer_id}/googleAds:search?entity=ad_group_ads:
     post:
       summary: List ad group ads
       description: >-
@@ -722,7 +722,7 @@ paths:
       x-airbyte-entity: ad_group_ads
       x-airbyte-action: list
       x-airbyte-path-override:
-        path: /v20/customers/{customer_id}/googleAds:search
+        path: /v23/customers/{customer_id}/googleAds:search
       x-airbyte-record-extractor: $.results
       x-airbyte-meta-extractor:
         next_page_token: $.nextPageToken
@@ -782,7 +782,7 @@ paths:
         "403":
           description: Forbidden
 
-  /v20/customers/{customer_id}/googleAds:search?entity=campaign_labels:
+  /v23/customers/{customer_id}/googleAds:search?entity=campaign_labels:
     post:
       summary: List campaign labels
       description: >-
@@ -791,7 +791,7 @@ paths:
       x-airbyte-entity: campaign_labels
       x-airbyte-action: list
       x-airbyte-path-override:
-        path: /v20/customers/{customer_id}/googleAds:search
+        path: /v23/customers/{customer_id}/googleAds:search
       x-airbyte-record-extractor: $.results
       x-airbyte-meta-extractor:
         next_page_token: $.nextPageToken
@@ -841,7 +841,7 @@ paths:
         "403":
           description: Forbidden
 
-  /v20/customers/{customer_id}/googleAds:search?entity=ad_group_labels:
+  /v23/customers/{customer_id}/googleAds:search?entity=ad_group_labels:
     post:
       summary: List ad group labels
       description: >-
@@ -850,7 +850,7 @@ paths:
       x-airbyte-entity: ad_group_labels
       x-airbyte-action: list
       x-airbyte-path-override:
-        path: /v20/customers/{customer_id}/googleAds:search
+        path: /v23/customers/{customer_id}/googleAds:search
       x-airbyte-record-extractor: $.results
       x-airbyte-meta-extractor:
         next_page_token: $.nextPageToken
@@ -900,7 +900,7 @@ paths:
         "403":
           description: Forbidden
 
-  /v20/customers/{customer_id}/googleAds:search?entity=ad_group_ad_labels:
+  /v23/customers/{customer_id}/googleAds:search?entity=ad_group_ad_labels:
     post:
       summary: List ad group ad labels
       description: >-
@@ -909,7 +909,7 @@ paths:
       x-airbyte-entity: ad_group_ad_labels
       x-airbyte-action: list
       x-airbyte-path-override:
-        path: /v20/customers/{customer_id}/googleAds:search
+        path: /v23/customers/{customer_id}/googleAds:search
       x-airbyte-record-extractor: $.results
       x-airbyte-meta-extractor:
         next_page_token: $.nextPageToken
@@ -959,7 +959,7 @@ paths:
         "403":
           description: Forbidden
 
-  /v20/customers/{customer_id}/campaigns:mutate:
+  /v23/customers/{customer_id}/campaigns:mutate:
     post:
       summary: Update a campaign
       description: >-
@@ -996,7 +996,7 @@ paths:
         "403":
           description: Forbidden
 
-  /v20/customers/{customer_id}/adGroups:mutate:
+  /v23/customers/{customer_id}/adGroups:mutate:
     post:
       summary: Update an ad group
       description: >-
@@ -1033,7 +1033,7 @@ paths:
         "403":
           description: Forbidden
 
-  /v20/customers/{customer_id}/labels:mutate:
+  /v23/customers/{customer_id}/labels:mutate:
     post:
       summary: Create a label
       description: >-
@@ -1070,7 +1070,7 @@ paths:
         "403":
           description: Forbidden
 
-  /v20/customers/{customer_id}/campaignLabels:mutate:
+  /v23/customers/{customer_id}/campaignLabels:mutate:
     post:
       summary: Apply a label to a campaign
       description: >-
@@ -1107,7 +1107,7 @@ paths:
         "403":
           description: Forbidden
 
-  /v20/customers/{customer_id}/adGroupLabels:mutate:
+  /v23/customers/{customer_id}/adGroupLabels:mutate:
     post:
       summary: Apply a label to an ad group
       description: >-

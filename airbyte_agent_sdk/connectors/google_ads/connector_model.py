@@ -99,7 +99,7 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
-                    path='/v20/customers:listAccessibleCustomers',
+                    path='/v23/customers:listAccessibleCustomers',
                     action=Action.LIST,
                     description='Returns resource names of customers directly accessible by the user authenticating the call. No customer_id is required for this endpoint.',
                     response_schema={
@@ -122,7 +122,7 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.resourceNames',
                     record_transform={'customer_id': "{{ record.value | replace('customers/', '') }}", 'resource_name': '{{ record.value }}'},
-                    no_pagination='Google Ads GET /v20/customers:listAccessibleCustomers returns the full list of customer resource names directly accessible to the authenticated user in a single response; the endpoint exposes no pagination cursor, offset, or next-page token.',
+                    no_pagination='Google Ads GET /v23/customers:listAccessibleCustomers returns the full list of customer resource names directly accessible to the authenticated user in a single response; the endpoint exposes no pagination cursor, offset, or next-page token.',
                     preferred_for_check=True,
                 ),
             },
@@ -134,7 +134,7 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='POST',
-                    path='/v20/customers/{customer_id}/googleAds:search',
+                    path='/v23/customers/{customer_id}/googleAds:search',
                     action=Action.LIST,
                     description='Retrieves customer account details using GAQL query.',
                     body_fields=['query', 'pageToken', 'pageSize'],
@@ -313,9 +313,9 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='POST',
-                    path='/v20/customers/{customer_id}/googleAds:search?entity=campaigns',
+                    path='/v23/customers/{customer_id}/googleAds:search?entity=campaigns',
                     path_override=PathOverrideConfig(
-                        path='/v20/customers/{customer_id}/googleAds:search',
+                        path='/v23/customers/{customer_id}/googleAds:search',
                     ),
                     action=Action.LIST,
                     description='Retrieves campaign data using GAQL query.',
@@ -437,7 +437,7 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
                 ),
                 Action.UPDATE: EndpointDefinition(
                     method='POST',
-                    path='/v20/customers/{customer_id}/campaigns:mutate',
+                    path='/v23/customers/{customer_id}/campaigns:mutate',
                     action=Action.UPDATE,
                     description='Updates campaign properties such as status (enable/pause), name, or other mutable fields using the Google Ads CampaignService mutate endpoint.',
                     body_fields=['operations'],
@@ -601,9 +601,9 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='POST',
-                    path='/v20/customers/{customer_id}/googleAds:search?entity=ad_groups',
+                    path='/v23/customers/{customer_id}/googleAds:search?entity=ad_groups',
                     path_override=PathOverrideConfig(
-                        path='/v20/customers/{customer_id}/googleAds:search',
+                        path='/v23/customers/{customer_id}/googleAds:search',
                     ),
                     action=Action.LIST,
                     description='Retrieves ad group data using GAQL query.',
@@ -713,7 +713,7 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
                 ),
                 Action.UPDATE: EndpointDefinition(
                     method='POST',
-                    path='/v20/customers/{customer_id}/adGroups:mutate',
+                    path='/v23/customers/{customer_id}/adGroups:mutate',
                     action=Action.UPDATE,
                     description='Updates ad group properties such as status (enable/pause), name, or bid amounts using the Google Ads AdGroupService mutate endpoint.',
                     body_fields=['operations'],
@@ -866,9 +866,9 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='POST',
-                    path='/v20/customers/{customer_id}/googleAds:search?entity=ad_group_ads',
+                    path='/v23/customers/{customer_id}/googleAds:search?entity=ad_group_ads',
                     path_override=PathOverrideConfig(
-                        path='/v20/customers/{customer_id}/googleAds:search',
+                        path='/v23/customers/{customer_id}/googleAds:search',
                     ),
                     action=Action.LIST,
                     description='Retrieves ad group ad data using GAQL query.',
@@ -1086,9 +1086,9 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='POST',
-                    path='/v20/customers/{customer_id}/googleAds:search?entity=campaign_labels',
+                    path='/v23/customers/{customer_id}/googleAds:search?entity=campaign_labels',
                     path_override=PathOverrideConfig(
-                        path='/v20/customers/{customer_id}/googleAds:search',
+                        path='/v23/customers/{customer_id}/googleAds:search',
                     ),
                     action=Action.LIST,
                     description='Retrieves campaign label associations using GAQL query.',
@@ -1165,7 +1165,7 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
                 ),
                 Action.CREATE: EndpointDefinition(
                     method='POST',
-                    path='/v20/customers/{customer_id}/campaignLabels:mutate',
+                    path='/v23/customers/{customer_id}/campaignLabels:mutate',
                     action=Action.CREATE,
                     description='Creates a campaign-label association, applying an existing label to a campaign for organization and filtering.',
                     body_fields=['operations'],
@@ -1278,9 +1278,9 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='POST',
-                    path='/v20/customers/{customer_id}/googleAds:search?entity=ad_group_labels',
+                    path='/v23/customers/{customer_id}/googleAds:search?entity=ad_group_labels',
                     path_override=PathOverrideConfig(
-                        path='/v20/customers/{customer_id}/googleAds:search',
+                        path='/v23/customers/{customer_id}/googleAds:search',
                     ),
                     action=Action.LIST,
                     description='Retrieves ad group label associations using GAQL query.',
@@ -1357,7 +1357,7 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
                 ),
                 Action.CREATE: EndpointDefinition(
                     method='POST',
-                    path='/v20/customers/{customer_id}/adGroupLabels:mutate',
+                    path='/v23/customers/{customer_id}/adGroupLabels:mutate',
                     action=Action.CREATE,
                     description='Creates an ad group-label association, applying an existing label to an ad group for organization and filtering.',
                     body_fields=['operations'],
@@ -1470,9 +1470,9 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='POST',
-                    path='/v20/customers/{customer_id}/googleAds:search?entity=ad_group_ad_labels',
+                    path='/v23/customers/{customer_id}/googleAds:search?entity=ad_group_ad_labels',
                     path_override=PathOverrideConfig(
-                        path='/v20/customers/{customer_id}/googleAds:search',
+                        path='/v23/customers/{customer_id}/googleAds:search',
                     ),
                     action=Action.LIST,
                     description='Retrieves ad group ad label associations using GAQL query.',
@@ -1619,7 +1619,7 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
             endpoints={
                 Action.CREATE: EndpointDefinition(
                     method='POST',
-                    path='/v20/customers/{customer_id}/labels:mutate',
+                    path='/v23/customers/{customer_id}/labels:mutate',
                     action=Action.CREATE,
                     description='Creates a new label that can be applied to campaigns, ad groups, or ads for organization and reporting purposes.',
                     body_fields=['operations'],
