@@ -111,7 +111,13 @@ HubspotConnectorModel: ConnectorModel = ConnectorModel(
         EntityDefinition(
             name='contacts',
             stream_name='contacts',
-            actions=[Action.LIST, Action.GET, Action.API_SEARCH],
+            actions=[
+                Action.LIST,
+                Action.CREATE,
+                Action.GET,
+                Action.UPDATE,
+                Action.API_SEARCH,
+            ],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
@@ -249,6 +255,119 @@ HubspotConnectorModel: ConnectorModel = ConnectorModel(
                     meta_extractor={'next_cursor': '$.paging.next.after', 'next_link': '$.paging.next.link'},
                     preferred_for_check=True,
                 ),
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/crm/v3/objects/contacts',
+                    action=Action.CREATE,
+                    description='Create a new contact in HubSpot CRM with the provided properties.',
+                    body_fields=['properties'],
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for creating a new contact',
+                        'properties': {
+                            'properties': {
+                                'type': 'object',
+                                'description': 'Contact properties to set',
+                                'required': ['email'],
+                                'properties': {
+                                    'email': {'type': 'string', 'description': 'Contact email address (required, used as unique identifier)'},
+                                    'firstname': {'type': 'string', 'description': 'Contact first name'},
+                                    'lastname': {'type': 'string', 'description': 'Contact last name'},
+                                    'phone': {'type': 'string', 'description': 'Contact phone number'},
+                                    'company': {'type': 'string', 'description': 'Company name associated with the contact'},
+                                    'website': {'type': 'string', 'description': 'Contact website URL'},
+                                    'lifecyclestage': {'type': 'string', 'description': 'Lifecycle stage (e.g., subscriber, lead, marketingqualifiedlead, salesqualifiedlead, opportunity, customer, evangelist, other)'},
+                                    'jobtitle': {'type': 'string', 'description': 'Contact job title'},
+                                    'hubspot_owner_id': {'type': 'string', 'description': 'ID of the HubSpot owner to assign to this contact'},
+                                },
+                                'additionalProperties': True,
+                            },
+                        },
+                        'required': ['properties'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'HubSpot contact object',
+                        'properties': {
+                            'id': {'type': 'string', 'description': 'Unique contact identifier'},
+                            'properties': {
+                                'type': 'object',
+                                'description': 'Contact properties',
+                                'properties': {
+                                    'createdate': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'email': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'firstname': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'hs_object_id': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'lastmodifieddate': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'lastname': {
+                                        'type': ['string', 'null'],
+                                    },
+                                },
+                                'additionalProperties': True,
+                            },
+                            'createdAt': {
+                                'type': 'string',
+                                'format': 'date-time',
+                                'description': 'Creation timestamp',
+                            },
+                            'updatedAt': {
+                                'type': 'string',
+                                'format': 'date-time',
+                                'description': 'Last update timestamp',
+                            },
+                            'archived': {'type': 'boolean', 'description': 'Whether the contact is archived'},
+                            'archivedAt': {
+                                'type': ['string', 'null'],
+                                'format': 'date-time',
+                                'description': 'Timestamp when the contact was archived',
+                            },
+                            'propertiesWithHistory': {
+                                'type': ['object', 'null'],
+                                'description': 'Properties with historical values',
+                                'additionalProperties': True,
+                            },
+                            'associations': {
+                                'type': ['object', 'null'],
+                                'description': 'Relationships with other CRM objects',
+                                'additionalProperties': True,
+                            },
+                            'objectWriteTraceId': {
+                                'type': ['string', 'null'],
+                                'description': 'Trace identifier for write operations',
+                            },
+                            'url': {
+                                'type': ['string', 'null'],
+                                'description': 'URL to view contact in HubSpot',
+                            },
+                        },
+                        'x-airbyte-entity-name': 'contacts',
+                        'x-airbyte-stream-name': 'contacts',
+                        'x-airbyte-ai-hints': {
+                            'summary': 'HubSpot contacts with email, name, and engagement history',
+                            'when_to_use': 'Looking up contact information, leads, or people in the CRM',
+                            'trigger_phrases': [
+                                'hubspot contact',
+                                'lead',
+                                'customer contact',
+                                'who is',
+                                'contact info',
+                            ],
+                            'freshness': 'live',
+                            'example_questions': ['Find a contact in HubSpot', 'Show contact details for an email'],
+                            'search_strategy': 'Search by email or name across properties for best results',
+                        },
+                    },
+                ),
                 Action.GET: EndpointDefinition(
                     method='GET',
                     path='/crm/v3/objects/contacts/{contactId}',
@@ -271,6 +390,122 @@ HubspotConnectorModel: ConnectorModel = ConnectorModel(
                     path_params=['contactId'],
                     path_params_schema={
                         'contactId': {'type': 'string', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'HubSpot contact object',
+                        'properties': {
+                            'id': {'type': 'string', 'description': 'Unique contact identifier'},
+                            'properties': {
+                                'type': 'object',
+                                'description': 'Contact properties',
+                                'properties': {
+                                    'createdate': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'email': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'firstname': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'hs_object_id': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'lastmodifieddate': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'lastname': {
+                                        'type': ['string', 'null'],
+                                    },
+                                },
+                                'additionalProperties': True,
+                            },
+                            'createdAt': {
+                                'type': 'string',
+                                'format': 'date-time',
+                                'description': 'Creation timestamp',
+                            },
+                            'updatedAt': {
+                                'type': 'string',
+                                'format': 'date-time',
+                                'description': 'Last update timestamp',
+                            },
+                            'archived': {'type': 'boolean', 'description': 'Whether the contact is archived'},
+                            'archivedAt': {
+                                'type': ['string', 'null'],
+                                'format': 'date-time',
+                                'description': 'Timestamp when the contact was archived',
+                            },
+                            'propertiesWithHistory': {
+                                'type': ['object', 'null'],
+                                'description': 'Properties with historical values',
+                                'additionalProperties': True,
+                            },
+                            'associations': {
+                                'type': ['object', 'null'],
+                                'description': 'Relationships with other CRM objects',
+                                'additionalProperties': True,
+                            },
+                            'objectWriteTraceId': {
+                                'type': ['string', 'null'],
+                                'description': 'Trace identifier for write operations',
+                            },
+                            'url': {
+                                'type': ['string', 'null'],
+                                'description': 'URL to view contact in HubSpot',
+                            },
+                        },
+                        'x-airbyte-entity-name': 'contacts',
+                        'x-airbyte-stream-name': 'contacts',
+                        'x-airbyte-ai-hints': {
+                            'summary': 'HubSpot contacts with email, name, and engagement history',
+                            'when_to_use': 'Looking up contact information, leads, or people in the CRM',
+                            'trigger_phrases': [
+                                'hubspot contact',
+                                'lead',
+                                'customer contact',
+                                'who is',
+                                'contact info',
+                            ],
+                            'freshness': 'live',
+                            'example_questions': ['Find a contact in HubSpot', 'Show contact details for an email'],
+                            'search_strategy': 'Search by email or name across properties for best results',
+                        },
+                    },
+                ),
+                Action.UPDATE: EndpointDefinition(
+                    method='PATCH',
+                    path='/crm/v3/objects/contacts/{contactId}',
+                    action=Action.UPDATE,
+                    description="Update an existing contact's properties by ID. Only the specified properties will be updated.",
+                    body_fields=['properties'],
+                    path_params=['contactId'],
+                    path_params_schema={
+                        'contactId': {'type': 'string', 'required': True},
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for updating an existing contact. Only provided properties will be updated.',
+                        'properties': {
+                            'properties': {
+                                'type': 'object',
+                                'description': 'Contact properties to update',
+                                'properties': {
+                                    'email': {'type': 'string', 'description': 'Contact email address'},
+                                    'firstname': {'type': 'string', 'description': 'Contact first name'},
+                                    'lastname': {'type': 'string', 'description': 'Contact last name'},
+                                    'phone': {'type': 'string', 'description': 'Contact phone number'},
+                                    'company': {'type': 'string', 'description': 'Company name associated with the contact'},
+                                    'website': {'type': 'string', 'description': 'Contact website URL'},
+                                    'lifecyclestage': {'type': 'string', 'description': 'Lifecycle stage (e.g., subscriber, lead, marketingqualifiedlead, salesqualifiedlead, opportunity, customer, evangelist, other)'},
+                                    'jobtitle': {'type': 'string', 'description': 'Contact job title'},
+                                    'hubspot_owner_id': {'type': 'string', 'description': 'ID of the HubSpot owner to assign to this contact'},
+                                },
+                                'additionalProperties': True,
+                            },
+                        },
+                        'required': ['properties'],
                     },
                     response_schema={
                         'type': 'object',
@@ -667,7 +902,13 @@ HubspotConnectorModel: ConnectorModel = ConnectorModel(
         EntityDefinition(
             name='companies',
             stream_name='companies',
-            actions=[Action.LIST, Action.GET, Action.API_SEARCH],
+            actions=[
+                Action.LIST,
+                Action.CREATE,
+                Action.GET,
+                Action.UPDATE,
+                Action.API_SEARCH,
+            ],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
@@ -800,6 +1041,120 @@ HubspotConnectorModel: ConnectorModel = ConnectorModel(
                     record_extractor='$.results',
                     meta_extractor={'next_cursor': '$.paging.next.after', 'next_link': '$.paging.next.link'},
                 ),
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/crm/v3/objects/companies',
+                    action=Action.CREATE,
+                    description='Create a new company in HubSpot CRM with the provided properties.',
+                    body_fields=['properties'],
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for creating a new company',
+                        'properties': {
+                            'properties': {
+                                'type': 'object',
+                                'description': 'Company properties to set',
+                                'required': ['name'],
+                                'properties': {
+                                    'name': {'type': 'string', 'description': 'Company name (required)'},
+                                    'domain': {'type': 'string', 'description': 'Company domain name (e.g., example.com)'},
+                                    'description': {'type': 'string', 'description': 'Company description'},
+                                    'phone': {'type': 'string', 'description': 'Company phone number'},
+                                    'industry': {'type': 'string', 'description': 'Company industry'},
+                                    'city': {'type': 'string', 'description': 'Company city'},
+                                    'state': {'type': 'string', 'description': 'Company state/region'},
+                                    'country': {'type': 'string', 'description': 'Company country'},
+                                    'zip': {'type': 'string', 'description': 'Company postal/zip code'},
+                                    'numberofemployees': {'type': 'string', 'description': 'Number of employees'},
+                                    'annualrevenue': {'type': 'string', 'description': 'Annual revenue'},
+                                    'lifecyclestage': {'type': 'string', 'description': 'Lifecycle stage (e.g., subscriber, lead, marketingqualifiedlead, salesqualifiedlead, opportunity, customer, evangelist, other)'},
+                                    'hubspot_owner_id': {'type': 'string', 'description': 'ID of the HubSpot owner to assign to this company'},
+                                    'website': {'type': 'string', 'description': 'Company website URL'},
+                                },
+                                'additionalProperties': True,
+                            },
+                        },
+                        'required': ['properties'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'HubSpot company object',
+                        'properties': {
+                            'id': {'type': 'string', 'description': 'Unique company identifier'},
+                            'properties': {
+                                'type': 'object',
+                                'description': 'Company properties',
+                                'properties': {
+                                    'createdate': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'domain': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'hs_lastmodifieddate': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'hs_object_id': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'name': {
+                                        'type': ['string', 'null'],
+                                    },
+                                },
+                                'additionalProperties': True,
+                            },
+                            'createdAt': {
+                                'type': 'string',
+                                'format': 'date-time',
+                                'description': 'Creation timestamp',
+                            },
+                            'updatedAt': {
+                                'type': 'string',
+                                'format': 'date-time',
+                                'description': 'Last update timestamp',
+                            },
+                            'archived': {'type': 'boolean', 'description': 'Whether the company is archived'},
+                            'archivedAt': {
+                                'type': ['string', 'null'],
+                                'format': 'date-time',
+                                'description': 'Timestamp when the company was archived',
+                            },
+                            'propertiesWithHistory': {
+                                'type': ['object', 'null'],
+                                'description': 'Properties with historical values',
+                                'additionalProperties': True,
+                            },
+                            'associations': {
+                                'type': ['object', 'null'],
+                                'description': 'Relationships with other CRM objects',
+                                'additionalProperties': True,
+                            },
+                            'objectWriteTraceId': {
+                                'type': ['string', 'null'],
+                                'description': 'Trace identifier for write operations',
+                            },
+                            'url': {
+                                'type': ['string', 'null'],
+                                'description': 'URL to view company in HubSpot',
+                            },
+                        },
+                        'x-airbyte-entity-name': 'companies',
+                        'x-airbyte-stream-name': 'companies',
+                        'x-airbyte-ai-hints': {
+                            'summary': 'Companies in HubSpot CRM with industry, size, and revenue data',
+                            'when_to_use': 'Looking up company information or account details',
+                            'trigger_phrases': [
+                                'hubspot company',
+                                'account',
+                                'company details',
+                                'which company',
+                            ],
+                            'freshness': 'live',
+                            'example_questions': ['Find a company in HubSpot', 'Show company details'],
+                            'search_strategy': 'Search by name or domain',
+                        },
+                    },
+                ),
                 Action.GET: EndpointDefinition(
                     method='GET',
                     path='/crm/v3/objects/companies/{companyId}',
@@ -822,6 +1177,123 @@ HubspotConnectorModel: ConnectorModel = ConnectorModel(
                     path_params=['companyId'],
                     path_params_schema={
                         'companyId': {'type': 'string', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'HubSpot company object',
+                        'properties': {
+                            'id': {'type': 'string', 'description': 'Unique company identifier'},
+                            'properties': {
+                                'type': 'object',
+                                'description': 'Company properties',
+                                'properties': {
+                                    'createdate': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'domain': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'hs_lastmodifieddate': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'hs_object_id': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'name': {
+                                        'type': ['string', 'null'],
+                                    },
+                                },
+                                'additionalProperties': True,
+                            },
+                            'createdAt': {
+                                'type': 'string',
+                                'format': 'date-time',
+                                'description': 'Creation timestamp',
+                            },
+                            'updatedAt': {
+                                'type': 'string',
+                                'format': 'date-time',
+                                'description': 'Last update timestamp',
+                            },
+                            'archived': {'type': 'boolean', 'description': 'Whether the company is archived'},
+                            'archivedAt': {
+                                'type': ['string', 'null'],
+                                'format': 'date-time',
+                                'description': 'Timestamp when the company was archived',
+                            },
+                            'propertiesWithHistory': {
+                                'type': ['object', 'null'],
+                                'description': 'Properties with historical values',
+                                'additionalProperties': True,
+                            },
+                            'associations': {
+                                'type': ['object', 'null'],
+                                'description': 'Relationships with other CRM objects',
+                                'additionalProperties': True,
+                            },
+                            'objectWriteTraceId': {
+                                'type': ['string', 'null'],
+                                'description': 'Trace identifier for write operations',
+                            },
+                            'url': {
+                                'type': ['string', 'null'],
+                                'description': 'URL to view company in HubSpot',
+                            },
+                        },
+                        'x-airbyte-entity-name': 'companies',
+                        'x-airbyte-stream-name': 'companies',
+                        'x-airbyte-ai-hints': {
+                            'summary': 'Companies in HubSpot CRM with industry, size, and revenue data',
+                            'when_to_use': 'Looking up company information or account details',
+                            'trigger_phrases': [
+                                'hubspot company',
+                                'account',
+                                'company details',
+                                'which company',
+                            ],
+                            'freshness': 'live',
+                            'example_questions': ['Find a company in HubSpot', 'Show company details'],
+                            'search_strategy': 'Search by name or domain',
+                        },
+                    },
+                ),
+                Action.UPDATE: EndpointDefinition(
+                    method='PATCH',
+                    path='/crm/v3/objects/companies/{companyId}',
+                    action=Action.UPDATE,
+                    description="Update an existing company's properties by ID. Only the specified properties will be updated.",
+                    body_fields=['properties'],
+                    path_params=['companyId'],
+                    path_params_schema={
+                        'companyId': {'type': 'string', 'required': True},
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for updating an existing company. Only provided properties will be updated.',
+                        'properties': {
+                            'properties': {
+                                'type': 'object',
+                                'description': 'Company properties to update',
+                                'properties': {
+                                    'name': {'type': 'string', 'description': 'Company name'},
+                                    'domain': {'type': 'string', 'description': 'Company domain name (e.g., example.com)'},
+                                    'description': {'type': 'string', 'description': 'Company description'},
+                                    'phone': {'type': 'string', 'description': 'Company phone number'},
+                                    'industry': {'type': 'string', 'description': 'Company industry'},
+                                    'city': {'type': 'string', 'description': 'Company city'},
+                                    'state': {'type': 'string', 'description': 'Company state/region'},
+                                    'country': {'type': 'string', 'description': 'Company country'},
+                                    'zip': {'type': 'string', 'description': 'Company postal/zip code'},
+                                    'numberofemployees': {'type': 'string', 'description': 'Number of employees'},
+                                    'annualrevenue': {'type': 'string', 'description': 'Annual revenue'},
+                                    'lifecyclestage': {'type': 'string', 'description': 'Lifecycle stage (e.g., subscriber, lead, marketingqualifiedlead, salesqualifiedlead, opportunity, customer, evangelist, other)'},
+                                    'hubspot_owner_id': {'type': 'string', 'description': 'ID of the HubSpot owner to assign to this company'},
+                                    'website': {'type': 'string', 'description': 'Company website URL'},
+                                },
+                                'additionalProperties': True,
+                            },
+                        },
+                        'required': ['properties'],
                     },
                     response_schema={
                         'type': 'object',
@@ -1205,7 +1677,13 @@ HubspotConnectorModel: ConnectorModel = ConnectorModel(
         EntityDefinition(
             name='deals',
             stream_name='deals',
-            actions=[Action.LIST, Action.GET, Action.API_SEARCH],
+            actions=[
+                Action.LIST,
+                Action.CREATE,
+                Action.GET,
+                Action.UPDATE,
+                Action.API_SEARCH,
+            ],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
@@ -1348,6 +1826,124 @@ HubspotConnectorModel: ConnectorModel = ConnectorModel(
                     record_extractor='$.results',
                     meta_extractor={'next_cursor': '$.paging.next.after', 'next_link': '$.paging.next.link'},
                 ),
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/crm/v3/objects/deals',
+                    action=Action.CREATE,
+                    description='Create a new deal in HubSpot CRM with the provided properties.',
+                    body_fields=['properties'],
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for creating a new deal',
+                        'properties': {
+                            'properties': {
+                                'type': 'object',
+                                'description': 'Deal properties to set',
+                                'required': ['dealname'],
+                                'properties': {
+                                    'dealname': {'type': 'string', 'description': 'Deal name (required)'},
+                                    'amount': {'type': 'string', 'description': 'Deal amount'},
+                                    'dealstage': {'type': 'string', 'description': 'Deal stage ID (e.g., appointmentscheduled, qualifiedtobuy, presentationscheduled, decisionmakerboughtin, contractsent, closedwon, closedlost)'},
+                                    'pipeline': {'type': 'string', 'description': 'Deal pipeline ID (defaults to the default pipeline)'},
+                                    'closedate': {'type': 'string', 'description': 'Expected close date (ISO 8601 format, e.g., 2024-12-31T00:00:00.000Z)'},
+                                    'dealtype': {'type': 'string', 'description': 'Deal type (e.g., newbusiness, existingbusiness)'},
+                                    'description': {'type': 'string', 'description': 'Deal description'},
+                                    'hubspot_owner_id': {'type': 'string', 'description': 'ID of the HubSpot owner to assign to this deal'},
+                                },
+                                'additionalProperties': True,
+                            },
+                        },
+                        'required': ['properties'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'HubSpot deal object',
+                        'properties': {
+                            'id': {'type': 'string', 'description': 'Unique deal identifier'},
+                            'properties': {
+                                'type': 'object',
+                                'description': 'Deal properties',
+                                'properties': {
+                                    'amount': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'closedate': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'createdate': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'dealname': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'dealstage': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'hs_lastmodifieddate': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'hs_object_id': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'pipeline': {
+                                        'type': ['string', 'null'],
+                                    },
+                                },
+                                'additionalProperties': True,
+                            },
+                            'createdAt': {
+                                'type': 'string',
+                                'format': 'date-time',
+                                'description': 'Creation timestamp',
+                            },
+                            'updatedAt': {
+                                'type': 'string',
+                                'format': 'date-time',
+                                'description': 'Last update timestamp',
+                            },
+                            'archived': {'type': 'boolean', 'description': 'Whether the deal is archived'},
+                            'archivedAt': {
+                                'type': ['string', 'null'],
+                                'format': 'date-time',
+                                'description': 'Timestamp when the deal was archived',
+                            },
+                            'propertiesWithHistory': {
+                                'type': ['object', 'null'],
+                                'description': 'Properties with historical values',
+                                'additionalProperties': True,
+                            },
+                            'associations': {
+                                'type': ['object', 'null'],
+                                'description': 'Relationships with other CRM objects',
+                                'additionalProperties': True,
+                            },
+                            'objectWriteTraceId': {
+                                'type': ['string', 'null'],
+                                'description': 'Trace identifier for write operations',
+                            },
+                            'url': {
+                                'type': ['string', 'null'],
+                                'description': 'URL to view deal in HubSpot',
+                            },
+                        },
+                        'x-airbyte-entity-name': 'deals',
+                        'x-airbyte-stream-name': 'deals',
+                        'x-airbyte-ai-hints': {
+                            'summary': 'Sales deals with stage, amount, close date, and owner',
+                            'when_to_use': 'Questions about sales pipeline, deal status, revenue, or forecasts',
+                            'trigger_phrases': [
+                                'deal',
+                                'sales pipeline',
+                                'deal stage',
+                                'revenue forecast',
+                                'close date',
+                            ],
+                            'freshness': 'live',
+                            'example_questions': ['What deals are in the pipeline?', 'Show deals closing this month'],
+                            'search_strategy': 'Search by name or filter by stage, owner, or close date',
+                        },
+                    },
+                ),
                 Action.GET: EndpointDefinition(
                     method='GET',
                     path='/crm/v3/objects/deals/{dealId}',
@@ -1370,6 +1966,127 @@ HubspotConnectorModel: ConnectorModel = ConnectorModel(
                     path_params=['dealId'],
                     path_params_schema={
                         'dealId': {'type': 'string', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'HubSpot deal object',
+                        'properties': {
+                            'id': {'type': 'string', 'description': 'Unique deal identifier'},
+                            'properties': {
+                                'type': 'object',
+                                'description': 'Deal properties',
+                                'properties': {
+                                    'amount': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'closedate': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'createdate': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'dealname': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'dealstage': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'hs_lastmodifieddate': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'hs_object_id': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'pipeline': {
+                                        'type': ['string', 'null'],
+                                    },
+                                },
+                                'additionalProperties': True,
+                            },
+                            'createdAt': {
+                                'type': 'string',
+                                'format': 'date-time',
+                                'description': 'Creation timestamp',
+                            },
+                            'updatedAt': {
+                                'type': 'string',
+                                'format': 'date-time',
+                                'description': 'Last update timestamp',
+                            },
+                            'archived': {'type': 'boolean', 'description': 'Whether the deal is archived'},
+                            'archivedAt': {
+                                'type': ['string', 'null'],
+                                'format': 'date-time',
+                                'description': 'Timestamp when the deal was archived',
+                            },
+                            'propertiesWithHistory': {
+                                'type': ['object', 'null'],
+                                'description': 'Properties with historical values',
+                                'additionalProperties': True,
+                            },
+                            'associations': {
+                                'type': ['object', 'null'],
+                                'description': 'Relationships with other CRM objects',
+                                'additionalProperties': True,
+                            },
+                            'objectWriteTraceId': {
+                                'type': ['string', 'null'],
+                                'description': 'Trace identifier for write operations',
+                            },
+                            'url': {
+                                'type': ['string', 'null'],
+                                'description': 'URL to view deal in HubSpot',
+                            },
+                        },
+                        'x-airbyte-entity-name': 'deals',
+                        'x-airbyte-stream-name': 'deals',
+                        'x-airbyte-ai-hints': {
+                            'summary': 'Sales deals with stage, amount, close date, and owner',
+                            'when_to_use': 'Questions about sales pipeline, deal status, revenue, or forecasts',
+                            'trigger_phrases': [
+                                'deal',
+                                'sales pipeline',
+                                'deal stage',
+                                'revenue forecast',
+                                'close date',
+                            ],
+                            'freshness': 'live',
+                            'example_questions': ['What deals are in the pipeline?', 'Show deals closing this month'],
+                            'search_strategy': 'Search by name or filter by stage, owner, or close date',
+                        },
+                    },
+                ),
+                Action.UPDATE: EndpointDefinition(
+                    method='PATCH',
+                    path='/crm/v3/objects/deals/{dealId}',
+                    action=Action.UPDATE,
+                    description="Update an existing deal's properties by ID. Only the specified properties will be updated.",
+                    body_fields=['properties'],
+                    path_params=['dealId'],
+                    path_params_schema={
+                        'dealId': {'type': 'string', 'required': True},
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for updating an existing deal. Only provided properties will be updated.',
+                        'properties': {
+                            'properties': {
+                                'type': 'object',
+                                'description': 'Deal properties to update',
+                                'properties': {
+                                    'dealname': {'type': 'string', 'description': 'Deal name'},
+                                    'amount': {'type': 'string', 'description': 'Deal amount'},
+                                    'dealstage': {'type': 'string', 'description': 'Deal stage ID (e.g., appointmentscheduled, qualifiedtobuy, presentationscheduled, decisionmakerboughtin, contractsent, closedwon, closedlost)'},
+                                    'pipeline': {'type': 'string', 'description': 'Deal pipeline ID'},
+                                    'closedate': {'type': 'string', 'description': 'Expected close date (ISO 8601 format, e.g., 2024-12-31T00:00:00.000Z)'},
+                                    'dealtype': {'type': 'string', 'description': 'Deal type (e.g., newbusiness, existingbusiness)'},
+                                    'description': {'type': 'string', 'description': 'Deal description'},
+                                    'hubspot_owner_id': {'type': 'string', 'description': 'ID of the HubSpot owner to assign to this deal'},
+                                },
+                                'additionalProperties': True,
+                            },
+                        },
+                        'required': ['properties'],
                     },
                     response_schema={
                         'type': 'object',
@@ -1784,7 +2501,13 @@ HubspotConnectorModel: ConnectorModel = ConnectorModel(
         EntityDefinition(
             name='tickets',
             stream_name='tickets',
-            actions=[Action.LIST, Action.GET, Action.API_SEARCH],
+            actions=[
+                Action.LIST,
+                Action.CREATE,
+                Action.GET,
+                Action.UPDATE,
+                Action.API_SEARCH,
+            ],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
@@ -1924,6 +2647,120 @@ HubspotConnectorModel: ConnectorModel = ConnectorModel(
                     record_extractor='$.results',
                     meta_extractor={'next_cursor': '$.paging.next.after', 'next_link': '$.paging.next.link'},
                 ),
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/crm/v3/objects/tickets',
+                    action=Action.CREATE,
+                    description='Create a new support ticket in HubSpot CRM with the provided properties.',
+                    body_fields=['properties'],
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for creating a new support ticket',
+                        'properties': {
+                            'properties': {
+                                'type': 'object',
+                                'description': 'Ticket properties to set',
+                                'required': ['subject', 'hs_pipeline', 'hs_pipeline_stage'],
+                                'properties': {
+                                    'subject': {'type': 'string', 'description': 'Ticket subject line (required)'},
+                                    'content': {'type': 'string', 'description': 'Ticket description/content'},
+                                    'hs_pipeline': {'type': 'string', 'description': "Ticket pipeline ID (required, use '0' for default pipeline)"},
+                                    'hs_pipeline_stage': {'type': 'string', 'description': "Pipeline stage ID (required, e.g., '1' for New in the default pipeline)"},
+                                    'hs_ticket_priority': {'type': 'string', 'description': 'Ticket priority (e.g., LOW, MEDIUM, HIGH)'},
+                                    'hs_ticket_category': {'type': 'string', 'description': 'Ticket category'},
+                                    'hubspot_owner_id': {'type': 'string', 'description': 'ID of the HubSpot owner to assign to this ticket'},
+                                },
+                                'additionalProperties': True,
+                            },
+                        },
+                        'required': ['properties'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'HubSpot ticket object',
+                        'properties': {
+                            'id': {'type': 'string', 'description': 'Unique ticket identifier'},
+                            'properties': {
+                                'type': 'object',
+                                'description': 'Ticket properties',
+                                'properties': {
+                                    'content': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'createdate': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'hs_lastmodifieddate': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'hs_object_id': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'hs_pipeline': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'hs_pipeline_stage': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'hs_ticket_category': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'hs_ticket_priority': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'subject': {
+                                        'type': ['string', 'null'],
+                                    },
+                                },
+                                'additionalProperties': True,
+                            },
+                            'createdAt': {
+                                'type': 'string',
+                                'format': 'date-time',
+                                'description': 'Creation timestamp',
+                            },
+                            'updatedAt': {
+                                'type': 'string',
+                                'format': 'date-time',
+                                'description': 'Last update timestamp',
+                            },
+                            'archived': {'type': 'boolean', 'description': 'Whether the ticket is archived'},
+                            'archivedAt': {
+                                'type': ['string', 'null'],
+                                'format': 'date-time',
+                                'description': 'Timestamp when the ticket was archived',
+                            },
+                            'propertiesWithHistory': {
+                                'type': ['object', 'null'],
+                                'description': 'Properties with historical values',
+                                'additionalProperties': True,
+                            },
+                            'associations': {
+                                'type': ['object', 'null'],
+                                'description': 'Relationships with other CRM objects',
+                                'additionalProperties': True,
+                            },
+                            'objectWriteTraceId': {
+                                'type': ['string', 'null'],
+                                'description': 'Trace identifier for write operations',
+                            },
+                            'url': {
+                                'type': ['string', 'null'],
+                                'description': 'URL to view ticket in HubSpot',
+                            },
+                        },
+                        'x-airbyte-entity-name': 'tickets',
+                        'x-airbyte-stream-name': 'tickets',
+                        'x-airbyte-ai-hints': {
+                            'summary': 'Support tickets tracking customer issues and requests',
+                            'when_to_use': 'Finding support tickets or customer service issues',
+                            'trigger_phrases': ['hubspot ticket', 'support ticket', 'customer issue'],
+                            'freshness': 'live',
+                            'example_questions': ['Show open HubSpot tickets', 'Find support tickets for a company'],
+                            'search_strategy': 'Search by subject or filter by status, priority, or assignee',
+                        },
+                    },
+                ),
                 Action.GET: EndpointDefinition(
                     method='GET',
                     path='/crm/v3/objects/tickets/{ticketId}',
@@ -1946,6 +2783,123 @@ HubspotConnectorModel: ConnectorModel = ConnectorModel(
                     path_params=['ticketId'],
                     path_params_schema={
                         'ticketId': {'type': 'string', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'HubSpot ticket object',
+                        'properties': {
+                            'id': {'type': 'string', 'description': 'Unique ticket identifier'},
+                            'properties': {
+                                'type': 'object',
+                                'description': 'Ticket properties',
+                                'properties': {
+                                    'content': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'createdate': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'hs_lastmodifieddate': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'hs_object_id': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'hs_pipeline': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'hs_pipeline_stage': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'hs_ticket_category': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'hs_ticket_priority': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'subject': {
+                                        'type': ['string', 'null'],
+                                    },
+                                },
+                                'additionalProperties': True,
+                            },
+                            'createdAt': {
+                                'type': 'string',
+                                'format': 'date-time',
+                                'description': 'Creation timestamp',
+                            },
+                            'updatedAt': {
+                                'type': 'string',
+                                'format': 'date-time',
+                                'description': 'Last update timestamp',
+                            },
+                            'archived': {'type': 'boolean', 'description': 'Whether the ticket is archived'},
+                            'archivedAt': {
+                                'type': ['string', 'null'],
+                                'format': 'date-time',
+                                'description': 'Timestamp when the ticket was archived',
+                            },
+                            'propertiesWithHistory': {
+                                'type': ['object', 'null'],
+                                'description': 'Properties with historical values',
+                                'additionalProperties': True,
+                            },
+                            'associations': {
+                                'type': ['object', 'null'],
+                                'description': 'Relationships with other CRM objects',
+                                'additionalProperties': True,
+                            },
+                            'objectWriteTraceId': {
+                                'type': ['string', 'null'],
+                                'description': 'Trace identifier for write operations',
+                            },
+                            'url': {
+                                'type': ['string', 'null'],
+                                'description': 'URL to view ticket in HubSpot',
+                            },
+                        },
+                        'x-airbyte-entity-name': 'tickets',
+                        'x-airbyte-stream-name': 'tickets',
+                        'x-airbyte-ai-hints': {
+                            'summary': 'Support tickets tracking customer issues and requests',
+                            'when_to_use': 'Finding support tickets or customer service issues',
+                            'trigger_phrases': ['hubspot ticket', 'support ticket', 'customer issue'],
+                            'freshness': 'live',
+                            'example_questions': ['Show open HubSpot tickets', 'Find support tickets for a company'],
+                            'search_strategy': 'Search by subject or filter by status, priority, or assignee',
+                        },
+                    },
+                ),
+                Action.UPDATE: EndpointDefinition(
+                    method='PATCH',
+                    path='/crm/v3/objects/tickets/{ticketId}',
+                    action=Action.UPDATE,
+                    description="Update an existing ticket's properties by ID. Only the specified properties will be updated.",
+                    body_fields=['properties'],
+                    path_params=['ticketId'],
+                    path_params_schema={
+                        'ticketId': {'type': 'string', 'required': True},
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for updating an existing ticket. Only provided properties will be updated.',
+                        'properties': {
+                            'properties': {
+                                'type': 'object',
+                                'description': 'Ticket properties to update',
+                                'properties': {
+                                    'subject': {'type': 'string', 'description': 'Ticket subject line'},
+                                    'content': {'type': 'string', 'description': 'Ticket description/content'},
+                                    'hs_pipeline': {'type': 'string', 'description': 'Ticket pipeline ID'},
+                                    'hs_pipeline_stage': {'type': 'string', 'description': 'Pipeline stage ID'},
+                                    'hs_ticket_priority': {'type': 'string', 'description': 'Ticket priority (e.g., LOW, MEDIUM, HIGH)'},
+                                    'hs_ticket_category': {'type': 'string', 'description': 'Ticket category'},
+                                    'hubspot_owner_id': {'type': 'string', 'description': 'ID of the HubSpot owner to assign to this ticket'},
+                                },
+                                'additionalProperties': True,
+                            },
+                        },
+                        'required': ['properties'],
                     },
                     response_schema={
                         'type': 'object',
@@ -3486,29 +4440,34 @@ HubspotConnectorModel: ConnectorModel = ConnectorModel(
             'List recent tickets',
             'List companies in my CRM',
             'List contacts in my CRM',
+            'Create a new contact with email john@example.com and name John Smith',
+            "Create a new deal called 'Enterprise License' with amount 50000",
+            "Update the deal stage to 'closedwon' for a specific deal",
+            "Create a new company called 'Acme Corp' with domain acme.com",
+            "Create a support ticket with subject 'Login issue' and priority HIGH",
+            'Update the contact email for a specific contact',
         ],
         context_store_search=[
-            'Show me all deals from {company} this quarter',
+            'Show me all deals from Acme Corp this quarter',
             'What are the top 5 most valuable deals in my pipeline right now?',
-            'Search for contacts in the marketing department at {company}',
+            'Search for contacts in the marketing department at HubSpot',
             "Give me an overview of my sales team's deals in the last 30 days",
             'Identify the most active companies in our CRM this month',
             'Compare the number of deals closed by different sales representatives',
             'Find all tickets related to a specific product issue and summarize their status',
         ],
         search=[
-            'Show me all deals from {company} this quarter',
+            'Show me all deals from Acme Corp this quarter',
             'What are the top 5 most valuable deals in my pipeline right now?',
-            'Search for contacts in the marketing department at {company}',
+            'Search for contacts in the marketing department at HubSpot',
             "Give me an overview of my sales team's deals in the last 30 days",
             'Identify the most active companies in our CRM this month',
             'Compare the number of deals closed by different sales representatives',
             'Find all tickets related to a specific product issue and summarize their status',
         ],
         unsupported=[
-            'Create a new contact record for {person}',
-            'Update the contact information for {customer}',
-            "Delete the ticket from last week's support case",
+            'Delete a contact from HubSpot',
+            'Delete a deal record',
             'Schedule a follow-up task for this deal',
             'Send an email to all contacts in the sales pipeline',
         ],

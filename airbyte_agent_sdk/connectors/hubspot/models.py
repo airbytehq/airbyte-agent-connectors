@@ -206,23 +206,6 @@ class TicketsList(BaseModel):
     paging: Paging | None = Field(default=None)
     total: int | None = Field(default=None)
 
-class SchemaAssociationsItem(BaseModel):
-    """Nested schema for Schema.associations_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    from_object_type_id: str | None = Field(default=None, alias="fromObjectTypeId")
-    to_object_type_id: str | None = Field(default=None, alias="toObjectTypeId")
-    name: str | None = Field(default=None)
-    cardinality: str | None = Field(default=None)
-    id: str | None = Field(default=None)
-    inverse_cardinality: str | None = Field(default=None, alias="inverseCardinality")
-    has_user_enforced_max_to_object_ids: bool | None = Field(default=None, alias="hasUserEnforcedMaxToObjectIds")
-    has_user_enforced_max_from_object_ids: bool | None = Field(default=None, alias="hasUserEnforcedMaxFromObjectIds")
-    max_to_object_ids: int | None = Field(default=None, alias="maxToObjectIds")
-    max_from_object_ids: int | None = Field(default=None, alias="maxFromObjectIds")
-    created_at: str | None | None = Field(default=None, alias="createdAt")
-    updated_at: str | None | None = Field(default=None, alias="updatedAt")
-
 class SchemaPropertiesItemModificationmetadata(BaseModel):
     """Nested schema for SchemaPropertiesItem.modificationMetadata"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -258,6 +241,23 @@ class SchemaPropertiesItem(BaseModel):
     updated_user_id: str | None = Field(default=None, alias="updatedUserId")
     show_currency_symbol: bool | None = Field(default=None, alias="showCurrencySymbol")
     modification_metadata: SchemaPropertiesItemModificationmetadata | None = Field(default=None, alias="modificationMetadata")
+
+class SchemaAssociationsItem(BaseModel):
+    """Nested schema for Schema.associations_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    from_object_type_id: str | None = Field(default=None, alias="fromObjectTypeId")
+    to_object_type_id: str | None = Field(default=None, alias="toObjectTypeId")
+    name: str | None = Field(default=None)
+    cardinality: str | None = Field(default=None)
+    id: str | None = Field(default=None)
+    inverse_cardinality: str | None = Field(default=None, alias="inverseCardinality")
+    has_user_enforced_max_to_object_ids: bool | None = Field(default=None, alias="hasUserEnforcedMaxToObjectIds")
+    has_user_enforced_max_from_object_ids: bool | None = Field(default=None, alias="hasUserEnforcedMaxFromObjectIds")
+    max_to_object_ids: int | None = Field(default=None, alias="maxToObjectIds")
+    max_from_object_ids: int | None = Field(default=None, alias="maxFromObjectIds")
+    created_at: str | None | None = Field(default=None, alias="createdAt")
+    updated_at: str | None | None = Field(default=None, alias="updatedAt")
 
 class SchemaLabels(BaseModel):
     """Display labels"""
@@ -326,6 +326,246 @@ class ObjectsList(BaseModel):
 
     results: list[CRMObject] | None = Field(default=None)
     paging: Paging | None = Field(default=None)
+
+class ContactCreateParamsProperties(BaseModel):
+    """Contact properties to set"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    email: str = Field(description="Contact email address (required, used as unique identifier)")
+    """Contact email address (required, used as unique identifier)"""
+    firstname: str | None = Field(default=None, description="Contact first name")
+    """Contact first name"""
+    lastname: str | None = Field(default=None, description="Contact last name")
+    """Contact last name"""
+    phone: str | None = Field(default=None, description="Contact phone number")
+    """Contact phone number"""
+    company: str | None = Field(default=None, description="Company name associated with the contact")
+    """Company name associated with the contact"""
+    website: str | None = Field(default=None, description="Contact website URL")
+    """Contact website URL"""
+    lifecyclestage: str | None = Field(default=None, description="Lifecycle stage (e.g., subscriber, lead, marketingqualifiedlead, salesqualifiedlead, opportunity, customer, evangelist, other)")
+    """Lifecycle stage (e.g., subscriber, lead, marketingqualifiedlead, salesqualifiedlead, opportunity, customer, evangelist, other)"""
+    jobtitle: str | None = Field(default=None, description="Contact job title")
+    """Contact job title"""
+    hubspot_owner_id: str | None = Field(default=None, description="ID of the HubSpot owner to assign to this contact")
+    """ID of the HubSpot owner to assign to this contact"""
+
+class ContactCreateParams(BaseModel):
+    """Parameters for creating a new contact"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    properties: ContactCreateParamsProperties
+
+class ContactUpdateParamsProperties(BaseModel):
+    """Contact properties to update"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    email: str | None = Field(default=None, description="Contact email address")
+    """Contact email address"""
+    firstname: str | None = Field(default=None, description="Contact first name")
+    """Contact first name"""
+    lastname: str | None = Field(default=None, description="Contact last name")
+    """Contact last name"""
+    phone: str | None = Field(default=None, description="Contact phone number")
+    """Contact phone number"""
+    company: str | None = Field(default=None, description="Company name associated with the contact")
+    """Company name associated with the contact"""
+    website: str | None = Field(default=None, description="Contact website URL")
+    """Contact website URL"""
+    lifecyclestage: str | None = Field(default=None, description="Lifecycle stage (e.g., subscriber, lead, marketingqualifiedlead, salesqualifiedlead, opportunity, customer, evangelist, other)")
+    """Lifecycle stage (e.g., subscriber, lead, marketingqualifiedlead, salesqualifiedlead, opportunity, customer, evangelist, other)"""
+    jobtitle: str | None = Field(default=None, description="Contact job title")
+    """Contact job title"""
+    hubspot_owner_id: str | None = Field(default=None, description="ID of the HubSpot owner to assign to this contact")
+    """ID of the HubSpot owner to assign to this contact"""
+
+class ContactUpdateParams(BaseModel):
+    """Parameters for updating an existing contact. Only provided properties will be updated."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    properties: ContactUpdateParamsProperties
+
+class CompanyCreateParamsProperties(BaseModel):
+    """Company properties to set"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: str = Field(description="Company name (required)")
+    """Company name (required)"""
+    domain: str | None = Field(default=None, description="Company domain name (e.g., example.com)")
+    """Company domain name (e.g., example.com)"""
+    description: str | None = Field(default=None, description="Company description")
+    """Company description"""
+    phone: str | None = Field(default=None, description="Company phone number")
+    """Company phone number"""
+    industry: str | None = Field(default=None, description="Company industry")
+    """Company industry"""
+    city: str | None = Field(default=None, description="Company city")
+    """Company city"""
+    state: str | None = Field(default=None, description="Company state/region")
+    """Company state/region"""
+    country: str | None = Field(default=None, description="Company country")
+    """Company country"""
+    zip: str | None = Field(default=None, description="Company postal/zip code")
+    """Company postal/zip code"""
+    numberofemployees: str | None = Field(default=None, description="Number of employees")
+    """Number of employees"""
+    annualrevenue: str | None = Field(default=None, description="Annual revenue")
+    """Annual revenue"""
+    lifecyclestage: str | None = Field(default=None, description="Lifecycle stage (e.g., subscriber, lead, marketingqualifiedlead, salesqualifiedlead, opportunity, customer, evangelist, other)")
+    """Lifecycle stage (e.g., subscriber, lead, marketingqualifiedlead, salesqualifiedlead, opportunity, customer, evangelist, other)"""
+    hubspot_owner_id: str | None = Field(default=None, description="ID of the HubSpot owner to assign to this company")
+    """ID of the HubSpot owner to assign to this company"""
+    website: str | None = Field(default=None, description="Company website URL")
+    """Company website URL"""
+
+class CompanyCreateParams(BaseModel):
+    """Parameters for creating a new company"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    properties: CompanyCreateParamsProperties
+
+class CompanyUpdateParamsProperties(BaseModel):
+    """Company properties to update"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: str | None = Field(default=None, description="Company name")
+    """Company name"""
+    domain: str | None = Field(default=None, description="Company domain name (e.g., example.com)")
+    """Company domain name (e.g., example.com)"""
+    description: str | None = Field(default=None, description="Company description")
+    """Company description"""
+    phone: str | None = Field(default=None, description="Company phone number")
+    """Company phone number"""
+    industry: str | None = Field(default=None, description="Company industry")
+    """Company industry"""
+    city: str | None = Field(default=None, description="Company city")
+    """Company city"""
+    state: str | None = Field(default=None, description="Company state/region")
+    """Company state/region"""
+    country: str | None = Field(default=None, description="Company country")
+    """Company country"""
+    zip: str | None = Field(default=None, description="Company postal/zip code")
+    """Company postal/zip code"""
+    numberofemployees: str | None = Field(default=None, description="Number of employees")
+    """Number of employees"""
+    annualrevenue: str | None = Field(default=None, description="Annual revenue")
+    """Annual revenue"""
+    lifecyclestage: str | None = Field(default=None, description="Lifecycle stage (e.g., subscriber, lead, marketingqualifiedlead, salesqualifiedlead, opportunity, customer, evangelist, other)")
+    """Lifecycle stage (e.g., subscriber, lead, marketingqualifiedlead, salesqualifiedlead, opportunity, customer, evangelist, other)"""
+    hubspot_owner_id: str | None = Field(default=None, description="ID of the HubSpot owner to assign to this company")
+    """ID of the HubSpot owner to assign to this company"""
+    website: str | None = Field(default=None, description="Company website URL")
+    """Company website URL"""
+
+class CompanyUpdateParams(BaseModel):
+    """Parameters for updating an existing company. Only provided properties will be updated."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    properties: CompanyUpdateParamsProperties
+
+class DealCreateParamsProperties(BaseModel):
+    """Deal properties to set"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    dealname: str = Field(description="Deal name (required)")
+    """Deal name (required)"""
+    amount: str | None = Field(default=None, description="Deal amount")
+    """Deal amount"""
+    dealstage: str | None = Field(default=None, description="Deal stage ID (e.g., appointmentscheduled, qualifiedtobuy, presentationscheduled, decisionmakerboughtin, contractsent, closedwon, closedlost)")
+    """Deal stage ID (e.g., appointmentscheduled, qualifiedtobuy, presentationscheduled, decisionmakerboughtin, contractsent, closedwon, closedlost)"""
+    pipeline: str | None = Field(default=None, description="Deal pipeline ID (defaults to the default pipeline)")
+    """Deal pipeline ID (defaults to the default pipeline)"""
+    closedate: str | None = Field(default=None, description="Expected close date (ISO 8601 format, e.g., 2024-12-31T00:00:00.000Z)")
+    """Expected close date (ISO 8601 format, e.g., 2024-12-31T00:00:00.000Z)"""
+    dealtype: str | None = Field(default=None, description="Deal type (e.g., newbusiness, existingbusiness)")
+    """Deal type (e.g., newbusiness, existingbusiness)"""
+    description: str | None = Field(default=None, description="Deal description")
+    """Deal description"""
+    hubspot_owner_id: str | None = Field(default=None, description="ID of the HubSpot owner to assign to this deal")
+    """ID of the HubSpot owner to assign to this deal"""
+
+class DealCreateParams(BaseModel):
+    """Parameters for creating a new deal"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    properties: DealCreateParamsProperties
+
+class DealUpdateParamsProperties(BaseModel):
+    """Deal properties to update"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    dealname: str | None = Field(default=None, description="Deal name")
+    """Deal name"""
+    amount: str | None = Field(default=None, description="Deal amount")
+    """Deal amount"""
+    dealstage: str | None = Field(default=None, description="Deal stage ID (e.g., appointmentscheduled, qualifiedtobuy, presentationscheduled, decisionmakerboughtin, contractsent, closedwon, closedlost)")
+    """Deal stage ID (e.g., appointmentscheduled, qualifiedtobuy, presentationscheduled, decisionmakerboughtin, contractsent, closedwon, closedlost)"""
+    pipeline: str | None = Field(default=None, description="Deal pipeline ID")
+    """Deal pipeline ID"""
+    closedate: str | None = Field(default=None, description="Expected close date (ISO 8601 format, e.g., 2024-12-31T00:00:00.000Z)")
+    """Expected close date (ISO 8601 format, e.g., 2024-12-31T00:00:00.000Z)"""
+    dealtype: str | None = Field(default=None, description="Deal type (e.g., newbusiness, existingbusiness)")
+    """Deal type (e.g., newbusiness, existingbusiness)"""
+    description: str | None = Field(default=None, description="Deal description")
+    """Deal description"""
+    hubspot_owner_id: str | None = Field(default=None, description="ID of the HubSpot owner to assign to this deal")
+    """ID of the HubSpot owner to assign to this deal"""
+
+class DealUpdateParams(BaseModel):
+    """Parameters for updating an existing deal. Only provided properties will be updated."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    properties: DealUpdateParamsProperties
+
+class TicketCreateParamsProperties(BaseModel):
+    """Ticket properties to set"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    subject: str = Field(description="Ticket subject line (required)")
+    """Ticket subject line (required)"""
+    content: str | None = Field(default=None, description="Ticket description/content")
+    """Ticket description/content"""
+    hs_pipeline: str = Field(description="Ticket pipeline ID (required, use '0' for default pipeline)")
+    """Ticket pipeline ID (required, use '0' for default pipeline)"""
+    hs_pipeline_stage: str = Field(description="Pipeline stage ID (required, e.g., '1' for New in the default pipeline)")
+    """Pipeline stage ID (required, e.g., '1' for New in the default pipeline)"""
+    hs_ticket_priority: str | None = Field(default=None, description="Ticket priority (e.g., LOW, MEDIUM, HIGH)")
+    """Ticket priority (e.g., LOW, MEDIUM, HIGH)"""
+    hs_ticket_category: str | None = Field(default=None, description="Ticket category")
+    """Ticket category"""
+    hubspot_owner_id: str | None = Field(default=None, description="ID of the HubSpot owner to assign to this ticket")
+    """ID of the HubSpot owner to assign to this ticket"""
+
+class TicketCreateParams(BaseModel):
+    """Parameters for creating a new support ticket"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    properties: TicketCreateParamsProperties
+
+class TicketUpdateParamsProperties(BaseModel):
+    """Ticket properties to update"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    subject: str | None = Field(default=None, description="Ticket subject line")
+    """Ticket subject line"""
+    content: str | None = Field(default=None, description="Ticket description/content")
+    """Ticket description/content"""
+    hs_pipeline: str | None = Field(default=None, description="Ticket pipeline ID")
+    """Ticket pipeline ID"""
+    hs_pipeline_stage: str | None = Field(default=None, description="Pipeline stage ID")
+    """Pipeline stage ID"""
+    hs_ticket_priority: str | None = Field(default=None, description="Ticket priority (e.g., LOW, MEDIUM, HIGH)")
+    """Ticket priority (e.g., LOW, MEDIUM, HIGH)"""
+    hs_ticket_category: str | None = Field(default=None, description="Ticket category")
+    """Ticket category"""
+    hubspot_owner_id: str | None = Field(default=None, description="ID of the HubSpot owner to assign to this ticket")
+    """ID of the HubSpot owner to assign to this ticket"""
+
+class TicketUpdateParams(BaseModel):
+    """Parameters for updating an existing ticket. Only provided properties will be updated."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    properties: TicketUpdateParamsProperties
 
 # ===== METADATA TYPE DEFINITIONS (PYDANTIC) =====
 # Meta types for operations that extract metadata (e.g., pagination info)

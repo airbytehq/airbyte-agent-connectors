@@ -21,18 +21,30 @@ from .types import (
     CompaniesApiSearchParams,
     CompaniesApiSearchParamsFiltergroupsItem,
     CompaniesApiSearchParamsSortsItem,
+    CompaniesCreateParams,
+    CompaniesCreateParamsProperties,
     CompaniesGetParams,
     CompaniesListParams,
+    CompaniesUpdateParams,
+    CompaniesUpdateParamsProperties,
     ContactsApiSearchParams,
     ContactsApiSearchParamsFiltergroupsItem,
     ContactsApiSearchParamsSortsItem,
+    ContactsCreateParams,
+    ContactsCreateParamsProperties,
     ContactsGetParams,
     ContactsListParams,
+    ContactsUpdateParams,
+    ContactsUpdateParamsProperties,
     DealsApiSearchParams,
     DealsApiSearchParamsFiltergroupsItem,
     DealsApiSearchParamsSortsItem,
+    DealsCreateParams,
+    DealsCreateParamsProperties,
     DealsGetParams,
     DealsListParams,
+    DealsUpdateParams,
+    DealsUpdateParamsProperties,
     ObjectsGetParams,
     ObjectsListParams,
     SchemasGetParams,
@@ -40,8 +52,12 @@ from .types import (
     TicketsApiSearchParams,
     TicketsApiSearchParamsFiltergroupsItem,
     TicketsApiSearchParamsSortsItem,
+    TicketsCreateParams,
+    TicketsCreateParamsProperties,
     TicketsGetParams,
     TicketsListParams,
+    TicketsUpdateParams,
+    TicketsUpdateParamsProperties,
     AirbyteSearchParams,
     CompaniesSearchFilter,
     CompaniesSearchQuery,
@@ -103,21 +119,29 @@ class HubspotConnector:
 
     connector_name = "hubspot"
     connector_version = "0.1.19"
-    sdk_version = "0.1.261"
+    sdk_version = "0.1.262"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
         ("contacts", "list"): True,
+        ("contacts", "create"): None,
         ("contacts", "get"): None,
+        ("contacts", "update"): None,
         ("contacts", "api_search"): True,
         ("companies", "list"): True,
+        ("companies", "create"): None,
         ("companies", "get"): None,
+        ("companies", "update"): None,
         ("companies", "api_search"): True,
         ("deals", "list"): True,
+        ("deals", "create"): None,
         ("deals", "get"): None,
+        ("deals", "update"): None,
         ("deals", "api_search"): True,
         ("tickets", "list"): True,
+        ("tickets", "create"): None,
         ("tickets", "get"): None,
+        ("tickets", "update"): None,
         ("tickets", "api_search"): True,
         ("schemas", "list"): True,
         ("schemas", "get"): None,
@@ -129,16 +153,24 @@ class HubspotConnector:
     # Used to convert snake_case TypedDict keys to API parameter names in execute()
     _PARAM_MAP = {
         ('contacts', 'list'): {'limit': 'limit', 'after': 'after', 'associations': 'associations', 'properties': 'properties', 'properties_with_history': 'propertiesWithHistory', 'archived': 'archived'},
+        ('contacts', 'create'): {'properties': 'properties'},
         ('contacts', 'get'): {'contact_id': 'contactId', 'properties': 'properties', 'properties_with_history': 'propertiesWithHistory', 'associations': 'associations', 'id_property': 'idProperty', 'archived': 'archived'},
+        ('contacts', 'update'): {'properties': 'properties', 'contact_id': 'contactId'},
         ('contacts', 'api_search'): {'filter_groups': 'filterGroups', 'properties': 'properties', 'limit': 'limit', 'after': 'after', 'sorts': 'sorts', 'query': 'query'},
         ('companies', 'list'): {'limit': 'limit', 'after': 'after', 'associations': 'associations', 'properties': 'properties', 'properties_with_history': 'propertiesWithHistory', 'archived': 'archived'},
+        ('companies', 'create'): {'properties': 'properties'},
         ('companies', 'get'): {'company_id': 'companyId', 'properties': 'properties', 'properties_with_history': 'propertiesWithHistory', 'associations': 'associations', 'id_property': 'idProperty', 'archived': 'archived'},
+        ('companies', 'update'): {'properties': 'properties', 'company_id': 'companyId'},
         ('companies', 'api_search'): {'filter_groups': 'filterGroups', 'properties': 'properties', 'limit': 'limit', 'after': 'after', 'sorts': 'sorts', 'query': 'query'},
         ('deals', 'list'): {'limit': 'limit', 'after': 'after', 'associations': 'associations', 'properties': 'properties', 'properties_with_history': 'propertiesWithHistory', 'archived': 'archived'},
+        ('deals', 'create'): {'properties': 'properties'},
         ('deals', 'get'): {'deal_id': 'dealId', 'properties': 'properties', 'properties_with_history': 'propertiesWithHistory', 'associations': 'associations', 'id_property': 'idProperty', 'archived': 'archived'},
+        ('deals', 'update'): {'properties': 'properties', 'deal_id': 'dealId'},
         ('deals', 'api_search'): {'filter_groups': 'filterGroups', 'properties': 'properties', 'limit': 'limit', 'after': 'after', 'sorts': 'sorts', 'query': 'query'},
         ('tickets', 'list'): {'limit': 'limit', 'after': 'after', 'associations': 'associations', 'properties': 'properties', 'properties_with_history': 'propertiesWithHistory', 'archived': 'archived'},
+        ('tickets', 'create'): {'properties': 'properties'},
         ('tickets', 'get'): {'ticket_id': 'ticketId', 'properties': 'properties', 'properties_with_history': 'propertiesWithHistory', 'associations': 'associations', 'id_property': 'idProperty', 'archived': 'archived'},
+        ('tickets', 'update'): {'properties': 'properties', 'ticket_id': 'ticketId'},
         ('tickets', 'api_search'): {'filter_groups': 'filterGroups', 'properties': 'properties', 'limit': 'limit', 'after': 'after', 'sorts': 'sorts', 'query': 'query'},
         ('schemas', 'list'): {'archived': 'archived'},
         ('schemas', 'get'): {'object_type': 'objectType'},
@@ -273,8 +305,32 @@ class HubspotConnector:
     async def execute(
         self,
         entity: Literal["contacts"],
+        action: Literal["create"],
+        params: "ContactsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "Contact": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["contacts"],
         action: Literal["get"],
         params: "ContactsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "Contact": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["contacts"],
+        action: Literal["update"],
+        params: "ContactsUpdateParams",
         *,
         select_fields: list[str] | None = ...,
         exclude_fields: list[str] | None = ...,
@@ -309,8 +365,32 @@ class HubspotConnector:
     async def execute(
         self,
         entity: Literal["companies"],
+        action: Literal["create"],
+        params: "CompaniesCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "Company": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["companies"],
         action: Literal["get"],
         params: "CompaniesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "Company": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["companies"],
+        action: Literal["update"],
+        params: "CompaniesUpdateParams",
         *,
         select_fields: list[str] | None = ...,
         exclude_fields: list[str] | None = ...,
@@ -345,8 +425,32 @@ class HubspotConnector:
     async def execute(
         self,
         entity: Literal["deals"],
+        action: Literal["create"],
+        params: "DealsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "Deal": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["deals"],
         action: Literal["get"],
         params: "DealsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "Deal": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["deals"],
+        action: Literal["update"],
+        params: "DealsUpdateParams",
         *,
         select_fields: list[str] | None = ...,
         exclude_fields: list[str] | None = ...,
@@ -381,8 +485,32 @@ class HubspotConnector:
     async def execute(
         self,
         entity: Literal["tickets"],
+        action: Literal["create"],
+        params: "TicketsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "Ticket": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["tickets"],
         action: Literal["get"],
         params: "TicketsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "Ticket": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["tickets"],
+        action: Literal["update"],
+        params: "TicketsUpdateParams",
         *,
         select_fields: list[str] | None = ...,
         exclude_fields: list[str] | None = ...,
@@ -454,7 +582,7 @@ class HubspotConnector:
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get", "api_search", "context_store_search"],
+        action: Literal["list", "create", "get", "update", "api_search", "context_store_search"],
         params: Mapping[str, Any],
         *,
         select_fields: list[str] | None = ...,
@@ -465,7 +593,7 @@ class HubspotConnector:
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get", "api_search", "context_store_search"],
+        action: Literal["list", "create", "get", "update", "api_search", "context_store_search"],
         params: Mapping[str, Any] | None = None,
         *,
         select_fields: list[str] | None = None,
@@ -783,6 +911,31 @@ class ContactsQuery:
 
 
 
+    async def create(
+        self,
+        properties: ContactsCreateParamsProperties,
+        **kwargs
+    ) -> Contact:
+        """
+        Create a new contact in HubSpot CRM with the provided properties.
+
+        Args:
+            properties: Contact properties to set
+            **kwargs: Additional parameters
+
+        Returns:
+            Contact
+        """
+        params = {k: v for k, v in {
+            "properties": properties,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("contacts", "create", params)
+        return result
+
+
+
     async def get(
         self,
         contact_id: str,
@@ -819,6 +972,34 @@ class ContactsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("contacts", "get", params)
+        return result
+
+
+
+    async def update(
+        self,
+        properties: ContactsUpdateParamsProperties,
+        contact_id: str,
+        **kwargs
+    ) -> Contact:
+        """
+        Update an existing contact's properties by ID. Only the specified properties will be updated.
+
+        Args:
+            properties: Contact properties to update
+            contact_id: Contact ID
+            **kwargs: Additional parameters
+
+        Returns:
+            Contact
+        """
+        params = {k: v for k, v in {
+            "properties": properties,
+            "contactId": contact_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("contacts", "update", params)
         return result
 
 
@@ -988,6 +1169,31 @@ class CompaniesQuery:
 
 
 
+    async def create(
+        self,
+        properties: CompaniesCreateParamsProperties,
+        **kwargs
+    ) -> Company:
+        """
+        Create a new company in HubSpot CRM with the provided properties.
+
+        Args:
+            properties: Company properties to set
+            **kwargs: Additional parameters
+
+        Returns:
+            Company
+        """
+        params = {k: v for k, v in {
+            "properties": properties,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("companies", "create", params)
+        return result
+
+
+
     async def get(
         self,
         company_id: str,
@@ -1024,6 +1230,34 @@ class CompaniesQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("companies", "get", params)
+        return result
+
+
+
+    async def update(
+        self,
+        properties: CompaniesUpdateParamsProperties,
+        company_id: str,
+        **kwargs
+    ) -> Company:
+        """
+        Update an existing company's properties by ID. Only the specified properties will be updated.
+
+        Args:
+            properties: Company properties to update
+            company_id: Company ID
+            **kwargs: Additional parameters
+
+        Returns:
+            Company
+        """
+        params = {k: v for k, v in {
+            "properties": properties,
+            "companyId": company_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("companies", "update", params)
         return result
 
 
@@ -1191,6 +1425,31 @@ class DealsQuery:
 
 
 
+    async def create(
+        self,
+        properties: DealsCreateParamsProperties,
+        **kwargs
+    ) -> Deal:
+        """
+        Create a new deal in HubSpot CRM with the provided properties.
+
+        Args:
+            properties: Deal properties to set
+            **kwargs: Additional parameters
+
+        Returns:
+            Deal
+        """
+        params = {k: v for k, v in {
+            "properties": properties,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("deals", "create", params)
+        return result
+
+
+
     async def get(
         self,
         deal_id: str,
@@ -1227,6 +1486,34 @@ class DealsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("deals", "get", params)
+        return result
+
+
+
+    async def update(
+        self,
+        properties: DealsUpdateParamsProperties,
+        deal_id: str,
+        **kwargs
+    ) -> Deal:
+        """
+        Update an existing deal's properties by ID. Only the specified properties will be updated.
+
+        Args:
+            properties: Deal properties to update
+            deal_id: Deal ID
+            **kwargs: Additional parameters
+
+        Returns:
+            Deal
+        """
+        params = {k: v for k, v in {
+            "properties": properties,
+            "dealId": deal_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("deals", "update", params)
         return result
 
 
@@ -1399,6 +1686,31 @@ class TicketsQuery:
 
 
 
+    async def create(
+        self,
+        properties: TicketsCreateParamsProperties,
+        **kwargs
+    ) -> Ticket:
+        """
+        Create a new support ticket in HubSpot CRM with the provided properties.
+
+        Args:
+            properties: Ticket properties to set
+            **kwargs: Additional parameters
+
+        Returns:
+            Ticket
+        """
+        params = {k: v for k, v in {
+            "properties": properties,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("tickets", "create", params)
+        return result
+
+
+
     async def get(
         self,
         ticket_id: str,
@@ -1435,6 +1747,34 @@ class TicketsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("tickets", "get", params)
+        return result
+
+
+
+    async def update(
+        self,
+        properties: TicketsUpdateParamsProperties,
+        ticket_id: str,
+        **kwargs
+    ) -> Ticket:
+        """
+        Update an existing ticket's properties by ID. Only the specified properties will be updated.
+
+        Args:
+            properties: Ticket properties to update
+            ticket_id: Ticket ID
+            **kwargs: Additional parameters
+
+        Returns:
+            Ticket
+        """
+        params = {k: v for k, v in {
+            "properties": properties,
+            "ticketId": ticket_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("tickets", "update", params)
         return result
 
 

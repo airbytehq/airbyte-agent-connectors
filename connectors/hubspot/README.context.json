@@ -67,8 +67,8 @@
   },
   "replication_config": null,
   "custom_description": "HubSpot is a CRM platform that provides tools for marketing, sales, customer service,\nand content management. This connector provides access to contacts, companies, deals,\ntickets, and custom objects for customer relationship management and sales analytics.\n",
-  "supported_questions": "- List recent deals\n- List recent tickets\n- List companies in my CRM\n- List contacts in my CRM\n- Show me all deals from {company} this quarter\n- What are the top 5 most valuable deals in my pipeline right now?\n- Search for contacts in the marketing department at {company}\n- Give me an overview of my sales team's deals in the last 30 days\n- Identify the most active companies in our CRM this month\n- Compare the number of deals closed by different sales representatives\n- Find all tickets related to a specific product issue and summarize their status",
-  "unsupported_questions": "- Create a new contact record for {person}\n- Update the contact information for {customer}\n- Delete the ticket from last week's support case\n- Schedule a follow-up task for this deal\n- Send an email to all contacts in the sales pipeline",
+  "supported_questions": "- List recent deals\n- List recent tickets\n- List companies in my CRM\n- List contacts in my CRM\n- Create a new contact with email john@example.com and name John Smith\n- Create a new deal called 'Enterprise License' with amount 50000\n- Update the deal stage to 'closedwon' for a specific deal\n- Create a new company called 'Acme Corp' with domain acme.com\n- Create a support ticket with subject 'Login issue' and priority HIGH\n- Update the contact email for a specific contact\n- Show me all deals from Acme Corp this quarter\n- What are the top 5 most valuable deals in my pipeline right now?\n- Search for contacts in the marketing department at HubSpot\n- Give me an overview of my sales team's deals in the last 30 days\n- Identify the most active companies in our CRM this month\n- Compare the number of deals closed by different sales representatives\n- Find all tickets related to a specific product issue and summarize their status",
+  "unsupported_questions": "- Delete a contact from HubSpot\n- Delete a deal record\n- Schedule a follow-up task for this deal\n- Send an email to all contacts in the sales pipeline",
   "first_operation": {
     "method_name": "list_contacts",
     "http_method": "get",
@@ -290,6 +290,77 @@
         "is_download": false
       },
       {
+        "method_name": "create_contact",
+        "http_method": "post",
+        "path": "/crm/v3/objects/contacts",
+        "entity": "contacts",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "properties",
+            "python_name": "properties",
+            "type": "ContactsCreateParamsProperties",
+            "schema": {
+              "type": "object",
+              "description": "Contact properties to set",
+              "required": [
+                "email"
+              ],
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "description": "Contact email address (required, used as unique identifier)"
+                },
+                "firstname": {
+                  "type": "string",
+                  "description": "Contact first name"
+                },
+                "lastname": {
+                  "type": "string",
+                  "description": "Contact last name"
+                },
+                "phone": {
+                  "type": "string",
+                  "description": "Contact phone number"
+                },
+                "company": {
+                  "type": "string",
+                  "description": "Company name associated with the contact"
+                },
+                "website": {
+                  "type": "string",
+                  "description": "Contact website URL"
+                },
+                "lifecyclestage": {
+                  "type": "string",
+                  "description": "Lifecycle stage (e.g., subscriber, lead, marketingqualifiedlead, salesqualifiedlead, opportunity, customer, evangelist, other)"
+                },
+                "jobtitle": {
+                  "type": "string",
+                  "description": "Contact job title"
+                },
+                "hubspot_owner_id": {
+                  "type": "string",
+                  "description": "ID of the HubSpot owner to assign to this contact"
+                }
+              },
+              "additionalProperties": true
+            },
+            "required": true,
+            "description": "Contact properties to set"
+          }
+        ],
+        "params_type_name": "ContactsCreateParams",
+        "response_type": "Contact",
+        "description": "Create a new contact in HubSpot CRM with the provided properties.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Contact",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
         "method_name": "get_contact",
         "http_method": "get",
         "path": "/crm/v3/objects/contacts/{contactId}",
@@ -365,6 +436,84 @@
         "params_type_name": "ContactsGetParams",
         "response_type": "Contact",
         "description": "Get a single contact by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Contact",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "update_contact",
+        "http_method": "patch",
+        "path": "/crm/v3/objects/contacts/{contactId}",
+        "entity": "contacts",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "properties",
+            "python_name": "properties",
+            "type": "ContactsUpdateParamsProperties",
+            "schema": {
+              "type": "object",
+              "description": "Contact properties to update",
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "description": "Contact email address"
+                },
+                "firstname": {
+                  "type": "string",
+                  "description": "Contact first name"
+                },
+                "lastname": {
+                  "type": "string",
+                  "description": "Contact last name"
+                },
+                "phone": {
+                  "type": "string",
+                  "description": "Contact phone number"
+                },
+                "company": {
+                  "type": "string",
+                  "description": "Company name associated with the contact"
+                },
+                "website": {
+                  "type": "string",
+                  "description": "Contact website URL"
+                },
+                "lifecyclestage": {
+                  "type": "string",
+                  "description": "Lifecycle stage (e.g., subscriber, lead, marketingqualifiedlead, salesqualifiedlead, opportunity, customer, evangelist, other)"
+                },
+                "jobtitle": {
+                  "type": "string",
+                  "description": "Contact job title"
+                },
+                "hubspot_owner_id": {
+                  "type": "string",
+                  "description": "ID of the HubSpot owner to assign to this contact"
+                }
+              },
+              "additionalProperties": true
+            },
+            "required": true,
+            "description": "Contact properties to update"
+          },
+          {
+            "name": "contactId",
+            "python_name": "contact_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Contact ID"
+          }
+        ],
+        "params_type_name": "ContactsUpdateParams",
+        "response_type": "Contact",
+        "description": "Update an existing contact's properties by ID. Only the specified properties will be updated.",
         "record_extractor": "$",
         "meta_extractor": null,
         "needs_envelope": null,
@@ -674,6 +823,97 @@
         "is_download": false
       },
       {
+        "method_name": "create_company",
+        "http_method": "post",
+        "path": "/crm/v3/objects/companies",
+        "entity": "companies",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "properties",
+            "python_name": "properties",
+            "type": "CompaniesCreateParamsProperties",
+            "schema": {
+              "type": "object",
+              "description": "Company properties to set",
+              "required": [
+                "name"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Company name (required)"
+                },
+                "domain": {
+                  "type": "string",
+                  "description": "Company domain name (e.g., example.com)"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Company description"
+                },
+                "phone": {
+                  "type": "string",
+                  "description": "Company phone number"
+                },
+                "industry": {
+                  "type": "string",
+                  "description": "Company industry"
+                },
+                "city": {
+                  "type": "string",
+                  "description": "Company city"
+                },
+                "state": {
+                  "type": "string",
+                  "description": "Company state/region"
+                },
+                "country": {
+                  "type": "string",
+                  "description": "Company country"
+                },
+                "zip": {
+                  "type": "string",
+                  "description": "Company postal/zip code"
+                },
+                "numberofemployees": {
+                  "type": "string",
+                  "description": "Number of employees"
+                },
+                "annualrevenue": {
+                  "type": "string",
+                  "description": "Annual revenue"
+                },
+                "lifecyclestage": {
+                  "type": "string",
+                  "description": "Lifecycle stage (e.g., subscriber, lead, marketingqualifiedlead, salesqualifiedlead, opportunity, customer, evangelist, other)"
+                },
+                "hubspot_owner_id": {
+                  "type": "string",
+                  "description": "ID of the HubSpot owner to assign to this company"
+                },
+                "website": {
+                  "type": "string",
+                  "description": "Company website URL"
+                }
+              },
+              "additionalProperties": true
+            },
+            "required": true,
+            "description": "Company properties to set"
+          }
+        ],
+        "params_type_name": "CompaniesCreateParams",
+        "response_type": "Company",
+        "description": "Create a new company in HubSpot CRM with the provided properties.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Company",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
         "method_name": "get_company",
         "http_method": "get",
         "path": "/crm/v3/objects/companies/{companyId}",
@@ -749,6 +989,104 @@
         "params_type_name": "CompaniesGetParams",
         "response_type": "Company",
         "description": "Get a single company by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Company",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "update_company",
+        "http_method": "patch",
+        "path": "/crm/v3/objects/companies/{companyId}",
+        "entity": "companies",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "properties",
+            "python_name": "properties",
+            "type": "CompaniesUpdateParamsProperties",
+            "schema": {
+              "type": "object",
+              "description": "Company properties to update",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Company name"
+                },
+                "domain": {
+                  "type": "string",
+                  "description": "Company domain name (e.g., example.com)"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Company description"
+                },
+                "phone": {
+                  "type": "string",
+                  "description": "Company phone number"
+                },
+                "industry": {
+                  "type": "string",
+                  "description": "Company industry"
+                },
+                "city": {
+                  "type": "string",
+                  "description": "Company city"
+                },
+                "state": {
+                  "type": "string",
+                  "description": "Company state/region"
+                },
+                "country": {
+                  "type": "string",
+                  "description": "Company country"
+                },
+                "zip": {
+                  "type": "string",
+                  "description": "Company postal/zip code"
+                },
+                "numberofemployees": {
+                  "type": "string",
+                  "description": "Number of employees"
+                },
+                "annualrevenue": {
+                  "type": "string",
+                  "description": "Annual revenue"
+                },
+                "lifecyclestage": {
+                  "type": "string",
+                  "description": "Lifecycle stage (e.g., subscriber, lead, marketingqualifiedlead, salesqualifiedlead, opportunity, customer, evangelist, other)"
+                },
+                "hubspot_owner_id": {
+                  "type": "string",
+                  "description": "ID of the HubSpot owner to assign to this company"
+                },
+                "website": {
+                  "type": "string",
+                  "description": "Company website URL"
+                }
+              },
+              "additionalProperties": true
+            },
+            "required": true,
+            "description": "Company properties to update"
+          },
+          {
+            "name": "companyId",
+            "python_name": "company_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Company ID"
+          }
+        ],
+        "params_type_name": "CompaniesUpdateParams",
+        "response_type": "Company",
+        "description": "Update an existing company's properties by ID. Only the specified properties will be updated.",
         "record_extractor": "$",
         "meta_extractor": null,
         "needs_envelope": null,
@@ -1058,6 +1396,73 @@
         "is_download": false
       },
       {
+        "method_name": "create_deal",
+        "http_method": "post",
+        "path": "/crm/v3/objects/deals",
+        "entity": "deals",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "properties",
+            "python_name": "properties",
+            "type": "DealsCreateParamsProperties",
+            "schema": {
+              "type": "object",
+              "description": "Deal properties to set",
+              "required": [
+                "dealname"
+              ],
+              "properties": {
+                "dealname": {
+                  "type": "string",
+                  "description": "Deal name (required)"
+                },
+                "amount": {
+                  "type": "string",
+                  "description": "Deal amount"
+                },
+                "dealstage": {
+                  "type": "string",
+                  "description": "Deal stage ID (e.g., appointmentscheduled, qualifiedtobuy, presentationscheduled, decisionmakerboughtin, contractsent, closedwon, closedlost)"
+                },
+                "pipeline": {
+                  "type": "string",
+                  "description": "Deal pipeline ID (defaults to the default pipeline)"
+                },
+                "closedate": {
+                  "type": "string",
+                  "description": "Expected close date (ISO 8601 format, e.g., 2024-12-31T00:00:00.000Z)"
+                },
+                "dealtype": {
+                  "type": "string",
+                  "description": "Deal type (e.g., newbusiness, existingbusiness)"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Deal description"
+                },
+                "hubspot_owner_id": {
+                  "type": "string",
+                  "description": "ID of the HubSpot owner to assign to this deal"
+                }
+              },
+              "additionalProperties": true
+            },
+            "required": true,
+            "description": "Deal properties to set"
+          }
+        ],
+        "params_type_name": "DealsCreateParams",
+        "response_type": "Deal",
+        "description": "Create a new deal in HubSpot CRM with the provided properties.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Deal",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
         "method_name": "get_deal",
         "http_method": "get",
         "path": "/crm/v3/objects/deals/{dealId}",
@@ -1133,6 +1538,80 @@
         "params_type_name": "DealsGetParams",
         "response_type": "Deal",
         "description": "Get a single deal by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Deal",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "update_deal",
+        "http_method": "patch",
+        "path": "/crm/v3/objects/deals/{dealId}",
+        "entity": "deals",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "properties",
+            "python_name": "properties",
+            "type": "DealsUpdateParamsProperties",
+            "schema": {
+              "type": "object",
+              "description": "Deal properties to update",
+              "properties": {
+                "dealname": {
+                  "type": "string",
+                  "description": "Deal name"
+                },
+                "amount": {
+                  "type": "string",
+                  "description": "Deal amount"
+                },
+                "dealstage": {
+                  "type": "string",
+                  "description": "Deal stage ID (e.g., appointmentscheduled, qualifiedtobuy, presentationscheduled, decisionmakerboughtin, contractsent, closedwon, closedlost)"
+                },
+                "pipeline": {
+                  "type": "string",
+                  "description": "Deal pipeline ID"
+                },
+                "closedate": {
+                  "type": "string",
+                  "description": "Expected close date (ISO 8601 format, e.g., 2024-12-31T00:00:00.000Z)"
+                },
+                "dealtype": {
+                  "type": "string",
+                  "description": "Deal type (e.g., newbusiness, existingbusiness)"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Deal description"
+                },
+                "hubspot_owner_id": {
+                  "type": "string",
+                  "description": "ID of the HubSpot owner to assign to this deal"
+                }
+              },
+              "additionalProperties": true
+            },
+            "required": true,
+            "description": "Deal properties to update"
+          },
+          {
+            "name": "dealId",
+            "python_name": "deal_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Deal ID"
+          }
+        ],
+        "params_type_name": "DealsUpdateParams",
+        "response_type": "Deal",
+        "description": "Update an existing deal's properties by ID. Only the specified properties will be updated.",
         "record_extractor": "$",
         "meta_extractor": null,
         "needs_envelope": null,
@@ -1442,6 +1921,71 @@
         "is_download": false
       },
       {
+        "method_name": "create_ticket",
+        "http_method": "post",
+        "path": "/crm/v3/objects/tickets",
+        "entity": "tickets",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "properties",
+            "python_name": "properties",
+            "type": "TicketsCreateParamsProperties",
+            "schema": {
+              "type": "object",
+              "description": "Ticket properties to set",
+              "required": [
+                "subject",
+                "hs_pipeline",
+                "hs_pipeline_stage"
+              ],
+              "properties": {
+                "subject": {
+                  "type": "string",
+                  "description": "Ticket subject line (required)"
+                },
+                "content": {
+                  "type": "string",
+                  "description": "Ticket description/content"
+                },
+                "hs_pipeline": {
+                  "type": "string",
+                  "description": "Ticket pipeline ID (required, use '0' for default pipeline)"
+                },
+                "hs_pipeline_stage": {
+                  "type": "string",
+                  "description": "Pipeline stage ID (required, e.g., '1' for New in the default pipeline)"
+                },
+                "hs_ticket_priority": {
+                  "type": "string",
+                  "description": "Ticket priority (e.g., LOW, MEDIUM, HIGH)"
+                },
+                "hs_ticket_category": {
+                  "type": "string",
+                  "description": "Ticket category"
+                },
+                "hubspot_owner_id": {
+                  "type": "string",
+                  "description": "ID of the HubSpot owner to assign to this ticket"
+                }
+              },
+              "additionalProperties": true
+            },
+            "required": true,
+            "description": "Ticket properties to set"
+          }
+        ],
+        "params_type_name": "TicketsCreateParams",
+        "response_type": "Ticket",
+        "description": "Create a new support ticket in HubSpot CRM with the provided properties.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Ticket",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
         "method_name": "get_ticket",
         "http_method": "get",
         "path": "/crm/v3/objects/tickets/{ticketId}",
@@ -1517,6 +2061,76 @@
         "params_type_name": "TicketsGetParams",
         "response_type": "Ticket",
         "description": "Get a single ticket by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Ticket",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "update_ticket",
+        "http_method": "patch",
+        "path": "/crm/v3/objects/tickets/{ticketId}",
+        "entity": "tickets",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "properties",
+            "python_name": "properties",
+            "type": "TicketsUpdateParamsProperties",
+            "schema": {
+              "type": "object",
+              "description": "Ticket properties to update",
+              "properties": {
+                "subject": {
+                  "type": "string",
+                  "description": "Ticket subject line"
+                },
+                "content": {
+                  "type": "string",
+                  "description": "Ticket description/content"
+                },
+                "hs_pipeline": {
+                  "type": "string",
+                  "description": "Ticket pipeline ID"
+                },
+                "hs_pipeline_stage": {
+                  "type": "string",
+                  "description": "Pipeline stage ID"
+                },
+                "hs_ticket_priority": {
+                  "type": "string",
+                  "description": "Ticket priority (e.g., LOW, MEDIUM, HIGH)"
+                },
+                "hs_ticket_category": {
+                  "type": "string",
+                  "description": "Ticket category"
+                },
+                "hubspot_owner_id": {
+                  "type": "string",
+                  "description": "ID of the HubSpot owner to assign to this ticket"
+                }
+              },
+              "additionalProperties": true
+            },
+            "required": true,
+            "description": "Ticket properties to update"
+          },
+          {
+            "name": "ticketId",
+            "python_name": "ticket_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Ticket ID"
+          }
+        ],
+        "params_type_name": "TicketsUpdateParams",
+        "response_type": "Ticket",
+        "description": "Update an existing ticket's properties by ID. Only the specified properties will be updated.",
         "record_extractor": "$",
         "meta_extractor": null,
         "needs_envelope": null,

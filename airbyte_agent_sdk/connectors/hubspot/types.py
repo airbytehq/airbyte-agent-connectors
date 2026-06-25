@@ -17,6 +17,30 @@ from typing import Any, Literal
 # ===== NESTED PARAM TYPE DEFINITIONS =====
 # Nested parameter schemas discovered during parameter extraction
 
+class ContactsCreateParamsProperties(TypedDict):
+    """Contact properties to set"""
+    email: str
+    firstname: NotRequired[str]
+    lastname: NotRequired[str]
+    phone: NotRequired[str]
+    company: NotRequired[str]
+    website: NotRequired[str]
+    lifecyclestage: NotRequired[str]
+    jobtitle: NotRequired[str]
+    hubspot_owner_id: NotRequired[str]
+
+class ContactsUpdateParamsProperties(TypedDict):
+    """Contact properties to update"""
+    email: NotRequired[str]
+    firstname: NotRequired[str]
+    lastname: NotRequired[str]
+    phone: NotRequired[str]
+    company: NotRequired[str]
+    website: NotRequired[str]
+    lifecyclestage: NotRequired[str]
+    jobtitle: NotRequired[str]
+    hubspot_owner_id: NotRequired[str]
+
 class ContactsApiSearchParamsFiltergroupsItemFiltersItem(TypedDict):
     """Nested schema for ContactsApiSearchParamsFiltergroupsItem.filters_item"""
     operator: NotRequired[str]
@@ -32,6 +56,40 @@ class ContactsApiSearchParamsSortsItem(TypedDict):
     """Nested schema for ContactsApiSearchParams.sorts_item"""
     propertyName: NotRequired[str]
     direction: NotRequired[str]
+
+class CompaniesCreateParamsProperties(TypedDict):
+    """Company properties to set"""
+    name: str
+    domain: NotRequired[str]
+    description: NotRequired[str]
+    phone: NotRequired[str]
+    industry: NotRequired[str]
+    city: NotRequired[str]
+    state: NotRequired[str]
+    country: NotRequired[str]
+    zip: NotRequired[str]
+    numberofemployees: NotRequired[str]
+    annualrevenue: NotRequired[str]
+    lifecyclestage: NotRequired[str]
+    hubspot_owner_id: NotRequired[str]
+    website: NotRequired[str]
+
+class CompaniesUpdateParamsProperties(TypedDict):
+    """Company properties to update"""
+    name: NotRequired[str]
+    domain: NotRequired[str]
+    description: NotRequired[str]
+    phone: NotRequired[str]
+    industry: NotRequired[str]
+    city: NotRequired[str]
+    state: NotRequired[str]
+    country: NotRequired[str]
+    zip: NotRequired[str]
+    numberofemployees: NotRequired[str]
+    annualrevenue: NotRequired[str]
+    lifecyclestage: NotRequired[str]
+    hubspot_owner_id: NotRequired[str]
+    website: NotRequired[str]
 
 class CompaniesApiSearchParamsFiltergroupsItemFiltersItem(TypedDict):
     """Nested schema for CompaniesApiSearchParamsFiltergroupsItem.filters_item"""
@@ -49,6 +107,28 @@ class CompaniesApiSearchParamsSortsItem(TypedDict):
     propertyName: NotRequired[str]
     direction: NotRequired[str]
 
+class DealsCreateParamsProperties(TypedDict):
+    """Deal properties to set"""
+    dealname: str
+    amount: NotRequired[str]
+    dealstage: NotRequired[str]
+    pipeline: NotRequired[str]
+    closedate: NotRequired[str]
+    dealtype: NotRequired[str]
+    description: NotRequired[str]
+    hubspot_owner_id: NotRequired[str]
+
+class DealsUpdateParamsProperties(TypedDict):
+    """Deal properties to update"""
+    dealname: NotRequired[str]
+    amount: NotRequired[str]
+    dealstage: NotRequired[str]
+    pipeline: NotRequired[str]
+    closedate: NotRequired[str]
+    dealtype: NotRequired[str]
+    description: NotRequired[str]
+    hubspot_owner_id: NotRequired[str]
+
 class DealsApiSearchParamsFiltergroupsItemFiltersItem(TypedDict):
     """Nested schema for DealsApiSearchParamsFiltergroupsItem.filters_item"""
     operator: NotRequired[str]
@@ -64,6 +144,26 @@ class DealsApiSearchParamsSortsItem(TypedDict):
     """Nested schema for DealsApiSearchParams.sorts_item"""
     propertyName: NotRequired[str]
     direction: NotRequired[str]
+
+class TicketsCreateParamsProperties(TypedDict):
+    """Ticket properties to set"""
+    subject: str
+    content: NotRequired[str]
+    hs_pipeline: str
+    hs_pipeline_stage: str
+    hs_ticket_priority: NotRequired[str]
+    hs_ticket_category: NotRequired[str]
+    hubspot_owner_id: NotRequired[str]
+
+class TicketsUpdateParamsProperties(TypedDict):
+    """Ticket properties to update"""
+    subject: NotRequired[str]
+    content: NotRequired[str]
+    hs_pipeline: NotRequired[str]
+    hs_pipeline_stage: NotRequired[str]
+    hs_ticket_priority: NotRequired[str]
+    hs_ticket_category: NotRequired[str]
+    hubspot_owner_id: NotRequired[str]
 
 class TicketsApiSearchParamsFiltergroupsItemFiltersItem(TypedDict):
     """Nested schema for TicketsApiSearchParamsFiltergroupsItem.filters_item"""
@@ -92,6 +192,10 @@ class ContactsListParams(TypedDict):
     properties_with_history: NotRequired[str]
     archived: NotRequired[bool]
 
+class ContactsCreateParams(TypedDict):
+    """Parameters for contacts.create operation"""
+    properties: ContactsCreateParamsProperties
+
 class ContactsGetParams(TypedDict):
     """Parameters for contacts.get operation"""
     contact_id: str
@@ -100,6 +204,11 @@ class ContactsGetParams(TypedDict):
     associations: NotRequired[str]
     id_property: NotRequired[str]
     archived: NotRequired[bool]
+
+class ContactsUpdateParams(TypedDict):
+    """Parameters for contacts.update operation"""
+    properties: ContactsUpdateParamsProperties
+    contact_id: str
 
 class ContactsApiSearchParams(TypedDict):
     """Parameters for contacts.api_search operation"""
@@ -119,6 +228,10 @@ class CompaniesListParams(TypedDict):
     properties_with_history: NotRequired[str]
     archived: NotRequired[bool]
 
+class CompaniesCreateParams(TypedDict):
+    """Parameters for companies.create operation"""
+    properties: CompaniesCreateParamsProperties
+
 class CompaniesGetParams(TypedDict):
     """Parameters for companies.get operation"""
     company_id: str
@@ -127,6 +240,11 @@ class CompaniesGetParams(TypedDict):
     associations: NotRequired[str]
     id_property: NotRequired[str]
     archived: NotRequired[bool]
+
+class CompaniesUpdateParams(TypedDict):
+    """Parameters for companies.update operation"""
+    properties: CompaniesUpdateParamsProperties
+    company_id: str
 
 class CompaniesApiSearchParams(TypedDict):
     """Parameters for companies.api_search operation"""
@@ -146,6 +264,10 @@ class DealsListParams(TypedDict):
     properties_with_history: NotRequired[str]
     archived: NotRequired[bool]
 
+class DealsCreateParams(TypedDict):
+    """Parameters for deals.create operation"""
+    properties: DealsCreateParamsProperties
+
 class DealsGetParams(TypedDict):
     """Parameters for deals.get operation"""
     deal_id: str
@@ -154,6 +276,11 @@ class DealsGetParams(TypedDict):
     associations: NotRequired[str]
     id_property: NotRequired[str]
     archived: NotRequired[bool]
+
+class DealsUpdateParams(TypedDict):
+    """Parameters for deals.update operation"""
+    properties: DealsUpdateParamsProperties
+    deal_id: str
 
 class DealsApiSearchParams(TypedDict):
     """Parameters for deals.api_search operation"""
@@ -173,6 +300,10 @@ class TicketsListParams(TypedDict):
     properties_with_history: NotRequired[str]
     archived: NotRequired[bool]
 
+class TicketsCreateParams(TypedDict):
+    """Parameters for tickets.create operation"""
+    properties: TicketsCreateParamsProperties
+
 class TicketsGetParams(TypedDict):
     """Parameters for tickets.get operation"""
     ticket_id: str
@@ -181,6 +312,11 @@ class TicketsGetParams(TypedDict):
     associations: NotRequired[str]
     id_property: NotRequired[str]
     archived: NotRequired[bool]
+
+class TicketsUpdateParams(TypedDict):
+    """Parameters for tickets.update operation"""
+    properties: TicketsUpdateParamsProperties
+    ticket_id: str
 
 class TicketsApiSearchParams(TypedDict):
     """Parameters for tickets.api_search operation"""
