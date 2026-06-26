@@ -107,41 +107,110 @@ EXECUTE_INSTRUCTIONS = (
     "\n\n" + FILTER_OPERATORS + "\n\n" + ID_RESOLUTION + "\n\n" + PAGINATION + "\n\n" + DATE_RANGES
 )
 
-# ALPHA semantic-search alternate syntax. Currently scoped to the Gong call_transcripts
-# entity / transcript field; the gating identifiers below mirror the backend
-# (app.core.search.motherduck_embedding_jobs). The note is defined once here so every
-# describe/tool surface advertises identical wording. Lines carry no leading indent so
-# callers can indent to match their surrounding block.
-SEMANTIC_SEARCH_ALPHA_CONNECTOR_NAME = "gong"
-SEMANTIC_SEARCH_ALPHA_ENTITY_NAME = "call_transcripts"
-SEMANTIC_SEARCH_ALPHA_FIELD = "transcript"
-SEMANTIC_SEARCH_ALPHA_NOTE = (
-    "- context_store_search(semantic={field, prompt, filter?, context_size?}, fields?, limit?)\n"
-    "  ALPHA — subject to change. Semantic (similarity) search over the 'transcript' field of Gong call transcripts.\n"
-    "  Embeds `prompt` and returns relevance-ranked hits shaped as {entity, metadata}: `entity` has the call fields "
-    "(callId, started); `metadata` has the similarity `score`, the matched `context` text, and per-turn attribution (speakerId, topic).\n"
+# ALPHA semantic-search alternate syntax. The note is rendered per configured semantic
+# field from the connector's x-airbyte-semantic-search annotation so every describe/tool
+# surface advertises identical, connector-accurate wording. Lines carry no leading indent
+# so callers can indent to match their surrounding block.
+
+# Generic, connector-agnostic guidance shared by every rendered note.
+_SEMANTIC_SEARCH_GENERIC_GUIDANCE = (
     "  `query` and `semantic` are mutually exclusive — never pass both in the same request. "
     "Results are ordered by similarity, so `sort` is not supported.\n"
     "  When using `semantic`, any filter must go inside `semantic.filter` (same shape/operators as `query.filter`). "
-    "A top-level `query.filter` is ignored when `semantic` is present.\n"
-    "  `context_size` controls how many characters of surrounding transcript are returned per hit "
-    "(default: full 2048-char window, maximum: 2048). Set it large enough for summarization and "
-    "reasoning about follow-up searches so you avoid unnecessary extra calls."
+    "A top-level `query.filter` is ignored when `semantic` is present."
 )
 
 
-def is_semantic_search_alpha_target(connector_name: str | None, entity_name: str | None) -> bool:
-    """Whether the ALPHA semantic-search note applies to this connector/entity pairing."""
-    if not connector_name or not entity_name:
-        return False
-    return connector_name.lower() == SEMANTIC_SEARCH_ALPHA_CONNECTOR_NAME and entity_name == SEMANTIC_SEARCH_ALPHA_ENTITY_NAME
+def _humanize_entity_name(entity_name: str) -> str:
+    """Turn an entity identifier into prose (e.g. 'support_tickets' -> 'support tickets')."""
+    return entity_name.replace("_", " ").strip() or entity_name
 
 
-def semantic_search_alpha_lines(connector_name: str | None, entity_name: str | None, indent: str = "      ") -> list[str]:
-    """Return indented ALPHA semantic-search note lines, or empty when ungated."""
-    if not is_semantic_search_alpha_target(connector_name, entity_name):
+def _semantic_metadata_names(config: Any, *, record_root: bool) -> list[str]:
+    """Names of metadata fields whose path is (or is not) record-root anchored.
+
+    A leading '/' on the metadata path resolves from the record root (entity-level
+    fields); any other path is relative to the sampled unit (per-unit attribution).
+    """
+    names: list[str] = []
+    for meta in getattr(config, "metadata", None) or []:
+        path = getattr(meta, "path", "") or ""
+        name = getattr(meta, "name", None)
+        if not name:
+            continue
+        if path.startswith("/") == record_root:
+            names.append(name)
+    return names
+
+
+def build_semantic_search_note(config: Any, *, entity_name: str, field_name: str) -> str:
+    """Render the ALPHA semantic-search note for one configured field.
+
+    The structure is fixed; the connector-specific facts are pulled from the
+    field's ``x-airbyte-semantic-search`` config (``config``):
+
+    - the searchable field name + entity it lives on,
+    - the entity-block fields = metadata whose ``path`` starts with ``/`` (record root),
+    - the per-unit attribution = metadata whose ``path`` does not start with ``/``,
+    - the context-window cap = ``windowing.context_max_chars`` (0/omitted => unbounded).
+
+    The generic guidance (query/semantic exclusivity, no sort, ``semantic.filter``,
+    ``context_size`` advice) is verbatim and connector-independent.
+    """
+    entity_label = _humanize_entity_name(entity_name)
+    entity_fields = _semantic_metadata_names(config, record_root=True)
+    attribution_fields = _semantic_metadata_names(config, record_root=False)
+
+    windowing = getattr(config, "windowing", None)
+    context_max_chars = getattr(windowing, "context_max_chars", 0) or 0
+
+    entity_clause = f" `entity` has the {entity_label} fields ({', '.join(entity_fields)});" if entity_fields else ""
+    attribution_clause = f", and per-unit attribution ({', '.join(attribution_fields)})" if attribution_fields else ""
+
+    if context_max_chars > 0:
+        context_clause = (
+            f"  `context_size` controls how many characters of surrounding context are returned per hit "
+            f"(default: full {context_max_chars}-char window, maximum: {context_max_chars}). "
+            "Set it large enough for summarization and reasoning about follow-up searches so you avoid "
+            "unnecessary extra calls."
+        )
+    else:
+        context_clause = (
+            "  `context_size` controls how many characters of surrounding context are returned per hit. "
+            "Set it large enough for summarization and reasoning about follow-up searches so you avoid "
+            "unnecessary extra calls."
+        )
+
+    return (
+        "- context_store_search(semantic={field, prompt, filter?, context_size?}, fields?, limit?)\n"
+        f"  ALPHA — subject to change. Semantic (similarity) search over the '{field_name}' field of {entity_label}.\n"
+        f"  Embeds `prompt` and returns relevance-ranked hits shaped as {{entity, metadata}}:{entity_clause} "
+        f"`metadata` has the similarity `score`, the matched `context` text{attribution_clause}.\n"
+        f"{_SEMANTIC_SEARCH_GENERIC_GUIDANCE}\n"
+        f"{context_clause}"
+    )
+
+
+def semantic_search_note_lines(
+    entity_semantic_fields: dict[str, Any] | None,
+    *,
+    entity_name: str,
+    indent: str = "      ",
+) -> list[str]:
+    """Return indented ALPHA semantic-search note lines for an entity's configured fields.
+
+    ``entity_semantic_fields`` is the per-entity ``{field_name: SemanticSearchConfig}``
+    mapping (e.g. ``ConnectorModel.semantic_search_fields[entity_name]``). Returns the
+    concatenated note lines for every configured semantic field, or an empty list when
+    the entity has none.
+    """
+    if not entity_semantic_fields:
         return []
-    return [f"{indent}{line}" for line in SEMANTIC_SEARCH_ALPHA_NOTE.split("\n")]
+    lines: list[str] = []
+    for field_name, config in entity_semantic_fields.items():
+        note = build_semantic_search_note(config, entity_name=entity_name, field_name=field_name)
+        lines.extend(f"{indent}{line}" for line in note.split("\n"))
+    return lines
 
 
 def _simplify_type(type_value: str | list[str]) -> str:
@@ -469,6 +538,9 @@ class ConnectorModelProtocol(Protocol):
     @property
     def search_field_paths(self) -> dict[str, list[str]] | None: ...
 
+    @property
+    def semantic_search_fields(self) -> dict[str, dict[str, Any]]: ...
+
 
 def format_param_signature(endpoint: EndpointProtocol) -> str:
     """Format parameter signature for an endpoint action.
@@ -649,8 +721,7 @@ def generate_tool_description(
     # at the first empty line and only keeps the initial section.
 
     # Entity/action parameter details (including pagination params like limit, starting_after)
-    info = getattr(getattr(model, "openapi_spec", None), "info", None)
-    connector_name = getattr(info, "x_airbyte_connector_name", None)
+    semantic_search_fields = getattr(model, "semantic_search_fields", None) or {}
     search_field_paths = _collect_search_field_paths(model)
     entity_field_schemas = _collect_entity_field_schemas(model)
     _, rels_by_entity = _build_relationship_index(model.entities)
@@ -733,7 +804,7 @@ def generate_tool_description(
         if entity.name in search_field_paths:
             search_sig = _format_search_param_signature()
             lines.append(f"      - context_store_search{search_sig}")
-            lines.extend(semantic_search_alpha_lines(connector_name, entity.name))
+            lines.extend(semantic_search_note_lines(semantic_search_fields.get(entity.name), entity_name=entity.name))
 
         # Searchable fields sub-section (nested paths for search queries)
         entity_search_fields = search_field_paths.get(entity.name)
