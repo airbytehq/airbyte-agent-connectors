@@ -30,6 +30,8 @@ info:
     - "Show me the creatives for my campaigns"
     - "List all conversions configured for my ad accounts"
     - "Show me account users for my LinkedIn ads accounts"
+    - "Show me campaign analytics for my LinkedIn ad campaigns"
+    - "Show me creative analytics for my ad creatives"
     search:
     - "Which campaigns have the highest click-through rate?"
     - "What is the total ad spend across all campaigns this month?"
@@ -82,6 +84,26 @@ info:
     target_entity: accounts
     foreign_key: account_id
     target_key: id
+    cardinality: many_to_one
+  - source_entity: account_users
+    target_entity: accounts
+    foreign_key: accounts
+    target_key: account_urn
+    cardinality: many_to_one
+  - source_entity: conversions
+    target_entity: accounts
+    foreign_key: account
+    target_key: account_urn
+    cardinality: many_to_one
+  - source_entity: ad_campaign_analytics
+    target_entity: campaigns
+    foreign_key: campaigns
+    target_key: campaign_analytics_param
+    cardinality: many_to_one
+  - source_entity: ad_creative_analytics
+    target_entity: creatives
+    foreign_key: creatives
+    target_key: creative_analytics_param
     cardinality: many_to_one
   x-airbyte-context-store:
     disable_compaction: false
@@ -649,6 +671,8 @@ paths:
       x-airbyte-action: list
       x-airbyte-preferred-for-check: true
       x-airbyte-record-extractor: $.elements
+      x-airbyte-record-transform:
+        account_urn: "urn:li:sponsoredAccount:{{ record.id }}"
       x-airbyte-meta-extractor:
         nextPageToken: $.metadata.nextPageToken
       parameters:
@@ -744,7 +768,6 @@ paths:
         required: true
         schema:
           type: string
-          default: ""
       - name: count
         in: query
         description: Number of items per page
@@ -784,6 +807,8 @@ paths:
       x-airbyte-entity: campaigns
       x-airbyte-action: list
       x-airbyte-record-extractor: $.elements
+      x-airbyte-record-transform:
+        campaign_analytics_param: "List(urn:li:sponsoredCampaign:{{ record.id }})"
       x-airbyte-meta-extractor:
         nextPageToken: $.metadata.nextPageToken
       parameters:
@@ -990,6 +1015,8 @@ paths:
       x-airbyte-entity: creatives
       x-airbyte-action: list
       x-airbyte-record-extractor: $.elements
+      x-airbyte-record-transform:
+        creative_analytics_param: "List({{ record.id }})"
       x-airbyte-meta-extractor:
         nextPageToken: $.metadata.nextPageToken
       parameters:
@@ -1104,7 +1131,6 @@ paths:
         required: true
         schema:
           type: string
-          default: ""
       - name: count
         in: query
         description: Number of items per page
@@ -1190,7 +1216,6 @@ paths:
       operationId: listAdCampaignAnalytics
       x-airbyte-entity: ad_campaign_analytics
       x-airbyte-action: list
-      x-airbyte-untested: true
       x-airbyte-no-pagination: "Analytics endpoint returns a bounded aggregation scoped to the requested dateRange and campaigns URNs; LinkedIn does not return a next-page cursor for /adAnalytics."
       x-airbyte-record-extractor: $.elements
       x-airbyte-path-override:
@@ -1231,7 +1256,6 @@ paths:
         description: "List of campaign URNs, e.g. List(urn%3Ali%3AsponsoredCampaign%3A123)"
         schema:
           type: string
-          default: "List()"
       - name: fields
         in: query
         description: Comma-separated list of metric fields to return
@@ -1268,7 +1292,6 @@ paths:
       operationId: listAdCreativeAnalytics
       x-airbyte-entity: ad_creative_analytics
       x-airbyte-action: list
-      x-airbyte-untested: true
       x-airbyte-no-pagination: "Analytics endpoint returns a bounded aggregation scoped to the requested dateRange and creatives URNs; LinkedIn does not return a next-page cursor for /adAnalytics."
       x-airbyte-record-extractor: $.elements
       x-airbyte-path-override:
@@ -1309,7 +1332,6 @@ paths:
         description: "List of creative URNs, e.g. List(urn%3Ali%3AsponsoredCreative%3A123)"
         schema:
           type: string
-          default: "List()"
       - name: fields
         in: query
         description: Comma-separated list of metric fields to return

@@ -1972,8 +1972,6 @@ class LocalExecutor:
                 # For single record actions, return first match
                 result = matches[0]
 
-            result = self._wrap_primitives(result)
-
         except Exception as e:
             record_transform = getattr(endpoint, "record_transform", None)
             record_filter = getattr(endpoint, "record_filter", None)
@@ -1999,6 +1997,8 @@ class LocalExecutor:
         record_transform = getattr(endpoint, "record_transform", None)
         if isinstance(record_transform, dict) and record_transform and result is not None:
             result = self._apply_record_transform(result, record_transform, config or {})
+
+        result = self._wrap_primitives(result)
 
         # Apply record_filter (Jinja expression) on list/api_search actions.
         # Intentionally outside the try/except above: a failing record_filter is
@@ -2099,7 +2099,10 @@ class LocalExecutor:
 
         def transform_record(record: Any) -> dict[str, Any]:
             record_context = record if isinstance(record, dict) else {"value": record}
-            return {field_name: template.render(record=record_context, config=config) for field_name, template in compiled.items()}
+            transformed = {field_name: template.render(record=record_context, config=config) for field_name, template in compiled.items()}
+            if isinstance(record, dict):
+                return {**record, **transformed}
+            return transformed
 
         if isinstance(records, list):
             return [transform_record(record) for record in records]

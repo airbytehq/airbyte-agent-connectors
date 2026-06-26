@@ -132,6 +132,55 @@ class OrderAddress(BaseModel):
     latitude: float | None = Field(default=None)
     longitude: float | None = Field(default=None)
 
+class Transaction(BaseModel):
+    """An order transaction"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int
+    order_id: int | None = Field(default=None)
+    kind: str | None = Field(default=None)
+    gateway: str | None = Field(default=None)
+    status: str | None = Field(default=None)
+    message: str | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    test: bool | None = Field(default=None)
+    authorization: str | None = Field(default=None)
+    location_id: int | None = Field(default=None)
+    user_id: int | None = Field(default=None)
+    parent_id: int | None = Field(default=None)
+    processed_at: str | None = Field(default=None)
+    device_id: int | None = Field(default=None)
+    error_code: str | None = Field(default=None)
+    source_name: str | None = Field(default=None)
+    receipt: dict[str, Any] | None = Field(default=None)
+    currency_exchange_adjustment: dict[str, Any] | None = Field(default=None)
+    amount: str | None = Field(default=None)
+    currency: str | None = Field(default=None)
+    payment_id: str | None = Field(default=None)
+    total_unsettled_set: dict[str, Any] | None = Field(default=None)
+    manual_payment_gateway: bool | None = Field(default=None)
+    admin_graphql_api_id: str | None = Field(default=None)
+
+class Refund(BaseModel):
+    """An order refund"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int
+    order_id: int | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    note: str | None = Field(default=None)
+    user_id: int | None = Field(default=None)
+    processed_at: str | None = Field(default=None)
+    restock: bool | None = Field(default=None)
+    duties: list[dict[str, Any]] | None = Field(default=None)
+    total_duties_set: dict[str, Any] | None = Field(default=None)
+    return_: dict[str, Any] | None = Field(default=None, alias="return")
+    refund_line_items: list[dict[str, Any]] | None = Field(default=None)
+    transactions: list[Transaction] | None = Field(default=None)
+    order_adjustments: list[dict[str, Any]] | None = Field(default=None)
+    admin_graphql_api_id: str | None = Field(default=None)
+    refund_shipping_lines: list[dict[str, Any]] | None = Field(default=None)
+
 class LineItem(BaseModel):
     """LineItem type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -188,55 +237,6 @@ class Fulfillment(BaseModel):
     receipt: dict[str, Any] | None = Field(default=None)
     name: str | None = Field(default=None)
     admin_graphql_api_id: str | None = Field(default=None)
-
-class Transaction(BaseModel):
-    """An order transaction"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: int
-    order_id: int | None = Field(default=None)
-    kind: str | None = Field(default=None)
-    gateway: str | None = Field(default=None)
-    status: str | None = Field(default=None)
-    message: str | None = Field(default=None)
-    created_at: str | None = Field(default=None)
-    test: bool | None = Field(default=None)
-    authorization: str | None = Field(default=None)
-    location_id: int | None = Field(default=None)
-    user_id: int | None = Field(default=None)
-    parent_id: int | None = Field(default=None)
-    processed_at: str | None = Field(default=None)
-    device_id: int | None = Field(default=None)
-    error_code: str | None = Field(default=None)
-    source_name: str | None = Field(default=None)
-    receipt: dict[str, Any] | None = Field(default=None)
-    currency_exchange_adjustment: dict[str, Any] | None = Field(default=None)
-    amount: str | None = Field(default=None)
-    currency: str | None = Field(default=None)
-    payment_id: str | None = Field(default=None)
-    total_unsettled_set: dict[str, Any] | None = Field(default=None)
-    manual_payment_gateway: bool | None = Field(default=None)
-    admin_graphql_api_id: str | None = Field(default=None)
-
-class Refund(BaseModel):
-    """An order refund"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: int
-    order_id: int | None = Field(default=None)
-    created_at: str | None = Field(default=None)
-    note: str | None = Field(default=None)
-    user_id: int | None = Field(default=None)
-    processed_at: str | None = Field(default=None)
-    restock: bool | None = Field(default=None)
-    duties: list[dict[str, Any]] | None = Field(default=None)
-    total_duties_set: dict[str, Any] | None = Field(default=None)
-    return_: dict[str, Any] | None = Field(default=None, alias="return")
-    refund_line_items: list[dict[str, Any]] | None = Field(default=None)
-    transactions: list[Transaction] | None = Field(default=None)
-    order_adjustments: list[dict[str, Any]] | None = Field(default=None)
-    admin_graphql_api_id: str | None = Field(default=None)
-    refund_shipping_lines: list[dict[str, Any]] | None = Field(default=None)
 
 class Order(BaseModel):
     """A Shopify order"""
@@ -1381,18 +1381,6 @@ class ProductVariantsDeleteResponse(BaseModel):
 
     data: ProductVariantsDeleteResponseData | None = Field(default=None)
 
-class OrderCreateParamsOrderShippingaddress(BaseModel):
-    """Nested schema for OrderCreateParamsOrder.shippingAddress"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    address1: str | None = Field(default=None)
-    city: str | None = Field(default=None)
-    province_code: str | None = Field(default=None, alias="provinceCode")
-    zip: str | None = Field(default=None)
-    country_code: str | None = Field(default=None, alias="countryCode")
-    first_name: str | None = Field(default=None, alias="firstName")
-    last_name: str | None = Field(default=None, alias="lastName")
-
 class OrderCreateParamsOrderLineitemsItemPricesetShopmoney(BaseModel):
     """Nested schema for OrderCreateParamsOrderLineitemsItemPriceset.shopMoney"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -1417,6 +1405,18 @@ class OrderCreateParamsOrderLineitemsItem(BaseModel):
     title: str | None = Field(default=None, description="Custom title (for custom line items without a variant)")
     """Custom title (for custom line items without a variant)"""
     price_set: OrderCreateParamsOrderLineitemsItemPriceset | None = Field(default=None, alias="priceSet")
+
+class OrderCreateParamsOrderShippingaddress(BaseModel):
+    """Nested schema for OrderCreateParamsOrder.shippingAddress"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    address1: str | None = Field(default=None)
+    city: str | None = Field(default=None)
+    province_code: str | None = Field(default=None, alias="provinceCode")
+    zip: str | None = Field(default=None)
+    country_code: str | None = Field(default=None, alias="countryCode")
+    first_name: str | None = Field(default=None, alias="firstName")
+    last_name: str | None = Field(default=None, alias="lastName")
 
 class OrderCreateParamsOrder(BaseModel):
     """OrderCreateOrderInput object"""
@@ -1895,6 +1895,13 @@ class InventoryAdjustQuantitiesResponse(BaseModel):
 
     data: InventoryAdjustQuantitiesResponseData | None = Field(default=None)
 
+class DiscountCodeCreateParamsBasiccodediscountCustomergetsItems(BaseModel):
+    """Which items the discount applies to"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    all: bool | None = Field(default=None, description="Set to true for all items")
+    """Set to true for all items"""
+
 class DiscountCodeCreateParamsBasiccodediscountCustomergetsValueDiscountamount(BaseModel):
     """Nested schema for DiscountCodeCreateParamsBasiccodediscountCustomergetsValue.discountAmount"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -1909,13 +1916,6 @@ class DiscountCodeCreateParamsBasiccodediscountCustomergetsValue(BaseModel):
     percentage: float | None = Field(default=None, description="Percentage discount (e.g. 0.1 for 10%)")
     """Percentage discount (e.g. 0.1 for 10%)"""
     discount_amount: DiscountCodeCreateParamsBasiccodediscountCustomergetsValueDiscountamount | None = Field(default=None, alias="discountAmount")
-
-class DiscountCodeCreateParamsBasiccodediscountCustomergetsItems(BaseModel):
-    """Which items the discount applies to"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    all: bool | None = Field(default=None, description="Set to true for all items")
-    """Set to true for all items"""
 
 class DiscountCodeCreateParamsBasiccodediscountCustomergets(BaseModel):
     """What the customer gets from this discount"""

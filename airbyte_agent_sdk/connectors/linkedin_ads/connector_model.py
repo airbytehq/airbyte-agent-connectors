@@ -239,6 +239,7 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.elements',
+                    record_transform={'account_urn': 'urn:li:sponsoredAccount:{{ record.id }}'},
                     meta_extractor={'nextPageToken': '$.metadata.nextPageToken'},
                     preferred_for_check=True,
                 ),
@@ -506,11 +507,7 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                             'required': True,
                             'default': 'accounts',
                         },
-                        'accounts': {
-                            'type': 'string',
-                            'required': True,
-                            'default': '',
-                        },
+                        'accounts': {'type': 'string', 'required': True},
                         'count': {
                             'type': 'integer',
                             'required': False,
@@ -674,6 +671,15 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                 'example_questions': ['Who has access to this LinkedIn Ads account?'],
                 'search_strategy': 'Filter by account',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='account_users',
+                    target_entity='accounts',
+                    foreign_key='accounts',
+                    target_key='account_urn',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='campaigns',
@@ -937,6 +943,7 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.elements',
+                    record_transform={'campaign_analytics_param': 'List(urn:li:sponsoredCampaign:{{ record.id }})'},
                     meta_extractor={'nextPageToken': '$.metadata.nextPageToken'},
                 ),
                 Action.GET: EndpointDefinition(
@@ -1952,6 +1959,7 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.elements',
+                    record_transform={'creative_analytics_param': 'List({{ record.id }})'},
                     meta_extractor={'nextPageToken': '$.metadata.nextPageToken'},
                 ),
                 Action.GET: EndpointDefinition(
@@ -2202,11 +2210,7 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                             'required': True,
                             'default': 'account',
                         },
-                        'account': {
-                            'type': 'string',
-                            'required': True,
-                            'default': '',
-                        },
+                        'account': {'type': 'string', 'required': True},
                         'count': {
                             'type': 'integer',
                             'required': False,
@@ -2605,6 +2609,15 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                 'example_questions': ['What conversion rules are set up?'],
                 'search_strategy': 'List all conversion rules',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='conversions',
+                    target_entity='accounts',
+                    foreign_key='account',
+                    target_key='account_urn',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='ad_campaign_analytics',
@@ -2648,11 +2661,7 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                             'required': True,
                             'default': '(start:(year:2024,month:1,day:1),end:(year:2024,month:12,day:31))',
                         },
-                        'campaigns': {
-                            'type': 'string',
-                            'required': True,
-                            'default': 'List()',
-                        },
+                        'campaigns': {'type': 'string', 'required': True},
                         'fields': {'type': 'string', 'required': False},
                     },
                     header_params=['LinkedIn-Version', 'X-Restli-Protocol-Version'],
@@ -2931,10 +2940,18 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.elements',
-                    untested=True,
                     no_pagination='Analytics endpoint returns a bounded aggregation scoped to the requested dateRange and campaigns URNs; LinkedIn does not return a next-page cursor for /adAnalytics.',
                 ),
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='ad_campaign_analytics',
+                    target_entity='campaigns',
+                    foreign_key='campaigns',
+                    target_key='campaign_analytics_param',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='ad_creative_analytics',
@@ -2978,11 +2995,7 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                             'required': True,
                             'default': '(start:(year:2024,month:1,day:1),end:(year:2024,month:12,day:31))',
                         },
-                        'creatives': {
-                            'type': 'string',
-                            'required': True,
-                            'default': 'List()',
-                        },
+                        'creatives': {'type': 'string', 'required': True},
                         'fields': {'type': 'string', 'required': False},
                     },
                     header_params=['LinkedIn-Version', 'X-Restli-Protocol-Version'],
@@ -3261,10 +3274,18 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.elements',
-                    untested=True,
                     no_pagination='Analytics endpoint returns a bounded aggregation scoped to the requested dateRange and creatives URNs; LinkedIn does not return a next-page cursor for /adAnalytics.',
                 ),
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='ad_creative_analytics',
+                    target_entity='creatives',
+                    foreign_key='creatives',
+                    target_key='creative_analytics_param',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
     ],
     context_store=CacheConfig(
@@ -4385,6 +4406,8 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
             'Show me the creatives for my campaigns',
             'List all conversions configured for my ad accounts',
             'Show me account users for my LinkedIn ads accounts',
+            'Show me campaign analytics for my LinkedIn ad campaigns',
+            'Show me creative analytics for my ad creatives',
         ],
         context_store_search=[
             'Which campaigns have the highest click-through rate?',

@@ -331,19 +331,6 @@ class SparkAdVideoInfo(BaseModel):
     size: int | None | None = Field(default=None, description="The size of the video, in bytes")
     """The size of the video, in bytes"""
 
-class SparkAdAuthInfo(BaseModel):
-    """Information about the authorization"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    invite_start_time: str | None | None = Field(default=None, description="The time when the authorization starts (UTC+0)")
-    """The time when the authorization starts (UTC+0)"""
-    auth_start_time: str | None | None = Field(default=None, description="The time when the authorization code becomes valid (UTC+0)")
-    """The time when the authorization code becomes valid (UTC+0)"""
-    auth_end_time: str | None | None = Field(default=None, description="The time when the authorization code expires (UTC+0)")
-    """The time when the authorization code expires (UTC+0)"""
-    ad_auth_status: str | None | None = Field(default=None, description="The authorization status (e.g. AUTHORIZED)")
-    """The authorization status (e.g. AUTHORIZED)"""
-
 class SparkAdItemInfo(BaseModel):
     """Information about the Spark Ads post"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -358,6 +345,19 @@ class SparkAdItemInfo(BaseModel):
     """Item status (e.g. HESITATE_RECOMMEND)"""
     item_type: str | None | None = Field(default=None, description="The type of Spark Ads post (VIDEO or CAROUSEL)")
     """The type of Spark Ads post (VIDEO or CAROUSEL)"""
+
+class SparkAdAuthInfo(BaseModel):
+    """Information about the authorization"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    invite_start_time: str | None | None = Field(default=None, description="The time when the authorization starts (UTC+0)")
+    """The time when the authorization starts (UTC+0)"""
+    auth_start_time: str | None | None = Field(default=None, description="The time when the authorization code becomes valid (UTC+0)")
+    """The time when the authorization code becomes valid (UTC+0)"""
+    auth_end_time: str | None | None = Field(default=None, description="The time when the authorization code expires (UTC+0)")
+    """The time when the authorization code expires (UTC+0)"""
+    ad_auth_status: str | None | None = Field(default=None, description="The authorization status (e.g. AUTHORIZED)")
+    """The authorization status (e.g. AUTHORIZED)"""
 
 class SparkAdUserInfo(BaseModel):
     """Information about the TikTok account"""

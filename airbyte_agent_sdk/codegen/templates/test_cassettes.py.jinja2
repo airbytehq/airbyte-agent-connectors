@@ -115,7 +115,10 @@ async def test_{{ test.test_name }}():
 
         def _apply_transform(rec):
             ctx = rec if isinstance(rec, dict) else {"value": rec}
-            return {k: _transform_env.from_string(v).render(record=ctx, config={}) for k, v in _transform_map.items()}
+            transformed = {k: _transform_env.from_string(v).render(record=ctx, config={}) for k, v in _transform_map.items()}
+            if isinstance(rec, dict):
+                return {**rec, **transformed}
+            return transformed
 
         if isinstance(expected_data, list):
             expected_data = [_apply_transform(r) for r in expected_data]
