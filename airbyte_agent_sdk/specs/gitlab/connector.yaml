@@ -7,8 +7,8 @@ info:
     '
   x-airbyte-connector-name: gitlab
   x-airbyte-connector-definition-id: 5e6175e5-68e1-4c17-bff9-56103bbb0d80
-  x-airbyte-replication-version: "4.4.28"
-  x-airbyte-replication-compatibility: ">=4.4.28, <5.0.0"
+  x-airbyte-replication-version: "4.4.31"
+  x-airbyte-replication-compatibility: ">=4.4.31, <5.0.0"
   x-airbyte-external-documentation-urls:
   - type: api_reference
     title: GitLab REST API Documentation

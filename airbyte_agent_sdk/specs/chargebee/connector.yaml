@@ -11,8 +11,8 @@ info:
     businesses manage the full subscription lifecycle.
   x-airbyte-connector-name: chargebee
   x-airbyte-connector-definition-id: 686473f1-76d9-4994-9cc7-9b13da46147c
-  x-airbyte-replication-version: "0.10.36"
-  x-airbyte-replication-compatibility: ">=0.10.36, <1.0.0"
+  x-airbyte-replication-version: "0.10.38"
+  x-airbyte-replication-compatibility: ">=0.10.38, <1.0.0"
   x-airbyte-skip-suggested-streams:
     - plan
     - addon

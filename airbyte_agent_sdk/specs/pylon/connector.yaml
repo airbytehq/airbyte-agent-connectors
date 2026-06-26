@@ -10,8 +10,8 @@ info:
     for customer support analytics and account intelligence insights.
   x-airbyte-connector-name: pylon
   x-airbyte-connector-definition-id: f2e53e88-3c6b-4e5a-b7c2-a1d9c5e8f4b6
-  x-airbyte-replication-version: "0.0.10"
-  x-airbyte-replication-compatibility: ">=0.0.10, <1.0.0"
+  x-airbyte-replication-version: "0.0.12"
+  x-airbyte-replication-compatibility: ">=0.0.12, <1.0.0"
   x-airbyte-context-store:
     entities:
       - entity: issues

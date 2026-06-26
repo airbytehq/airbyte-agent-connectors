@@ -16,8 +16,8 @@ info:
     to channels.
   x-airbyte-connector-name: slack
   x-airbyte-connector-definition-id: c2281cee-86f9-4a86-bb48-d23286b4c7bd
-  x-airbyte-replication-version: "3.2.9"
-  x-airbyte-replication-compatibility: ">=3.2.9, <4.0.0"
+  x-airbyte-replication-version: "3.2.11"
+  x-airbyte-replication-compatibility: ">=3.2.11, <4.0.0"
   x-airbyte-example-questions:
     direct:
       - "List all users in my Slack workspace"

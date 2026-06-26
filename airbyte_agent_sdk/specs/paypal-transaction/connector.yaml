@@ -10,8 +10,8 @@ info:
     credentials for authentication.
   x-airbyte-connector-name: paypal-transaction
   x-airbyte-connector-definition-id: d913b0f2-cc51-4e55-a44c-8ba1697b9239
-  x-airbyte-replication-version: "2.6.35"
-  x-airbyte-replication-compatibility: ">=2.6.35, <3.0.0"
+  x-airbyte-replication-version: "2.6.37"
+  x-airbyte-replication-compatibility: ">=2.6.37, <3.0.0"
   x-airbyte-platform-availability:
     state: experimental
     reason: Requires additional QA testing
