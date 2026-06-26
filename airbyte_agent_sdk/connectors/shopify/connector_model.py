@@ -29,6 +29,9 @@ from airbyte_agent_sdk.schema.extensions import (
 from airbyte_agent_sdk.schema.base import (
     ExampleQuestions,
 )
+from airbyte_agent_sdk.schema.components import (
+    PathOverrideConfig,
+)
 from uuid import (
     UUID,
 )
@@ -101,7 +104,13 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
         EntityDefinition(
             name='customers',
             stream_name='customers',
-            actions=[Action.LIST, Action.GET],
+            actions=[
+                Action.LIST,
+                Action.GET,
+                Action.CREATE,
+                Action.UPDATE,
+                Action.DELETE,
+            ],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
@@ -450,12 +459,18 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                     'x-airbyte-entity-name': 'customers',
                                     'x-airbyte-stream-name': 'customers',
                                     'x-airbyte-ai-hints': {
-                                        'summary': 'Shopify customers with order history and contact information',
-                                        'when_to_use': 'Looking up customer details or purchase history',
-                                        'trigger_phrases': ['shopify customer', 'buyer', 'customer info'],
+                                        'summary': 'Shopify customers with contact info, addresses, order history, and marketing consent',
+                                        'when_to_use': 'Looking up customer details, contact information, purchase history, or marketing status',
+                                        'trigger_phrases': [
+                                            'shopify customer',
+                                            'buyer',
+                                            'customer info',
+                                            'customer email',
+                                            'customer list',
+                                        ],
                                         'freshness': 'live',
-                                        'example_questions': ['Find a customer in Shopify', 'Show customer order history'],
-                                        'search_strategy': 'Search by email, name, or phone',
+                                        'example_questions': ['Find a customer in Shopify', "Show a customer's order history", 'List customers who joined this month'],
+                                        'search_strategy': 'Search by email, name, or phone; filter by created/updated date',
                                     },
                                 },
                             },
@@ -776,17 +791,394 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                 'x-airbyte-entity-name': 'customers',
                                 'x-airbyte-stream-name': 'customers',
                                 'x-airbyte-ai-hints': {
-                                    'summary': 'Shopify customers with order history and contact information',
-                                    'when_to_use': 'Looking up customer details or purchase history',
-                                    'trigger_phrases': ['shopify customer', 'buyer', 'customer info'],
+                                    'summary': 'Shopify customers with contact info, addresses, order history, and marketing consent',
+                                    'when_to_use': 'Looking up customer details, contact information, purchase history, or marketing status',
+                                    'trigger_phrases': [
+                                        'shopify customer',
+                                        'buyer',
+                                        'customer info',
+                                        'customer email',
+                                        'customer list',
+                                    ],
                                     'freshness': 'live',
-                                    'example_questions': ['Find a customer in Shopify', 'Show customer order history'],
-                                    'search_strategy': 'Search by email, name, or phone',
+                                    'example_questions': ['Find a customer in Shopify', "Show a customer's order history", 'List customers who joined this month'],
+                                    'search_strategy': 'Search by email, name, or phone; filter by created/updated date',
                                 },
                             },
                         },
                     },
                     record_extractor='$.customer',
+                ),
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/graphql.json:customerCreate',
+                    path_override=PathOverrideConfig(
+                        path='/graphql.json',
+                    ),
+                    action=Action.CREATE,
+                    description='Creates a new customer in the store via GraphQL mutation.\nRequires at least one of: email, phone, firstName, or lastName.\n',
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'customerCreate': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'userErrors': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'field': {
+                                                            'type': ['string', 'null', 'array'],
+                                                            'description': 'Path to the input field that caused the error',
+                                                        },
+                                                        'message': {'type': 'string', 'description': 'Error message'},
+                                                        'code': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Error code',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            'customer': {
+                                                'type': 'object',
+                                                'description': 'Customer returned from GraphQL mutation',
+                                                'properties': {
+                                                    'id': {'type': 'string', 'description': 'GraphQL GID'},
+                                                    'email': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'firstName': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'lastName': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'phone': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'note': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'tags': {
+                                                        'type': 'array',
+                                                        'items': {'type': 'string'},
+                                                    },
+                                                    'taxExempt': {
+                                                        'type': ['boolean', 'null'],
+                                                    },
+                                                    'createdAt': {
+                                                        'type': ['string', 'null'],
+                                                        'format': 'date-time',
+                                                    },
+                                                    'updatedAt': {
+                                                        'type': ['string', 'null'],
+                                                        'format': 'date-time',
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                    'customerUpdate': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'userErrors': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'field': {
+                                                            'type': ['string', 'null', 'array'],
+                                                            'description': 'Path to the input field that caused the error',
+                                                        },
+                                                        'message': {'type': 'string', 'description': 'Error message'},
+                                                        'code': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Error code',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            'customer': {
+                                                'type': 'object',
+                                                'description': 'Customer returned from GraphQL mutation',
+                                                'properties': {
+                                                    'id': {'type': 'string', 'description': 'GraphQL GID'},
+                                                    'email': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'firstName': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'lastName': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'phone': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'note': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'tags': {
+                                                        'type': 'array',
+                                                        'items': {'type': 'string'},
+                                                    },
+                                                    'taxExempt': {
+                                                        'type': ['boolean', 'null'],
+                                                    },
+                                                    'createdAt': {
+                                                        'type': ['string', 'null'],
+                                                        'format': 'date-time',
+                                                    },
+                                                    'updatedAt': {
+                                                        'type': ['string', 'null'],
+                                                        'format': 'date-time',
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    graphql_body={
+                        'type': 'graphql',
+                        'query': 'mutation customerCreate($input: CustomerInput!) { customerCreate(input: $input) { userErrors { field message } customer { id email firstName lastName phone note tags taxExempt createdAt updatedAt } } }',
+                        'variables': {'input': '{{ input }}'},
+                    },
+                    record_extractor='$.data.customerCreate',
+                    ai_hints={
+                        'summary': 'Create a new Shopify customer',
+                        'when_to_use': 'When the user asks to add, create, or register a new customer',
+                        'trigger_phrases': [
+                            'create a customer',
+                            'add a customer',
+                            'new customer',
+                            'register a buyer',
+                        ],
+                        'freshness': 'live',
+                        'example_questions': ['Create a customer with email test@example.com'],
+                        'search_strategy': 'Use customers.create with an input containing at least email or first/last name. Requires write_customers scope. To look up existing customers use customers.list/get.',
+                    },
+                ),
+                Action.UPDATE: EndpointDefinition(
+                    method='POST',
+                    path='/graphql.json:customerUpdate',
+                    path_override=PathOverrideConfig(
+                        path='/graphql.json',
+                    ),
+                    action=Action.UPDATE,
+                    description='Updates an existing customer via GraphQL mutation.\nAll fields except id are optional for partial updates.\n',
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'customerCreate': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'userErrors': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'field': {
+                                                            'type': ['string', 'null', 'array'],
+                                                            'description': 'Path to the input field that caused the error',
+                                                        },
+                                                        'message': {'type': 'string', 'description': 'Error message'},
+                                                        'code': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Error code',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            'customer': {
+                                                'type': 'object',
+                                                'description': 'Customer returned from GraphQL mutation',
+                                                'properties': {
+                                                    'id': {'type': 'string', 'description': 'GraphQL GID'},
+                                                    'email': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'firstName': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'lastName': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'phone': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'note': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'tags': {
+                                                        'type': 'array',
+                                                        'items': {'type': 'string'},
+                                                    },
+                                                    'taxExempt': {
+                                                        'type': ['boolean', 'null'],
+                                                    },
+                                                    'createdAt': {
+                                                        'type': ['string', 'null'],
+                                                        'format': 'date-time',
+                                                    },
+                                                    'updatedAt': {
+                                                        'type': ['string', 'null'],
+                                                        'format': 'date-time',
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                    'customerUpdate': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'userErrors': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'field': {
+                                                            'type': ['string', 'null', 'array'],
+                                                            'description': 'Path to the input field that caused the error',
+                                                        },
+                                                        'message': {'type': 'string', 'description': 'Error message'},
+                                                        'code': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Error code',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            'customer': {
+                                                'type': 'object',
+                                                'description': 'Customer returned from GraphQL mutation',
+                                                'properties': {
+                                                    'id': {'type': 'string', 'description': 'GraphQL GID'},
+                                                    'email': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'firstName': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'lastName': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'phone': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'note': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'tags': {
+                                                        'type': 'array',
+                                                        'items': {'type': 'string'},
+                                                    },
+                                                    'taxExempt': {
+                                                        'type': ['boolean', 'null'],
+                                                    },
+                                                    'createdAt': {
+                                                        'type': ['string', 'null'],
+                                                        'format': 'date-time',
+                                                    },
+                                                    'updatedAt': {
+                                                        'type': ['string', 'null'],
+                                                        'format': 'date-time',
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    graphql_body={
+                        'type': 'graphql',
+                        'query': 'mutation customerUpdate($input: CustomerInput!) { customerUpdate(input: $input) { userErrors { field message } customer { id email firstName lastName phone note tags taxExempt createdAt updatedAt } } }',
+                        'variables': {'input': '{{ input }}'},
+                    },
+                    record_extractor='$.data.customerUpdate',
+                    ai_hints={
+                        'summary': 'Update an existing Shopify customer',
+                        'when_to_use': "When the user asks to edit, change, or correct a customer's details",
+                        'trigger_phrases': [
+                            'update a customer',
+                            'edit customer',
+                            'change customer email',
+                            'fix customer info',
+                        ],
+                        'freshness': 'live',
+                        'example_questions': ["Update a customer's first name", "Change a customer's phone number"],
+                        'search_strategy': 'Use customers.update with the customer GID and the fields to change. Requires write_customers scope.',
+                    },
+                ),
+                Action.DELETE: EndpointDefinition(
+                    method='POST',
+                    path='/graphql.json:customerDelete',
+                    path_override=PathOverrideConfig(
+                        path='/graphql.json',
+                    ),
+                    action=Action.DELETE,
+                    description='Deletes a customer from the store via GraphQL mutation.\nOnly succeeds if the customer has no orders. This action is irreversible.\n',
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'customerDelete': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'userErrors': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'field': {
+                                                            'type': ['string', 'null', 'array'],
+                                                            'description': 'Path to the input field that caused the error',
+                                                        },
+                                                        'message': {'type': 'string', 'description': 'Error message'},
+                                                        'code': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Error code',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            'deletedCustomerId': {
+                                                'type': ['string', 'null'],
+                                                'description': 'GID of the deleted customer',
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    graphql_body={
+                        'type': 'graphql',
+                        'query': 'mutation customerDelete($input: CustomerDeleteInput!) { customerDelete(input: $input) { userErrors { field message } deletedCustomerId } }',
+                        'variables': {'input': '{{ input }}'},
+                    },
+                    record_extractor='$.data.customerDelete',
+                    ai_hints={
+                        'summary': 'Delete a Shopify customer',
+                        'when_to_use': 'When the user asks to remove or delete a customer permanently',
+                        'trigger_phrases': ['delete a customer', 'remove customer', 'erase a buyer'],
+                        'freshness': 'live',
+                        'example_questions': ['Delete a customer from Shopify'],
+                        'search_strategy': 'Use customers.delete with the customer GID. Irreversible. Requires write_customers scope.',
+                    },
                 ),
             },
             entity_schema={
@@ -912,27 +1304,45 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'customers',
                 'x-airbyte-stream-name': 'customers',
                 'x-airbyte-ai-hints': {
-                    'summary': 'Shopify customers with order history and contact information',
-                    'when_to_use': 'Looking up customer details or purchase history',
-                    'trigger_phrases': ['shopify customer', 'buyer', 'customer info'],
+                    'summary': 'Shopify customers with contact info, addresses, order history, and marketing consent',
+                    'when_to_use': 'Looking up customer details, contact information, purchase history, or marketing status',
+                    'trigger_phrases': [
+                        'shopify customer',
+                        'buyer',
+                        'customer info',
+                        'customer email',
+                        'customer list',
+                    ],
                     'freshness': 'live',
-                    'example_questions': ['Find a customer in Shopify', 'Show customer order history'],
-                    'search_strategy': 'Search by email, name, or phone',
+                    'example_questions': ['Find a customer in Shopify', "Show a customer's order history", 'List customers who joined this month'],
+                    'search_strategy': 'Search by email, name, or phone; filter by created/updated date',
                 },
             },
             ai_hints={
-                'summary': 'Shopify customers with order history and contact information',
-                'when_to_use': 'Looking up customer details or purchase history',
-                'trigger_phrases': ['shopify customer', 'buyer', 'customer info'],
+                'summary': 'Shopify customers with contact info, addresses, order history, and marketing consent',
+                'when_to_use': 'Looking up customer details, contact information, purchase history, or marketing status',
+                'trigger_phrases': [
+                    'shopify customer',
+                    'buyer',
+                    'customer info',
+                    'customer email',
+                    'customer list',
+                ],
                 'freshness': 'live',
-                'example_questions': ['Find a customer in Shopify', 'Show customer order history'],
-                'search_strategy': 'Search by email, name, or phone',
+                'example_questions': ['Find a customer in Shopify', "Show a customer's order history", 'List customers who joined this month'],
+                'search_strategy': 'Search by email, name, or phone; filter by created/updated date',
             },
         ),
         EntityDefinition(
             name='orders',
             stream_name='orders',
-            actions=[Action.LIST, Action.GET],
+            actions=[
+                Action.LIST,
+                Action.GET,
+                Action.CREATE,
+                Action.UPDATE,
+                Action.DELETE,
+            ],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
@@ -1412,12 +1822,18 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                                     'x-airbyte-entity-name': 'customers',
                                                     'x-airbyte-stream-name': 'customers',
                                                     'x-airbyte-ai-hints': {
-                                                        'summary': 'Shopify customers with order history and contact information',
-                                                        'when_to_use': 'Looking up customer details or purchase history',
-                                                        'trigger_phrases': ['shopify customer', 'buyer', 'customer info'],
+                                                        'summary': 'Shopify customers with contact info, addresses, order history, and marketing consent',
+                                                        'when_to_use': 'Looking up customer details, contact information, purchase history, or marketing status',
+                                                        'trigger_phrases': [
+                                                            'shopify customer',
+                                                            'buyer',
+                                                            'customer info',
+                                                            'customer email',
+                                                            'customer list',
+                                                        ],
                                                         'freshness': 'live',
-                                                        'example_questions': ['Find a customer in Shopify', 'Show customer order history'],
-                                                        'search_strategy': 'Search by email, name, or phone',
+                                                        'example_questions': ['Find a customer in Shopify', "Show a customer's order history", 'List customers who joined this month'],
+                                                        'search_strategy': 'Search by email, name, or phone; filter by created/updated date',
                                                     },
                                                 },
                                                 {'type': 'null'},
@@ -1611,12 +2027,18 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                                 'x-airbyte-entity-name': 'fulfillments',
                                                 'x-airbyte-stream-name': 'fulfillments',
                                                 'x-airbyte-ai-hints': {
-                                                    'summary': 'Order fulfillments with tracking and shipping details',
-                                                    'when_to_use': 'Questions about shipping status or fulfillment tracking',
-                                                    'trigger_phrases': ['fulfillment', 'shipping status', 'tracking number'],
+                                                    'summary': 'Fulfillment records for an order — shipped items, tracking numbers, and carrier',
+                                                    'when_to_use': 'Questions about shipments, tracking numbers, or what has shipped on an order',
+                                                    'trigger_phrases': [
+                                                        'fulfillment',
+                                                        'shipment',
+                                                        'tracking number',
+                                                        'what shipped',
+                                                        'carrier',
+                                                    ],
                                                     'freshness': 'live',
-                                                    'example_questions': ['What is the shipping status of an order?'],
-                                                    'search_strategy': 'Filter by order',
+                                                    'example_questions': ['Show fulfillments for an order', 'What is the tracking number for a shipment?'],
+                                                    'search_strategy': 'Filter by order_id; an order can have multiple fulfillments',
                                                 },
                                             },
                                         },
@@ -1920,12 +2342,18 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                                             'x-airbyte-entity-name': 'transactions',
                                                             'x-airbyte-stream-name': 'transactions',
                                                             'x-airbyte-ai-hints': {
-                                                                'summary': 'Payment transactions on Shopify orders',
-                                                                'when_to_use': 'Questions about payment processing or transaction details',
-                                                                'trigger_phrases': ['shopify transaction', 'payment', 'charge'],
+                                                                'summary': 'Payment transactions for an order (authorizations, captures, sales, refunds, voids)',
+                                                                'when_to_use': 'Questions about how an order was paid, gateway, or transaction amounts',
+                                                                'trigger_phrases': [
+                                                                    'order transaction',
+                                                                    'payment',
+                                                                    'capture',
+                                                                    'authorization',
+                                                                    'how was an order paid',
+                                                                ],
                                                                 'freshness': 'live',
-                                                                'example_questions': ['Show transactions for an order'],
-                                                                'search_strategy': 'Filter by order',
+                                                                'example_questions': ['Show payment transactions for an order', "Was an order's payment captured?"],
+                                                                'search_strategy': 'Filter by order_id; transactions show kind (sale, authorization, capture, refund, void) and gateway',
                                                             },
                                                         },
                                                     },
@@ -1945,12 +2373,17 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                                 'x-airbyte-entity-name': 'order_refunds',
                                                 'x-airbyte-stream-name': 'order_refunds',
                                                 'x-airbyte-ai-hints': {
-                                                    'summary': 'Refunds processed for Shopify orders',
-                                                    'when_to_use': 'Questions about refunds or return processing',
-                                                    'trigger_phrases': ['refund', 'order refund', 'return'],
+                                                    'summary': 'Refunds issued against a Shopify order, including refunded line items and amounts',
+                                                    'when_to_use': 'Questions about refunds, returned money, or what was refunded on an order',
+                                                    'trigger_phrases': [
+                                                        'refund',
+                                                        'refunded amount',
+                                                        'order refund',
+                                                        'money back',
+                                                    ],
                                                     'freshness': 'live',
-                                                    'example_questions': ['What refunds were processed for an order?'],
-                                                    'search_strategy': 'Filter by order',
+                                                    'example_questions': ['Show refunds for an order', 'How much was refunded on an order?'],
+                                                    'search_strategy': 'Filter by order_id; each order may have multiple partial refunds',
                                                 },
                                             },
                                         },
@@ -2152,17 +2585,19 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                     'x-airbyte-entity-name': 'orders',
                                     'x-airbyte-stream-name': 'orders',
                                     'x-airbyte-ai-hints': {
-                                        'summary': 'Shopify orders with line items, payment, and fulfillment status',
-                                        'when_to_use': 'Questions about orders, order status, or fulfillment',
+                                        'summary': 'Shopify orders with line items, totals, payment status, and fulfillment status',
+                                        'when_to_use': 'Questions about orders, order status, totals, payment, or fulfillment progress',
                                         'trigger_phrases': [
                                             'shopify order',
                                             'order status',
                                             'fulfillment',
                                             'purchase',
+                                            'order total',
+                                            'recent orders',
                                         ],
                                         'freshness': 'live',
-                                        'example_questions': ['Show recent Shopify orders', 'What is the status of an order?'],
-                                        'search_strategy': 'Search by order number or filter by status, date, or customer',
+                                        'example_questions': ['Show recent Shopify orders', 'What is the status of an order?', 'Which orders are unfulfilled?'],
+                                        'search_strategy': 'Search by order number/name or filter by financial_status, fulfillment_status, date, or customer. Default REST window is the last 60 days unless read_all_orders is granted',
                                     },
                                 },
                             },
@@ -2573,12 +3008,18 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                                 'x-airbyte-entity-name': 'customers',
                                                 'x-airbyte-stream-name': 'customers',
                                                 'x-airbyte-ai-hints': {
-                                                    'summary': 'Shopify customers with order history and contact information',
-                                                    'when_to_use': 'Looking up customer details or purchase history',
-                                                    'trigger_phrases': ['shopify customer', 'buyer', 'customer info'],
+                                                    'summary': 'Shopify customers with contact info, addresses, order history, and marketing consent',
+                                                    'when_to_use': 'Looking up customer details, contact information, purchase history, or marketing status',
+                                                    'trigger_phrases': [
+                                                        'shopify customer',
+                                                        'buyer',
+                                                        'customer info',
+                                                        'customer email',
+                                                        'customer list',
+                                                    ],
                                                     'freshness': 'live',
-                                                    'example_questions': ['Find a customer in Shopify', 'Show customer order history'],
-                                                    'search_strategy': 'Search by email, name, or phone',
+                                                    'example_questions': ['Find a customer in Shopify', "Show a customer's order history", 'List customers who joined this month'],
+                                                    'search_strategy': 'Search by email, name, or phone; filter by created/updated date',
                                                 },
                                             },
                                             {'type': 'null'},
@@ -2772,12 +3213,18 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                             'x-airbyte-entity-name': 'fulfillments',
                                             'x-airbyte-stream-name': 'fulfillments',
                                             'x-airbyte-ai-hints': {
-                                                'summary': 'Order fulfillments with tracking and shipping details',
-                                                'when_to_use': 'Questions about shipping status or fulfillment tracking',
-                                                'trigger_phrases': ['fulfillment', 'shipping status', 'tracking number'],
+                                                'summary': 'Fulfillment records for an order — shipped items, tracking numbers, and carrier',
+                                                'when_to_use': 'Questions about shipments, tracking numbers, or what has shipped on an order',
+                                                'trigger_phrases': [
+                                                    'fulfillment',
+                                                    'shipment',
+                                                    'tracking number',
+                                                    'what shipped',
+                                                    'carrier',
+                                                ],
                                                 'freshness': 'live',
-                                                'example_questions': ['What is the shipping status of an order?'],
-                                                'search_strategy': 'Filter by order',
+                                                'example_questions': ['Show fulfillments for an order', 'What is the tracking number for a shipment?'],
+                                                'search_strategy': 'Filter by order_id; an order can have multiple fulfillments',
                                             },
                                         },
                                     },
@@ -3081,12 +3528,18 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                                         'x-airbyte-entity-name': 'transactions',
                                                         'x-airbyte-stream-name': 'transactions',
                                                         'x-airbyte-ai-hints': {
-                                                            'summary': 'Payment transactions on Shopify orders',
-                                                            'when_to_use': 'Questions about payment processing or transaction details',
-                                                            'trigger_phrases': ['shopify transaction', 'payment', 'charge'],
+                                                            'summary': 'Payment transactions for an order (authorizations, captures, sales, refunds, voids)',
+                                                            'when_to_use': 'Questions about how an order was paid, gateway, or transaction amounts',
+                                                            'trigger_phrases': [
+                                                                'order transaction',
+                                                                'payment',
+                                                                'capture',
+                                                                'authorization',
+                                                                'how was an order paid',
+                                                            ],
                                                             'freshness': 'live',
-                                                            'example_questions': ['Show transactions for an order'],
-                                                            'search_strategy': 'Filter by order',
+                                                            'example_questions': ['Show payment transactions for an order', "Was an order's payment captured?"],
+                                                            'search_strategy': 'Filter by order_id; transactions show kind (sale, authorization, capture, refund, void) and gateway',
                                                         },
                                                     },
                                                 },
@@ -3106,12 +3559,17 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                             'x-airbyte-entity-name': 'order_refunds',
                                             'x-airbyte-stream-name': 'order_refunds',
                                             'x-airbyte-ai-hints': {
-                                                'summary': 'Refunds processed for Shopify orders',
-                                                'when_to_use': 'Questions about refunds or return processing',
-                                                'trigger_phrases': ['refund', 'order refund', 'return'],
+                                                'summary': 'Refunds issued against a Shopify order, including refunded line items and amounts',
+                                                'when_to_use': 'Questions about refunds, returned money, or what was refunded on an order',
+                                                'trigger_phrases': [
+                                                    'refund',
+                                                    'refunded amount',
+                                                    'order refund',
+                                                    'money back',
+                                                ],
                                                 'freshness': 'live',
-                                                'example_questions': ['What refunds were processed for an order?'],
-                                                'search_strategy': 'Filter by order',
+                                                'example_questions': ['Show refunds for an order', 'How much was refunded on an order?'],
+                                                'search_strategy': 'Filter by order_id; each order may have multiple partial refunds',
                                             },
                                         },
                                     },
@@ -3313,22 +3771,287 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                 'x-airbyte-entity-name': 'orders',
                                 'x-airbyte-stream-name': 'orders',
                                 'x-airbyte-ai-hints': {
-                                    'summary': 'Shopify orders with line items, payment, and fulfillment status',
-                                    'when_to_use': 'Questions about orders, order status, or fulfillment',
+                                    'summary': 'Shopify orders with line items, totals, payment status, and fulfillment status',
+                                    'when_to_use': 'Questions about orders, order status, totals, payment, or fulfillment progress',
                                     'trigger_phrases': [
                                         'shopify order',
                                         'order status',
                                         'fulfillment',
                                         'purchase',
+                                        'order total',
+                                        'recent orders',
                                     ],
                                     'freshness': 'live',
-                                    'example_questions': ['Show recent Shopify orders', 'What is the status of an order?'],
-                                    'search_strategy': 'Search by order number or filter by status, date, or customer',
+                                    'example_questions': ['Show recent Shopify orders', 'What is the status of an order?', 'Which orders are unfulfilled?'],
+                                    'search_strategy': 'Search by order number/name or filter by financial_status, fulfillment_status, date, or customer. Default REST window is the last 60 days unless read_all_orders is granted',
                                 },
                             },
                         },
                     },
                     record_extractor='$.order',
+                ),
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/graphql.json:orderCreate',
+                    path_override=PathOverrideConfig(
+                        path='/graphql.json',
+                    ),
+                    action=Action.CREATE,
+                    description='Creates a new order via GraphQL mutation.\nUse line items with either variantId or customAttributes.\n',
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'orderCreate': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'userErrors': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'field': {
+                                                            'type': ['string', 'null', 'array'],
+                                                            'description': 'Path to the input field that caused the error',
+                                                        },
+                                                        'message': {'type': 'string', 'description': 'Error message'},
+                                                        'code': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Error code',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            'order': {
+                                                'type': 'object',
+                                                'properties': {
+                                                    'id': {'type': 'string'},
+                                                    'name': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'email': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'createdAt': {
+                                                        'type': ['string', 'null'],
+                                                        'format': 'date-time',
+                                                    },
+                                                    'displayFinancialStatus': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'displayFulfillmentStatus': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'totalPriceSet': {
+                                                        'type': ['object', 'null'],
+                                                        'properties': {
+                                                            'shopMoney': {
+                                                                'type': 'object',
+                                                                'properties': {
+                                                                    'amount': {'type': 'string'},
+                                                                    'currencyCode': {'type': 'string'},
+                                                                },
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    graphql_body={
+                        'type': 'graphql',
+                        'query': 'mutation orderCreate($order: OrderCreateOrderInput!, $options: OrderCreateOptionsInput) { orderCreate(order: $order, options: $options) { userErrors { field message } order { id name email createdAt displayFinancialStatus displayFulfillmentStatus totalPriceSet { shopMoney { amount currencyCode } } } } }',
+                        'variables': {'order': '{{ order }}', 'options': '{{ options }}'},
+                    },
+                    record_extractor='$.data.orderCreate',
+                    ai_hints={
+                        'summary': 'Create a new Shopify order',
+                        'when_to_use': 'When the user asks to create an order directly (not a draft)',
+                        'trigger_phrases': ['create an order', 'place an order', 'new order'],
+                        'freshness': 'live',
+                        'example_questions': ['Create an order for a customer'],
+                        'search_strategy': "Use orders.create with line items and customer info. Requires write_orders scope. For quotes/invoices that aren't finalized, use draft_orders.create instead.",
+                    },
+                ),
+                Action.UPDATE: EndpointDefinition(
+                    method='POST',
+                    path='/graphql.json:orderUpdate',
+                    path_override=PathOverrideConfig(
+                        path='/graphql.json',
+                    ),
+                    action=Action.UPDATE,
+                    description='Updates simple fields on an existing order via GraphQL mutation.\nFor line item changes, use orderEditBegin/orderEditCommit instead.\n',
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'orderUpdate': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'userErrors': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'field': {
+                                                            'type': ['string', 'null', 'array'],
+                                                            'description': 'Path to the input field that caused the error',
+                                                        },
+                                                        'message': {'type': 'string', 'description': 'Error message'},
+                                                        'code': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Error code',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            'order': {
+                                                'type': 'object',
+                                                'properties': {
+                                                    'id': {'type': 'string'},
+                                                    'name': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'email': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'note': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'tags': {
+                                                        'type': 'array',
+                                                        'items': {'type': 'string'},
+                                                    },
+                                                    'createdAt': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'displayFinancialStatus': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'displayFulfillmentStatus': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    graphql_body={
+                        'type': 'graphql',
+                        'query': 'mutation orderUpdate($input: OrderInput!) { orderUpdate(input: $input) { userErrors { field message } order { id name email note tags createdAt displayFinancialStatus displayFulfillmentStatus } } }',
+                        'variables': {'input': '{{ input }}'},
+                    },
+                    record_extractor='$.data.orderUpdate',
+                    ai_hints={
+                        'summary': 'Update an existing Shopify order',
+                        'when_to_use': 'When the user asks to edit order attributes like tags, note, email, or shipping address',
+                        'trigger_phrases': [
+                            'update an order',
+                            'edit order',
+                            'add a note to an order',
+                            'tag an order',
+                        ],
+                        'freshness': 'live',
+                        'example_questions': ['Add a note to an order', 'Tag an order as priority'],
+                        'search_strategy': 'Use orders.update with the order GID and changed fields. Requires write_orders scope. Note: line-item edits after creation are not supported here.',
+                    },
+                ),
+                Action.DELETE: EndpointDefinition(
+                    method='POST',
+                    path='/graphql.json:orderCancel',
+                    path_override=PathOverrideConfig(
+                        path='/graphql.json',
+                    ),
+                    action=Action.DELETE,
+                    description='Cancels an open order via GraphQL mutation.\nThis action is irreversible. Optional refund and restock parameters.\n',
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'orderCancel': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'userErrors': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'field': {
+                                                            'type': ['string', 'null', 'array'],
+                                                            'description': 'Path to the input field that caused the error',
+                                                        },
+                                                        'message': {'type': 'string', 'description': 'Error message'},
+                                                        'code': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Error code',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            'orderCancelUserErrors': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'field': {
+                                                            'type': ['string', 'null', 'array'],
+                                                            'description': 'Path to the input field that caused the error',
+                                                        },
+                                                        'message': {'type': 'string', 'description': 'Error message'},
+                                                        'code': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Error code',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            'job': {
+                                                'type': ['object', 'null'],
+                                                'properties': {
+                                                    'id': {'type': 'string'},
+                                                    'done': {'type': 'boolean'},
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    graphql_body={
+                        'type': 'graphql',
+                        'query': 'mutation orderCancel($orderId: ID!, $reason: OrderCancelReason!, $notifyCustomer: Boolean, $refund: Boolean, $restock: Boolean!, $staffNote: String) { orderCancel(orderId: $orderId, reason: $reason, notifyCustomer: $notifyCustomer, refund: $refund, restock: $restock, staffNote: $staffNote) { userErrors { field message } orderCancelUserErrors { field message code } job { id done } } }',
+                        'variables': {
+                            'orderId': '{{ orderId }}',
+                            'reason': '{{ reason }}',
+                            'notifyCustomer': '{{ notifyCustomer }}',
+                            'refund': '{{ refund }}',
+                            'restock': '{{ restock }}',
+                            'staffNote': '{{ staffNote }}',
+                        },
+                    },
+                    record_extractor='$.data.orderCancel',
+                    ai_hints={
+                        'summary': 'Cancel a Shopify order',
+                        'when_to_use': 'When the user asks to cancel an order',
+                        'trigger_phrases': ['cancel an order', 'void an order', 'stop an order'],
+                        'freshness': 'live',
+                        'example_questions': ['Cancel an order', 'Cancel an order and restock items'],
+                        'search_strategy': 'Use orders.delete (orderCancel) with the order GID and a reason; restock is required. Requires write_orders scope. This cancels, it does not hard-delete.',
+                    },
                 ),
             },
             entity_schema={
@@ -3640,37 +4363,47 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'orders',
                 'x-airbyte-stream-name': 'orders',
                 'x-airbyte-ai-hints': {
-                    'summary': 'Shopify orders with line items, payment, and fulfillment status',
-                    'when_to_use': 'Questions about orders, order status, or fulfillment',
+                    'summary': 'Shopify orders with line items, totals, payment status, and fulfillment status',
+                    'when_to_use': 'Questions about orders, order status, totals, payment, or fulfillment progress',
                     'trigger_phrases': [
                         'shopify order',
                         'order status',
                         'fulfillment',
                         'purchase',
+                        'order total',
+                        'recent orders',
                     ],
                     'freshness': 'live',
-                    'example_questions': ['Show recent Shopify orders', 'What is the status of an order?'],
-                    'search_strategy': 'Search by order number or filter by status, date, or customer',
+                    'example_questions': ['Show recent Shopify orders', 'What is the status of an order?', 'Which orders are unfulfilled?'],
+                    'search_strategy': 'Search by order number/name or filter by financial_status, fulfillment_status, date, or customer. Default REST window is the last 60 days unless read_all_orders is granted',
                 },
             },
             ai_hints={
-                'summary': 'Shopify orders with line items, payment, and fulfillment status',
-                'when_to_use': 'Questions about orders, order status, or fulfillment',
+                'summary': 'Shopify orders with line items, totals, payment status, and fulfillment status',
+                'when_to_use': 'Questions about orders, order status, totals, payment, or fulfillment progress',
                 'trigger_phrases': [
                     'shopify order',
                     'order status',
                     'fulfillment',
                     'purchase',
+                    'order total',
+                    'recent orders',
                 ],
                 'freshness': 'live',
-                'example_questions': ['Show recent Shopify orders', 'What is the status of an order?'],
-                'search_strategy': 'Search by order number or filter by status, date, or customer',
+                'example_questions': ['Show recent Shopify orders', 'What is the status of an order?', 'Which orders are unfulfilled?'],
+                'search_strategy': 'Search by order number/name or filter by financial_status, fulfillment_status, date, or customer. Default REST window is the last 60 days unless read_all_orders is granted',
             },
         ),
         EntityDefinition(
             name='products',
             stream_name='products',
-            actions=[Action.LIST, Action.GET],
+            actions=[
+                Action.LIST,
+                Action.GET,
+                Action.CREATE,
+                Action.UPDATE,
+                Action.DELETE,
+            ],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
@@ -3906,17 +4639,19 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                                 'x-airbyte-entity-name': 'product_variants',
                                                 'x-airbyte-stream-name': 'product_variants',
                                                 'x-airbyte-ai-hints': {
-                                                    'summary': 'Product variants with size, color, SKU, and inventory details',
-                                                    'when_to_use': 'Questions about product options, SKUs, or variant-level data',
+                                                    'summary': 'Product variants with SKU, price, option values (size/color), barcode, and inventory linkage',
+                                                    'when_to_use': 'Questions about product options, SKUs, per-variant price, or variant-level inventory',
                                                     'trigger_phrases': [
                                                         'product variant',
                                                         'SKU',
                                                         'size',
                                                         'color option',
+                                                        'variant price',
+                                                        'barcode',
                                                     ],
                                                     'freshness': 'live',
-                                                    'example_questions': ['What variants does a product have?'],
-                                                    'search_strategy': 'Filter by product',
+                                                    'example_questions': ['What variants does a product have?', 'Find a variant by SKU'],
+                                                    'search_strategy': 'Filter by product_id; each variant links to an inventory_item for stock',
                                                 },
                                             },
                                         },
@@ -3978,12 +4713,17 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                                 'x-airbyte-entity-name': 'product_images',
                                                 'x-airbyte-stream-name': 'product_images',
                                                 'x-airbyte-ai-hints': {
-                                                    'summary': 'Product images attached to Shopify products',
-                                                    'when_to_use': 'Looking for product photos or image assets',
-                                                    'trigger_phrases': ['product image', 'product photo'],
+                                                    'summary': 'Image assets attached to Shopify products, with src URL, alt text, and position',
+                                                    'when_to_use': 'Looking for product photos, image URLs, or alt text',
+                                                    'trigger_phrases': [
+                                                        'product image',
+                                                        'product photo',
+                                                        'image url',
+                                                        'product picture',
+                                                    ],
                                                     'freshness': 'live',
-                                                    'example_questions': ['Show images for a product'],
-                                                    'search_strategy': 'Filter by product',
+                                                    'example_questions': ['Show images for a product', 'Get the main photo URL for a product'],
+                                                    'search_strategy': 'Filter by product_id; images are ordered by position',
                                                 },
                                             },
                                         },
@@ -4041,12 +4781,17 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                                     'x-airbyte-entity-name': 'product_images',
                                                     'x-airbyte-stream-name': 'product_images',
                                                     'x-airbyte-ai-hints': {
-                                                        'summary': 'Product images attached to Shopify products',
-                                                        'when_to_use': 'Looking for product photos or image assets',
-                                                        'trigger_phrases': ['product image', 'product photo'],
+                                                        'summary': 'Image assets attached to Shopify products, with src URL, alt text, and position',
+                                                        'when_to_use': 'Looking for product photos, image URLs, or alt text',
+                                                        'trigger_phrases': [
+                                                            'product image',
+                                                            'product photo',
+                                                            'image url',
+                                                            'product picture',
+                                                        ],
                                                         'freshness': 'live',
-                                                        'example_questions': ['Show images for a product'],
-                                                        'search_strategy': 'Filter by product',
+                                                        'example_questions': ['Show images for a product', 'Get the main photo URL for a product'],
+                                                        'search_strategy': 'Filter by product_id; images are ordered by position',
                                                     },
                                                 },
                                                 {'type': 'null'},
@@ -4057,17 +4802,19 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                     'x-airbyte-entity-name': 'products',
                                     'x-airbyte-stream-name': 'products',
                                     'x-airbyte-ai-hints': {
-                                        'summary': 'Shopify products with title, description, pricing, and inventory',
-                                        'when_to_use': 'Questions about products, pricing, or product catalog',
+                                        'summary': 'Shopify products with title, description, vendor, type, status, images, and variants',
+                                        'when_to_use': 'Questions about products, the product catalog, pricing, or product status',
                                         'trigger_phrases': [
                                             'shopify product',
                                             'product details',
                                             'pricing',
                                             'catalog',
+                                            'product list',
+                                            'what do I sell',
                                         ],
                                         'freshness': 'live',
-                                        'example_questions': ['List Shopify products', 'What is the price of a product?'],
-                                        'search_strategy': 'Search by title or filter by type, vendor, or status',
+                                        'example_questions': ['List Shopify products', 'What is the price of a product?', 'Show draft products'],
+                                        'search_strategy': 'Search by title or filter by product_type, vendor, or status (active/draft/archived)',
                                     },
                                 },
                             },
@@ -4262,17 +5009,19 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                             'x-airbyte-entity-name': 'product_variants',
                                             'x-airbyte-stream-name': 'product_variants',
                                             'x-airbyte-ai-hints': {
-                                                'summary': 'Product variants with size, color, SKU, and inventory details',
-                                                'when_to_use': 'Questions about product options, SKUs, or variant-level data',
+                                                'summary': 'Product variants with SKU, price, option values (size/color), barcode, and inventory linkage',
+                                                'when_to_use': 'Questions about product options, SKUs, per-variant price, or variant-level inventory',
                                                 'trigger_phrases': [
                                                     'product variant',
                                                     'SKU',
                                                     'size',
                                                     'color option',
+                                                    'variant price',
+                                                    'barcode',
                                                 ],
                                                 'freshness': 'live',
-                                                'example_questions': ['What variants does a product have?'],
-                                                'search_strategy': 'Filter by product',
+                                                'example_questions': ['What variants does a product have?', 'Find a variant by SKU'],
+                                                'search_strategy': 'Filter by product_id; each variant links to an inventory_item for stock',
                                             },
                                         },
                                     },
@@ -4334,12 +5083,17 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                             'x-airbyte-entity-name': 'product_images',
                                             'x-airbyte-stream-name': 'product_images',
                                             'x-airbyte-ai-hints': {
-                                                'summary': 'Product images attached to Shopify products',
-                                                'when_to_use': 'Looking for product photos or image assets',
-                                                'trigger_phrases': ['product image', 'product photo'],
+                                                'summary': 'Image assets attached to Shopify products, with src URL, alt text, and position',
+                                                'when_to_use': 'Looking for product photos, image URLs, or alt text',
+                                                'trigger_phrases': [
+                                                    'product image',
+                                                    'product photo',
+                                                    'image url',
+                                                    'product picture',
+                                                ],
                                                 'freshness': 'live',
-                                                'example_questions': ['Show images for a product'],
-                                                'search_strategy': 'Filter by product',
+                                                'example_questions': ['Show images for a product', 'Get the main photo URL for a product'],
+                                                'search_strategy': 'Filter by product_id; images are ordered by position',
                                             },
                                         },
                                     },
@@ -4397,12 +5151,17 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                                 'x-airbyte-entity-name': 'product_images',
                                                 'x-airbyte-stream-name': 'product_images',
                                                 'x-airbyte-ai-hints': {
-                                                    'summary': 'Product images attached to Shopify products',
-                                                    'when_to_use': 'Looking for product photos or image assets',
-                                                    'trigger_phrases': ['product image', 'product photo'],
+                                                    'summary': 'Image assets attached to Shopify products, with src URL, alt text, and position',
+                                                    'when_to_use': 'Looking for product photos, image URLs, or alt text',
+                                                    'trigger_phrases': [
+                                                        'product image',
+                                                        'product photo',
+                                                        'image url',
+                                                        'product picture',
+                                                    ],
                                                     'freshness': 'live',
-                                                    'example_questions': ['Show images for a product'],
-                                                    'search_strategy': 'Filter by product',
+                                                    'example_questions': ['Show images for a product', 'Get the main photo URL for a product'],
+                                                    'search_strategy': 'Filter by product_id; images are ordered by position',
                                                 },
                                             },
                                             {'type': 'null'},
@@ -4413,22 +5172,382 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                 'x-airbyte-entity-name': 'products',
                                 'x-airbyte-stream-name': 'products',
                                 'x-airbyte-ai-hints': {
-                                    'summary': 'Shopify products with title, description, pricing, and inventory',
-                                    'when_to_use': 'Questions about products, pricing, or product catalog',
+                                    'summary': 'Shopify products with title, description, vendor, type, status, images, and variants',
+                                    'when_to_use': 'Questions about products, the product catalog, pricing, or product status',
                                     'trigger_phrases': [
                                         'shopify product',
                                         'product details',
                                         'pricing',
                                         'catalog',
+                                        'product list',
+                                        'what do I sell',
                                     ],
                                     'freshness': 'live',
-                                    'example_questions': ['List Shopify products', 'What is the price of a product?'],
-                                    'search_strategy': 'Search by title or filter by type, vendor, or status',
+                                    'example_questions': ['List Shopify products', 'What is the price of a product?', 'Show draft products'],
+                                    'search_strategy': 'Search by title or filter by product_type, vendor, or status (active/draft/archived)',
                                 },
                             },
                         },
                     },
                     record_extractor='$.product',
+                ),
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/graphql.json:productCreate',
+                    path_override=PathOverrideConfig(
+                        path='/graphql.json',
+                    ),
+                    action=Action.CREATE,
+                    description='Creates a new product via GraphQL mutation.\nCreates the product with a default variant. Use productVariantsBulkCreate\nto add additional variants afterwards.\n',
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'productCreate': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'userErrors': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'field': {
+                                                            'type': ['string', 'null', 'array'],
+                                                            'description': 'Path to the input field that caused the error',
+                                                        },
+                                                        'message': {'type': 'string', 'description': 'Error message'},
+                                                        'code': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Error code',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            'product': {
+                                                'type': 'object',
+                                                'description': 'Product returned from GraphQL mutation',
+                                                'properties': {
+                                                    'id': {'type': 'string', 'description': 'GraphQL GID'},
+                                                    'title': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'descriptionHtml': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'vendor': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'productType': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'tags': {
+                                                        'type': 'array',
+                                                        'items': {'type': 'string'},
+                                                    },
+                                                    'status': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'createdAt': {
+                                                        'type': ['string', 'null'],
+                                                        'format': 'date-time',
+                                                    },
+                                                    'updatedAt': {
+                                                        'type': ['string', 'null'],
+                                                        'format': 'date-time',
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                    'productUpdate': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'userErrors': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'field': {
+                                                            'type': ['string', 'null', 'array'],
+                                                            'description': 'Path to the input field that caused the error',
+                                                        },
+                                                        'message': {'type': 'string', 'description': 'Error message'},
+                                                        'code': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Error code',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            'product': {
+                                                'type': 'object',
+                                                'description': 'Product returned from GraphQL mutation',
+                                                'properties': {
+                                                    'id': {'type': 'string', 'description': 'GraphQL GID'},
+                                                    'title': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'descriptionHtml': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'vendor': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'productType': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'tags': {
+                                                        'type': 'array',
+                                                        'items': {'type': 'string'},
+                                                    },
+                                                    'status': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'createdAt': {
+                                                        'type': ['string', 'null'],
+                                                        'format': 'date-time',
+                                                    },
+                                                    'updatedAt': {
+                                                        'type': ['string', 'null'],
+                                                        'format': 'date-time',
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    graphql_body={
+                        'type': 'graphql',
+                        'query': 'mutation productCreate($product: ProductCreateInput!, $media: [CreateMediaInput!]) { productCreate(product: $product, media: $media) { userErrors { field message } product { id title descriptionHtml vendor productType tags status createdAt updatedAt } } }',
+                        'variables': {'product': '{{ product }}', 'media': '{{ media }}'},
+                    },
+                    record_extractor='$.data.productCreate',
+                    ai_hints={
+                        'summary': 'Create a new Shopify product',
+                        'when_to_use': 'When the user asks to add, create, or list a new product',
+                        'trigger_phrases': [
+                            'create a product',
+                            'add a product',
+                            'new product',
+                            'list a new item',
+                        ],
+                        'freshness': 'live',
+                        'example_questions': ["Create a product called 'Summer T-Shirt'"],
+                        'search_strategy': 'Use products.create with a title (required) and optional descriptionHtml, vendor, productType, status. Requires write_products scope. Add variants via product_variants.create.',
+                    },
+                ),
+                Action.UPDATE: EndpointDefinition(
+                    method='POST',
+                    path='/graphql.json:productUpdate',
+                    path_override=PathOverrideConfig(
+                        path='/graphql.json',
+                    ),
+                    action=Action.UPDATE,
+                    description='Updates an existing product via GraphQL mutation.\nAll fields except id are optional for partial updates.\n',
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'productCreate': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'userErrors': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'field': {
+                                                            'type': ['string', 'null', 'array'],
+                                                            'description': 'Path to the input field that caused the error',
+                                                        },
+                                                        'message': {'type': 'string', 'description': 'Error message'},
+                                                        'code': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Error code',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            'product': {
+                                                'type': 'object',
+                                                'description': 'Product returned from GraphQL mutation',
+                                                'properties': {
+                                                    'id': {'type': 'string', 'description': 'GraphQL GID'},
+                                                    'title': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'descriptionHtml': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'vendor': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'productType': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'tags': {
+                                                        'type': 'array',
+                                                        'items': {'type': 'string'},
+                                                    },
+                                                    'status': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'createdAt': {
+                                                        'type': ['string', 'null'],
+                                                        'format': 'date-time',
+                                                    },
+                                                    'updatedAt': {
+                                                        'type': ['string', 'null'],
+                                                        'format': 'date-time',
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                    'productUpdate': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'userErrors': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'field': {
+                                                            'type': ['string', 'null', 'array'],
+                                                            'description': 'Path to the input field that caused the error',
+                                                        },
+                                                        'message': {'type': 'string', 'description': 'Error message'},
+                                                        'code': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Error code',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            'product': {
+                                                'type': 'object',
+                                                'description': 'Product returned from GraphQL mutation',
+                                                'properties': {
+                                                    'id': {'type': 'string', 'description': 'GraphQL GID'},
+                                                    'title': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'descriptionHtml': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'vendor': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'productType': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'tags': {
+                                                        'type': 'array',
+                                                        'items': {'type': 'string'},
+                                                    },
+                                                    'status': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'createdAt': {
+                                                        'type': ['string', 'null'],
+                                                        'format': 'date-time',
+                                                    },
+                                                    'updatedAt': {
+                                                        'type': ['string', 'null'],
+                                                        'format': 'date-time',
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    graphql_body={
+                        'type': 'graphql',
+                        'query': 'mutation productUpdate($product: ProductUpdateInput!) { productUpdate(product: $product) { userErrors { field message } product { id title descriptionHtml vendor productType tags status createdAt updatedAt } } }',
+                        'variables': {'product': '{{ product }}'},
+                    },
+                    record_extractor='$.data.productUpdate',
+                    ai_hints={
+                        'summary': 'Update an existing Shopify product',
+                        'when_to_use': "When the user asks to edit a product's title, description, status, or other fields",
+                        'trigger_phrases': [
+                            'update a product',
+                            'edit product',
+                            'change product title',
+                            'publish a product',
+                        ],
+                        'freshness': 'live',
+                        'example_questions': ['Update a product title', 'Set a product to active'],
+                        'search_strategy': 'Use products.update with the product GID and changed fields. Requires write_products scope.',
+                    },
+                ),
+                Action.DELETE: EndpointDefinition(
+                    method='POST',
+                    path='/graphql.json:productDelete',
+                    path_override=PathOverrideConfig(
+                        path='/graphql.json',
+                    ),
+                    action=Action.DELETE,
+                    description='Deletes a product from the store via GraphQL mutation.\nThis action is irreversible.\n',
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'productDelete': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'userErrors': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'field': {
+                                                            'type': ['string', 'null', 'array'],
+                                                            'description': 'Path to the input field that caused the error',
+                                                        },
+                                                        'message': {'type': 'string', 'description': 'Error message'},
+                                                        'code': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Error code',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            'deletedProductId': {
+                                                'type': ['string', 'null'],
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    graphql_body={
+                        'type': 'graphql',
+                        'query': 'mutation productDelete($input: ProductDeleteInput!) { productDelete(input: $input) { userErrors { field message } deletedProductId } }',
+                        'variables': {'input': '{{ input }}'},
+                    },
+                    record_extractor='$.data.productDelete',
+                    ai_hints={
+                        'summary': 'Delete a Shopify product',
+                        'when_to_use': 'When the user asks to remove or delete a product',
+                        'trigger_phrases': ['delete a product', 'remove product', 'archive vs delete a product'],
+                        'freshness': 'live',
+                        'example_questions': ['Delete a product from the catalog'],
+                        'search_strategy': 'Use products.delete with the product GID. Irreversible and removes variants. Requires write_products scope.',
+                    },
                 ),
             },
             entity_schema={
@@ -4514,37 +5633,47 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'products',
                 'x-airbyte-stream-name': 'products',
                 'x-airbyte-ai-hints': {
-                    'summary': 'Shopify products with title, description, pricing, and inventory',
-                    'when_to_use': 'Questions about products, pricing, or product catalog',
+                    'summary': 'Shopify products with title, description, vendor, type, status, images, and variants',
+                    'when_to_use': 'Questions about products, the product catalog, pricing, or product status',
                     'trigger_phrases': [
                         'shopify product',
                         'product details',
                         'pricing',
                         'catalog',
+                        'product list',
+                        'what do I sell',
                     ],
                     'freshness': 'live',
-                    'example_questions': ['List Shopify products', 'What is the price of a product?'],
-                    'search_strategy': 'Search by title or filter by type, vendor, or status',
+                    'example_questions': ['List Shopify products', 'What is the price of a product?', 'Show draft products'],
+                    'search_strategy': 'Search by title or filter by product_type, vendor, or status (active/draft/archived)',
                 },
             },
             ai_hints={
-                'summary': 'Shopify products with title, description, pricing, and inventory',
-                'when_to_use': 'Questions about products, pricing, or product catalog',
+                'summary': 'Shopify products with title, description, vendor, type, status, images, and variants',
+                'when_to_use': 'Questions about products, the product catalog, pricing, or product status',
                 'trigger_phrases': [
                     'shopify product',
                     'product details',
                     'pricing',
                     'catalog',
+                    'product list',
+                    'what do I sell',
                 ],
                 'freshness': 'live',
-                'example_questions': ['List Shopify products', 'What is the price of a product?'],
-                'search_strategy': 'Search by title or filter by type, vendor, or status',
+                'example_questions': ['List Shopify products', 'What is the price of a product?', 'Show draft products'],
+                'search_strategy': 'Search by title or filter by product_type, vendor, or status (active/draft/archived)',
             },
         ),
         EntityDefinition(
             name='product_variants',
             stream_name='product_variants',
-            actions=[Action.LIST, Action.GET],
+            actions=[
+                Action.LIST,
+                Action.GET,
+                Action.CREATE,
+                Action.UPDATE,
+                Action.DELETE,
+            ],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
@@ -4683,17 +5812,19 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                     'x-airbyte-entity-name': 'product_variants',
                                     'x-airbyte-stream-name': 'product_variants',
                                     'x-airbyte-ai-hints': {
-                                        'summary': 'Product variants with size, color, SKU, and inventory details',
-                                        'when_to_use': 'Questions about product options, SKUs, or variant-level data',
+                                        'summary': 'Product variants with SKU, price, option values (size/color), barcode, and inventory linkage',
+                                        'when_to_use': 'Questions about product options, SKUs, per-variant price, or variant-level inventory',
                                         'trigger_phrases': [
                                             'product variant',
                                             'SKU',
                                             'size',
                                             'color option',
+                                            'variant price',
+                                            'barcode',
                                         ],
                                         'freshness': 'live',
-                                        'example_questions': ['What variants does a product have?'],
-                                        'search_strategy': 'Filter by product',
+                                        'example_questions': ['What variants does a product have?', 'Find a variant by SKU'],
+                                        'search_strategy': 'Filter by product_id; each variant links to an inventory_item for stock',
                                     },
                                 },
                             },
@@ -4826,22 +5957,360 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                 'x-airbyte-entity-name': 'product_variants',
                                 'x-airbyte-stream-name': 'product_variants',
                                 'x-airbyte-ai-hints': {
-                                    'summary': 'Product variants with size, color, SKU, and inventory details',
-                                    'when_to_use': 'Questions about product options, SKUs, or variant-level data',
+                                    'summary': 'Product variants with SKU, price, option values (size/color), barcode, and inventory linkage',
+                                    'when_to_use': 'Questions about product options, SKUs, per-variant price, or variant-level inventory',
                                     'trigger_phrases': [
                                         'product variant',
                                         'SKU',
                                         'size',
                                         'color option',
+                                        'variant price',
+                                        'barcode',
                                     ],
                                     'freshness': 'live',
-                                    'example_questions': ['What variants does a product have?'],
-                                    'search_strategy': 'Filter by product',
+                                    'example_questions': ['What variants does a product have?', 'Find a variant by SKU'],
+                                    'search_strategy': 'Filter by product_id; each variant links to an inventory_item for stock',
                                 },
                             },
                         },
                     },
                     record_extractor='$.variant',
+                ),
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/graphql.json:productVariantsBulkCreate',
+                    path_override=PathOverrideConfig(
+                        path='/graphql.json',
+                    ),
+                    action=Action.CREATE,
+                    description='Creates one or more product variants via GraphQL mutation.\nVariants are created in bulk for a given product.\n',
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'productVariantsBulkCreate': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'userErrors': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'field': {
+                                                            'type': ['string', 'null', 'array'],
+                                                            'description': 'Path to the input field that caused the error',
+                                                        },
+                                                        'message': {'type': 'string', 'description': 'Error message'},
+                                                        'code': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Error code',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            'productVariants': {
+                                                'type': ['array', 'null'],
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'id': {'type': 'string'},
+                                                        'title': {
+                                                            'type': ['string', 'null'],
+                                                        },
+                                                        'price': {
+                                                            'type': ['string', 'null'],
+                                                        },
+                                                        'sku': {
+                                                            'type': ['string', 'null'],
+                                                        },
+                                                        'barcode': {
+                                                            'type': ['string', 'null'],
+                                                        },
+                                                        'compareAtPrice': {
+                                                            'type': ['string', 'null'],
+                                                        },
+                                                        'inventoryQuantity': {
+                                                            'type': ['integer', 'null'],
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                    'productVariantsBulkUpdate': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'userErrors': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'field': {
+                                                            'type': ['string', 'null', 'array'],
+                                                            'description': 'Path to the input field that caused the error',
+                                                        },
+                                                        'message': {'type': 'string', 'description': 'Error message'},
+                                                        'code': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Error code',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            'productVariants': {
+                                                'type': ['array', 'null'],
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'id': {'type': 'string'},
+                                                        'title': {
+                                                            'type': ['string', 'null'],
+                                                        },
+                                                        'price': {
+                                                            'type': ['string', 'null'],
+                                                        },
+                                                        'sku': {
+                                                            'type': ['string', 'null'],
+                                                        },
+                                                        'barcode': {
+                                                            'type': ['string', 'null'],
+                                                        },
+                                                        'compareAtPrice': {
+                                                            'type': ['string', 'null'],
+                                                        },
+                                                        'inventoryQuantity': {
+                                                            'type': ['integer', 'null'],
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    graphql_body={
+                        'type': 'graphql',
+                        'query': 'mutation productVariantsBulkCreate($productId: ID!, $variants: [ProductVariantsBulkInput!]!) { productVariantsBulkCreate(productId: $productId, variants: $variants) { userErrors { field message } productVariants { id title price sku barcode compareAtPrice inventoryQuantity } } }',
+                        'variables': {'productId': '{{ productId }}', 'variants': '{{ variants }}'},
+                    },
+                    record_extractor='$.data.productVariantsBulkCreate',
+                    ai_hints={
+                        'summary': 'Create one or more variants on a product (bulk)',
+                        'when_to_use': 'When the user asks to add size/color or other variants to a product',
+                        'trigger_phrases': [
+                            'add a variant',
+                            'create variants',
+                            'add size option',
+                            'add color option',
+                        ],
+                        'freshness': 'live',
+                        'example_questions': ["Add a 'Large / Blue' variant to a product", 'Add a variant priced at 24.99 to a product'],
+                        'search_strategy': "Use product_variants.create with productId and a variants array (productVariantsBulkCreate). Each variant must include optionValues with one entry per product option (optionName + name); a product with Color and Size options needs both, and a single-option product needs a 'Title' entry. price/barcode/compareAtPrice are optional. To set a SKU use inventoryItem.sku (a top-level sku is NOT a variant field in the current API and is ignored). Requires write_products scope.",
+                    },
+                ),
+                Action.UPDATE: EndpointDefinition(
+                    method='POST',
+                    path='/graphql.json:productVariantsBulkUpdate',
+                    path_override=PathOverrideConfig(
+                        path='/graphql.json',
+                    ),
+                    action=Action.UPDATE,
+                    description='Updates one or more product variants via GraphQL mutation.\nVariants are updated in bulk for a given product.\n',
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'productVariantsBulkCreate': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'userErrors': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'field': {
+                                                            'type': ['string', 'null', 'array'],
+                                                            'description': 'Path to the input field that caused the error',
+                                                        },
+                                                        'message': {'type': 'string', 'description': 'Error message'},
+                                                        'code': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Error code',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            'productVariants': {
+                                                'type': ['array', 'null'],
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'id': {'type': 'string'},
+                                                        'title': {
+                                                            'type': ['string', 'null'],
+                                                        },
+                                                        'price': {
+                                                            'type': ['string', 'null'],
+                                                        },
+                                                        'sku': {
+                                                            'type': ['string', 'null'],
+                                                        },
+                                                        'barcode': {
+                                                            'type': ['string', 'null'],
+                                                        },
+                                                        'compareAtPrice': {
+                                                            'type': ['string', 'null'],
+                                                        },
+                                                        'inventoryQuantity': {
+                                                            'type': ['integer', 'null'],
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                    'productVariantsBulkUpdate': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'userErrors': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'field': {
+                                                            'type': ['string', 'null', 'array'],
+                                                            'description': 'Path to the input field that caused the error',
+                                                        },
+                                                        'message': {'type': 'string', 'description': 'Error message'},
+                                                        'code': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Error code',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            'productVariants': {
+                                                'type': ['array', 'null'],
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'id': {'type': 'string'},
+                                                        'title': {
+                                                            'type': ['string', 'null'],
+                                                        },
+                                                        'price': {
+                                                            'type': ['string', 'null'],
+                                                        },
+                                                        'sku': {
+                                                            'type': ['string', 'null'],
+                                                        },
+                                                        'barcode': {
+                                                            'type': ['string', 'null'],
+                                                        },
+                                                        'compareAtPrice': {
+                                                            'type': ['string', 'null'],
+                                                        },
+                                                        'inventoryQuantity': {
+                                                            'type': ['integer', 'null'],
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    graphql_body={
+                        'type': 'graphql',
+                        'query': 'mutation productVariantsBulkUpdate($productId: ID!, $variants: [ProductVariantsBulkInput!]!) { productVariantsBulkUpdate(productId: $productId, variants: $variants) { userErrors { field message } productVariants { id title price sku barcode compareAtPrice inventoryQuantity } } }',
+                        'variables': {'productId': '{{ productId }}', 'variants': '{{ variants }}'},
+                    },
+                    record_extractor='$.data.productVariantsBulkUpdate',
+                    ai_hints={
+                        'summary': 'Update one or more variants on a product (bulk)',
+                        'when_to_use': 'When the user asks to change variant price, SKU, or options',
+                        'trigger_phrases': [
+                            'update a variant',
+                            'change variant price',
+                            'edit SKU',
+                            'update variants',
+                        ],
+                        'freshness': 'live',
+                        'example_questions': ['Change the price of a variant', "Update a variant's SKU"],
+                        'search_strategy': 'Use product_variants.update with productId and a variants array of GIDs + changed fields (productVariantsBulkUpdate). To change a SKU set inventoryItem.sku, NOT a top-level sku (the latter is not a variant field in the current API and is silently ignored, returning a null result). price/barcode/compareAtPrice update at the variant level. Requires write_products scope.',
+                    },
+                ),
+                Action.DELETE: EndpointDefinition(
+                    method='POST',
+                    path='/graphql.json:productVariantsBulkDelete',
+                    path_override=PathOverrideConfig(
+                        path='/graphql.json',
+                    ),
+                    action=Action.DELETE,
+                    description='Deletes one or more product variants via GraphQL mutation.\nCannot delete the last variant of a product.\n',
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'productVariantsBulkDelete': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'userErrors': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'field': {
+                                                            'type': ['string', 'null', 'array'],
+                                                            'description': 'Path to the input field that caused the error',
+                                                        },
+                                                        'message': {'type': 'string', 'description': 'Error message'},
+                                                        'code': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Error code',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            'product': {
+                                                'type': ['object', 'null'],
+                                                'properties': {
+                                                    'id': {'type': 'string'},
+                                                    'title': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    graphql_body={
+                        'type': 'graphql',
+                        'query': 'mutation productVariantsBulkDelete($productId: ID!, $variantsIds: [ID!]!) { productVariantsBulkDelete(productId: $productId, variantsIds: $variantsIds) { userErrors { field message } product { id title } } }',
+                        'variables': {'productId': '{{ productId }}', 'variantsIds': '{{ variantsIds }}'},
+                    },
+                    record_extractor='$.data.productVariantsBulkDelete',
+                    ai_hints={
+                        'summary': 'Delete one or more variants from a product (bulk)',
+                        'when_to_use': 'When the user asks to remove variants from a product',
+                        'trigger_phrases': ['delete a variant', 'remove variants', 'drop a size option'],
+                        'freshness': 'live',
+                        'example_questions': ['Remove a variant from a product'],
+                        'search_strategy': 'Use product_variants.delete with productId and variantsIds (productVariantsBulkDelete). Requires write_products scope.',
+                    },
                 ),
             },
             entity_schema={
@@ -4956,31 +6425,35 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'product_variants',
                 'x-airbyte-stream-name': 'product_variants',
                 'x-airbyte-ai-hints': {
-                    'summary': 'Product variants with size, color, SKU, and inventory details',
-                    'when_to_use': 'Questions about product options, SKUs, or variant-level data',
+                    'summary': 'Product variants with SKU, price, option values (size/color), barcode, and inventory linkage',
+                    'when_to_use': 'Questions about product options, SKUs, per-variant price, or variant-level inventory',
                     'trigger_phrases': [
                         'product variant',
                         'SKU',
                         'size',
                         'color option',
+                        'variant price',
+                        'barcode',
                     ],
                     'freshness': 'live',
-                    'example_questions': ['What variants does a product have?'],
-                    'search_strategy': 'Filter by product',
+                    'example_questions': ['What variants does a product have?', 'Find a variant by SKU'],
+                    'search_strategy': 'Filter by product_id; each variant links to an inventory_item for stock',
                 },
             },
             ai_hints={
-                'summary': 'Product variants with size, color, SKU, and inventory details',
-                'when_to_use': 'Questions about product options, SKUs, or variant-level data',
+                'summary': 'Product variants with SKU, price, option values (size/color), barcode, and inventory linkage',
+                'when_to_use': 'Questions about product options, SKUs, per-variant price, or variant-level inventory',
                 'trigger_phrases': [
                     'product variant',
                     'SKU',
                     'size',
                     'color option',
+                    'variant price',
+                    'barcode',
                 ],
                 'freshness': 'live',
-                'example_questions': ['What variants does a product have?'],
-                'search_strategy': 'Filter by product',
+                'example_questions': ['What variants does a product have?', 'Find a variant by SKU'],
+                'search_strategy': 'Filter by product_id; each variant links to an inventory_item for stock',
             },
             relationships=[
                 EntityRelationshipConfig(
@@ -5066,12 +6539,17 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                     'x-airbyte-entity-name': 'product_images',
                                     'x-airbyte-stream-name': 'product_images',
                                     'x-airbyte-ai-hints': {
-                                        'summary': 'Product images attached to Shopify products',
-                                        'when_to_use': 'Looking for product photos or image assets',
-                                        'trigger_phrases': ['product image', 'product photo'],
+                                        'summary': 'Image assets attached to Shopify products, with src URL, alt text, and position',
+                                        'when_to_use': 'Looking for product photos, image URLs, or alt text',
+                                        'trigger_phrases': [
+                                            'product image',
+                                            'product photo',
+                                            'image url',
+                                            'product picture',
+                                        ],
                                         'freshness': 'live',
-                                        'example_questions': ['Show images for a product'],
-                                        'search_strategy': 'Filter by product',
+                                        'example_questions': ['Show images for a product', 'Get the main photo URL for a product'],
+                                        'search_strategy': 'Filter by product_id; images are ordered by position',
                                     },
                                 },
                             },
@@ -5145,12 +6623,17 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                 'x-airbyte-entity-name': 'product_images',
                                 'x-airbyte-stream-name': 'product_images',
                                 'x-airbyte-ai-hints': {
-                                    'summary': 'Product images attached to Shopify products',
-                                    'when_to_use': 'Looking for product photos or image assets',
-                                    'trigger_phrases': ['product image', 'product photo'],
+                                    'summary': 'Image assets attached to Shopify products, with src URL, alt text, and position',
+                                    'when_to_use': 'Looking for product photos, image URLs, or alt text',
+                                    'trigger_phrases': [
+                                        'product image',
+                                        'product photo',
+                                        'image url',
+                                        'product picture',
+                                    ],
                                     'freshness': 'live',
-                                    'example_questions': ['Show images for a product'],
-                                    'search_strategy': 'Filter by product',
+                                    'example_questions': ['Show images for a product', 'Get the main photo URL for a product'],
+                                    'search_strategy': 'Filter by product_id; images are ordered by position',
                                 },
                             },
                         },
@@ -5210,21 +6693,31 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'product_images',
                 'x-airbyte-stream-name': 'product_images',
                 'x-airbyte-ai-hints': {
-                    'summary': 'Product images attached to Shopify products',
-                    'when_to_use': 'Looking for product photos or image assets',
-                    'trigger_phrases': ['product image', 'product photo'],
+                    'summary': 'Image assets attached to Shopify products, with src URL, alt text, and position',
+                    'when_to_use': 'Looking for product photos, image URLs, or alt text',
+                    'trigger_phrases': [
+                        'product image',
+                        'product photo',
+                        'image url',
+                        'product picture',
+                    ],
                     'freshness': 'live',
-                    'example_questions': ['Show images for a product'],
-                    'search_strategy': 'Filter by product',
+                    'example_questions': ['Show images for a product', 'Get the main photo URL for a product'],
+                    'search_strategy': 'Filter by product_id; images are ordered by position',
                 },
             },
             ai_hints={
-                'summary': 'Product images attached to Shopify products',
-                'when_to_use': 'Looking for product photos or image assets',
-                'trigger_phrases': ['product image', 'product photo'],
+                'summary': 'Image assets attached to Shopify products, with src URL, alt text, and position',
+                'when_to_use': 'Looking for product photos, image URLs, or alt text',
+                'trigger_phrases': [
+                    'product image',
+                    'product photo',
+                    'image url',
+                    'product picture',
+                ],
                 'freshness': 'live',
-                'example_questions': ['Show images for a product'],
-                'search_strategy': 'Filter by product',
+                'example_questions': ['Show images for a product', 'Get the main photo URL for a product'],
+                'search_strategy': 'Filter by product_id; images are ordered by position',
             },
             relationships=[
                 EntityRelationshipConfig(
@@ -5936,12 +7429,18 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                                     'x-airbyte-entity-name': 'customers',
                                                     'x-airbyte-stream-name': 'customers',
                                                     'x-airbyte-ai-hints': {
-                                                        'summary': 'Shopify customers with order history and contact information',
-                                                        'when_to_use': 'Looking up customer details or purchase history',
-                                                        'trigger_phrases': ['shopify customer', 'buyer', 'customer info'],
+                                                        'summary': 'Shopify customers with contact info, addresses, order history, and marketing consent',
+                                                        'when_to_use': 'Looking up customer details, contact information, purchase history, or marketing status',
+                                                        'trigger_phrases': [
+                                                            'shopify customer',
+                                                            'buyer',
+                                                            'customer info',
+                                                            'customer email',
+                                                            'customer list',
+                                                        ],
                                                         'freshness': 'live',
-                                                        'example_questions': ['Find a customer in Shopify', 'Show customer order history'],
-                                                        'search_strategy': 'Search by email, name, or phone',
+                                                        'example_questions': ['Find a customer in Shopify', "Show a customer's order history", 'List customers who joined this month'],
+                                                        'search_strategy': 'Search by email, name, or phone; filter by created/updated date',
                                                     },
                                                 },
                                                 {'type': 'null'},
@@ -5955,12 +7454,17 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                     'x-airbyte-entity-name': 'abandoned_checkouts',
                                     'x-airbyte-stream-name': 'abandoned_checkouts',
                                     'x-airbyte-ai-hints': {
-                                        'summary': 'Abandoned checkout sessions with cart contents and customer info',
-                                        'when_to_use': 'Questions about abandoned carts or checkout drop-off',
-                                        'trigger_phrases': ['abandoned checkout', 'abandoned cart', 'cart recovery'],
+                                        'summary': 'Abandoned checkout sessions with cart contents, customer info, and recovery URL',
+                                        'when_to_use': 'Questions about abandoned carts, checkout drop-off, or cart recovery',
+                                        'trigger_phrases': [
+                                            'abandoned checkout',
+                                            'abandoned cart',
+                                            'cart recovery',
+                                            'incomplete checkout',
+                                        ],
                                         'freshness': 'live',
-                                        'example_questions': ['Show abandoned checkouts', 'How many carts were abandoned?'],
-                                        'search_strategy': 'Filter by date or customer',
+                                        'example_questions': ['Show abandoned checkouts this week', 'How many carts were abandoned?'],
+                                        'search_strategy': 'Filter by date or customer; includes a recovery_url for follow-up',
                                     },
                                 },
                             },
@@ -6130,21 +7634,31 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'abandoned_checkouts',
                 'x-airbyte-stream-name': 'abandoned_checkouts',
                 'x-airbyte-ai-hints': {
-                    'summary': 'Abandoned checkout sessions with cart contents and customer info',
-                    'when_to_use': 'Questions about abandoned carts or checkout drop-off',
-                    'trigger_phrases': ['abandoned checkout', 'abandoned cart', 'cart recovery'],
+                    'summary': 'Abandoned checkout sessions with cart contents, customer info, and recovery URL',
+                    'when_to_use': 'Questions about abandoned carts, checkout drop-off, or cart recovery',
+                    'trigger_phrases': [
+                        'abandoned checkout',
+                        'abandoned cart',
+                        'cart recovery',
+                        'incomplete checkout',
+                    ],
                     'freshness': 'live',
-                    'example_questions': ['Show abandoned checkouts', 'How many carts were abandoned?'],
-                    'search_strategy': 'Filter by date or customer',
+                    'example_questions': ['Show abandoned checkouts this week', 'How many carts were abandoned?'],
+                    'search_strategy': 'Filter by date or customer; includes a recovery_url for follow-up',
                 },
             },
             ai_hints={
-                'summary': 'Abandoned checkout sessions with cart contents and customer info',
-                'when_to_use': 'Questions about abandoned carts or checkout drop-off',
-                'trigger_phrases': ['abandoned checkout', 'abandoned cart', 'cart recovery'],
+                'summary': 'Abandoned checkout sessions with cart contents, customer info, and recovery URL',
+                'when_to_use': 'Questions about abandoned carts, checkout drop-off, or cart recovery',
+                'trigger_phrases': [
+                    'abandoned checkout',
+                    'abandoned cart',
+                    'cart recovery',
+                    'incomplete checkout',
+                ],
                 'freshness': 'live',
-                'example_questions': ['Show abandoned checkouts', 'How many carts were abandoned?'],
-                'search_strategy': 'Filter by date or customer',
+                'example_questions': ['Show abandoned checkouts this week', 'How many carts were abandoned?'],
+                'search_strategy': 'Filter by date or customer; includes a recovery_url for follow-up',
             },
         ),
         EntityDefinition(
@@ -6228,12 +7742,17 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                     'x-airbyte-entity-name': 'locations',
                                     'x-airbyte-stream-name': 'locations',
                                     'x-airbyte-ai-hints': {
-                                        'summary': 'Shopify store locations for inventory and fulfillment',
-                                        'when_to_use': 'Questions about store or warehouse locations',
-                                        'trigger_phrases': ['shopify location', 'warehouse', 'store location'],
+                                        'summary': 'Physical and logical store locations used for inventory and fulfillment',
+                                        'when_to_use': 'Questions about store, warehouse, or fulfillment locations and their addresses',
+                                        'trigger_phrases': [
+                                            'shopify location',
+                                            'warehouse',
+                                            'store location',
+                                            'fulfillment location',
+                                        ],
                                         'freshness': 'static',
-                                        'example_questions': ['What locations are configured in Shopify?'],
-                                        'search_strategy': 'List all locations',
+                                        'example_questions': ['What locations are configured in Shopify?', 'Which location fulfills orders?'],
+                                        'search_strategy': 'List all locations; the location id is required to read or set inventory levels',
                                     },
                                 },
                             },
@@ -6320,12 +7839,17 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                 'x-airbyte-entity-name': 'locations',
                                 'x-airbyte-stream-name': 'locations',
                                 'x-airbyte-ai-hints': {
-                                    'summary': 'Shopify store locations for inventory and fulfillment',
-                                    'when_to_use': 'Questions about store or warehouse locations',
-                                    'trigger_phrases': ['shopify location', 'warehouse', 'store location'],
+                                    'summary': 'Physical and logical store locations used for inventory and fulfillment',
+                                    'when_to_use': 'Questions about store, warehouse, or fulfillment locations and their addresses',
+                                    'trigger_phrases': [
+                                        'shopify location',
+                                        'warehouse',
+                                        'store location',
+                                        'fulfillment location',
+                                    ],
                                     'freshness': 'static',
-                                    'example_questions': ['What locations are configured in Shopify?'],
-                                    'search_strategy': 'List all locations',
+                                    'example_questions': ['What locations are configured in Shopify?', 'Which location fulfills orders?'],
+                                    'search_strategy': 'List all locations; the location id is required to read or set inventory levels',
                                 },
                             },
                         },
@@ -6399,21 +7923,31 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'locations',
                 'x-airbyte-stream-name': 'locations',
                 'x-airbyte-ai-hints': {
-                    'summary': 'Shopify store locations for inventory and fulfillment',
-                    'when_to_use': 'Questions about store or warehouse locations',
-                    'trigger_phrases': ['shopify location', 'warehouse', 'store location'],
+                    'summary': 'Physical and logical store locations used for inventory and fulfillment',
+                    'when_to_use': 'Questions about store, warehouse, or fulfillment locations and their addresses',
+                    'trigger_phrases': [
+                        'shopify location',
+                        'warehouse',
+                        'store location',
+                        'fulfillment location',
+                    ],
                     'freshness': 'static',
-                    'example_questions': ['What locations are configured in Shopify?'],
-                    'search_strategy': 'List all locations',
+                    'example_questions': ['What locations are configured in Shopify?', 'Which location fulfills orders?'],
+                    'search_strategy': 'List all locations; the location id is required to read or set inventory levels',
                 },
             },
             ai_hints={
-                'summary': 'Shopify store locations for inventory and fulfillment',
-                'when_to_use': 'Questions about store or warehouse locations',
-                'trigger_phrases': ['shopify location', 'warehouse', 'store location'],
+                'summary': 'Physical and logical store locations used for inventory and fulfillment',
+                'when_to_use': 'Questions about store, warehouse, or fulfillment locations and their addresses',
+                'trigger_phrases': [
+                    'shopify location',
+                    'warehouse',
+                    'store location',
+                    'fulfillment location',
+                ],
                 'freshness': 'static',
-                'example_questions': ['What locations are configured in Shopify?'],
-                'search_strategy': 'List all locations',
+                'example_questions': ['What locations are configured in Shopify?', 'Which location fulfills orders?'],
+                'search_strategy': 'List all locations; the location id is required to read or set inventory levels',
             },
         ),
         EntityDefinition(
@@ -6467,12 +8001,18 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                     'x-airbyte-entity-name': 'inventory_levels',
                                     'x-airbyte-stream-name': 'inventory_levels',
                                     'x-airbyte-ai-hints': {
-                                        'summary': 'Inventory quantities at specific locations for variants',
-                                        'when_to_use': 'Questions about stock levels or inventory availability',
-                                        'trigger_phrases': ['inventory level', 'stock level', 'how many in stock'],
+                                        'summary': 'Available inventory quantity for an inventory item at a specific location',
+                                        'when_to_use': 'Questions about stock on hand, availability, or how many units are in stock',
+                                        'trigger_phrases': [
+                                            'inventory level',
+                                            'stock level',
+                                            'how many in stock',
+                                            'available quantity',
+                                            'on hand',
+                                        ],
                                         'freshness': 'live',
-                                        'example_questions': ['What is the stock level for a product?'],
-                                        'search_strategy': 'Filter by location or inventory item',
+                                        'example_questions': ['How many units of a variant are in stock?', 'Show inventory levels at a location'],
+                                        'search_strategy': 'Read per location (location_id required); join via inventory_item_id to the variant',
                                     },
                                 },
                             },
@@ -6504,21 +8044,33 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'inventory_levels',
                 'x-airbyte-stream-name': 'inventory_levels',
                 'x-airbyte-ai-hints': {
-                    'summary': 'Inventory quantities at specific locations for variants',
-                    'when_to_use': 'Questions about stock levels or inventory availability',
-                    'trigger_phrases': ['inventory level', 'stock level', 'how many in stock'],
+                    'summary': 'Available inventory quantity for an inventory item at a specific location',
+                    'when_to_use': 'Questions about stock on hand, availability, or how many units are in stock',
+                    'trigger_phrases': [
+                        'inventory level',
+                        'stock level',
+                        'how many in stock',
+                        'available quantity',
+                        'on hand',
+                    ],
                     'freshness': 'live',
-                    'example_questions': ['What is the stock level for a product?'],
-                    'search_strategy': 'Filter by location or inventory item',
+                    'example_questions': ['How many units of a variant are in stock?', 'Show inventory levels at a location'],
+                    'search_strategy': 'Read per location (location_id required); join via inventory_item_id to the variant',
                 },
             },
             ai_hints={
-                'summary': 'Inventory quantities at specific locations for variants',
-                'when_to_use': 'Questions about stock levels or inventory availability',
-                'trigger_phrases': ['inventory level', 'stock level', 'how many in stock'],
+                'summary': 'Available inventory quantity for an inventory item at a specific location',
+                'when_to_use': 'Questions about stock on hand, availability, or how many units are in stock',
+                'trigger_phrases': [
+                    'inventory level',
+                    'stock level',
+                    'how many in stock',
+                    'available quantity',
+                    'on hand',
+                ],
                 'freshness': 'live',
-                'example_questions': ['What is the stock level for a product?'],
-                'search_strategy': 'Filter by location or inventory item',
+                'example_questions': ['How many units of a variant are in stock?', 'Show inventory levels at a location'],
+                'search_strategy': 'Read per location (location_id required); join via inventory_item_id to the variant',
             },
             relationships=[
                 EntityRelationshipConfig(
@@ -6605,12 +8157,18 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                     'x-airbyte-entity-name': 'inventory_items',
                                     'x-airbyte-stream-name': 'inventory_items',
                                     'x-airbyte-ai-hints': {
-                                        'summary': 'Inventory items representing physical goods for tracking',
-                                        'when_to_use': 'Questions about inventory item details or tracking configuration',
-                                        'trigger_phrases': ['inventory item', 'tracked inventory'],
+                                        'summary': 'Inventory items linking variants to stock — SKU, cost, tracking, and country of origin',
+                                        'when_to_use': 'Questions about cost of goods, SKU-level tracking, or whether inventory is tracked',
+                                        'trigger_phrases': [
+                                            'inventory item',
+                                            'cost of goods',
+                                            'COGS',
+                                            'tracked inventory',
+                                            'unit cost',
+                                        ],
                                         'freshness': 'live',
-                                        'example_questions': ['Show inventory item details'],
-                                        'search_strategy': 'Filter by product variant',
+                                        'example_questions': ['What is the unit cost of an item?', 'Is inventory tracked for a variant?'],
+                                        'search_strategy': 'List all or filter by ids; each inventory_item maps 1:1 to a product variant',
                                     },
                                 },
                             },
@@ -6677,12 +8235,18 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                 'x-airbyte-entity-name': 'inventory_items',
                                 'x-airbyte-stream-name': 'inventory_items',
                                 'x-airbyte-ai-hints': {
-                                    'summary': 'Inventory items representing physical goods for tracking',
-                                    'when_to_use': 'Questions about inventory item details or tracking configuration',
-                                    'trigger_phrases': ['inventory item', 'tracked inventory'],
+                                    'summary': 'Inventory items linking variants to stock — SKU, cost, tracking, and country of origin',
+                                    'when_to_use': 'Questions about cost of goods, SKU-level tracking, or whether inventory is tracked',
+                                    'trigger_phrases': [
+                                        'inventory item',
+                                        'cost of goods',
+                                        'COGS',
+                                        'tracked inventory',
+                                        'unit cost',
+                                    ],
                                     'freshness': 'live',
-                                    'example_questions': ['Show inventory item details'],
-                                    'search_strategy': 'Filter by product variant',
+                                    'example_questions': ['What is the unit cost of an item?', 'Is inventory tracked for a variant?'],
+                                    'search_strategy': 'List all or filter by ids; each inventory_item maps 1:1 to a product variant',
                                 },
                             },
                         },
@@ -6736,21 +8300,33 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'inventory_items',
                 'x-airbyte-stream-name': 'inventory_items',
                 'x-airbyte-ai-hints': {
-                    'summary': 'Inventory items representing physical goods for tracking',
-                    'when_to_use': 'Questions about inventory item details or tracking configuration',
-                    'trigger_phrases': ['inventory item', 'tracked inventory'],
+                    'summary': 'Inventory items linking variants to stock — SKU, cost, tracking, and country of origin',
+                    'when_to_use': 'Questions about cost of goods, SKU-level tracking, or whether inventory is tracked',
+                    'trigger_phrases': [
+                        'inventory item',
+                        'cost of goods',
+                        'COGS',
+                        'tracked inventory',
+                        'unit cost',
+                    ],
                     'freshness': 'live',
-                    'example_questions': ['Show inventory item details'],
-                    'search_strategy': 'Filter by product variant',
+                    'example_questions': ['What is the unit cost of an item?', 'Is inventory tracked for a variant?'],
+                    'search_strategy': 'List all or filter by ids; each inventory_item maps 1:1 to a product variant',
                 },
             },
             ai_hints={
-                'summary': 'Inventory items representing physical goods for tracking',
-                'when_to_use': 'Questions about inventory item details or tracking configuration',
-                'trigger_phrases': ['inventory item', 'tracked inventory'],
+                'summary': 'Inventory items linking variants to stock — SKU, cost, tracking, and country of origin',
+                'when_to_use': 'Questions about cost of goods, SKU-level tracking, or whether inventory is tracked',
+                'trigger_phrases': [
+                    'inventory item',
+                    'cost of goods',
+                    'COGS',
+                    'tracked inventory',
+                    'unit cost',
+                ],
                 'freshness': 'live',
-                'example_questions': ['Show inventory item details'],
-                'search_strategy': 'Filter by product variant',
+                'example_questions': ['What is the unit cost of an item?', 'Is inventory tracked for a variant?'],
+                'search_strategy': 'List all or filter by ids; each inventory_item maps 1:1 to a product variant',
             },
         ),
         EntityDefinition(
@@ -6938,12 +8514,18 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                 'x-airbyte-entity-name': 'shop',
                                 'x-airbyte-stream-name': 'shop',
                                 'x-airbyte-ai-hints': {
-                                    'summary': 'Shopify store configuration and account details',
-                                    'when_to_use': 'Questions about store settings or account information',
-                                    'trigger_phrases': ['shopify shop', 'store settings', 'shop details'],
+                                    'summary': 'Store-level settings and metadata — name, domain, currency, timezone, plan, and contact info',
+                                    'when_to_use': 'Questions about the store itself: its name, currency, timezone, plan, or primary domain',
+                                    'trigger_phrases': [
+                                        'shop info',
+                                        'store details',
+                                        'store currency',
+                                        'store timezone',
+                                        'my shop',
+                                    ],
                                     'freshness': 'static',
-                                    'example_questions': ['Show Shopify store details'],
-                                    'search_strategy': 'Retrieve store info',
+                                    'example_questions': ['What currency does the store use?', "What is the store's timezone and domain?"],
+                                    'search_strategy': 'Single-record fetch; no filters',
                                 },
                             },
                         },
@@ -7123,21 +8705,33 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'shop',
                 'x-airbyte-stream-name': 'shop',
                 'x-airbyte-ai-hints': {
-                    'summary': 'Shopify store configuration and account details',
-                    'when_to_use': 'Questions about store settings or account information',
-                    'trigger_phrases': ['shopify shop', 'store settings', 'shop details'],
+                    'summary': 'Store-level settings and metadata — name, domain, currency, timezone, plan, and contact info',
+                    'when_to_use': 'Questions about the store itself: its name, currency, timezone, plan, or primary domain',
+                    'trigger_phrases': [
+                        'shop info',
+                        'store details',
+                        'store currency',
+                        'store timezone',
+                        'my shop',
+                    ],
                     'freshness': 'static',
-                    'example_questions': ['Show Shopify store details'],
-                    'search_strategy': 'Retrieve store info',
+                    'example_questions': ['What currency does the store use?', "What is the store's timezone and domain?"],
+                    'search_strategy': 'Single-record fetch; no filters',
                 },
             },
             ai_hints={
-                'summary': 'Shopify store configuration and account details',
-                'when_to_use': 'Questions about store settings or account information',
-                'trigger_phrases': ['shopify shop', 'store settings', 'shop details'],
+                'summary': 'Store-level settings and metadata — name, domain, currency, timezone, plan, and contact info',
+                'when_to_use': 'Questions about the store itself: its name, currency, timezone, plan, or primary domain',
+                'trigger_phrases': [
+                    'shop info',
+                    'store details',
+                    'store currency',
+                    'store timezone',
+                    'my shop',
+                ],
                 'freshness': 'static',
-                'example_questions': ['Show Shopify store details'],
-                'search_strategy': 'Retrieve store info',
+                'example_questions': ['What currency does the store use?', "What is the store's timezone and domain?"],
+                'search_strategy': 'Single-record fetch; no filters',
             },
         ),
         EntityDefinition(
@@ -7303,12 +8897,17 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                     'x-airbyte-entity-name': 'price_rules',
                                     'x-airbyte-stream-name': 'price_rules',
                                     'x-airbyte-ai-hints': {
-                                        'summary': 'Discount price rules for Shopify promotions',
-                                        'when_to_use': 'Questions about discount rules or promotion configuration',
-                                        'trigger_phrases': ['price rule', 'discount rule', 'promotion'],
+                                        'summary': 'Discount price rules defining the conditions and value of a discount (the rule behind discount codes)',
+                                        'when_to_use': 'Questions about discount rules, promotions, or the conditions/value of a discount',
+                                        'trigger_phrases': [
+                                            'price rule',
+                                            'discount rule',
+                                            'promotion',
+                                            'discount conditions',
+                                        ],
                                         'freshness': 'live',
-                                        'example_questions': ['What price rules are active?'],
-                                        'search_strategy': 'List all price rules',
+                                        'example_questions': ['What discount rules are active?', 'Show the conditions for a promotion'],
+                                        'search_strategy': 'List all or filter by date; each price rule owns one or more discount codes',
                                     },
                                 },
                             },
@@ -7439,12 +9038,17 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                 'x-airbyte-entity-name': 'price_rules',
                                 'x-airbyte-stream-name': 'price_rules',
                                 'x-airbyte-ai-hints': {
-                                    'summary': 'Discount price rules for Shopify promotions',
-                                    'when_to_use': 'Questions about discount rules or promotion configuration',
-                                    'trigger_phrases': ['price rule', 'discount rule', 'promotion'],
+                                    'summary': 'Discount price rules defining the conditions and value of a discount (the rule behind discount codes)',
+                                    'when_to_use': 'Questions about discount rules, promotions, or the conditions/value of a discount',
+                                    'trigger_phrases': [
+                                        'price rule',
+                                        'discount rule',
+                                        'promotion',
+                                        'discount conditions',
+                                    ],
                                     'freshness': 'live',
-                                    'example_questions': ['What price rules are active?'],
-                                    'search_strategy': 'List all price rules',
+                                    'example_questions': ['What discount rules are active?', 'Show the conditions for a promotion'],
+                                    'search_strategy': 'List all or filter by date; each price rule owns one or more discount codes',
                                 },
                             },
                         },
@@ -7562,27 +9166,43 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'price_rules',
                 'x-airbyte-stream-name': 'price_rules',
                 'x-airbyte-ai-hints': {
-                    'summary': 'Discount price rules for Shopify promotions',
-                    'when_to_use': 'Questions about discount rules or promotion configuration',
-                    'trigger_phrases': ['price rule', 'discount rule', 'promotion'],
+                    'summary': 'Discount price rules defining the conditions and value of a discount (the rule behind discount codes)',
+                    'when_to_use': 'Questions about discount rules, promotions, or the conditions/value of a discount',
+                    'trigger_phrases': [
+                        'price rule',
+                        'discount rule',
+                        'promotion',
+                        'discount conditions',
+                    ],
                     'freshness': 'live',
-                    'example_questions': ['What price rules are active?'],
-                    'search_strategy': 'List all price rules',
+                    'example_questions': ['What discount rules are active?', 'Show the conditions for a promotion'],
+                    'search_strategy': 'List all or filter by date; each price rule owns one or more discount codes',
                 },
             },
             ai_hints={
-                'summary': 'Discount price rules for Shopify promotions',
-                'when_to_use': 'Questions about discount rules or promotion configuration',
-                'trigger_phrases': ['price rule', 'discount rule', 'promotion'],
+                'summary': 'Discount price rules defining the conditions and value of a discount (the rule behind discount codes)',
+                'when_to_use': 'Questions about discount rules, promotions, or the conditions/value of a discount',
+                'trigger_phrases': [
+                    'price rule',
+                    'discount rule',
+                    'promotion',
+                    'discount conditions',
+                ],
                 'freshness': 'live',
-                'example_questions': ['What price rules are active?'],
-                'search_strategy': 'List all price rules',
+                'example_questions': ['What discount rules are active?', 'Show the conditions for a promotion'],
+                'search_strategy': 'List all or filter by date; each price rule owns one or more discount codes',
             },
         ),
         EntityDefinition(
             name='discount_codes',
             stream_name='discount_codes',
-            actions=[Action.LIST, Action.GET],
+            actions=[
+                Action.LIST,
+                Action.GET,
+                Action.CREATE,
+                Action.UPDATE,
+                Action.DELETE,
+            ],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
@@ -7635,12 +9255,17 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                     'x-airbyte-entity-name': 'discount_codes',
                                     'x-airbyte-stream-name': 'discount_codes',
                                     'x-airbyte-ai-hints': {
-                                        'summary': 'Discount codes associated with Shopify price rules',
-                                        'when_to_use': 'Questions about available discount codes',
-                                        'trigger_phrases': ['discount code', 'promo code', 'coupon code'],
+                                        'summary': 'Discount codes belonging to a price rule — the redeemable codes customers enter at checkout',
+                                        'when_to_use': 'Questions about specific discount/coupon codes or their usage',
+                                        'trigger_phrases': [
+                                            'discount code',
+                                            'coupon code',
+                                            'promo code',
+                                            'redeem code',
+                                        ],
                                         'freshness': 'live',
-                                        'example_questions': ['What discount codes are available?'],
-                                        'search_strategy': 'Filter by price rule or search by code',
+                                        'example_questions': ['List discount codes for a promotion', 'Does a coupon code exist?'],
+                                        'search_strategy': "Read under a price_rule_id; the code's behavior (amount, conditions) lives on its price rule",
                                     },
                                 },
                             },
@@ -7689,17 +9314,399 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                 'x-airbyte-entity-name': 'discount_codes',
                                 'x-airbyte-stream-name': 'discount_codes',
                                 'x-airbyte-ai-hints': {
-                                    'summary': 'Discount codes associated with Shopify price rules',
-                                    'when_to_use': 'Questions about available discount codes',
-                                    'trigger_phrases': ['discount code', 'promo code', 'coupon code'],
+                                    'summary': 'Discount codes belonging to a price rule — the redeemable codes customers enter at checkout',
+                                    'when_to_use': 'Questions about specific discount/coupon codes or their usage',
+                                    'trigger_phrases': [
+                                        'discount code',
+                                        'coupon code',
+                                        'promo code',
+                                        'redeem code',
+                                    ],
                                     'freshness': 'live',
-                                    'example_questions': ['What discount codes are available?'],
-                                    'search_strategy': 'Filter by price rule or search by code',
+                                    'example_questions': ['List discount codes for a promotion', 'Does a coupon code exist?'],
+                                    'search_strategy': "Read under a price_rule_id; the code's behavior (amount, conditions) lives on its price rule",
                                 },
                             },
                         },
                     },
                     record_extractor='$.discount_code',
+                ),
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/graphql.json:discountCodeBasicCreate',
+                    path_override=PathOverrideConfig(
+                        path='/graphql.json',
+                    ),
+                    action=Action.CREATE,
+                    description='Creates a basic discount code via GraphQL mutation.\nSupports percentage, fixed amount, or free shipping discounts.\n',
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'discountCodeBasicCreate': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'userErrors': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'field': {
+                                                            'type': ['string', 'null', 'array'],
+                                                            'description': 'Path to the input field that caused the error',
+                                                        },
+                                                        'message': {'type': 'string', 'description': 'Error message'},
+                                                        'code': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Error code',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            'codeDiscountNode': {
+                                                'type': ['object', 'null'],
+                                                'properties': {
+                                                    'id': {'type': 'string'},
+                                                    'codeDiscount': {
+                                                        'type': 'object',
+                                                        'properties': {
+                                                            'title': {
+                                                                'type': ['string', 'null'],
+                                                            },
+                                                            'summary': {
+                                                                'type': ['string', 'null'],
+                                                            },
+                                                            'startsAt': {
+                                                                'type': ['string', 'null'],
+                                                            },
+                                                            'endsAt': {
+                                                                'type': ['string', 'null'],
+                                                            },
+                                                            'status': {
+                                                                'type': ['string', 'null'],
+                                                            },
+                                                            'codes': {
+                                                                'type': 'object',
+                                                                'properties': {
+                                                                    'nodes': {
+                                                                        'type': 'array',
+                                                                        'items': {
+                                                                            'type': 'object',
+                                                                            'properties': {
+                                                                                'code': {'type': 'string'},
+                                                                            },
+                                                                        },
+                                                                    },
+                                                                },
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                    'discountCodeBasicUpdate': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'userErrors': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'field': {
+                                                            'type': ['string', 'null', 'array'],
+                                                            'description': 'Path to the input field that caused the error',
+                                                        },
+                                                        'message': {'type': 'string', 'description': 'Error message'},
+                                                        'code': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Error code',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            'codeDiscountNode': {
+                                                'type': ['object', 'null'],
+                                                'properties': {
+                                                    'id': {'type': 'string'},
+                                                    'codeDiscount': {
+                                                        'type': 'object',
+                                                        'properties': {
+                                                            'title': {
+                                                                'type': ['string', 'null'],
+                                                            },
+                                                            'summary': {
+                                                                'type': ['string', 'null'],
+                                                            },
+                                                            'startsAt': {
+                                                                'type': ['string', 'null'],
+                                                            },
+                                                            'endsAt': {
+                                                                'type': ['string', 'null'],
+                                                            },
+                                                            'status': {
+                                                                'type': ['string', 'null'],
+                                                            },
+                                                            'codes': {
+                                                                'type': 'object',
+                                                                'properties': {
+                                                                    'nodes': {
+                                                                        'type': 'array',
+                                                                        'items': {
+                                                                            'type': 'object',
+                                                                            'properties': {
+                                                                                'code': {'type': 'string'},
+                                                                            },
+                                                                        },
+                                                                    },
+                                                                },
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    graphql_body={
+                        'type': 'graphql',
+                        'query': 'mutation discountCodeBasicCreate($basicCodeDiscount: DiscountCodeBasicInput!) { discountCodeBasicCreate(basicCodeDiscount: $basicCodeDiscount) { userErrors { field message code } codeDiscountNode { id codeDiscount { ... on DiscountCodeBasic { title summary startsAt endsAt status codes(first: 5) { nodes { code } } } } } } }',
+                        'variables': {'basicCodeDiscount': '{{ basicCodeDiscount }}'},
+                    },
+                    record_extractor='$.data.discountCodeBasicCreate',
+                    ai_hints={
+                        'summary': 'Create a basic discount code',
+                        'when_to_use': 'When the user asks to create a coupon or discount code',
+                        'trigger_phrases': [
+                            'create a discount code',
+                            'make a coupon',
+                            'new promo code',
+                            'create a discount',
+                        ],
+                        'freshness': 'live',
+                        'example_questions': ['Create a 10% off discount code'],
+                        'search_strategy': 'Use discount_codes.create (discountCodeBasicCreate) with title, code, and value (percentage/fixed). Requires write_discounts scope.',
+                    },
+                ),
+                Action.UPDATE: EndpointDefinition(
+                    method='POST',
+                    path='/graphql.json:discountCodeBasicUpdate',
+                    path_override=PathOverrideConfig(
+                        path='/graphql.json',
+                    ),
+                    action=Action.UPDATE,
+                    description='Updates an existing basic discount code via GraphQL mutation.\n',
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'discountCodeBasicCreate': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'userErrors': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'field': {
+                                                            'type': ['string', 'null', 'array'],
+                                                            'description': 'Path to the input field that caused the error',
+                                                        },
+                                                        'message': {'type': 'string', 'description': 'Error message'},
+                                                        'code': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Error code',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            'codeDiscountNode': {
+                                                'type': ['object', 'null'],
+                                                'properties': {
+                                                    'id': {'type': 'string'},
+                                                    'codeDiscount': {
+                                                        'type': 'object',
+                                                        'properties': {
+                                                            'title': {
+                                                                'type': ['string', 'null'],
+                                                            },
+                                                            'summary': {
+                                                                'type': ['string', 'null'],
+                                                            },
+                                                            'startsAt': {
+                                                                'type': ['string', 'null'],
+                                                            },
+                                                            'endsAt': {
+                                                                'type': ['string', 'null'],
+                                                            },
+                                                            'status': {
+                                                                'type': ['string', 'null'],
+                                                            },
+                                                            'codes': {
+                                                                'type': 'object',
+                                                                'properties': {
+                                                                    'nodes': {
+                                                                        'type': 'array',
+                                                                        'items': {
+                                                                            'type': 'object',
+                                                                            'properties': {
+                                                                                'code': {'type': 'string'},
+                                                                            },
+                                                                        },
+                                                                    },
+                                                                },
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                    'discountCodeBasicUpdate': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'userErrors': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'field': {
+                                                            'type': ['string', 'null', 'array'],
+                                                            'description': 'Path to the input field that caused the error',
+                                                        },
+                                                        'message': {'type': 'string', 'description': 'Error message'},
+                                                        'code': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Error code',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            'codeDiscountNode': {
+                                                'type': ['object', 'null'],
+                                                'properties': {
+                                                    'id': {'type': 'string'},
+                                                    'codeDiscount': {
+                                                        'type': 'object',
+                                                        'properties': {
+                                                            'title': {
+                                                                'type': ['string', 'null'],
+                                                            },
+                                                            'summary': {
+                                                                'type': ['string', 'null'],
+                                                            },
+                                                            'startsAt': {
+                                                                'type': ['string', 'null'],
+                                                            },
+                                                            'endsAt': {
+                                                                'type': ['string', 'null'],
+                                                            },
+                                                            'status': {
+                                                                'type': ['string', 'null'],
+                                                            },
+                                                            'codes': {
+                                                                'type': 'object',
+                                                                'properties': {
+                                                                    'nodes': {
+                                                                        'type': 'array',
+                                                                        'items': {
+                                                                            'type': 'object',
+                                                                            'properties': {
+                                                                                'code': {'type': 'string'},
+                                                                            },
+                                                                        },
+                                                                    },
+                                                                },
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    graphql_body={
+                        'type': 'graphql',
+                        'query': 'mutation discountCodeBasicUpdate($id: ID!, $basicCodeDiscount: DiscountCodeBasicInput!) { discountCodeBasicUpdate(id: $id, basicCodeDiscount: $basicCodeDiscount) { userErrors { field message code } codeDiscountNode { id codeDiscount { ... on DiscountCodeBasic { title summary startsAt endsAt status codes(first: 5) { nodes { code } } } } } } }',
+                        'variables': {'id': '{{ id }}', 'basicCodeDiscount': '{{ basicCodeDiscount }}'},
+                    },
+                    record_extractor='$.data.discountCodeBasicUpdate',
+                    ai_hints={
+                        'summary': 'Update a basic discount code',
+                        'when_to_use': "When the user asks to change a discount's value, dates, or code",
+                        'trigger_phrases': ['update a discount code', 'edit a coupon', 'change discount amount'],
+                        'freshness': 'live',
+                        'example_questions': ['Change a discount code to 20% off'],
+                        'search_strategy': 'Use discount_codes.update (discountCodeBasicUpdate) with the discount GID and changed fields. Requires write_discounts scope.',
+                    },
+                ),
+                Action.DELETE: EndpointDefinition(
+                    method='POST',
+                    path='/graphql.json:discountCodeDelete',
+                    path_override=PathOverrideConfig(
+                        path='/graphql.json',
+                    ),
+                    action=Action.DELETE,
+                    description='Deletes a discount code via GraphQL mutation.\n',
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'discountCodeDelete': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'userErrors': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'field': {
+                                                            'type': ['string', 'null', 'array'],
+                                                            'description': 'Path to the input field that caused the error',
+                                                        },
+                                                        'message': {'type': 'string', 'description': 'Error message'},
+                                                        'code': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Error code',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            'deletedCodeDiscountId': {
+                                                'type': ['string', 'null'],
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    graphql_body={
+                        'type': 'graphql',
+                        'query': 'mutation discountCodeDelete($id: ID!) { discountCodeDelete(id: $id) { userErrors { field message code } deletedCodeDiscountId } }',
+                        'variables': {'id': '{{ id }}'},
+                    },
+                    record_extractor='$.data.discountCodeDelete',
+                    ai_hints={
+                        'summary': 'Delete a discount code',
+                        'when_to_use': 'When the user asks to remove or delete a discount/coupon code',
+                        'trigger_phrases': ['delete a discount code', 'remove a coupon', 'deactivate a promo code'],
+                        'freshness': 'live',
+                        'example_questions': ['Delete a discount code'],
+                        'search_strategy': 'Use discount_codes.delete (discountCodeDelete) with the discount GID. Requires write_discounts scope.',
+                    },
                 ),
             },
             entity_schema={
@@ -7729,21 +9736,31 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'discount_codes',
                 'x-airbyte-stream-name': 'discount_codes',
                 'x-airbyte-ai-hints': {
-                    'summary': 'Discount codes associated with Shopify price rules',
-                    'when_to_use': 'Questions about available discount codes',
-                    'trigger_phrases': ['discount code', 'promo code', 'coupon code'],
+                    'summary': 'Discount codes belonging to a price rule — the redeemable codes customers enter at checkout',
+                    'when_to_use': 'Questions about specific discount/coupon codes or their usage',
+                    'trigger_phrases': [
+                        'discount code',
+                        'coupon code',
+                        'promo code',
+                        'redeem code',
+                    ],
                     'freshness': 'live',
-                    'example_questions': ['What discount codes are available?'],
-                    'search_strategy': 'Filter by price rule or search by code',
+                    'example_questions': ['List discount codes for a promotion', 'Does a coupon code exist?'],
+                    'search_strategy': "Read under a price_rule_id; the code's behavior (amount, conditions) lives on its price rule",
                 },
             },
             ai_hints={
-                'summary': 'Discount codes associated with Shopify price rules',
-                'when_to_use': 'Questions about available discount codes',
-                'trigger_phrases': ['discount code', 'promo code', 'coupon code'],
+                'summary': 'Discount codes belonging to a price rule — the redeemable codes customers enter at checkout',
+                'when_to_use': 'Questions about specific discount/coupon codes or their usage',
+                'trigger_phrases': [
+                    'discount code',
+                    'coupon code',
+                    'promo code',
+                    'redeem code',
+                ],
                 'freshness': 'live',
-                'example_questions': ['What discount codes are available?'],
-                'search_strategy': 'Filter by price rule or search by code',
+                'example_questions': ['List discount codes for a promotion', 'Does a coupon code exist?'],
+                'search_strategy': "Read under a price_rule_id; the code's behavior (amount, conditions) lives on its price rule",
             },
             relationships=[
                 EntityRelationshipConfig(
@@ -7757,7 +9774,13 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
         EntityDefinition(
             name='custom_collections',
             stream_name='custom_collections',
-            actions=[Action.LIST, Action.GET],
+            actions=[
+                Action.LIST,
+                Action.GET,
+                Action.CREATE,
+                Action.UPDATE,
+                Action.DELETE,
+            ],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
@@ -7844,12 +9867,17 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                     'x-airbyte-entity-name': 'custom_collections',
                                     'x-airbyte-stream-name': 'custom_collections',
                                     'x-airbyte-ai-hints': {
-                                        'summary': 'Manually curated product collections in Shopify',
-                                        'when_to_use': 'Questions about product collections or curated groupings',
-                                        'trigger_phrases': ['custom collection', 'product collection'],
+                                        'summary': 'Manually curated product collections where products are added by hand',
+                                        'when_to_use': 'Questions about manually built collections or which products are grouped together',
+                                        'trigger_phrases': [
+                                            'custom collection',
+                                            'manual collection',
+                                            'product group',
+                                            'collection',
+                                        ],
                                         'freshness': 'live',
-                                        'example_questions': ['What custom collections exist?'],
-                                        'search_strategy': 'Search by title',
+                                        'example_questions': ['List custom collections', 'What products are in a collection?'],
+                                        'search_strategy': 'List all or filter by title/published status; membership is managed via collects',
                                     },
                                 },
                             },
@@ -7915,17 +9943,334 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                 'x-airbyte-entity-name': 'custom_collections',
                                 'x-airbyte-stream-name': 'custom_collections',
                                 'x-airbyte-ai-hints': {
-                                    'summary': 'Manually curated product collections in Shopify',
-                                    'when_to_use': 'Questions about product collections or curated groupings',
-                                    'trigger_phrases': ['custom collection', 'product collection'],
+                                    'summary': 'Manually curated product collections where products are added by hand',
+                                    'when_to_use': 'Questions about manually built collections or which products are grouped together',
+                                    'trigger_phrases': [
+                                        'custom collection',
+                                        'manual collection',
+                                        'product group',
+                                        'collection',
+                                    ],
                                     'freshness': 'live',
-                                    'example_questions': ['What custom collections exist?'],
-                                    'search_strategy': 'Search by title',
+                                    'example_questions': ['List custom collections', 'What products are in a collection?'],
+                                    'search_strategy': 'List all or filter by title/published status; membership is managed via collects',
                                 },
                             },
                         },
                     },
                     record_extractor='$.custom_collection',
+                ),
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/graphql.json:collectionCreate',
+                    path_override=PathOverrideConfig(
+                        path='/graphql.json',
+                    ),
+                    action=Action.CREATE,
+                    description='Creates a new collection (custom or smart) via GraphQL mutation.\nFor smart collections, provide ruleSet with rules.\n',
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'collectionCreate': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'userErrors': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'field': {
+                                                            'type': ['string', 'null', 'array'],
+                                                            'description': 'Path to the input field that caused the error',
+                                                        },
+                                                        'message': {'type': 'string', 'description': 'Error message'},
+                                                        'code': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Error code',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            'collection': {
+                                                'type': 'object',
+                                                'properties': {
+                                                    'id': {'type': 'string'},
+                                                    'title': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'handle': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'descriptionHtml': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'sortOrder': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'templateSuffix': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'updatedAt': {
+                                                        'type': ['string', 'null'],
+                                                        'format': 'date-time',
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                    'collectionUpdate': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'userErrors': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'field': {
+                                                            'type': ['string', 'null', 'array'],
+                                                            'description': 'Path to the input field that caused the error',
+                                                        },
+                                                        'message': {'type': 'string', 'description': 'Error message'},
+                                                        'code': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Error code',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            'collection': {
+                                                'type': 'object',
+                                                'properties': {
+                                                    'id': {'type': 'string'},
+                                                    'title': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'handle': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'descriptionHtml': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'sortOrder': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'templateSuffix': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'updatedAt': {
+                                                        'type': ['string', 'null'],
+                                                        'format': 'date-time',
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    graphql_body={
+                        'type': 'graphql',
+                        'query': 'mutation collectionCreate($input: CollectionInput!) { collectionCreate(input: $input) { userErrors { field message } collection { id title handle descriptionHtml sortOrder templateSuffix updatedAt } } }',
+                        'variables': {'input': '{{ input }}'},
+                    },
+                    record_extractor='$.data.collectionCreate',
+                    ai_hints={
+                        'summary': 'Create a custom (manual) collection',
+                        'when_to_use': 'When the user asks to create a new manual product collection',
+                        'trigger_phrases': ['create a collection', 'new custom collection', 'make a product group'],
+                        'freshness': 'live',
+                        'example_questions': ["Create a custom collection called 'Summer Sale'"],
+                        'search_strategy': 'Use custom_collections.create (collectionCreate) with a title. Requires write_products scope (collections are governed by the products scope).',
+                    },
+                ),
+                Action.UPDATE: EndpointDefinition(
+                    method='POST',
+                    path='/graphql.json:collectionUpdate',
+                    path_override=PathOverrideConfig(
+                        path='/graphql.json',
+                    ),
+                    action=Action.UPDATE,
+                    description='Updates an existing collection via GraphQL mutation.\nRule-based membership recompute is async for smart collections.\n',
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'collectionCreate': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'userErrors': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'field': {
+                                                            'type': ['string', 'null', 'array'],
+                                                            'description': 'Path to the input field that caused the error',
+                                                        },
+                                                        'message': {'type': 'string', 'description': 'Error message'},
+                                                        'code': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Error code',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            'collection': {
+                                                'type': 'object',
+                                                'properties': {
+                                                    'id': {'type': 'string'},
+                                                    'title': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'handle': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'descriptionHtml': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'sortOrder': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'templateSuffix': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'updatedAt': {
+                                                        'type': ['string', 'null'],
+                                                        'format': 'date-time',
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                    'collectionUpdate': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'userErrors': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'field': {
+                                                            'type': ['string', 'null', 'array'],
+                                                            'description': 'Path to the input field that caused the error',
+                                                        },
+                                                        'message': {'type': 'string', 'description': 'Error message'},
+                                                        'code': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Error code',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            'collection': {
+                                                'type': 'object',
+                                                'properties': {
+                                                    'id': {'type': 'string'},
+                                                    'title': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'handle': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'descriptionHtml': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'sortOrder': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'templateSuffix': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'updatedAt': {
+                                                        'type': ['string', 'null'],
+                                                        'format': 'date-time',
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    graphql_body={
+                        'type': 'graphql',
+                        'query': 'mutation collectionUpdate($input: CollectionInput!) { collectionUpdate(input: $input) { userErrors { field message } collection { id title handle descriptionHtml sortOrder templateSuffix updatedAt } } }',
+                        'variables': {'input': '{{ input }}'},
+                    },
+                    record_extractor='$.data.collectionUpdate',
+                    ai_hints={
+                        'summary': 'Update a custom collection',
+                        'when_to_use': 'When the user asks to rename or edit a collection',
+                        'trigger_phrases': ['update a collection', 'rename a collection', 'edit a product group'],
+                        'freshness': 'live',
+                        'example_questions': ['Rename a custom collection'],
+                        'search_strategy': 'Use custom_collections.update (collectionUpdate) with the collection GID and changed fields. Requires write_products scope.',
+                    },
+                ),
+                Action.DELETE: EndpointDefinition(
+                    method='POST',
+                    path='/graphql.json:collectionDelete',
+                    path_override=PathOverrideConfig(
+                        path='/graphql.json',
+                    ),
+                    action=Action.DELETE,
+                    description='Deletes a collection via GraphQL mutation.\n',
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'collectionDelete': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'userErrors': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'field': {
+                                                            'type': ['string', 'null', 'array'],
+                                                            'description': 'Path to the input field that caused the error',
+                                                        },
+                                                        'message': {'type': 'string', 'description': 'Error message'},
+                                                        'code': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Error code',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            'deletedCollectionId': {
+                                                'type': ['string', 'null'],
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    graphql_body={
+                        'type': 'graphql',
+                        'query': 'mutation collectionDelete($input: CollectionDeleteInput!) { collectionDelete(input: $input) { userErrors { field message } deletedCollectionId } }',
+                        'variables': {'input': '{{ input }}'},
+                    },
+                    record_extractor='$.data.collectionDelete',
+                    ai_hints={
+                        'summary': 'Delete a custom collection',
+                        'when_to_use': 'When the user asks to remove or delete a collection',
+                        'trigger_phrases': ['delete a collection', 'remove a product group'],
+                        'freshness': 'live',
+                        'example_questions': ['Delete a custom collection'],
+                        'search_strategy': 'Use custom_collections.delete (collectionDelete) with the collection GID. Requires write_products scope.',
+                    },
                 ),
             },
             entity_schema={
@@ -7973,21 +10318,31 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'custom_collections',
                 'x-airbyte-stream-name': 'custom_collections',
                 'x-airbyte-ai-hints': {
-                    'summary': 'Manually curated product collections in Shopify',
-                    'when_to_use': 'Questions about product collections or curated groupings',
-                    'trigger_phrases': ['custom collection', 'product collection'],
+                    'summary': 'Manually curated product collections where products are added by hand',
+                    'when_to_use': 'Questions about manually built collections or which products are grouped together',
+                    'trigger_phrases': [
+                        'custom collection',
+                        'manual collection',
+                        'product group',
+                        'collection',
+                    ],
                     'freshness': 'live',
-                    'example_questions': ['What custom collections exist?'],
-                    'search_strategy': 'Search by title',
+                    'example_questions': ['List custom collections', 'What products are in a collection?'],
+                    'search_strategy': 'List all or filter by title/published status; membership is managed via collects',
                 },
             },
             ai_hints={
-                'summary': 'Manually curated product collections in Shopify',
-                'when_to_use': 'Questions about product collections or curated groupings',
-                'trigger_phrases': ['custom collection', 'product collection'],
+                'summary': 'Manually curated product collections where products are added by hand',
+                'when_to_use': 'Questions about manually built collections or which products are grouped together',
+                'trigger_phrases': [
+                    'custom collection',
+                    'manual collection',
+                    'product group',
+                    'collection',
+                ],
                 'freshness': 'live',
-                'example_questions': ['What custom collections exist?'],
-                'search_strategy': 'Search by title',
+                'example_questions': ['List custom collections', 'What products are in a collection?'],
+                'search_strategy': 'List all or filter by title/published status; membership is managed via collects',
             },
         ),
         EntityDefinition(
@@ -8087,12 +10442,12 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                     'x-airbyte-entity-name': 'smart_collections',
                                     'x-airbyte-stream-name': 'smart_collections',
                                     'x-airbyte-ai-hints': {
-                                        'summary': 'Automated product collections based on rules in Shopify',
-                                        'when_to_use': 'Questions about automated collections or rule-based groupings',
-                                        'trigger_phrases': ['smart collection', 'automated collection'],
+                                        'summary': 'Automated collections whose membership is defined by rules (e.g. tag, price, vendor)',
+                                        'when_to_use': 'Questions about rule-based/automatic collections and their conditions',
+                                        'trigger_phrases': ['smart collection', 'automated collection', 'rule-based collection'],
                                         'freshness': 'live',
-                                        'example_questions': ['What smart collections exist?'],
-                                        'search_strategy': 'Search by title',
+                                        'example_questions': ['List smart collections', 'What rules define a smart collection?'],
+                                        'search_strategy': 'List all or filter by title; membership is rule-driven, not manual',
                                     },
                                 },
                             },
@@ -8165,12 +10520,12 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                 'x-airbyte-entity-name': 'smart_collections',
                                 'x-airbyte-stream-name': 'smart_collections',
                                 'x-airbyte-ai-hints': {
-                                    'summary': 'Automated product collections based on rules in Shopify',
-                                    'when_to_use': 'Questions about automated collections or rule-based groupings',
-                                    'trigger_phrases': ['smart collection', 'automated collection'],
+                                    'summary': 'Automated collections whose membership is defined by rules (e.g. tag, price, vendor)',
+                                    'when_to_use': 'Questions about rule-based/automatic collections and their conditions',
+                                    'trigger_phrases': ['smart collection', 'automated collection', 'rule-based collection'],
                                     'freshness': 'live',
-                                    'example_questions': ['What smart collections exist?'],
-                                    'search_strategy': 'Search by title',
+                                    'example_questions': ['List smart collections', 'What rules define a smart collection?'],
+                                    'search_strategy': 'List all or filter by title; membership is rule-driven, not manual',
                                 },
                             },
                         },
@@ -8230,21 +10585,21 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'smart_collections',
                 'x-airbyte-stream-name': 'smart_collections',
                 'x-airbyte-ai-hints': {
-                    'summary': 'Automated product collections based on rules in Shopify',
-                    'when_to_use': 'Questions about automated collections or rule-based groupings',
-                    'trigger_phrases': ['smart collection', 'automated collection'],
+                    'summary': 'Automated collections whose membership is defined by rules (e.g. tag, price, vendor)',
+                    'when_to_use': 'Questions about rule-based/automatic collections and their conditions',
+                    'trigger_phrases': ['smart collection', 'automated collection', 'rule-based collection'],
                     'freshness': 'live',
-                    'example_questions': ['What smart collections exist?'],
-                    'search_strategy': 'Search by title',
+                    'example_questions': ['List smart collections', 'What rules define a smart collection?'],
+                    'search_strategy': 'List all or filter by title; membership is rule-driven, not manual',
                 },
             },
             ai_hints={
-                'summary': 'Automated product collections based on rules in Shopify',
-                'when_to_use': 'Questions about automated collections or rule-based groupings',
-                'trigger_phrases': ['smart collection', 'automated collection'],
+                'summary': 'Automated collections whose membership is defined by rules (e.g. tag, price, vendor)',
+                'when_to_use': 'Questions about rule-based/automatic collections and their conditions',
+                'trigger_phrases': ['smart collection', 'automated collection', 'rule-based collection'],
                 'freshness': 'live',
-                'example_questions': ['What smart collections exist?'],
-                'search_strategy': 'Search by title',
+                'example_questions': ['List smart collections', 'What rules define a smart collection?'],
+                'search_strategy': 'List all or filter by title; membership is rule-driven, not manual',
             },
         ),
         EntityDefinition(
@@ -8310,12 +10665,17 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                     'x-airbyte-entity-name': 'collects',
                                     'x-airbyte-stream-name': 'collects',
                                     'x-airbyte-ai-hints': {
-                                        'summary': 'Links between products and collections in Shopify',
-                                        'when_to_use': 'Questions about which products are in which collections',
-                                        'trigger_phrases': ['product in collection', 'collection membership'],
+                                        'summary': 'Join records linking products to custom collections, with sort position',
+                                        'when_to_use': 'When you need the product-to-collection membership mapping or ordering',
+                                        'trigger_phrases': [
+                                            'collect',
+                                            'collection membership',
+                                            'product in collection',
+                                            'collection mapping',
+                                        ],
                                         'freshness': 'live',
-                                        'example_questions': ['What products are in a collection?'],
-                                        'search_strategy': 'Filter by collection or product',
+                                        'example_questions': ['Which collection is a product in?', 'List products in a custom collection'],
+                                        'search_strategy': 'Filter by collection_id or product_id to resolve membership',
                                     },
                                 },
                             },
@@ -8366,12 +10726,17 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                 'x-airbyte-entity-name': 'collects',
                                 'x-airbyte-stream-name': 'collects',
                                 'x-airbyte-ai-hints': {
-                                    'summary': 'Links between products and collections in Shopify',
-                                    'when_to_use': 'Questions about which products are in which collections',
-                                    'trigger_phrases': ['product in collection', 'collection membership'],
+                                    'summary': 'Join records linking products to custom collections, with sort position',
+                                    'when_to_use': 'When you need the product-to-collection membership mapping or ordering',
+                                    'trigger_phrases': [
+                                        'collect',
+                                        'collection membership',
+                                        'product in collection',
+                                        'collection mapping',
+                                    ],
                                     'freshness': 'live',
-                                    'example_questions': ['What products are in a collection?'],
-                                    'search_strategy': 'Filter by collection or product',
+                                    'example_questions': ['Which collection is a product in?', 'List products in a custom collection'],
+                                    'search_strategy': 'Filter by collection_id or product_id to resolve membership',
                                 },
                             },
                         },
@@ -8409,27 +10774,43 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'collects',
                 'x-airbyte-stream-name': 'collects',
                 'x-airbyte-ai-hints': {
-                    'summary': 'Links between products and collections in Shopify',
-                    'when_to_use': 'Questions about which products are in which collections',
-                    'trigger_phrases': ['product in collection', 'collection membership'],
+                    'summary': 'Join records linking products to custom collections, with sort position',
+                    'when_to_use': 'When you need the product-to-collection membership mapping or ordering',
+                    'trigger_phrases': [
+                        'collect',
+                        'collection membership',
+                        'product in collection',
+                        'collection mapping',
+                    ],
                     'freshness': 'live',
-                    'example_questions': ['What products are in a collection?'],
-                    'search_strategy': 'Filter by collection or product',
+                    'example_questions': ['Which collection is a product in?', 'List products in a custom collection'],
+                    'search_strategy': 'Filter by collection_id or product_id to resolve membership',
                 },
             },
             ai_hints={
-                'summary': 'Links between products and collections in Shopify',
-                'when_to_use': 'Questions about which products are in which collections',
-                'trigger_phrases': ['product in collection', 'collection membership'],
+                'summary': 'Join records linking products to custom collections, with sort position',
+                'when_to_use': 'When you need the product-to-collection membership mapping or ordering',
+                'trigger_phrases': [
+                    'collect',
+                    'collection membership',
+                    'product in collection',
+                    'collection mapping',
+                ],
                 'freshness': 'live',
-                'example_questions': ['What products are in a collection?'],
-                'search_strategy': 'Filter by collection or product',
+                'example_questions': ['Which collection is a product in?', 'List products in a custom collection'],
+                'search_strategy': 'Filter by collection_id or product_id to resolve membership',
             },
         ),
         EntityDefinition(
             name='draft_orders',
             stream_name='draft_orders',
-            actions=[Action.LIST, Action.GET],
+            actions=[
+                Action.LIST,
+                Action.GET,
+                Action.CREATE,
+                Action.UPDATE,
+                Action.DELETE,
+            ],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
@@ -9064,12 +11445,18 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                                     'x-airbyte-entity-name': 'customers',
                                                     'x-airbyte-stream-name': 'customers',
                                                     'x-airbyte-ai-hints': {
-                                                        'summary': 'Shopify customers with order history and contact information',
-                                                        'when_to_use': 'Looking up customer details or purchase history',
-                                                        'trigger_phrases': ['shopify customer', 'buyer', 'customer info'],
+                                                        'summary': 'Shopify customers with contact info, addresses, order history, and marketing consent',
+                                                        'when_to_use': 'Looking up customer details, contact information, purchase history, or marketing status',
+                                                        'trigger_phrases': [
+                                                            'shopify customer',
+                                                            'buyer',
+                                                            'customer info',
+                                                            'customer email',
+                                                            'customer list',
+                                                        ],
                                                         'freshness': 'live',
-                                                        'example_questions': ['Find a customer in Shopify', 'Show customer order history'],
-                                                        'search_strategy': 'Search by email, name, or phone',
+                                                        'example_questions': ['Find a customer in Shopify', "Show a customer's order history", 'List customers who joined this month'],
+                                                        'search_strategy': 'Search by email, name, or phone; filter by created/updated date',
                                                     },
                                                 },
                                                 {'type': 'null'},
@@ -9096,12 +11483,18 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                     'x-airbyte-entity-name': 'draft_orders',
                                     'x-airbyte-stream-name': 'draft_orders',
                                     'x-airbyte-ai-hints': {
-                                        'summary': 'Draft orders created manually in Shopify admin',
-                                        'when_to_use': 'Questions about draft orders or manually created orders',
-                                        'trigger_phrases': ['draft order', 'manual order'],
+                                        'summary': 'Draft orders — provisional orders/quotes a merchant builds before invoicing or completing them',
+                                        'when_to_use': 'Questions about quotes, invoices, or orders being drafted before they are finalized',
+                                        'trigger_phrases': [
+                                            'draft order',
+                                            'quote',
+                                            'invoice',
+                                            'provisional order',
+                                            'order in progress',
+                                        ],
                                         'freshness': 'live',
-                                        'example_questions': ['Show draft orders'],
-                                        'search_strategy': 'Filter by status or date',
+                                        'example_questions': ['Show open draft orders', 'List quotes awaiting payment'],
+                                        'search_strategy': 'List all or filter by status (open/invoice_sent/completed)',
                                     },
                                 },
                             },
@@ -9713,12 +12106,18 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                                 'x-airbyte-entity-name': 'customers',
                                                 'x-airbyte-stream-name': 'customers',
                                                 'x-airbyte-ai-hints': {
-                                                    'summary': 'Shopify customers with order history and contact information',
-                                                    'when_to_use': 'Looking up customer details or purchase history',
-                                                    'trigger_phrases': ['shopify customer', 'buyer', 'customer info'],
+                                                    'summary': 'Shopify customers with contact info, addresses, order history, and marketing consent',
+                                                    'when_to_use': 'Looking up customer details, contact information, purchase history, or marketing status',
+                                                    'trigger_phrases': [
+                                                        'shopify customer',
+                                                        'buyer',
+                                                        'customer info',
+                                                        'customer email',
+                                                        'customer list',
+                                                    ],
                                                     'freshness': 'live',
-                                                    'example_questions': ['Find a customer in Shopify', 'Show customer order history'],
-                                                    'search_strategy': 'Search by email, name, or phone',
+                                                    'example_questions': ['Find a customer in Shopify', "Show a customer's order history", 'List customers who joined this month'],
+                                                    'search_strategy': 'Search by email, name, or phone; filter by created/updated date',
                                                 },
                                             },
                                             {'type': 'null'},
@@ -9745,17 +12144,356 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                 'x-airbyte-entity-name': 'draft_orders',
                                 'x-airbyte-stream-name': 'draft_orders',
                                 'x-airbyte-ai-hints': {
-                                    'summary': 'Draft orders created manually in Shopify admin',
-                                    'when_to_use': 'Questions about draft orders or manually created orders',
-                                    'trigger_phrases': ['draft order', 'manual order'],
+                                    'summary': 'Draft orders — provisional orders/quotes a merchant builds before invoicing or completing them',
+                                    'when_to_use': 'Questions about quotes, invoices, or orders being drafted before they are finalized',
+                                    'trigger_phrases': [
+                                        'draft order',
+                                        'quote',
+                                        'invoice',
+                                        'provisional order',
+                                        'order in progress',
+                                    ],
                                     'freshness': 'live',
-                                    'example_questions': ['Show draft orders'],
-                                    'search_strategy': 'Filter by status or date',
+                                    'example_questions': ['Show open draft orders', 'List quotes awaiting payment'],
+                                    'search_strategy': 'List all or filter by status (open/invoice_sent/completed)',
                                 },
                             },
                         },
                     },
                     record_extractor='$.draft_order',
+                ),
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/graphql.json:draftOrderCreate',
+                    path_override=PathOverrideConfig(
+                        path='/graphql.json',
+                    ),
+                    action=Action.CREATE,
+                    description='Creates a new draft order via GraphQL mutation.\nDraft orders can be completed to become regular orders.\n',
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'draftOrderCreate': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'userErrors': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'field': {
+                                                            'type': ['string', 'null', 'array'],
+                                                            'description': 'Path to the input field that caused the error',
+                                                        },
+                                                        'message': {'type': 'string', 'description': 'Error message'},
+                                                        'code': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Error code',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            'draftOrder': {
+                                                'type': 'object',
+                                                'properties': {
+                                                    'id': {'type': 'string'},
+                                                    'name': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'email': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'status': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'createdAt': {
+                                                        'type': ['string', 'null'],
+                                                        'format': 'date-time',
+                                                    },
+                                                    'updatedAt': {
+                                                        'type': ['string', 'null'],
+                                                        'format': 'date-time',
+                                                    },
+                                                    'totalPrice': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'currencyCode': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                    'draftOrderUpdate': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'userErrors': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'field': {
+                                                            'type': ['string', 'null', 'array'],
+                                                            'description': 'Path to the input field that caused the error',
+                                                        },
+                                                        'message': {'type': 'string', 'description': 'Error message'},
+                                                        'code': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Error code',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            'draftOrder': {
+                                                'type': 'object',
+                                                'properties': {
+                                                    'id': {'type': 'string'},
+                                                    'name': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'email': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'status': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'createdAt': {
+                                                        'type': ['string', 'null'],
+                                                        'format': 'date-time',
+                                                    },
+                                                    'updatedAt': {
+                                                        'type': ['string', 'null'],
+                                                        'format': 'date-time',
+                                                    },
+                                                    'totalPrice': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'currencyCode': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    graphql_body={
+                        'type': 'graphql',
+                        'query': 'mutation draftOrderCreate($input: DraftOrderInput!) { draftOrderCreate(input: $input) { userErrors { field message } draftOrder { id name email status createdAt updatedAt totalPrice currencyCode } } }',
+                        'variables': {'input': '{{ input }}'},
+                    },
+                    record_extractor='$.data.draftOrderCreate',
+                    ai_hints={
+                        'summary': 'Create a draft order (quote/invoice)',
+                        'when_to_use': 'When the user asks to draft an order, build a quote, or prepare an invoice',
+                        'trigger_phrases': [
+                            'create a draft order',
+                            'build a quote',
+                            'prepare an invoice',
+                            'draft an order',
+                        ],
+                        'freshness': 'live',
+                        'example_questions': ['Create a draft order for a customer'],
+                        'search_strategy': 'Use draft_orders.create with line items and customer. Requires write_draft_orders scope. Finalize later with draft_order_complete.update.',
+                    },
+                ),
+                Action.UPDATE: EndpointDefinition(
+                    method='POST',
+                    path='/graphql.json:draftOrderUpdate',
+                    path_override=PathOverrideConfig(
+                        path='/graphql.json',
+                    ),
+                    action=Action.UPDATE,
+                    description='Updates an existing draft order via GraphQL mutation.\nOnly open draft orders can be updated.\n',
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'draftOrderCreate': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'userErrors': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'field': {
+                                                            'type': ['string', 'null', 'array'],
+                                                            'description': 'Path to the input field that caused the error',
+                                                        },
+                                                        'message': {'type': 'string', 'description': 'Error message'},
+                                                        'code': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Error code',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            'draftOrder': {
+                                                'type': 'object',
+                                                'properties': {
+                                                    'id': {'type': 'string'},
+                                                    'name': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'email': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'status': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'createdAt': {
+                                                        'type': ['string', 'null'],
+                                                        'format': 'date-time',
+                                                    },
+                                                    'updatedAt': {
+                                                        'type': ['string', 'null'],
+                                                        'format': 'date-time',
+                                                    },
+                                                    'totalPrice': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'currencyCode': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                    'draftOrderUpdate': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'userErrors': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'field': {
+                                                            'type': ['string', 'null', 'array'],
+                                                            'description': 'Path to the input field that caused the error',
+                                                        },
+                                                        'message': {'type': 'string', 'description': 'Error message'},
+                                                        'code': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Error code',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            'draftOrder': {
+                                                'type': 'object',
+                                                'properties': {
+                                                    'id': {'type': 'string'},
+                                                    'name': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'email': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'status': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'createdAt': {
+                                                        'type': ['string', 'null'],
+                                                        'format': 'date-time',
+                                                    },
+                                                    'updatedAt': {
+                                                        'type': ['string', 'null'],
+                                                        'format': 'date-time',
+                                                    },
+                                                    'totalPrice': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'currencyCode': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    graphql_body={
+                        'type': 'graphql',
+                        'query': 'mutation draftOrderUpdate($id: ID!, $input: DraftOrderInput!) { draftOrderUpdate(id: $id, input: $input) { userErrors { field message } draftOrder { id name email status createdAt updatedAt totalPrice currencyCode } } }',
+                        'variables': {'id': '{{ id }}', 'input': '{{ input }}'},
+                    },
+                    record_extractor='$.data.draftOrderUpdate',
+                    ai_hints={
+                        'summary': 'Update a draft order',
+                        'when_to_use': 'When the user asks to change line items, discounts, or customer on a draft order',
+                        'trigger_phrases': ['update a draft order', 'edit a quote', 'change draft order items'],
+                        'freshness': 'live',
+                        'example_questions': ['Add an item to a draft order'],
+                        'search_strategy': 'Use draft_orders.update with the draft order GID and changed fields. Requires write_draft_orders scope.',
+                    },
+                ),
+                Action.DELETE: EndpointDefinition(
+                    method='POST',
+                    path='/graphql.json:draftOrderDelete',
+                    path_override=PathOverrideConfig(
+                        path='/graphql.json',
+                    ),
+                    action=Action.DELETE,
+                    description='Deletes a draft order via GraphQL mutation.\nOnly open draft orders can be deleted.\n',
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'draftOrderDelete': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'userErrors': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'field': {
+                                                            'type': ['string', 'null', 'array'],
+                                                            'description': 'Path to the input field that caused the error',
+                                                        },
+                                                        'message': {'type': 'string', 'description': 'Error message'},
+                                                        'code': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Error code',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            'deletedId': {
+                                                'type': ['string', 'null'],
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    graphql_body={
+                        'type': 'graphql',
+                        'query': 'mutation draftOrderDelete($input: DraftOrderDeleteInput!) { draftOrderDelete(input: $input) { userErrors { field message } deletedId } }',
+                        'variables': {'input': '{{ input }}'},
+                    },
+                    record_extractor='$.data.draftOrderDelete',
+                    ai_hints={
+                        'summary': 'Delete a draft order',
+                        'when_to_use': 'When the user asks to discard or delete a draft order/quote',
+                        'trigger_phrases': ['delete a draft order', 'discard a quote', 'remove a draft order'],
+                        'freshness': 'live',
+                        'example_questions': ['Delete a draft order'],
+                        'search_strategy': 'Use draft_orders.delete with the draft order GID. Requires write_draft_orders scope.',
+                    },
                 ),
             },
             entity_schema={
@@ -9881,21 +12619,33 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'draft_orders',
                 'x-airbyte-stream-name': 'draft_orders',
                 'x-airbyte-ai-hints': {
-                    'summary': 'Draft orders created manually in Shopify admin',
-                    'when_to_use': 'Questions about draft orders or manually created orders',
-                    'trigger_phrases': ['draft order', 'manual order'],
+                    'summary': 'Draft orders — provisional orders/quotes a merchant builds before invoicing or completing them',
+                    'when_to_use': 'Questions about quotes, invoices, or orders being drafted before they are finalized',
+                    'trigger_phrases': [
+                        'draft order',
+                        'quote',
+                        'invoice',
+                        'provisional order',
+                        'order in progress',
+                    ],
                     'freshness': 'live',
-                    'example_questions': ['Show draft orders'],
-                    'search_strategy': 'Filter by status or date',
+                    'example_questions': ['Show open draft orders', 'List quotes awaiting payment'],
+                    'search_strategy': 'List all or filter by status (open/invoice_sent/completed)',
                 },
             },
             ai_hints={
-                'summary': 'Draft orders created manually in Shopify admin',
-                'when_to_use': 'Questions about draft orders or manually created orders',
-                'trigger_phrases': ['draft order', 'manual order'],
+                'summary': 'Draft orders — provisional orders/quotes a merchant builds before invoicing or completing them',
+                'when_to_use': 'Questions about quotes, invoices, or orders being drafted before they are finalized',
+                'trigger_phrases': [
+                    'draft order',
+                    'quote',
+                    'invoice',
+                    'provisional order',
+                    'order in progress',
+                ],
                 'freshness': 'live',
-                'example_questions': ['Show draft orders'],
-                'search_strategy': 'Filter by status or date',
+                'example_questions': ['Show open draft orders', 'List quotes awaiting payment'],
+                'search_strategy': 'List all or filter by status (open/invoice_sent/completed)',
             },
         ),
         EntityDefinition(
@@ -10115,12 +12865,18 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                     'x-airbyte-entity-name': 'fulfillments',
                                     'x-airbyte-stream-name': 'fulfillments',
                                     'x-airbyte-ai-hints': {
-                                        'summary': 'Order fulfillments with tracking and shipping details',
-                                        'when_to_use': 'Questions about shipping status or fulfillment tracking',
-                                        'trigger_phrases': ['fulfillment', 'shipping status', 'tracking number'],
+                                        'summary': 'Fulfillment records for an order — shipped items, tracking numbers, and carrier',
+                                        'when_to_use': 'Questions about shipments, tracking numbers, or what has shipped on an order',
+                                        'trigger_phrases': [
+                                            'fulfillment',
+                                            'shipment',
+                                            'tracking number',
+                                            'what shipped',
+                                            'carrier',
+                                        ],
                                         'freshness': 'live',
-                                        'example_questions': ['What is the shipping status of an order?'],
-                                        'search_strategy': 'Filter by order',
+                                        'example_questions': ['Show fulfillments for an order', 'What is the tracking number for a shipment?'],
+                                        'search_strategy': 'Filter by order_id; an order can have multiple fulfillments',
                                     },
                                 },
                             },
@@ -10302,12 +13058,18 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                 'x-airbyte-entity-name': 'fulfillments',
                                 'x-airbyte-stream-name': 'fulfillments',
                                 'x-airbyte-ai-hints': {
-                                    'summary': 'Order fulfillments with tracking and shipping details',
-                                    'when_to_use': 'Questions about shipping status or fulfillment tracking',
-                                    'trigger_phrases': ['fulfillment', 'shipping status', 'tracking number'],
+                                    'summary': 'Fulfillment records for an order — shipped items, tracking numbers, and carrier',
+                                    'when_to_use': 'Questions about shipments, tracking numbers, or what has shipped on an order',
+                                    'trigger_phrases': [
+                                        'fulfillment',
+                                        'shipment',
+                                        'tracking number',
+                                        'what shipped',
+                                        'carrier',
+                                    ],
                                     'freshness': 'live',
-                                    'example_questions': ['What is the shipping status of an order?'],
-                                    'search_strategy': 'Filter by order',
+                                    'example_questions': ['Show fulfillments for an order', 'What is the tracking number for a shipment?'],
+                                    'search_strategy': 'Filter by order_id; an order can have multiple fulfillments',
                                 },
                             },
                         },
@@ -10381,21 +13143,33 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'fulfillments',
                 'x-airbyte-stream-name': 'fulfillments',
                 'x-airbyte-ai-hints': {
-                    'summary': 'Order fulfillments with tracking and shipping details',
-                    'when_to_use': 'Questions about shipping status or fulfillment tracking',
-                    'trigger_phrases': ['fulfillment', 'shipping status', 'tracking number'],
+                    'summary': 'Fulfillment records for an order — shipped items, tracking numbers, and carrier',
+                    'when_to_use': 'Questions about shipments, tracking numbers, or what has shipped on an order',
+                    'trigger_phrases': [
+                        'fulfillment',
+                        'shipment',
+                        'tracking number',
+                        'what shipped',
+                        'carrier',
+                    ],
                     'freshness': 'live',
-                    'example_questions': ['What is the shipping status of an order?'],
-                    'search_strategy': 'Filter by order',
+                    'example_questions': ['Show fulfillments for an order', 'What is the tracking number for a shipment?'],
+                    'search_strategy': 'Filter by order_id; an order can have multiple fulfillments',
                 },
             },
             ai_hints={
-                'summary': 'Order fulfillments with tracking and shipping details',
-                'when_to_use': 'Questions about shipping status or fulfillment tracking',
-                'trigger_phrases': ['fulfillment', 'shipping status', 'tracking number'],
+                'summary': 'Fulfillment records for an order — shipped items, tracking numbers, and carrier',
+                'when_to_use': 'Questions about shipments, tracking numbers, or what has shipped on an order',
+                'trigger_phrases': [
+                    'fulfillment',
+                    'shipment',
+                    'tracking number',
+                    'what shipped',
+                    'carrier',
+                ],
                 'freshness': 'live',
-                'example_questions': ['What is the shipping status of an order?'],
-                'search_strategy': 'Filter by order',
+                'example_questions': ['Show fulfillments for an order', 'What is the tracking number for a shipment?'],
+                'search_strategy': 'Filter by order_id; an order can have multiple fulfillments',
             },
             relationships=[
                 EntityRelationshipConfig(
@@ -10557,12 +13331,18 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                                 'x-airbyte-entity-name': 'transactions',
                                                 'x-airbyte-stream-name': 'transactions',
                                                 'x-airbyte-ai-hints': {
-                                                    'summary': 'Payment transactions on Shopify orders',
-                                                    'when_to_use': 'Questions about payment processing or transaction details',
-                                                    'trigger_phrases': ['shopify transaction', 'payment', 'charge'],
+                                                    'summary': 'Payment transactions for an order (authorizations, captures, sales, refunds, voids)',
+                                                    'when_to_use': 'Questions about how an order was paid, gateway, or transaction amounts',
+                                                    'trigger_phrases': [
+                                                        'order transaction',
+                                                        'payment',
+                                                        'capture',
+                                                        'authorization',
+                                                        'how was an order paid',
+                                                    ],
                                                     'freshness': 'live',
-                                                    'example_questions': ['Show transactions for an order'],
-                                                    'search_strategy': 'Filter by order',
+                                                    'example_questions': ['Show payment transactions for an order', "Was an order's payment captured?"],
+                                                    'search_strategy': 'Filter by order_id; transactions show kind (sale, authorization, capture, refund, void) and gateway',
                                                 },
                                             },
                                         },
@@ -10582,12 +13362,17 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                     'x-airbyte-entity-name': 'order_refunds',
                                     'x-airbyte-stream-name': 'order_refunds',
                                     'x-airbyte-ai-hints': {
-                                        'summary': 'Refunds processed for Shopify orders',
-                                        'when_to_use': 'Questions about refunds or return processing',
-                                        'trigger_phrases': ['refund', 'order refund', 'return'],
+                                        'summary': 'Refunds issued against a Shopify order, including refunded line items and amounts',
+                                        'when_to_use': 'Questions about refunds, returned money, or what was refunded on an order',
+                                        'trigger_phrases': [
+                                            'refund',
+                                            'refunded amount',
+                                            'order refund',
+                                            'money back',
+                                        ],
                                         'freshness': 'live',
-                                        'example_questions': ['What refunds were processed for an order?'],
-                                        'search_strategy': 'Filter by order',
+                                        'example_questions': ['Show refunds for an order', 'How much was refunded on an order?'],
+                                        'search_strategy': 'Filter by order_id; each order may have multiple partial refunds',
                                     },
                                 },
                             },
@@ -10731,12 +13516,18 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                             'x-airbyte-entity-name': 'transactions',
                                             'x-airbyte-stream-name': 'transactions',
                                             'x-airbyte-ai-hints': {
-                                                'summary': 'Payment transactions on Shopify orders',
-                                                'when_to_use': 'Questions about payment processing or transaction details',
-                                                'trigger_phrases': ['shopify transaction', 'payment', 'charge'],
+                                                'summary': 'Payment transactions for an order (authorizations, captures, sales, refunds, voids)',
+                                                'when_to_use': 'Questions about how an order was paid, gateway, or transaction amounts',
+                                                'trigger_phrases': [
+                                                    'order transaction',
+                                                    'payment',
+                                                    'capture',
+                                                    'authorization',
+                                                    'how was an order paid',
+                                                ],
                                                 'freshness': 'live',
-                                                'example_questions': ['Show transactions for an order'],
-                                                'search_strategy': 'Filter by order',
+                                                'example_questions': ['Show payment transactions for an order', "Was an order's payment captured?"],
+                                                'search_strategy': 'Filter by order_id; transactions show kind (sale, authorization, capture, refund, void) and gateway',
                                             },
                                         },
                                     },
@@ -10756,12 +13547,17 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                 'x-airbyte-entity-name': 'order_refunds',
                                 'x-airbyte-stream-name': 'order_refunds',
                                 'x-airbyte-ai-hints': {
-                                    'summary': 'Refunds processed for Shopify orders',
-                                    'when_to_use': 'Questions about refunds or return processing',
-                                    'trigger_phrases': ['refund', 'order refund', 'return'],
+                                    'summary': 'Refunds issued against a Shopify order, including refunded line items and amounts',
+                                    'when_to_use': 'Questions about refunds, returned money, or what was refunded on an order',
+                                    'trigger_phrases': [
+                                        'refund',
+                                        'refunded amount',
+                                        'order refund',
+                                        'money back',
+                                    ],
                                     'freshness': 'live',
-                                    'example_questions': ['What refunds were processed for an order?'],
-                                    'search_strategy': 'Filter by order',
+                                    'example_questions': ['Show refunds for an order', 'How much was refunded on an order?'],
+                                    'search_strategy': 'Filter by order_id; each order may have multiple partial refunds',
                                 },
                             },
                         },
@@ -10828,21 +13624,31 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'order_refunds',
                 'x-airbyte-stream-name': 'order_refunds',
                 'x-airbyte-ai-hints': {
-                    'summary': 'Refunds processed for Shopify orders',
-                    'when_to_use': 'Questions about refunds or return processing',
-                    'trigger_phrases': ['refund', 'order refund', 'return'],
+                    'summary': 'Refunds issued against a Shopify order, including refunded line items and amounts',
+                    'when_to_use': 'Questions about refunds, returned money, or what was refunded on an order',
+                    'trigger_phrases': [
+                        'refund',
+                        'refunded amount',
+                        'order refund',
+                        'money back',
+                    ],
                     'freshness': 'live',
-                    'example_questions': ['What refunds were processed for an order?'],
-                    'search_strategy': 'Filter by order',
+                    'example_questions': ['Show refunds for an order', 'How much was refunded on an order?'],
+                    'search_strategy': 'Filter by order_id; each order may have multiple partial refunds',
                 },
             },
             ai_hints={
-                'summary': 'Refunds processed for Shopify orders',
-                'when_to_use': 'Questions about refunds or return processing',
-                'trigger_phrases': ['refund', 'order refund', 'return'],
+                'summary': 'Refunds issued against a Shopify order, including refunded line items and amounts',
+                'when_to_use': 'Questions about refunds, returned money, or what was refunded on an order',
+                'trigger_phrases': [
+                    'refund',
+                    'refunded amount',
+                    'order refund',
+                    'money back',
+                ],
                 'freshness': 'live',
-                'example_questions': ['What refunds were processed for an order?'],
-                'search_strategy': 'Filter by order',
+                'example_questions': ['Show refunds for an order', 'How much was refunded on an order?'],
+                'search_strategy': 'Filter by order_id; each order may have multiple partial refunds',
             },
             relationships=[
                 EntityRelationshipConfig(
@@ -10957,12 +13763,18 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                     'x-airbyte-entity-name': 'transactions',
                                     'x-airbyte-stream-name': 'transactions',
                                     'x-airbyte-ai-hints': {
-                                        'summary': 'Payment transactions on Shopify orders',
-                                        'when_to_use': 'Questions about payment processing or transaction details',
-                                        'trigger_phrases': ['shopify transaction', 'payment', 'charge'],
+                                        'summary': 'Payment transactions for an order (authorizations, captures, sales, refunds, voids)',
+                                        'when_to_use': 'Questions about how an order was paid, gateway, or transaction amounts',
+                                        'trigger_phrases': [
+                                            'order transaction',
+                                            'payment',
+                                            'capture',
+                                            'authorization',
+                                            'how was an order paid',
+                                        ],
                                         'freshness': 'live',
-                                        'example_questions': ['Show transactions for an order'],
-                                        'search_strategy': 'Filter by order',
+                                        'example_questions': ['Show payment transactions for an order', "Was an order's payment captured?"],
+                                        'search_strategy': 'Filter by order_id; transactions show kind (sale, authorization, capture, refund, void) and gateway',
                                     },
                                 },
                             },
@@ -11065,12 +13877,18 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                 'x-airbyte-entity-name': 'transactions',
                                 'x-airbyte-stream-name': 'transactions',
                                 'x-airbyte-ai-hints': {
-                                    'summary': 'Payment transactions on Shopify orders',
-                                    'when_to_use': 'Questions about payment processing or transaction details',
-                                    'trigger_phrases': ['shopify transaction', 'payment', 'charge'],
+                                    'summary': 'Payment transactions for an order (authorizations, captures, sales, refunds, voids)',
+                                    'when_to_use': 'Questions about how an order was paid, gateway, or transaction amounts',
+                                    'trigger_phrases': [
+                                        'order transaction',
+                                        'payment',
+                                        'capture',
+                                        'authorization',
+                                        'how was an order paid',
+                                    ],
                                     'freshness': 'live',
-                                    'example_questions': ['Show transactions for an order'],
-                                    'search_strategy': 'Filter by order',
+                                    'example_questions': ['Show payment transactions for an order', "Was an order's payment captured?"],
+                                    'search_strategy': 'Filter by order_id; transactions show kind (sale, authorization, capture, refund, void) and gateway',
                                 },
                             },
                         },
@@ -11159,21 +13977,33 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'transactions',
                 'x-airbyte-stream-name': 'transactions',
                 'x-airbyte-ai-hints': {
-                    'summary': 'Payment transactions on Shopify orders',
-                    'when_to_use': 'Questions about payment processing or transaction details',
-                    'trigger_phrases': ['shopify transaction', 'payment', 'charge'],
+                    'summary': 'Payment transactions for an order (authorizations, captures, sales, refunds, voids)',
+                    'when_to_use': 'Questions about how an order was paid, gateway, or transaction amounts',
+                    'trigger_phrases': [
+                        'order transaction',
+                        'payment',
+                        'capture',
+                        'authorization',
+                        'how was an order paid',
+                    ],
                     'freshness': 'live',
-                    'example_questions': ['Show transactions for an order'],
-                    'search_strategy': 'Filter by order',
+                    'example_questions': ['Show payment transactions for an order', "Was an order's payment captured?"],
+                    'search_strategy': 'Filter by order_id; transactions show kind (sale, authorization, capture, refund, void) and gateway',
                 },
             },
             ai_hints={
-                'summary': 'Payment transactions on Shopify orders',
-                'when_to_use': 'Questions about payment processing or transaction details',
-                'trigger_phrases': ['shopify transaction', 'payment', 'charge'],
+                'summary': 'Payment transactions for an order (authorizations, captures, sales, refunds, voids)',
+                'when_to_use': 'Questions about how an order was paid, gateway, or transaction amounts',
+                'trigger_phrases': [
+                    'order transaction',
+                    'payment',
+                    'capture',
+                    'authorization',
+                    'how was an order paid',
+                ],
                 'freshness': 'live',
-                'example_questions': ['Show transactions for an order'],
-                'search_strategy': 'Filter by order',
+                'example_questions': ['Show payment transactions for an order', "Was an order's payment captured?"],
+                'search_strategy': 'Filter by order_id; transactions show kind (sale, authorization, capture, refund, void) and gateway',
             },
             relationships=[
                 EntityRelationshipConfig(
@@ -11269,12 +14099,17 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                     'x-airbyte-entity-name': 'tender_transactions',
                                     'x-airbyte-stream-name': 'tender_transactions',
                                     'x-airbyte-ai-hints': {
-                                        'summary': 'Tender transactions recording payment method usage',
-                                        'when_to_use': 'Questions about payment method usage or tender records',
-                                        'trigger_phrases': ['tender transaction', 'payment method'],
+                                        'summary': 'Store-wide tender transactions — each real money movement between a buyer and the shop',
+                                        'when_to_use': 'Reconciliation or reporting on money movement across all orders over time',
+                                        'trigger_phrases': [
+                                            'tender transaction',
+                                            'money movement',
+                                            'payment reconciliation',
+                                            'cash flow',
+                                        ],
                                         'freshness': 'live',
-                                        'example_questions': ['Show recent tender transactions'],
-                                        'search_strategy': 'Filter by date',
+                                        'example_questions': ['List tender transactions from last month', 'Show all money movements for the store'],
+                                        'search_strategy': 'List all and filter by processed_at date; immutable ledger across the whole shop',
                                     },
                                 },
                             },
@@ -11322,21 +14157,31 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'tender_transactions',
                 'x-airbyte-stream-name': 'tender_transactions',
                 'x-airbyte-ai-hints': {
-                    'summary': 'Tender transactions recording payment method usage',
-                    'when_to_use': 'Questions about payment method usage or tender records',
-                    'trigger_phrases': ['tender transaction', 'payment method'],
+                    'summary': 'Store-wide tender transactions — each real money movement between a buyer and the shop',
+                    'when_to_use': 'Reconciliation or reporting on money movement across all orders over time',
+                    'trigger_phrases': [
+                        'tender transaction',
+                        'money movement',
+                        'payment reconciliation',
+                        'cash flow',
+                    ],
                     'freshness': 'live',
-                    'example_questions': ['Show recent tender transactions'],
-                    'search_strategy': 'Filter by date',
+                    'example_questions': ['List tender transactions from last month', 'Show all money movements for the store'],
+                    'search_strategy': 'List all and filter by processed_at date; immutable ledger across the whole shop',
                 },
             },
             ai_hints={
-                'summary': 'Tender transactions recording payment method usage',
-                'when_to_use': 'Questions about payment method usage or tender records',
-                'trigger_phrases': ['tender transaction', 'payment method'],
+                'summary': 'Store-wide tender transactions — each real money movement between a buyer and the shop',
+                'when_to_use': 'Reconciliation or reporting on money movement across all orders over time',
+                'trigger_phrases': [
+                    'tender transaction',
+                    'money movement',
+                    'payment reconciliation',
+                    'cash flow',
+                ],
                 'freshness': 'live',
-                'example_questions': ['Show recent tender transactions'],
-                'search_strategy': 'Filter by date',
+                'example_questions': ['List tender transactions from last month', 'Show all money movements for the store'],
+                'search_strategy': 'List all and filter by processed_at date; immutable ledger across the whole shop',
             },
         ),
         EntityDefinition(
@@ -11384,12 +14229,17 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                     'x-airbyte-entity-name': 'countries',
                                     'x-airbyte-stream-name': 'countries',
                                     'x-airbyte-ai-hints': {
-                                        'summary': 'Countries configured for Shopify store shipping and taxes',
-                                        'when_to_use': 'Questions about shipping zones or tax configuration by country',
-                                        'trigger_phrases': ['shopify country', 'shipping country', 'tax region'],
+                                        'summary': 'Shipping countries configured for the store, with their provinces and tax settings',
+                                        'when_to_use': 'Questions about which countries the store ships to or country-level tax setup',
+                                        'trigger_phrases': [
+                                            'shipping countries',
+                                            'country tax',
+                                            'where does the store ship',
+                                            'country list',
+                                        ],
                                         'freshness': 'static',
-                                        'example_questions': ['What countries are configured for shipping?'],
-                                        'search_strategy': 'List all countries',
+                                        'example_questions': ['Which countries does the store ship to?', 'What is the tax rate for a country?'],
+                                        'search_strategy': 'List all configured shipping countries',
                                     },
                                 },
                             },
@@ -11436,12 +14286,17 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                 'x-airbyte-entity-name': 'countries',
                                 'x-airbyte-stream-name': 'countries',
                                 'x-airbyte-ai-hints': {
-                                    'summary': 'Countries configured for Shopify store shipping and taxes',
-                                    'when_to_use': 'Questions about shipping zones or tax configuration by country',
-                                    'trigger_phrases': ['shopify country', 'shipping country', 'tax region'],
+                                    'summary': 'Shipping countries configured for the store, with their provinces and tax settings',
+                                    'when_to_use': 'Questions about which countries the store ships to or country-level tax setup',
+                                    'trigger_phrases': [
+                                        'shipping countries',
+                                        'country tax',
+                                        'where does the store ship',
+                                        'country list',
+                                    ],
                                     'freshness': 'static',
-                                    'example_questions': ['What countries are configured for shipping?'],
-                                    'search_strategy': 'List all countries',
+                                    'example_questions': ['Which countries does the store ship to?', 'What is the tax rate for a country?'],
+                                    'search_strategy': 'List all configured shipping countries',
                                 },
                             },
                         },
@@ -11475,21 +14330,31 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'countries',
                 'x-airbyte-stream-name': 'countries',
                 'x-airbyte-ai-hints': {
-                    'summary': 'Countries configured for Shopify store shipping and taxes',
-                    'when_to_use': 'Questions about shipping zones or tax configuration by country',
-                    'trigger_phrases': ['shopify country', 'shipping country', 'tax region'],
+                    'summary': 'Shipping countries configured for the store, with their provinces and tax settings',
+                    'when_to_use': 'Questions about which countries the store ships to or country-level tax setup',
+                    'trigger_phrases': [
+                        'shipping countries',
+                        'country tax',
+                        'where does the store ship',
+                        'country list',
+                    ],
                     'freshness': 'static',
-                    'example_questions': ['What countries are configured for shipping?'],
-                    'search_strategy': 'List all countries',
+                    'example_questions': ['Which countries does the store ship to?', 'What is the tax rate for a country?'],
+                    'search_strategy': 'List all configured shipping countries',
                 },
             },
             ai_hints={
-                'summary': 'Countries configured for Shopify store shipping and taxes',
-                'when_to_use': 'Questions about shipping zones or tax configuration by country',
-                'trigger_phrases': ['shopify country', 'shipping country', 'tax region'],
+                'summary': 'Shipping countries configured for the store, with their provinces and tax settings',
+                'when_to_use': 'Questions about which countries the store ships to or country-level tax setup',
+                'trigger_phrases': [
+                    'shipping countries',
+                    'country tax',
+                    'where does the store ship',
+                    'country list',
+                ],
                 'freshness': 'static',
-                'example_questions': ['What countries are configured for shipping?'],
-                'search_strategy': 'List all countries',
+                'example_questions': ['Which countries does the store ship to?', 'What is the tax rate for a country?'],
+                'search_strategy': 'List all configured shipping countries',
             },
         ),
         EntityDefinition(
@@ -11574,12 +14439,17 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                     'x-airbyte-entity-name': 'metafields',
                                     'x-airbyte-stream-name': 'metafields',
                                     'x-airbyte-ai-hints': {
-                                        'summary': 'Custom metafields storing additional data on Shopify resources',
-                                        'when_to_use': 'Questions about custom metadata or extended fields on resources',
-                                        'trigger_phrases': ['metafield', 'custom field', 'metadata'],
+                                        'summary': 'Custom metafields (typed key/value data) attached to any Shopify resource via owner GID',
+                                        'when_to_use': 'When setting or deleting custom data on a product, order, customer, or other resource',
+                                        'trigger_phrases': [
+                                            'set metafield',
+                                            'delete metafield',
+                                            'custom field',
+                                            'metadata on a resource',
+                                        ],
                                         'freshness': 'live',
-                                        'example_questions': ['What metafields are on a product?'],
-                                        'search_strategy': 'Filter by resource type and namespace',
+                                        'example_questions': ['Set a metafield on a product', 'Delete a metafield from an order'],
+                                        'search_strategy': "Metafields are written by owner GID + namespace + key; requires the owner resource's write scope (e.g. write_products for a product metafield)",
                                     },
                                 },
                             },
@@ -11587,6 +14457,14 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.metafields',
                     meta_extractor={'next_page_url': '@link.next'},
+                    ai_hints={
+                        'summary': 'Custom metafields attached to the shop (store-level custom data)',
+                        'when_to_use': 'When you need store-level custom fields stored as metafields',
+                        'trigger_phrases': ['shop metafield', 'store custom field', 'store metadata'],
+                        'freshness': 'live',
+                        'example_questions': ['Show custom metafields on the shop'],
+                        'search_strategy': 'List shop-owned metafields; identify by namespace and key',
+                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -11648,12 +14526,17 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                 'x-airbyte-entity-name': 'metafields',
                                 'x-airbyte-stream-name': 'metafields',
                                 'x-airbyte-ai-hints': {
-                                    'summary': 'Custom metafields storing additional data on Shopify resources',
-                                    'when_to_use': 'Questions about custom metadata or extended fields on resources',
-                                    'trigger_phrases': ['metafield', 'custom field', 'metadata'],
+                                    'summary': 'Custom metafields (typed key/value data) attached to any Shopify resource via owner GID',
+                                    'when_to_use': 'When setting or deleting custom data on a product, order, customer, or other resource',
+                                    'trigger_phrases': [
+                                        'set metafield',
+                                        'delete metafield',
+                                        'custom field',
+                                        'metadata on a resource',
+                                    ],
                                     'freshness': 'live',
-                                    'example_questions': ['What metafields are on a product?'],
-                                    'search_strategy': 'Filter by resource type and namespace',
+                                    'example_questions': ['Set a metafield on a product', 'Delete a metafield from an order'],
+                                    'search_strategy': "Metafields are written by owner GID + namespace + key; requires the owner resource's write scope (e.g. write_products for a product metafield)",
                                 },
                             },
                         },
@@ -11746,12 +14629,17 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                     'x-airbyte-entity-name': 'metafields',
                                     'x-airbyte-stream-name': 'metafields',
                                     'x-airbyte-ai-hints': {
-                                        'summary': 'Custom metafields storing additional data on Shopify resources',
-                                        'when_to_use': 'Questions about custom metadata or extended fields on resources',
-                                        'trigger_phrases': ['metafield', 'custom field', 'metadata'],
+                                        'summary': 'Custom metafields (typed key/value data) attached to any Shopify resource via owner GID',
+                                        'when_to_use': 'When setting or deleting custom data on a product, order, customer, or other resource',
+                                        'trigger_phrases': [
+                                            'set metafield',
+                                            'delete metafield',
+                                            'custom field',
+                                            'metadata on a resource',
+                                        ],
                                         'freshness': 'live',
-                                        'example_questions': ['What metafields are on a product?'],
-                                        'search_strategy': 'Filter by resource type and namespace',
+                                        'example_questions': ['Set a metafield on a product', 'Delete a metafield from an order'],
+                                        'search_strategy': "Metafields are written by owner GID + namespace + key; requires the owner resource's write scope (e.g. write_products for a product metafield)",
                                     },
                                 },
                             },
@@ -11759,6 +14647,14 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.metafields',
                     meta_extractor={'next_page_url': '@link.next'},
+                    ai_hints={
+                        'summary': 'Custom metafields attached to a customer (extra customer data beyond standard fields)',
+                        'when_to_use': 'When you need custom fields stored on a customer record',
+                        'trigger_phrases': ['customer metafield', 'customer custom field', 'extra customer data'],
+                        'freshness': 'live',
+                        'example_questions': ['Show custom metafields on a customer'],
+                        'search_strategy': 'Filter by customer_id; identify by namespace and key',
+                    },
                 ),
             },
             relationships=[
@@ -11854,12 +14750,17 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                     'x-airbyte-entity-name': 'metafields',
                                     'x-airbyte-stream-name': 'metafields',
                                     'x-airbyte-ai-hints': {
-                                        'summary': 'Custom metafields storing additional data on Shopify resources',
-                                        'when_to_use': 'Questions about custom metadata or extended fields on resources',
-                                        'trigger_phrases': ['metafield', 'custom field', 'metadata'],
+                                        'summary': 'Custom metafields (typed key/value data) attached to any Shopify resource via owner GID',
+                                        'when_to_use': 'When setting or deleting custom data on a product, order, customer, or other resource',
+                                        'trigger_phrases': [
+                                            'set metafield',
+                                            'delete metafield',
+                                            'custom field',
+                                            'metadata on a resource',
+                                        ],
                                         'freshness': 'live',
-                                        'example_questions': ['What metafields are on a product?'],
-                                        'search_strategy': 'Filter by resource type and namespace',
+                                        'example_questions': ['Set a metafield on a product', 'Delete a metafield from an order'],
+                                        'search_strategy': "Metafields are written by owner GID + namespace + key; requires the owner resource's write scope (e.g. write_products for a product metafield)",
                                     },
                                 },
                             },
@@ -11867,6 +14768,14 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.metafields',
                     meta_extractor={'next_page_url': '@link.next'},
+                    ai_hints={
+                        'summary': 'Custom metafields attached to a product (extended product attributes)',
+                        'when_to_use': 'When you need custom product attributes stored as metafields',
+                        'trigger_phrases': ['product metafield', 'product custom field', 'extended product data'],
+                        'freshness': 'live',
+                        'example_questions': ['Show custom metafields on a product'],
+                        'search_strategy': 'Filter by product_id; identify by namespace and key',
+                    },
                 ),
             },
             relationships=[
@@ -11962,12 +14871,17 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                     'x-airbyte-entity-name': 'metafields',
                                     'x-airbyte-stream-name': 'metafields',
                                     'x-airbyte-ai-hints': {
-                                        'summary': 'Custom metafields storing additional data on Shopify resources',
-                                        'when_to_use': 'Questions about custom metadata or extended fields on resources',
-                                        'trigger_phrases': ['metafield', 'custom field', 'metadata'],
+                                        'summary': 'Custom metafields (typed key/value data) attached to any Shopify resource via owner GID',
+                                        'when_to_use': 'When setting or deleting custom data on a product, order, customer, or other resource',
+                                        'trigger_phrases': [
+                                            'set metafield',
+                                            'delete metafield',
+                                            'custom field',
+                                            'metadata on a resource',
+                                        ],
                                         'freshness': 'live',
-                                        'example_questions': ['What metafields are on a product?'],
-                                        'search_strategy': 'Filter by resource type and namespace',
+                                        'example_questions': ['Set a metafield on a product', 'Delete a metafield from an order'],
+                                        'search_strategy': "Metafields are written by owner GID + namespace + key; requires the owner resource's write scope (e.g. write_products for a product metafield)",
                                     },
                                 },
                             },
@@ -11975,6 +14889,14 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.metafields',
                     meta_extractor={'next_page_url': '@link.next'},
+                    ai_hints={
+                        'summary': 'Custom metafields attached to an order (extra order data)',
+                        'when_to_use': 'When you need custom fields stored on an order',
+                        'trigger_phrases': ['order metafield', 'order custom field'],
+                        'freshness': 'live',
+                        'example_questions': ['Show custom metafields on an order'],
+                        'search_strategy': 'Filter by order_id; identify by namespace and key',
+                    },
                 ),
             },
             relationships=[
@@ -12070,12 +14992,17 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                     'x-airbyte-entity-name': 'metafields',
                                     'x-airbyte-stream-name': 'metafields',
                                     'x-airbyte-ai-hints': {
-                                        'summary': 'Custom metafields storing additional data on Shopify resources',
-                                        'when_to_use': 'Questions about custom metadata or extended fields on resources',
-                                        'trigger_phrases': ['metafield', 'custom field', 'metadata'],
+                                        'summary': 'Custom metafields (typed key/value data) attached to any Shopify resource via owner GID',
+                                        'when_to_use': 'When setting or deleting custom data on a product, order, customer, or other resource',
+                                        'trigger_phrases': [
+                                            'set metafield',
+                                            'delete metafield',
+                                            'custom field',
+                                            'metadata on a resource',
+                                        ],
                                         'freshness': 'live',
-                                        'example_questions': ['What metafields are on a product?'],
-                                        'search_strategy': 'Filter by resource type and namespace',
+                                        'example_questions': ['Set a metafield on a product', 'Delete a metafield from an order'],
+                                        'search_strategy': "Metafields are written by owner GID + namespace + key; requires the owner resource's write scope (e.g. write_products for a product metafield)",
                                     },
                                 },
                             },
@@ -12083,6 +15010,14 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.metafields',
                     meta_extractor={'next_page_url': '@link.next'},
+                    ai_hints={
+                        'summary': 'Custom metafields attached to a draft order',
+                        'when_to_use': 'When you need custom fields stored on a draft order',
+                        'trigger_phrases': ['draft order metafield', 'draft order custom field'],
+                        'freshness': 'live',
+                        'example_questions': ['Show custom metafields on a draft order'],
+                        'search_strategy': 'Filter by draft_order_id; identify by namespace and key',
+                    },
                 ),
             },
             relationships=[
@@ -12178,12 +15113,17 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                     'x-airbyte-entity-name': 'metafields',
                                     'x-airbyte-stream-name': 'metafields',
                                     'x-airbyte-ai-hints': {
-                                        'summary': 'Custom metafields storing additional data on Shopify resources',
-                                        'when_to_use': 'Questions about custom metadata or extended fields on resources',
-                                        'trigger_phrases': ['metafield', 'custom field', 'metadata'],
+                                        'summary': 'Custom metafields (typed key/value data) attached to any Shopify resource via owner GID',
+                                        'when_to_use': 'When setting or deleting custom data on a product, order, customer, or other resource',
+                                        'trigger_phrases': [
+                                            'set metafield',
+                                            'delete metafield',
+                                            'custom field',
+                                            'metadata on a resource',
+                                        ],
                                         'freshness': 'live',
-                                        'example_questions': ['What metafields are on a product?'],
-                                        'search_strategy': 'Filter by resource type and namespace',
+                                        'example_questions': ['Set a metafield on a product', 'Delete a metafield from an order'],
+                                        'search_strategy': "Metafields are written by owner GID + namespace + key; requires the owner resource's write scope (e.g. write_products for a product metafield)",
                                     },
                                 },
                             },
@@ -12191,6 +15131,14 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.metafields',
                     meta_extractor={'next_page_url': '@link.next'},
+                    ai_hints={
+                        'summary': 'Custom metafields attached to a location',
+                        'when_to_use': 'When you need custom fields stored on a location',
+                        'trigger_phrases': ['location metafield', 'location custom field'],
+                        'freshness': 'live',
+                        'example_questions': ['Show custom metafields on a location'],
+                        'search_strategy': 'Filter by location_id; identify by namespace and key',
+                    },
                 ),
             },
             relationships=[
@@ -12286,12 +15234,17 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                     'x-airbyte-entity-name': 'metafields',
                                     'x-airbyte-stream-name': 'metafields',
                                     'x-airbyte-ai-hints': {
-                                        'summary': 'Custom metafields storing additional data on Shopify resources',
-                                        'when_to_use': 'Questions about custom metadata or extended fields on resources',
-                                        'trigger_phrases': ['metafield', 'custom field', 'metadata'],
+                                        'summary': 'Custom metafields (typed key/value data) attached to any Shopify resource via owner GID',
+                                        'when_to_use': 'When setting or deleting custom data on a product, order, customer, or other resource',
+                                        'trigger_phrases': [
+                                            'set metafield',
+                                            'delete metafield',
+                                            'custom field',
+                                            'metadata on a resource',
+                                        ],
                                         'freshness': 'live',
-                                        'example_questions': ['What metafields are on a product?'],
-                                        'search_strategy': 'Filter by resource type and namespace',
+                                        'example_questions': ['Set a metafield on a product', 'Delete a metafield from an order'],
+                                        'search_strategy': "Metafields are written by owner GID + namespace + key; requires the owner resource's write scope (e.g. write_products for a product metafield)",
                                     },
                                 },
                             },
@@ -12299,6 +15252,14 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.metafields',
                     meta_extractor={'next_page_url': '@link.next'},
+                    ai_hints={
+                        'summary': 'Custom metafields attached to a product variant',
+                        'when_to_use': 'When you need custom fields stored on a specific variant',
+                        'trigger_phrases': ['variant metafield', 'variant custom field'],
+                        'freshness': 'live',
+                        'example_questions': ['Show custom metafields on a variant'],
+                        'search_strategy': 'Filter by variant_id; identify by namespace and key',
+                    },
                 ),
             },
             relationships=[
@@ -12394,12 +15355,17 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                     'x-airbyte-entity-name': 'metafields',
                                     'x-airbyte-stream-name': 'metafields',
                                     'x-airbyte-ai-hints': {
-                                        'summary': 'Custom metafields storing additional data on Shopify resources',
-                                        'when_to_use': 'Questions about custom metadata or extended fields on resources',
-                                        'trigger_phrases': ['metafield', 'custom field', 'metadata'],
+                                        'summary': 'Custom metafields (typed key/value data) attached to any Shopify resource via owner GID',
+                                        'when_to_use': 'When setting or deleting custom data on a product, order, customer, or other resource',
+                                        'trigger_phrases': [
+                                            'set metafield',
+                                            'delete metafield',
+                                            'custom field',
+                                            'metadata on a resource',
+                                        ],
                                         'freshness': 'live',
-                                        'example_questions': ['What metafields are on a product?'],
-                                        'search_strategy': 'Filter by resource type and namespace',
+                                        'example_questions': ['Set a metafield on a product', 'Delete a metafield from an order'],
+                                        'search_strategy': "Metafields are written by owner GID + namespace + key; requires the owner resource's write scope (e.g. write_products for a product metafield)",
                                     },
                                 },
                             },
@@ -12407,6 +15373,14 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.metafields',
                     meta_extractor={'next_page_url': '@link.next'},
+                    ai_hints={
+                        'summary': 'Custom metafields attached to a smart collection',
+                        'when_to_use': 'When you need custom fields stored on a smart collection',
+                        'trigger_phrases': ['smart collection metafield', 'collection custom field'],
+                        'freshness': 'live',
+                        'example_questions': ['Show custom metafields on a smart collection'],
+                        'search_strategy': 'Filter by collection_id; identify by namespace and key',
+                    },
                 ),
             },
             relationships=[
@@ -12503,12 +15477,17 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                     'x-airbyte-entity-name': 'metafields',
                                     'x-airbyte-stream-name': 'metafields',
                                     'x-airbyte-ai-hints': {
-                                        'summary': 'Custom metafields storing additional data on Shopify resources',
-                                        'when_to_use': 'Questions about custom metadata or extended fields on resources',
-                                        'trigger_phrases': ['metafield', 'custom field', 'metadata'],
+                                        'summary': 'Custom metafields (typed key/value data) attached to any Shopify resource via owner GID',
+                                        'when_to_use': 'When setting or deleting custom data on a product, order, customer, or other resource',
+                                        'trigger_phrases': [
+                                            'set metafield',
+                                            'delete metafield',
+                                            'custom field',
+                                            'metadata on a resource',
+                                        ],
                                         'freshness': 'live',
-                                        'example_questions': ['What metafields are on a product?'],
-                                        'search_strategy': 'Filter by resource type and namespace',
+                                        'example_questions': ['Set a metafield on a product', 'Delete a metafield from an order'],
+                                        'search_strategy': "Metafields are written by owner GID + namespace + key; requires the owner resource's write scope (e.g. write_products for a product metafield)",
                                     },
                                 },
                             },
@@ -12517,6 +15496,14 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                     record_extractor='$.metafields',
                     meta_extractor={'next_page_url': '@link.next'},
                     untested=True,
+                    ai_hints={
+                        'summary': 'Custom metafields attached to a product image',
+                        'when_to_use': 'When you need custom fields stored on a product image',
+                        'trigger_phrases': ['product image metafield', 'image custom field'],
+                        'freshness': 'live',
+                        'example_questions': ['Show custom metafields on a product image'],
+                        'search_strategy': 'Filter by product_id and image_id; identify by namespace and key',
+                    },
                 ),
             },
             relationships=[
@@ -12639,6 +15626,19 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.addresses',
                     meta_extractor={'next_page_url': '@link.next'},
+                    ai_hints={
+                        'summary': 'Mailing/shipping addresses belonging to a Shopify customer',
+                        'when_to_use': "When you need a customer's saved shipping or billing addresses",
+                        'trigger_phrases': [
+                            'customer address',
+                            'shipping address',
+                            'billing address',
+                            'where does a customer live',
+                        ],
+                        'freshness': 'live',
+                        'example_questions': ["What is a customer's shipping address?", 'List all addresses for a customer'],
+                        'search_strategy': 'Filter by customer_id; a customer may have several addresses with one default',
+                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -12827,12 +15827,17 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                     'x-airbyte-entity-name': 'fulfillment_orders',
                                     'x-airbyte-stream-name': 'fulfillment_orders',
                                     'x-airbyte-ai-hints': {
-                                        'summary': 'Fulfillment orders representing items to be shipped from a location',
-                                        'when_to_use': 'Questions about pending fulfillment or items to ship',
-                                        'trigger_phrases': ['fulfillment order', 'items to ship', 'pending fulfillment'],
+                                        'summary': 'Fulfillment orders — the modern unit of work grouping line items by assigned fulfillment location',
+                                        'when_to_use': 'Questions about what still needs to ship, assigned location, or fulfillment workflow state',
+                                        'trigger_phrases': [
+                                            'fulfillment order',
+                                            'what needs to ship',
+                                            'assigned location',
+                                            'fulfillment status',
+                                        ],
                                         'freshness': 'live',
-                                        'example_questions': ['What fulfillment orders are pending?'],
-                                        'search_strategy': 'Filter by order or location',
+                                        'example_questions': ['What line items still need fulfillment?', 'Show fulfillment orders for an order'],
+                                        'search_strategy': 'Filter by order_id; fulfillment orders drive the create-fulfillment workflow',
                                     },
                                 },
                             },
@@ -12922,12 +15927,17 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                 'x-airbyte-entity-name': 'fulfillment_orders',
                                 'x-airbyte-stream-name': 'fulfillment_orders',
                                 'x-airbyte-ai-hints': {
-                                    'summary': 'Fulfillment orders representing items to be shipped from a location',
-                                    'when_to_use': 'Questions about pending fulfillment or items to ship',
-                                    'trigger_phrases': ['fulfillment order', 'items to ship', 'pending fulfillment'],
+                                    'summary': 'Fulfillment orders — the modern unit of work grouping line items by assigned fulfillment location',
+                                    'when_to_use': 'Questions about what still needs to ship, assigned location, or fulfillment workflow state',
+                                    'trigger_phrases': [
+                                        'fulfillment order',
+                                        'what needs to ship',
+                                        'assigned location',
+                                        'fulfillment status',
+                                    ],
                                     'freshness': 'live',
-                                    'example_questions': ['What fulfillment orders are pending?'],
-                                    'search_strategy': 'Filter by order or location',
+                                    'example_questions': ['What line items still need fulfillment?', 'Show fulfillment orders for an order'],
+                                    'search_strategy': 'Filter by order_id; fulfillment orders drive the create-fulfillment workflow',
                                 },
                             },
                         },
@@ -13004,21 +16014,31 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'fulfillment_orders',
                 'x-airbyte-stream-name': 'fulfillment_orders',
                 'x-airbyte-ai-hints': {
-                    'summary': 'Fulfillment orders representing items to be shipped from a location',
-                    'when_to_use': 'Questions about pending fulfillment or items to ship',
-                    'trigger_phrases': ['fulfillment order', 'items to ship', 'pending fulfillment'],
+                    'summary': 'Fulfillment orders — the modern unit of work grouping line items by assigned fulfillment location',
+                    'when_to_use': 'Questions about what still needs to ship, assigned location, or fulfillment workflow state',
+                    'trigger_phrases': [
+                        'fulfillment order',
+                        'what needs to ship',
+                        'assigned location',
+                        'fulfillment status',
+                    ],
                     'freshness': 'live',
-                    'example_questions': ['What fulfillment orders are pending?'],
-                    'search_strategy': 'Filter by order or location',
+                    'example_questions': ['What line items still need fulfillment?', 'Show fulfillment orders for an order'],
+                    'search_strategy': 'Filter by order_id; fulfillment orders drive the create-fulfillment workflow',
                 },
             },
             ai_hints={
-                'summary': 'Fulfillment orders representing items to be shipped from a location',
-                'when_to_use': 'Questions about pending fulfillment or items to ship',
-                'trigger_phrases': ['fulfillment order', 'items to ship', 'pending fulfillment'],
+                'summary': 'Fulfillment orders — the modern unit of work grouping line items by assigned fulfillment location',
+                'when_to_use': 'Questions about what still needs to ship, assigned location, or fulfillment workflow state',
+                'trigger_phrases': [
+                    'fulfillment order',
+                    'what needs to ship',
+                    'assigned location',
+                    'fulfillment status',
+                ],
                 'freshness': 'live',
-                'example_questions': ['What fulfillment orders are pending?'],
-                'search_strategy': 'Filter by order or location',
+                'example_questions': ['What line items still need fulfillment?', 'Show fulfillment orders for an order'],
+                'search_strategy': 'Filter by order_id; fulfillment orders drive the create-fulfillment workflow',
             },
             relationships=[
                 EntityRelationshipConfig(
@@ -13032,7 +16052,13 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
         EntityDefinition(
             name='pages',
             stream_name='pages',
-            actions=[Action.LIST, Action.GET],
+            actions=[
+                Action.LIST,
+                Action.GET,
+                Action.CREATE,
+                Action.UPDATE,
+                Action.DELETE,
+            ],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
@@ -13135,17 +16161,17 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                     'x-airbyte-entity-name': 'pages',
                                     'x-airbyte-stream-name': 'pages',
                                     'x-airbyte-ai-hints': {
-                                        'summary': 'Static HTML pages on the Shopify store (About Us, Contact, FAQ, etc.)',
-                                        'when_to_use': 'Questions about store pages, static content, or published page info',
+                                        'summary': 'Online store content pages (e.g. About, Contact, FAQ) with title, handle, and body HTML',
+                                        'when_to_use': 'Questions about static content pages on the storefront',
                                         'trigger_phrases': [
-                                            'page',
-                                            'static page',
+                                            'store page',
+                                            'content page',
                                             'about page',
-                                            'contact page',
+                                            'FAQ page',
                                         ],
-                                        'freshness': 'static',
-                                        'example_questions': ['What pages are published on my store?', 'Show me the About Us page content'],
-                                        'search_strategy': 'List all pages or filter by title/handle',
+                                        'freshness': 'live',
+                                        'example_questions': ['List pages on the store', 'Show the About page content'],
+                                        'search_strategy': 'List all or filter by handle/title',
                                     },
                                 },
                             },
@@ -13153,7 +16179,6 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.pages',
                     meta_extractor={'next_page_url': '@link.next'},
-                    untested=True,
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -13213,23 +16238,326 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                 'x-airbyte-entity-name': 'pages',
                                 'x-airbyte-stream-name': 'pages',
                                 'x-airbyte-ai-hints': {
-                                    'summary': 'Static HTML pages on the Shopify store (About Us, Contact, FAQ, etc.)',
-                                    'when_to_use': 'Questions about store pages, static content, or published page info',
+                                    'summary': 'Online store content pages (e.g. About, Contact, FAQ) with title, handle, and body HTML',
+                                    'when_to_use': 'Questions about static content pages on the storefront',
                                     'trigger_phrases': [
-                                        'page',
-                                        'static page',
+                                        'store page',
+                                        'content page',
                                         'about page',
-                                        'contact page',
+                                        'FAQ page',
                                     ],
-                                    'freshness': 'static',
-                                    'example_questions': ['What pages are published on my store?', 'Show me the About Us page content'],
-                                    'search_strategy': 'List all pages or filter by title/handle',
+                                    'freshness': 'live',
+                                    'example_questions': ['List pages on the store', 'Show the About page content'],
+                                    'search_strategy': 'List all or filter by handle/title',
                                 },
                             },
                         },
                     },
                     record_extractor='$.page',
-                    untested=True,
+                ),
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/graphql.json:pageCreate',
+                    path_override=PathOverrideConfig(
+                        path='/graphql.json',
+                    ),
+                    action=Action.CREATE,
+                    description='Creates a new page on the online store via GraphQL mutation.\n',
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'pageCreate': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'userErrors': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'field': {
+                                                            'type': ['string', 'null', 'array'],
+                                                            'description': 'Path to the input field that caused the error',
+                                                        },
+                                                        'message': {'type': 'string', 'description': 'Error message'},
+                                                        'code': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Error code',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            'page': {
+                                                'type': 'object',
+                                                'properties': {
+                                                    'id': {'type': 'string'},
+                                                    'title': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'handle': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'body': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'createdAt': {
+                                                        'type': ['string', 'null'],
+                                                        'format': 'date-time',
+                                                    },
+                                                    'updatedAt': {
+                                                        'type': ['string', 'null'],
+                                                        'format': 'date-time',
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                    'pageUpdate': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'userErrors': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'field': {
+                                                            'type': ['string', 'null', 'array'],
+                                                            'description': 'Path to the input field that caused the error',
+                                                        },
+                                                        'message': {'type': 'string', 'description': 'Error message'},
+                                                        'code': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Error code',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            'page': {
+                                                'type': 'object',
+                                                'properties': {
+                                                    'id': {'type': 'string'},
+                                                    'title': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'handle': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'body': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'createdAt': {
+                                                        'type': ['string', 'null'],
+                                                        'format': 'date-time',
+                                                    },
+                                                    'updatedAt': {
+                                                        'type': ['string', 'null'],
+                                                        'format': 'date-time',
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    graphql_body={
+                        'type': 'graphql',
+                        'query': 'mutation pageCreate($page: PageCreateInput!) { pageCreate(page: $page) { userErrors { field message } page { id title handle body createdAt updatedAt } } }',
+                        'variables': {'page': '{{ page }}'},
+                    },
+                    record_extractor='$.data.pageCreate',
+                    ai_hints={
+                        'summary': 'Create an online store page',
+                        'when_to_use': 'When the user asks to add a new content page (About, FAQ, etc.)',
+                        'trigger_phrases': ['create a page', 'add a content page', 'new store page'],
+                        'freshness': 'live',
+                        'example_questions': ['Create a new page on the store'],
+                        'search_strategy': 'Use pages.create (pageCreate) with title and body HTML. Requires write_content (or write_online_store_pages) scope.',
+                    },
+                ),
+                Action.UPDATE: EndpointDefinition(
+                    method='POST',
+                    path='/graphql.json:pageUpdate',
+                    path_override=PathOverrideConfig(
+                        path='/graphql.json',
+                    ),
+                    action=Action.UPDATE,
+                    description='Updates an existing page on the online store via GraphQL mutation.\n',
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'pageCreate': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'userErrors': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'field': {
+                                                            'type': ['string', 'null', 'array'],
+                                                            'description': 'Path to the input field that caused the error',
+                                                        },
+                                                        'message': {'type': 'string', 'description': 'Error message'},
+                                                        'code': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Error code',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            'page': {
+                                                'type': 'object',
+                                                'properties': {
+                                                    'id': {'type': 'string'},
+                                                    'title': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'handle': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'body': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'createdAt': {
+                                                        'type': ['string', 'null'],
+                                                        'format': 'date-time',
+                                                    },
+                                                    'updatedAt': {
+                                                        'type': ['string', 'null'],
+                                                        'format': 'date-time',
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                    'pageUpdate': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'userErrors': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'field': {
+                                                            'type': ['string', 'null', 'array'],
+                                                            'description': 'Path to the input field that caused the error',
+                                                        },
+                                                        'message': {'type': 'string', 'description': 'Error message'},
+                                                        'code': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Error code',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            'page': {
+                                                'type': 'object',
+                                                'properties': {
+                                                    'id': {'type': 'string'},
+                                                    'title': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'handle': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'body': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'createdAt': {
+                                                        'type': ['string', 'null'],
+                                                        'format': 'date-time',
+                                                    },
+                                                    'updatedAt': {
+                                                        'type': ['string', 'null'],
+                                                        'format': 'date-time',
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    graphql_body={
+                        'type': 'graphql',
+                        'query': 'mutation pageUpdate($id: ID!, $page: PageUpdateInput!) { pageUpdate(id: $id, page: $page) { userErrors { field message } page { id title handle body createdAt updatedAt } } }',
+                        'variables': {'id': '{{ id }}', 'page': '{{ page }}'},
+                    },
+                    record_extractor='$.data.pageUpdate',
+                    ai_hints={
+                        'summary': 'Update an online store page',
+                        'when_to_use': "When the user asks to edit a page's title or content",
+                        'trigger_phrases': ['update a page', 'edit page content', 'change a store page'],
+                        'freshness': 'live',
+                        'example_questions': ['Update the About page content'],
+                        'search_strategy': 'Use pages.update (pageUpdate) with the page GID and changed fields. Requires write_content (or write_online_store_pages) scope.',
+                    },
+                ),
+                Action.DELETE: EndpointDefinition(
+                    method='POST',
+                    path='/graphql.json:pageDelete',
+                    path_override=PathOverrideConfig(
+                        path='/graphql.json',
+                    ),
+                    action=Action.DELETE,
+                    description='Deletes a page from the online store via GraphQL mutation.\n',
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'pageDelete': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'userErrors': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'field': {
+                                                            'type': ['string', 'null', 'array'],
+                                                            'description': 'Path to the input field that caused the error',
+                                                        },
+                                                        'message': {'type': 'string', 'description': 'Error message'},
+                                                        'code': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Error code',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            'deletedPageId': {
+                                                'type': ['string', 'null'],
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    graphql_body={
+                        'type': 'graphql',
+                        'query': 'mutation pageDelete($id: ID!) { pageDelete(id: $id) { userErrors { field message } deletedPageId } }',
+                        'variables': {'id': '{{ id }}'},
+                    },
+                    record_extractor='$.data.pageDelete',
+                    ai_hints={
+                        'summary': 'Delete an online store page',
+                        'when_to_use': 'When the user asks to remove or delete a content page',
+                        'trigger_phrases': ['delete a page', 'remove a store page'],
+                        'freshness': 'live',
+                        'example_questions': ['Delete a page from the store'],
+                        'search_strategy': 'Use pages.delete (pageDelete) with the page GID. Requires write_content (or write_online_store_pages) scope.',
+                    },
                 ),
             },
             entity_schema={
@@ -13278,37 +16606,43 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'pages',
                 'x-airbyte-stream-name': 'pages',
                 'x-airbyte-ai-hints': {
-                    'summary': 'Static HTML pages on the Shopify store (About Us, Contact, FAQ, etc.)',
-                    'when_to_use': 'Questions about store pages, static content, or published page info',
+                    'summary': 'Online store content pages (e.g. About, Contact, FAQ) with title, handle, and body HTML',
+                    'when_to_use': 'Questions about static content pages on the storefront',
                     'trigger_phrases': [
-                        'page',
-                        'static page',
+                        'store page',
+                        'content page',
                         'about page',
-                        'contact page',
+                        'FAQ page',
                     ],
-                    'freshness': 'static',
-                    'example_questions': ['What pages are published on my store?', 'Show me the About Us page content'],
-                    'search_strategy': 'List all pages or filter by title/handle',
+                    'freshness': 'live',
+                    'example_questions': ['List pages on the store', 'Show the About page content'],
+                    'search_strategy': 'List all or filter by handle/title',
                 },
             },
             ai_hints={
-                'summary': 'Static HTML pages on the Shopify store (About Us, Contact, FAQ, etc.)',
-                'when_to_use': 'Questions about store pages, static content, or published page info',
+                'summary': 'Online store content pages (e.g. About, Contact, FAQ) with title, handle, and body HTML',
+                'when_to_use': 'Questions about static content pages on the storefront',
                 'trigger_phrases': [
-                    'page',
-                    'static page',
+                    'store page',
+                    'content page',
                     'about page',
-                    'contact page',
+                    'FAQ page',
                 ],
-                'freshness': 'static',
-                'example_questions': ['What pages are published on my store?', 'Show me the About Us page content'],
-                'search_strategy': 'List all pages or filter by title/handle',
+                'freshness': 'live',
+                'example_questions': ['List pages on the store', 'Show the About page content'],
+                'search_strategy': 'List all or filter by handle/title',
             },
         ),
         EntityDefinition(
             name='blogs',
             stream_name='blogs',
-            actions=[Action.LIST, Action.GET],
+            actions=[
+                Action.LIST,
+                Action.GET,
+                Action.CREATE,
+                Action.UPDATE,
+                Action.DELETE,
+            ],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
@@ -13380,12 +16714,12 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                     'x-airbyte-entity-name': 'blogs',
                                     'x-airbyte-stream-name': 'blogs',
                                     'x-airbyte-ai-hints': {
-                                        'summary': 'Blogs on the Shopify store that contain articles (blog posts)',
-                                        'when_to_use': 'Questions about store blogs, blog configuration, or blog listing',
-                                        'trigger_phrases': ['blog', 'blog list', 'store blog'],
-                                        'freshness': 'static',
-                                        'example_questions': ['What blogs are on my store?', 'Show me the blog configuration'],
-                                        'search_strategy': 'List all blogs',
+                                        'summary': 'Blogs (containers for articles) configured on the online store',
+                                        'when_to_use': 'Questions about blog containers or where articles are published',
+                                        'trigger_phrases': ['store blog', 'blog list', 'blog container'],
+                                        'freshness': 'live',
+                                        'example_questions': ['List blogs on the store', 'Which blog do articles belong to?'],
+                                        'search_strategy': 'List all blogs; each blog holds many articles',
                                     },
                                 },
                             },
@@ -13393,7 +16727,6 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.blogs',
                     meta_extractor={'next_page_url': '@link.next'},
-                    untested=True,
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -13456,18 +16789,293 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                 'x-airbyte-entity-name': 'blogs',
                                 'x-airbyte-stream-name': 'blogs',
                                 'x-airbyte-ai-hints': {
-                                    'summary': 'Blogs on the Shopify store that contain articles (blog posts)',
-                                    'when_to_use': 'Questions about store blogs, blog configuration, or blog listing',
-                                    'trigger_phrases': ['blog', 'blog list', 'store blog'],
-                                    'freshness': 'static',
-                                    'example_questions': ['What blogs are on my store?', 'Show me the blog configuration'],
-                                    'search_strategy': 'List all blogs',
+                                    'summary': 'Blogs (containers for articles) configured on the online store',
+                                    'when_to_use': 'Questions about blog containers or where articles are published',
+                                    'trigger_phrases': ['store blog', 'blog list', 'blog container'],
+                                    'freshness': 'live',
+                                    'example_questions': ['List blogs on the store', 'Which blog do articles belong to?'],
+                                    'search_strategy': 'List all blogs; each blog holds many articles',
                                 },
                             },
                         },
                     },
                     record_extractor='$.blog',
-                    untested=True,
+                ),
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/graphql.json:blogCreate',
+                    path_override=PathOverrideConfig(
+                        path='/graphql.json',
+                    ),
+                    action=Action.CREATE,
+                    description='Creates a new blog on the online store via GraphQL mutation.\n',
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'blogCreate': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'userErrors': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'field': {
+                                                            'type': ['string', 'null', 'array'],
+                                                            'description': 'Path to the input field that caused the error',
+                                                        },
+                                                        'message': {'type': 'string', 'description': 'Error message'},
+                                                        'code': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Error code',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            'blog': {
+                                                'type': 'object',
+                                                'properties': {
+                                                    'id': {'type': 'string'},
+                                                    'title': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'handle': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'createdAt': {
+                                                        'type': ['string', 'null'],
+                                                        'format': 'date-time',
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                    'blogUpdate': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'userErrors': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'field': {
+                                                            'type': ['string', 'null', 'array'],
+                                                            'description': 'Path to the input field that caused the error',
+                                                        },
+                                                        'message': {'type': 'string', 'description': 'Error message'},
+                                                        'code': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Error code',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            'blog': {
+                                                'type': 'object',
+                                                'properties': {
+                                                    'id': {'type': 'string'},
+                                                    'title': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'handle': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'createdAt': {
+                                                        'type': ['string', 'null'],
+                                                        'format': 'date-time',
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    graphql_body={
+                        'type': 'graphql',
+                        'query': 'mutation blogCreate($blog: BlogCreateInput!) { blogCreate(blog: $blog) { userErrors { field message } blog { id title handle createdAt } } }',
+                        'variables': {'blog': '{{ blog }}'},
+                    },
+                    record_extractor='$.data.blogCreate',
+                    ai_hints={
+                        'summary': 'Create a blog',
+                        'when_to_use': 'When the user asks to create a new blog container',
+                        'trigger_phrases': ['create a blog', 'new blog', 'add a blog'],
+                        'freshness': 'live',
+                        'example_questions': ['Create a new blog'],
+                        'search_strategy': 'Use blogs.create (blogCreate) with a title. Requires write_content (or write_online_store_pages) scope. Articles are added via articles.create.',
+                    },
+                ),
+                Action.UPDATE: EndpointDefinition(
+                    method='POST',
+                    path='/graphql.json:blogUpdate',
+                    path_override=PathOverrideConfig(
+                        path='/graphql.json',
+                    ),
+                    action=Action.UPDATE,
+                    description='Updates an existing blog via GraphQL mutation.\n',
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'blogCreate': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'userErrors': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'field': {
+                                                            'type': ['string', 'null', 'array'],
+                                                            'description': 'Path to the input field that caused the error',
+                                                        },
+                                                        'message': {'type': 'string', 'description': 'Error message'},
+                                                        'code': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Error code',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            'blog': {
+                                                'type': 'object',
+                                                'properties': {
+                                                    'id': {'type': 'string'},
+                                                    'title': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'handle': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'createdAt': {
+                                                        'type': ['string', 'null'],
+                                                        'format': 'date-time',
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                    'blogUpdate': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'userErrors': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'field': {
+                                                            'type': ['string', 'null', 'array'],
+                                                            'description': 'Path to the input field that caused the error',
+                                                        },
+                                                        'message': {'type': 'string', 'description': 'Error message'},
+                                                        'code': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Error code',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            'blog': {
+                                                'type': 'object',
+                                                'properties': {
+                                                    'id': {'type': 'string'},
+                                                    'title': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'handle': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'createdAt': {
+                                                        'type': ['string', 'null'],
+                                                        'format': 'date-time',
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    graphql_body={
+                        'type': 'graphql',
+                        'query': 'mutation blogUpdate($id: ID!, $blog: BlogUpdateInput!) { blogUpdate(id: $id, blog: $blog) { userErrors { field message } blog { id title handle createdAt } } }',
+                        'variables': {'id': '{{ id }}', 'blog': '{{ blog }}'},
+                    },
+                    record_extractor='$.data.blogUpdate',
+                    ai_hints={
+                        'summary': 'Update a blog',
+                        'when_to_use': 'When the user asks to rename or edit a blog',
+                        'trigger_phrases': ['update a blog', 'rename a blog', 'edit blog settings'],
+                        'freshness': 'live',
+                        'example_questions': ['Rename a blog'],
+                        'search_strategy': 'Use blogs.update (blogUpdate) with the blog GID and changed fields. Requires write_content (or write_online_store_pages) scope.',
+                    },
+                ),
+                Action.DELETE: EndpointDefinition(
+                    method='POST',
+                    path='/graphql.json:blogDelete',
+                    path_override=PathOverrideConfig(
+                        path='/graphql.json',
+                    ),
+                    action=Action.DELETE,
+                    description='Deletes a blog from the online store via GraphQL mutation.\n',
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'blogDelete': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'userErrors': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'field': {
+                                                            'type': ['string', 'null', 'array'],
+                                                            'description': 'Path to the input field that caused the error',
+                                                        },
+                                                        'message': {'type': 'string', 'description': 'Error message'},
+                                                        'code': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Error code',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            'deletedBlogId': {
+                                                'type': ['string', 'null'],
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    graphql_body={
+                        'type': 'graphql',
+                        'query': 'mutation blogDelete($id: ID!) { blogDelete(id: $id) { userErrors { field message } deletedBlogId } }',
+                        'variables': {'id': '{{ id }}'},
+                    },
+                    record_extractor='$.data.blogDelete',
+                    ai_hints={
+                        'summary': 'Delete a blog',
+                        'when_to_use': 'When the user asks to remove or delete a blog',
+                        'trigger_phrases': ['delete a blog', 'remove a blog'],
+                        'freshness': 'live',
+                        'example_questions': ['Delete a blog'],
+                        'search_strategy': 'Use blogs.delete (blogDelete) with the blog GID. Requires write_content (or write_online_store_pages) scope. Deletes the blog and its articles.',
+                    },
                 ),
             },
             entity_schema={
@@ -13519,27 +17127,33 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'blogs',
                 'x-airbyte-stream-name': 'blogs',
                 'x-airbyte-ai-hints': {
-                    'summary': 'Blogs on the Shopify store that contain articles (blog posts)',
-                    'when_to_use': 'Questions about store blogs, blog configuration, or blog listing',
-                    'trigger_phrases': ['blog', 'blog list', 'store blog'],
-                    'freshness': 'static',
-                    'example_questions': ['What blogs are on my store?', 'Show me the blog configuration'],
-                    'search_strategy': 'List all blogs',
+                    'summary': 'Blogs (containers for articles) configured on the online store',
+                    'when_to_use': 'Questions about blog containers or where articles are published',
+                    'trigger_phrases': ['store blog', 'blog list', 'blog container'],
+                    'freshness': 'live',
+                    'example_questions': ['List blogs on the store', 'Which blog do articles belong to?'],
+                    'search_strategy': 'List all blogs; each blog holds many articles',
                 },
             },
             ai_hints={
-                'summary': 'Blogs on the Shopify store that contain articles (blog posts)',
-                'when_to_use': 'Questions about store blogs, blog configuration, or blog listing',
-                'trigger_phrases': ['blog', 'blog list', 'store blog'],
-                'freshness': 'static',
-                'example_questions': ['What blogs are on my store?', 'Show me the blog configuration'],
-                'search_strategy': 'List all blogs',
+                'summary': 'Blogs (containers for articles) configured on the online store',
+                'when_to_use': 'Questions about blog containers or where articles are published',
+                'trigger_phrases': ['store blog', 'blog list', 'blog container'],
+                'freshness': 'live',
+                'example_questions': ['List blogs on the store', 'Which blog do articles belong to?'],
+                'search_strategy': 'List all blogs; each blog holds many articles',
             },
         ),
         EntityDefinition(
             name='articles',
             stream_name='articles',
-            actions=[Action.LIST, Action.GET],
+            actions=[
+                Action.LIST,
+                Action.GET,
+                Action.CREATE,
+                Action.UPDATE,
+                Action.DELETE,
+            ],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
@@ -13688,12 +17302,17 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                     'x-airbyte-entity-name': 'articles',
                                     'x-airbyte-stream-name': 'articles',
                                     'x-airbyte-ai-hints': {
-                                        'summary': 'Blog articles (posts) on the Shopify store',
-                                        'when_to_use': 'Questions about blog posts, article content, or article authors',
-                                        'trigger_phrases': ['article', 'blog post', 'blog article'],
+                                        'summary': 'Blog articles (posts) within a blog, with title, author, body HTML, and publish status',
+                                        'when_to_use': 'Questions about blog posts, article content, or publishing status',
+                                        'trigger_phrases': [
+                                            'blog article',
+                                            'blog post',
+                                            'article content',
+                                            'published post',
+                                        ],
                                         'freshness': 'live',
-                                        'example_questions': ['What articles are in my blog?', 'Show me the latest blog posts'],
-                                        'search_strategy': 'List articles by blog or filter by author/tag',
+                                        'example_questions': ['List blog articles', 'Show a published blog post'],
+                                        'search_strategy': 'Read under a blog_id; filter by published status or author',
                                     },
                                 },
                             },
@@ -13701,7 +17320,6 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.articles',
                     meta_extractor={'next_page_url': '@link.next'},
-                    untested=True,
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -13804,18 +17422,367 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                 'x-airbyte-entity-name': 'articles',
                                 'x-airbyte-stream-name': 'articles',
                                 'x-airbyte-ai-hints': {
-                                    'summary': 'Blog articles (posts) on the Shopify store',
-                                    'when_to_use': 'Questions about blog posts, article content, or article authors',
-                                    'trigger_phrases': ['article', 'blog post', 'blog article'],
+                                    'summary': 'Blog articles (posts) within a blog, with title, author, body HTML, and publish status',
+                                    'when_to_use': 'Questions about blog posts, article content, or publishing status',
+                                    'trigger_phrases': [
+                                        'blog article',
+                                        'blog post',
+                                        'article content',
+                                        'published post',
+                                    ],
                                     'freshness': 'live',
-                                    'example_questions': ['What articles are in my blog?', 'Show me the latest blog posts'],
-                                    'search_strategy': 'List articles by blog or filter by author/tag',
+                                    'example_questions': ['List blog articles', 'Show a published blog post'],
+                                    'search_strategy': 'Read under a blog_id; filter by published status or author',
                                 },
                             },
                         },
                     },
                     record_extractor='$.article',
-                    untested=True,
+                ),
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/graphql.json:articleCreate',
+                    path_override=PathOverrideConfig(
+                        path='/graphql.json',
+                    ),
+                    action=Action.CREATE,
+                    description='Creates a new blog article via GraphQL mutation.\n',
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'articleCreate': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'userErrors': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'field': {
+                                                            'type': ['string', 'null', 'array'],
+                                                            'description': 'Path to the input field that caused the error',
+                                                        },
+                                                        'message': {'type': 'string', 'description': 'Error message'},
+                                                        'code': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Error code',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            'article': {
+                                                'type': 'object',
+                                                'properties': {
+                                                    'id': {'type': 'string'},
+                                                    'title': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'handle': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'body': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'blog': {
+                                                        'type': ['object', 'null'],
+                                                        'properties': {
+                                                            'id': {'type': 'string'},
+                                                            'title': {
+                                                                'type': ['string', 'null'],
+                                                            },
+                                                        },
+                                                    },
+                                                    'createdAt': {
+                                                        'type': ['string', 'null'],
+                                                        'format': 'date-time',
+                                                    },
+                                                    'updatedAt': {
+                                                        'type': ['string', 'null'],
+                                                        'format': 'date-time',
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                    'articleUpdate': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'userErrors': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'field': {
+                                                            'type': ['string', 'null', 'array'],
+                                                            'description': 'Path to the input field that caused the error',
+                                                        },
+                                                        'message': {'type': 'string', 'description': 'Error message'},
+                                                        'code': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Error code',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            'article': {
+                                                'type': 'object',
+                                                'properties': {
+                                                    'id': {'type': 'string'},
+                                                    'title': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'handle': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'body': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'blog': {
+                                                        'type': ['object', 'null'],
+                                                        'properties': {
+                                                            'id': {'type': 'string'},
+                                                            'title': {
+                                                                'type': ['string', 'null'],
+                                                            },
+                                                        },
+                                                    },
+                                                    'createdAt': {
+                                                        'type': ['string', 'null'],
+                                                        'format': 'date-time',
+                                                    },
+                                                    'updatedAt': {
+                                                        'type': ['string', 'null'],
+                                                        'format': 'date-time',
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    graphql_body={
+                        'type': 'graphql',
+                        'query': 'mutation articleCreate($article: ArticleCreateInput!) { articleCreate(article: $article) { userErrors { field message } article { id title handle body blog { id title } createdAt updatedAt } } }',
+                        'variables': {'article': '{{ article }}'},
+                    },
+                    record_extractor='$.data.articleCreate',
+                    ai_hints={
+                        'summary': 'Create a blog article (post)',
+                        'when_to_use': 'When the user asks to write or publish a new blog post',
+                        'trigger_phrases': [
+                            'create an article',
+                            'write a blog post',
+                            'publish a post',
+                            'new blog article',
+                        ],
+                        'freshness': 'live',
+                        'example_questions': ['Write a new blog post by an author'],
+                        'search_strategy': 'Use articles.create (articleCreate) with blogId, title, and author (all required; author.name must be set), plus optional body HTML. Requires write_content (or write_online_store_pages) scope.',
+                    },
+                ),
+                Action.UPDATE: EndpointDefinition(
+                    method='POST',
+                    path='/graphql.json:articleUpdate',
+                    path_override=PathOverrideConfig(
+                        path='/graphql.json',
+                    ),
+                    action=Action.UPDATE,
+                    description='Updates an existing blog article via GraphQL mutation.\n',
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'articleCreate': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'userErrors': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'field': {
+                                                            'type': ['string', 'null', 'array'],
+                                                            'description': 'Path to the input field that caused the error',
+                                                        },
+                                                        'message': {'type': 'string', 'description': 'Error message'},
+                                                        'code': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Error code',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            'article': {
+                                                'type': 'object',
+                                                'properties': {
+                                                    'id': {'type': 'string'},
+                                                    'title': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'handle': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'body': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'blog': {
+                                                        'type': ['object', 'null'],
+                                                        'properties': {
+                                                            'id': {'type': 'string'},
+                                                            'title': {
+                                                                'type': ['string', 'null'],
+                                                            },
+                                                        },
+                                                    },
+                                                    'createdAt': {
+                                                        'type': ['string', 'null'],
+                                                        'format': 'date-time',
+                                                    },
+                                                    'updatedAt': {
+                                                        'type': ['string', 'null'],
+                                                        'format': 'date-time',
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                    'articleUpdate': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'userErrors': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'field': {
+                                                            'type': ['string', 'null', 'array'],
+                                                            'description': 'Path to the input field that caused the error',
+                                                        },
+                                                        'message': {'type': 'string', 'description': 'Error message'},
+                                                        'code': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Error code',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            'article': {
+                                                'type': 'object',
+                                                'properties': {
+                                                    'id': {'type': 'string'},
+                                                    'title': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'handle': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'body': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'blog': {
+                                                        'type': ['object', 'null'],
+                                                        'properties': {
+                                                            'id': {'type': 'string'},
+                                                            'title': {
+                                                                'type': ['string', 'null'],
+                                                            },
+                                                        },
+                                                    },
+                                                    'createdAt': {
+                                                        'type': ['string', 'null'],
+                                                        'format': 'date-time',
+                                                    },
+                                                    'updatedAt': {
+                                                        'type': ['string', 'null'],
+                                                        'format': 'date-time',
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    graphql_body={
+                        'type': 'graphql',
+                        'query': 'mutation articleUpdate($id: ID!, $article: ArticleUpdateInput!) { articleUpdate(id: $id, article: $article) { userErrors { field message } article { id title handle body blog { id title } createdAt updatedAt } } }',
+                        'variables': {'id': '{{ id }}', 'article': '{{ article }}'},
+                    },
+                    record_extractor='$.data.articleUpdate',
+                    ai_hints={
+                        'summary': 'Update a blog article',
+                        'when_to_use': "When the user asks to edit a blog post's title, body, or publish status",
+                        'trigger_phrases': ['update an article', 'edit a blog post', 'publish a draft post'],
+                        'freshness': 'live',
+                        'example_questions': ['Edit a blog post', 'Publish a draft article'],
+                        'search_strategy': 'Use articles.update (articleUpdate) with the article GID and changed fields. Requires write_content (or write_online_store_pages) scope.',
+                    },
+                ),
+                Action.DELETE: EndpointDefinition(
+                    method='POST',
+                    path='/graphql.json:articleDelete',
+                    path_override=PathOverrideConfig(
+                        path='/graphql.json',
+                    ),
+                    action=Action.DELETE,
+                    description='Deletes a blog article via GraphQL mutation.\n',
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'articleDelete': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'userErrors': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'field': {
+                                                            'type': ['string', 'null', 'array'],
+                                                            'description': 'Path to the input field that caused the error',
+                                                        },
+                                                        'message': {'type': 'string', 'description': 'Error message'},
+                                                        'code': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Error code',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            'deletedArticleId': {
+                                                'type': ['string', 'null'],
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    graphql_body={
+                        'type': 'graphql',
+                        'query': 'mutation articleDelete($id: ID!) { articleDelete(id: $id) { userErrors { field message } deletedArticleId } }',
+                        'variables': {'id': '{{ id }}'},
+                    },
+                    record_extractor='$.data.articleDelete',
+                    ai_hints={
+                        'summary': 'Delete a blog article',
+                        'when_to_use': 'When the user asks to remove or delete a blog post',
+                        'trigger_phrases': ['delete an article', 'remove a blog post', 'unpublish and delete a post'],
+                        'freshness': 'live',
+                        'example_questions': ['Delete a blog post'],
+                        'search_strategy': 'Use articles.delete (articleDelete) with the article GID. Requires write_content (or write_online_store_pages) scope.',
+                    },
                 ),
             },
             entity_schema={
@@ -13906,21 +17873,31 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'articles',
                 'x-airbyte-stream-name': 'articles',
                 'x-airbyte-ai-hints': {
-                    'summary': 'Blog articles (posts) on the Shopify store',
-                    'when_to_use': 'Questions about blog posts, article content, or article authors',
-                    'trigger_phrases': ['article', 'blog post', 'blog article'],
+                    'summary': 'Blog articles (posts) within a blog, with title, author, body HTML, and publish status',
+                    'when_to_use': 'Questions about blog posts, article content, or publishing status',
+                    'trigger_phrases': [
+                        'blog article',
+                        'blog post',
+                        'article content',
+                        'published post',
+                    ],
                     'freshness': 'live',
-                    'example_questions': ['What articles are in my blog?', 'Show me the latest blog posts'],
-                    'search_strategy': 'List articles by blog or filter by author/tag',
+                    'example_questions': ['List blog articles', 'Show a published blog post'],
+                    'search_strategy': 'Read under a blog_id; filter by published status or author',
                 },
             },
             ai_hints={
-                'summary': 'Blog articles (posts) on the Shopify store',
-                'when_to_use': 'Questions about blog posts, article content, or article authors',
-                'trigger_phrases': ['article', 'blog post', 'blog article'],
+                'summary': 'Blog articles (posts) within a blog, with title, author, body HTML, and publish status',
+                'when_to_use': 'Questions about blog posts, article content, or publishing status',
+                'trigger_phrases': [
+                    'blog article',
+                    'blog post',
+                    'article content',
+                    'published post',
+                ],
                 'freshness': 'live',
-                'example_questions': ['What articles are in my blog?', 'Show me the latest blog posts'],
-                'search_strategy': 'List articles by blog or filter by author/tag',
+                'example_questions': ['List blog articles', 'Show a published blog post'],
+                'search_strategy': 'Read under a blog_id; filter by published status or author',
             },
             relationships=[
                 EntityRelationshipConfig(
@@ -14045,17 +18022,17 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                     'x-airbyte-entity-name': 'balance_transactions',
                                     'x-airbyte-stream-name': 'balance_transactions',
                                     'x-airbyte-ai-hints': {
-                                        'summary': 'Shopify Payments balance transactions — the canonical ledger of all money movement',
-                                        'when_to_use': 'Questions about payment ledger entries, charges, fees, refunds, payouts, or financial reconciliation',
+                                        'summary': 'Shopify Payments balance transactions — payouts, charges, refunds, and fees affecting the balance',
+                                        'when_to_use': 'Questions about Shopify Payments payouts, fees, or the payments balance ledger',
                                         'trigger_phrases': [
                                             'balance transaction',
-                                            'payment ledger',
-                                            'shopify payment',
-                                            'payout transaction',
+                                            'shopify payments balance',
+                                            'payout',
+                                            'processing fee',
                                         ],
                                         'freshness': 'live',
-                                        'example_questions': ['Show me recent Shopify Payments balance transactions', 'What transactions are in the latest payout?'],
-                                        'search_strategy': 'List balance transactions, optionally filter by payout',
+                                        'example_questions': ['Show Shopify Payments payouts', 'What fees were charged this month?'],
+                                        'search_strategy': 'List all and filter by payout or date; requires read_shopify_payments_payouts scope',
                                     },
                                 },
                             },
@@ -14137,31 +18114,31 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'balance_transactions',
                 'x-airbyte-stream-name': 'balance_transactions',
                 'x-airbyte-ai-hints': {
-                    'summary': 'Shopify Payments balance transactions — the canonical ledger of all money movement',
-                    'when_to_use': 'Questions about payment ledger entries, charges, fees, refunds, payouts, or financial reconciliation',
+                    'summary': 'Shopify Payments balance transactions — payouts, charges, refunds, and fees affecting the balance',
+                    'when_to_use': 'Questions about Shopify Payments payouts, fees, or the payments balance ledger',
                     'trigger_phrases': [
                         'balance transaction',
-                        'payment ledger',
-                        'shopify payment',
-                        'payout transaction',
+                        'shopify payments balance',
+                        'payout',
+                        'processing fee',
                     ],
                     'freshness': 'live',
-                    'example_questions': ['Show me recent Shopify Payments balance transactions', 'What transactions are in the latest payout?'],
-                    'search_strategy': 'List balance transactions, optionally filter by payout',
+                    'example_questions': ['Show Shopify Payments payouts', 'What fees were charged this month?'],
+                    'search_strategy': 'List all and filter by payout or date; requires read_shopify_payments_payouts scope',
                 },
             },
             ai_hints={
-                'summary': 'Shopify Payments balance transactions — the canonical ledger of all money movement',
-                'when_to_use': 'Questions about payment ledger entries, charges, fees, refunds, payouts, or financial reconciliation',
+                'summary': 'Shopify Payments balance transactions — payouts, charges, refunds, and fees affecting the balance',
+                'when_to_use': 'Questions about Shopify Payments payouts, fees, or the payments balance ledger',
                 'trigger_phrases': [
                     'balance transaction',
-                    'payment ledger',
-                    'shopify payment',
-                    'payout transaction',
+                    'shopify payments balance',
+                    'payout',
+                    'processing fee',
                 ],
                 'freshness': 'live',
-                'example_questions': ['Show me recent Shopify Payments balance transactions', 'What transactions are in the latest payout?'],
-                'search_strategy': 'List balance transactions, optionally filter by payout',
+                'example_questions': ['Show Shopify Payments payouts', 'What fees were charged this month?'],
+                'search_strategy': 'List all and filter by payout or date; requires read_shopify_payments_payouts scope',
             },
             relationships=[
                 EntityRelationshipConfig(
@@ -14278,17 +18255,17 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                     'x-airbyte-entity-name': 'disputes',
                                     'x-airbyte-stream-name': 'disputes',
                                     'x-airbyte-ai-hints': {
-                                        'summary': 'Shopify Payments disputes — chargebacks and inquiries from cardholders',
-                                        'when_to_use': 'Questions about chargebacks, payment disputes, or cardholder claims',
+                                        'summary': 'Shopify Payments disputes and chargebacks raised by customers, with status and evidence due dates',
+                                        'when_to_use': 'Questions about chargebacks, disputes, or evidence deadlines',
                                         'trigger_phrases': [
                                             'dispute',
                                             'chargeback',
-                                            'inquiry',
                                             'payment dispute',
+                                            'evidence due',
                                         ],
                                         'freshness': 'live',
-                                        'example_questions': ['Are there any open disputes?', 'Show me recent chargebacks'],
-                                        'search_strategy': 'List disputes, filter by status or date',
+                                        'example_questions': ['Are there any open disputes?', 'When is dispute evidence due?'],
+                                        'search_strategy': 'List all or filter by status/date; requires read_shopify_payments_disputes scope',
                                     },
                                 },
                             },
@@ -14368,17 +18345,17 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                 'x-airbyte-entity-name': 'disputes',
                                 'x-airbyte-stream-name': 'disputes',
                                 'x-airbyte-ai-hints': {
-                                    'summary': 'Shopify Payments disputes — chargebacks and inquiries from cardholders',
-                                    'when_to_use': 'Questions about chargebacks, payment disputes, or cardholder claims',
+                                    'summary': 'Shopify Payments disputes and chargebacks raised by customers, with status and evidence due dates',
+                                    'when_to_use': 'Questions about chargebacks, disputes, or evidence deadlines',
                                     'trigger_phrases': [
                                         'dispute',
                                         'chargeback',
-                                        'inquiry',
                                         'payment dispute',
+                                        'evidence due',
                                     ],
                                     'freshness': 'live',
-                                    'example_questions': ['Are there any open disputes?', 'Show me recent chargebacks'],
-                                    'search_strategy': 'List disputes, filter by status or date',
+                                    'example_questions': ['Are there any open disputes?', 'When is dispute evidence due?'],
+                                    'search_strategy': 'List all or filter by status/date; requires read_shopify_payments_disputes scope',
                                 },
                             },
                         },
@@ -14445,31 +18422,31 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'disputes',
                 'x-airbyte-stream-name': 'disputes',
                 'x-airbyte-ai-hints': {
-                    'summary': 'Shopify Payments disputes — chargebacks and inquiries from cardholders',
-                    'when_to_use': 'Questions about chargebacks, payment disputes, or cardholder claims',
+                    'summary': 'Shopify Payments disputes and chargebacks raised by customers, with status and evidence due dates',
+                    'when_to_use': 'Questions about chargebacks, disputes, or evidence deadlines',
                     'trigger_phrases': [
                         'dispute',
                         'chargeback',
-                        'inquiry',
                         'payment dispute',
+                        'evidence due',
                     ],
                     'freshness': 'live',
-                    'example_questions': ['Are there any open disputes?', 'Show me recent chargebacks'],
-                    'search_strategy': 'List disputes, filter by status or date',
+                    'example_questions': ['Are there any open disputes?', 'When is dispute evidence due?'],
+                    'search_strategy': 'List all or filter by status/date; requires read_shopify_payments_disputes scope',
                 },
             },
             ai_hints={
-                'summary': 'Shopify Payments disputes — chargebacks and inquiries from cardholders',
-                'when_to_use': 'Questions about chargebacks, payment disputes, or cardholder claims',
+                'summary': 'Shopify Payments disputes and chargebacks raised by customers, with status and evidence due dates',
+                'when_to_use': 'Questions about chargebacks, disputes, or evidence deadlines',
                 'trigger_phrases': [
                     'dispute',
                     'chargeback',
-                    'inquiry',
                     'payment dispute',
+                    'evidence due',
                 ],
                 'freshness': 'live',
-                'example_questions': ['Are there any open disputes?', 'Show me recent chargebacks'],
-                'search_strategy': 'List disputes, filter by status or date',
+                'example_questions': ['Are there any open disputes?', 'When is dispute evidence due?'],
+                'search_strategy': 'List all or filter by status/date; requires read_shopify_payments_disputes scope',
             },
             relationships=[
                 EntityRelationshipConfig(
@@ -14556,12 +18533,17 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                     'x-airbyte-entity-name': 'metafields',
                                     'x-airbyte-stream-name': 'metafields',
                                     'x-airbyte-ai-hints': {
-                                        'summary': 'Custom metafields storing additional data on Shopify resources',
-                                        'when_to_use': 'Questions about custom metadata or extended fields on resources',
-                                        'trigger_phrases': ['metafield', 'custom field', 'metadata'],
+                                        'summary': 'Custom metafields (typed key/value data) attached to any Shopify resource via owner GID',
+                                        'when_to_use': 'When setting or deleting custom data on a product, order, customer, or other resource',
+                                        'trigger_phrases': [
+                                            'set metafield',
+                                            'delete metafield',
+                                            'custom field',
+                                            'metadata on a resource',
+                                        ],
                                         'freshness': 'live',
-                                        'example_questions': ['What metafields are on a product?'],
-                                        'search_strategy': 'Filter by resource type and namespace',
+                                        'example_questions': ['Set a metafield on a product', 'Delete a metafield from an order'],
+                                        'search_strategy': "Metafields are written by owner GID + namespace + key; requires the owner resource's write scope (e.g. write_products for a product metafield)",
                                     },
                                 },
                             },
@@ -14569,7 +18551,14 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.metafields',
                     meta_extractor={'next_page_url': '@link.next'},
-                    untested=True,
+                    ai_hints={
+                        'summary': 'Custom metafields attached to an online store page',
+                        'when_to_use': 'When you need custom fields stored on a page',
+                        'trigger_phrases': ['page metafield', 'page custom field'],
+                        'freshness': 'live',
+                        'example_questions': ['Show custom metafields on a page'],
+                        'search_strategy': 'Filter by page_id; identify by namespace and key',
+                    },
                 ),
             },
             relationships=[
@@ -14657,12 +18646,17 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                     'x-airbyte-entity-name': 'metafields',
                                     'x-airbyte-stream-name': 'metafields',
                                     'x-airbyte-ai-hints': {
-                                        'summary': 'Custom metafields storing additional data on Shopify resources',
-                                        'when_to_use': 'Questions about custom metadata or extended fields on resources',
-                                        'trigger_phrases': ['metafield', 'custom field', 'metadata'],
+                                        'summary': 'Custom metafields (typed key/value data) attached to any Shopify resource via owner GID',
+                                        'when_to_use': 'When setting or deleting custom data on a product, order, customer, or other resource',
+                                        'trigger_phrases': [
+                                            'set metafield',
+                                            'delete metafield',
+                                            'custom field',
+                                            'metadata on a resource',
+                                        ],
                                         'freshness': 'live',
-                                        'example_questions': ['What metafields are on a product?'],
-                                        'search_strategy': 'Filter by resource type and namespace',
+                                        'example_questions': ['Set a metafield on a product', 'Delete a metafield from an order'],
+                                        'search_strategy': "Metafields are written by owner GID + namespace + key; requires the owner resource's write scope (e.g. write_products for a product metafield)",
                                     },
                                 },
                             },
@@ -14670,7 +18664,14 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.metafields',
                     meta_extractor={'next_page_url': '@link.next'},
-                    untested=True,
+                    ai_hints={
+                        'summary': 'Custom metafields attached to a blog',
+                        'when_to_use': 'When you need custom fields stored on a blog',
+                        'trigger_phrases': ['blog metafield', 'blog custom field'],
+                        'freshness': 'live',
+                        'example_questions': ['Show custom metafields on a blog'],
+                        'search_strategy': 'Filter by blog_id; identify by namespace and key',
+                    },
                 ),
             },
             relationships=[
@@ -14759,12 +18760,17 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                                     'x-airbyte-entity-name': 'metafields',
                                     'x-airbyte-stream-name': 'metafields',
                                     'x-airbyte-ai-hints': {
-                                        'summary': 'Custom metafields storing additional data on Shopify resources',
-                                        'when_to_use': 'Questions about custom metadata or extended fields on resources',
-                                        'trigger_phrases': ['metafield', 'custom field', 'metadata'],
+                                        'summary': 'Custom metafields (typed key/value data) attached to any Shopify resource via owner GID',
+                                        'when_to_use': 'When setting or deleting custom data on a product, order, customer, or other resource',
+                                        'trigger_phrases': [
+                                            'set metafield',
+                                            'delete metafield',
+                                            'custom field',
+                                            'metadata on a resource',
+                                        ],
                                         'freshness': 'live',
-                                        'example_questions': ['What metafields are on a product?'],
-                                        'search_strategy': 'Filter by resource type and namespace',
+                                        'example_questions': ['Set a metafield on a product', 'Delete a metafield from an order'],
+                                        'search_strategy': "Metafields are written by owner GID + namespace + key; requires the owner resource's write scope (e.g. write_products for a product metafield)",
                                     },
                                 },
                             },
@@ -14772,7 +18778,14 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.metafields',
                     meta_extractor={'next_page_url': '@link.next'},
-                    untested=True,
+                    ai_hints={
+                        'summary': 'Custom metafields attached to a blog article',
+                        'when_to_use': 'When you need custom fields stored on an article',
+                        'trigger_phrases': ['article metafield', 'article custom field'],
+                        'freshness': 'live',
+                        'example_questions': ['Show custom metafields on an article'],
+                        'search_strategy': 'Filter by blog_id and article_id; identify by namespace and key',
+                    },
                 ),
             },
             relationships=[
@@ -14789,6 +18802,520 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                     cardinality='many_to_one',
                 ),
             ],
+        ),
+        EntityDefinition(
+            name='draft_order_complete',
+            actions=[Action.UPDATE],
+            endpoints={
+                Action.UPDATE: EndpointDefinition(
+                    method='POST',
+                    path='/graphql.json:draftOrderComplete',
+                    path_override=PathOverrideConfig(
+                        path='/graphql.json',
+                    ),
+                    action=Action.UPDATE,
+                    description='Completes a draft order, converting it to a regular order via GraphQL mutation.\n',
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'draftOrderComplete': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'userErrors': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'field': {
+                                                            'type': ['string', 'null', 'array'],
+                                                            'description': 'Path to the input field that caused the error',
+                                                        },
+                                                        'message': {'type': 'string', 'description': 'Error message'},
+                                                        'code': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Error code',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            'draftOrder': {
+                                                'type': ['object', 'null'],
+                                                'properties': {
+                                                    'id': {'type': 'string'},
+                                                    'name': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'status': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'order': {
+                                                        'type': ['object', 'null'],
+                                                        'properties': {
+                                                            'id': {'type': 'string'},
+                                                            'name': {
+                                                                'type': ['string', 'null'],
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    graphql_body={
+                        'type': 'graphql',
+                        'query': 'mutation draftOrderComplete($id: ID!, $paymentPending: Boolean) { draftOrderComplete(id: $id, paymentPending: $paymentPending) { userErrors { field message } draftOrder { id name status order { id name } } } }',
+                        'variables': {'id': '{{ id }}', 'paymentPending': '{{ paymentPending }}'},
+                    },
+                    record_extractor='$.data.draftOrderComplete',
+                    ai_hints={
+                        'summary': 'Complete a draft order, converting it into a real order',
+                        'when_to_use': 'When the user asks to finalize a draft order/quote into an order',
+                        'trigger_phrases': [
+                            'complete a draft order',
+                            'finalize a quote',
+                            'convert a draft to an order',
+                            'mark draft as paid',
+                        ],
+                        'freshness': 'live',
+                        'example_questions': ['Complete a draft order'],
+                        'search_strategy': 'Use draft_order_complete.update with the draft order GID (draftOrderComplete). Requires write_draft_orders scope. To create the draft first, use draft_orders.create.',
+                    },
+                ),
+            },
+        ),
+        EntityDefinition(
+            name='inventory_set',
+            actions=[Action.CREATE],
+            endpoints={
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/graphql.json:inventorySetQuantities',
+                    path_override=PathOverrideConfig(
+                        path='/graphql.json',
+                    ),
+                    action=Action.CREATE,
+                    description='Sets absolute inventory quantities for items at locations via GraphQL mutation.\nUses the inventorySetQuantities mutation with a required reason and reference document.\n',
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'inventorySetQuantities': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'userErrors': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'field': {
+                                                            'type': ['string', 'null', 'array'],
+                                                            'description': 'Path to the input field that caused the error',
+                                                        },
+                                                        'message': {'type': 'string', 'description': 'Error message'},
+                                                        'code': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Error code',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            'inventoryAdjustmentGroup': {
+                                                'type': 'object',
+                                                'properties': {
+                                                    'reason': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'referenceDocumentUri': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'changes': {
+                                                        'type': 'array',
+                                                        'items': {
+                                                            'type': 'object',
+                                                            'properties': {
+                                                                'name': {
+                                                                    'type': ['string', 'null'],
+                                                                },
+                                                                'delta': {
+                                                                    'type': ['integer', 'null'],
+                                                                },
+                                                                'quantityAfterChange': {
+                                                                    'type': ['integer', 'null'],
+                                                                },
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    graphql_body={
+                        'type': 'graphql',
+                        'query': 'mutation inventorySetQuantities($input: InventorySetQuantitiesInput!) { inventorySetQuantities(input: $input) { userErrors { field message code } inventoryAdjustmentGroup { reason referenceDocumentUri changes { name delta quantityAfterChange } } } }',
+                        'variables': {'input': '{{ input }}'},
+                    },
+                    record_extractor='$.data.inventorySetQuantities',
+                    ai_hints={
+                        'summary': 'Set absolute inventory quantities at a location',
+                        'when_to_use': 'When the user wants to set stock to an exact number',
+                        'trigger_phrases': [
+                            'set inventory',
+                            'set stock to',
+                            'overwrite inventory',
+                            'set quantity to',
+                        ],
+                        'freshness': 'live',
+                        'example_questions': ["Set a variant's inventory to 100 at a location"],
+                        'search_strategy': 'Use inventory_set.create (inventorySetQuantities) with inventoryItemId, locationId, and the absolute quantity. Requires write_inventory scope. Use inventory_adjust.create for relative changes.',
+                    },
+                ),
+            },
+        ),
+        EntityDefinition(
+            name='inventory_adjust',
+            actions=[Action.CREATE],
+            endpoints={
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/graphql.json:inventoryAdjustQuantities',
+                    path_override=PathOverrideConfig(
+                        path='/graphql.json',
+                    ),
+                    action=Action.CREATE,
+                    description='Adjusts inventory quantities relatively (add/subtract) for items at locations via GraphQL mutation.\n',
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'inventoryAdjustQuantities': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'userErrors': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'field': {
+                                                            'type': ['string', 'null', 'array'],
+                                                            'description': 'Path to the input field that caused the error',
+                                                        },
+                                                        'message': {'type': 'string', 'description': 'Error message'},
+                                                        'code': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Error code',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            'inventoryAdjustmentGroup': {
+                                                'type': 'object',
+                                                'properties': {
+                                                    'reason': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'referenceDocumentUri': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                    'changes': {
+                                                        'type': 'array',
+                                                        'items': {
+                                                            'type': 'object',
+                                                            'properties': {
+                                                                'name': {
+                                                                    'type': ['string', 'null'],
+                                                                },
+                                                                'delta': {
+                                                                    'type': ['integer', 'null'],
+                                                                },
+                                                                'quantityAfterChange': {
+                                                                    'type': ['integer', 'null'],
+                                                                },
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    graphql_body={
+                        'type': 'graphql',
+                        'query': 'mutation inventoryAdjustQuantities($input: InventoryAdjustQuantitiesInput!) { inventoryAdjustQuantities(input: $input) { userErrors { field message code } inventoryAdjustmentGroup { reason referenceDocumentUri changes { name delta quantityAfterChange } } } }',
+                        'variables': {'input': '{{ input }}'},
+                    },
+                    record_extractor='$.data.inventoryAdjustQuantities',
+                    ai_hints={
+                        'summary': 'Adjust inventory quantities by a delta at a location',
+                        'when_to_use': 'When the user wants to increase or decrease stock by a relative amount',
+                        'trigger_phrases': [
+                            'adjust inventory',
+                            'increase stock',
+                            'decrease stock',
+                            'add units',
+                            'deduct stock',
+                        ],
+                        'freshness': 'live',
+                        'example_questions': ["Add 10 units to a variant's stock"],
+                        'search_strategy': 'Use inventory_adjust.create (inventoryAdjustQuantities) with a positive or negative delta. Requires write_inventory scope. Use inventory_set.create when you know the exact target.',
+                    },
+                ),
+            },
+        ),
+        EntityDefinition(
+            name='metafields',
+            stream_name='metafields',
+            actions=[Action.CREATE, Action.DELETE],
+            endpoints={
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/graphql.json:metafieldsSet',
+                    path_override=PathOverrideConfig(
+                        path='/graphql.json',
+                    ),
+                    action=Action.CREATE,
+                    description='Sets (creates or updates) up to 25 metafields atomically via GraphQL mutation.\nWorks across all resource types (products, customers, orders, etc.).\n',
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'metafieldsSet': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'userErrors': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'field': {
+                                                            'type': ['string', 'null', 'array'],
+                                                            'description': 'Path to the input field that caused the error',
+                                                        },
+                                                        'message': {'type': 'string', 'description': 'Error message'},
+                                                        'code': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Error code',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            'metafields': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'id': {'type': 'string'},
+                                                        'namespace': {
+                                                            'type': ['string', 'null'],
+                                                        },
+                                                        'key': {
+                                                            'type': ['string', 'null'],
+                                                        },
+                                                        'value': {
+                                                            'type': ['string', 'null'],
+                                                        },
+                                                        'type': {
+                                                            'type': ['string', 'null'],
+                                                        },
+                                                        'updatedAt': {
+                                                            'type': ['string', 'null'],
+                                                            'format': 'date-time',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    graphql_body={
+                        'type': 'graphql',
+                        'query': 'mutation metafieldsSet($metafields: [MetafieldsSetInput!]!) { metafieldsSet(metafields: $metafields) { userErrors { field message code } metafields { id namespace key value type updatedAt } } }',
+                        'variables': {'metafields': '{{ metafields }}'},
+                    },
+                    record_extractor='$.data.metafieldsSet',
+                    ai_hints={
+                        'summary': 'Set (create or update) metafields on any resource',
+                        'when_to_use': 'When the user asks to set, add, or update custom data/metadata on a resource',
+                        'trigger_phrases': [
+                            'set a metafield',
+                            'add custom data',
+                            'store metadata',
+                            'set a custom field',
+                        ],
+                        'freshness': 'live',
+                        'example_questions': ['Set a metafield on a product'],
+                        'search_strategy': "Use metafields.create (metafieldsSet) with ownerId GID, namespace, key, type, and value. Requires the OWNER resource's write scope (e.g. write_products for a product metafield).",
+                    },
+                ),
+                Action.DELETE: EndpointDefinition(
+                    method='POST',
+                    path='/graphql.json:metafieldsDelete',
+                    path_override=PathOverrideConfig(
+                        path='/graphql.json',
+                    ),
+                    action=Action.DELETE,
+                    description='Deletes one or more metafields via GraphQL mutation.\nIdentifies metafields by ownerId + namespace + key.\n',
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'metafieldsDelete': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'deletedMetafields': {
+                                                'type': ['array', 'null'],
+                                                'items': {
+                                                    'type': ['object', 'null'],
+                                                    'properties': {
+                                                        'key': {
+                                                            'type': ['string', 'null'],
+                                                        },
+                                                        'namespace': {
+                                                            'type': ['string', 'null'],
+                                                        },
+                                                        'ownerId': {
+                                                            'type': ['string', 'null'],
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            'userErrors': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'field': {
+                                                            'type': ['string', 'null', 'array'],
+                                                            'description': 'Path to the input field that caused the error',
+                                                        },
+                                                        'message': {'type': 'string', 'description': 'Error message'},
+                                                        'code': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Error code',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    graphql_body={
+                        'type': 'graphql',
+                        'query': 'mutation metafieldsDelete($metafields: [MetafieldIdentifierInput!]!) { metafieldsDelete(metafields: $metafields) { deletedMetafields { key namespace ownerId } userErrors { field message } } }',
+                        'variables': {'metafields': '{{ metafields }}'},
+                    },
+                    record_extractor='$.data.metafieldsDelete',
+                    ai_hints={
+                        'summary': 'Delete metafields from a resource',
+                        'when_to_use': 'When the user asks to remove custom data/metadata from a resource',
+                        'trigger_phrases': ['delete a metafield', 'remove custom data', 'clear a custom field'],
+                        'freshness': 'live',
+                        'example_questions': ['Delete a metafield from an order'],
+                        'search_strategy': "Use metafields.delete (metafieldsDelete) with the metafield identifier (ownerId, namespace, key). Requires the owner resource's write scope.",
+                    },
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'A metafield',
+                'properties': {
+                    'id': {'type': 'integer', 'description': 'Metafield ID'},
+                    'namespace': {
+                        'type': ['string', 'null'],
+                    },
+                    'key': {
+                        'type': ['string', 'null'],
+                    },
+                    'value': {
+                        'type': [
+                            'string',
+                            'integer',
+                            'boolean',
+                            'null',
+                        ],
+                        'description': 'The metafield value (can be string, integer, or boolean depending on type)',
+                    },
+                    'type': {
+                        'type': ['string', 'null'],
+                    },
+                    'description': {
+                        'type': ['string', 'null'],
+                    },
+                    'owner_id': {
+                        'type': ['integer', 'null'],
+                    },
+                    'created_at': {
+                        'type': ['string', 'null'],
+                        'format': 'date-time',
+                    },
+                    'updated_at': {
+                        'type': ['string', 'null'],
+                        'format': 'date-time',
+                    },
+                    'owner_resource': {
+                        'type': ['string', 'null'],
+                    },
+                    'admin_graphql_api_id': {
+                        'type': ['string', 'null'],
+                    },
+                },
+                'required': ['id'],
+                'x-airbyte-entity-name': 'metafields',
+                'x-airbyte-stream-name': 'metafields',
+                'x-airbyte-ai-hints': {
+                    'summary': 'Custom metafields (typed key/value data) attached to any Shopify resource via owner GID',
+                    'when_to_use': 'When setting or deleting custom data on a product, order, customer, or other resource',
+                    'trigger_phrases': [
+                        'set metafield',
+                        'delete metafield',
+                        'custom field',
+                        'metadata on a resource',
+                    ],
+                    'freshness': 'live',
+                    'example_questions': ['Set a metafield on a product', 'Delete a metafield from an order'],
+                    'search_strategy': "Metafields are written by owner GID + namespace + key; requires the owner resource's write scope (e.g. write_products for a product metafield)",
+                },
+            },
+            ai_hints={
+                'summary': 'Custom metafields (typed key/value data) attached to any Shopify resource via owner GID',
+                'when_to_use': 'When setting or deleting custom data on a product, order, customer, or other resource',
+                'trigger_phrases': [
+                    'set metafield',
+                    'delete metafield',
+                    'custom field',
+                    'metadata on a resource',
+                ],
+                'freshness': 'live',
+                'example_questions': ['Set a metafield on a product', 'Delete a metafield from an order'],
+                'search_strategy': "Metafields are written by owner GID + namespace + key; requires the owner resource's write scope (e.g. write_products for a product metafield)",
+            },
         ),
     ],
     context_store=CacheConfig(
@@ -17259,6 +21786,17 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
             'List all custom collections in my store',
             'Show me details for a recent order',
             'Show me product variants for a recent product',
+            'Create a new customer in Shopify with email test@example.com',
+            "Update a customer's first name",
+            "Create a new product called 'Summer T-Shirt'",
+            'Update a product title',
+            'Create a draft order for a customer',
+            'Complete a draft order',
+            'Set inventory quantity for a product variant at a location',
+            'Create a basic discount code for 10% off',
+            'Set a metafield on a product',
+            'Create a new page on my store',
+            'Create a new blog post',
         ],
         context_store_search=[
             'Show me orders from the last 30 days',
@@ -17276,14 +21814,7 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
             'List all blog articles',
             'Are there any open disputes?',
         ],
-        unsupported=[
-            'Create a new customer in Shopify',
-            'Update product pricing',
-            'Delete an order',
-            'Process a refund',
-            'Send shipping notification to customer',
-            'Create a new discount code',
-        ],
+        unsupported=['Process a refund', 'Send shipping notification to customer', 'Modify order line items after creation'],
     ),
     server_variable_defaults={'shop': 'my-store'},
 )

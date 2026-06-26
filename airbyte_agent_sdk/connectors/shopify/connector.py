@@ -19,34 +19,72 @@ from airbyte_agent_sdk.translation import DEFAULT_MAX_OUTPUT_CHARS, FrameworkNam
 from airbyte_agent_sdk.types import AirbyteAuthConfig
 from .types import (
     AbandonedCheckoutsListParams,
+    ArticlesCreateParams,
+    ArticlesCreateParamsArticle,
+    ArticlesDeleteParams,
     ArticlesGetParams,
     ArticlesListParams,
+    ArticlesUpdateParams,
+    ArticlesUpdateParamsArticle,
     BalanceTransactionsListParams,
+    BlogsCreateParams,
+    BlogsCreateParamsBlog,
+    BlogsDeleteParams,
     BlogsGetParams,
     BlogsListParams,
+    BlogsUpdateParams,
+    BlogsUpdateParamsBlog,
     CollectsGetParams,
     CollectsListParams,
     CountriesGetParams,
     CountriesListParams,
+    CustomCollectionsCreateParams,
+    CustomCollectionsCreateParamsInput,
+    CustomCollectionsDeleteParams,
+    CustomCollectionsDeleteParamsInput,
     CustomCollectionsGetParams,
     CustomCollectionsListParams,
+    CustomCollectionsUpdateParams,
+    CustomCollectionsUpdateParamsInput,
     CustomerAddressGetParams,
     CustomerAddressListParams,
+    CustomersCreateParams,
+    CustomersCreateParamsInput,
+    CustomersDeleteParams,
+    CustomersDeleteParamsInput,
     CustomersGetParams,
     CustomersListParams,
+    CustomersUpdateParams,
+    CustomersUpdateParamsInput,
+    DiscountCodesCreateParams,
+    DiscountCodesCreateParamsBasiccodediscount,
+    DiscountCodesDeleteParams,
     DiscountCodesGetParams,
     DiscountCodesListParams,
+    DiscountCodesUpdateParams,
+    DiscountCodesUpdateParamsBasiccodediscount,
     DisputesGetParams,
     DisputesListParams,
+    DraftOrderCompleteUpdateParams,
+    DraftOrdersCreateParams,
+    DraftOrdersCreateParamsInput,
+    DraftOrdersDeleteParams,
+    DraftOrdersDeleteParamsInput,
     DraftOrdersGetParams,
     DraftOrdersListParams,
+    DraftOrdersUpdateParams,
+    DraftOrdersUpdateParamsInput,
     FulfillmentOrdersGetParams,
     FulfillmentOrdersListParams,
     FulfillmentsGetParams,
     FulfillmentsListParams,
+    InventoryAdjustCreateParams,
+    InventoryAdjustCreateParamsInput,
     InventoryItemsGetParams,
     InventoryItemsListParams,
     InventoryLevelsListParams,
+    InventorySetCreateParams,
+    InventorySetCreateParamsInput,
     LocationsGetParams,
     LocationsListParams,
     MetafieldArticlesListParams,
@@ -62,20 +100,47 @@ from .types import (
     MetafieldShopsGetParams,
     MetafieldShopsListParams,
     MetafieldSmartCollectionsListParams,
+    MetafieldsCreateParams,
+    MetafieldsCreateParamsMetafieldsItem,
+    MetafieldsDeleteParams,
+    MetafieldsDeleteParamsMetafieldsItem,
     OrderRefundsGetParams,
     OrderRefundsListParams,
+    OrdersCreateParams,
+    OrdersCreateParamsOptions,
+    OrdersCreateParamsOrder,
+    OrdersDeleteParams,
     OrdersGetParams,
     OrdersListParams,
+    OrdersUpdateParams,
+    OrdersUpdateParamsInput,
+    PagesCreateParams,
+    PagesCreateParamsPage,
+    PagesDeleteParams,
     PagesGetParams,
     PagesListParams,
+    PagesUpdateParams,
+    PagesUpdateParamsPage,
     PriceRulesGetParams,
     PriceRulesListParams,
     ProductImagesGetParams,
     ProductImagesListParams,
+    ProductVariantsCreateParams,
+    ProductVariantsCreateParamsVariantsItem,
+    ProductVariantsDeleteParams,
     ProductVariantsGetParams,
     ProductVariantsListParams,
+    ProductVariantsUpdateParams,
+    ProductVariantsUpdateParamsVariantsItem,
+    ProductsCreateParams,
+    ProductsCreateParamsMediaItem,
+    ProductsCreateParamsProduct,
+    ProductsDeleteParams,
+    ProductsDeleteParamsInput,
     ProductsGetParams,
     ProductsListParams,
+    ProductsUpdateParams,
+    ProductsUpdateParamsProduct,
     ShopGetParams,
     SmartCollectionsGetParams,
     SmartCollectionsListParams,
@@ -209,28 +274,63 @@ from .models import (
     MetafieldArticlesListResult,
     AbandonedCheckout,
     Article,
+    ArticleCreatePayload,
+    ArticleDeletePayload,
+    ArticleUpdatePayload,
     BalanceTransaction,
     Blog,
+    BlogCreatePayload,
+    BlogDeletePayload,
+    BlogUpdatePayload,
     Collect,
+    CollectionCreatePayload,
+    CollectionDeletePayload,
+    CollectionUpdatePayload,
     Country,
     CustomCollection,
     Customer,
     CustomerAddress,
+    CustomerCreatePayload,
+    CustomerDeletePayload,
+    CustomerUpdatePayload,
     DiscountCode,
+    DiscountCodeBasicCreatePayload,
+    DiscountCodeBasicUpdatePayload,
+    DiscountCodeDeletePayload,
     Dispute,
     DraftOrder,
+    DraftOrderCompletePayload,
+    DraftOrderCreatePayload,
+    DraftOrderDeletePayload,
+    DraftOrderUpdatePayload,
     Fulfillment,
     FulfillmentOrder,
+    InventoryAdjustQuantitiesPayload,
     InventoryItem,
     InventoryLevel,
+    InventorySetQuantitiesPayload,
     Location,
     Metafield,
+    MetafieldDeletePayload,
+    MetafieldsSetPayload,
     Order,
+    OrderCancelPayload,
+    OrderCreatePayload,
+    OrderUpdatePayload,
     Page,
+    PageCreatePayload,
+    PageDeletePayload,
+    PageUpdatePayload,
     PriceRule,
     Product,
+    ProductCreatePayload,
+    ProductDeletePayload,
     ProductImage,
+    ProductUpdatePayload,
     ProductVariant,
+    ProductVariantsBulkCreatePayload,
+    ProductVariantsBulkDeletePayload,
+    ProductVariantsBulkUpdatePayload,
     Refund,
     Shop,
     SmartCollection,
@@ -331,7 +431,7 @@ class ShopifyConnector:
 
     connector_name = "shopify"
     connector_version = "0.1.13"
-    sdk_version = "0.1.263"
+    sdk_version = "0.1.264"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -399,6 +499,41 @@ class ShopifyConnector:
         ("metafield_pages", "list"): True,
         ("metafield_blogs", "list"): True,
         ("metafield_articles", "list"): True,
+        ("customers", "create"): None,
+        ("customers", "update"): None,
+        ("customers", "delete"): None,
+        ("products", "create"): None,
+        ("products", "update"): None,
+        ("products", "delete"): None,
+        ("product_variants", "create"): None,
+        ("product_variants", "update"): None,
+        ("product_variants", "delete"): None,
+        ("orders", "create"): None,
+        ("orders", "update"): None,
+        ("orders", "delete"): None,
+        ("draft_orders", "create"): None,
+        ("draft_orders", "update"): None,
+        ("draft_orders", "delete"): None,
+        ("draft_order_complete", "update"): None,
+        ("inventory_set", "create"): None,
+        ("inventory_adjust", "create"): None,
+        ("discount_codes", "create"): None,
+        ("discount_codes", "update"): None,
+        ("discount_codes", "delete"): None,
+        ("metafields", "create"): None,
+        ("metafields", "delete"): None,
+        ("custom_collections", "create"): None,
+        ("custom_collections", "update"): None,
+        ("custom_collections", "delete"): None,
+        ("pages", "create"): None,
+        ("pages", "update"): None,
+        ("pages", "delete"): None,
+        ("blogs", "create"): None,
+        ("blogs", "update"): None,
+        ("blogs", "delete"): None,
+        ("articles", "create"): None,
+        ("articles", "update"): None,
+        ("articles", "delete"): None,
     }
 
     # Map of (entity, action) -> {python_param_name: api_param_name}
@@ -466,6 +601,41 @@ class ShopifyConnector:
         ('metafield_pages', 'list'): {'page_id': 'page_id', 'limit': 'limit'},
         ('metafield_blogs', 'list'): {'blog_id': 'blog_id', 'limit': 'limit'},
         ('metafield_articles', 'list'): {'blog_id': 'blog_id', 'article_id': 'article_id', 'limit': 'limit'},
+        ('customers', 'create'): {'input': 'input'},
+        ('customers', 'update'): {'input': 'input'},
+        ('customers', 'delete'): {'input': 'input'},
+        ('products', 'create'): {'product': 'product', 'media': 'media'},
+        ('products', 'update'): {'product': 'product'},
+        ('products', 'delete'): {'input': 'input'},
+        ('product_variants', 'create'): {'product_id': 'productId', 'variants': 'variants'},
+        ('product_variants', 'update'): {'product_id': 'productId', 'variants': 'variants'},
+        ('product_variants', 'delete'): {'product_id': 'productId', 'variants_ids': 'variantsIds'},
+        ('orders', 'create'): {'order': 'order', 'options': 'options'},
+        ('orders', 'update'): {'input': 'input'},
+        ('orders', 'delete'): {'order_id': 'orderId', 'reason': 'reason', 'notify_customer': 'notifyCustomer', 'refund': 'refund', 'restock': 'restock', 'staff_note': 'staffNote'},
+        ('draft_orders', 'create'): {'input': 'input'},
+        ('draft_orders', 'update'): {'id': 'id', 'input': 'input'},
+        ('draft_orders', 'delete'): {'input': 'input'},
+        ('draft_order_complete', 'update'): {'id': 'id', 'payment_pending': 'paymentPending'},
+        ('inventory_set', 'create'): {'input': 'input'},
+        ('inventory_adjust', 'create'): {'input': 'input'},
+        ('discount_codes', 'create'): {'basic_code_discount': 'basicCodeDiscount'},
+        ('discount_codes', 'update'): {'id': 'id', 'basic_code_discount': 'basicCodeDiscount'},
+        ('discount_codes', 'delete'): {'id': 'id'},
+        ('metafields', 'create'): {'metafields': 'metafields'},
+        ('metafields', 'delete'): {'metafields': 'metafields'},
+        ('custom_collections', 'create'): {'input': 'input'},
+        ('custom_collections', 'update'): {'input': 'input'},
+        ('custom_collections', 'delete'): {'input': 'input'},
+        ('pages', 'create'): {'page': 'page'},
+        ('pages', 'update'): {'id': 'id', 'page': 'page'},
+        ('pages', 'delete'): {'id': 'id'},
+        ('blogs', 'create'): {'blog': 'blog'},
+        ('blogs', 'update'): {'id': 'id', 'blog': 'blog'},
+        ('blogs', 'delete'): {'id': 'id'},
+        ('articles', 'create'): {'article': 'article'},
+        ('articles', 'update'): {'id': 'id', 'article': 'article'},
+        ('articles', 'delete'): {'id': 'id'},
     }
 
     # Accepted auth_config types for isinstance validation
@@ -617,6 +787,10 @@ class ShopifyConnector:
         self.metafield_pages = MetafieldPagesQuery(self)
         self.metafield_blogs = MetafieldBlogsQuery(self)
         self.metafield_articles = MetafieldArticlesQuery(self)
+        self.draft_order_complete = DraftOrderCompleteQuery(self)
+        self.inventory_set = InventorySetQuery(self)
+        self.inventory_adjust = InventoryAdjustQuery(self)
+        self.metafields = MetafieldsQuery(self)
 
     # ===== TYPED EXECUTE METHOD (Recommended Interface) =====
 
@@ -1388,12 +1562,432 @@ class ShopifyConnector:
         skip_truncation: bool = ...
     ) -> "MetafieldArticlesListResult": ...
 
+    @overload
+    async def execute(
+        self,
+        entity: Literal["customers"],
+        action: Literal["create"],
+        params: "CustomersCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "CustomerCreatePayload": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["customers"],
+        action: Literal["update"],
+        params: "CustomersUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "CustomerUpdatePayload": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["customers"],
+        action: Literal["delete"],
+        params: "CustomersDeleteParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "CustomerDeletePayload": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["products"],
+        action: Literal["create"],
+        params: "ProductsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "ProductCreatePayload": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["products"],
+        action: Literal["update"],
+        params: "ProductsUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "ProductUpdatePayload": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["products"],
+        action: Literal["delete"],
+        params: "ProductsDeleteParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "ProductDeletePayload": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["product_variants"],
+        action: Literal["create"],
+        params: "ProductVariantsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "ProductVariantsBulkCreatePayload": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["product_variants"],
+        action: Literal["update"],
+        params: "ProductVariantsUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "ProductVariantsBulkUpdatePayload": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["product_variants"],
+        action: Literal["delete"],
+        params: "ProductVariantsDeleteParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "ProductVariantsBulkDeletePayload": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["orders"],
+        action: Literal["create"],
+        params: "OrdersCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "OrderCreatePayload": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["orders"],
+        action: Literal["update"],
+        params: "OrdersUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "OrderUpdatePayload": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["orders"],
+        action: Literal["delete"],
+        params: "OrdersDeleteParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "OrderCancelPayload": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["draft_orders"],
+        action: Literal["create"],
+        params: "DraftOrdersCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "DraftOrderCreatePayload": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["draft_orders"],
+        action: Literal["update"],
+        params: "DraftOrdersUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "DraftOrderUpdatePayload": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["draft_orders"],
+        action: Literal["delete"],
+        params: "DraftOrdersDeleteParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "DraftOrderDeletePayload": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["draft_order_complete"],
+        action: Literal["update"],
+        params: "DraftOrderCompleteUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "DraftOrderCompletePayload": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["inventory_set"],
+        action: Literal["create"],
+        params: "InventorySetCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "InventorySetQuantitiesPayload": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["inventory_adjust"],
+        action: Literal["create"],
+        params: "InventoryAdjustCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "InventoryAdjustQuantitiesPayload": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["discount_codes"],
+        action: Literal["create"],
+        params: "DiscountCodesCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "DiscountCodeBasicCreatePayload": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["discount_codes"],
+        action: Literal["update"],
+        params: "DiscountCodesUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "DiscountCodeBasicUpdatePayload": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["discount_codes"],
+        action: Literal["delete"],
+        params: "DiscountCodesDeleteParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "DiscountCodeDeletePayload": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["metafields"],
+        action: Literal["create"],
+        params: "MetafieldsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "MetafieldsSetPayload": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["metafields"],
+        action: Literal["delete"],
+        params: "MetafieldsDeleteParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "MetafieldDeletePayload": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["custom_collections"],
+        action: Literal["create"],
+        params: "CustomCollectionsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "CollectionCreatePayload": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["custom_collections"],
+        action: Literal["update"],
+        params: "CustomCollectionsUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "CollectionUpdatePayload": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["custom_collections"],
+        action: Literal["delete"],
+        params: "CustomCollectionsDeleteParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "CollectionDeletePayload": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["pages"],
+        action: Literal["create"],
+        params: "PagesCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "PageCreatePayload": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["pages"],
+        action: Literal["update"],
+        params: "PagesUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "PageUpdatePayload": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["pages"],
+        action: Literal["delete"],
+        params: "PagesDeleteParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "PageDeletePayload": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["blogs"],
+        action: Literal["create"],
+        params: "BlogsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "BlogCreatePayload": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["blogs"],
+        action: Literal["update"],
+        params: "BlogsUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "BlogUpdatePayload": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["blogs"],
+        action: Literal["delete"],
+        params: "BlogsDeleteParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "BlogDeletePayload": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["articles"],
+        action: Literal["create"],
+        params: "ArticlesCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "ArticleCreatePayload": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["articles"],
+        action: Literal["update"],
+        params: "ArticlesUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "ArticleUpdatePayload": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["articles"],
+        action: Literal["delete"],
+        params: "ArticlesDeleteParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "ArticleDeletePayload": ...
+
 
     @overload
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get", "context_store_search"],
+        action: Literal["list", "get", "create", "update", "delete", "context_store_search"],
         params: Mapping[str, Any],
         *,
         select_fields: list[str] | None = ...,
@@ -1404,7 +1998,7 @@ class ShopifyConnector:
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get", "context_store_search"],
+        action: Literal["list", "get", "create", "update", "delete", "context_store_search"],
         params: Mapping[str, Any] | None = None,
         *,
         select_fields: list[str] | None = None,
@@ -1747,6 +2341,87 @@ class CustomersQuery:
 
 
 
+    async def create(
+        self,
+        input: CustomersCreateParamsInput,
+        **kwargs
+    ) -> CustomerCreatePayload:
+        """
+        Creates a new customer in the store via GraphQL mutation.
+Requires at least one of: email, phone, firstName, or lastName.
+
+
+        Args:
+            input: CustomerInput object
+            **kwargs: Additional parameters
+
+        Returns:
+            CustomerCreatePayload
+        """
+        params = {k: v for k, v in {
+            "input": input,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("customers", "create", params)
+        return result
+
+
+
+    async def update(
+        self,
+        input: CustomersUpdateParamsInput,
+        **kwargs
+    ) -> CustomerUpdatePayload:
+        """
+        Updates an existing customer via GraphQL mutation.
+All fields except id are optional for partial updates.
+
+
+        Args:
+            input: CustomerInput object with id
+            **kwargs: Additional parameters
+
+        Returns:
+            CustomerUpdatePayload
+        """
+        params = {k: v for k, v in {
+            "input": input,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("customers", "update", params)
+        return result
+
+
+
+    async def delete(
+        self,
+        input: CustomersDeleteParamsInput,
+        **kwargs
+    ) -> CustomerDeletePayload:
+        """
+        Deletes a customer from the store via GraphQL mutation.
+Only succeeds if the customer has no orders. This action is irreversible.
+
+
+        Args:
+            input: Parameter input
+            **kwargs: Additional parameters
+
+        Returns:
+            CustomerDeletePayload
+        """
+        params = {k: v for k, v in {
+            "input": input,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("customers", "delete", params)
+        return result
+
+
+
     async def context_store_search(
         self,
         query: CustomersSearchQuery,
@@ -1895,6 +2570,105 @@ class OrdersQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("orders", "get", params)
+        return result
+
+
+
+    async def create(
+        self,
+        order: OrdersCreateParamsOrder,
+        options: OrdersCreateParamsOptions | None = None,
+        **kwargs
+    ) -> OrderCreatePayload:
+        """
+        Creates a new order via GraphQL mutation.
+Use line items with either variantId or customAttributes.
+
+
+        Args:
+            order: OrderCreateOrderInput object
+            options: OrderCreateOptionsInput
+            **kwargs: Additional parameters
+
+        Returns:
+            OrderCreatePayload
+        """
+        params = {k: v for k, v in {
+            "order": order,
+            "options": options,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("orders", "create", params)
+        return result
+
+
+
+    async def update(
+        self,
+        input: OrdersUpdateParamsInput,
+        **kwargs
+    ) -> OrderUpdatePayload:
+        """
+        Updates simple fields on an existing order via GraphQL mutation.
+For line item changes, use orderEditBegin/orderEditCommit instead.
+
+
+        Args:
+            input: Parameter input
+            **kwargs: Additional parameters
+
+        Returns:
+            OrderUpdatePayload
+        """
+        params = {k: v for k, v in {
+            "input": input,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("orders", "update", params)
+        return result
+
+
+
+    async def delete(
+        self,
+        order_id: str,
+        reason: str,
+        restock: bool,
+        notify_customer: bool | None = None,
+        refund: bool | None = None,
+        staff_note: str | None = None,
+        **kwargs
+    ) -> OrderCancelPayload:
+        """
+        Cancels an open order via GraphQL mutation.
+This action is irreversible. Optional refund and restock parameters.
+
+
+        Args:
+            order_id: The GraphQL GID of the order to cancel
+            reason: Reason for cancellation
+            notify_customer: Whether to notify the customer
+            refund: Whether to refund the order
+            restock: Whether to restock items
+            staff_note: Staff note for the cancellation
+            **kwargs: Additional parameters
+
+        Returns:
+            OrderCancelPayload
+        """
+        params = {k: v for k, v in {
+            "orderId": order_id,
+            "reason": reason,
+            "notifyCustomer": notify_customer,
+            "refund": refund,
+            "restock": restock,
+            "staffNote": staff_note,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("orders", "delete", params)
         return result
 
 
@@ -2064,6 +2838,91 @@ class ProductsQuery:
 
 
 
+    async def create(
+        self,
+        product: ProductsCreateParamsProduct,
+        media: list[ProductsCreateParamsMediaItem] | None = None,
+        **kwargs
+    ) -> ProductCreatePayload:
+        """
+        Creates a new product via GraphQL mutation.
+Creates the product with a default variant. Use productVariantsBulkCreate
+to add additional variants afterwards.
+
+
+        Args:
+            product: ProductCreateInput object
+            media: Media to attach to the product
+            **kwargs: Additional parameters
+
+        Returns:
+            ProductCreatePayload
+        """
+        params = {k: v for k, v in {
+            "product": product,
+            "media": media,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("products", "create", params)
+        return result
+
+
+
+    async def update(
+        self,
+        product: ProductsUpdateParamsProduct,
+        **kwargs
+    ) -> ProductUpdatePayload:
+        """
+        Updates an existing product via GraphQL mutation.
+All fields except id are optional for partial updates.
+
+
+        Args:
+            product: ProductUpdateInput object
+            **kwargs: Additional parameters
+
+        Returns:
+            ProductUpdatePayload
+        """
+        params = {k: v for k, v in {
+            "product": product,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("products", "update", params)
+        return result
+
+
+
+    async def delete(
+        self,
+        input: ProductsDeleteParamsInput,
+        **kwargs
+    ) -> ProductDeletePayload:
+        """
+        Deletes a product from the store via GraphQL mutation.
+This action is irreversible.
+
+
+        Args:
+            input: Parameter input
+            **kwargs: Additional parameters
+
+        Returns:
+            ProductDeletePayload
+        """
+        params = {k: v for k, v in {
+            "input": input,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("products", "delete", params)
+        return result
+
+
+
     async def context_store_search(
         self,
         query: ProductsSearchQuery,
@@ -2195,6 +3054,96 @@ class ProductVariantsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("product_variants", "get", params)
+        return result
+
+
+
+    async def create(
+        self,
+        product_id: str,
+        variants: list[ProductVariantsCreateParamsVariantsItem],
+        **kwargs
+    ) -> ProductVariantsBulkCreatePayload:
+        """
+        Creates one or more product variants via GraphQL mutation.
+Variants are created in bulk for a given product.
+
+
+        Args:
+            product_id: The GraphQL GID of the product (e.g. gid://shopify/Product/123)
+            variants: List of variants to create
+            **kwargs: Additional parameters
+
+        Returns:
+            ProductVariantsBulkCreatePayload
+        """
+        params = {k: v for k, v in {
+            "productId": product_id,
+            "variants": variants,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("product_variants", "create", params)
+        return result
+
+
+
+    async def update(
+        self,
+        product_id: str,
+        variants: list[ProductVariantsUpdateParamsVariantsItem],
+        **kwargs
+    ) -> ProductVariantsBulkUpdatePayload:
+        """
+        Updates one or more product variants via GraphQL mutation.
+Variants are updated in bulk for a given product.
+
+
+        Args:
+            product_id: The GraphQL GID of the product
+            variants: List of variants to update (each must include id)
+            **kwargs: Additional parameters
+
+        Returns:
+            ProductVariantsBulkUpdatePayload
+        """
+        params = {k: v for k, v in {
+            "productId": product_id,
+            "variants": variants,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("product_variants", "update", params)
+        return result
+
+
+
+    async def delete(
+        self,
+        product_id: str,
+        variants_ids: list[str],
+        **kwargs
+    ) -> ProductVariantsBulkDeletePayload:
+        """
+        Deletes one or more product variants via GraphQL mutation.
+Cannot delete the last variant of a product.
+
+
+        Args:
+            product_id: The GraphQL GID of the product
+            variants_ids: List of variant GIDs to delete
+            **kwargs: Additional parameters
+
+        Returns:
+            ProductVariantsBulkDeletePayload
+        """
+        params = {k: v for k, v in {
+            "productId": product_id,
+            "variantsIds": variants_ids,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("product_variants", "delete", params)
         return result
 
 
@@ -3168,6 +4117,88 @@ class DiscountCodesQuery:
 
 
 
+    async def create(
+        self,
+        basic_code_discount: DiscountCodesCreateParamsBasiccodediscount,
+        **kwargs
+    ) -> DiscountCodeBasicCreatePayload:
+        """
+        Creates a basic discount code via GraphQL mutation.
+Supports percentage, fixed amount, or free shipping discounts.
+
+
+        Args:
+            basic_code_discount: Parameter basicCodeDiscount
+            **kwargs: Additional parameters
+
+        Returns:
+            DiscountCodeBasicCreatePayload
+        """
+        params = {k: v for k, v in {
+            "basicCodeDiscount": basic_code_discount,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("discount_codes", "create", params)
+        return result
+
+
+
+    async def update(
+        self,
+        basic_code_discount: DiscountCodesUpdateParamsBasiccodediscount,
+        id: str | None = None,
+        **kwargs
+    ) -> DiscountCodeBasicUpdatePayload:
+        """
+        Updates an existing basic discount code via GraphQL mutation.
+
+
+        Args:
+            id: The GraphQL GID of the discount code node to update
+            basic_code_discount: Parameter basicCodeDiscount
+            **kwargs: Additional parameters
+
+        Returns:
+            DiscountCodeBasicUpdatePayload
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            "basicCodeDiscount": basic_code_discount,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("discount_codes", "update", params)
+        return result
+
+
+
+    async def delete(
+        self,
+        id: str | None = None,
+        **kwargs
+    ) -> DiscountCodeDeletePayload:
+        """
+        Deletes a discount code via GraphQL mutation.
+
+
+        Args:
+            id: The GraphQL GID of the discount code node to delete
+            **kwargs: Additional parameters
+
+        Returns:
+            DiscountCodeDeletePayload
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("discount_codes", "delete", params)
+        return result
+
+
+
     async def context_store_search(
         self,
         query: DiscountCodesSearchQuery,
@@ -3302,6 +4333,86 @@ class CustomCollectionsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("custom_collections", "get", params)
+        return result
+
+
+
+    async def create(
+        self,
+        input: CustomCollectionsCreateParamsInput,
+        **kwargs
+    ) -> CollectionCreatePayload:
+        """
+        Creates a new collection (custom or smart) via GraphQL mutation.
+For smart collections, provide ruleSet with rules.
+
+
+        Args:
+            input: Parameter input
+            **kwargs: Additional parameters
+
+        Returns:
+            CollectionCreatePayload
+        """
+        params = {k: v for k, v in {
+            "input": input,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("custom_collections", "create", params)
+        return result
+
+
+
+    async def update(
+        self,
+        input: CustomCollectionsUpdateParamsInput,
+        **kwargs
+    ) -> CollectionUpdatePayload:
+        """
+        Updates an existing collection via GraphQL mutation.
+Rule-based membership recompute is async for smart collections.
+
+
+        Args:
+            input: Parameter input
+            **kwargs: Additional parameters
+
+        Returns:
+            CollectionUpdatePayload
+        """
+        params = {k: v for k, v in {
+            "input": input,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("custom_collections", "update", params)
+        return result
+
+
+
+    async def delete(
+        self,
+        input: CustomCollectionsDeleteParamsInput,
+        **kwargs
+    ) -> CollectionDeletePayload:
+        """
+        Deletes a collection via GraphQL mutation.
+
+
+        Args:
+            input: Parameter input
+            **kwargs: Additional parameters
+
+        Returns:
+            CollectionDeletePayload
+        """
+        params = {k: v for k, v in {
+            "input": input,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("custom_collections", "delete", params)
         return result
 
 
@@ -3709,6 +4820,90 @@ class DraftOrdersQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("draft_orders", "get", params)
+        return result
+
+
+
+    async def create(
+        self,
+        input: DraftOrdersCreateParamsInput,
+        **kwargs
+    ) -> DraftOrderCreatePayload:
+        """
+        Creates a new draft order via GraphQL mutation.
+Draft orders can be completed to become regular orders.
+
+
+        Args:
+            input: DraftOrderInput object
+            **kwargs: Additional parameters
+
+        Returns:
+            DraftOrderCreatePayload
+        """
+        params = {k: v for k, v in {
+            "input": input,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("draft_orders", "create", params)
+        return result
+
+
+
+    async def update(
+        self,
+        input: DraftOrdersUpdateParamsInput,
+        id: str | None = None,
+        **kwargs
+    ) -> DraftOrderUpdatePayload:
+        """
+        Updates an existing draft order via GraphQL mutation.
+Only open draft orders can be updated.
+
+
+        Args:
+            id: The GraphQL GID of the draft order to update
+            input: DraftOrderInput object with updated fields
+            **kwargs: Additional parameters
+
+        Returns:
+            DraftOrderUpdatePayload
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            "input": input,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("draft_orders", "update", params)
+        return result
+
+
+
+    async def delete(
+        self,
+        input: DraftOrdersDeleteParamsInput,
+        **kwargs
+    ) -> DraftOrderDeletePayload:
+        """
+        Deletes a draft order via GraphQL mutation.
+Only open draft orders can be deleted.
+
+
+        Args:
+            input: Parameter input
+            **kwargs: Additional parameters
+
+        Returns:
+            DraftOrderDeletePayload
+        """
+        params = {k: v for k, v in {
+            "input": input,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("draft_orders", "delete", params)
         return result
 
 
@@ -5684,6 +6879,87 @@ class PagesQuery:
 
 
 
+    async def create(
+        self,
+        page: PagesCreateParamsPage,
+        **kwargs
+    ) -> PageCreatePayload:
+        """
+        Creates a new page on the online store via GraphQL mutation.
+
+
+        Args:
+            page: Parameter page
+            **kwargs: Additional parameters
+
+        Returns:
+            PageCreatePayload
+        """
+        params = {k: v for k, v in {
+            "page": page,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("pages", "create", params)
+        return result
+
+
+
+    async def update(
+        self,
+        page: PagesUpdateParamsPage,
+        id: str | None = None,
+        **kwargs
+    ) -> PageUpdatePayload:
+        """
+        Updates an existing page on the online store via GraphQL mutation.
+
+
+        Args:
+            id: The GraphQL GID of the page to update
+            page: Parameter page
+            **kwargs: Additional parameters
+
+        Returns:
+            PageUpdatePayload
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            "page": page,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("pages", "update", params)
+        return result
+
+
+
+    async def delete(
+        self,
+        id: str | None = None,
+        **kwargs
+    ) -> PageDeletePayload:
+        """
+        Deletes a page from the online store via GraphQL mutation.
+
+
+        Args:
+            id: The GraphQL GID of the page to delete
+            **kwargs: Additional parameters
+
+        Returns:
+            PageDeletePayload
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("pages", "delete", params)
+        return result
+
+
+
     async def context_store_search(
         self,
         query: PagesSearchQuery,
@@ -5808,6 +7084,87 @@ class BlogsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("blogs", "get", params)
+        return result
+
+
+
+    async def create(
+        self,
+        blog: BlogsCreateParamsBlog,
+        **kwargs
+    ) -> BlogCreatePayload:
+        """
+        Creates a new blog on the online store via GraphQL mutation.
+
+
+        Args:
+            blog: Parameter blog
+            **kwargs: Additional parameters
+
+        Returns:
+            BlogCreatePayload
+        """
+        params = {k: v for k, v in {
+            "blog": blog,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("blogs", "create", params)
+        return result
+
+
+
+    async def update(
+        self,
+        blog: BlogsUpdateParamsBlog,
+        id: str | None = None,
+        **kwargs
+    ) -> BlogUpdatePayload:
+        """
+        Updates an existing blog via GraphQL mutation.
+
+
+        Args:
+            id: The GraphQL GID of the blog to update
+            blog: Parameter blog
+            **kwargs: Additional parameters
+
+        Returns:
+            BlogUpdatePayload
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            "blog": blog,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("blogs", "update", params)
+        return result
+
+
+
+    async def delete(
+        self,
+        id: str | None = None,
+        **kwargs
+    ) -> BlogDeletePayload:
+        """
+        Deletes a blog from the online store via GraphQL mutation.
+
+
+        Args:
+            id: The GraphQL GID of the blog to delete
+            **kwargs: Additional parameters
+
+        Returns:
+            BlogDeletePayload
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("blogs", "delete", params)
         return result
 
 
@@ -5956,6 +7313,87 @@ class ArticlesQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("articles", "get", params)
+        return result
+
+
+
+    async def create(
+        self,
+        article: ArticlesCreateParamsArticle,
+        **kwargs
+    ) -> ArticleCreatePayload:
+        """
+        Creates a new blog article via GraphQL mutation.
+
+
+        Args:
+            article: Parameter article
+            **kwargs: Additional parameters
+
+        Returns:
+            ArticleCreatePayload
+        """
+        params = {k: v for k, v in {
+            "article": article,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("articles", "create", params)
+        return result
+
+
+
+    async def update(
+        self,
+        article: ArticlesUpdateParamsArticle,
+        id: str | None = None,
+        **kwargs
+    ) -> ArticleUpdatePayload:
+        """
+        Updates an existing blog article via GraphQL mutation.
+
+
+        Args:
+            id: The GraphQL GID of the article to update
+            article: Parameter article
+            **kwargs: Additional parameters
+
+        Returns:
+            ArticleUpdatePayload
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            "article": article,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("articles", "update", params)
+        return result
+
+
+
+    async def delete(
+        self,
+        id: str | None = None,
+        **kwargs
+    ) -> ArticleDeletePayload:
+        """
+        Deletes a blog article via GraphQL mutation.
+
+
+        Args:
+            id: The GraphQL GID of the article to delete
+            **kwargs: Additional parameters
+
+        Returns:
+            ArticleDeletePayload
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("articles", "delete", params)
         return result
 
 
@@ -6591,3 +8029,175 @@ class MetafieldArticlesQuery:
                 took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
             ),
         )
+
+class DraftOrderCompleteQuery:
+    """
+    Query class for DraftOrderComplete entity operations.
+    """
+
+    def __init__(self, connector: ShopifyConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def update(
+        self,
+        id: str | None = None,
+        payment_pending: bool | None = None,
+        **kwargs
+    ) -> DraftOrderCompletePayload:
+        """
+        Completes a draft order, converting it to a regular order via GraphQL mutation.
+
+
+        Args:
+            id: The GraphQL GID of the draft order to complete
+            payment_pending: Whether payment is pending (true) or mark as paid (false/omit)
+            **kwargs: Additional parameters
+
+        Returns:
+            DraftOrderCompletePayload
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            "paymentPending": payment_pending,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("draft_order_complete", "update", params)
+        return result
+
+
+
+class InventorySetQuery:
+    """
+    Query class for InventorySet entity operations.
+    """
+
+    def __init__(self, connector: ShopifyConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def create(
+        self,
+        input: InventorySetCreateParamsInput,
+        **kwargs
+    ) -> InventorySetQuantitiesPayload:
+        """
+        Sets absolute inventory quantities for items at locations via GraphQL mutation.
+Uses the inventorySetQuantities mutation with a required reason and reference document.
+
+
+        Args:
+            input: Parameter input
+            **kwargs: Additional parameters
+
+        Returns:
+            InventorySetQuantitiesPayload
+        """
+        params = {k: v for k, v in {
+            "input": input,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("inventory_set", "create", params)
+        return result
+
+
+
+class InventoryAdjustQuery:
+    """
+    Query class for InventoryAdjust entity operations.
+    """
+
+    def __init__(self, connector: ShopifyConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def create(
+        self,
+        input: InventoryAdjustCreateParamsInput,
+        **kwargs
+    ) -> InventoryAdjustQuantitiesPayload:
+        """
+        Adjusts inventory quantities relatively (add/subtract) for items at locations via GraphQL mutation.
+
+
+        Args:
+            input: Parameter input
+            **kwargs: Additional parameters
+
+        Returns:
+            InventoryAdjustQuantitiesPayload
+        """
+        params = {k: v for k, v in {
+            "input": input,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("inventory_adjust", "create", params)
+        return result
+
+
+
+class MetafieldsQuery:
+    """
+    Query class for Metafields entity operations.
+    """
+
+    def __init__(self, connector: ShopifyConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def create(
+        self,
+        metafields: list[MetafieldsCreateParamsMetafieldsItem],
+        **kwargs
+    ) -> MetafieldsSetPayload:
+        """
+        Sets (creates or updates) up to 25 metafields atomically via GraphQL mutation.
+Works across all resource types (products, customers, orders, etc.).
+
+
+        Args:
+            metafields: List of metafields to set
+            **kwargs: Additional parameters
+
+        Returns:
+            MetafieldsSetPayload
+        """
+        params = {k: v for k, v in {
+            "metafields": metafields,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("metafields", "create", params)
+        return result
+
+
+
+    async def delete(
+        self,
+        metafields: list[MetafieldsDeleteParamsMetafieldsItem],
+        **kwargs
+    ) -> MetafieldDeletePayload:
+        """
+        Deletes one or more metafields via GraphQL mutation.
+Identifies metafields by ownerId + namespace + key.
+
+
+        Args:
+            metafields: List of metafield identifiers to delete
+            **kwargs: Additional parameters
+
+        Returns:
+            MetafieldDeletePayload
+        """
+        params = {k: v for k, v in {
+            "metafields": metafields,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("metafields", "delete", params)
+        return result
+
+

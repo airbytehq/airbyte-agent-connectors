@@ -29,18 +29,32 @@ class PaginationMeta(BaseModel):
     after: str | None = Field(default=None)
     page_size: int | None = Field(default=None)
 
-class IncidentIncidentType(BaseModel):
-    """Type of the incident"""
+class IncidentSeverity(BaseModel):
+    """Severity of the incident"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     id: str | None | None = Field(default=None)
     name: str | None | None = Field(default=None)
     description: str | None | None = Field(default=None)
-    create_in_triage: str | None | None = Field(default=None)
-    is_default: bool | None | None = Field(default=None)
-    private_incidents_only: bool | None | None = Field(default=None)
+    rank: float | None | None = Field(default=None)
     created_at: str | None | None = Field(default=None)
     updated_at: str | None | None = Field(default=None)
+
+class IncidentCreatorUser(BaseModel):
+    """Nested schema for IncidentCreator.user"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None | None = Field(default=None)
+    name: str | None | None = Field(default=None)
+    email: str | None | None = Field(default=None)
+    role: str | None | None = Field(default=None)
+    slack_user_id: str | None | None = Field(default=None)
+
+class IncidentCreator(BaseModel):
+    """The user who created the incident"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    user: IncidentCreatorUser | None | None = Field(default=None)
 
 class IncidentDurationMetricsItemDurationMetric(BaseModel):
     """Nested schema for IncidentDurationMetricsItem.duration_metric"""
@@ -55,6 +69,19 @@ class IncidentDurationMetricsItem(BaseModel):
 
     duration_metric: IncidentDurationMetricsItemDurationMetric | None | None = Field(default=None)
 
+class IncidentIncidentType(BaseModel):
+    """Type of the incident"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None | None = Field(default=None)
+    name: str | None | None = Field(default=None)
+    description: str | None | None = Field(default=None)
+    create_in_triage: str | None | None = Field(default=None)
+    is_default: bool | None | None = Field(default=None)
+    private_incidents_only: bool | None | None = Field(default=None)
+    created_at: str | None | None = Field(default=None)
+    updated_at: str | None | None = Field(default=None)
+
 class IncidentIncidentStatus(BaseModel):
     """Current status of the incident"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -67,26 +94,36 @@ class IncidentIncidentStatus(BaseModel):
     created_at: str | None | None = Field(default=None)
     updated_at: str | None | None = Field(default=None)
 
-class IncidentIncidentTimestampValuesItemIncidentTimestamp(BaseModel):
-    """Nested schema for IncidentIncidentTimestampValuesItem.incident_timestamp"""
+class IncidentIncidentRoleAssignmentsItemAssignee(BaseModel):
+    """Nested schema for IncidentIncidentRoleAssignmentsItem.assignee"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     id: str | None | None = Field(default=None)
     name: str | None | None = Field(default=None)
-    rank: float | None | None = Field(default=None)
+    email: str | None | None = Field(default=None)
+    role: str | None | None = Field(default=None)
+    slack_user_id: str | None | None = Field(default=None)
 
-class IncidentIncidentTimestampValuesItemValue(BaseModel):
-    """Nested schema for IncidentIncidentTimestampValuesItem.value"""
+class IncidentIncidentRoleAssignmentsItemRole(BaseModel):
+    """Nested schema for IncidentIncidentRoleAssignmentsItem.role"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    value: str | None | None = Field(default=None)
+    id: str | None | None = Field(default=None)
+    name: str | None | None = Field(default=None)
+    description: str | None | None = Field(default=None)
+    instructions: str | None | None = Field(default=None)
+    required: bool | None | None = Field(default=None)
+    role_type: str | None | None = Field(default=None)
+    shortform: str | None | None = Field(default=None)
+    created_at: str | None | None = Field(default=None)
+    updated_at: str | None | None = Field(default=None)
 
-class IncidentIncidentTimestampValuesItem(BaseModel):
-    """Nested schema for Incident.incident_timestamp_values_item"""
+class IncidentIncidentRoleAssignmentsItem(BaseModel):
+    """Nested schema for Incident.incident_role_assignments_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    incident_timestamp: IncidentIncidentTimestampValuesItemIncidentTimestamp | None | None = Field(default=None)
-    value: IncidentIncidentTimestampValuesItemValue | None | None = Field(default=None)
+    assignee: IncidentIncidentRoleAssignmentsItemAssignee | None | None = Field(default=None)
+    role: IncidentIncidentRoleAssignmentsItemRole | None | None = Field(default=None)
 
 class IncidentCustomFieldEntriesItemCustomField(BaseModel):
     """Nested schema for IncidentCustomFieldEntriesItem.custom_field"""
@@ -105,63 +142,26 @@ class IncidentCustomFieldEntriesItem(BaseModel):
     custom_field: IncidentCustomFieldEntriesItemCustomField | None | None = Field(default=None)
     values: list[Any] | None | None = Field(default=None)
 
-class IncidentSeverity(BaseModel):
-    """Severity of the incident"""
+class IncidentIncidentTimestampValuesItemValue(BaseModel):
+    """Nested schema for IncidentIncidentTimestampValuesItem.value"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    value: str | None | None = Field(default=None)
+
+class IncidentIncidentTimestampValuesItemIncidentTimestamp(BaseModel):
+    """Nested schema for IncidentIncidentTimestampValuesItem.incident_timestamp"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     id: str | None | None = Field(default=None)
     name: str | None | None = Field(default=None)
-    description: str | None | None = Field(default=None)
     rank: float | None | None = Field(default=None)
-    created_at: str | None | None = Field(default=None)
-    updated_at: str | None | None = Field(default=None)
 
-class IncidentIncidentRoleAssignmentsItemRole(BaseModel):
-    """Nested schema for IncidentIncidentRoleAssignmentsItem.role"""
+class IncidentIncidentTimestampValuesItem(BaseModel):
+    """Nested schema for Incident.incident_timestamp_values_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: str | None | None = Field(default=None)
-    name: str | None | None = Field(default=None)
-    description: str | None | None = Field(default=None)
-    instructions: str | None | None = Field(default=None)
-    required: bool | None | None = Field(default=None)
-    role_type: str | None | None = Field(default=None)
-    shortform: str | None | None = Field(default=None)
-    created_at: str | None | None = Field(default=None)
-    updated_at: str | None | None = Field(default=None)
-
-class IncidentIncidentRoleAssignmentsItemAssignee(BaseModel):
-    """Nested schema for IncidentIncidentRoleAssignmentsItem.assignee"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: str | None | None = Field(default=None)
-    name: str | None | None = Field(default=None)
-    email: str | None | None = Field(default=None)
-    role: str | None | None = Field(default=None)
-    slack_user_id: str | None | None = Field(default=None)
-
-class IncidentIncidentRoleAssignmentsItem(BaseModel):
-    """Nested schema for Incident.incident_role_assignments_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    assignee: IncidentIncidentRoleAssignmentsItemAssignee | None | None = Field(default=None)
-    role: IncidentIncidentRoleAssignmentsItemRole | None | None = Field(default=None)
-
-class IncidentCreatorUser(BaseModel):
-    """Nested schema for IncidentCreator.user"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: str | None | None = Field(default=None)
-    name: str | None | None = Field(default=None)
-    email: str | None | None = Field(default=None)
-    role: str | None | None = Field(default=None)
-    slack_user_id: str | None | None = Field(default=None)
-
-class IncidentCreator(BaseModel):
-    """The user who created the incident"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    user: IncidentCreatorUser | None | None = Field(default=None)
+    incident_timestamp: IncidentIncidentTimestampValuesItemIncidentTimestamp | None | None = Field(default=None)
+    value: IncidentIncidentTimestampValuesItemValue | None | None = Field(default=None)
 
 class Incident(BaseModel):
     """An incident tracked in incident.io"""
@@ -242,27 +242,6 @@ class Alert(BaseModel):
     resolved_at: str | None = Field(default=None)
     attributes: list[AlertAttributesItem] | None = Field(default=None)
 
-class EscalationRelatedIncidentsItem(BaseModel):
-    """Nested schema for Escalation.related_incidents_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: str | None | None = Field(default=None)
-    name: str | None | None = Field(default=None)
-    reference: str | None | None = Field(default=None)
-    summary: str | None | None = Field(default=None)
-    external_id: int | None | None = Field(default=None)
-    status_category: str | None | None = Field(default=None)
-    visibility: str | None | None = Field(default=None)
-
-class EscalationEventsItemChannelsItem(BaseModel):
-    """Nested schema for EscalationEventsItem.channels_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    slack_channel_id: str | None | None = Field(default=None)
-    slack_team_id: str | None | None = Field(default=None)
-    microsoft_teams_channel_id: str | None | None = Field(default=None)
-    microsoft_teams_team_id: str | None | None = Field(default=None)
-
 class EscalationEventsItemUsersItem(BaseModel):
     """Nested schema for EscalationEventsItem.users_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -272,6 +251,15 @@ class EscalationEventsItemUsersItem(BaseModel):
     email: str | None | None = Field(default=None)
     role: str | None | None = Field(default=None)
     slack_user_id: str | None | None = Field(default=None)
+
+class EscalationEventsItemChannelsItem(BaseModel):
+    """Nested schema for EscalationEventsItem.channels_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    slack_channel_id: str | None | None = Field(default=None)
+    slack_team_id: str | None | None = Field(default=None)
+    microsoft_teams_channel_id: str | None | None = Field(default=None)
+    microsoft_teams_team_id: str | None | None = Field(default=None)
 
 class EscalationEventsItem(BaseModel):
     """Nested schema for Escalation.events_item"""
@@ -284,43 +272,23 @@ class EscalationEventsItem(BaseModel):
     users: list[EscalationEventsItemUsersItem] | None | None = Field(default=None)
     channels: list[EscalationEventsItemChannelsItem] | None | None = Field(default=None)
 
+class EscalationRelatedIncidentsItem(BaseModel):
+    """Nested schema for Escalation.related_incidents_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None | None = Field(default=None)
+    name: str | None | None = Field(default=None)
+    reference: str | None | None = Field(default=None)
+    summary: str | None | None = Field(default=None)
+    external_id: int | None | None = Field(default=None)
+    status_category: str | None | None = Field(default=None)
+    visibility: str | None | None = Field(default=None)
+
 class EscalationPriority(BaseModel):
     """Priority of the escalation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     name: str | None | None = Field(default=None)
-
-class EscalationCreatorUser(BaseModel):
-    """Nested schema for EscalationCreator.user"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: str | None | None = Field(default=None)
-    name: str | None | None = Field(default=None)
-    email: str | None | None = Field(default=None)
-    role: str | None | None = Field(default=None)
-    slack_user_id: str | None | None = Field(default=None)
-
-class EscalationCreatorWorkflow(BaseModel):
-    """Nested schema for EscalationCreator.workflow"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: str | None | None = Field(default=None)
-    name: str | None | None = Field(default=None)
-
-class EscalationCreatorAlert(BaseModel):
-    """Nested schema for EscalationCreator.alert"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: str | None | None = Field(default=None)
-    title: str | None | None = Field(default=None)
-
-class EscalationCreator(BaseModel):
-    """The creator of this escalation"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    alert: EscalationCreatorAlert | None | None = Field(default=None)
-    user: EscalationCreatorUser | None | None = Field(default=None)
-    workflow: EscalationCreatorWorkflow | None | None = Field(default=None)
 
 class EscalationRelatedAlertsItem(BaseModel):
     """Nested schema for Escalation.related_alerts_item"""
@@ -336,6 +304,38 @@ class EscalationRelatedAlertsItem(BaseModel):
     created_at: str | None | None = Field(default=None)
     updated_at: str | None | None = Field(default=None)
     resolved_at: str | None | None = Field(default=None)
+
+class EscalationCreatorWorkflow(BaseModel):
+    """Nested schema for EscalationCreator.workflow"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None | None = Field(default=None)
+    name: str | None | None = Field(default=None)
+
+class EscalationCreatorAlert(BaseModel):
+    """Nested schema for EscalationCreator.alert"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None | None = Field(default=None)
+    title: str | None | None = Field(default=None)
+
+class EscalationCreatorUser(BaseModel):
+    """Nested schema for EscalationCreator.user"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None | None = Field(default=None)
+    name: str | None | None = Field(default=None)
+    email: str | None | None = Field(default=None)
+    role: str | None | None = Field(default=None)
+    slack_user_id: str | None | None = Field(default=None)
+
+class EscalationCreator(BaseModel):
+    """The creator of this escalation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    alert: EscalationCreatorAlert | None | None = Field(default=None)
+    user: EscalationCreatorUser | None | None = Field(default=None)
+    workflow: EscalationCreatorWorkflow | None | None = Field(default=None)
 
 class Escalation(BaseModel):
     """An escalation that pages people via escalation paths"""
@@ -374,18 +374,6 @@ class User(BaseModel):
     base_role: UserBaseRole | None = Field(default=None)
     custom_roles: list[Any] | None = Field(default=None)
 
-class IncidentUpdateNewIncidentStatus(BaseModel):
-    """New incident status set by this update"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: str | None | None = Field(default=None)
-    name: str | None | None = Field(default=None)
-    description: str | None | None = Field(default=None)
-    category: str | None | None = Field(default=None)
-    rank: float | None | None = Field(default=None)
-    created_at: str | None | None = Field(default=None)
-    updated_at: str | None | None = Field(default=None)
-
 class IncidentUpdateUpdaterUser(BaseModel):
     """Nested schema for IncidentUpdateUpdater.user"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -409,6 +397,18 @@ class IncidentUpdateNewSeverity(BaseModel):
     id: str | None | None = Field(default=None)
     name: str | None | None = Field(default=None)
     description: str | None | None = Field(default=None)
+    rank: float | None | None = Field(default=None)
+    created_at: str | None | None = Field(default=None)
+    updated_at: str | None | None = Field(default=None)
+
+class IncidentUpdateNewIncidentStatus(BaseModel):
+    """New incident status set by this update"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None | None = Field(default=None)
+    name: str | None | None = Field(default=None)
+    description: str | None | None = Field(default=None)
+    category: str | None | None = Field(default=None)
     rank: float | None | None = Field(default=None)
     created_at: str | None | None = Field(default=None)
     updated_at: str | None | None = Field(default=None)
@@ -521,15 +521,6 @@ class CatalogType(BaseModel):
     required_integrations: list[str] | None = Field(default=None)
     schema_: CatalogTypeSchema | None = Field(default=None, alias="schema")
 
-class ScheduleCurrentShiftsItem(BaseModel):
-    """Nested schema for Schedule.current_shifts_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    rotation_id: str | None | None = Field(default=None)
-    fingerprint: str | None | None = Field(default=None)
-    start_at: str | None | None = Field(default=None)
-    end_at: str | None | None = Field(default=None)
-
 class ScheduleConfigRotationsItemLayersItem(BaseModel):
     """Nested schema for ScheduleConfigRotationsItem.layers_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -560,6 +551,15 @@ class ScheduleConfig(BaseModel):
 
     rotations: list[ScheduleConfigRotationsItem] | None | None = Field(default=None)
 
+class ScheduleCurrentShiftsItem(BaseModel):
+    """Nested schema for Schedule.current_shifts_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    rotation_id: str | None | None = Field(default=None)
+    fingerprint: str | None | None = Field(default=None)
+    start_at: str | None | None = Field(default=None)
+    end_at: str | None | None = Field(default=None)
+
 class Schedule(BaseModel):
     """An on-call schedule"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -575,6 +575,15 @@ class Schedule(BaseModel):
     holidays_public_config: dict[str, Any] | None = Field(default=None)
     current_shifts: list[ScheduleCurrentShiftsItem] | None = Field(default=None)
 
+class TeamCatalogEntry(BaseModel):
+    """Associated catalog entry for enrichment"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None | None = Field(default=None, description="ID of the catalog entry")
+    """ID of the catalog entry"""
+    name: str | None | None = Field(default=None, description="Name of the catalog entry")
+    """Name of the catalog entry"""
+
 class TeamMembersItem(BaseModel):
     """Nested schema for Team.members_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -587,15 +596,6 @@ class TeamMembersItem(BaseModel):
     """Email address of the user"""
     slack_user_id: str | None | None = Field(default=None, description="Slack ID of the user")
     """Slack ID of the user"""
-
-class TeamCatalogEntry(BaseModel):
-    """Associated catalog entry for enrichment"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: str | None | None = Field(default=None, description="ID of the catalog entry")
-    """ID of the catalog entry"""
-    name: str | None | None = Field(default=None, description="Name of the catalog entry")
-    """Name of the catalog entry"""
 
 class Team(BaseModel):
     """A team in incident.io"""

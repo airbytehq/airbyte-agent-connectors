@@ -60,8 +60,8 @@
   },
   "replication_config": null,
   "custom_description": "Shopify is an e-commerce platform that enables businesses to create online stores,\nmanage products, process orders, and handle customer relationships. This connector\nprovides access to Shopify Admin REST API for reading store data including customers,\norders, products, inventory, and more.\n",
-  "supported_questions": "- List all customers in my Shopify store\n- Show me details for a recent customer\n- What products do I have in my store?\n- List all locations for my store\n- Show me inventory levels for a recent location\n- Show me all draft orders\n- List all custom collections in my store\n- Show me details for a recent order\n- Show me product variants for a recent product\n- Show me orders from the last 30 days\n- Show me abandoned checkouts from this week\n- What price rules are currently active?\n- Show me all pages on my store\n- List all blog articles\n- Are there any open disputes?",
-  "unsupported_questions": "- Create a new customer in Shopify\n- Update product pricing\n- Delete an order\n- Process a refund\n- Send shipping notification to customer\n- Create a new discount code",
+  "supported_questions": "- List all customers in my Shopify store\n- Show me details for a recent customer\n- What products do I have in my store?\n- List all locations for my store\n- Show me inventory levels for a recent location\n- Show me all draft orders\n- List all custom collections in my store\n- Show me details for a recent order\n- Show me product variants for a recent product\n- Create a new customer in Shopify with email test@example.com\n- Update a customer's first name\n- Create a new product called 'Summer T-Shirt'\n- Update a product title\n- Create a draft order for a customer\n- Complete a draft order\n- Set inventory quantity for a product variant at a location\n- Create a basic discount code for 10% off\n- Set a metafield on a product\n- Create a new page on my store\n- Create a new blog post\n- Show me orders from the last 30 days\n- Show me abandoned checkouts from this week\n- What price rules are currently active?\n- Show me all pages on my store\n- List all blog articles\n- Are there any open disputes?",
+  "unsupported_questions": "- Process a refund\n- Send shipping notification to customer\n- Modify order line items after creation",
   "first_operation": {
     "method_name": "customers__list",
     "http_method": "get",
@@ -297,6 +297,210 @@
         "record_type": "Customer",
         "meta_fields": null,
         "is_download": false
+      },
+      {
+        "method_name": "customers__create",
+        "http_method": "post",
+        "path": "/graphql.json:customerCreate",
+        "entity": "customers",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "input",
+            "python_name": "input",
+            "type": "CustomersCreateParamsInput",
+            "schema": {
+              "type": "object",
+              "description": "CustomerInput object",
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "description": "Customer email address"
+                },
+                "firstName": {
+                  "type": "string",
+                  "description": "Customer first name"
+                },
+                "lastName": {
+                  "type": "string",
+                  "description": "Customer last name"
+                },
+                "phone": {
+                  "type": "string",
+                  "description": "Customer phone number (E.164 format, e.g. +16465555555)"
+                },
+                "note": {
+                  "type": "string",
+                  "description": "Note about the customer"
+                },
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Tags to associate with the customer"
+                },
+                "taxExempt": {
+                  "type": "boolean",
+                  "description": "Whether the customer is tax exempt"
+                },
+                "addresses": {
+                  "type": "array",
+                  "description": "List of customer addresses",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "address1": {
+                        "type": "string"
+                      },
+                      "address2": {
+                        "type": "string"
+                      },
+                      "city": {
+                        "type": "string"
+                      },
+                      "province": {
+                        "type": "string"
+                      },
+                      "zip": {
+                        "type": "string"
+                      },
+                      "countryCode": {
+                        "type": "string"
+                      },
+                      "phone": {
+                        "type": "string"
+                      },
+                      "firstName": {
+                        "type": "string"
+                      },
+                      "lastName": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "required": true,
+            "description": "CustomerInput object"
+          }
+        ],
+        "params_type_name": "CustomersCreateParams",
+        "response_type": "CustomerCreatePayload",
+        "description": "Creates a new customer in the store via GraphQL mutation.\nRequires at least one of: email, phone, firstName, or lastName.\n",
+        "record_extractor": "$.data.customerCreate",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "CustomerCreatePayload",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "customers__update",
+        "http_method": "post",
+        "path": "/graphql.json:customerUpdate",
+        "entity": "customers",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "input",
+            "python_name": "input",
+            "type": "CustomersUpdateParamsInput",
+            "schema": {
+              "type": "object",
+              "description": "CustomerInput object with id",
+              "required": [
+                "id"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "The GraphQL GID of the customer (e.g. gid://shopify/Customer/123)"
+                },
+                "email": {
+                  "type": "string",
+                  "description": "Customer email address"
+                },
+                "firstName": {
+                  "type": "string",
+                  "description": "Customer first name"
+                },
+                "lastName": {
+                  "type": "string",
+                  "description": "Customer last name"
+                },
+                "phone": {
+                  "type": "string",
+                  "description": "Customer phone number (E.164 format)"
+                },
+                "note": {
+                  "type": "string",
+                  "description": "Note about the customer"
+                },
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Tags to associate with the customer"
+                },
+                "taxExempt": {
+                  "type": "boolean",
+                  "description": "Whether the customer is tax exempt"
+                }
+              }
+            },
+            "required": true,
+            "description": "CustomerInput object with id"
+          }
+        ],
+        "params_type_name": "CustomersUpdateParams",
+        "response_type": "CustomerUpdatePayload",
+        "description": "Updates an existing customer via GraphQL mutation.\nAll fields except id are optional for partial updates.\n",
+        "record_extractor": "$.data.customerUpdate",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "CustomerUpdatePayload",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "customers__delete",
+        "http_method": "post",
+        "path": "/graphql.json:customerDelete",
+        "entity": "customers",
+        "action": "delete",
+        "parameters": [
+          {
+            "name": "input",
+            "python_name": "input",
+            "type": "CustomersDeleteParamsInput",
+            "schema": {
+              "type": "object",
+              "required": [
+                "id"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "The GraphQL GID of the customer to delete (e.g. gid://shopify/Customer/123)"
+                }
+              }
+            },
+            "required": true,
+            "description": ""
+          }
+        ],
+        "params_type_name": "CustomersDeleteParams",
+        "response_type": "CustomerDeletePayload",
+        "description": "Deletes a customer from the store via GraphQL mutation.\nOnly succeeds if the customer has no orders. This action is irreversible.\n",
+        "record_extractor": "$.data.customerDelete",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "CustomerDeletePayload",
+        "meta_fields": null,
+        "is_download": false
       }
     ],
     "orders": [
@@ -488,6 +692,307 @@
         "record_type": "Order",
         "meta_fields": null,
         "is_download": false
+      },
+      {
+        "method_name": "orders__create",
+        "http_method": "post",
+        "path": "/graphql.json:orderCreate",
+        "entity": "orders",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "order",
+            "python_name": "order",
+            "type": "OrdersCreateParamsOrder",
+            "schema": {
+              "type": "object",
+              "description": "OrderCreateOrderInput object",
+              "required": [
+                "lineItems"
+              ],
+              "properties": {
+                "lineItems": {
+                  "type": "array",
+                  "description": "Line items for the order",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "variantId": {
+                        "type": "string",
+                        "description": "GraphQL GID of the product variant"
+                      },
+                      "quantity": {
+                        "type": "integer",
+                        "description": "Quantity to order"
+                      },
+                      "title": {
+                        "type": "string",
+                        "description": "Custom title (for custom line items without a variant)"
+                      },
+                      "priceSet": {
+                        "type": "object",
+                        "properties": {
+                          "shopMoney": {
+                            "type": "object",
+                            "properties": {
+                              "amount": {
+                                "type": "string"
+                              },
+                              "currencyCode": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "customerId": {
+                  "type": "string",
+                  "description": "GraphQL GID of the customer"
+                },
+                "email": {
+                  "type": "string",
+                  "description": "Customer email"
+                },
+                "note": {
+                  "type": "string",
+                  "description": "Order note"
+                },
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Order tags"
+                },
+                "shippingAddress": {
+                  "type": "object",
+                  "properties": {
+                    "address1": {
+                      "type": "string"
+                    },
+                    "city": {
+                      "type": "string"
+                    },
+                    "provinceCode": {
+                      "type": "string"
+                    },
+                    "zip": {
+                      "type": "string"
+                    },
+                    "countryCode": {
+                      "type": "string"
+                    },
+                    "firstName": {
+                      "type": "string"
+                    },
+                    "lastName": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "required": true,
+            "description": "OrderCreateOrderInput object"
+          },
+          {
+            "name": "options",
+            "python_name": "options",
+            "type": "OrdersCreateParamsOptions",
+            "schema": {
+              "type": "object",
+              "description": "OrderCreateOptionsInput",
+              "properties": {
+                "inventoryBehaviour": {
+                  "type": "string",
+                  "enum": [
+                    "BYPASS",
+                    "DECREMENT_IGNORING_POLICY",
+                    "DECREMENT_OBEYING_POLICY"
+                  ]
+                }
+              }
+            },
+            "required": false,
+            "description": "OrderCreateOptionsInput"
+          }
+        ],
+        "params_type_name": "OrdersCreateParams",
+        "response_type": "OrderCreatePayload",
+        "description": "Creates a new order via GraphQL mutation.\nUse line items with either variantId or customAttributes.\n",
+        "record_extractor": "$.data.orderCreate",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "OrderCreatePayload",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "orders__update",
+        "http_method": "post",
+        "path": "/graphql.json:orderUpdate",
+        "entity": "orders",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "input",
+            "python_name": "input",
+            "type": "OrdersUpdateParamsInput",
+            "schema": {
+              "type": "object",
+              "required": [
+                "id"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "The GraphQL GID of the order (e.g. gid://shopify/Order/123)"
+                },
+                "email": {
+                  "type": "string",
+                  "description": "Customer email"
+                },
+                "note": {
+                  "type": "string",
+                  "description": "Order note"
+                },
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Order tags"
+                },
+                "shippingAddress": {
+                  "type": "object",
+                  "properties": {
+                    "address1": {
+                      "type": "string"
+                    },
+                    "city": {
+                      "type": "string"
+                    },
+                    "provinceCode": {
+                      "type": "string"
+                    },
+                    "zip": {
+                      "type": "string"
+                    },
+                    "countryCode": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "required": true,
+            "description": ""
+          }
+        ],
+        "params_type_name": "OrdersUpdateParams",
+        "response_type": "OrderUpdatePayload",
+        "description": "Updates simple fields on an existing order via GraphQL mutation.\nFor line item changes, use orderEditBegin/orderEditCommit instead.\n",
+        "record_extractor": "$.data.orderUpdate",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "OrderUpdatePayload",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "orders__cancel",
+        "http_method": "post",
+        "path": "/graphql.json:orderCancel",
+        "entity": "orders",
+        "action": "delete",
+        "parameters": [
+          {
+            "name": "orderId",
+            "python_name": "order_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The GraphQL GID of the order to cancel"
+            },
+            "required": true,
+            "description": "The GraphQL GID of the order to cancel"
+          },
+          {
+            "name": "reason",
+            "python_name": "reason",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "CUSTOMER",
+                "DECLINED",
+                "FRAUD",
+                "INVENTORY",
+                "OTHER",
+                "STAFF"
+              ],
+              "description": "Reason for cancellation"
+            },
+            "required": true,
+            "description": "Reason for cancellation"
+          },
+          {
+            "name": "notifyCustomer",
+            "python_name": "notify_customer",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Whether to notify the customer"
+            },
+            "required": false,
+            "description": "Whether to notify the customer"
+          },
+          {
+            "name": "refund",
+            "python_name": "refund",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Whether to refund the order"
+            },
+            "required": false,
+            "description": "Whether to refund the order"
+          },
+          {
+            "name": "restock",
+            "python_name": "restock",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Whether to restock items"
+            },
+            "required": true,
+            "description": "Whether to restock items"
+          },
+          {
+            "name": "staffNote",
+            "python_name": "staff_note",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Staff note for the cancellation"
+            },
+            "required": false,
+            "description": "Staff note for the cancellation"
+          }
+        ],
+        "params_type_name": "OrdersDeleteParams",
+        "response_type": "OrderCancelPayload",
+        "description": "Cancels an open order via GraphQL mutation.\nThis action is irreversible. Optional refund and restock parameters.\n",
+        "record_extractor": "$.data.orderCancel",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "OrderCancelPayload",
+        "meta_fields": null,
+        "is_download": false
       }
     ],
     "products": [
@@ -670,6 +1175,208 @@
         "record_type": "Product",
         "meta_fields": null,
         "is_download": false
+      },
+      {
+        "method_name": "products__create",
+        "http_method": "post",
+        "path": "/graphql.json:productCreate",
+        "entity": "products",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "product",
+            "python_name": "product",
+            "type": "ProductsCreateParamsProduct",
+            "schema": {
+              "type": "object",
+              "description": "ProductCreateInput object",
+              "required": [
+                "title"
+              ],
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "description": "Product title"
+                },
+                "descriptionHtml": {
+                  "type": "string",
+                  "description": "Product description in HTML"
+                },
+                "vendor": {
+                  "type": "string",
+                  "description": "Product vendor"
+                },
+                "productType": {
+                  "type": "string",
+                  "description": "Product type"
+                },
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Tags for the product"
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "ACTIVE",
+                    "ARCHIVED",
+                    "DRAFT"
+                  ],
+                  "description": "Product status (ACTIVE, ARCHIVED, DRAFT)"
+                }
+              }
+            },
+            "required": true,
+            "description": "ProductCreateInput object"
+          },
+          {
+            "name": "media",
+            "python_name": "media",
+            "type": "list[ProductsCreateParamsMediaItem]",
+            "schema": {
+              "type": "array",
+              "description": "Media to attach to the product",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "originalSource": {
+                    "type": "string",
+                    "description": "URL of the media"
+                  },
+                  "mediaContentType": {
+                    "type": "string",
+                    "enum": [
+                      "IMAGE",
+                      "VIDEO",
+                      "EXTERNAL_VIDEO",
+                      "MODEL_3D"
+                    ]
+                  }
+                }
+              }
+            },
+            "required": false,
+            "description": "Media to attach to the product"
+          }
+        ],
+        "params_type_name": "ProductsCreateParams",
+        "response_type": "ProductCreatePayload",
+        "description": "Creates a new product via GraphQL mutation.\nCreates the product with a default variant. Use productVariantsBulkCreate\nto add additional variants afterwards.\n",
+        "record_extractor": "$.data.productCreate",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "ProductCreatePayload",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "products__update",
+        "http_method": "post",
+        "path": "/graphql.json:productUpdate",
+        "entity": "products",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "product",
+            "python_name": "product",
+            "type": "ProductsUpdateParamsProduct",
+            "schema": {
+              "type": "object",
+              "description": "ProductUpdateInput object",
+              "required": [
+                "id"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "The GraphQL GID of the product (e.g. gid://shopify/Product/123)"
+                },
+                "title": {
+                  "type": "string",
+                  "description": "Product title"
+                },
+                "descriptionHtml": {
+                  "type": "string",
+                  "description": "Product description in HTML"
+                },
+                "vendor": {
+                  "type": "string",
+                  "description": "Product vendor"
+                },
+                "productType": {
+                  "type": "string",
+                  "description": "Product type"
+                },
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Tags for the product"
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "ACTIVE",
+                    "ARCHIVED",
+                    "DRAFT"
+                  ],
+                  "description": "Product status"
+                }
+              }
+            },
+            "required": true,
+            "description": "ProductUpdateInput object"
+          }
+        ],
+        "params_type_name": "ProductsUpdateParams",
+        "response_type": "ProductUpdatePayload",
+        "description": "Updates an existing product via GraphQL mutation.\nAll fields except id are optional for partial updates.\n",
+        "record_extractor": "$.data.productUpdate",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "ProductUpdatePayload",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "products__delete",
+        "http_method": "post",
+        "path": "/graphql.json:productDelete",
+        "entity": "products",
+        "action": "delete",
+        "parameters": [
+          {
+            "name": "input",
+            "python_name": "input",
+            "type": "ProductsDeleteParamsInput",
+            "schema": {
+              "type": "object",
+              "required": [
+                "id"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "The GraphQL GID of the product to delete (e.g. gid://shopify/Product/123)"
+                }
+              }
+            },
+            "required": true,
+            "description": ""
+          }
+        ],
+        "params_type_name": "ProductsDeleteParams",
+        "response_type": "ProductDeletePayload",
+        "description": "Deletes a product from the store via GraphQL mutation.\nThis action is irreversible.\n",
+        "record_extractor": "$.data.productDelete",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "ProductDeletePayload",
+        "meta_fields": null,
+        "is_download": false
       }
     ],
     "product_variants": [
@@ -763,6 +1470,208 @@
         "meta_extractor": null,
         "needs_envelope": null,
         "record_type": "ProductVariant",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "product_variants__create",
+        "http_method": "post",
+        "path": "/graphql.json:productVariantsBulkCreate",
+        "entity": "product_variants",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "productId",
+            "python_name": "product_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The GraphQL GID of the product (e.g. gid://shopify/Product/123)"
+            },
+            "required": true,
+            "description": "The GraphQL GID of the product (e.g. gid://shopify/Product/123)"
+          },
+          {
+            "name": "variants",
+            "python_name": "variants",
+            "type": "list[ProductVariantsCreateParamsVariantsItem]",
+            "schema": {
+              "type": "array",
+              "description": "List of variants to create",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "price": {
+                    "type": "string",
+                    "description": "Variant price"
+                  },
+                  "barcode": {
+                    "type": "string",
+                    "description": "Variant barcode"
+                  },
+                  "compareAtPrice": {
+                    "type": "string",
+                    "description": "Compare-at price"
+                  },
+                  "inventoryItem": {
+                    "type": "object",
+                    "description": "Inventory-item attributes for the variant. As of Admin API 2024-07+ the SKU is no longer a variant-level field and must be set here (a top-level sku is ignored/rejected by productVariantsBulkCreate).",
+                    "properties": {
+                      "sku": {
+                        "type": "string",
+                        "description": "Variant SKU (set via inventoryItem.sku)"
+                      }
+                    }
+                  },
+                  "optionValues": {
+                    "type": "array",
+                    "description": "Required in practice: each variant must supply one option value for EVERY option defined on the product. A product with options Color and Size needs both here; a product with only the default option needs a single \"Title\" entry. Omitting an option (or optionValues entirely) causes a userErrors rejection.",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "optionName",
+                        "name"
+                      ],
+                      "properties": {
+                        "optionName": {
+                          "type": "string",
+                          "description": "Name of the product option this value belongs to (e.g. \"Color\", \"Size\", or \"Title\" for a single-option product)."
+                        },
+                        "name": {
+                          "type": "string",
+                          "description": "The option value (e.g. \"Large\"). If the value already exists on the option it is linked; otherwise a new option value is created."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "required": true,
+            "description": "List of variants to create"
+          }
+        ],
+        "params_type_name": "ProductVariantsCreateParams",
+        "response_type": "ProductVariantsBulkCreatePayload",
+        "description": "Creates one or more product variants via GraphQL mutation.\nVariants are created in bulk for a given product.\n",
+        "record_extractor": "$.data.productVariantsBulkCreate",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "ProductVariantsBulkCreatePayload",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "product_variants__update",
+        "http_method": "post",
+        "path": "/graphql.json:productVariantsBulkUpdate",
+        "entity": "product_variants",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "productId",
+            "python_name": "product_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The GraphQL GID of the product"
+            },
+            "required": true,
+            "description": "The GraphQL GID of the product"
+          },
+          {
+            "name": "variants",
+            "python_name": "variants",
+            "type": "list[ProductVariantsUpdateParamsVariantsItem]",
+            "schema": {
+              "type": "array",
+              "description": "List of variants to update (each must include id)",
+              "items": {
+                "type": "object",
+                "required": [
+                  "id"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "The GraphQL GID of the variant"
+                  },
+                  "price": {
+                    "type": "string"
+                  },
+                  "barcode": {
+                    "type": "string"
+                  },
+                  "compareAtPrice": {
+                    "type": "string"
+                  },
+                  "inventoryItem": {
+                    "type": "object",
+                    "description": "Inventory-item attributes for the variant. As of Admin API 2024-07+ the SKU is no longer a variant-level field and must be set here (a top-level sku is ignored/rejected by productVariantsBulkUpdate, which silently returns null instead of updating).",
+                    "properties": {
+                      "sku": {
+                        "type": "string",
+                        "description": "Variant SKU (set via inventoryItem.sku)"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "required": true,
+            "description": "List of variants to update (each must include id)"
+          }
+        ],
+        "params_type_name": "ProductVariantsUpdateParams",
+        "response_type": "ProductVariantsBulkUpdatePayload",
+        "description": "Updates one or more product variants via GraphQL mutation.\nVariants are updated in bulk for a given product.\n",
+        "record_extractor": "$.data.productVariantsBulkUpdate",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "ProductVariantsBulkUpdatePayload",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "product_variants__delete",
+        "http_method": "post",
+        "path": "/graphql.json:productVariantsBulkDelete",
+        "entity": "product_variants",
+        "action": "delete",
+        "parameters": [
+          {
+            "name": "productId",
+            "python_name": "product_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The GraphQL GID of the product"
+            },
+            "required": true,
+            "description": "The GraphQL GID of the product"
+          },
+          {
+            "name": "variantsIds",
+            "python_name": "variants_ids",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "List of variant GIDs to delete"
+            },
+            "required": true,
+            "description": "List of variant GIDs to delete"
+          }
+        ],
+        "params_type_name": "ProductVariantsDeleteParams",
+        "response_type": "ProductVariantsBulkDeletePayload",
+        "description": "Deletes one or more product variants via GraphQL mutation.\nCannot delete the last variant of a product.\n",
+        "record_extractor": "$.data.productVariantsBulkDelete",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "ProductVariantsBulkDeletePayload",
         "meta_fields": null,
         "is_download": false
       }
@@ -1425,6 +2334,199 @@
         "record_type": "DiscountCode",
         "meta_fields": null,
         "is_download": false
+      },
+      {
+        "method_name": "discount_codes__create",
+        "http_method": "post",
+        "path": "/graphql.json:discountCodeBasicCreate",
+        "entity": "discount_codes",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "basicCodeDiscount",
+            "python_name": "basic_code_discount",
+            "type": "DiscountCodesCreateParamsBasiccodediscount",
+            "schema": {
+              "type": "object",
+              "required": [
+                "title",
+                "code",
+                "startsAt",
+                "customerGets",
+                "customerSelection"
+              ],
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "description": "Discount title"
+                },
+                "code": {
+                  "type": "string",
+                  "description": "Discount code that customers enter at checkout"
+                },
+                "startsAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "When the discount starts (ISO 8601)"
+                },
+                "endsAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "When the discount ends (ISO 8601, optional)"
+                },
+                "usageLimit": {
+                  "type": "integer",
+                  "description": "Maximum number of times the discount can be used"
+                },
+                "customerSelection": {
+                  "type": "object",
+                  "description": "Which customers can use this discount",
+                  "properties": {
+                    "all": {
+                      "type": "boolean",
+                      "description": "Set to true for all customers"
+                    }
+                  }
+                },
+                "customerGets": {
+                  "type": "object",
+                  "description": "What the customer gets from this discount",
+                  "properties": {
+                    "value": {
+                      "type": "object",
+                      "description": "The discount value",
+                      "properties": {
+                        "percentage": {
+                          "type": "number",
+                          "description": "Percentage discount (e.g. 0.1 for 10%)"
+                        },
+                        "discountAmount": {
+                          "type": "object",
+                          "properties": {
+                            "amount": {
+                              "type": "string"
+                            },
+                            "appliesOnEachItem": {
+                              "type": "boolean"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "items": {
+                      "type": "object",
+                      "description": "Which items the discount applies to",
+                      "properties": {
+                        "all": {
+                          "type": "boolean",
+                          "description": "Set to true for all items"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "required": true,
+            "description": ""
+          }
+        ],
+        "params_type_name": "DiscountCodesCreateParams",
+        "response_type": "DiscountCodeBasicCreatePayload",
+        "description": "Creates a basic discount code via GraphQL mutation.\nSupports percentage, fixed amount, or free shipping discounts.\n",
+        "record_extractor": "$.data.discountCodeBasicCreate",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "DiscountCodeBasicCreatePayload",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "discount_codes__update",
+        "http_method": "post",
+        "path": "/graphql.json:discountCodeBasicUpdate",
+        "entity": "discount_codes",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The GraphQL GID of the discount code node to update"
+            },
+            "required": true,
+            "description": "The GraphQL GID of the discount code node to update"
+          },
+          {
+            "name": "basicCodeDiscount",
+            "python_name": "basic_code_discount",
+            "type": "DiscountCodesUpdateParamsBasiccodediscount",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "code": {
+                  "type": "string"
+                },
+                "startsAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "endsAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "usageLimit": {
+                  "type": "integer"
+                }
+              }
+            },
+            "required": true,
+            "description": ""
+          }
+        ],
+        "params_type_name": "DiscountCodesUpdateParams",
+        "response_type": "DiscountCodeBasicUpdatePayload",
+        "description": "Updates an existing basic discount code via GraphQL mutation.\n",
+        "record_extractor": "$.data.discountCodeBasicUpdate",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "DiscountCodeBasicUpdatePayload",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "discount_codes__delete",
+        "http_method": "post",
+        "path": "/graphql.json:discountCodeDelete",
+        "entity": "discount_codes",
+        "action": "delete",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The GraphQL GID of the discount code node to delete"
+            },
+            "required": true,
+            "description": "The GraphQL GID of the discount code node to delete"
+          }
+        ],
+        "params_type_name": "DiscountCodesDeleteParams",
+        "response_type": "DiscountCodeDeletePayload",
+        "description": "Deletes a discount code via GraphQL mutation.\n",
+        "record_extractor": "$.data.discountCodeDelete",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "DiscountCodeDeletePayload",
+        "meta_fields": null,
+        "is_download": false
       }
     ],
     "custom_collections": [
@@ -1554,6 +2656,195 @@
         "meta_extractor": null,
         "needs_envelope": null,
         "record_type": "CustomCollection",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "collections__create",
+        "http_method": "post",
+        "path": "/graphql.json:collectionCreate",
+        "entity": "custom_collections",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "input",
+            "python_name": "input",
+            "type": "CustomCollectionsCreateParamsInput",
+            "schema": {
+              "type": "object",
+              "required": [
+                "title"
+              ],
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "description": "Collection title"
+                },
+                "descriptionHtml": {
+                  "type": "string",
+                  "description": "Collection description in HTML"
+                },
+                "handle": {
+                  "type": "string",
+                  "description": "URL handle for the collection"
+                },
+                "sortOrder": {
+                  "type": "string",
+                  "enum": [
+                    "ALPHA_ASC",
+                    "ALPHA_DESC",
+                    "BEST_SELLING",
+                    "CREATED",
+                    "CREATED_DESC",
+                    "MANUAL",
+                    "PRICE_ASC",
+                    "PRICE_DESC"
+                  ],
+                  "description": "Sort order for products"
+                },
+                "templateSuffix": {
+                  "type": "string",
+                  "description": "Liquid template suffix"
+                },
+                "ruleSet": {
+                  "type": "object",
+                  "description": "Rule set for smart collections",
+                  "properties": {
+                    "appliedDisjunctively": {
+                      "type": "boolean",
+                      "description": "Whether rules are OR (true) or AND (false)"
+                    },
+                    "rules": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "column": {
+                            "type": "string",
+                            "description": "Rule column (e.g. TAG, TITLE, VENDOR)"
+                          },
+                          "relation": {
+                            "type": "string",
+                            "description": "Rule relation (e.g. EQUALS, CONTAINS)"
+                          },
+                          "condition": {
+                            "type": "string",
+                            "description": "Rule condition value"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "required": true,
+            "description": ""
+          }
+        ],
+        "params_type_name": "CustomCollectionsCreateParams",
+        "response_type": "CollectionCreatePayload",
+        "description": "Creates a new collection (custom or smart) via GraphQL mutation.\nFor smart collections, provide ruleSet with rules.\n",
+        "record_extractor": "$.data.collectionCreate",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "CollectionCreatePayload",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "collections__update",
+        "http_method": "post",
+        "path": "/graphql.json:collectionUpdate",
+        "entity": "custom_collections",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "input",
+            "python_name": "input",
+            "type": "CustomCollectionsUpdateParamsInput",
+            "schema": {
+              "type": "object",
+              "required": [
+                "id"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "The GraphQL GID of the collection"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "descriptionHtml": {
+                  "type": "string"
+                },
+                "handle": {
+                  "type": "string"
+                },
+                "sortOrder": {
+                  "type": "string",
+                  "enum": [
+                    "ALPHA_ASC",
+                    "ALPHA_DESC",
+                    "BEST_SELLING",
+                    "CREATED",
+                    "CREATED_DESC",
+                    "MANUAL",
+                    "PRICE_ASC",
+                    "PRICE_DESC"
+                  ]
+                }
+              }
+            },
+            "required": true,
+            "description": ""
+          }
+        ],
+        "params_type_name": "CustomCollectionsUpdateParams",
+        "response_type": "CollectionUpdatePayload",
+        "description": "Updates an existing collection via GraphQL mutation.\nRule-based membership recompute is async for smart collections.\n",
+        "record_extractor": "$.data.collectionUpdate",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "CollectionUpdatePayload",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "collections__delete",
+        "http_method": "post",
+        "path": "/graphql.json:collectionDelete",
+        "entity": "custom_collections",
+        "action": "delete",
+        "parameters": [
+          {
+            "name": "input",
+            "python_name": "input",
+            "type": "CustomCollectionsDeleteParamsInput",
+            "schema": {
+              "type": "object",
+              "required": [
+                "id"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "The GraphQL GID of the collection to delete"
+                }
+              }
+            },
+            "required": true,
+            "description": ""
+          }
+        ],
+        "params_type_name": "CustomCollectionsDeleteParams",
+        "response_type": "CollectionDeletePayload",
+        "description": "Deletes a collection via GraphQL mutation.\n",
+        "record_extractor": "$.data.collectionDelete",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "CollectionDeletePayload",
         "meta_fields": null,
         "is_download": false
       }
@@ -1917,6 +3208,211 @@
         "meta_extractor": null,
         "needs_envelope": null,
         "record_type": "DraftOrder",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "draft_orders__create",
+        "http_method": "post",
+        "path": "/graphql.json:draftOrderCreate",
+        "entity": "draft_orders",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "input",
+            "python_name": "input",
+            "type": "DraftOrdersCreateParamsInput",
+            "schema": {
+              "type": "object",
+              "description": "DraftOrderInput object",
+              "properties": {
+                "lineItems": {
+                  "type": "array",
+                  "description": "Line items for the draft order",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "variantId": {
+                        "type": "string",
+                        "description": "GraphQL GID of the product variant"
+                      },
+                      "quantity": {
+                        "type": "integer",
+                        "description": "Quantity"
+                      },
+                      "title": {
+                        "type": "string",
+                        "description": "Custom title"
+                      },
+                      "originalUnitPrice": {
+                        "type": "string",
+                        "description": "Unit price"
+                      }
+                    }
+                  }
+                },
+                "customerId": {
+                  "type": "string",
+                  "description": "GraphQL GID of the customer"
+                },
+                "email": {
+                  "type": "string",
+                  "description": "Customer email"
+                },
+                "note": {
+                  "type": "string",
+                  "description": "Draft order note"
+                },
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "shippingAddress": {
+                  "type": "object",
+                  "properties": {
+                    "address1": {
+                      "type": "string"
+                    },
+                    "city": {
+                      "type": "string"
+                    },
+                    "provinceCode": {
+                      "type": "string"
+                    },
+                    "zip": {
+                      "type": "string"
+                    },
+                    "countryCode": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "required": true,
+            "description": "DraftOrderInput object"
+          }
+        ],
+        "params_type_name": "DraftOrdersCreateParams",
+        "response_type": "DraftOrderCreatePayload",
+        "description": "Creates a new draft order via GraphQL mutation.\nDraft orders can be completed to become regular orders.\n",
+        "record_extractor": "$.data.draftOrderCreate",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "DraftOrderCreatePayload",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "draft_orders__update",
+        "http_method": "post",
+        "path": "/graphql.json:draftOrderUpdate",
+        "entity": "draft_orders",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The GraphQL GID of the draft order to update"
+            },
+            "required": true,
+            "description": "The GraphQL GID of the draft order to update"
+          },
+          {
+            "name": "input",
+            "python_name": "input",
+            "type": "DraftOrdersUpdateParamsInput",
+            "schema": {
+              "type": "object",
+              "description": "DraftOrderInput object with updated fields",
+              "properties": {
+                "lineItems": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "variantId": {
+                        "type": "string"
+                      },
+                      "quantity": {
+                        "type": "integer"
+                      },
+                      "title": {
+                        "type": "string"
+                      },
+                      "originalUnitPrice": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "email": {
+                  "type": "string"
+                },
+                "note": {
+                  "type": "string"
+                },
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "required": true,
+            "description": "DraftOrderInput object with updated fields"
+          }
+        ],
+        "params_type_name": "DraftOrdersUpdateParams",
+        "response_type": "DraftOrderUpdatePayload",
+        "description": "Updates an existing draft order via GraphQL mutation.\nOnly open draft orders can be updated.\n",
+        "record_extractor": "$.data.draftOrderUpdate",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "DraftOrderUpdatePayload",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "draft_orders__delete",
+        "http_method": "post",
+        "path": "/graphql.json:draftOrderDelete",
+        "entity": "draft_orders",
+        "action": "delete",
+        "parameters": [
+          {
+            "name": "input",
+            "python_name": "input",
+            "type": "DraftOrdersDeleteParamsInput",
+            "schema": {
+              "type": "object",
+              "required": [
+                "id"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "The GraphQL GID of the draft order to delete"
+                }
+              }
+            },
+            "required": true,
+            "description": ""
+          }
+        ],
+        "params_type_name": "DraftOrdersDeleteParams",
+        "response_type": "DraftOrderDeletePayload",
+        "description": "Deletes a draft order via GraphQL mutation.\nOnly open draft orders can be deleted.\n",
+        "record_extractor": "$.data.draftOrderDelete",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "DraftOrderDeletePayload",
         "meta_fields": null,
         "is_download": false
       }
@@ -3578,6 +5074,137 @@
         "record_type": "Page",
         "meta_fields": null,
         "is_download": false
+      },
+      {
+        "method_name": "pages__create",
+        "http_method": "post",
+        "path": "/graphql.json:pageCreate",
+        "entity": "pages",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "PagesCreateParamsPage",
+            "schema": {
+              "type": "object",
+              "required": [
+                "title"
+              ],
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "description": "Page title"
+                },
+                "body": {
+                  "type": "string",
+                  "description": "Page body content (HTML)"
+                },
+                "handle": {
+                  "type": "string",
+                  "description": "URL handle for the page"
+                },
+                "isPublished": {
+                  "type": "boolean",
+                  "description": "Whether the page is published"
+                }
+              }
+            },
+            "required": true,
+            "description": ""
+          }
+        ],
+        "params_type_name": "PagesCreateParams",
+        "response_type": "PageCreatePayload",
+        "description": "Creates a new page on the online store via GraphQL mutation.\n",
+        "record_extractor": "$.data.pageCreate",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "PageCreatePayload",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "pages__update",
+        "http_method": "post",
+        "path": "/graphql.json:pageUpdate",
+        "entity": "pages",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The GraphQL GID of the page to update"
+            },
+            "required": true,
+            "description": "The GraphQL GID of the page to update"
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "PagesUpdateParamsPage",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "body": {
+                  "type": "string"
+                },
+                "handle": {
+                  "type": "string"
+                },
+                "isPublished": {
+                  "type": "boolean"
+                }
+              }
+            },
+            "required": true,
+            "description": ""
+          }
+        ],
+        "params_type_name": "PagesUpdateParams",
+        "response_type": "PageUpdatePayload",
+        "description": "Updates an existing page on the online store via GraphQL mutation.\n",
+        "record_extractor": "$.data.pageUpdate",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "PageUpdatePayload",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "pages__delete",
+        "http_method": "post",
+        "path": "/graphql.json:pageDelete",
+        "entity": "pages",
+        "action": "delete",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The GraphQL GID of the page to delete"
+            },
+            "required": true,
+            "description": "The GraphQL GID of the page to delete"
+          }
+        ],
+        "params_type_name": "PagesDeleteParams",
+        "response_type": "PageDeletePayload",
+        "description": "Deletes a page from the online store via GraphQL mutation.\n",
+        "record_extractor": "$.data.pageDelete",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "PageDeletePayload",
+        "meta_fields": null,
+        "is_download": false
       }
     ],
     "blogs": [
@@ -3661,6 +5288,123 @@
         "meta_extractor": null,
         "needs_envelope": null,
         "record_type": "Blog",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "blogs__create",
+        "http_method": "post",
+        "path": "/graphql.json:blogCreate",
+        "entity": "blogs",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "blog",
+            "python_name": "blog",
+            "type": "BlogsCreateParamsBlog",
+            "schema": {
+              "type": "object",
+              "required": [
+                "title"
+              ],
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "description": "Blog title"
+                },
+                "handle": {
+                  "type": "string",
+                  "description": "URL handle for the blog"
+                }
+              }
+            },
+            "required": true,
+            "description": ""
+          }
+        ],
+        "params_type_name": "BlogsCreateParams",
+        "response_type": "BlogCreatePayload",
+        "description": "Creates a new blog on the online store via GraphQL mutation.\n",
+        "record_extractor": "$.data.blogCreate",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "BlogCreatePayload",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "blogs__update",
+        "http_method": "post",
+        "path": "/graphql.json:blogUpdate",
+        "entity": "blogs",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The GraphQL GID of the blog to update"
+            },
+            "required": true,
+            "description": "The GraphQL GID of the blog to update"
+          },
+          {
+            "name": "blog",
+            "python_name": "blog",
+            "type": "BlogsUpdateParamsBlog",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "handle": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": true,
+            "description": ""
+          }
+        ],
+        "params_type_name": "BlogsUpdateParams",
+        "response_type": "BlogUpdatePayload",
+        "description": "Updates an existing blog via GraphQL mutation.\n",
+        "record_extractor": "$.data.blogUpdate",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "BlogUpdatePayload",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "blogs__delete",
+        "http_method": "post",
+        "path": "/graphql.json:blogDelete",
+        "entity": "blogs",
+        "action": "delete",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The GraphQL GID of the blog to delete"
+            },
+            "required": true,
+            "description": "The GraphQL GID of the blog to delete"
+          }
+        ],
+        "params_type_name": "BlogsDeleteParams",
+        "response_type": "BlogDeletePayload",
+        "description": "Deletes a blog from the online store via GraphQL mutation.\n",
+        "record_extractor": "$.data.blogDelete",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "BlogDeletePayload",
         "meta_fields": null,
         "is_download": false
       }
@@ -3831,6 +5575,168 @@
         "meta_extractor": null,
         "needs_envelope": null,
         "record_type": "Article",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "articles__create",
+        "http_method": "post",
+        "path": "/graphql.json:articleCreate",
+        "entity": "articles",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "article",
+            "python_name": "article",
+            "type": "ArticlesCreateParamsArticle",
+            "schema": {
+              "type": "object",
+              "required": [
+                "title",
+                "blogId",
+                "author"
+              ],
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "description": "Article title"
+                },
+                "blogId": {
+                  "type": "string",
+                  "description": "GraphQL GID of the blog this article belongs to"
+                },
+                "body": {
+                  "type": "string",
+                  "description": "Article body content (HTML)"
+                },
+                "handle": {
+                  "type": "string",
+                  "description": "URL handle for the article"
+                },
+                "isPublished": {
+                  "type": "boolean",
+                  "description": "Whether the article is published"
+                },
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "author": {
+                  "type": "object",
+                  "description": "Author of the article. Required by Shopify's articleCreate mutation (ArticleCreateInput.author is non-null).",
+                  "required": [
+                    "name"
+                  ],
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "Author display name. Required (provide the author's name)."
+                    }
+                  }
+                }
+              }
+            },
+            "required": true,
+            "description": ""
+          }
+        ],
+        "params_type_name": "ArticlesCreateParams",
+        "response_type": "ArticleCreatePayload",
+        "description": "Creates a new blog article via GraphQL mutation.\n",
+        "record_extractor": "$.data.articleCreate",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "ArticleCreatePayload",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "articles__update",
+        "http_method": "post",
+        "path": "/graphql.json:articleUpdate",
+        "entity": "articles",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The GraphQL GID of the article to update"
+            },
+            "required": true,
+            "description": "The GraphQL GID of the article to update"
+          },
+          {
+            "name": "article",
+            "python_name": "article",
+            "type": "ArticlesUpdateParamsArticle",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "body": {
+                  "type": "string"
+                },
+                "handle": {
+                  "type": "string"
+                },
+                "isPublished": {
+                  "type": "boolean"
+                },
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "required": true,
+            "description": ""
+          }
+        ],
+        "params_type_name": "ArticlesUpdateParams",
+        "response_type": "ArticleUpdatePayload",
+        "description": "Updates an existing blog article via GraphQL mutation.\n",
+        "record_extractor": "$.data.articleUpdate",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "ArticleUpdatePayload",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "articles__delete",
+        "http_method": "post",
+        "path": "/graphql.json:articleDelete",
+        "entity": "articles",
+        "action": "delete",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The GraphQL GID of the article to delete"
+            },
+            "required": true,
+            "description": "The GraphQL GID of the article to delete"
+          }
+        ],
+        "params_type_name": "ArticlesDeleteParams",
+        "response_type": "ArticleDeletePayload",
+        "description": "Deletes a blog article via GraphQL mutation.\n",
+        "record_extractor": "$.data.articleDelete",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "ArticleDeletePayload",
         "meta_fields": null,
         "is_download": false
       }
@@ -4212,6 +6118,312 @@
             }
           }
         ],
+        "is_download": false
+      }
+    ],
+    "draft_order_complete": [
+      {
+        "method_name": "draft_orders__complete",
+        "http_method": "post",
+        "path": "/graphql.json:draftOrderComplete",
+        "entity": "draft_order_complete",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The GraphQL GID of the draft order to complete"
+            },
+            "required": true,
+            "description": "The GraphQL GID of the draft order to complete"
+          },
+          {
+            "name": "paymentPending",
+            "python_name": "payment_pending",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Whether payment is pending (true) or mark as paid (false/omit)"
+            },
+            "required": false,
+            "description": "Whether payment is pending (true) or mark as paid (false/omit)"
+          }
+        ],
+        "params_type_name": "DraftOrderCompleteUpdateParams",
+        "response_type": "DraftOrderCompletePayload",
+        "description": "Completes a draft order, converting it to a regular order via GraphQL mutation.\n",
+        "record_extractor": "$.data.draftOrderComplete",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "DraftOrderCompletePayload",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "inventory_set": [
+      {
+        "method_name": "inventory_levels__set",
+        "http_method": "post",
+        "path": "/graphql.json:inventorySetQuantities",
+        "entity": "inventory_set",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "input",
+            "python_name": "input",
+            "type": "InventorySetCreateParamsInput",
+            "schema": {
+              "type": "object",
+              "required": [
+                "name",
+                "reason",
+                "quantities"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Quantity name (e.g. 'available', 'on_hand')"
+                },
+                "reason": {
+                  "type": "string",
+                  "description": "Reason for the adjustment (e.g. 'correction', 'other')"
+                },
+                "referenceDocumentUri": {
+                  "type": "string",
+                  "description": "URI for the reference document"
+                },
+                "quantities": {
+                  "type": "array",
+                  "description": "Quantities to set",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "inventoryItemId",
+                      "locationId",
+                      "quantity"
+                    ],
+                    "properties": {
+                      "inventoryItemId": {
+                        "type": "string",
+                        "description": "GraphQL GID of the inventory item"
+                      },
+                      "locationId": {
+                        "type": "string",
+                        "description": "GraphQL GID of the location"
+                      },
+                      "quantity": {
+                        "type": "integer",
+                        "description": "Absolute quantity to set"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "required": true,
+            "description": ""
+          }
+        ],
+        "params_type_name": "InventorySetCreateParams",
+        "response_type": "InventorySetQuantitiesPayload",
+        "description": "Sets absolute inventory quantities for items at locations via GraphQL mutation.\nUses the inventorySetQuantities mutation with a required reason and reference document.\n",
+        "record_extractor": "$.data.inventorySetQuantities",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "InventorySetQuantitiesPayload",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "inventory_adjust": [
+      {
+        "method_name": "inventory_levels__adjust",
+        "http_method": "post",
+        "path": "/graphql.json:inventoryAdjustQuantities",
+        "entity": "inventory_adjust",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "input",
+            "python_name": "input",
+            "type": "InventoryAdjustCreateParamsInput",
+            "schema": {
+              "type": "object",
+              "required": [
+                "name",
+                "reason",
+                "changes"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Quantity name (e.g. 'available')"
+                },
+                "reason": {
+                  "type": "string",
+                  "description": "Reason for the adjustment"
+                },
+                "referenceDocumentUri": {
+                  "type": "string",
+                  "description": "URI for the reference document"
+                },
+                "changes": {
+                  "type": "array",
+                  "description": "Inventory changes to apply",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "inventoryItemId",
+                      "locationId",
+                      "delta"
+                    ],
+                    "properties": {
+                      "inventoryItemId": {
+                        "type": "string",
+                        "description": "GraphQL GID of the inventory item"
+                      },
+                      "locationId": {
+                        "type": "string",
+                        "description": "GraphQL GID of the location"
+                      },
+                      "delta": {
+                        "type": "integer",
+                        "description": "Amount to adjust (positive to add, negative to subtract)"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "required": true,
+            "description": ""
+          }
+        ],
+        "params_type_name": "InventoryAdjustCreateParams",
+        "response_type": "InventoryAdjustQuantitiesPayload",
+        "description": "Adjusts inventory quantities relatively (add/subtract) for items at locations via GraphQL mutation.\n",
+        "record_extractor": "$.data.inventoryAdjustQuantities",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "InventoryAdjustQuantitiesPayload",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "metafields": [
+      {
+        "method_name": "metafields__set",
+        "http_method": "post",
+        "path": "/graphql.json:metafieldsSet",
+        "entity": "metafields",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "metafields",
+            "python_name": "metafields",
+            "type": "list[MetafieldsCreateParamsMetafieldsItem]",
+            "schema": {
+              "type": "array",
+              "description": "List of metafields to set",
+              "items": {
+                "type": "object",
+                "required": [
+                  "namespace",
+                  "key",
+                  "type",
+                  "value",
+                  "ownerId"
+                ],
+                "properties": {
+                  "namespace": {
+                    "type": "string",
+                    "description": "Metafield namespace (e.g. 'custom')"
+                  },
+                  "key": {
+                    "type": "string",
+                    "description": "Metafield key (e.g. 'color')"
+                  },
+                  "type": {
+                    "type": "string",
+                    "description": "Metafield type (e.g. 'single_line_text_field', 'number_integer', 'boolean')"
+                  },
+                  "value": {
+                    "type": "string",
+                    "description": "Metafield value"
+                  },
+                  "ownerId": {
+                    "type": "string",
+                    "description": "GraphQL GID of the owner resource (e.g. gid://shopify/Product/123)"
+                  }
+                }
+              }
+            },
+            "required": true,
+            "description": "List of metafields to set"
+          }
+        ],
+        "params_type_name": "MetafieldsCreateParams",
+        "response_type": "MetafieldsSetPayload",
+        "description": "Sets (creates or updates) up to 25 metafields atomically via GraphQL mutation.\nWorks across all resource types (products, customers, orders, etc.).\n",
+        "record_extractor": "$.data.metafieldsSet",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "MetafieldsSetPayload",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "metafields__delete",
+        "http_method": "post",
+        "path": "/graphql.json:metafieldsDelete",
+        "entity": "metafields",
+        "action": "delete",
+        "parameters": [
+          {
+            "name": "metafields",
+            "python_name": "metafields",
+            "type": "list[MetafieldsDeleteParamsMetafieldsItem]",
+            "schema": {
+              "type": "array",
+              "description": "List of metafield identifiers to delete",
+              "items": {
+                "type": "object",
+                "required": [
+                  "ownerId",
+                  "namespace",
+                  "key"
+                ],
+                "properties": {
+                  "ownerId": {
+                    "type": "string",
+                    "description": "GraphQL GID of the owner resource (e.g. gid://shopify/Product/123)"
+                  },
+                  "namespace": {
+                    "type": "string",
+                    "description": "Metafield namespace (e.g. 'custom')"
+                  },
+                  "key": {
+                    "type": "string",
+                    "description": "Metafield key (e.g. 'color')"
+                  }
+                }
+              }
+            },
+            "required": true,
+            "description": "List of metafield identifiers to delete"
+          }
+        ],
+        "params_type_name": "MetafieldsDeleteParams",
+        "response_type": "MetafieldDeletePayload",
+        "description": "Deletes one or more metafields via GraphQL mutation.\nIdentifies metafields by ownerId + namespace + key.\n",
+        "record_extractor": "$.data.metafieldsDelete",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "MetafieldDeletePayload",
+        "meta_fields": null,
         "is_download": false
       }
     ]

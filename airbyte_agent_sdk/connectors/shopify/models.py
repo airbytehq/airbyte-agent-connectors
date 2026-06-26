@@ -166,29 +166,6 @@ class LineItem(BaseModel):
     duties: list[dict[str, Any]] | None = Field(default=None)
     discount_allocations: list[dict[str, Any]] | None = Field(default=None)
 
-class Fulfillment(BaseModel):
-    """A fulfillment"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: int
-    order_id: int | None = Field(default=None)
-    status: str | None = Field(default=None)
-    created_at: str | None = Field(default=None)
-    service: str | None = Field(default=None)
-    updated_at: str | None = Field(default=None)
-    tracking_company: str | None = Field(default=None)
-    shipment_status: str | None = Field(default=None)
-    location_id: int | None = Field(default=None)
-    origin_address: dict[str, Any] | None = Field(default=None)
-    line_items: list[LineItem] | None = Field(default=None)
-    tracking_number: str | None = Field(default=None)
-    tracking_numbers: list[str] | None = Field(default=None)
-    tracking_url: str | None = Field(default=None)
-    tracking_urls: list[str] | None = Field(default=None)
-    receipt: dict[str, Any] | None = Field(default=None)
-    name: str | None = Field(default=None)
-    admin_graphql_api_id: str | None = Field(default=None)
-
 class Transaction(BaseModel):
     """An order transaction"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -237,6 +214,29 @@ class Refund(BaseModel):
     order_adjustments: list[dict[str, Any]] | None = Field(default=None)
     admin_graphql_api_id: str | None = Field(default=None)
     refund_shipping_lines: list[dict[str, Any]] | None = Field(default=None)
+
+class Fulfillment(BaseModel):
+    """A fulfillment"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int
+    order_id: int | None = Field(default=None)
+    status: str | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    service: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
+    tracking_company: str | None = Field(default=None)
+    shipment_status: str | None = Field(default=None)
+    location_id: int | None = Field(default=None)
+    origin_address: dict[str, Any] | None = Field(default=None)
+    line_items: list[LineItem] | None = Field(default=None)
+    tracking_number: str | None = Field(default=None)
+    tracking_numbers: list[str] | None = Field(default=None)
+    tracking_url: str | None = Field(default=None)
+    tracking_urls: list[str] | None = Field(default=None)
+    receipt: dict[str, Any] | None = Field(default=None)
+    name: str | None = Field(default=None)
+    admin_graphql_api_id: str | None = Field(default=None)
 
 class Order(BaseModel):
     """A Shopify order"""
@@ -342,22 +342,6 @@ class OrderList(BaseModel):
 
     orders: list[Order] | None = Field(default=None)
 
-class ProductImage(BaseModel):
-    """A product image"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: int
-    product_id: int | None = Field(default=None)
-    position: int | None = Field(default=None)
-    created_at: str | None = Field(default=None)
-    updated_at: str | None = Field(default=None)
-    alt: str | None = Field(default=None)
-    width: int | None = Field(default=None)
-    height: int | None = Field(default=None)
-    src: str | None = Field(default=None)
-    variant_ids: list[int] | None = Field(default=None)
-    admin_graphql_api_id: str | None = Field(default=None)
-
 class ProductVariant(BaseModel):
     """A product variant"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -387,6 +371,22 @@ class ProductVariant(BaseModel):
     inventory_quantity: int | None = Field(default=None)
     old_inventory_quantity: int | None = Field(default=None)
     requires_shipping: bool | None = Field(default=None)
+    admin_graphql_api_id: str | None = Field(default=None)
+
+class ProductImage(BaseModel):
+    """A product image"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int
+    product_id: int | None = Field(default=None)
+    position: int | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
+    alt: str | None = Field(default=None)
+    width: int | None = Field(default=None)
+    height: int | None = Field(default=None)
+    src: str | None = Field(default=None)
+    variant_ids: list[int] | None = Field(default=None)
     admin_graphql_api_id: str | None = Field(default=None)
 
 class Product(BaseModel):
@@ -1006,6 +1006,1636 @@ class MetafieldList(BaseModel):
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     metafields: list[Metafield] | None = Field(default=None)
+
+class GraphQLUserError(BaseModel):
+    """GraphQLUserError type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    field: Any | None = Field(default=None)
+    message: str | None = Field(default=None)
+    code: str | None = Field(default=None)
+
+class CustomerCreateParamsInputAddressesItem(BaseModel):
+    """Nested schema for CustomerCreateParamsInput.addresses_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    address1: str | None = Field(default=None)
+    address2: str | None = Field(default=None)
+    city: str | None = Field(default=None)
+    province: str | None = Field(default=None)
+    zip: str | None = Field(default=None)
+    country_code: str | None = Field(default=None, alias="countryCode")
+    phone: str | None = Field(default=None)
+    first_name: str | None = Field(default=None, alias="firstName")
+    last_name: str | None = Field(default=None, alias="lastName")
+
+class CustomerCreateParamsInput(BaseModel):
+    """CustomerInput object"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    email: str | None = Field(default=None, description="Customer email address")
+    """Customer email address"""
+    first_name: str | None = Field(default=None, alias="firstName", description="Customer first name")
+    """Customer first name"""
+    last_name: str | None = Field(default=None, alias="lastName", description="Customer last name")
+    """Customer last name"""
+    phone: str | None = Field(default=None, description="Customer phone number (E.164 format, e.g. +16465555555)")
+    """Customer phone number (E.164 format, e.g. +16465555555)"""
+    note: str | None = Field(default=None, description="Note about the customer")
+    """Note about the customer"""
+    tags: list[str] | None = Field(default=None, description="Tags to associate with the customer")
+    """Tags to associate with the customer"""
+    tax_exempt: bool | None = Field(default=None, alias="taxExempt", description="Whether the customer is tax exempt")
+    """Whether the customer is tax exempt"""
+    addresses: list[CustomerCreateParamsInputAddressesItem] | None = Field(default=None, description="List of customer addresses")
+    """List of customer addresses"""
+
+class CustomerCreateParams(BaseModel):
+    """Parameters for creating a customer. Provide fields inside the 'input' object.
+At least one of email, phone, firstName, or lastName is required.
+"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    input: CustomerCreateParamsInput
+
+class CustomerUpdateParamsInput(BaseModel):
+    """CustomerInput object with id"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str = Field(description="The GraphQL GID of the customer (e.g. gid://shopify/Customer/123)")
+    """The GraphQL GID of the customer (e.g. gid://shopify/Customer/123)"""
+    email: str | None = Field(default=None, description="Customer email address")
+    """Customer email address"""
+    first_name: str | None = Field(default=None, alias="firstName", description="Customer first name")
+    """Customer first name"""
+    last_name: str | None = Field(default=None, alias="lastName", description="Customer last name")
+    """Customer last name"""
+    phone: str | None = Field(default=None, description="Customer phone number (E.164 format)")
+    """Customer phone number (E.164 format)"""
+    note: str | None = Field(default=None, description="Note about the customer")
+    """Note about the customer"""
+    tags: list[str] | None = Field(default=None, description="Tags to associate with the customer")
+    """Tags to associate with the customer"""
+    tax_exempt: bool | None = Field(default=None, alias="taxExempt", description="Whether the customer is tax exempt")
+    """Whether the customer is tax exempt"""
+
+class CustomerUpdateParams(BaseModel):
+    """Parameters for updating a customer. The input.id field is required.
+All other fields are optional for partial updates.
+"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    input: CustomerUpdateParamsInput
+
+class CustomerDeleteParamsInput(BaseModel):
+    """Nested schema for CustomerDeleteParams.input"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str = Field(description="The GraphQL GID of the customer to delete (e.g. gid://shopify/Customer/123)")
+    """The GraphQL GID of the customer to delete (e.g. gid://shopify/Customer/123)"""
+
+class CustomerDeleteParams(BaseModel):
+    """Parameters for deleting a customer. Only succeeds if the customer has no orders."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    input: CustomerDeleteParamsInput
+
+class GraphQLCustomer(BaseModel):
+    """Customer returned from GraphQL mutation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None)
+    email: str | None = Field(default=None)
+    first_name: str | None = Field(default=None, alias="firstName")
+    last_name: str | None = Field(default=None, alias="lastName")
+    phone: str | None = Field(default=None)
+    note: str | None = Field(default=None)
+    tags: list[str] | None = Field(default=None)
+    tax_exempt: bool | None = Field(default=None, alias="taxExempt")
+    created_at: str | None = Field(default=None, alias="createdAt")
+    updated_at: str | None = Field(default=None, alias="updatedAt")
+
+class CustomerCreatePayload(BaseModel):
+    """CustomerCreatePayload type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    user_errors: list[GraphQLUserError] | None = Field(default=None, alias="userErrors")
+    customer: GraphQLCustomer | None = Field(default=None)
+
+class CustomerUpdatePayload(BaseModel):
+    """CustomerUpdatePayload type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    user_errors: list[GraphQLUserError] | None = Field(default=None, alias="userErrors")
+    customer: GraphQLCustomer | None = Field(default=None)
+
+class CustomerDeletePayload(BaseModel):
+    """CustomerDeletePayload type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    user_errors: list[GraphQLUserError] | None = Field(default=None, alias="userErrors")
+    deleted_customer_id: str | None = Field(default=None, alias="deletedCustomerId")
+
+class CustomerMutationResponseData(BaseModel):
+    """Nested schema for CustomerMutationResponse.data"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    customer_create: CustomerCreatePayload | None = Field(default=None, alias="customerCreate")
+    customer_update: CustomerUpdatePayload | None = Field(default=None, alias="customerUpdate")
+
+class CustomerMutationResponse(BaseModel):
+    """CustomerMutationResponse type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: CustomerMutationResponseData | None = Field(default=None)
+
+class CustomerDeleteResponseData(BaseModel):
+    """Nested schema for CustomerDeleteResponse.data"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    customer_delete: CustomerDeletePayload | None = Field(default=None, alias="customerDelete")
+
+class CustomerDeleteResponse(BaseModel):
+    """CustomerDeleteResponse type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: CustomerDeleteResponseData | None = Field(default=None)
+
+class ProductCreateParamsMediaItem(BaseModel):
+    """Nested schema for ProductCreateParams.media_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    original_source: str | None = Field(default=None, alias="originalSource", description="URL of the media")
+    """URL of the media"""
+    media_content_type: str | None = Field(default=None, alias="mediaContentType")
+
+class ProductCreateParamsProduct(BaseModel):
+    """ProductCreateInput object"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    title: str = Field(description="Product title")
+    """Product title"""
+    description_html: str | None = Field(default=None, alias="descriptionHtml", description="Product description in HTML")
+    """Product description in HTML"""
+    vendor: str | None = Field(default=None, description="Product vendor")
+    """Product vendor"""
+    product_type: str | None = Field(default=None, alias="productType", description="Product type")
+    """Product type"""
+    tags: list[str] | None = Field(default=None, description="Tags for the product")
+    """Tags for the product"""
+    status: str | None = Field(default=None, description="Product status (ACTIVE, ARCHIVED, DRAFT)")
+    """Product status (ACTIVE, ARCHIVED, DRAFT)"""
+
+class ProductCreateParams(BaseModel):
+    """Parameters for creating a product.
+Creates the product with a default variant.
+"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    product: ProductCreateParamsProduct
+    media: list[ProductCreateParamsMediaItem] | None = Field(default=None)
+
+class ProductUpdateParamsProduct(BaseModel):
+    """ProductUpdateInput object"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str = Field(description="The GraphQL GID of the product (e.g. gid://shopify/Product/123)")
+    """The GraphQL GID of the product (e.g. gid://shopify/Product/123)"""
+    title: str | None = Field(default=None, description="Product title")
+    """Product title"""
+    description_html: str | None = Field(default=None, alias="descriptionHtml", description="Product description in HTML")
+    """Product description in HTML"""
+    vendor: str | None = Field(default=None, description="Product vendor")
+    """Product vendor"""
+    product_type: str | None = Field(default=None, alias="productType", description="Product type")
+    """Product type"""
+    tags: list[str] | None = Field(default=None, description="Tags for the product")
+    """Tags for the product"""
+    status: str | None = Field(default=None, description="Product status")
+    """Product status"""
+
+class ProductUpdateParams(BaseModel):
+    """Parameters for updating a product. The product.id field is required.
+All other fields are optional for partial updates.
+"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    product: ProductUpdateParamsProduct
+
+class ProductDeleteParamsInput(BaseModel):
+    """Nested schema for ProductDeleteParams.input"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str = Field(description="The GraphQL GID of the product to delete (e.g. gid://shopify/Product/123)")
+    """The GraphQL GID of the product to delete (e.g. gid://shopify/Product/123)"""
+
+class ProductDeleteParams(BaseModel):
+    """Parameters for deleting a product. This action is irreversible."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    input: ProductDeleteParamsInput
+
+class GraphQLProduct(BaseModel):
+    """Product returned from GraphQL mutation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None)
+    title: str | None = Field(default=None)
+    description_html: str | None = Field(default=None, alias="descriptionHtml")
+    vendor: str | None = Field(default=None)
+    product_type: str | None = Field(default=None, alias="productType")
+    tags: list[str] | None = Field(default=None)
+    status: str | None = Field(default=None)
+    created_at: str | None = Field(default=None, alias="createdAt")
+    updated_at: str | None = Field(default=None, alias="updatedAt")
+
+class ProductCreatePayload(BaseModel):
+    """ProductCreatePayload type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    user_errors: list[GraphQLUserError] | None = Field(default=None, alias="userErrors")
+    product: GraphQLProduct | None = Field(default=None)
+
+class ProductUpdatePayload(BaseModel):
+    """ProductUpdatePayload type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    user_errors: list[GraphQLUserError] | None = Field(default=None, alias="userErrors")
+    product: GraphQLProduct | None = Field(default=None)
+
+class ProductDeletePayload(BaseModel):
+    """ProductDeletePayload type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    user_errors: list[GraphQLUserError] | None = Field(default=None, alias="userErrors")
+    deleted_product_id: str | None = Field(default=None, alias="deletedProductId")
+
+class ProductMutationResponseData(BaseModel):
+    """Nested schema for ProductMutationResponse.data"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    product_create: ProductCreatePayload | None = Field(default=None, alias="productCreate")
+    product_update: ProductUpdatePayload | None = Field(default=None, alias="productUpdate")
+
+class ProductMutationResponse(BaseModel):
+    """ProductMutationResponse type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: ProductMutationResponseData | None = Field(default=None)
+
+class ProductDeleteResponseData(BaseModel):
+    """Nested schema for ProductDeleteResponse.data"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    product_delete: ProductDeletePayload | None = Field(default=None, alias="productDelete")
+
+class ProductDeleteResponse(BaseModel):
+    """ProductDeleteResponse type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: ProductDeleteResponseData | None = Field(default=None)
+
+class ProductVariantsCreateParams(BaseModel):
+    """Parameters for bulk creating product variants."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    product_id: str = Field(alias="productId")
+    variants: list[ProductVariantsCreateParamsVariantsItem]
+
+class ProductVariantsUpdateParams(BaseModel):
+    """Parameters for bulk updating product variants."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    product_id: str = Field(alias="productId")
+    variants: list[ProductVariantsUpdateParamsVariantsItem]
+
+class ProductVariantsDeleteParams(BaseModel):
+    """Parameters for bulk deleting product variants. Cannot delete the last variant."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    product_id: str = Field(alias="productId")
+    variants_ids: list[str] = Field(alias="variantsIds")
+
+class GraphQLProductVariant(BaseModel):
+    """GraphQLProductVariant type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None)
+    title: str | None = Field(default=None)
+    price: str | None = Field(default=None)
+    sku: str | None = Field(default=None)
+    barcode: str | None = Field(default=None)
+    compare_at_price: str | None = Field(default=None, alias="compareAtPrice")
+    inventory_quantity: int | None = Field(default=None, alias="inventoryQuantity")
+
+class ProductVariantsBulkCreatePayload(BaseModel):
+    """ProductVariantsBulkCreatePayload type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    user_errors: list[GraphQLUserError] | None = Field(default=None, alias="userErrors")
+    product_variants: list[GraphQLProductVariant] | None = Field(default=None, alias="productVariants")
+
+class ProductVariantsBulkUpdatePayload(BaseModel):
+    """ProductVariantsBulkUpdatePayload type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    user_errors: list[GraphQLUserError] | None = Field(default=None, alias="userErrors")
+    product_variants: list[GraphQLProductVariant] | None = Field(default=None, alias="productVariants")
+
+class ProductVariantsBulkDeletePayloadProduct(BaseModel):
+    """Nested schema for ProductVariantsBulkDeletePayload.product"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None)
+    title: str | None | None = Field(default=None)
+
+class ProductVariantsBulkDeletePayload(BaseModel):
+    """ProductVariantsBulkDeletePayload type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    user_errors: list[GraphQLUserError] | None = Field(default=None, alias="userErrors")
+    product: ProductVariantsBulkDeletePayloadProduct | None = Field(default=None)
+
+class ProductVariantsMutationResponseData(BaseModel):
+    """Nested schema for ProductVariantsMutationResponse.data"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    product_variants_bulk_create: ProductVariantsBulkCreatePayload | None = Field(default=None, alias="productVariantsBulkCreate")
+    product_variants_bulk_update: ProductVariantsBulkUpdatePayload | None = Field(default=None, alias="productVariantsBulkUpdate")
+
+class ProductVariantsMutationResponse(BaseModel):
+    """ProductVariantsMutationResponse type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: ProductVariantsMutationResponseData | None = Field(default=None)
+
+class ProductVariantsDeleteResponseData(BaseModel):
+    """Nested schema for ProductVariantsDeleteResponse.data"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    product_variants_bulk_delete: ProductVariantsBulkDeletePayload | None = Field(default=None, alias="productVariantsBulkDelete")
+
+class ProductVariantsDeleteResponse(BaseModel):
+    """ProductVariantsDeleteResponse type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: ProductVariantsDeleteResponseData | None = Field(default=None)
+
+class OrderCreateParamsOrderShippingaddress(BaseModel):
+    """Nested schema for OrderCreateParamsOrder.shippingAddress"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    address1: str | None = Field(default=None)
+    city: str | None = Field(default=None)
+    province_code: str | None = Field(default=None, alias="provinceCode")
+    zip: str | None = Field(default=None)
+    country_code: str | None = Field(default=None, alias="countryCode")
+    first_name: str | None = Field(default=None, alias="firstName")
+    last_name: str | None = Field(default=None, alias="lastName")
+
+class OrderCreateParamsOrderLineitemsItemPricesetShopmoney(BaseModel):
+    """Nested schema for OrderCreateParamsOrderLineitemsItemPriceset.shopMoney"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    amount: str | None = Field(default=None)
+    currency_code: str | None = Field(default=None, alias="currencyCode")
+
+class OrderCreateParamsOrderLineitemsItemPriceset(BaseModel):
+    """Nested schema for OrderCreateParamsOrderLineitemsItem.priceSet"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    shop_money: OrderCreateParamsOrderLineitemsItemPricesetShopmoney | None = Field(default=None, alias="shopMoney")
+
+class OrderCreateParamsOrderLineitemsItem(BaseModel):
+    """Nested schema for OrderCreateParamsOrder.lineItems_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    variant_id: str | None = Field(default=None, alias="variantId", description="GraphQL GID of the product variant")
+    """GraphQL GID of the product variant"""
+    quantity: int | None = Field(default=None, description="Quantity to order")
+    """Quantity to order"""
+    title: str | None = Field(default=None, description="Custom title (for custom line items without a variant)")
+    """Custom title (for custom line items without a variant)"""
+    price_set: OrderCreateParamsOrderLineitemsItemPriceset | None = Field(default=None, alias="priceSet")
+
+class OrderCreateParamsOrder(BaseModel):
+    """OrderCreateOrderInput object"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    line_items: list[OrderCreateParamsOrderLineitemsItem] = Field(alias="lineItems", description="Line items for the order")
+    """Line items for the order"""
+    customer_id: str | None = Field(default=None, alias="customerId", description="GraphQL GID of the customer")
+    """GraphQL GID of the customer"""
+    email: str | None = Field(default=None, description="Customer email")
+    """Customer email"""
+    note: str | None = Field(default=None, description="Order note")
+    """Order note"""
+    tags: list[str] | None = Field(default=None, description="Order tags")
+    """Order tags"""
+    shipping_address: OrderCreateParamsOrderShippingaddress | None = Field(default=None, alias="shippingAddress")
+
+class OrderCreateParamsOptions(BaseModel):
+    """OrderCreateOptionsInput"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    inventory_behaviour: str | None = Field(default=None, alias="inventoryBehaviour")
+
+class OrderCreateParams(BaseModel):
+    """Parameters for creating an order.
+Use line items with variantId and quantity.
+"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    order: OrderCreateParamsOrder
+    options: OrderCreateParamsOptions | None = Field(default=None)
+
+class OrderUpdateParamsInputShippingaddress(BaseModel):
+    """Nested schema for OrderUpdateParamsInput.shippingAddress"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    address1: str | None = Field(default=None)
+    city: str | None = Field(default=None)
+    province_code: str | None = Field(default=None, alias="provinceCode")
+    zip: str | None = Field(default=None)
+    country_code: str | None = Field(default=None, alias="countryCode")
+
+class OrderUpdateParamsInput(BaseModel):
+    """Nested schema for OrderUpdateParams.input"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str = Field(description="The GraphQL GID of the order (e.g. gid://shopify/Order/123)")
+    """The GraphQL GID of the order (e.g. gid://shopify/Order/123)"""
+    email: str | None = Field(default=None, description="Customer email")
+    """Customer email"""
+    note: str | None = Field(default=None, description="Order note")
+    """Order note"""
+    tags: list[str] | None = Field(default=None, description="Order tags")
+    """Order tags"""
+    shipping_address: OrderUpdateParamsInputShippingaddress | None = Field(default=None, alias="shippingAddress")
+
+class OrderUpdateParams(BaseModel):
+    """Parameters for updating an order. The input.id field is required.
+For line item changes, use orderEditBegin/orderEditCommit instead.
+"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    input: OrderUpdateParamsInput
+
+class OrderCancelParams(BaseModel):
+    """Parameters for cancelling an order. This action is irreversible.
+"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    order_id: str = Field(alias="orderId")
+    reason: str
+    notify_customer: bool | None = Field(default=None, alias="notifyCustomer")
+    refund: bool | None = Field(default=None)
+    restock: bool
+    staff_note: str | None = Field(default=None, alias="staffNote")
+
+class GraphQLOrderTotalpricesetShopmoney(BaseModel):
+    """Nested schema for GraphQLOrderTotalpriceset.shopMoney"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    amount: str | None = Field(default=None)
+    currency_code: str | None = Field(default=None, alias="currencyCode")
+
+class GraphQLOrderTotalpriceset(BaseModel):
+    """Nested schema for GraphQLOrder.totalPriceSet"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    shop_money: GraphQLOrderTotalpricesetShopmoney | None = Field(default=None, alias="shopMoney")
+
+class GraphQLOrder(BaseModel):
+    """GraphQLOrder type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    email: str | None = Field(default=None)
+    created_at: str | None = Field(default=None, alias="createdAt")
+    display_financial_status: str | None = Field(default=None, alias="displayFinancialStatus")
+    display_fulfillment_status: str | None = Field(default=None, alias="displayFulfillmentStatus")
+    total_price_set: GraphQLOrderTotalpriceset | None = Field(default=None, alias="totalPriceSet")
+
+class OrderCreatePayload(BaseModel):
+    """OrderCreatePayload type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    user_errors: list[GraphQLUserError] | None = Field(default=None, alias="userErrors")
+    order: GraphQLOrder | None = Field(default=None)
+
+class OrderUpdatePayloadOrder(BaseModel):
+    """Nested schema for OrderUpdatePayload.order"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None)
+    name: str | None | None = Field(default=None)
+    email: str | None | None = Field(default=None)
+    note: str | None | None = Field(default=None)
+    tags: list[str] | None = Field(default=None)
+    created_at: str | None | None = Field(default=None, alias="createdAt")
+    display_financial_status: str | None | None = Field(default=None, alias="displayFinancialStatus")
+    display_fulfillment_status: str | None | None = Field(default=None, alias="displayFulfillmentStatus")
+
+class OrderUpdatePayload(BaseModel):
+    """OrderUpdatePayload type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    user_errors: list[GraphQLUserError] | None = Field(default=None, alias="userErrors")
+    order: OrderUpdatePayloadOrder | None = Field(default=None)
+
+class OrderCancelPayloadJob(BaseModel):
+    """Nested schema for OrderCancelPayload.job"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None)
+    done: bool | None = Field(default=None)
+
+class OrderCancelPayload(BaseModel):
+    """OrderCancelPayload type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    user_errors: list[GraphQLUserError] | None = Field(default=None, alias="userErrors")
+    order_cancel_user_errors: list[GraphQLUserError] | None = Field(default=None, alias="orderCancelUserErrors")
+    job: OrderCancelPayloadJob | None = Field(default=None)
+
+class OrderMutationResponseData(BaseModel):
+    """Nested schema for OrderMutationResponse.data"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    order_create: OrderCreatePayload | None = Field(default=None, alias="orderCreate")
+
+class OrderMutationResponse(BaseModel):
+    """OrderMutationResponse type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: OrderMutationResponseData | None = Field(default=None)
+
+class OrderUpdateResponseData(BaseModel):
+    """Nested schema for OrderUpdateResponse.data"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    order_update: OrderUpdatePayload | None = Field(default=None, alias="orderUpdate")
+
+class OrderUpdateResponse(BaseModel):
+    """OrderUpdateResponse type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: OrderUpdateResponseData | None = Field(default=None)
+
+class OrderCancelResponseData(BaseModel):
+    """Nested schema for OrderCancelResponse.data"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    order_cancel: OrderCancelPayload | None = Field(default=None, alias="orderCancel")
+
+class OrderCancelResponse(BaseModel):
+    """OrderCancelResponse type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: OrderCancelResponseData | None = Field(default=None)
+
+class DraftOrderCreateParamsInputLineitemsItem(BaseModel):
+    """Nested schema for DraftOrderCreateParamsInput.lineItems_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    variant_id: str | None = Field(default=None, alias="variantId", description="GraphQL GID of the product variant")
+    """GraphQL GID of the product variant"""
+    quantity: int | None = Field(default=None, description="Quantity")
+    """Quantity"""
+    title: str | None = Field(default=None, description="Custom title")
+    """Custom title"""
+    original_unit_price: str | None = Field(default=None, alias="originalUnitPrice", description="Unit price")
+    """Unit price"""
+
+class DraftOrderCreateParamsInputShippingaddress(BaseModel):
+    """Nested schema for DraftOrderCreateParamsInput.shippingAddress"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    address1: str | None = Field(default=None)
+    city: str | None = Field(default=None)
+    province_code: str | None = Field(default=None, alias="provinceCode")
+    zip: str | None = Field(default=None)
+    country_code: str | None = Field(default=None, alias="countryCode")
+
+class DraftOrderCreateParamsInput(BaseModel):
+    """DraftOrderInput object"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    line_items: list[DraftOrderCreateParamsInputLineitemsItem] | None = Field(default=None, alias="lineItems", description="Line items for the draft order")
+    """Line items for the draft order"""
+    customer_id: str | None = Field(default=None, alias="customerId", description="GraphQL GID of the customer")
+    """GraphQL GID of the customer"""
+    email: str | None = Field(default=None, description="Customer email")
+    """Customer email"""
+    note: str | None = Field(default=None, description="Draft order note")
+    """Draft order note"""
+    tags: list[str] | None = Field(default=None)
+    shipping_address: DraftOrderCreateParamsInputShippingaddress | None = Field(default=None, alias="shippingAddress")
+
+class DraftOrderCreateParams(BaseModel):
+    """Parameters for creating a draft order."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    input: DraftOrderCreateParamsInput
+
+class DraftOrderUpdateParamsInputLineitemsItem(BaseModel):
+    """Nested schema for DraftOrderUpdateParamsInput.lineItems_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    variant_id: str | None = Field(default=None, alias="variantId")
+    quantity: int | None = Field(default=None)
+    title: str | None = Field(default=None)
+    original_unit_price: str | None = Field(default=None, alias="originalUnitPrice")
+
+class DraftOrderUpdateParamsInput(BaseModel):
+    """DraftOrderInput object with updated fields"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    line_items: list[DraftOrderUpdateParamsInputLineitemsItem] | None = Field(default=None, alias="lineItems")
+    email: str | None = Field(default=None)
+    note: str | None = Field(default=None)
+    tags: list[str] | None = Field(default=None)
+
+class DraftOrderUpdateParams(BaseModel):
+    """Parameters for updating a draft order."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str
+    input: DraftOrderUpdateParamsInput
+
+class DraftOrderDeleteParamsInput(BaseModel):
+    """Nested schema for DraftOrderDeleteParams.input"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str = Field(description="The GraphQL GID of the draft order to delete")
+    """The GraphQL GID of the draft order to delete"""
+
+class DraftOrderDeleteParams(BaseModel):
+    """Parameters for deleting a draft order. Only open draft orders can be deleted."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    input: DraftOrderDeleteParamsInput
+
+class DraftOrderCompleteParams(BaseModel):
+    """Parameters for completing a draft order, converting it to a regular order."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str
+    payment_pending: bool | None = Field(default=None, alias="paymentPending")
+
+class GraphQLDraftOrder(BaseModel):
+    """GraphQLDraftOrder type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    email: str | None = Field(default=None)
+    status: str | None = Field(default=None)
+    created_at: str | None = Field(default=None, alias="createdAt")
+    updated_at: str | None = Field(default=None, alias="updatedAt")
+    total_price: str | None = Field(default=None, alias="totalPrice")
+    currency_code: str | None = Field(default=None, alias="currencyCode")
+
+class DraftOrderCreatePayload(BaseModel):
+    """DraftOrderCreatePayload type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    user_errors: list[GraphQLUserError] | None = Field(default=None, alias="userErrors")
+    draft_order: GraphQLDraftOrder | None = Field(default=None, alias="draftOrder")
+
+class DraftOrderUpdatePayload(BaseModel):
+    """DraftOrderUpdatePayload type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    user_errors: list[GraphQLUserError] | None = Field(default=None, alias="userErrors")
+    draft_order: GraphQLDraftOrder | None = Field(default=None, alias="draftOrder")
+
+class DraftOrderDeletePayload(BaseModel):
+    """DraftOrderDeletePayload type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    user_errors: list[GraphQLUserError] | None = Field(default=None, alias="userErrors")
+    deleted_id: str | None = Field(default=None, alias="deletedId")
+
+class DraftOrderCompletePayloadDraftorderOrder(BaseModel):
+    """Nested schema for DraftOrderCompletePayloadDraftorder.order"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None)
+    name: str | None | None = Field(default=None)
+
+class DraftOrderCompletePayloadDraftorder(BaseModel):
+    """Nested schema for DraftOrderCompletePayload.draftOrder"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None)
+    name: str | None | None = Field(default=None)
+    status: str | None | None = Field(default=None)
+    order: DraftOrderCompletePayloadDraftorderOrder | None | None = Field(default=None)
+
+class DraftOrderCompletePayload(BaseModel):
+    """DraftOrderCompletePayload type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    user_errors: list[GraphQLUserError] | None = Field(default=None, alias="userErrors")
+    draft_order: DraftOrderCompletePayloadDraftorder | None = Field(default=None, alias="draftOrder")
+
+class DraftOrderMutationResponseData(BaseModel):
+    """Nested schema for DraftOrderMutationResponse.data"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    draft_order_create: DraftOrderCreatePayload | None = Field(default=None, alias="draftOrderCreate")
+    draft_order_update: DraftOrderUpdatePayload | None = Field(default=None, alias="draftOrderUpdate")
+
+class DraftOrderMutationResponse(BaseModel):
+    """DraftOrderMutationResponse type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: DraftOrderMutationResponseData | None = Field(default=None)
+
+class DraftOrderDeleteResponseData(BaseModel):
+    """Nested schema for DraftOrderDeleteResponse.data"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    draft_order_delete: DraftOrderDeletePayload | None = Field(default=None, alias="draftOrderDelete")
+
+class DraftOrderDeleteResponse(BaseModel):
+    """DraftOrderDeleteResponse type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: DraftOrderDeleteResponseData | None = Field(default=None)
+
+class DraftOrderCompleteResponseData(BaseModel):
+    """Nested schema for DraftOrderCompleteResponse.data"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    draft_order_complete: DraftOrderCompletePayload | None = Field(default=None, alias="draftOrderComplete")
+
+class DraftOrderCompleteResponse(BaseModel):
+    """DraftOrderCompleteResponse type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: DraftOrderCompleteResponseData | None = Field(default=None)
+
+class InventorySetQuantitiesParamsInputQuantitiesItem(BaseModel):
+    """Nested schema for InventorySetQuantitiesParamsInput.quantities_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    inventory_item_id: str = Field(alias="inventoryItemId", description="GraphQL GID of the inventory item")
+    """GraphQL GID of the inventory item"""
+    location_id: str = Field(alias="locationId", description="GraphQL GID of the location")
+    """GraphQL GID of the location"""
+    quantity: int = Field(description="Absolute quantity to set")
+    """Absolute quantity to set"""
+
+class InventorySetQuantitiesParamsInput(BaseModel):
+    """Nested schema for InventorySetQuantitiesParams.input"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: str = Field(description="Quantity name (e.g. 'available', 'on_hand')")
+    """Quantity name (e.g. 'available', 'on_hand')"""
+    reason: str = Field(description="Reason for the adjustment (e.g. 'correction', 'other')")
+    """Reason for the adjustment (e.g. 'correction', 'other')"""
+    reference_document_uri: str | None = Field(default=None, alias="referenceDocumentUri", description="URI for the reference document")
+    """URI for the reference document"""
+    quantities: list[InventorySetQuantitiesParamsInputQuantitiesItem] = Field(description="Quantities to set")
+    """Quantities to set"""
+
+class InventorySetQuantitiesParams(BaseModel):
+    """Parameters for setting absolute inventory quantities.
+Requires a reason and reference document URI.
+"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    input: InventorySetQuantitiesParamsInput
+
+class InventoryAdjustQuantitiesParamsInputChangesItem(BaseModel):
+    """Nested schema for InventoryAdjustQuantitiesParamsInput.changes_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    inventory_item_id: str = Field(alias="inventoryItemId", description="GraphQL GID of the inventory item")
+    """GraphQL GID of the inventory item"""
+    location_id: str = Field(alias="locationId", description="GraphQL GID of the location")
+    """GraphQL GID of the location"""
+    delta: int = Field(description="Amount to adjust (positive to add, negative to subtract)")
+    """Amount to adjust (positive to add, negative to subtract)"""
+
+class InventoryAdjustQuantitiesParamsInput(BaseModel):
+    """Nested schema for InventoryAdjustQuantitiesParams.input"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: str = Field(description="Quantity name (e.g. 'available')")
+    """Quantity name (e.g. 'available')"""
+    reason: str = Field(description="Reason for the adjustment")
+    """Reason for the adjustment"""
+    reference_document_uri: str | None = Field(default=None, alias="referenceDocumentUri", description="URI for the reference document")
+    """URI for the reference document"""
+    changes: list[InventoryAdjustQuantitiesParamsInputChangesItem] = Field(description="Inventory changes to apply")
+    """Inventory changes to apply"""
+
+class InventoryAdjustQuantitiesParams(BaseModel):
+    """Parameters for adjusting inventory quantities relatively (add/subtract)."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    input: InventoryAdjustQuantitiesParamsInput
+
+class InventoryAdjustmentGroupChangesItem(BaseModel):
+    """Nested schema for InventoryAdjustmentGroup.changes_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: str | None | None = Field(default=None)
+    delta: int | None | None = Field(default=None)
+    quantity_after_change: int | None | None = Field(default=None, alias="quantityAfterChange")
+
+class InventoryAdjustmentGroup(BaseModel):
+    """InventoryAdjustmentGroup type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    reason: str | None = Field(default=None)
+    reference_document_uri: str | None = Field(default=None, alias="referenceDocumentUri")
+    changes: list[InventoryAdjustmentGroupChangesItem] | None = Field(default=None)
+
+class InventorySetQuantitiesPayload(BaseModel):
+    """InventorySetQuantitiesPayload type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    user_errors: list[GraphQLUserError] | None = Field(default=None, alias="userErrors")
+    inventory_adjustment_group: InventoryAdjustmentGroup | None = Field(default=None, alias="inventoryAdjustmentGroup")
+
+class InventoryAdjustQuantitiesPayload(BaseModel):
+    """InventoryAdjustQuantitiesPayload type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    user_errors: list[GraphQLUserError] | None = Field(default=None, alias="userErrors")
+    inventory_adjustment_group: InventoryAdjustmentGroup | None = Field(default=None, alias="inventoryAdjustmentGroup")
+
+class InventorySetQuantitiesResponseData(BaseModel):
+    """Nested schema for InventorySetQuantitiesResponse.data"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    inventory_set_quantities: InventorySetQuantitiesPayload | None = Field(default=None, alias="inventorySetQuantities")
+
+class InventorySetQuantitiesResponse(BaseModel):
+    """InventorySetQuantitiesResponse type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: InventorySetQuantitiesResponseData | None = Field(default=None)
+
+class InventoryAdjustQuantitiesResponseData(BaseModel):
+    """Nested schema for InventoryAdjustQuantitiesResponse.data"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    inventory_adjust_quantities: InventoryAdjustQuantitiesPayload | None = Field(default=None, alias="inventoryAdjustQuantities")
+
+class InventoryAdjustQuantitiesResponse(BaseModel):
+    """InventoryAdjustQuantitiesResponse type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: InventoryAdjustQuantitiesResponseData | None = Field(default=None)
+
+class DiscountCodeCreateParamsBasiccodediscountCustomerselection(BaseModel):
+    """Which customers can use this discount"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    all: bool | None = Field(default=None, description="Set to true for all customers")
+    """Set to true for all customers"""
+
+class DiscountCodeCreateParamsBasiccodediscountCustomergetsValueDiscountamount(BaseModel):
+    """Nested schema for DiscountCodeCreateParamsBasiccodediscountCustomergetsValue.discountAmount"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    amount: str | None = Field(default=None)
+    applies_on_each_item: bool | None = Field(default=None, alias="appliesOnEachItem")
+
+class DiscountCodeCreateParamsBasiccodediscountCustomergetsValue(BaseModel):
+    """The discount value"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    percentage: float | None = Field(default=None, description="Percentage discount (e.g. 0.1 for 10%)")
+    """Percentage discount (e.g. 0.1 for 10%)"""
+    discount_amount: DiscountCodeCreateParamsBasiccodediscountCustomergetsValueDiscountamount | None = Field(default=None, alias="discountAmount")
+
+class DiscountCodeCreateParamsBasiccodediscountCustomergetsItems(BaseModel):
+    """Which items the discount applies to"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    all: bool | None = Field(default=None, description="Set to true for all items")
+    """Set to true for all items"""
+
+class DiscountCodeCreateParamsBasiccodediscountCustomergets(BaseModel):
+    """What the customer gets from this discount"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    value: DiscountCodeCreateParamsBasiccodediscountCustomergetsValue | None = Field(default=None, description="The discount value")
+    """The discount value"""
+    items: DiscountCodeCreateParamsBasiccodediscountCustomergetsItems | None = Field(default=None, description="Which items the discount applies to")
+    """Which items the discount applies to"""
+
+class DiscountCodeCreateParamsBasiccodediscount(BaseModel):
+    """Nested schema for DiscountCodeCreateParams.basicCodeDiscount"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    title: str = Field(description="Discount title")
+    """Discount title"""
+    code: str = Field(description="Discount code that customers enter at checkout")
+    """Discount code that customers enter at checkout"""
+    starts_at: str = Field(alias="startsAt", description="When the discount starts (ISO 8601)")
+    """When the discount starts (ISO 8601)"""
+    ends_at: str | None = Field(default=None, alias="endsAt", description="When the discount ends (ISO 8601, optional)")
+    """When the discount ends (ISO 8601, optional)"""
+    usage_limit: int | None = Field(default=None, alias="usageLimit", description="Maximum number of times the discount can be used")
+    """Maximum number of times the discount can be used"""
+    customer_selection: DiscountCodeCreateParamsBasiccodediscountCustomerselection = Field(alias="customerSelection", description="Which customers can use this discount")
+    """Which customers can use this discount"""
+    customer_gets: DiscountCodeCreateParamsBasiccodediscountCustomergets = Field(alias="customerGets", description="What the customer gets from this discount")
+    """What the customer gets from this discount"""
+
+class DiscountCodeCreateParams(BaseModel):
+    """Parameters for creating a basic discount code.
+Supports percentage or fixed amount discounts.
+"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    basic_code_discount: DiscountCodeCreateParamsBasiccodediscount = Field(alias="basicCodeDiscount")
+
+class DiscountCodeUpdateParamsBasiccodediscount(BaseModel):
+    """Nested schema for DiscountCodeUpdateParams.basicCodeDiscount"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    title: str | None = Field(default=None)
+    code: str | None = Field(default=None)
+    starts_at: str | None = Field(default=None, alias="startsAt")
+    ends_at: str | None = Field(default=None, alias="endsAt")
+    usage_limit: int | None = Field(default=None, alias="usageLimit")
+
+class DiscountCodeUpdateParams(BaseModel):
+    """Parameters for updating a basic discount code."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str
+    basic_code_discount: DiscountCodeUpdateParamsBasiccodediscount = Field(alias="basicCodeDiscount")
+
+class DiscountCodeDeleteParams(BaseModel):
+    """Parameters for deleting a discount code."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str
+
+class DiscountCodeBasicCreatePayloadCodediscountnodeCodediscountCodesNodesItem(BaseModel):
+    """Nested schema for DiscountCodeBasicCreatePayloadCodediscountnodeCodediscountCodes.nodes_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    code: str | None = Field(default=None)
+
+class DiscountCodeBasicCreatePayloadCodediscountnodeCodediscountCodes(BaseModel):
+    """Nested schema for DiscountCodeBasicCreatePayloadCodediscountnodeCodediscount.codes"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    nodes: list[DiscountCodeBasicCreatePayloadCodediscountnodeCodediscountCodesNodesItem] | None = Field(default=None)
+
+class DiscountCodeBasicCreatePayloadCodediscountnodeCodediscount(BaseModel):
+    """Nested schema for DiscountCodeBasicCreatePayloadCodediscountnode.codeDiscount"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    title: str | None | None = Field(default=None)
+    summary: str | None | None = Field(default=None)
+    starts_at: str | None | None = Field(default=None, alias="startsAt")
+    ends_at: str | None | None = Field(default=None, alias="endsAt")
+    status: str | None | None = Field(default=None)
+    codes: DiscountCodeBasicCreatePayloadCodediscountnodeCodediscountCodes | None = Field(default=None)
+
+class DiscountCodeBasicCreatePayloadCodediscountnode(BaseModel):
+    """Nested schema for DiscountCodeBasicCreatePayload.codeDiscountNode"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None)
+    code_discount: DiscountCodeBasicCreatePayloadCodediscountnodeCodediscount | None = Field(default=None, alias="codeDiscount")
+
+class DiscountCodeBasicCreatePayload(BaseModel):
+    """DiscountCodeBasicCreatePayload type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    user_errors: list[GraphQLUserError] | None = Field(default=None, alias="userErrors")
+    code_discount_node: DiscountCodeBasicCreatePayloadCodediscountnode | None = Field(default=None, alias="codeDiscountNode")
+
+class DiscountCodeBasicUpdatePayloadCodediscountnodeCodediscountCodesNodesItem(BaseModel):
+    """Nested schema for DiscountCodeBasicUpdatePayloadCodediscountnodeCodediscountCodes.nodes_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    code: str | None = Field(default=None)
+
+class DiscountCodeBasicUpdatePayloadCodediscountnodeCodediscountCodes(BaseModel):
+    """Nested schema for DiscountCodeBasicUpdatePayloadCodediscountnodeCodediscount.codes"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    nodes: list[DiscountCodeBasicUpdatePayloadCodediscountnodeCodediscountCodesNodesItem] | None = Field(default=None)
+
+class DiscountCodeBasicUpdatePayloadCodediscountnodeCodediscount(BaseModel):
+    """Nested schema for DiscountCodeBasicUpdatePayloadCodediscountnode.codeDiscount"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    title: str | None | None = Field(default=None)
+    summary: str | None | None = Field(default=None)
+    starts_at: str | None | None = Field(default=None, alias="startsAt")
+    ends_at: str | None | None = Field(default=None, alias="endsAt")
+    status: str | None | None = Field(default=None)
+    codes: DiscountCodeBasicUpdatePayloadCodediscountnodeCodediscountCodes | None = Field(default=None)
+
+class DiscountCodeBasicUpdatePayloadCodediscountnode(BaseModel):
+    """Nested schema for DiscountCodeBasicUpdatePayload.codeDiscountNode"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None)
+    code_discount: DiscountCodeBasicUpdatePayloadCodediscountnodeCodediscount | None = Field(default=None, alias="codeDiscount")
+
+class DiscountCodeBasicUpdatePayload(BaseModel):
+    """DiscountCodeBasicUpdatePayload type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    user_errors: list[GraphQLUserError] | None = Field(default=None, alias="userErrors")
+    code_discount_node: DiscountCodeBasicUpdatePayloadCodediscountnode | None = Field(default=None, alias="codeDiscountNode")
+
+class DiscountCodeDeletePayload(BaseModel):
+    """DiscountCodeDeletePayload type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    user_errors: list[GraphQLUserError] | None = Field(default=None, alias="userErrors")
+    deleted_code_discount_id: str | None = Field(default=None, alias="deletedCodeDiscountId")
+
+class DiscountCodeMutationResponseData(BaseModel):
+    """Nested schema for DiscountCodeMutationResponse.data"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    discount_code_basic_create: DiscountCodeBasicCreatePayload | None = Field(default=None, alias="discountCodeBasicCreate")
+    discount_code_basic_update: DiscountCodeBasicUpdatePayload | None = Field(default=None, alias="discountCodeBasicUpdate")
+
+class DiscountCodeMutationResponse(BaseModel):
+    """DiscountCodeMutationResponse type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: DiscountCodeMutationResponseData | None = Field(default=None)
+
+class DiscountCodeDeleteResponseData(BaseModel):
+    """Nested schema for DiscountCodeDeleteResponse.data"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    discount_code_delete: DiscountCodeDeletePayload | None = Field(default=None, alias="discountCodeDelete")
+
+class DiscountCodeDeleteResponse(BaseModel):
+    """DiscountCodeDeleteResponse type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: DiscountCodeDeleteResponseData | None = Field(default=None)
+
+class MetafieldsSetParamsMetafieldsItem(BaseModel):
+    """Nested schema for MetafieldsSetParams.metafields_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    namespace: str = Field(description="Metafield namespace (e.g. 'custom')")
+    """Metafield namespace (e.g. 'custom')"""
+    key: str = Field(description="Metafield key (e.g. 'color')")
+    """Metafield key (e.g. 'color')"""
+    type_: str = Field(alias="type", description="Metafield type (e.g. 'single_line_text_field', 'number_integer', 'boolean')")
+    """Metafield type (e.g. 'single_line_text_field', 'number_integer', 'boolean')"""
+    value: str = Field(description="Metafield value")
+    """Metafield value"""
+    owner_id: str = Field(alias="ownerId", description="GraphQL GID of the owner resource (e.g. gid://shopify/Product/123)")
+    """GraphQL GID of the owner resource (e.g. gid://shopify/Product/123)"""
+
+class MetafieldsSetParams(BaseModel):
+    """Parameters for setting (creating or updating) metafields atomically.
+Supports up to 25 metafields per call.
+"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    metafields: list[MetafieldsSetParamsMetafieldsItem]
+
+class MetafieldDeleteParamsMetafieldsItem(BaseModel):
+    """Nested schema for MetafieldDeleteParams.metafields_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    owner_id: str = Field(alias="ownerId", description="GraphQL GID of the owner resource (e.g. gid://shopify/Product/123)")
+    """GraphQL GID of the owner resource (e.g. gid://shopify/Product/123)"""
+    namespace: str = Field(description="Metafield namespace (e.g. 'custom')")
+    """Metafield namespace (e.g. 'custom')"""
+    key: str = Field(description="Metafield key (e.g. 'color')")
+    """Metafield key (e.g. 'color')"""
+
+class MetafieldDeleteParams(BaseModel):
+    """Parameters for deleting metafields. Identify each metafield by
+ownerId + namespace + key.
+"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    metafields: list[MetafieldDeleteParamsMetafieldsItem]
+
+class MetafieldsSetPayloadMetafieldsItem(BaseModel):
+    """Nested schema for MetafieldsSetPayload.metafields_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None)
+    namespace: str | None | None = Field(default=None)
+    key: str | None | None = Field(default=None)
+    value: str | None | None = Field(default=None)
+    type_: str | None | None = Field(default=None, alias="type")
+    updated_at: str | None | None = Field(default=None, alias="updatedAt")
+
+class MetafieldsSetPayload(BaseModel):
+    """MetafieldsSetPayload type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    user_errors: list[GraphQLUserError] | None = Field(default=None, alias="userErrors")
+    metafields: list[MetafieldsSetPayloadMetafieldsItem] | None = Field(default=None)
+
+class MetafieldDeletePayloadDeletedmetafieldsItem(BaseModel):
+    """Nested schema for MetafieldDeletePayload.deletedMetafields_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    key: str | None | None = Field(default=None)
+    namespace: str | None | None = Field(default=None)
+    owner_id: str | None | None = Field(default=None, alias="ownerId")
+
+class MetafieldDeletePayload(BaseModel):
+    """MetafieldDeletePayload type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    deleted_metafields: list[MetafieldDeletePayloadDeletedmetafieldsItem | None] | None = Field(default=None, alias="deletedMetafields")
+    user_errors: list[GraphQLUserError] | None = Field(default=None, alias="userErrors")
+
+class MetafieldsSetResponseData(BaseModel):
+    """Nested schema for MetafieldsSetResponse.data"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    metafields_set: MetafieldsSetPayload | None = Field(default=None, alias="metafieldsSet")
+
+class MetafieldsSetResponse(BaseModel):
+    """MetafieldsSetResponse type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: MetafieldsSetResponseData | None = Field(default=None)
+
+class MetafieldDeleteResponseData(BaseModel):
+    """Nested schema for MetafieldDeleteResponse.data"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    metafields_delete: MetafieldDeletePayload | None = Field(default=None, alias="metafieldsDelete")
+
+class MetafieldDeleteResponse(BaseModel):
+    """MetafieldDeleteResponse type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: MetafieldDeleteResponseData | None = Field(default=None)
+
+class CollectionCreateParamsInputRulesetRulesItem(BaseModel):
+    """Nested schema for CollectionCreateParamsInputRuleset.rules_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    column: str | None = Field(default=None, description="Rule column (e.g. TAG, TITLE, VENDOR)")
+    """Rule column (e.g. TAG, TITLE, VENDOR)"""
+    relation: str | None = Field(default=None, description="Rule relation (e.g. EQUALS, CONTAINS)")
+    """Rule relation (e.g. EQUALS, CONTAINS)"""
+    condition: str | None = Field(default=None, description="Rule condition value")
+    """Rule condition value"""
+
+class CollectionCreateParamsInputRuleset(BaseModel):
+    """Rule set for smart collections"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    applied_disjunctively: bool | None = Field(default=None, alias="appliedDisjunctively", description="Whether rules are OR (true) or AND (false)")
+    """Whether rules are OR (true) or AND (false)"""
+    rules: list[CollectionCreateParamsInputRulesetRulesItem] | None = Field(default=None)
+
+class CollectionCreateParamsInput(BaseModel):
+    """Nested schema for CollectionCreateParams.input"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    title: str = Field(description="Collection title")
+    """Collection title"""
+    description_html: str | None = Field(default=None, alias="descriptionHtml", description="Collection description in HTML")
+    """Collection description in HTML"""
+    handle: str | None = Field(default=None, description="URL handle for the collection")
+    """URL handle for the collection"""
+    sort_order: str | None = Field(default=None, alias="sortOrder", description="Sort order for products")
+    """Sort order for products"""
+    template_suffix: str | None = Field(default=None, alias="templateSuffix", description="Liquid template suffix")
+    """Liquid template suffix"""
+    rule_set: CollectionCreateParamsInputRuleset | None = Field(default=None, alias="ruleSet", description="Rule set for smart collections")
+    """Rule set for smart collections"""
+
+class CollectionCreateParams(BaseModel):
+    """Parameters for creating a collection (custom or smart)."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    input: CollectionCreateParamsInput
+
+class CollectionUpdateParamsInput(BaseModel):
+    """Nested schema for CollectionUpdateParams.input"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str = Field(description="The GraphQL GID of the collection")
+    """The GraphQL GID of the collection"""
+    title: str | None = Field(default=None)
+    description_html: str | None = Field(default=None, alias="descriptionHtml")
+    handle: str | None = Field(default=None)
+    sort_order: str | None = Field(default=None, alias="sortOrder")
+
+class CollectionUpdateParams(BaseModel):
+    """Parameters for updating a collection."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    input: CollectionUpdateParamsInput
+
+class CollectionDeleteParamsInput(BaseModel):
+    """Nested schema for CollectionDeleteParams.input"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str = Field(description="The GraphQL GID of the collection to delete")
+    """The GraphQL GID of the collection to delete"""
+
+class CollectionDeleteParams(BaseModel):
+    """Parameters for deleting a collection."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    input: CollectionDeleteParamsInput
+
+class CollectionCreatePayloadCollection(BaseModel):
+    """Nested schema for CollectionCreatePayload.collection"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None)
+    title: str | None | None = Field(default=None)
+    handle: str | None | None = Field(default=None)
+    description_html: str | None | None = Field(default=None, alias="descriptionHtml")
+    sort_order: str | None | None = Field(default=None, alias="sortOrder")
+    template_suffix: str | None | None = Field(default=None, alias="templateSuffix")
+    updated_at: str | None | None = Field(default=None, alias="updatedAt")
+
+class CollectionCreatePayload(BaseModel):
+    """CollectionCreatePayload type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    user_errors: list[GraphQLUserError] | None = Field(default=None, alias="userErrors")
+    collection: CollectionCreatePayloadCollection | None = Field(default=None)
+
+class CollectionUpdatePayloadCollection(BaseModel):
+    """Nested schema for CollectionUpdatePayload.collection"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None)
+    title: str | None | None = Field(default=None)
+    handle: str | None | None = Field(default=None)
+    description_html: str | None | None = Field(default=None, alias="descriptionHtml")
+    sort_order: str | None | None = Field(default=None, alias="sortOrder")
+    template_suffix: str | None | None = Field(default=None, alias="templateSuffix")
+    updated_at: str | None | None = Field(default=None, alias="updatedAt")
+
+class CollectionUpdatePayload(BaseModel):
+    """CollectionUpdatePayload type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    user_errors: list[GraphQLUserError] | None = Field(default=None, alias="userErrors")
+    collection: CollectionUpdatePayloadCollection | None = Field(default=None)
+
+class CollectionDeletePayload(BaseModel):
+    """CollectionDeletePayload type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    user_errors: list[GraphQLUserError] | None = Field(default=None, alias="userErrors")
+    deleted_collection_id: str | None = Field(default=None, alias="deletedCollectionId")
+
+class CollectionMutationResponseData(BaseModel):
+    """Nested schema for CollectionMutationResponse.data"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    collection_create: CollectionCreatePayload | None = Field(default=None, alias="collectionCreate")
+    collection_update: CollectionUpdatePayload | None = Field(default=None, alias="collectionUpdate")
+
+class CollectionMutationResponse(BaseModel):
+    """CollectionMutationResponse type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: CollectionMutationResponseData | None = Field(default=None)
+
+class CollectionDeleteResponseData(BaseModel):
+    """Nested schema for CollectionDeleteResponse.data"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    collection_delete: CollectionDeletePayload | None = Field(default=None, alias="collectionDelete")
+
+class CollectionDeleteResponse(BaseModel):
+    """CollectionDeleteResponse type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: CollectionDeleteResponseData | None = Field(default=None)
+
+class PageCreateParamsPage(BaseModel):
+    """Nested schema for PageCreateParams.page"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    title: str = Field(description="Page title")
+    """Page title"""
+    body: str | None = Field(default=None, description="Page body content (HTML)")
+    """Page body content (HTML)"""
+    handle: str | None = Field(default=None, description="URL handle for the page")
+    """URL handle for the page"""
+    is_published: bool | None = Field(default=None, alias="isPublished", description="Whether the page is published")
+    """Whether the page is published"""
+
+class PageCreateParams(BaseModel):
+    """Parameters for creating a page."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    page: PageCreateParamsPage
+
+class PageUpdateParamsPage(BaseModel):
+    """Nested schema for PageUpdateParams.page"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    title: str | None = Field(default=None)
+    body: str | None = Field(default=None)
+    handle: str | None = Field(default=None)
+    is_published: bool | None = Field(default=None, alias="isPublished")
+
+class PageUpdateParams(BaseModel):
+    """Parameters for updating a page."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str
+    page: PageUpdateParamsPage
+
+class PageDeleteParams(BaseModel):
+    """Parameters for deleting a page."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str
+
+class GraphQLPage(BaseModel):
+    """GraphQLPage type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None)
+    title: str | None = Field(default=None)
+    handle: str | None = Field(default=None)
+    body: str | None = Field(default=None)
+    created_at: str | None = Field(default=None, alias="createdAt")
+    updated_at: str | None = Field(default=None, alias="updatedAt")
+
+class PageCreatePayload(BaseModel):
+    """PageCreatePayload type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    user_errors: list[GraphQLUserError] | None = Field(default=None, alias="userErrors")
+    page: GraphQLPage | None = Field(default=None)
+
+class PageUpdatePayload(BaseModel):
+    """PageUpdatePayload type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    user_errors: list[GraphQLUserError] | None = Field(default=None, alias="userErrors")
+    page: GraphQLPage | None = Field(default=None)
+
+class PageDeletePayload(BaseModel):
+    """PageDeletePayload type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    user_errors: list[GraphQLUserError] | None = Field(default=None, alias="userErrors")
+    deleted_page_id: str | None = Field(default=None, alias="deletedPageId")
+
+class PageMutationResponseData(BaseModel):
+    """Nested schema for PageMutationResponse.data"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    page_create: PageCreatePayload | None = Field(default=None, alias="pageCreate")
+    page_update: PageUpdatePayload | None = Field(default=None, alias="pageUpdate")
+
+class PageMutationResponse(BaseModel):
+    """PageMutationResponse type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: PageMutationResponseData | None = Field(default=None)
+
+class PageDeleteResponseData(BaseModel):
+    """Nested schema for PageDeleteResponse.data"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    page_delete: PageDeletePayload | None = Field(default=None, alias="pageDelete")
+
+class PageDeleteResponse(BaseModel):
+    """PageDeleteResponse type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: PageDeleteResponseData | None = Field(default=None)
+
+class BlogCreateParamsBlog(BaseModel):
+    """Nested schema for BlogCreateParams.blog"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    title: str = Field(description="Blog title")
+    """Blog title"""
+    handle: str | None = Field(default=None, description="URL handle for the blog")
+    """URL handle for the blog"""
+
+class BlogCreateParams(BaseModel):
+    """Parameters for creating a blog."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    blog: BlogCreateParamsBlog
+
+class BlogUpdateParamsBlog(BaseModel):
+    """Nested schema for BlogUpdateParams.blog"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    title: str | None = Field(default=None)
+    handle: str | None = Field(default=None)
+
+class BlogUpdateParams(BaseModel):
+    """Parameters for updating a blog."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str
+    blog: BlogUpdateParamsBlog
+
+class BlogDeleteParams(BaseModel):
+    """Parameters for deleting a blog."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str
+
+class GraphQLBlog(BaseModel):
+    """GraphQLBlog type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None)
+    title: str | None = Field(default=None)
+    handle: str | None = Field(default=None)
+    created_at: str | None = Field(default=None, alias="createdAt")
+
+class BlogCreatePayload(BaseModel):
+    """BlogCreatePayload type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    user_errors: list[GraphQLUserError] | None = Field(default=None, alias="userErrors")
+    blog: GraphQLBlog | None = Field(default=None)
+
+class BlogUpdatePayload(BaseModel):
+    """BlogUpdatePayload type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    user_errors: list[GraphQLUserError] | None = Field(default=None, alias="userErrors")
+    blog: GraphQLBlog | None = Field(default=None)
+
+class BlogDeletePayload(BaseModel):
+    """BlogDeletePayload type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    user_errors: list[GraphQLUserError] | None = Field(default=None, alias="userErrors")
+    deleted_blog_id: str | None = Field(default=None, alias="deletedBlogId")
+
+class BlogMutationResponseData(BaseModel):
+    """Nested schema for BlogMutationResponse.data"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    blog_create: BlogCreatePayload | None = Field(default=None, alias="blogCreate")
+    blog_update: BlogUpdatePayload | None = Field(default=None, alias="blogUpdate")
+
+class BlogMutationResponse(BaseModel):
+    """BlogMutationResponse type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: BlogMutationResponseData | None = Field(default=None)
+
+class BlogDeleteResponseData(BaseModel):
+    """Nested schema for BlogDeleteResponse.data"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    blog_delete: BlogDeletePayload | None = Field(default=None, alias="blogDelete")
+
+class BlogDeleteResponse(BaseModel):
+    """BlogDeleteResponse type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: BlogDeleteResponseData | None = Field(default=None)
+
+class ArticleCreateParamsArticleAuthor(BaseModel):
+    """Author of the article. Required by Shopify's articleCreate mutation (ArticleCreateInput.author is non-null)."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: str = Field(description="Author display name. Required (provide the author's name).")
+    """Author display name. Required (provide the author's name)."""
+
+class ArticleCreateParamsArticle(BaseModel):
+    """Nested schema for ArticleCreateParams.article"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    title: str = Field(description="Article title")
+    """Article title"""
+    blog_id: str = Field(alias="blogId", description="GraphQL GID of the blog this article belongs to")
+    """GraphQL GID of the blog this article belongs to"""
+    body: str | None = Field(default=None, description="Article body content (HTML)")
+    """Article body content (HTML)"""
+    handle: str | None = Field(default=None, description="URL handle for the article")
+    """URL handle for the article"""
+    is_published: bool | None = Field(default=None, alias="isPublished", description="Whether the article is published")
+    """Whether the article is published"""
+    tags: list[str] | None = Field(default=None)
+    author: ArticleCreateParamsArticleAuthor = Field(description="Author of the article. Required by Shopify's articleCreate mutation (ArticleCreateInput.author is non-null).")
+    """Author of the article. Required by Shopify's articleCreate mutation (ArticleCreateInput.author is non-null)."""
+
+class ArticleCreateParams(BaseModel):
+    """Parameters for creating a blog article."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    article: ArticleCreateParamsArticle
+
+class ArticleUpdateParamsArticle(BaseModel):
+    """Nested schema for ArticleUpdateParams.article"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    title: str | None = Field(default=None)
+    body: str | None = Field(default=None)
+    handle: str | None = Field(default=None)
+    is_published: bool | None = Field(default=None, alias="isPublished")
+    tags: list[str] | None = Field(default=None)
+
+class ArticleUpdateParams(BaseModel):
+    """Parameters for updating a blog article."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str
+    article: ArticleUpdateParamsArticle
+
+class ArticleDeleteParams(BaseModel):
+    """Parameters for deleting a blog article."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str
+
+class GraphQLArticleBlog(BaseModel):
+    """Nested schema for GraphQLArticle.blog"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None)
+    title: str | None | None = Field(default=None)
+
+class GraphQLArticle(BaseModel):
+    """GraphQLArticle type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None)
+    title: str | None = Field(default=None)
+    handle: str | None = Field(default=None)
+    body: str | None = Field(default=None)
+    blog: GraphQLArticleBlog | None = Field(default=None)
+    created_at: str | None = Field(default=None, alias="createdAt")
+    updated_at: str | None = Field(default=None, alias="updatedAt")
+
+class ArticleCreatePayload(BaseModel):
+    """ArticleCreatePayload type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    user_errors: list[GraphQLUserError] | None = Field(default=None, alias="userErrors")
+    article: GraphQLArticle | None = Field(default=None)
+
+class ArticleUpdatePayload(BaseModel):
+    """ArticleUpdatePayload type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    user_errors: list[GraphQLUserError] | None = Field(default=None, alias="userErrors")
+    article: GraphQLArticle | None = Field(default=None)
+
+class ArticleDeletePayload(BaseModel):
+    """ArticleDeletePayload type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    user_errors: list[GraphQLUserError] | None = Field(default=None, alias="userErrors")
+    deleted_article_id: str | None = Field(default=None, alias="deletedArticleId")
+
+class ArticleMutationResponseData(BaseModel):
+    """Nested schema for ArticleMutationResponse.data"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    article_create: ArticleCreatePayload | None = Field(default=None, alias="articleCreate")
+    article_update: ArticleUpdatePayload | None = Field(default=None, alias="articleUpdate")
+
+class ArticleMutationResponse(BaseModel):
+    """ArticleMutationResponse type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: ArticleMutationResponseData | None = Field(default=None)
+
+class ArticleDeleteResponseData(BaseModel):
+    """Nested schema for ArticleDeleteResponse.data"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    article_delete: ArticleDeletePayload | None = Field(default=None, alias="articleDelete")
+
+class ArticleDeleteResponse(BaseModel):
+    """ArticleDeleteResponse type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: ArticleDeleteResponseData | None = Field(default=None)
 
 # ===== METADATA TYPE DEFINITIONS (PYDANTIC) =====
 # Meta types for operations that extract metadata (e.g., pagination info)

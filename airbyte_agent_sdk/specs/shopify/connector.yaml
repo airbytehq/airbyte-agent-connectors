@@ -35,6 +35,17 @@ info:
     - "List all custom collections in my store"
     - "Show me details for a recent order"
     - "Show me product variants for a recent product"
+    - "Create a new customer in Shopify with email test@example.com"
+    - "Update a customer's first name"
+    - "Create a new product called 'Summer T-Shirt'"
+    - "Update a product title"
+    - "Create a draft order for a customer"
+    - "Complete a draft order"
+    - "Set inventory quantity for a product variant at a location"
+    - "Create a basic discount code for 10% off"
+    - "Set a metafield on a product"
+    - "Create a new page on my store"
+    - "Create a new blog post"
     search:
     - "Show me orders from the last 30 days"
     - "Show me abandoned checkouts from this week"
@@ -43,12 +54,9 @@ info:
     - "List all blog articles"
     - "Are there any open disputes?"
     unsupported:
-    - "Create a new customer in Shopify"
-    - "Update product pricing"
-    - "Delete an order"
     - "Process a refund"
     - "Send shipping notification to customer"
-    - "Create a new discount code"
+    - "Modify order line items after creation"
   x-airbyte-skip-suggested-streams:
   - customer_journey_summary
   - order_agreements
@@ -2907,6 +2915,14 @@ paths:
       operationId: MetafieldShops_List
       x-airbyte-entity: metafield_shops
       x-airbyte-action: list
+      x-airbyte-ai-hints:
+        summary: "Custom metafields attached to the shop (store-level custom data)"
+        when_to_use: "When you need store-level custom fields stored as metafields"
+        trigger_phrases: ["shop metafield", "store custom field", "store metadata"]
+        freshness: live
+        search_strategy: "List shop-owned metafields; identify by namespace and key"
+        example_questions:
+          - "Show custom metafields on the shop"
       x-airbyte-record-extractor: $.metafields
       x-airbyte-meta-extractor:
         next_page_url: "@link.next"
@@ -2984,6 +3000,14 @@ paths:
       operationId: MetafieldCustomers_List
       x-airbyte-entity: metafield_customers
       x-airbyte-action: list
+      x-airbyte-ai-hints:
+        summary: "Custom metafields attached to a customer (extra customer data beyond standard fields)"
+        when_to_use: "When you need custom fields stored on a customer record"
+        trigger_phrases: ["customer metafield", "customer custom field", "extra customer data"]
+        freshness: live
+        search_strategy: "Filter by customer_id; identify by namespace and key"
+        example_questions:
+          - "Show custom metafields on a customer"
       x-airbyte-record-extractor: $.metafields
       x-airbyte-meta-extractor:
         next_page_url: "@link.next"
@@ -3034,6 +3058,14 @@ paths:
       operationId: MetafieldProducts_List
       x-airbyte-entity: metafield_products
       x-airbyte-action: list
+      x-airbyte-ai-hints:
+        summary: "Custom metafields attached to a product (extended product attributes)"
+        when_to_use: "When you need custom product attributes stored as metafields"
+        trigger_phrases: ["product metafield", "product custom field", "extended product data"]
+        freshness: live
+        search_strategy: "Filter by product_id; identify by namespace and key"
+        example_questions:
+          - "Show custom metafields on a product"
       x-airbyte-record-extractor: $.metafields
       x-airbyte-meta-extractor:
         next_page_url: "@link.next"
@@ -3084,6 +3116,14 @@ paths:
       operationId: MetafieldOrders_List
       x-airbyte-entity: metafield_orders
       x-airbyte-action: list
+      x-airbyte-ai-hints:
+        summary: "Custom metafields attached to an order (extra order data)"
+        when_to_use: "When you need custom fields stored on an order"
+        trigger_phrases: ["order metafield", "order custom field"]
+        freshness: live
+        search_strategy: "Filter by order_id; identify by namespace and key"
+        example_questions:
+          - "Show custom metafields on an order"
       x-airbyte-record-extractor: $.metafields
       x-airbyte-meta-extractor:
         next_page_url: "@link.next"
@@ -3134,6 +3174,14 @@ paths:
       operationId: MetafieldDraftOrders_List
       x-airbyte-entity: metafield_draft_orders
       x-airbyte-action: list
+      x-airbyte-ai-hints:
+        summary: "Custom metafields attached to a draft order"
+        when_to_use: "When you need custom fields stored on a draft order"
+        trigger_phrases: ["draft order metafield", "draft order custom field"]
+        freshness: live
+        search_strategy: "Filter by draft_order_id; identify by namespace and key"
+        example_questions:
+          - "Show custom metafields on a draft order"
       x-airbyte-record-extractor: $.metafields
       x-airbyte-meta-extractor:
         next_page_url: "@link.next"
@@ -3184,6 +3232,14 @@ paths:
       operationId: MetafieldLocations_List
       x-airbyte-entity: metafield_locations
       x-airbyte-action: list
+      x-airbyte-ai-hints:
+        summary: "Custom metafields attached to a location"
+        when_to_use: "When you need custom fields stored on a location"
+        trigger_phrases: ["location metafield", "location custom field"]
+        freshness: live
+        search_strategy: "Filter by location_id; identify by namespace and key"
+        example_questions:
+          - "Show custom metafields on a location"
       x-airbyte-record-extractor: $.metafields
       x-airbyte-meta-extractor:
         next_page_url: "@link.next"
@@ -3234,6 +3290,14 @@ paths:
       operationId: MetafieldProductVariants_List
       x-airbyte-entity: metafield_product_variants
       x-airbyte-action: list
+      x-airbyte-ai-hints:
+        summary: "Custom metafields attached to a product variant"
+        when_to_use: "When you need custom fields stored on a specific variant"
+        trigger_phrases: ["variant metafield", "variant custom field"]
+        freshness: live
+        search_strategy: "Filter by variant_id; identify by namespace and key"
+        example_questions:
+          - "Show custom metafields on a variant"
       x-airbyte-record-extractor: $.metafields
       x-airbyte-meta-extractor:
         next_page_url: "@link.next"
@@ -3284,6 +3348,14 @@ paths:
       operationId: MetafieldSmartCollections_List
       x-airbyte-entity: metafield_smart_collections
       x-airbyte-action: list
+      x-airbyte-ai-hints:
+        summary: "Custom metafields attached to a smart collection"
+        when_to_use: "When you need custom fields stored on a smart collection"
+        trigger_phrases: ["smart collection metafield", "collection custom field"]
+        freshness: live
+        search_strategy: "Filter by collection_id; identify by namespace and key"
+        example_questions:
+          - "Show custom metafields on a smart collection"
       x-airbyte-record-extractor: $.metafields
       x-airbyte-meta-extractor:
         next_page_url: "@link.next"
@@ -3334,6 +3406,14 @@ paths:
       operationId: MetafieldProductImages_List
       x-airbyte-entity: metafield_product_images
       x-airbyte-action: list
+      x-airbyte-ai-hints:
+        summary: "Custom metafields attached to a product image"
+        when_to_use: "When you need custom fields stored on a product image"
+        trigger_phrases: ["product image metafield", "image custom field"]
+        freshness: live
+        search_strategy: "Filter by product_id and image_id; identify by namespace and key"
+        example_questions:
+          - "Show custom metafields on a product image"
       x-airbyte-untested: true
       x-airbyte-record-extractor: $.metafields
       x-airbyte-meta-extractor:
@@ -3391,6 +3471,15 @@ paths:
       operationId: CustomerAddresses_List
       x-airbyte-entity: customer_address
       x-airbyte-action: list
+      x-airbyte-ai-hints:
+        summary: "Mailing/shipping addresses belonging to a Shopify customer"
+        when_to_use: "When you need a customer's saved shipping or billing addresses"
+        trigger_phrases: ["customer address", "shipping address", "billing address", "where does a customer live"]
+        freshness: live
+        search_strategy: "Filter by customer_id; a customer may have several addresses with one default"
+        example_questions:
+          - "What is a customer's shipping address?"
+          - "List all addresses for a customer"
       x-airbyte-record-extractor: $.addresses
       x-airbyte-meta-extractor:
         next_page_url: "@link.next"
@@ -3515,7 +3604,6 @@ paths:
       operationId: Pages_List
       x-airbyte-entity: pages
       x-airbyte-action: list
-      x-airbyte-untested: true
       x-airbyte-record-extractor: $.pages
       x-airbyte-meta-extractor:
         next_page_url: "@link.next"
@@ -3584,7 +3672,6 @@ paths:
       operationId: Pages_Get
       x-airbyte-entity: pages
       x-airbyte-action: get
-      x-airbyte-untested: true
       x-airbyte-record-extractor: $.page
       tags:
       - Pages
@@ -3613,7 +3700,6 @@ paths:
       operationId: Blogs_List
       x-airbyte-entity: blogs
       x-airbyte-action: list
-      x-airbyte-untested: true
       x-airbyte-record-extractor: $.blogs
       x-airbyte-meta-extractor:
         next_page_url: "@link.next"
@@ -3648,7 +3734,6 @@ paths:
       operationId: Blogs_Get
       x-airbyte-entity: blogs
       x-airbyte-action: get
-      x-airbyte-untested: true
       x-airbyte-record-extractor: $.blog
       tags:
       - Blogs
@@ -3677,7 +3762,6 @@ paths:
       operationId: Articles_List
       x-airbyte-entity: articles
       x-airbyte-action: list
-      x-airbyte-untested: true
       x-airbyte-record-extractor: $.articles
       x-airbyte-meta-extractor:
         next_page_url: "@link.next"
@@ -3752,7 +3836,6 @@ paths:
       operationId: Articles_Get
       x-airbyte-entity: articles
       x-airbyte-action: get
-      x-airbyte-untested: true
       x-airbyte-record-extractor: $.article
       tags:
       - Articles
@@ -3920,7 +4003,14 @@ paths:
       operationId: MetafieldPages_List
       x-airbyte-entity: metafield_pages
       x-airbyte-action: list
-      x-airbyte-untested: true
+      x-airbyte-ai-hints:
+        summary: "Custom metafields attached to an online store page"
+        when_to_use: "When you need custom fields stored on a page"
+        trigger_phrases: ["page metafield", "page custom field"]
+        freshness: live
+        search_strategy: "Filter by page_id; identify by namespace and key"
+        example_questions:
+          - "Show custom metafields on a page"
       x-airbyte-record-extractor: $.metafields
       x-airbyte-meta-extractor:
         next_page_url: "@link.next"
@@ -3956,7 +4046,14 @@ paths:
       operationId: MetafieldBlogs_List
       x-airbyte-entity: metafield_blogs
       x-airbyte-action: list
-      x-airbyte-untested: true
+      x-airbyte-ai-hints:
+        summary: "Custom metafields attached to a blog"
+        when_to_use: "When you need custom fields stored on a blog"
+        trigger_phrases: ["blog metafield", "blog custom field"]
+        freshness: live
+        search_strategy: "Filter by blog_id; identify by namespace and key"
+        example_questions:
+          - "Show custom metafields on a blog"
       x-airbyte-record-extractor: $.metafields
       x-airbyte-meta-extractor:
         next_page_url: "@link.next"
@@ -3992,7 +4089,14 @@ paths:
       operationId: MetafieldArticles_List
       x-airbyte-entity: metafield_articles
       x-airbyte-action: list
-      x-airbyte-untested: true
+      x-airbyte-ai-hints:
+        summary: "Custom metafields attached to a blog article"
+        when_to_use: "When you need custom fields stored on an article"
+        trigger_phrases: ["article metafield", "article custom field"]
+        freshness: live
+        search_strategy: "Filter by blog_id and article_id; identify by namespace and key"
+        example_questions:
+          - "Show custom metafields on an article"
       x-airbyte-record-extractor: $.metafields
       x-airbyte-meta-extractor:
         next_page_url: "@link.next"
@@ -4027,6 +4131,1479 @@ paths:
               schema:
                 $ref: "#/components/schemas/MetafieldList"
 
+  # ──────────────────────────────────────────────────────────────────────
+  # GraphQL Write Operations (mutations via POST /graphql.json)
+  # ──────────────────────────────────────────────────────────────────────
+
+  # ── Customers ────────────────────────────────────────────────────────
+
+  "/graphql.json:customerCreate":
+    post:
+      summary: Create a customer
+      description: |
+        Creates a new customer in the store via GraphQL mutation.
+        Requires at least one of: email, phone, firstName, or lastName.
+      operationId: Customers_Create
+      x-airbyte-entity: customers
+      x-airbyte-action: create
+      x-airbyte-ai-hints:
+        summary: "Create a new Shopify customer"
+        when_to_use: "When the user asks to add, create, or register a new customer"
+        trigger_phrases: ["create a customer", "add a customer", "new customer", "register a buyer"]
+        freshness: live
+        search_strategy: "Use customers.create with an input containing at least email or first/last name. Requires write_customers scope. To look up existing customers use customers.list/get."
+        example_questions:
+          - "Create a customer with email test@example.com"
+      x-airbyte-record-extractor: $.data.customerCreate
+      x-airbyte-path-override:
+        path: /graphql.json
+      tags:
+      - Customers
+      requestBody:
+        required: true
+        x-airbyte-body-type:
+          type: graphql
+          query: "mutation customerCreate($input: CustomerInput!) { customerCreate(input: $input) { userErrors { field message } customer { id email firstName lastName phone note tags taxExempt createdAt updatedAt } } }"
+          variables:
+            input: "{{ input }}"
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CustomerCreateParams"
+      responses:
+        "200":
+          description: Customer created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerMutationResponse"
+
+  "/graphql.json:customerUpdate":
+    post:
+      summary: Update a customer
+      description: |
+        Updates an existing customer via GraphQL mutation.
+        All fields except id are optional for partial updates.
+      operationId: Customers_Update
+      x-airbyte-entity: customers
+      x-airbyte-action: update
+      x-airbyte-ai-hints:
+        summary: "Update an existing Shopify customer"
+        when_to_use: "When the user asks to edit, change, or correct a customer's details"
+        trigger_phrases: ["update a customer", "edit customer", "change customer email", "fix customer info"]
+        freshness: live
+        search_strategy: "Use customers.update with the customer GID and the fields to change. Requires write_customers scope."
+        example_questions:
+          - "Update a customer's first name"
+          - "Change a customer's phone number"
+      x-airbyte-record-extractor: $.data.customerUpdate
+      x-airbyte-path-override:
+        path: /graphql.json
+      tags:
+      - Customers
+      requestBody:
+        required: true
+        x-airbyte-body-type:
+          type: graphql
+          query: "mutation customerUpdate($input: CustomerInput!) { customerUpdate(input: $input) { userErrors { field message } customer { id email firstName lastName phone note tags taxExempt createdAt updatedAt } } }"
+          variables:
+            input: "{{ input }}"
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CustomerUpdateParams"
+      responses:
+        "200":
+          description: Customer updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerMutationResponse"
+
+  "/graphql.json:customerDelete":
+    post:
+      summary: Delete a customer
+      description: |
+        Deletes a customer from the store via GraphQL mutation.
+        Only succeeds if the customer has no orders. This action is irreversible.
+      operationId: Customers_Delete
+      x-airbyte-entity: customers
+      x-airbyte-action: delete
+      x-airbyte-ai-hints:
+        summary: "Delete a Shopify customer"
+        when_to_use: "When the user asks to remove or delete a customer permanently"
+        trigger_phrases: ["delete a customer", "remove customer", "erase a buyer"]
+        freshness: live
+        search_strategy: "Use customers.delete with the customer GID. Irreversible. Requires write_customers scope."
+        example_questions:
+          - "Delete a customer from Shopify"
+      x-airbyte-record-extractor: $.data.customerDelete
+      x-airbyte-path-override:
+        path: /graphql.json
+      tags:
+      - Customers
+      requestBody:
+        required: true
+        x-airbyte-body-type:
+          type: graphql
+          query: "mutation customerDelete($input: CustomerDeleteInput!) { customerDelete(input: $input) { userErrors { field message } deletedCustomerId } }"
+          variables:
+            input: "{{ input }}"
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CustomerDeleteParams"
+      responses:
+        "200":
+          description: Customer deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerDeleteResponse"
+
+  # ── Products ─────────────────────────────────────────────────────────
+
+  "/graphql.json:productCreate":
+    post:
+      summary: Create a product
+      description: |
+        Creates a new product via GraphQL mutation.
+        Creates the product with a default variant. Use productVariantsBulkCreate
+        to add additional variants afterwards.
+      operationId: Products_Create
+      x-airbyte-entity: products
+      x-airbyte-action: create
+      x-airbyte-ai-hints:
+        summary: "Create a new Shopify product"
+        when_to_use: "When the user asks to add, create, or list a new product"
+        trigger_phrases: ["create a product", "add a product", "new product", "list a new item"]
+        freshness: live
+        search_strategy: "Use products.create with a title (required) and optional descriptionHtml, vendor, productType, status. Requires write_products scope. Add variants via product_variants.create."
+        example_questions:
+          - "Create a product called 'Summer T-Shirt'"
+      x-airbyte-record-extractor: $.data.productCreate
+      x-airbyte-path-override:
+        path: /graphql.json
+      tags:
+      - Products
+      requestBody:
+        required: true
+        x-airbyte-body-type:
+          type: graphql
+          query: "mutation productCreate($product: ProductCreateInput!, $media: [CreateMediaInput!]) { productCreate(product: $product, media: $media) { userErrors { field message } product { id title descriptionHtml vendor productType tags status createdAt updatedAt } } }"
+          variables:
+            product: "{{ product }}"
+            media: "{{ media }}"
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductCreateParams"
+      responses:
+        "200":
+          description: Product created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductMutationResponse"
+
+  "/graphql.json:productUpdate":
+    post:
+      summary: Update a product
+      description: |
+        Updates an existing product via GraphQL mutation.
+        All fields except id are optional for partial updates.
+      operationId: Products_Update
+      x-airbyte-entity: products
+      x-airbyte-action: update
+      x-airbyte-ai-hints:
+        summary: "Update an existing Shopify product"
+        when_to_use: "When the user asks to edit a product's title, description, status, or other fields"
+        trigger_phrases: ["update a product", "edit product", "change product title", "publish a product"]
+        freshness: live
+        search_strategy: "Use products.update with the product GID and changed fields. Requires write_products scope."
+        example_questions:
+          - "Update a product title"
+          - "Set a product to active"
+      x-airbyte-record-extractor: $.data.productUpdate
+      x-airbyte-path-override:
+        path: /graphql.json
+      tags:
+      - Products
+      requestBody:
+        required: true
+        x-airbyte-body-type:
+          type: graphql
+          query: "mutation productUpdate($product: ProductUpdateInput!) { productUpdate(product: $product) { userErrors { field message } product { id title descriptionHtml vendor productType tags status createdAt updatedAt } } }"
+          variables:
+            product: "{{ product }}"
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductUpdateParams"
+      responses:
+        "200":
+          description: Product updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductMutationResponse"
+
+  "/graphql.json:productDelete":
+    post:
+      summary: Delete a product
+      description: |
+        Deletes a product from the store via GraphQL mutation.
+        This action is irreversible.
+      operationId: Products_Delete
+      x-airbyte-entity: products
+      x-airbyte-action: delete
+      x-airbyte-ai-hints:
+        summary: "Delete a Shopify product"
+        when_to_use: "When the user asks to remove or delete a product"
+        trigger_phrases: ["delete a product", "remove product", "archive vs delete a product"]
+        freshness: live
+        search_strategy: "Use products.delete with the product GID. Irreversible and removes variants. Requires write_products scope."
+        example_questions:
+          - "Delete a product from the catalog"
+      x-airbyte-record-extractor: $.data.productDelete
+      x-airbyte-path-override:
+        path: /graphql.json
+      tags:
+      - Products
+      requestBody:
+        required: true
+        x-airbyte-body-type:
+          type: graphql
+          query: "mutation productDelete($input: ProductDeleteInput!) { productDelete(input: $input) { userErrors { field message } deletedProductId } }"
+          variables:
+            input: "{{ input }}"
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductDeleteParams"
+      responses:
+        "200":
+          description: Product deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductDeleteResponse"
+
+  # ── Product Variants ─────────────────────────────────────────────────
+
+  "/graphql.json:productVariantsBulkCreate":
+    post:
+      summary: Create product variants
+      description: |
+        Creates one or more product variants via GraphQL mutation.
+        Variants are created in bulk for a given product.
+      operationId: ProductVariants_Create
+      x-airbyte-entity: product_variants
+      x-airbyte-action: create
+      x-airbyte-ai-hints:
+        summary: "Create one or more variants on a product (bulk)"
+        when_to_use: "When the user asks to add size/color or other variants to a product"
+        trigger_phrases: ["add a variant", "create variants", "add size option", "add color option"]
+        freshness: live
+        search_strategy: "Use product_variants.create with productId and a variants array (productVariantsBulkCreate). Each variant must include optionValues with one entry per product option (optionName + name); a product with Color and Size options needs both, and a single-option product needs a 'Title' entry. price/barcode/compareAtPrice are optional. To set a SKU use inventoryItem.sku (a top-level sku is NOT a variant field in the current API and is ignored). Requires write_products scope."
+        example_questions:
+          - "Add a 'Large / Blue' variant to a product"
+          - "Add a variant priced at 24.99 to a product"
+      x-airbyte-record-extractor: $.data.productVariantsBulkCreate
+      x-airbyte-path-override:
+        path: /graphql.json
+      tags:
+      - Product Variants
+      requestBody:
+        required: true
+        x-airbyte-body-type:
+          type: graphql
+          query: "mutation productVariantsBulkCreate($productId: ID!, $variants: [ProductVariantsBulkInput!]!) { productVariantsBulkCreate(productId: $productId, variants: $variants) { userErrors { field message } productVariants { id title price sku barcode compareAtPrice inventoryQuantity } } }"
+          variables:
+            productId: "{{ productId }}"
+            variants: "{{ variants }}"
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductVariantsCreateParams"
+      responses:
+        "200":
+          description: Product variants created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductVariantsMutationResponse"
+
+  "/graphql.json:productVariantsBulkUpdate":
+    post:
+      summary: Update product variants
+      description: |
+        Updates one or more product variants via GraphQL mutation.
+        Variants are updated in bulk for a given product.
+      operationId: ProductVariants_Update
+      x-airbyte-entity: product_variants
+      x-airbyte-action: update
+      x-airbyte-ai-hints:
+        summary: "Update one or more variants on a product (bulk)"
+        when_to_use: "When the user asks to change variant price, SKU, or options"
+        trigger_phrases: ["update a variant", "change variant price", "edit SKU", "update variants"]
+        freshness: live
+        search_strategy: "Use product_variants.update with productId and a variants array of GIDs + changed fields (productVariantsBulkUpdate). To change a SKU set inventoryItem.sku, NOT a top-level sku (the latter is not a variant field in the current API and is silently ignored, returning a null result). price/barcode/compareAtPrice update at the variant level. Requires write_products scope."
+        example_questions:
+          - "Change the price of a variant"
+          - "Update a variant's SKU"
+      x-airbyte-record-extractor: $.data.productVariantsBulkUpdate
+      x-airbyte-path-override:
+        path: /graphql.json
+      tags:
+      - Product Variants
+      requestBody:
+        required: true
+        x-airbyte-body-type:
+          type: graphql
+          query: "mutation productVariantsBulkUpdate($productId: ID!, $variants: [ProductVariantsBulkInput!]!) { productVariantsBulkUpdate(productId: $productId, variants: $variants) { userErrors { field message } productVariants { id title price sku barcode compareAtPrice inventoryQuantity } } }"
+          variables:
+            productId: "{{ productId }}"
+            variants: "{{ variants }}"
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductVariantsUpdateParams"
+      responses:
+        "200":
+          description: Product variants updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductVariantsMutationResponse"
+
+  "/graphql.json:productVariantsBulkDelete":
+    post:
+      summary: Delete product variants
+      description: |
+        Deletes one or more product variants via GraphQL mutation.
+        Cannot delete the last variant of a product.
+      operationId: ProductVariants_Delete
+      x-airbyte-entity: product_variants
+      x-airbyte-action: delete
+      x-airbyte-ai-hints:
+        summary: "Delete one or more variants from a product (bulk)"
+        when_to_use: "When the user asks to remove variants from a product"
+        trigger_phrases: ["delete a variant", "remove variants", "drop a size option"]
+        freshness: live
+        search_strategy: "Use product_variants.delete with productId and variantsIds (productVariantsBulkDelete). Requires write_products scope."
+        example_questions:
+          - "Remove a variant from a product"
+      x-airbyte-record-extractor: $.data.productVariantsBulkDelete
+      x-airbyte-path-override:
+        path: /graphql.json
+      tags:
+      - Product Variants
+      requestBody:
+        required: true
+        x-airbyte-body-type:
+          type: graphql
+          query: "mutation productVariantsBulkDelete($productId: ID!, $variantsIds: [ID!]!) { productVariantsBulkDelete(productId: $productId, variantsIds: $variantsIds) { userErrors { field message } product { id title } } }"
+          variables:
+            productId: "{{ productId }}"
+            variantsIds: "{{ variantsIds }}"
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductVariantsDeleteParams"
+      responses:
+        "200":
+          description: Product variants deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductVariantsDeleteResponse"
+
+  # ── Orders ───────────────────────────────────────────────────────────
+
+  "/graphql.json:orderCreate":
+    post:
+      summary: Create an order
+      description: |
+        Creates a new order via GraphQL mutation.
+        Use line items with either variantId or customAttributes.
+      operationId: Orders_Create
+      x-airbyte-entity: orders
+      x-airbyte-action: create
+      x-airbyte-ai-hints:
+        summary: "Create a new Shopify order"
+        when_to_use: "When the user asks to create an order directly (not a draft)"
+        trigger_phrases: ["create an order", "place an order", "new order"]
+        freshness: live
+        search_strategy: "Use orders.create with line items and customer info. Requires write_orders scope. For quotes/invoices that aren't finalized, use draft_orders.create instead."
+        example_questions:
+          - "Create an order for a customer"
+      x-airbyte-record-extractor: $.data.orderCreate
+      x-airbyte-path-override:
+        path: /graphql.json
+      tags:
+      - Orders
+      requestBody:
+        required: true
+        x-airbyte-body-type:
+          type: graphql
+          query: "mutation orderCreate($order: OrderCreateOrderInput!, $options: OrderCreateOptionsInput) { orderCreate(order: $order, options: $options) { userErrors { field message } order { id name email createdAt displayFinancialStatus displayFulfillmentStatus totalPriceSet { shopMoney { amount currencyCode } } } } }"
+          variables:
+            order: "{{ order }}"
+            options: "{{ options }}"
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OrderCreateParams"
+      responses:
+        "200":
+          description: Order created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrderMutationResponse"
+
+  "/graphql.json:orderUpdate":
+    post:
+      summary: Update an order
+      description: |
+        Updates simple fields on an existing order via GraphQL mutation.
+        For line item changes, use orderEditBegin/orderEditCommit instead.
+      operationId: Orders_Update
+      x-airbyte-entity: orders
+      x-airbyte-action: update
+      x-airbyte-ai-hints:
+        summary: "Update an existing Shopify order"
+        when_to_use: "When the user asks to edit order attributes like tags, note, email, or shipping address"
+        trigger_phrases: ["update an order", "edit order", "add a note to an order", "tag an order"]
+        freshness: live
+        search_strategy: "Use orders.update with the order GID and changed fields. Requires write_orders scope. Note: line-item edits after creation are not supported here."
+        example_questions:
+          - "Add a note to an order"
+          - "Tag an order as priority"
+      x-airbyte-record-extractor: $.data.orderUpdate
+      x-airbyte-path-override:
+        path: /graphql.json
+      tags:
+      - Orders
+      requestBody:
+        required: true
+        x-airbyte-body-type:
+          type: graphql
+          query: "mutation orderUpdate($input: OrderInput!) { orderUpdate(input: $input) { userErrors { field message } order { id name email note tags createdAt displayFinancialStatus displayFulfillmentStatus } } }"
+          variables:
+            input: "{{ input }}"
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OrderUpdateParams"
+      responses:
+        "200":
+          description: Order updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrderUpdateResponse"
+
+  "/graphql.json:orderCancel":
+    post:
+      summary: Cancel an order
+      description: |
+        Cancels an open order via GraphQL mutation.
+        This action is irreversible. Optional refund and restock parameters.
+      operationId: Orders_Cancel
+      x-airbyte-entity: orders
+      x-airbyte-action: delete
+      x-airbyte-ai-hints:
+        summary: "Cancel a Shopify order"
+        when_to_use: "When the user asks to cancel an order"
+        trigger_phrases: ["cancel an order", "void an order", "stop an order"]
+        freshness: live
+        search_strategy: "Use orders.delete (orderCancel) with the order GID and a reason; restock is required. Requires write_orders scope. This cancels, it does not hard-delete."
+        example_questions:
+          - "Cancel an order"
+          - "Cancel an order and restock items"
+      x-airbyte-record-extractor: $.data.orderCancel
+      x-airbyte-path-override:
+        path: /graphql.json
+      tags:
+      - Orders
+      requestBody:
+        required: true
+        x-airbyte-body-type:
+          type: graphql
+          query: "mutation orderCancel($orderId: ID!, $reason: OrderCancelReason!, $notifyCustomer: Boolean, $refund: Boolean, $restock: Boolean!, $staffNote: String) { orderCancel(orderId: $orderId, reason: $reason, notifyCustomer: $notifyCustomer, refund: $refund, restock: $restock, staffNote: $staffNote) { userErrors { field message } orderCancelUserErrors { field message code } job { id done } } }"
+          variables:
+            orderId: "{{ orderId }}"
+            reason: "{{ reason }}"
+            notifyCustomer: "{{ notifyCustomer }}"
+            refund: "{{ refund }}"
+            restock: "{{ restock }}"
+            staffNote: "{{ staffNote }}"
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OrderCancelParams"
+      responses:
+        "200":
+          description: Order cancelled successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrderCancelResponse"
+
+  # ── Draft Orders ─────────────────────────────────────────────────────
+
+  "/graphql.json:draftOrderCreate":
+    post:
+      summary: Create a draft order
+      description: |
+        Creates a new draft order via GraphQL mutation.
+        Draft orders can be completed to become regular orders.
+      operationId: DraftOrders_Create
+      x-airbyte-entity: draft_orders
+      x-airbyte-action: create
+      x-airbyte-ai-hints:
+        summary: "Create a draft order (quote/invoice)"
+        when_to_use: "When the user asks to draft an order, build a quote, or prepare an invoice"
+        trigger_phrases: ["create a draft order", "build a quote", "prepare an invoice", "draft an order"]
+        freshness: live
+        search_strategy: "Use draft_orders.create with line items and customer. Requires write_draft_orders scope. Finalize later with draft_order_complete.update."
+        example_questions:
+          - "Create a draft order for a customer"
+      x-airbyte-record-extractor: $.data.draftOrderCreate
+      x-airbyte-path-override:
+        path: /graphql.json
+      tags:
+      - Draft Orders
+      requestBody:
+        required: true
+        x-airbyte-body-type:
+          type: graphql
+          query: "mutation draftOrderCreate($input: DraftOrderInput!) { draftOrderCreate(input: $input) { userErrors { field message } draftOrder { id name email status createdAt updatedAt totalPrice currencyCode } } }"
+          variables:
+            input: "{{ input }}"
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DraftOrderCreateParams"
+      responses:
+        "200":
+          description: Draft order created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DraftOrderMutationResponse"
+
+  "/graphql.json:draftOrderUpdate":
+    post:
+      summary: Update a draft order
+      description: |
+        Updates an existing draft order via GraphQL mutation.
+        Only open draft orders can be updated.
+      operationId: DraftOrders_Update
+      x-airbyte-entity: draft_orders
+      x-airbyte-action: update
+      x-airbyte-ai-hints:
+        summary: "Update a draft order"
+        when_to_use: "When the user asks to change line items, discounts, or customer on a draft order"
+        trigger_phrases: ["update a draft order", "edit a quote", "change draft order items"]
+        freshness: live
+        search_strategy: "Use draft_orders.update with the draft order GID and changed fields. Requires write_draft_orders scope."
+        example_questions:
+          - "Add an item to a draft order"
+      x-airbyte-record-extractor: $.data.draftOrderUpdate
+      x-airbyte-path-override:
+        path: /graphql.json
+      tags:
+      - Draft Orders
+      requestBody:
+        required: true
+        x-airbyte-body-type:
+          type: graphql
+          query: "mutation draftOrderUpdate($id: ID!, $input: DraftOrderInput!) { draftOrderUpdate(id: $id, input: $input) { userErrors { field message } draftOrder { id name email status createdAt updatedAt totalPrice currencyCode } } }"
+          variables:
+            id: "{{ id }}"
+            input: "{{ input }}"
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DraftOrderUpdateParams"
+      responses:
+        "200":
+          description: Draft order updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DraftOrderMutationResponse"
+
+  "/graphql.json:draftOrderDelete":
+    post:
+      summary: Delete a draft order
+      description: |
+        Deletes a draft order via GraphQL mutation.
+        Only open draft orders can be deleted.
+      operationId: DraftOrders_Delete
+      x-airbyte-entity: draft_orders
+      x-airbyte-action: delete
+      x-airbyte-ai-hints:
+        summary: "Delete a draft order"
+        when_to_use: "When the user asks to discard or delete a draft order/quote"
+        trigger_phrases: ["delete a draft order", "discard a quote", "remove a draft order"]
+        freshness: live
+        search_strategy: "Use draft_orders.delete with the draft order GID. Requires write_draft_orders scope."
+        example_questions:
+          - "Delete a draft order"
+      x-airbyte-record-extractor: $.data.draftOrderDelete
+      x-airbyte-path-override:
+        path: /graphql.json
+      tags:
+      - Draft Orders
+      requestBody:
+        required: true
+        x-airbyte-body-type:
+          type: graphql
+          query: "mutation draftOrderDelete($input: DraftOrderDeleteInput!) { draftOrderDelete(input: $input) { userErrors { field message } deletedId } }"
+          variables:
+            input: "{{ input }}"
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DraftOrderDeleteParams"
+      responses:
+        "200":
+          description: Draft order deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DraftOrderDeleteResponse"
+
+  "/graphql.json:draftOrderComplete":
+    post:
+      summary: Complete a draft order
+      description: |
+        Completes a draft order, converting it to a regular order via GraphQL mutation.
+      operationId: DraftOrders_Complete
+      x-airbyte-entity: draft_order_complete
+      x-airbyte-action: update
+      x-airbyte-ai-hints:
+        summary: "Complete a draft order, converting it into a real order"
+        when_to_use: "When the user asks to finalize a draft order/quote into an order"
+        trigger_phrases: ["complete a draft order", "finalize a quote", "convert a draft to an order", "mark draft as paid"]
+        freshness: live
+        search_strategy: "Use draft_order_complete.update with the draft order GID (draftOrderComplete). Requires write_draft_orders scope. To create the draft first, use draft_orders.create."
+        example_questions:
+          - "Complete a draft order"
+      x-airbyte-record-extractor: $.data.draftOrderComplete
+      x-airbyte-path-override:
+        path: /graphql.json
+      tags:
+      - Draft Orders
+      requestBody:
+        required: true
+        x-airbyte-body-type:
+          type: graphql
+          query: "mutation draftOrderComplete($id: ID!, $paymentPending: Boolean) { draftOrderComplete(id: $id, paymentPending: $paymentPending) { userErrors { field message } draftOrder { id name status order { id name } } } }"
+          variables:
+            id: "{{ id }}"
+            paymentPending: "{{ paymentPending }}"
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DraftOrderCompleteParams"
+      responses:
+        "200":
+          description: Draft order completed successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DraftOrderCompleteResponse"
+
+  # ── Inventory Levels ─────────────────────────────────────────────────
+
+  "/graphql.json:inventorySetQuantities":
+    post:
+      summary: Set inventory quantities
+      description: |
+        Sets absolute inventory quantities for items at locations via GraphQL mutation.
+        Uses the inventorySetQuantities mutation with a required reason and reference document.
+      operationId: InventoryLevels_Set
+      x-airbyte-entity: inventory_set
+      x-airbyte-action: create
+      x-airbyte-ai-hints:
+        summary: "Set absolute inventory quantities at a location"
+        when_to_use: "When the user wants to set stock to an exact number"
+        trigger_phrases: ["set inventory", "set stock to", "overwrite inventory", "set quantity to"]
+        freshness: live
+        search_strategy: "Use inventory_set.create (inventorySetQuantities) with inventoryItemId, locationId, and the absolute quantity. Requires write_inventory scope. Use inventory_adjust.create for relative changes."
+        example_questions:
+          - "Set a variant's inventory to 100 at a location"
+      x-airbyte-record-extractor: $.data.inventorySetQuantities
+      x-airbyte-path-override:
+        path: /graphql.json
+      tags:
+      - Inventory
+      requestBody:
+        required: true
+        x-airbyte-body-type:
+          type: graphql
+          query: "mutation inventorySetQuantities($input: InventorySetQuantitiesInput!) { inventorySetQuantities(input: $input) { userErrors { field message code } inventoryAdjustmentGroup { reason referenceDocumentUri changes { name delta quantityAfterChange } } } }"
+          variables:
+            input: "{{ input }}"
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InventorySetQuantitiesParams"
+      responses:
+        "200":
+          description: Inventory quantities set successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InventorySetQuantitiesResponse"
+
+  "/graphql.json:inventoryAdjustQuantities":
+    post:
+      summary: Adjust inventory quantities
+      description: |
+        Adjusts inventory quantities relatively (add/subtract) for items at locations via GraphQL mutation.
+      operationId: InventoryLevels_Adjust
+      x-airbyte-entity: inventory_adjust
+      x-airbyte-action: create
+      x-airbyte-ai-hints:
+        summary: "Adjust inventory quantities by a delta at a location"
+        when_to_use: "When the user wants to increase or decrease stock by a relative amount"
+        trigger_phrases: ["adjust inventory", "increase stock", "decrease stock", "add units", "deduct stock"]
+        freshness: live
+        search_strategy: "Use inventory_adjust.create (inventoryAdjustQuantities) with a positive or negative delta. Requires write_inventory scope. Use inventory_set.create when you know the exact target."
+        example_questions:
+          - "Add 10 units to a variant's stock"
+      x-airbyte-record-extractor: $.data.inventoryAdjustQuantities
+      x-airbyte-path-override:
+        path: /graphql.json
+      tags:
+      - Inventory
+      requestBody:
+        required: true
+        x-airbyte-body-type:
+          type: graphql
+          query: "mutation inventoryAdjustQuantities($input: InventoryAdjustQuantitiesInput!) { inventoryAdjustQuantities(input: $input) { userErrors { field message code } inventoryAdjustmentGroup { reason referenceDocumentUri changes { name delta quantityAfterChange } } } }"
+          variables:
+            input: "{{ input }}"
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InventoryAdjustQuantitiesParams"
+      responses:
+        "200":
+          description: Inventory quantities adjusted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InventoryAdjustQuantitiesResponse"
+
+  # ── Discount Codes ───────────────────────────────────────────────────
+
+  "/graphql.json:discountCodeBasicCreate":
+    post:
+      summary: Create a basic discount code
+      description: |
+        Creates a basic discount code via GraphQL mutation.
+        Supports percentage, fixed amount, or free shipping discounts.
+      operationId: DiscountCodes_Create
+      x-airbyte-entity: discount_codes
+      x-airbyte-action: create
+      x-airbyte-ai-hints:
+        summary: "Create a basic discount code"
+        when_to_use: "When the user asks to create a coupon or discount code"
+        trigger_phrases: ["create a discount code", "make a coupon", "new promo code", "create a discount"]
+        freshness: live
+        search_strategy: "Use discount_codes.create (discountCodeBasicCreate) with title, code, and value (percentage/fixed). Requires write_discounts scope."
+        example_questions:
+          - "Create a 10% off discount code"
+      x-airbyte-record-extractor: $.data.discountCodeBasicCreate
+      x-airbyte-path-override:
+        path: /graphql.json
+      tags:
+      - Discounts
+      requestBody:
+        required: true
+        x-airbyte-body-type:
+          type: graphql
+          query: "mutation discountCodeBasicCreate($basicCodeDiscount: DiscountCodeBasicInput!) { discountCodeBasicCreate(basicCodeDiscount: $basicCodeDiscount) { userErrors { field message code } codeDiscountNode { id codeDiscount { ... on DiscountCodeBasic { title summary startsAt endsAt status codes(first: 5) { nodes { code } } } } } } }"
+          variables:
+            basicCodeDiscount: "{{ basicCodeDiscount }}"
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DiscountCodeCreateParams"
+      responses:
+        "200":
+          description: Discount code created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DiscountCodeMutationResponse"
+
+  "/graphql.json:discountCodeBasicUpdate":
+    post:
+      summary: Update a basic discount code
+      description: |
+        Updates an existing basic discount code via GraphQL mutation.
+      operationId: DiscountCodes_Update
+      x-airbyte-entity: discount_codes
+      x-airbyte-action: update
+      x-airbyte-ai-hints:
+        summary: "Update a basic discount code"
+        when_to_use: "When the user asks to change a discount's value, dates, or code"
+        trigger_phrases: ["update a discount code", "edit a coupon", "change discount amount"]
+        freshness: live
+        search_strategy: "Use discount_codes.update (discountCodeBasicUpdate) with the discount GID and changed fields. Requires write_discounts scope."
+        example_questions:
+          - "Change a discount code to 20% off"
+      x-airbyte-record-extractor: $.data.discountCodeBasicUpdate
+      x-airbyte-path-override:
+        path: /graphql.json
+      tags:
+      - Discounts
+      requestBody:
+        required: true
+        x-airbyte-body-type:
+          type: graphql
+          query: "mutation discountCodeBasicUpdate($id: ID!, $basicCodeDiscount: DiscountCodeBasicInput!) { discountCodeBasicUpdate(id: $id, basicCodeDiscount: $basicCodeDiscount) { userErrors { field message code } codeDiscountNode { id codeDiscount { ... on DiscountCodeBasic { title summary startsAt endsAt status codes(first: 5) { nodes { code } } } } } } }"
+          variables:
+            id: "{{ id }}"
+            basicCodeDiscount: "{{ basicCodeDiscount }}"
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DiscountCodeUpdateParams"
+      responses:
+        "200":
+          description: Discount code updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DiscountCodeMutationResponse"
+
+  "/graphql.json:discountCodeDelete":
+    post:
+      summary: Delete a discount code
+      description: |
+        Deletes a discount code via GraphQL mutation.
+      operationId: DiscountCodes_Delete
+      x-airbyte-entity: discount_codes
+      x-airbyte-action: delete
+      x-airbyte-ai-hints:
+        summary: "Delete a discount code"
+        when_to_use: "When the user asks to remove or delete a discount/coupon code"
+        trigger_phrases: ["delete a discount code", "remove a coupon", "deactivate a promo code"]
+        freshness: live
+        search_strategy: "Use discount_codes.delete (discountCodeDelete) with the discount GID. Requires write_discounts scope."
+        example_questions:
+          - "Delete a discount code"
+      x-airbyte-record-extractor: $.data.discountCodeDelete
+      x-airbyte-path-override:
+        path: /graphql.json
+      tags:
+      - Discounts
+      requestBody:
+        required: true
+        x-airbyte-body-type:
+          type: graphql
+          query: "mutation discountCodeDelete($id: ID!) { discountCodeDelete(id: $id) { userErrors { field message code } deletedCodeDiscountId } }"
+          variables:
+            id: "{{ id }}"
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DiscountCodeDeleteParams"
+      responses:
+        "200":
+          description: Discount code deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DiscountCodeDeleteResponse"
+
+  # ── Metafields ───────────────────────────────────────────────────────
+
+  "/graphql.json:metafieldsSet":
+    post:
+      summary: Set metafields
+      description: |
+        Sets (creates or updates) up to 25 metafields atomically via GraphQL mutation.
+        Works across all resource types (products, customers, orders, etc.).
+      operationId: Metafields_Set
+      x-airbyte-entity: metafields
+      x-airbyte-action: create
+      x-airbyte-ai-hints:
+        summary: "Set (create or update) metafields on any resource"
+        when_to_use: "When the user asks to set, add, or update custom data/metadata on a resource"
+        trigger_phrases: ["set a metafield", "add custom data", "store metadata", "set a custom field"]
+        freshness: live
+        search_strategy: "Use metafields.create (metafieldsSet) with ownerId GID, namespace, key, type, and value. Requires the OWNER resource's write scope (e.g. write_products for a product metafield)."
+        example_questions:
+          - "Set a metafield on a product"
+      x-airbyte-record-extractor: $.data.metafieldsSet
+      x-airbyte-path-override:
+        path: /graphql.json
+      tags:
+      - Metafields
+      requestBody:
+        required: true
+        x-airbyte-body-type:
+          type: graphql
+          query: "mutation metafieldsSet($metafields: [MetafieldsSetInput!]!) { metafieldsSet(metafields: $metafields) { userErrors { field message code } metafields { id namespace key value type updatedAt } } }"
+          variables:
+            metafields: "{{ metafields }}"
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MetafieldsSetParams"
+      responses:
+        "200":
+          description: Metafields set successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MetafieldsSetResponse"
+
+  "/graphql.json:metafieldsDelete":
+    post:
+      summary: Delete metafields
+      description: |
+        Deletes one or more metafields via GraphQL mutation.
+        Identifies metafields by ownerId + namespace + key.
+      operationId: Metafields_Delete
+      x-airbyte-entity: metafields
+      x-airbyte-action: delete
+      x-airbyte-ai-hints:
+        summary: "Delete metafields from a resource"
+        when_to_use: "When the user asks to remove custom data/metadata from a resource"
+        trigger_phrases: ["delete a metafield", "remove custom data", "clear a custom field"]
+        freshness: live
+        search_strategy: "Use metafields.delete (metafieldsDelete) with the metafield identifier (ownerId, namespace, key). Requires the owner resource's write scope."
+        example_questions:
+          - "Delete a metafield from an order"
+      x-airbyte-record-extractor: $.data.metafieldsDelete
+      x-airbyte-path-override:
+        path: /graphql.json
+      tags:
+      - Metafields
+      requestBody:
+        required: true
+        x-airbyte-body-type:
+          type: graphql
+          query: "mutation metafieldsDelete($metafields: [MetafieldIdentifierInput!]!) { metafieldsDelete(metafields: $metafields) { deletedMetafields { key namespace ownerId } userErrors { field message } } }"
+          variables:
+            metafields: "{{ metafields }}"
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MetafieldDeleteParams"
+      responses:
+        "200":
+          description: Metafields deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MetafieldDeleteResponse"
+
+  # ── Collections (Custom & Smart) ─────────────────────────────────────
+
+  "/graphql.json:collectionCreate":
+    post:
+      summary: Create a collection
+      description: |
+        Creates a new collection (custom or smart) via GraphQL mutation.
+        For smart collections, provide ruleSet with rules.
+      operationId: Collections_Create
+      x-airbyte-entity: custom_collections
+      x-airbyte-action: create
+      x-airbyte-ai-hints:
+        summary: "Create a custom (manual) collection"
+        when_to_use: "When the user asks to create a new manual product collection"
+        trigger_phrases: ["create a collection", "new custom collection", "make a product group"]
+        freshness: live
+        search_strategy: "Use custom_collections.create (collectionCreate) with a title. Requires write_products scope (collections are governed by the products scope)."
+        example_questions:
+          - "Create a custom collection called 'Summer Sale'"
+      x-airbyte-record-extractor: $.data.collectionCreate
+      x-airbyte-path-override:
+        path: /graphql.json
+      tags:
+      - Collections
+      requestBody:
+        required: true
+        x-airbyte-body-type:
+          type: graphql
+          query: "mutation collectionCreate($input: CollectionInput!) { collectionCreate(input: $input) { userErrors { field message } collection { id title handle descriptionHtml sortOrder templateSuffix updatedAt } } }"
+          variables:
+            input: "{{ input }}"
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CollectionCreateParams"
+      responses:
+        "200":
+          description: Collection created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CollectionMutationResponse"
+
+  "/graphql.json:collectionUpdate":
+    post:
+      summary: Update a collection
+      description: |
+        Updates an existing collection via GraphQL mutation.
+        Rule-based membership recompute is async for smart collections.
+      operationId: Collections_Update
+      x-airbyte-entity: custom_collections
+      x-airbyte-action: update
+      x-airbyte-ai-hints:
+        summary: "Update a custom collection"
+        when_to_use: "When the user asks to rename or edit a collection"
+        trigger_phrases: ["update a collection", "rename a collection", "edit a product group"]
+        freshness: live
+        search_strategy: "Use custom_collections.update (collectionUpdate) with the collection GID and changed fields. Requires write_products scope."
+        example_questions:
+          - "Rename a custom collection"
+      x-airbyte-record-extractor: $.data.collectionUpdate
+      x-airbyte-path-override:
+        path: /graphql.json
+      tags:
+      - Collections
+      requestBody:
+        required: true
+        x-airbyte-body-type:
+          type: graphql
+          query: "mutation collectionUpdate($input: CollectionInput!) { collectionUpdate(input: $input) { userErrors { field message } collection { id title handle descriptionHtml sortOrder templateSuffix updatedAt } } }"
+          variables:
+            input: "{{ input }}"
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CollectionUpdateParams"
+      responses:
+        "200":
+          description: Collection updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CollectionMutationResponse"
+
+  "/graphql.json:collectionDelete":
+    post:
+      summary: Delete a collection
+      description: |
+        Deletes a collection via GraphQL mutation.
+      operationId: Collections_Delete
+      x-airbyte-entity: custom_collections
+      x-airbyte-action: delete
+      x-airbyte-ai-hints:
+        summary: "Delete a custom collection"
+        when_to_use: "When the user asks to remove or delete a collection"
+        trigger_phrases: ["delete a collection", "remove a product group"]
+        freshness: live
+        search_strategy: "Use custom_collections.delete (collectionDelete) with the collection GID. Requires write_products scope."
+        example_questions:
+          - "Delete a custom collection"
+      x-airbyte-record-extractor: $.data.collectionDelete
+      x-airbyte-path-override:
+        path: /graphql.json
+      tags:
+      - Collections
+      requestBody:
+        required: true
+        x-airbyte-body-type:
+          type: graphql
+          query: "mutation collectionDelete($input: CollectionDeleteInput!) { collectionDelete(input: $input) { userErrors { field message } deletedCollectionId } }"
+          variables:
+            input: "{{ input }}"
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CollectionDeleteParams"
+      responses:
+        "200":
+          description: Collection deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CollectionDeleteResponse"
+
+  # ── Pages ────────────────────────────────────────────────────────────
+
+  "/graphql.json:pageCreate":
+    post:
+      summary: Create a page
+      description: |
+        Creates a new page on the online store via GraphQL mutation.
+      operationId: Pages_Create
+      x-airbyte-entity: pages
+      x-airbyte-action: create
+      x-airbyte-ai-hints:
+        summary: "Create an online store page"
+        when_to_use: "When the user asks to add a new content page (About, FAQ, etc.)"
+        trigger_phrases: ["create a page", "add a content page", "new store page"]
+        freshness: live
+        search_strategy: "Use pages.create (pageCreate) with title and body HTML. Requires write_content (or write_online_store_pages) scope."
+        example_questions:
+          - "Create a new page on the store"
+      x-airbyte-record-extractor: $.data.pageCreate
+      x-airbyte-path-override:
+        path: /graphql.json
+      tags:
+      - Pages
+      requestBody:
+        required: true
+        x-airbyte-body-type:
+          type: graphql
+          query: "mutation pageCreate($page: PageCreateInput!) { pageCreate(page: $page) { userErrors { field message } page { id title handle body createdAt updatedAt } } }"
+          variables:
+            page: "{{ page }}"
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PageCreateParams"
+      responses:
+        "200":
+          description: Page created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PageMutationResponse"
+
+  "/graphql.json:pageUpdate":
+    post:
+      summary: Update a page
+      description: |
+        Updates an existing page on the online store via GraphQL mutation.
+      operationId: Pages_Update
+      x-airbyte-entity: pages
+      x-airbyte-action: update
+      x-airbyte-ai-hints:
+        summary: "Update an online store page"
+        when_to_use: "When the user asks to edit a page's title or content"
+        trigger_phrases: ["update a page", "edit page content", "change a store page"]
+        freshness: live
+        search_strategy: "Use pages.update (pageUpdate) with the page GID and changed fields. Requires write_content (or write_online_store_pages) scope."
+        example_questions:
+          - "Update the About page content"
+      x-airbyte-record-extractor: $.data.pageUpdate
+      x-airbyte-path-override:
+        path: /graphql.json
+      tags:
+      - Pages
+      requestBody:
+        required: true
+        x-airbyte-body-type:
+          type: graphql
+          query: "mutation pageUpdate($id: ID!, $page: PageUpdateInput!) { pageUpdate(id: $id, page: $page) { userErrors { field message } page { id title handle body createdAt updatedAt } } }"
+          variables:
+            id: "{{ id }}"
+            page: "{{ page }}"
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PageUpdateParams"
+      responses:
+        "200":
+          description: Page updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PageMutationResponse"
+
+  "/graphql.json:pageDelete":
+    post:
+      summary: Delete a page
+      description: |
+        Deletes a page from the online store via GraphQL mutation.
+      operationId: Pages_Delete
+      x-airbyte-entity: pages
+      x-airbyte-action: delete
+      x-airbyte-ai-hints:
+        summary: "Delete an online store page"
+        when_to_use: "When the user asks to remove or delete a content page"
+        trigger_phrases: ["delete a page", "remove a store page"]
+        freshness: live
+        search_strategy: "Use pages.delete (pageDelete) with the page GID. Requires write_content (or write_online_store_pages) scope."
+        example_questions:
+          - "Delete a page from the store"
+      x-airbyte-record-extractor: $.data.pageDelete
+      x-airbyte-path-override:
+        path: /graphql.json
+      tags:
+      - Pages
+      requestBody:
+        required: true
+        x-airbyte-body-type:
+          type: graphql
+          query: "mutation pageDelete($id: ID!) { pageDelete(id: $id) { userErrors { field message } deletedPageId } }"
+          variables:
+            id: "{{ id }}"
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PageDeleteParams"
+      responses:
+        "200":
+          description: Page deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PageDeleteResponse"
+
+  # ── Blogs ────────────────────────────────────────────────────────────
+
+  "/graphql.json:blogCreate":
+    post:
+      summary: Create a blog
+      description: |
+        Creates a new blog on the online store via GraphQL mutation.
+      operationId: Blogs_Create
+      x-airbyte-entity: blogs
+      x-airbyte-action: create
+      x-airbyte-ai-hints:
+        summary: "Create a blog"
+        when_to_use: "When the user asks to create a new blog container"
+        trigger_phrases: ["create a blog", "new blog", "add a blog"]
+        freshness: live
+        search_strategy: "Use blogs.create (blogCreate) with a title. Requires write_content (or write_online_store_pages) scope. Articles are added via articles.create."
+        example_questions:
+          - "Create a new blog"
+      x-airbyte-record-extractor: $.data.blogCreate
+      x-airbyte-path-override:
+        path: /graphql.json
+      tags:
+      - Blogs
+      requestBody:
+        required: true
+        x-airbyte-body-type:
+          type: graphql
+          query: "mutation blogCreate($blog: BlogCreateInput!) { blogCreate(blog: $blog) { userErrors { field message } blog { id title handle createdAt } } }"
+          variables:
+            blog: "{{ blog }}"
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BlogCreateParams"
+      responses:
+        "200":
+          description: Blog created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BlogMutationResponse"
+
+  "/graphql.json:blogUpdate":
+    post:
+      summary: Update a blog
+      description: |
+        Updates an existing blog via GraphQL mutation.
+      operationId: Blogs_Update
+      x-airbyte-entity: blogs
+      x-airbyte-action: update
+      x-airbyte-ai-hints:
+        summary: "Update a blog"
+        when_to_use: "When the user asks to rename or edit a blog"
+        trigger_phrases: ["update a blog", "rename a blog", "edit blog settings"]
+        freshness: live
+        search_strategy: "Use blogs.update (blogUpdate) with the blog GID and changed fields. Requires write_content (or write_online_store_pages) scope."
+        example_questions:
+          - "Rename a blog"
+      x-airbyte-record-extractor: $.data.blogUpdate
+      x-airbyte-path-override:
+        path: /graphql.json
+      tags:
+      - Blogs
+      requestBody:
+        required: true
+        x-airbyte-body-type:
+          type: graphql
+          query: "mutation blogUpdate($id: ID!, $blog: BlogUpdateInput!) { blogUpdate(id: $id, blog: $blog) { userErrors { field message } blog { id title handle createdAt } } }"
+          variables:
+            id: "{{ id }}"
+            blog: "{{ blog }}"
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BlogUpdateParams"
+      responses:
+        "200":
+          description: Blog updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BlogMutationResponse"
+
+  "/graphql.json:blogDelete":
+    post:
+      summary: Delete a blog
+      description: |
+        Deletes a blog from the online store via GraphQL mutation.
+      operationId: Blogs_Delete
+      x-airbyte-entity: blogs
+      x-airbyte-action: delete
+      x-airbyte-ai-hints:
+        summary: "Delete a blog"
+        when_to_use: "When the user asks to remove or delete a blog"
+        trigger_phrases: ["delete a blog", "remove a blog"]
+        freshness: live
+        search_strategy: "Use blogs.delete (blogDelete) with the blog GID. Requires write_content (or write_online_store_pages) scope. Deletes the blog and its articles."
+        example_questions:
+          - "Delete a blog"
+      x-airbyte-record-extractor: $.data.blogDelete
+      x-airbyte-path-override:
+        path: /graphql.json
+      tags:
+      - Blogs
+      requestBody:
+        required: true
+        x-airbyte-body-type:
+          type: graphql
+          query: "mutation blogDelete($id: ID!) { blogDelete(id: $id) { userErrors { field message } deletedBlogId } }"
+          variables:
+            id: "{{ id }}"
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BlogDeleteParams"
+      responses:
+        "200":
+          description: Blog deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BlogDeleteResponse"
+
+  # ── Articles ─────────────────────────────────────────────────────────
+
+  "/graphql.json:articleCreate":
+    post:
+      summary: Create an article
+      description: |
+        Creates a new blog article via GraphQL mutation.
+      operationId: Articles_Create
+      x-airbyte-entity: articles
+      x-airbyte-action: create
+      x-airbyte-ai-hints:
+        summary: "Create a blog article (post)"
+        when_to_use: "When the user asks to write or publish a new blog post"
+        trigger_phrases: ["create an article", "write a blog post", "publish a post", "new blog article"]
+        freshness: live
+        search_strategy: "Use articles.create (articleCreate) with blogId, title, and author (all required; author.name must be set), plus optional body HTML. Requires write_content (or write_online_store_pages) scope."
+        example_questions:
+          - "Write a new blog post by an author"
+      x-airbyte-record-extractor: $.data.articleCreate
+      x-airbyte-path-override:
+        path: /graphql.json
+      tags:
+      - Articles
+      requestBody:
+        required: true
+        x-airbyte-body-type:
+          type: graphql
+          query: "mutation articleCreate($article: ArticleCreateInput!) { articleCreate(article: $article) { userErrors { field message } article { id title handle body blog { id title } createdAt updatedAt } } }"
+          variables:
+            article: "{{ article }}"
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ArticleCreateParams"
+      responses:
+        "200":
+          description: Article created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ArticleMutationResponse"
+
+  "/graphql.json:articleUpdate":
+    post:
+      summary: Update an article
+      description: |
+        Updates an existing blog article via GraphQL mutation.
+      operationId: Articles_Update
+      x-airbyte-entity: articles
+      x-airbyte-action: update
+      x-airbyte-ai-hints:
+        summary: "Update a blog article"
+        when_to_use: "When the user asks to edit a blog post's title, body, or publish status"
+        trigger_phrases: ["update an article", "edit a blog post", "publish a draft post"]
+        freshness: live
+        search_strategy: "Use articles.update (articleUpdate) with the article GID and changed fields. Requires write_content (or write_online_store_pages) scope."
+        example_questions:
+          - "Edit a blog post"
+          - "Publish a draft article"
+      x-airbyte-record-extractor: $.data.articleUpdate
+      x-airbyte-path-override:
+        path: /graphql.json
+      tags:
+      - Articles
+      requestBody:
+        required: true
+        x-airbyte-body-type:
+          type: graphql
+          query: "mutation articleUpdate($id: ID!, $article: ArticleUpdateInput!) { articleUpdate(id: $id, article: $article) { userErrors { field message } article { id title handle body blog { id title } createdAt updatedAt } } }"
+          variables:
+            id: "{{ id }}"
+            article: "{{ article }}"
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ArticleUpdateParams"
+      responses:
+        "200":
+          description: Article updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ArticleMutationResponse"
+
+  "/graphql.json:articleDelete":
+    post:
+      summary: Delete an article
+      description: |
+        Deletes a blog article via GraphQL mutation.
+      operationId: Articles_Delete
+      x-airbyte-entity: articles
+      x-airbyte-action: delete
+      x-airbyte-ai-hints:
+        summary: "Delete a blog article"
+        when_to_use: "When the user asks to remove or delete a blog post"
+        trigger_phrases: ["delete an article", "remove a blog post", "unpublish and delete a post"]
+        freshness: live
+        search_strategy: "Use articles.delete (articleDelete) with the article GID. Requires write_content (or write_online_store_pages) scope."
+        example_questions:
+          - "Delete a blog post"
+      x-airbyte-record-extractor: $.data.articleDelete
+      x-airbyte-path-override:
+        path: /graphql.json
+      tags:
+      - Articles
+      requestBody:
+        required: true
+        x-airbyte-body-type:
+          type: graphql
+          query: "mutation articleDelete($id: ID!) { articleDelete(id: $id) { userErrors { field message } deletedArticleId } }"
+          variables:
+            id: "{{ id }}"
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ArticleDeleteParams"
+      responses:
+        "200":
+          description: Article deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ArticleDeleteResponse"
+
 components:
   securitySchemes:
     shopifyAccessToken:
@@ -4050,6 +5627,134 @@ components:
           credentials.api_password: "api_key"
         replication_auth_key_constants:
           credentials.auth_method: "api_password"
+      x-airbyte-oauth-scopes:
+        - scope: "read_customers"
+          mode: read
+          description: Read customers and customer addresses
+          entities:
+            - customers
+            - customer_address
+            - metafield_customers
+        - scope: "read_products"
+          mode: read
+          description: Read products, variants, images, and collections
+          entities:
+            - products
+            - product_variants
+            - product_images
+            - custom_collections
+            - smart_collections
+            - collects
+            - metafield_products
+            - metafield_product_variants
+            - metafield_product_images
+            - metafield_smart_collections
+        - scope: "read_orders"
+          mode: read
+          description: Read orders, refunds, transactions, fulfillments, and abandoned checkouts
+          entities:
+            - orders
+            - order_refunds
+            - transactions
+            - tender_transactions
+            - abandoned_checkouts
+            - fulfillments
+            - fulfillment_orders
+            - metafield_orders
+        - scope: "read_draft_orders"
+          mode: read
+          description: Read draft orders
+          entities:
+            - draft_orders
+            - metafield_draft_orders
+        - scope: "read_inventory"
+          mode: read
+          description: Read inventory levels and items
+          entities:
+            - inventory_levels
+            - inventory_items
+        - scope: "read_locations"
+          mode: read
+          description: Read store locations
+          entities:
+            - locations
+            - metafield_locations
+        - scope: "read_price_rules"
+          mode: read
+          description: Read price rules and their discount codes (legacy REST resources)
+          entities:
+            - price_rules
+            - discount_codes
+        - scope: "read_content"
+          mode: read
+          description: Read online store pages, blogs, and articles
+          entities:
+            - pages
+            - blogs
+            - articles
+            - metafield_pages
+            - metafield_blogs
+            - metafield_articles
+        - scope: "read_shipping"
+          mode: read
+          description: Read shipping data including the Country resource
+          entities:
+            - countries
+        - scope: "read_shopify_payments_payouts"
+          mode: read
+          description: Read Shopify Payments payouts and balance transactions (requires Partner Dashboard approval)
+          entities:
+            - balance_transactions
+        - scope: "read_shopify_payments_disputes"
+          mode: read
+          description: Read Shopify Payments disputes (requires Partner Dashboard approval)
+          entities:
+            - disputes
+        - scope: "write_customers"
+          mode: read_write
+          description: Create, update, and delete customers
+          entities:
+            - customers
+        - scope: "write_products"
+          mode: read_write
+          description: Create, update, and delete products, variants, and collections
+          entities:
+            - products
+            - product_variants
+            - custom_collections
+            - metafields
+        - scope: "write_orders"
+          mode: read_write
+          description: Create, update, cancel orders
+          entities:
+            - orders
+            - metafields
+        - scope: "write_draft_orders"
+          mode: read_write
+          description: Create, update, delete, and complete draft orders
+          entities:
+            - draft_orders
+            - draft_order_complete
+            - metafields
+        - scope: "write_inventory"
+          mode: read_write
+          description: Set and adjust inventory quantities
+          entities:
+            - inventory_set
+            - inventory_adjust
+        - scope: "write_discounts"
+          mode: read_write
+          description: Create, update, and delete discount codes
+          entities:
+            - discount_codes
+        - scope: "write_content"
+          mode: read_write
+          description: Create, update, and delete pages, blogs, and articles
+          entities:
+            - pages
+            - blogs
+            - articles
+            - metafields
 
     shopifyOAuth:
       type: oauth2
@@ -4098,14 +5803,15 @@ components:
       x-airbyte-entity-name: customers
       x-airbyte-stream-name: customers
       x-airbyte-ai-hints:
-        summary: "Shopify customers with order history and contact information"
-        when_to_use: "Looking up customer details or purchase history"
-        trigger_phrases: ["shopify customer", "buyer", "customer info"]
+        summary: "Shopify customers with contact info, addresses, order history, and marketing consent"
+        when_to_use: "Looking up customer details, contact information, purchase history, or marketing status"
+        trigger_phrases: ["shopify customer", "buyer", "customer info", "customer email", "customer list"]
         freshness: live
-        search_strategy: "Search by email, name, or phone"
+        search_strategy: "Search by email, name, or phone; filter by created/updated date"
         example_questions:
           - "Find a customer in Shopify"
-          - "Show customer order history"
+          - "Show a customer's order history"
+          - "List customers who joined this month"
       description: A Shopify customer
       required:
       - id
@@ -4327,14 +6033,15 @@ components:
       x-airbyte-entity-name: orders
       x-airbyte-stream-name: orders
       x-airbyte-ai-hints:
-        summary: "Shopify orders with line items, payment, and fulfillment status"
-        when_to_use: "Questions about orders, order status, or fulfillment"
-        trigger_phrases: ["shopify order", "order status", "fulfillment", "purchase"]
+        summary: "Shopify orders with line items, totals, payment status, and fulfillment status"
+        when_to_use: "Questions about orders, order status, totals, payment, or fulfillment progress"
+        trigger_phrases: ["shopify order", "order status", "fulfillment", "purchase", "order total", "recent orders"]
         freshness: live
-        search_strategy: "Search by order number or filter by status, date, or customer"
+        search_strategy: "Search by order number/name or filter by financial_status, fulfillment_status, date, or customer. Default REST window is the last 60 days unless read_all_orders is granted"
         example_questions:
           - "Show recent Shopify orders"
           - "What is the status of an order?"
+          - "Which orders are unfulfilled?"
       description: A Shopify order
       required:
       - id
@@ -4641,14 +6348,15 @@ components:
       x-airbyte-entity-name: products
       x-airbyte-stream-name: products
       x-airbyte-ai-hints:
-        summary: "Shopify products with title, description, pricing, and inventory"
-        when_to_use: "Questions about products, pricing, or product catalog"
-        trigger_phrases: ["shopify product", "product details", "pricing", "catalog"]
+        summary: "Shopify products with title, description, vendor, type, status, images, and variants"
+        when_to_use: "Questions about products, the product catalog, pricing, or product status"
+        trigger_phrases: ["shopify product", "product details", "pricing", "catalog", "product list", "what do I sell"]
         freshness: live
-        search_strategy: "Search by title or filter by type, vendor, or status"
+        search_strategy: "Search by title or filter by product_type, vendor, or status (active/draft/archived)"
         example_questions:
           - "List Shopify products"
           - "What is the price of a product?"
+          - "Show draft products"
       description: A Shopify product
       required:
       - id
@@ -4728,13 +6436,14 @@ components:
       x-airbyte-entity-name: product_variants
       x-airbyte-stream-name: product_variants
       x-airbyte-ai-hints:
-        summary: "Product variants with size, color, SKU, and inventory details"
-        when_to_use: "Questions about product options, SKUs, or variant-level data"
-        trigger_phrases: ["product variant", "SKU", "size", "color option"]
+        summary: "Product variants with SKU, price, option values (size/color), barcode, and inventory linkage"
+        when_to_use: "Questions about product options, SKUs, per-variant price, or variant-level inventory"
+        trigger_phrases: ["product variant", "SKU", "size", "color option", "variant price", "barcode"]
         freshness: live
-        search_strategy: "Filter by product"
+        search_strategy: "Filter by product_id; each variant links to an inventory_item for stock"
         example_questions:
           - "What variants does a product have?"
+          - "Find a variant by SKU"
       description: A product variant
       required:
       - id
@@ -4833,13 +6542,14 @@ components:
       x-airbyte-entity-name: product_images
       x-airbyte-stream-name: product_images
       x-airbyte-ai-hints:
-        summary: "Product images attached to Shopify products"
-        when_to_use: "Looking for product photos or image assets"
-        trigger_phrases: ["product image", "product photo"]
+        summary: "Image assets attached to Shopify products, with src URL, alt text, and position"
+        when_to_use: "Looking for product photos, image URLs, or alt text"
+        trigger_phrases: ["product image", "product photo", "image url", "product picture"]
         freshness: live
-        search_strategy: "Filter by product"
+        search_strategy: "Filter by product_id; images are ordered by position"
         example_questions:
           - "Show images for a product"
+          - "Get the main photo URL for a product"
       description: A product image
       required:
       - id
@@ -4894,13 +6604,13 @@ components:
       x-airbyte-entity-name: abandoned_checkouts
       x-airbyte-stream-name: abandoned_checkouts
       x-airbyte-ai-hints:
-        summary: "Abandoned checkout sessions with cart contents and customer info"
-        when_to_use: "Questions about abandoned carts or checkout drop-off"
-        trigger_phrases: ["abandoned checkout", "abandoned cart", "cart recovery"]
+        summary: "Abandoned checkout sessions with cart contents, customer info, and recovery URL"
+        when_to_use: "Questions about abandoned carts, checkout drop-off, or cart recovery"
+        trigger_phrases: ["abandoned checkout", "abandoned cart", "cart recovery", "incomplete checkout"]
         freshness: live
-        search_strategy: "Filter by date or customer"
+        search_strategy: "Filter by date or customer; includes a recovery_url for follow-up"
         example_questions:
-          - "Show abandoned checkouts"
+          - "Show abandoned checkouts this week"
           - "How many carts were abandoned?"
       description: An abandoned checkout
       required:
@@ -5031,13 +6741,14 @@ components:
       x-airbyte-entity-name: locations
       x-airbyte-stream-name: locations
       x-airbyte-ai-hints:
-        summary: "Shopify store locations for inventory and fulfillment"
-        when_to_use: "Questions about store or warehouse locations"
-        trigger_phrases: ["shopify location", "warehouse", "store location"]
+        summary: "Physical and logical store locations used for inventory and fulfillment"
+        when_to_use: "Questions about store, warehouse, or fulfillment locations and their addresses"
+        trigger_phrases: ["shopify location", "warehouse", "store location", "fulfillment location"]
         freshness: static
-        search_strategy: "List all locations"
+        search_strategy: "List all locations; the location id is required to read or set inventory levels"
         example_questions:
           - "What locations are configured in Shopify?"
+          - "Which location fulfills orders?"
       description: A store location
       required:
       - id
@@ -5097,13 +6808,14 @@ components:
       x-airbyte-entity-name: inventory_levels
       x-airbyte-stream-name: inventory_levels
       x-airbyte-ai-hints:
-        summary: "Inventory quantities at specific locations for variants"
-        when_to_use: "Questions about stock levels or inventory availability"
-        trigger_phrases: ["inventory level", "stock level", "how many in stock"]
+        summary: "Available inventory quantity for an inventory item at a specific location"
+        when_to_use: "Questions about stock on hand, availability, or how many units are in stock"
+        trigger_phrases: ["inventory level", "stock level", "how many in stock", "available quantity", "on hand"]
         freshness: live
-        search_strategy: "Filter by location or inventory item"
+        search_strategy: "Read per location (location_id required); join via inventory_item_id to the variant"
         example_questions:
-          - "What is the stock level for a product?"
+          - "How many units of a variant are in stock?"
+          - "Show inventory levels at a location"
       description: An inventory level
       properties:
         inventory_item_id:
@@ -5131,13 +6843,14 @@ components:
       x-airbyte-entity-name: inventory_items
       x-airbyte-stream-name: inventory_items
       x-airbyte-ai-hints:
-        summary: "Inventory items representing physical goods for tracking"
-        when_to_use: "Questions about inventory item details or tracking configuration"
-        trigger_phrases: ["inventory item", "tracked inventory"]
+        summary: "Inventory items linking variants to stock — SKU, cost, tracking, and country of origin"
+        when_to_use: "Questions about cost of goods, SKU-level tracking, or whether inventory is tracked"
+        trigger_phrases: ["inventory item", "cost of goods", "COGS", "tracked inventory", "unit cost"]
         freshness: live
-        search_strategy: "Filter by product variant"
+        search_strategy: "List all or filter by ids; each inventory_item maps 1:1 to a product variant"
         example_questions:
-          - "Show inventory item details"
+          - "What is the unit cost of an item?"
+          - "Is inventory tracked for a variant?"
       description: An inventory item
       required:
       - id
@@ -5185,13 +6898,14 @@ components:
       x-airbyte-entity-name: shop
       x-airbyte-stream-name: shop
       x-airbyte-ai-hints:
-        summary: "Shopify store configuration and account details"
-        when_to_use: "Questions about store settings or account information"
-        trigger_phrases: ["shopify shop", "store settings", "shop details"]
+        summary: "Store-level settings and metadata — name, domain, currency, timezone, plan, and contact info"
+        when_to_use: "Questions about the store itself: its name, currency, timezone, plan, or primary domain"
+        trigger_phrases: ["shop info", "store details", "store currency", "store timezone", "my shop"]
         freshness: static
-        search_strategy: "Retrieve store info"
+        search_strategy: "Single-record fetch; no filters"
         example_questions:
-          - "Show Shopify store details"
+          - "What currency does the store use?"
+          - "What is the store's timezone and domain?"
       description: Shop configuration
       required:
       - id
@@ -5315,13 +7029,14 @@ components:
       x-airbyte-entity-name: price_rules
       x-airbyte-stream-name: price_rules
       x-airbyte-ai-hints:
-        summary: "Discount price rules for Shopify promotions"
-        when_to_use: "Questions about discount rules or promotion configuration"
-        trigger_phrases: ["price rule", "discount rule", "promotion"]
+        summary: "Discount price rules defining the conditions and value of a discount (the rule behind discount codes)"
+        when_to_use: "Questions about discount rules, promotions, or the conditions/value of a discount"
+        trigger_phrases: ["price rule", "discount rule", "promotion", "discount conditions"]
         freshness: live
-        search_strategy: "List all price rules"
+        search_strategy: "List all or filter by date; each price rule owns one or more discount codes"
         example_questions:
-          - "What price rules are active?"
+          - "What discount rules are active?"
+          - "Show the conditions for a promotion"
       description: A price rule
       required:
       - id
@@ -5423,13 +7138,14 @@ components:
       x-airbyte-entity-name: discount_codes
       x-airbyte-stream-name: discount_codes
       x-airbyte-ai-hints:
-        summary: "Discount codes associated with Shopify price rules"
-        when_to_use: "Questions about available discount codes"
-        trigger_phrases: ["discount code", "promo code", "coupon code"]
+        summary: "Discount codes belonging to a price rule — the redeemable codes customers enter at checkout"
+        when_to_use: "Questions about specific discount/coupon codes or their usage"
+        trigger_phrases: ["discount code", "coupon code", "promo code", "redeem code"]
         freshness: live
-        search_strategy: "Filter by price rule or search by code"
+        search_strategy: "Read under a price_rule_id; the code's behavior (amount, conditions) lives on its price rule"
         example_questions:
-          - "What discount codes are available?"
+          - "List discount codes for a promotion"
+          - "Does a coupon code exist?"
       description: A discount code
       required:
       - id
@@ -5463,13 +7179,14 @@ components:
       x-airbyte-entity-name: custom_collections
       x-airbyte-stream-name: custom_collections
       x-airbyte-ai-hints:
-        summary: "Manually curated product collections in Shopify"
-        when_to_use: "Questions about product collections or curated groupings"
-        trigger_phrases: ["custom collection", "product collection"]
+        summary: "Manually curated product collections where products are added by hand"
+        when_to_use: "Questions about manually built collections or which products are grouped together"
+        trigger_phrases: ["custom collection", "manual collection", "product group", "collection"]
         freshness: live
-        search_strategy: "Search by title"
+        search_strategy: "List all or filter by title/published status; membership is managed via collects"
         example_questions:
-          - "What custom collections exist?"
+          - "List custom collections"
+          - "What products are in a collection?"
       description: A custom collection
       required:
       - id
@@ -5515,13 +7232,14 @@ components:
       x-airbyte-entity-name: smart_collections
       x-airbyte-stream-name: smart_collections
       x-airbyte-ai-hints:
-        summary: "Automated product collections based on rules in Shopify"
-        when_to_use: "Questions about automated collections or rule-based groupings"
-        trigger_phrases: ["smart collection", "automated collection"]
+        summary: "Automated collections whose membership is defined by rules (e.g. tag, price, vendor)"
+        when_to_use: "Questions about rule-based/automatic collections and their conditions"
+        trigger_phrases: ["smart collection", "automated collection", "rule-based collection"]
         freshness: live
-        search_strategy: "Search by title"
+        search_strategy: "List all or filter by title; membership is rule-driven, not manual"
         example_questions:
-          - "What smart collections exist?"
+          - "List smart collections"
+          - "What rules define a smart collection?"
       description: A smart collection
       required:
       - id
@@ -5573,13 +7291,14 @@ components:
       x-airbyte-entity-name: collects
       x-airbyte-stream-name: collects
       x-airbyte-ai-hints:
-        summary: "Links between products and collections in Shopify"
-        when_to_use: "Questions about which products are in which collections"
-        trigger_phrases: ["product in collection", "collection membership"]
+        summary: "Join records linking products to custom collections, with sort position"
+        when_to_use: "When you need the product-to-collection membership mapping or ordering"
+        trigger_phrases: ["collect", "collection membership", "product in collection", "collection mapping"]
         freshness: live
-        search_strategy: "Filter by collection or product"
+        search_strategy: "Filter by collection_id or product_id to resolve membership"
         example_questions:
-          - "What products are in a collection?"
+          - "Which collection is a product in?"
+          - "List products in a custom collection"
       description: A collect (product-collection link)
       required:
       - id
@@ -5615,13 +7334,14 @@ components:
       x-airbyte-entity-name: draft_orders
       x-airbyte-stream-name: draft_orders
       x-airbyte-ai-hints:
-        summary: "Draft orders created manually in Shopify admin"
-        when_to_use: "Questions about draft orders or manually created orders"
-        trigger_phrases: ["draft order", "manual order"]
+        summary: "Draft orders — provisional orders/quotes a merchant builds before invoicing or completing them"
+        when_to_use: "Questions about quotes, invoices, or orders being drafted before they are finalized"
+        trigger_phrases: ["draft order", "quote", "invoice", "provisional order", "order in progress"]
         freshness: live
-        search_strategy: "Filter by status or date"
+        search_strategy: "List all or filter by status (open/invoice_sent/completed)"
         example_questions:
-          - "Show draft orders"
+          - "Show open draft orders"
+          - "List quotes awaiting payment"
       description: A draft order
       required:
       - id
@@ -5725,13 +7445,14 @@ components:
       x-airbyte-entity-name: fulfillments
       x-airbyte-stream-name: fulfillments
       x-airbyte-ai-hints:
-        summary: "Order fulfillments with tracking and shipping details"
-        when_to_use: "Questions about shipping status or fulfillment tracking"
-        trigger_phrases: ["fulfillment", "shipping status", "tracking number"]
+        summary: "Fulfillment records for an order — shipped items, tracking numbers, and carrier"
+        when_to_use: "Questions about shipments, tracking numbers, or what has shipped on an order"
+        trigger_phrases: ["fulfillment", "shipment", "tracking number", "what shipped", "carrier"]
         freshness: live
-        search_strategy: "Filter by order"
+        search_strategy: "Filter by order_id; an order can have multiple fulfillments"
         example_questions:
-          - "What is the shipping status of an order?"
+          - "Show fulfillments for an order"
+          - "What is the tracking number for a shipment?"
       description: A fulfillment
       required:
       - id
@@ -5795,13 +7516,14 @@ components:
       x-airbyte-entity-name: fulfillment_orders
       x-airbyte-stream-name: fulfillment_orders
       x-airbyte-ai-hints:
-        summary: "Fulfillment orders representing items to be shipped from a location"
-        when_to_use: "Questions about pending fulfillment or items to ship"
-        trigger_phrases: ["fulfillment order", "items to ship", "pending fulfillment"]
+        summary: "Fulfillment orders — the modern unit of work grouping line items by assigned fulfillment location"
+        when_to_use: "Questions about what still needs to ship, assigned location, or fulfillment workflow state"
+        trigger_phrases: ["fulfillment order", "what needs to ship", "assigned location", "fulfillment status"]
         freshness: live
-        search_strategy: "Filter by order or location"
+        search_strategy: "Filter by order_id; fulfillment orders drive the create-fulfillment workflow"
         example_questions:
-          - "What fulfillment orders are pending?"
+          - "What line items still need fulfillment?"
+          - "Show fulfillment orders for an order"
       description: A fulfillment order
       required:
       - id
@@ -5869,13 +7591,14 @@ components:
       x-airbyte-entity-name: order_refunds
       x-airbyte-stream-name: order_refunds
       x-airbyte-ai-hints:
-        summary: "Refunds processed for Shopify orders"
-        when_to_use: "Questions about refunds or return processing"
-        trigger_phrases: ["refund", "order refund", "return"]
+        summary: "Refunds issued against a Shopify order, including refunded line items and amounts"
+        when_to_use: "Questions about refunds, returned money, or what was refunded on an order"
+        trigger_phrases: ["refund", "refunded amount", "order refund", "money back"]
         freshness: live
-        search_strategy: "Filter by order"
+        search_strategy: "Filter by order_id; each order may have multiple partial refunds"
         example_questions:
-          - "What refunds were processed for an order?"
+          - "Show refunds for an order"
+          - "How much was refunded on an order?"
       description: An order refund
       required:
       - id
@@ -5937,13 +7660,14 @@ components:
       x-airbyte-entity-name: transactions
       x-airbyte-stream-name: transactions
       x-airbyte-ai-hints:
-        summary: "Payment transactions on Shopify orders"
-        when_to_use: "Questions about payment processing or transaction details"
-        trigger_phrases: ["shopify transaction", "payment", "charge"]
+        summary: "Payment transactions for an order (authorizations, captures, sales, refunds, voids)"
+        when_to_use: "Questions about how an order was paid, gateway, or transaction amounts"
+        trigger_phrases: ["order transaction", "payment", "capture", "authorization", "how was an order paid"]
         freshness: live
-        search_strategy: "Filter by order"
+        search_strategy: "Filter by order_id; transactions show kind (sale, authorization, capture, refund, void) and gateway"
         example_questions:
-          - "Show transactions for an order"
+          - "Show payment transactions for an order"
+          - "Was an order's payment captured?"
       description: An order transaction
       required:
       - id
@@ -6013,13 +7737,14 @@ components:
       x-airbyte-entity-name: tender_transactions
       x-airbyte-stream-name: tender_transactions
       x-airbyte-ai-hints:
-        summary: "Tender transactions recording payment method usage"
-        when_to_use: "Questions about payment method usage or tender records"
-        trigger_phrases: ["tender transaction", "payment method"]
+        summary: "Store-wide tender transactions — each real money movement between a buyer and the shop"
+        when_to_use: "Reconciliation or reporting on money movement across all orders over time"
+        trigger_phrases: ["tender transaction", "money movement", "payment reconciliation", "cash flow"]
         freshness: live
-        search_strategy: "Filter by date"
+        search_strategy: "List all and filter by processed_at date; immutable ledger across the whole shop"
         example_questions:
-          - "Show recent tender transactions"
+          - "List tender transactions from last month"
+          - "Show all money movements for the store"
       description: A tender transaction
       required:
       - id
@@ -6060,13 +7785,14 @@ components:
       x-airbyte-entity-name: countries
       x-airbyte-stream-name: countries
       x-airbyte-ai-hints:
-        summary: "Countries configured for Shopify store shipping and taxes"
-        when_to_use: "Questions about shipping zones or tax configuration by country"
-        trigger_phrases: ["shopify country", "shipping country", "tax region"]
+        summary: "Shipping countries configured for the store, with their provinces and tax settings"
+        when_to_use: "Questions about which countries the store ships to or country-level tax setup"
+        trigger_phrases: ["shipping countries", "country tax", "where does the store ship", "country list"]
         freshness: static
-        search_strategy: "List all countries"
+        search_strategy: "List all configured shipping countries"
         example_questions:
-          - "What countries are configured for shipping?"
+          - "Which countries does the store ship to?"
+          - "What is the tax rate for a country?"
       description: A country
       required:
       - id
@@ -6100,14 +7826,14 @@ components:
       x-airbyte-entity-name: pages
       x-airbyte-stream-name: pages
       x-airbyte-ai-hints:
-        summary: "Static HTML pages on the Shopify store (About Us, Contact, FAQ, etc.)"
-        when_to_use: "Questions about store pages, static content, or published page info"
-        trigger_phrases: ["page", "static page", "about page", "contact page"]
-        freshness: static
-        search_strategy: "List all pages or filter by title/handle"
+        summary: "Online store content pages (e.g. About, Contact, FAQ) with title, handle, and body HTML"
+        when_to_use: "Questions about static content pages on the storefront"
+        trigger_phrases: ["store page", "content page", "about page", "FAQ page"]
+        freshness: live
+        search_strategy: "List all or filter by handle/title"
         example_questions:
-          - "What pages are published on my store?"
-          - "Show me the About Us page content"
+          - "List pages on the store"
+          - "Show the About page content"
       description: A static page on the store
       required:
       - id
@@ -6156,14 +7882,14 @@ components:
       x-airbyte-entity-name: blogs
       x-airbyte-stream-name: blogs
       x-airbyte-ai-hints:
-        summary: "Blogs on the Shopify store that contain articles (blog posts)"
-        when_to_use: "Questions about store blogs, blog configuration, or blog listing"
-        trigger_phrases: ["blog", "blog list", "store blog"]
-        freshness: static
-        search_strategy: "List all blogs"
+        summary: "Blogs (containers for articles) configured on the online store"
+        when_to_use: "Questions about blog containers or where articles are published"
+        trigger_phrases: ["store blog", "blog list", "blog container"]
+        freshness: live
+        search_strategy: "List all blogs; each blog holds many articles"
         example_questions:
-          - "What blogs are on my store?"
-          - "Show me the blog configuration"
+          - "List blogs on the store"
+          - "Which blog do articles belong to?"
       description: A blog on the store
       required:
       - id
@@ -6214,14 +7940,14 @@ components:
       x-airbyte-entity-name: articles
       x-airbyte-stream-name: articles
       x-airbyte-ai-hints:
-        summary: "Blog articles (posts) on the Shopify store"
-        when_to_use: "Questions about blog posts, article content, or article authors"
-        trigger_phrases: ["article", "blog post", "blog article"]
+        summary: "Blog articles (posts) within a blog, with title, author, body HTML, and publish status"
+        when_to_use: "Questions about blog posts, article content, or publishing status"
+        trigger_phrases: ["blog article", "blog post", "article content", "published post"]
         freshness: live
-        search_strategy: "List articles by blog or filter by author/tag"
+        search_strategy: "Read under a blog_id; filter by published status or author"
         example_questions:
-          - "What articles are in my blog?"
-          - "Show me the latest blog posts"
+          - "List blog articles"
+          - "Show a published blog post"
       description: A blog article (post)
       required:
       - id
@@ -6298,14 +8024,14 @@ components:
       x-airbyte-entity-name: balance_transactions
       x-airbyte-stream-name: balance_transactions
       x-airbyte-ai-hints:
-        summary: "Shopify Payments balance transactions — the canonical ledger of all money movement"
-        when_to_use: "Questions about payment ledger entries, charges, fees, refunds, payouts, or financial reconciliation"
-        trigger_phrases: ["balance transaction", "payment ledger", "shopify payment", "payout transaction"]
+        summary: "Shopify Payments balance transactions — payouts, charges, refunds, and fees affecting the balance"
+        when_to_use: "Questions about Shopify Payments payouts, fees, or the payments balance ledger"
+        trigger_phrases: ["balance transaction", "shopify payments balance", "payout", "processing fee"]
         freshness: live
-        search_strategy: "List balance transactions, optionally filter by payout"
+        search_strategy: "List all and filter by payout or date; requires read_shopify_payments_payouts scope"
         example_questions:
-          - "Show me recent Shopify Payments balance transactions"
-          - "What transactions are in the latest payout?"
+          - "Show Shopify Payments payouts"
+          - "What fees were charged this month?"
       description: A Shopify Payments balance transaction
       required:
       - id
@@ -6374,14 +8100,14 @@ components:
       x-airbyte-entity-name: disputes
       x-airbyte-stream-name: disputes
       x-airbyte-ai-hints:
-        summary: "Shopify Payments disputes — chargebacks and inquiries from cardholders"
-        when_to_use: "Questions about chargebacks, payment disputes, or cardholder claims"
-        trigger_phrases: ["dispute", "chargeback", "inquiry", "payment dispute"]
+        summary: "Shopify Payments disputes and chargebacks raised by customers, with status and evidence due dates"
+        when_to_use: "Questions about chargebacks, disputes, or evidence deadlines"
+        trigger_phrases: ["dispute", "chargeback", "payment dispute", "evidence due"]
         freshness: live
-        search_strategy: "List disputes, filter by status or date"
+        search_strategy: "List all or filter by status/date; requires read_shopify_payments_disputes scope"
         example_questions:
           - "Are there any open disputes?"
-          - "Show me recent chargebacks"
+          - "When is dispute evidence due?"
       description: A Shopify Payments dispute
       required:
       - id
@@ -6440,13 +8166,14 @@ components:
       x-airbyte-entity-name: metafields
       x-airbyte-stream-name: metafields
       x-airbyte-ai-hints:
-        summary: "Custom metafields storing additional data on Shopify resources"
-        when_to_use: "Questions about custom metadata or extended fields on resources"
-        trigger_phrases: ["metafield", "custom field", "metadata"]
+        summary: "Custom metafields (typed key/value data) attached to any Shopify resource via owner GID"
+        when_to_use: "When setting or deleting custom data on a product, order, customer, or other resource"
+        trigger_phrases: ["set metafield", "delete metafield", "custom field", "metadata on a resource"]
         freshness: live
-        search_strategy: "Filter by resource type and namespace"
+        search_strategy: "Metafields are written by owner GID + namespace + key; requires the owner resource's write scope (e.g. write_products for a product metafield)"
         example_questions:
-          - "What metafields are on a product?"
+          - "Set a metafield on a product"
+          - "Delete a metafield from an order"
       description: A metafield
       required:
       - id
@@ -6485,3 +8212,2130 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Metafield"
+
+    # ── GraphQL Write Operation Schemas ──────────────────────────────────
+
+    # Common GraphQL error object
+    GraphQLUserError:
+      type: object
+      properties:
+        field:
+          type: ["string", "null", "array"]
+          description: Path to the input field that caused the error
+        message:
+          type: string
+          description: Error message
+        code:
+          type: ["string", "null"]
+          description: Error code
+
+    # ── Customer Mutation Schemas ──────────────────────────────────────
+
+    CustomerCreateParams:
+      type: object
+      description: |
+        Parameters for creating a customer. Provide fields inside the 'input' object.
+        At least one of email, phone, firstName, or lastName is required.
+      required:
+      - input
+      properties:
+        input:
+          type: object
+          description: "CustomerInput object"
+          properties:
+            email:
+              type: string
+              description: Customer email address
+            firstName:
+              type: string
+              description: Customer first name
+            lastName:
+              type: string
+              description: Customer last name
+            phone:
+              type: string
+              description: "Customer phone number (E.164 format, e.g. +16465555555)"
+            note:
+              type: string
+              description: Note about the customer
+            tags:
+              type: array
+              items:
+                type: string
+              description: Tags to associate with the customer
+            taxExempt:
+              type: boolean
+              description: Whether the customer is tax exempt
+            addresses:
+              type: array
+              description: List of customer addresses
+              items:
+                type: object
+                properties:
+                  address1:
+                    type: string
+                  address2:
+                    type: string
+                  city:
+                    type: string
+                  province:
+                    type: string
+                  zip:
+                    type: string
+                  countryCode:
+                    type: string
+                  phone:
+                    type: string
+                  firstName:
+                    type: string
+                  lastName:
+                    type: string
+
+    CustomerUpdateParams:
+      type: object
+      description: |
+        Parameters for updating a customer. The input.id field is required.
+        All other fields are optional for partial updates.
+      required:
+      - input
+      properties:
+        input:
+          type: object
+          description: "CustomerInput object with id"
+          required:
+          - id
+          properties:
+            id:
+              type: string
+              description: "The GraphQL GID of the customer (e.g. gid://shopify/Customer/123)"
+            email:
+              type: string
+              description: Customer email address
+            firstName:
+              type: string
+              description: Customer first name
+            lastName:
+              type: string
+              description: Customer last name
+            phone:
+              type: string
+              description: "Customer phone number (E.164 format)"
+            note:
+              type: string
+              description: Note about the customer
+            tags:
+              type: array
+              items:
+                type: string
+              description: Tags to associate with the customer
+            taxExempt:
+              type: boolean
+              description: Whether the customer is tax exempt
+
+    CustomerDeleteParams:
+      type: object
+      description: Parameters for deleting a customer. Only succeeds if the customer has no orders.
+      required:
+      - input
+      properties:
+        input:
+          type: object
+          required:
+          - id
+          properties:
+            id:
+              type: string
+              description: "The GraphQL GID of the customer to delete (e.g. gid://shopify/Customer/123)"
+
+    GraphQLCustomer:
+      type: object
+      description: Customer returned from GraphQL mutation
+      properties:
+        id:
+          type: string
+          description: GraphQL GID
+        email:
+          type: ["string", "null"]
+        firstName:
+          type: ["string", "null"]
+        lastName:
+          type: ["string", "null"]
+        phone:
+          type: ["string", "null"]
+        note:
+          type: ["string", "null"]
+        tags:
+          type: array
+          items:
+            type: string
+        taxExempt:
+          type: ["boolean", "null"]
+        createdAt:
+          type: ["string", "null"]
+          format: date-time
+        updatedAt:
+          type: ["string", "null"]
+          format: date-time
+
+    CustomerCreatePayload:
+      type: object
+      properties:
+        userErrors:
+          type: array
+          items:
+            $ref: "#/components/schemas/GraphQLUserError"
+        customer:
+          $ref: "#/components/schemas/GraphQLCustomer"
+
+    CustomerUpdatePayload:
+      type: object
+      properties:
+        userErrors:
+          type: array
+          items:
+            $ref: "#/components/schemas/GraphQLUserError"
+        customer:
+          $ref: "#/components/schemas/GraphQLCustomer"
+
+    CustomerDeletePayload:
+      type: object
+      properties:
+        userErrors:
+          type: array
+          items:
+            $ref: "#/components/schemas/GraphQLUserError"
+        deletedCustomerId:
+          type: ["string", "null"]
+          description: GID of the deleted customer
+
+    CustomerMutationResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            customerCreate:
+              $ref: "#/components/schemas/CustomerCreatePayload"
+            customerUpdate:
+              $ref: "#/components/schemas/CustomerUpdatePayload"
+
+    CustomerDeleteResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            customerDelete:
+              $ref: "#/components/schemas/CustomerDeletePayload"
+
+    # ── Product Mutation Schemas ───────────────────────────────────────
+
+    ProductCreateParams:
+      type: object
+      description: |
+        Parameters for creating a product.
+        Creates the product with a default variant.
+      required:
+      - product
+      properties:
+        product:
+          type: object
+          description: "ProductCreateInput object"
+          required:
+          - title
+          properties:
+            title:
+              type: string
+              description: Product title
+            descriptionHtml:
+              type: string
+              description: Product description in HTML
+            vendor:
+              type: string
+              description: Product vendor
+            productType:
+              type: string
+              description: Product type
+            tags:
+              type: array
+              items:
+                type: string
+              description: Tags for the product
+            status:
+              type: string
+              enum: [ACTIVE, ARCHIVED, DRAFT]
+              description: "Product status (ACTIVE, ARCHIVED, DRAFT)"
+        media:
+          type: array
+          description: Media to attach to the product
+          items:
+            type: object
+            properties:
+              originalSource:
+                type: string
+                description: URL of the media
+              mediaContentType:
+                type: string
+                enum: [IMAGE, VIDEO, EXTERNAL_VIDEO, MODEL_3D]
+
+    ProductUpdateParams:
+      type: object
+      description: |
+        Parameters for updating a product. The product.id field is required.
+        All other fields are optional for partial updates.
+      required:
+      - product
+      properties:
+        product:
+          type: object
+          description: "ProductUpdateInput object"
+          required:
+          - id
+          properties:
+            id:
+              type: string
+              description: "The GraphQL GID of the product (e.g. gid://shopify/Product/123)"
+            title:
+              type: string
+              description: Product title
+            descriptionHtml:
+              type: string
+              description: Product description in HTML
+            vendor:
+              type: string
+              description: Product vendor
+            productType:
+              type: string
+              description: Product type
+            tags:
+              type: array
+              items:
+                type: string
+              description: Tags for the product
+            status:
+              type: string
+              enum: [ACTIVE, ARCHIVED, DRAFT]
+              description: "Product status"
+
+    ProductDeleteParams:
+      type: object
+      description: Parameters for deleting a product. This action is irreversible.
+      required:
+      - input
+      properties:
+        input:
+          type: object
+          required:
+          - id
+          properties:
+            id:
+              type: string
+              description: "The GraphQL GID of the product to delete (e.g. gid://shopify/Product/123)"
+
+    GraphQLProduct:
+      type: object
+      description: Product returned from GraphQL mutation
+      properties:
+        id:
+          type: string
+          description: GraphQL GID
+        title:
+          type: ["string", "null"]
+        descriptionHtml:
+          type: ["string", "null"]
+        vendor:
+          type: ["string", "null"]
+        productType:
+          type: ["string", "null"]
+        tags:
+          type: array
+          items:
+            type: string
+        status:
+          type: ["string", "null"]
+        createdAt:
+          type: ["string", "null"]
+          format: date-time
+        updatedAt:
+          type: ["string", "null"]
+          format: date-time
+
+    ProductCreatePayload:
+      type: object
+      properties:
+        userErrors:
+          type: array
+          items:
+            $ref: "#/components/schemas/GraphQLUserError"
+        product:
+          $ref: "#/components/schemas/GraphQLProduct"
+
+    ProductUpdatePayload:
+      type: object
+      properties:
+        userErrors:
+          type: array
+          items:
+            $ref: "#/components/schemas/GraphQLUserError"
+        product:
+          $ref: "#/components/schemas/GraphQLProduct"
+
+    ProductDeletePayload:
+      type: object
+      properties:
+        userErrors:
+          type: array
+          items:
+            $ref: "#/components/schemas/GraphQLUserError"
+        deletedProductId:
+          type: ["string", "null"]
+
+    ProductMutationResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            productCreate:
+              $ref: "#/components/schemas/ProductCreatePayload"
+            productUpdate:
+              $ref: "#/components/schemas/ProductUpdatePayload"
+
+    ProductDeleteResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            productDelete:
+              $ref: "#/components/schemas/ProductDeletePayload"
+
+    # ── Product Variants Mutation Schemas ───────────────────────────────
+
+    ProductVariantsCreateParams:
+      type: object
+      description: Parameters for bulk creating product variants.
+      required:
+      - productId
+      - variants
+      properties:
+        productId:
+          type: string
+          description: "The GraphQL GID of the product (e.g. gid://shopify/Product/123)"
+        variants:
+          type: array
+          description: List of variants to create
+          items:
+            type: object
+            properties:
+              price:
+                type: string
+                description: Variant price
+              barcode:
+                type: string
+                description: Variant barcode
+              compareAtPrice:
+                type: string
+                description: Compare-at price
+              inventoryItem:
+                type: object
+                description: >-
+                  Inventory-item attributes for the variant. As of Admin API
+                  2024-07+ the SKU is no longer a variant-level field and must be
+                  set here (a top-level sku is ignored/rejected by
+                  productVariantsBulkCreate).
+                properties:
+                  sku:
+                    type: string
+                    description: Variant SKU (set via inventoryItem.sku)
+              optionValues:
+                type: array
+                description: >-
+                  Required in practice: each variant must supply one option value
+                  for EVERY option defined on the product. A product with options
+                  Color and Size needs both here; a product with only the default
+                  option needs a single "Title" entry. Omitting an option (or
+                  optionValues entirely) causes a userErrors rejection.
+                items:
+                  type: object
+                  required:
+                  - optionName
+                  - name
+                  properties:
+                    optionName:
+                      type: string
+                      description: >-
+                        Name of the product option this value belongs to (e.g.
+                        "Color", "Size", or "Title" for a single-option product).
+                    name:
+                      type: string
+                      description: >-
+                        The option value (e.g. "Large"). If the value already
+                        exists on the option it is linked; otherwise a new option
+                        value is created.
+
+    ProductVariantsUpdateParams:
+      type: object
+      description: Parameters for bulk updating product variants.
+      required:
+      - productId
+      - variants
+      properties:
+        productId:
+          type: string
+          description: "The GraphQL GID of the product"
+        variants:
+          type: array
+          description: List of variants to update (each must include id)
+          items:
+            type: object
+            required:
+            - id
+            properties:
+              id:
+                type: string
+                description: "The GraphQL GID of the variant"
+              price:
+                type: string
+              barcode:
+                type: string
+              compareAtPrice:
+                type: string
+              inventoryItem:
+                type: object
+                description: >-
+                  Inventory-item attributes for the variant. As of Admin API
+                  2024-07+ the SKU is no longer a variant-level field and must be
+                  set here (a top-level sku is ignored/rejected by
+                  productVariantsBulkUpdate, which silently returns null instead
+                  of updating).
+                properties:
+                  sku:
+                    type: string
+                    description: Variant SKU (set via inventoryItem.sku)
+
+    ProductVariantsDeleteParams:
+      type: object
+      description: Parameters for bulk deleting product variants. Cannot delete the last variant.
+      required:
+      - productId
+      - variantsIds
+      properties:
+        productId:
+          type: string
+          description: "The GraphQL GID of the product"
+        variantsIds:
+          type: array
+          items:
+            type: string
+          description: "List of variant GIDs to delete"
+
+    GraphQLProductVariant:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: ["string", "null"]
+        price:
+          type: ["string", "null"]
+        sku:
+          type: ["string", "null"]
+        barcode:
+          type: ["string", "null"]
+        compareAtPrice:
+          type: ["string", "null"]
+        inventoryQuantity:
+          type: ["integer", "null"]
+
+    ProductVariantsBulkCreatePayload:
+      type: object
+      properties:
+        userErrors:
+          type: array
+          items:
+            $ref: "#/components/schemas/GraphQLUserError"
+        productVariants:
+          type: ["array", "null"]
+          items:
+            $ref: "#/components/schemas/GraphQLProductVariant"
+
+    ProductVariantsBulkUpdatePayload:
+      type: object
+      properties:
+        userErrors:
+          type: array
+          items:
+            $ref: "#/components/schemas/GraphQLUserError"
+        productVariants:
+          type: ["array", "null"]
+          items:
+            $ref: "#/components/schemas/GraphQLProductVariant"
+
+    ProductVariantsBulkDeletePayload:
+      type: object
+      properties:
+        userErrors:
+          type: array
+          items:
+            $ref: "#/components/schemas/GraphQLUserError"
+        product:
+          type: ["object", "null"]
+          properties:
+            id:
+              type: string
+            title:
+              type: ["string", "null"]
+
+    ProductVariantsMutationResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            productVariantsBulkCreate:
+              $ref: "#/components/schemas/ProductVariantsBulkCreatePayload"
+            productVariantsBulkUpdate:
+              $ref: "#/components/schemas/ProductVariantsBulkUpdatePayload"
+
+    ProductVariantsDeleteResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            productVariantsBulkDelete:
+              $ref: "#/components/schemas/ProductVariantsBulkDeletePayload"
+
+    # ── Order Mutation Schemas ─────────────────────────────────────────
+
+    OrderCreateParams:
+      type: object
+      description: |
+        Parameters for creating an order.
+        Use line items with variantId and quantity.
+      required:
+      - order
+      properties:
+        order:
+          type: object
+          description: "OrderCreateOrderInput object"
+          required:
+          - lineItems
+          properties:
+            lineItems:
+              type: array
+              description: Line items for the order
+              items:
+                type: object
+                properties:
+                  variantId:
+                    type: string
+                    description: "GraphQL GID of the product variant"
+                  quantity:
+                    type: integer
+                    description: Quantity to order
+                  title:
+                    type: string
+                    description: Custom title (for custom line items without a variant)
+                  priceSet:
+                    type: object
+                    properties:
+                      shopMoney:
+                        type: object
+                        properties:
+                          amount:
+                            type: string
+                          currencyCode:
+                            type: string
+            customerId:
+              type: string
+              description: "GraphQL GID of the customer"
+            email:
+              type: string
+              description: Customer email
+            note:
+              type: string
+              description: Order note
+            tags:
+              type: array
+              items:
+                type: string
+              description: Order tags
+            shippingAddress:
+              type: object
+              properties:
+                address1:
+                  type: string
+                city:
+                  type: string
+                provinceCode:
+                  type: string
+                zip:
+                  type: string
+                countryCode:
+                  type: string
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+        options:
+          type: object
+          description: "OrderCreateOptionsInput"
+          properties:
+            inventoryBehaviour:
+              type: string
+              enum: [BYPASS, DECREMENT_IGNORING_POLICY, DECREMENT_OBEYING_POLICY]
+
+    OrderUpdateParams:
+      type: object
+      description: |
+        Parameters for updating an order. The input.id field is required.
+        For line item changes, use orderEditBegin/orderEditCommit instead.
+      required:
+      - input
+      properties:
+        input:
+          type: object
+          required:
+          - id
+          properties:
+            id:
+              type: string
+              description: "The GraphQL GID of the order (e.g. gid://shopify/Order/123)"
+            email:
+              type: string
+              description: Customer email
+            note:
+              type: string
+              description: Order note
+            tags:
+              type: array
+              items:
+                type: string
+              description: Order tags
+            shippingAddress:
+              type: object
+              properties:
+                address1:
+                  type: string
+                city:
+                  type: string
+                provinceCode:
+                  type: string
+                zip:
+                  type: string
+                countryCode:
+                  type: string
+
+    OrderCancelParams:
+      type: object
+      description: |
+        Parameters for cancelling an order. This action is irreversible.
+      required:
+      - orderId
+      - reason
+      - restock
+      properties:
+        orderId:
+          type: string
+          description: "The GraphQL GID of the order to cancel"
+        reason:
+          type: string
+          enum: [CUSTOMER, DECLINED, FRAUD, INVENTORY, OTHER, STAFF]
+          description: "Reason for cancellation"
+        notifyCustomer:
+          type: boolean
+          description: Whether to notify the customer
+        refund:
+          type: boolean
+          description: Whether to refund the order
+        restock:
+          type: boolean
+          description: Whether to restock items
+        staffNote:
+          type: string
+          description: Staff note for the cancellation
+
+    GraphQLOrder:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: ["string", "null"]
+        email:
+          type: ["string", "null"]
+        createdAt:
+          type: ["string", "null"]
+          format: date-time
+        displayFinancialStatus:
+          type: ["string", "null"]
+        displayFulfillmentStatus:
+          type: ["string", "null"]
+        totalPriceSet:
+          type: ["object", "null"]
+          properties:
+            shopMoney:
+              type: object
+              properties:
+                amount:
+                  type: string
+                currencyCode:
+                  type: string
+
+    OrderCreatePayload:
+      type: object
+      properties:
+        userErrors:
+          type: array
+          items:
+            $ref: "#/components/schemas/GraphQLUserError"
+        order:
+          $ref: "#/components/schemas/GraphQLOrder"
+
+    OrderUpdatePayload:
+      type: object
+      properties:
+        userErrors:
+          type: array
+          items:
+            $ref: "#/components/schemas/GraphQLUserError"
+        order:
+          type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: ["string", "null"]
+            email:
+              type: ["string", "null"]
+            note:
+              type: ["string", "null"]
+            tags:
+              type: array
+              items:
+                type: string
+            createdAt:
+              type: ["string", "null"]
+            displayFinancialStatus:
+              type: ["string", "null"]
+            displayFulfillmentStatus:
+              type: ["string", "null"]
+
+    OrderCancelPayload:
+      type: object
+      properties:
+        userErrors:
+          type: array
+          items:
+            $ref: "#/components/schemas/GraphQLUserError"
+        orderCancelUserErrors:
+          type: array
+          items:
+            $ref: "#/components/schemas/GraphQLUserError"
+        job:
+          type: ["object", "null"]
+          properties:
+            id:
+              type: string
+            done:
+              type: boolean
+
+    OrderMutationResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            orderCreate:
+              $ref: "#/components/schemas/OrderCreatePayload"
+
+    OrderUpdateResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            orderUpdate:
+              $ref: "#/components/schemas/OrderUpdatePayload"
+
+    OrderCancelResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            orderCancel:
+              $ref: "#/components/schemas/OrderCancelPayload"
+
+    # ── Draft Order Mutation Schemas ───────────────────────────────────
+
+    DraftOrderCreateParams:
+      type: object
+      description: Parameters for creating a draft order.
+      required:
+      - input
+      properties:
+        input:
+          type: object
+          description: "DraftOrderInput object"
+          properties:
+            lineItems:
+              type: array
+              description: Line items for the draft order
+              items:
+                type: object
+                properties:
+                  variantId:
+                    type: string
+                    description: "GraphQL GID of the product variant"
+                  quantity:
+                    type: integer
+                    description: Quantity
+                  title:
+                    type: string
+                    description: Custom title
+                  originalUnitPrice:
+                    type: string
+                    description: Unit price
+            customerId:
+              type: string
+              description: "GraphQL GID of the customer"
+            email:
+              type: string
+              description: Customer email
+            note:
+              type: string
+              description: Draft order note
+            tags:
+              type: array
+              items:
+                type: string
+            shippingAddress:
+              type: object
+              properties:
+                address1:
+                  type: string
+                city:
+                  type: string
+                provinceCode:
+                  type: string
+                zip:
+                  type: string
+                countryCode:
+                  type: string
+
+    DraftOrderUpdateParams:
+      type: object
+      description: Parameters for updating a draft order.
+      required:
+      - id
+      - input
+      properties:
+        id:
+          type: string
+          description: "The GraphQL GID of the draft order to update"
+        input:
+          type: object
+          description: "DraftOrderInput object with updated fields"
+          properties:
+            lineItems:
+              type: array
+              items:
+                type: object
+                properties:
+                  variantId:
+                    type: string
+                  quantity:
+                    type: integer
+                  title:
+                    type: string
+                  originalUnitPrice:
+                    type: string
+            email:
+              type: string
+            note:
+              type: string
+            tags:
+              type: array
+              items:
+                type: string
+
+    DraftOrderDeleteParams:
+      type: object
+      description: Parameters for deleting a draft order. Only open draft orders can be deleted.
+      required:
+      - input
+      properties:
+        input:
+          type: object
+          required:
+          - id
+          properties:
+            id:
+              type: string
+              description: "The GraphQL GID of the draft order to delete"
+
+    DraftOrderCompleteParams:
+      type: object
+      description: Parameters for completing a draft order, converting it to a regular order.
+      required:
+      - id
+      properties:
+        id:
+          type: string
+          description: "The GraphQL GID of the draft order to complete"
+        paymentPending:
+          type: boolean
+          description: Whether payment is pending (true) or mark as paid (false/omit)
+
+    GraphQLDraftOrder:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: ["string", "null"]
+        email:
+          type: ["string", "null"]
+        status:
+          type: ["string", "null"]
+        createdAt:
+          type: ["string", "null"]
+          format: date-time
+        updatedAt:
+          type: ["string", "null"]
+          format: date-time
+        totalPrice:
+          type: ["string", "null"]
+        currencyCode:
+          type: ["string", "null"]
+
+    DraftOrderCreatePayload:
+      type: object
+      properties:
+        userErrors:
+          type: array
+          items:
+            $ref: "#/components/schemas/GraphQLUserError"
+        draftOrder:
+          $ref: "#/components/schemas/GraphQLDraftOrder"
+
+    DraftOrderUpdatePayload:
+      type: object
+      properties:
+        userErrors:
+          type: array
+          items:
+            $ref: "#/components/schemas/GraphQLUserError"
+        draftOrder:
+          $ref: "#/components/schemas/GraphQLDraftOrder"
+
+    DraftOrderDeletePayload:
+      type: object
+      properties:
+        userErrors:
+          type: array
+          items:
+            $ref: "#/components/schemas/GraphQLUserError"
+        deletedId:
+          type: ["string", "null"]
+
+    DraftOrderCompletePayload:
+      type: object
+      properties:
+        userErrors:
+          type: array
+          items:
+            $ref: "#/components/schemas/GraphQLUserError"
+        draftOrder:
+          type: ["object", "null"]
+          properties:
+            id:
+              type: string
+            name:
+              type: ["string", "null"]
+            status:
+              type: ["string", "null"]
+            order:
+              type: ["object", "null"]
+              properties:
+                id:
+                  type: string
+                name:
+                  type: ["string", "null"]
+
+    DraftOrderMutationResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            draftOrderCreate:
+              $ref: "#/components/schemas/DraftOrderCreatePayload"
+            draftOrderUpdate:
+              $ref: "#/components/schemas/DraftOrderUpdatePayload"
+
+    DraftOrderDeleteResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            draftOrderDelete:
+              $ref: "#/components/schemas/DraftOrderDeletePayload"
+
+    DraftOrderCompleteResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            draftOrderComplete:
+              $ref: "#/components/schemas/DraftOrderCompletePayload"
+
+    # ── Inventory Mutation Schemas ─────────────────────────────────────
+
+    InventorySetQuantitiesParams:
+      type: object
+      description: |
+        Parameters for setting absolute inventory quantities.
+        Requires a reason and reference document URI.
+      required:
+      - input
+      properties:
+        input:
+          type: object
+          required:
+          - name
+          - reason
+          - quantities
+          properties:
+            name:
+              type: string
+              description: "Quantity name (e.g. 'available', 'on_hand')"
+            reason:
+              type: string
+              description: "Reason for the adjustment (e.g. 'correction', 'other')"
+            referenceDocumentUri:
+              type: string
+              description: "URI for the reference document"
+            quantities:
+              type: array
+              description: Quantities to set
+              items:
+                type: object
+                required:
+                - inventoryItemId
+                - locationId
+                - quantity
+                properties:
+                  inventoryItemId:
+                    type: string
+                    description: "GraphQL GID of the inventory item"
+                  locationId:
+                    type: string
+                    description: "GraphQL GID of the location"
+                  quantity:
+                    type: integer
+                    description: Absolute quantity to set
+
+    InventoryAdjustQuantitiesParams:
+      type: object
+      description: Parameters for adjusting inventory quantities relatively (add/subtract).
+      required:
+      - input
+      properties:
+        input:
+          type: object
+          required:
+          - name
+          - reason
+          - changes
+          properties:
+            name:
+              type: string
+              description: "Quantity name (e.g. 'available')"
+            reason:
+              type: string
+              description: "Reason for the adjustment"
+            referenceDocumentUri:
+              type: string
+              description: "URI for the reference document"
+            changes:
+              type: array
+              description: Inventory changes to apply
+              items:
+                type: object
+                required:
+                - inventoryItemId
+                - locationId
+                - delta
+                properties:
+                  inventoryItemId:
+                    type: string
+                    description: "GraphQL GID of the inventory item"
+                  locationId:
+                    type: string
+                    description: "GraphQL GID of the location"
+                  delta:
+                    type: integer
+                    description: "Amount to adjust (positive to add, negative to subtract)"
+
+    InventoryAdjustmentGroup:
+      type: object
+      properties:
+        reason:
+          type: ["string", "null"]
+        referenceDocumentUri:
+          type: ["string", "null"]
+        changes:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: ["string", "null"]
+              delta:
+                type: ["integer", "null"]
+              quantityAfterChange:
+                type: ["integer", "null"]
+
+    InventorySetQuantitiesPayload:
+      type: object
+      properties:
+        userErrors:
+          type: array
+          items:
+            $ref: "#/components/schemas/GraphQLUserError"
+        inventoryAdjustmentGroup:
+          $ref: "#/components/schemas/InventoryAdjustmentGroup"
+
+    InventoryAdjustQuantitiesPayload:
+      type: object
+      properties:
+        userErrors:
+          type: array
+          items:
+            $ref: "#/components/schemas/GraphQLUserError"
+        inventoryAdjustmentGroup:
+          $ref: "#/components/schemas/InventoryAdjustmentGroup"
+
+    InventorySetQuantitiesResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            inventorySetQuantities:
+              $ref: "#/components/schemas/InventorySetQuantitiesPayload"
+
+    InventoryAdjustQuantitiesResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            inventoryAdjustQuantities:
+              $ref: "#/components/schemas/InventoryAdjustQuantitiesPayload"
+
+    # ── Discount Code Mutation Schemas ─────────────────────────────────
+
+    DiscountCodeCreateParams:
+      type: object
+      description: |
+        Parameters for creating a basic discount code.
+        Supports percentage or fixed amount discounts.
+      required:
+      - basicCodeDiscount
+      properties:
+        basicCodeDiscount:
+          type: object
+          required:
+          - title
+          - code
+          - startsAt
+          - customerGets
+          - customerSelection
+          properties:
+            title:
+              type: string
+              description: Discount title
+            code:
+              type: string
+              description: Discount code that customers enter at checkout
+            startsAt:
+              type: string
+              format: date-time
+              description: "When the discount starts (ISO 8601)"
+            endsAt:
+              type: string
+              format: date-time
+              description: "When the discount ends (ISO 8601, optional)"
+            usageLimit:
+              type: integer
+              description: Maximum number of times the discount can be used
+            customerSelection:
+              type: object
+              description: Which customers can use this discount
+              properties:
+                all:
+                  type: boolean
+                  description: Set to true for all customers
+            customerGets:
+              type: object
+              description: What the customer gets from this discount
+              properties:
+                value:
+                  type: object
+                  description: The discount value
+                  properties:
+                    percentage:
+                      type: number
+                      description: "Percentage discount (e.g. 0.1 for 10%)"
+                    discountAmount:
+                      type: object
+                      properties:
+                        amount:
+                          type: string
+                        appliesOnEachItem:
+                          type: boolean
+                items:
+                  type: object
+                  description: Which items the discount applies to
+                  properties:
+                    all:
+                      type: boolean
+                      description: Set to true for all items
+
+    DiscountCodeUpdateParams:
+      type: object
+      description: Parameters for updating a basic discount code.
+      required:
+      - id
+      - basicCodeDiscount
+      properties:
+        id:
+          type: string
+          description: "The GraphQL GID of the discount code node to update"
+        basicCodeDiscount:
+          type: object
+          properties:
+            title:
+              type: string
+            code:
+              type: string
+            startsAt:
+              type: string
+              format: date-time
+            endsAt:
+              type: string
+              format: date-time
+            usageLimit:
+              type: integer
+
+    DiscountCodeDeleteParams:
+      type: object
+      description: Parameters for deleting a discount code.
+      required:
+      - id
+      properties:
+        id:
+          type: string
+          description: "The GraphQL GID of the discount code node to delete"
+
+    DiscountCodeBasicCreatePayload:
+      type: object
+      properties:
+        userErrors:
+          type: array
+          items:
+            $ref: "#/components/schemas/GraphQLUserError"
+        codeDiscountNode:
+          type: ["object", "null"]
+          properties:
+            id:
+              type: string
+            codeDiscount:
+              type: object
+              properties:
+                title:
+                  type: ["string", "null"]
+                summary:
+                  type: ["string", "null"]
+                startsAt:
+                  type: ["string", "null"]
+                endsAt:
+                  type: ["string", "null"]
+                status:
+                  type: ["string", "null"]
+                codes:
+                  type: object
+                  properties:
+                    nodes:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          code:
+                            type: string
+
+    DiscountCodeBasicUpdatePayload:
+      type: object
+      properties:
+        userErrors:
+          type: array
+          items:
+            $ref: "#/components/schemas/GraphQLUserError"
+        codeDiscountNode:
+          type: ["object", "null"]
+          properties:
+            id:
+              type: string
+            codeDiscount:
+              type: object
+              properties:
+                title:
+                  type: ["string", "null"]
+                summary:
+                  type: ["string", "null"]
+                startsAt:
+                  type: ["string", "null"]
+                endsAt:
+                  type: ["string", "null"]
+                status:
+                  type: ["string", "null"]
+                codes:
+                  type: object
+                  properties:
+                    nodes:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          code:
+                            type: string
+
+    DiscountCodeDeletePayload:
+      type: object
+      properties:
+        userErrors:
+          type: array
+          items:
+            $ref: "#/components/schemas/GraphQLUserError"
+        deletedCodeDiscountId:
+          type: ["string", "null"]
+
+    DiscountCodeMutationResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            discountCodeBasicCreate:
+              $ref: "#/components/schemas/DiscountCodeBasicCreatePayload"
+            discountCodeBasicUpdate:
+              $ref: "#/components/schemas/DiscountCodeBasicUpdatePayload"
+
+    DiscountCodeDeleteResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            discountCodeDelete:
+              $ref: "#/components/schemas/DiscountCodeDeletePayload"
+
+    # ── Metafield Mutation Schemas ─────────────────────────────────────
+
+    MetafieldsSetParams:
+      type: object
+      description: |
+        Parameters for setting (creating or updating) metafields atomically.
+        Supports up to 25 metafields per call.
+      required:
+      - metafields
+      properties:
+        metafields:
+          type: array
+          description: List of metafields to set
+          items:
+            type: object
+            required:
+            - namespace
+            - key
+            - type
+            - value
+            - ownerId
+            properties:
+              namespace:
+                type: string
+                description: "Metafield namespace (e.g. 'custom')"
+              key:
+                type: string
+                description: "Metafield key (e.g. 'color')"
+              type:
+                type: string
+                description: "Metafield type (e.g. 'single_line_text_field', 'number_integer', 'boolean')"
+              value:
+                type: string
+                description: "Metafield value"
+              ownerId:
+                type: string
+                description: "GraphQL GID of the owner resource (e.g. gid://shopify/Product/123)"
+
+    MetafieldDeleteParams:
+      type: object
+      description: |
+        Parameters for deleting metafields. Identify each metafield by
+        ownerId + namespace + key.
+      required:
+      - metafields
+      properties:
+        metafields:
+          type: array
+          description: List of metafield identifiers to delete
+          items:
+            type: object
+            required:
+            - ownerId
+            - namespace
+            - key
+            properties:
+              ownerId:
+                type: string
+                description: "GraphQL GID of the owner resource (e.g. gid://shopify/Product/123)"
+              namespace:
+                type: string
+                description: "Metafield namespace (e.g. 'custom')"
+              key:
+                type: string
+                description: "Metafield key (e.g. 'color')"
+
+    MetafieldsSetPayload:
+      type: object
+      properties:
+        userErrors:
+          type: array
+          items:
+            $ref: "#/components/schemas/GraphQLUserError"
+        metafields:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              namespace:
+                type: ["string", "null"]
+              key:
+                type: ["string", "null"]
+              value:
+                type: ["string", "null"]
+              type:
+                type: ["string", "null"]
+              updatedAt:
+                type: ["string", "null"]
+                format: date-time
+
+    MetafieldDeletePayload:
+      type: object
+      properties:
+        deletedMetafields:
+          type: ["array", "null"]
+          items:
+            type: ["object", "null"]
+            properties:
+              key:
+                type: ["string", "null"]
+              namespace:
+                type: ["string", "null"]
+              ownerId:
+                type: ["string", "null"]
+        userErrors:
+          type: array
+          items:
+            $ref: "#/components/schemas/GraphQLUserError"
+
+    MetafieldsSetResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            metafieldsSet:
+              $ref: "#/components/schemas/MetafieldsSetPayload"
+
+    MetafieldDeleteResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            metafieldsDelete:
+              $ref: "#/components/schemas/MetafieldDeletePayload"
+
+    # ── Collection Mutation Schemas ────────────────────────────────────
+
+    CollectionCreateParams:
+      type: object
+      description: Parameters for creating a collection (custom or smart).
+      required:
+      - input
+      properties:
+        input:
+          type: object
+          required:
+          - title
+          properties:
+            title:
+              type: string
+              description: Collection title
+            descriptionHtml:
+              type: string
+              description: Collection description in HTML
+            handle:
+              type: string
+              description: URL handle for the collection
+            sortOrder:
+              type: string
+              enum: [ALPHA_ASC, ALPHA_DESC, BEST_SELLING, CREATED, CREATED_DESC, MANUAL, PRICE_ASC, PRICE_DESC]
+              description: Sort order for products
+            templateSuffix:
+              type: string
+              description: Liquid template suffix
+            ruleSet:
+              type: object
+              description: Rule set for smart collections
+              properties:
+                appliedDisjunctively:
+                  type: boolean
+                  description: Whether rules are OR (true) or AND (false)
+                rules:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      column:
+                        type: string
+                        description: "Rule column (e.g. TAG, TITLE, VENDOR)"
+                      relation:
+                        type: string
+                        description: "Rule relation (e.g. EQUALS, CONTAINS)"
+                      condition:
+                        type: string
+                        description: "Rule condition value"
+
+    CollectionUpdateParams:
+      type: object
+      description: Parameters for updating a collection.
+      required:
+      - input
+      properties:
+        input:
+          type: object
+          required:
+          - id
+          properties:
+            id:
+              type: string
+              description: "The GraphQL GID of the collection"
+            title:
+              type: string
+            descriptionHtml:
+              type: string
+            handle:
+              type: string
+            sortOrder:
+              type: string
+              enum: [ALPHA_ASC, ALPHA_DESC, BEST_SELLING, CREATED, CREATED_DESC, MANUAL, PRICE_ASC, PRICE_DESC]
+
+    CollectionDeleteParams:
+      type: object
+      description: Parameters for deleting a collection.
+      required:
+      - input
+      properties:
+        input:
+          type: object
+          required:
+          - id
+          properties:
+            id:
+              type: string
+              description: "The GraphQL GID of the collection to delete"
+
+    CollectionCreatePayload:
+      type: object
+      properties:
+        userErrors:
+          type: array
+          items:
+            $ref: "#/components/schemas/GraphQLUserError"
+        collection:
+          type: object
+          properties:
+            id:
+              type: string
+            title:
+              type: ["string", "null"]
+            handle:
+              type: ["string", "null"]
+            descriptionHtml:
+              type: ["string", "null"]
+            sortOrder:
+              type: ["string", "null"]
+            templateSuffix:
+              type: ["string", "null"]
+            updatedAt:
+              type: ["string", "null"]
+              format: date-time
+
+    CollectionUpdatePayload:
+      type: object
+      properties:
+        userErrors:
+          type: array
+          items:
+            $ref: "#/components/schemas/GraphQLUserError"
+        collection:
+          type: object
+          properties:
+            id:
+              type: string
+            title:
+              type: ["string", "null"]
+            handle:
+              type: ["string", "null"]
+            descriptionHtml:
+              type: ["string", "null"]
+            sortOrder:
+              type: ["string", "null"]
+            templateSuffix:
+              type: ["string", "null"]
+            updatedAt:
+              type: ["string", "null"]
+              format: date-time
+
+    CollectionDeletePayload:
+      type: object
+      properties:
+        userErrors:
+          type: array
+          items:
+            $ref: "#/components/schemas/GraphQLUserError"
+        deletedCollectionId:
+          type: ["string", "null"]
+
+    CollectionMutationResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            collectionCreate:
+              $ref: "#/components/schemas/CollectionCreatePayload"
+            collectionUpdate:
+              $ref: "#/components/schemas/CollectionUpdatePayload"
+
+    CollectionDeleteResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            collectionDelete:
+              $ref: "#/components/schemas/CollectionDeletePayload"
+
+    # ── Page Mutation Schemas ──────────────────────────────────────────
+
+    PageCreateParams:
+      type: object
+      description: Parameters for creating a page.
+      required:
+      - page
+      properties:
+        page:
+          type: object
+          required:
+          - title
+          properties:
+            title:
+              type: string
+              description: Page title
+            body:
+              type: string
+              description: Page body content (HTML)
+            handle:
+              type: string
+              description: URL handle for the page
+            isPublished:
+              type: boolean
+              description: Whether the page is published
+
+    PageUpdateParams:
+      type: object
+      description: Parameters for updating a page.
+      required:
+      - id
+      - page
+      properties:
+        id:
+          type: string
+          description: "The GraphQL GID of the page to update"
+        page:
+          type: object
+          properties:
+            title:
+              type: string
+            body:
+              type: string
+            handle:
+              type: string
+            isPublished:
+              type: boolean
+
+    PageDeleteParams:
+      type: object
+      description: Parameters for deleting a page.
+      required:
+      - id
+      properties:
+        id:
+          type: string
+          description: "The GraphQL GID of the page to delete"
+
+    GraphQLPage:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: ["string", "null"]
+        handle:
+          type: ["string", "null"]
+        body:
+          type: ["string", "null"]
+        createdAt:
+          type: ["string", "null"]
+          format: date-time
+        updatedAt:
+          type: ["string", "null"]
+          format: date-time
+
+    PageCreatePayload:
+      type: object
+      properties:
+        userErrors:
+          type: array
+          items:
+            $ref: "#/components/schemas/GraphQLUserError"
+        page:
+          $ref: "#/components/schemas/GraphQLPage"
+
+    PageUpdatePayload:
+      type: object
+      properties:
+        userErrors:
+          type: array
+          items:
+            $ref: "#/components/schemas/GraphQLUserError"
+        page:
+          $ref: "#/components/schemas/GraphQLPage"
+
+    PageDeletePayload:
+      type: object
+      properties:
+        userErrors:
+          type: array
+          items:
+            $ref: "#/components/schemas/GraphQLUserError"
+        deletedPageId:
+          type: ["string", "null"]
+
+    PageMutationResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            pageCreate:
+              $ref: "#/components/schemas/PageCreatePayload"
+            pageUpdate:
+              $ref: "#/components/schemas/PageUpdatePayload"
+
+    PageDeleteResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            pageDelete:
+              $ref: "#/components/schemas/PageDeletePayload"
+
+    # ── Blog Mutation Schemas ──────────────────────────────────────────
+
+    BlogCreateParams:
+      type: object
+      description: Parameters for creating a blog.
+      required:
+      - blog
+      properties:
+        blog:
+          type: object
+          required:
+          - title
+          properties:
+            title:
+              type: string
+              description: Blog title
+            handle:
+              type: string
+              description: URL handle for the blog
+
+    BlogUpdateParams:
+      type: object
+      description: Parameters for updating a blog.
+      required:
+      - id
+      - blog
+      properties:
+        id:
+          type: string
+          description: "The GraphQL GID of the blog to update"
+        blog:
+          type: object
+          properties:
+            title:
+              type: string
+            handle:
+              type: string
+
+    BlogDeleteParams:
+      type: object
+      description: Parameters for deleting a blog.
+      required:
+      - id
+      properties:
+        id:
+          type: string
+          description: "The GraphQL GID of the blog to delete"
+
+    GraphQLBlog:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: ["string", "null"]
+        handle:
+          type: ["string", "null"]
+        createdAt:
+          type: ["string", "null"]
+          format: date-time
+
+    BlogCreatePayload:
+      type: object
+      properties:
+        userErrors:
+          type: array
+          items:
+            $ref: "#/components/schemas/GraphQLUserError"
+        blog:
+          $ref: "#/components/schemas/GraphQLBlog"
+
+    BlogUpdatePayload:
+      type: object
+      properties:
+        userErrors:
+          type: array
+          items:
+            $ref: "#/components/schemas/GraphQLUserError"
+        blog:
+          $ref: "#/components/schemas/GraphQLBlog"
+
+    BlogDeletePayload:
+      type: object
+      properties:
+        userErrors:
+          type: array
+          items:
+            $ref: "#/components/schemas/GraphQLUserError"
+        deletedBlogId:
+          type: ["string", "null"]
+
+    BlogMutationResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            blogCreate:
+              $ref: "#/components/schemas/BlogCreatePayload"
+            blogUpdate:
+              $ref: "#/components/schemas/BlogUpdatePayload"
+
+    BlogDeleteResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            blogDelete:
+              $ref: "#/components/schemas/BlogDeletePayload"
+
+    # ── Article Mutation Schemas ───────────────────────────────────────
+
+    ArticleCreateParams:
+      type: object
+      description: Parameters for creating a blog article.
+      required:
+      - article
+      properties:
+        article:
+          type: object
+          required:
+          - title
+          - blogId
+          - author
+          properties:
+            title:
+              type: string
+              description: Article title
+            blogId:
+              type: string
+              description: "GraphQL GID of the blog this article belongs to"
+            body:
+              type: string
+              description: Article body content (HTML)
+            handle:
+              type: string
+              description: URL handle for the article
+            isPublished:
+              type: boolean
+              description: Whether the article is published
+            tags:
+              type: array
+              items:
+                type: string
+            author:
+              type: object
+              description: "Author of the article. Required by Shopify's articleCreate mutation (ArticleCreateInput.author is non-null)."
+              required:
+              - name
+              properties:
+                name:
+                  type: string
+                  description: "Author display name. Required (provide the author's name)."
+
+    ArticleUpdateParams:
+      type: object
+      description: Parameters for updating a blog article.
+      required:
+      - id
+      - article
+      properties:
+        id:
+          type: string
+          description: "The GraphQL GID of the article to update"
+        article:
+          type: object
+          properties:
+            title:
+              type: string
+            body:
+              type: string
+            handle:
+              type: string
+            isPublished:
+              type: boolean
+            tags:
+              type: array
+              items:
+                type: string
+
+    ArticleDeleteParams:
+      type: object
+      description: Parameters for deleting a blog article.
+      required:
+      - id
+      properties:
+        id:
+          type: string
+          description: "The GraphQL GID of the article to delete"
+
+    GraphQLArticle:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: ["string", "null"]
+        handle:
+          type: ["string", "null"]
+        body:
+          type: ["string", "null"]
+        blog:
+          type: ["object", "null"]
+          properties:
+            id:
+              type: string
+            title:
+              type: ["string", "null"]
+        createdAt:
+          type: ["string", "null"]
+          format: date-time
+        updatedAt:
+          type: ["string", "null"]
+          format: date-time
+
+    ArticleCreatePayload:
+      type: object
+      properties:
+        userErrors:
+          type: array
+          items:
+            $ref: "#/components/schemas/GraphQLUserError"
+        article:
+          $ref: "#/components/schemas/GraphQLArticle"
+
+    ArticleUpdatePayload:
+      type: object
+      properties:
+        userErrors:
+          type: array
+          items:
+            $ref: "#/components/schemas/GraphQLUserError"
+        article:
+          $ref: "#/components/schemas/GraphQLArticle"
+
+    ArticleDeletePayload:
+      type: object
+      properties:
+        userErrors:
+          type: array
+          items:
+            $ref: "#/components/schemas/GraphQLUserError"
+        deletedArticleId:
+          type: ["string", "null"]
+
+    ArticleMutationResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            articleCreate:
+              $ref: "#/components/schemas/ArticleCreatePayload"
+            articleUpdate:
+              $ref: "#/components/schemas/ArticleUpdatePayload"
+
+    ArticleDeleteResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            articleDelete:
+              $ref: "#/components/schemas/ArticleDeletePayload"
