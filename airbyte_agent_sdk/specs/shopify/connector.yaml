@@ -5627,6 +5627,47 @@ components:
           credentials.api_password: "api_key"
         replication_auth_key_constants:
           credentials.auth_method: "api_password"
+
+    shopifyOAuth:
+      type: oauth2
+      x-airbyte-untested: true
+      description: Shopify OAuth 2.0 authentication
+      flows:
+        authorizationCode:
+          authorizationUrl: https://{{shop}}.myshopify.com/admin/oauth/authorize
+          tokenUrl: https://{{shop}}.myshopify.com/admin/oauth/access_token
+          scopes: {}
+      x-airbyte-token-refresh:
+        header: "X-Shopify-Access-Token"
+        prefix: ""
+      x-airbyte-auth-config:
+        title: "OAuth2"
+        type: object
+        required:
+        - access_token
+        properties:
+          client_id:
+            type: string
+            title: "Client ID"
+            description: "Your Shopify OAuth2 application client ID"
+          client_secret:
+            type: string
+            title: "Client Secret"
+            description: "Your Shopify OAuth2 application client secret"
+          access_token:
+            type: string
+            title: "Access Token"
+            description: "Your Shopify OAuth2 access token"
+        auth_mapping:
+          access_token: "${access_token}"
+          client_id: "${client_id}"
+          client_secret: "${client_secret}"
+        replication_auth_key_mapping:
+          credentials.client_id: "client_id"
+          credentials.client_secret: "client_secret"
+          credentials.access_token: "access_token"
+        replication_auth_key_constants:
+          credentials.auth_method: "oauth2.0"
       x-airbyte-oauth-scopes:
         - scope: "read_customers"
           mode: read
@@ -5649,6 +5690,13 @@ components:
             - metafield_product_variants
             - metafield_product_images
             - metafield_smart_collections
+            # shop and metafield_shops require no specific Shopify scope (the Shop
+            # object has none, and shop metafields inherit the owner object's scope).
+            # The scope resolver rejects entities with no mapped scope, so they ride
+            # on read_products as a workaround until the resolver supports scopeless
+            # entities (tracked as a follow-up issue).
+            - shop
+            - metafield_shops
         - scope: "read_orders"
           mode: read
           description: Read orders, refunds, transactions, fulfillments, and abandoned checkouts
@@ -5755,47 +5803,6 @@ components:
             - blogs
             - articles
             - metafields
-
-    shopifyOAuth:
-      type: oauth2
-      x-airbyte-untested: true
-      description: Shopify OAuth 2.0 authentication
-      flows:
-        authorizationCode:
-          authorizationUrl: https://{{shop}}.myshopify.com/admin/oauth/authorize
-          tokenUrl: https://{{shop}}.myshopify.com/admin/oauth/access_token
-          scopes: {}
-      x-airbyte-token-refresh:
-        header: "X-Shopify-Access-Token"
-        prefix: ""
-      x-airbyte-auth-config:
-        title: "OAuth2"
-        type: object
-        required:
-        - access_token
-        properties:
-          client_id:
-            type: string
-            title: "Client ID"
-            description: "Your Shopify OAuth2 application client ID"
-          client_secret:
-            type: string
-            title: "Client Secret"
-            description: "Your Shopify OAuth2 application client secret"
-          access_token:
-            type: string
-            title: "Access Token"
-            description: "Your Shopify OAuth2 access token"
-        auth_mapping:
-          access_token: "${access_token}"
-          client_id: "${client_id}"
-          client_secret: "${client_secret}"
-        replication_auth_key_mapping:
-          credentials.client_id: "client_id"
-          credentials.client_secret: "client_secret"
-          credentials.access_token: "access_token"
-        replication_auth_key_constants:
-          credentials.auth_method: "oauth2.0"
 
   schemas:
     Customer:
