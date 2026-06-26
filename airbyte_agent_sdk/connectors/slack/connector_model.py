@@ -25,6 +25,9 @@ from airbyte_agent_sdk.schema.extensions import (
     CacheEntityConfig,
     CacheFieldConfig,
     CacheFieldProperty,
+    EnrichmentConfig,
+    EnrichmentMatch,
+    EnrichmentProjection,
     EntityRelationshipConfig,
 )
 from airbyte_agent_sdk.schema.base import (
@@ -4764,6 +4767,27 @@ SlackConnectorModel: ConnectorModel = ConnectorModel(
                         description='Team ID.',
                     ),
                 ],
+                x_airbyte_enrichment=[
+                    EnrichmentConfig(
+                        target='users',
+                        match=[
+                            EnrichmentMatch(
+                                local='user',
+                                foreign='id',
+                            ),
+                        ],
+                        project=[
+                            EnrichmentProjection(
+                                name='authorName',
+                                from_='real_name',
+                            ),
+                            EnrichmentProjection(
+                                name='authorDisplayName',
+                                from_='profile.display_name',
+                            ),
+                        ],
+                    ),
+                ],
             ),
             CacheEntityConfig(
                 entity='threads',
@@ -4849,6 +4873,27 @@ SlackConnectorModel: ConnectorModel = ConnectorModel(
                         name='team',
                         type=['null', 'string'],
                         description='Team ID.',
+                    ),
+                ],
+                x_airbyte_enrichment=[
+                    EnrichmentConfig(
+                        target='users',
+                        match=[
+                            EnrichmentMatch(
+                                local='user',
+                                foreign='id',
+                            ),
+                        ],
+                        project=[
+                            EnrichmentProjection(
+                                name='authorName',
+                                from_='real_name',
+                            ),
+                            EnrichmentProjection(
+                                name='authorDisplayName',
+                                from_='profile.display_name',
+                            ),
+                        ],
                     ),
                 ],
             ),
@@ -5204,6 +5249,50 @@ SlackConnectorModel: ConnectorModel = ConnectorModel(
             'tz_offset',
             'updated',
             'who_can_share_contact_card',
+        ],
+    },
+    enrichment_configs={
+        'channel_messages': [
+            EnrichmentConfig(
+                target='users',
+                match=[
+                    EnrichmentMatch(
+                        local='user',
+                        foreign='id',
+                    ),
+                ],
+                project=[
+                    EnrichmentProjection(
+                        name='authorName',
+                        from_='real_name',
+                    ),
+                    EnrichmentProjection(
+                        name='authorDisplayName',
+                        from_='profile.display_name',
+                    ),
+                ],
+            ),
+        ],
+        'threads': [
+            EnrichmentConfig(
+                target='users',
+                match=[
+                    EnrichmentMatch(
+                        local='user',
+                        foreign='id',
+                    ),
+                ],
+                project=[
+                    EnrichmentProjection(
+                        name='authorName',
+                        from_='real_name',
+                    ),
+                    EnrichmentProjection(
+                        name='authorDisplayName',
+                        from_='profile.display_name',
+                    ),
+                ],
+            ),
         ],
     },
     example_questions=ExampleQuestions(

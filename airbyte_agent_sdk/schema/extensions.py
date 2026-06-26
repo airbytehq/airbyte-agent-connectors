@@ -304,6 +304,83 @@ class CacheFieldConfig(ExtensionAwareModel):
         return self.x_airbyte_name or self.name
 
 
+class EnrichmentMatch(BaseModel):
+    """
+    A single join condition for an enrichment (the `match` block entries).
+
+    ``local`` is a path into the record being read (a leading '/' resolves from
+    the record root; otherwise relative to the record). ``foreign`` is a path
+    into a target-entity row; a path containing an array segment (e.g.
+    ``parties[].speakerId``) is matched element-wise in Python, while a top-level
+    scalar path (e.g. ``id``) bounds the lookup query's ``WHERE ... IN``.
+
+    Used inside x-airbyte-enrichment on a context-store entity.
+    """
+
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+
+    local: str = Field(description="Path to the join key on the record being read.")
+    foreign: str = Field(description="Path to the join key on the target-entity row.")
+
+
+class EnrichmentProjection(BaseModel):
+    """
+    A single field projected from the target entity onto the record (the
+    `project` block entries).
+
+    ``from`` resolves relative to the matched target row (or the matched array
+    element when it shares an array prefix with a match condition).
+
+    Used inside x-airbyte-enrichment on a context-store entity.
+    """
+
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+
+    name: str = Field(description="Output field name added to the record.")
+    from_: str = Field(
+        alias="from",
+        description="Path to the value on the target entity to project.",
+    )
+
+
+class EnrichmentConfig(BaseModel):
+    """
+    A single query-time enrichment join (an entry of x-airbyte-enrichment).
+
+    Declares that rows of the entity are decorated at read time by looking up
+    fields from another context-store entity (``target``), joined on one or more
+    ``match`` conditions, projecting ``project`` fields onto each record. The
+    lookup runs over the result set at read time (never a build-time pre-join).
+
+    Example YAML usage (on a context-store entity):
+        x-airbyte-enrichment:
+          - target: calls_extensive
+            match:
+              - { local: "/callId",  foreign: "id" }
+              - { local: "speakerId", foreign: "parties[].speakerId" }
+            project:
+              - { name: speakerName, from: "parties[].name" }
+              - { name: speakerRole, from: "parties[].title" }
+    """
+
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+
+    target: str = Field(description="Target context-store entity to look up.")
+    match: list[EnrichmentMatch] = Field(description="Join conditions (AND-ed).")
+    project: list[EnrichmentProjection] = Field(description="Fields to project onto each record.")
+
+    @model_validator(mode="after")
+    def validate_non_empty(self) -> "EnrichmentConfig":
+        """Require a target and at least one match condition and one projection."""
+        if not self.target:
+            raise ValueError("x-airbyte-enrichment: 'target' must be a non-empty entity name.")
+        if not self.match:
+            raise ValueError("x-airbyte-enrichment: at least one 'match' condition is required.")
+        if not self.project:
+            raise ValueError("x-airbyte-enrichment: at least one 'project' field is required.")
+        return self
+
+
 class CacheEntityConfig(ExtensionAwareModel):
     """
     Entity configuration for cache mapping.
@@ -327,6 +404,13 @@ class CacheEntityConfig(ExtensionAwareModel):
         description="Reason why this entity does not define searchable fields. "
         "Entities in x-airbyte-context-store must either declare at least one field "
         "or set x-airbyte-skip-searchable-fields with a justification.",
+    )
+    x_airbyte_enrichment: list[EnrichmentConfig] | None = Field(
+        default=None,
+        alias="x-airbyte-enrichment",
+        description="Query-time enrichment joins for this entity: each entry looks up "
+        "fields from another context-store entity and projects them onto each record "
+        "at read time.",
     )
 
     @property

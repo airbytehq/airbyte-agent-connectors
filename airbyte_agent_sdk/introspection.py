@@ -12,6 +12,7 @@ ConnectorModel and EndpointDefinition interfaces from airbyte_agent_sdk.types.
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from typing import Any, Protocol
 
 # Constants
@@ -143,7 +144,13 @@ def _semantic_metadata_names(config: Any, *, record_root: bool) -> list[str]:
     return names
 
 
-def build_semantic_search_note(config: Any, *, entity_name: str, field_name: str) -> str:
+def build_semantic_search_note(
+    config: Any,
+    *,
+    entity_name: str,
+    field_name: str,
+    enrichment_outputs: Sequence[str] = (),
+) -> str:
     """Render the ALPHA semantic-search note for one configured field.
 
     The structure is fixed; the connector-specific facts are pulled from the
@@ -153,6 +160,11 @@ def build_semantic_search_note(config: Any, *, entity_name: str, field_name: str
     - the entity-block fields = metadata whose ``path`` starts with ``/`` (record root),
     - the per-unit attribution = metadata whose ``path`` does not start with ``/``,
     - the context-window cap = ``windowing.context_max_chars`` (0/omitted => unbounded).
+
+    ``enrichment_outputs`` are entity-level x-airbyte-enrichment fields added to each
+    hit's ``metadata`` at read time (e.g. a speaker's name resolved from a related
+    entity); they are advertised so the agent knows they are available to read. They
+    are returned only, NOT filterable (the join runs after similarity ranking).
 
     The generic guidance (query/semantic exclusivity, no sort, ``semantic.filter``,
     ``context_size`` advice) is verbatim and connector-independent.
@@ -166,6 +178,12 @@ def build_semantic_search_note(config: Any, *, entity_name: str, field_name: str
 
     entity_clause = f" `entity` has the {entity_label} fields ({', '.join(entity_fields)});" if entity_fields else ""
     attribution_clause = f", and per-unit attribution ({', '.join(attribution_fields)})" if attribution_fields else ""
+    enrichment_clause = (
+        f"  `metadata` also carries enriched fields resolved from related entities at read time "
+        f"({', '.join(enrichment_outputs)}); these are returned for reading only and are NOT filterable.\n"
+        if enrichment_outputs
+        else ""
+    )
 
     if context_max_chars > 0:
         context_clause = (
@@ -186,6 +204,7 @@ def build_semantic_search_note(config: Any, *, entity_name: str, field_name: str
         f"  ALPHA — subject to change. Semantic (similarity) search over the '{field_name}' field of {entity_label}.\n"
         f"  Embeds `prompt` and returns relevance-ranked hits shaped as {{entity, metadata}}:{entity_clause} "
         f"`metadata` has the similarity `score`, the matched `context` text{attribution_clause}.\n"
+        f"{enrichment_clause}"
         f"{_SEMANTIC_SEARCH_GENERIC_GUIDANCE}\n"
         f"{context_clause}"
     )
@@ -196,21 +215,53 @@ def semantic_search_note_lines(
     *,
     entity_name: str,
     indent: str = "      ",
+    enrichment_outputs: Sequence[str] = (),
 ) -> list[str]:
     """Return indented ALPHA semantic-search note lines for an entity's configured fields.
 
     ``entity_semantic_fields`` is the per-entity ``{field_name: SemanticSearchConfig}``
     mapping (e.g. ``ConnectorModel.semantic_search_fields[entity_name]``). Returns the
     concatenated note lines for every configured semantic field, or an empty list when
-    the entity has none.
+    the entity has none. ``enrichment_outputs`` are the entity's x-airbyte-enrichment
+    output fields, advertised in each field's metadata description.
     """
     if not entity_semantic_fields:
         return []
     lines: list[str] = []
     for field_name, config in entity_semantic_fields.items():
-        note = build_semantic_search_note(config, entity_name=entity_name, field_name=field_name)
+        note = build_semantic_search_note(config, entity_name=entity_name, field_name=field_name, enrichment_outputs=enrichment_outputs)
         lines.extend(f"{indent}{line}" for line in note.split("\n"))
     return lines
+
+
+def build_enrichment_note(config: Any, *, entity_name: str) -> str:
+    """Render a one-line note for a single x-airbyte-enrichment join.
+
+    Advertises the output fields added to each record and the related entity they
+    are resolved from at read time.
+    """
+    target = getattr(config, "target", "") or ""
+    outputs = [getattr(p, "name", None) for p in (getattr(config, "project", None) or [])]
+    output_names = [name for name in outputs if name]
+    entity_label = _humanize_entity_name(entity_name)
+    return f"Each {entity_label} record is enriched with {', '.join(output_names)} (resolved from {target} at read time)."
+
+
+def enrichment_note_lines(
+    entity_enrichments: Any | None,
+    *,
+    entity_name: str,
+    indent: str = "      ",
+) -> list[str]:
+    """Return indented enrichment note lines for an entity's configured joins.
+
+    ``entity_enrichments`` is the per-entity list of EnrichmentConfig (e.g.
+    ``ConnectorModel.enrichment_configs[entity_name]``). Returns one note line per
+    configured join, or an empty list when the entity has none.
+    """
+    if not entity_enrichments:
+        return []
+    return [f"{indent}- {build_enrichment_note(config, entity_name=entity_name)}" for config in entity_enrichments]
 
 
 def _simplify_type(type_value: str | list[str]) -> str:

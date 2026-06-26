@@ -152,13 +152,6 @@ class ChatConversion(BaseModel):
     timestamp: str | None = Field(default=None)
     attribution: Any | None = Field(default=None)
 
-class WebpathItem(BaseModel):
-    """WebpathItem type definition"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    from_: str | None = Field(default=None, alias="from")
-    timestamp: str | None = Field(default=None)
-
 class ChatEngagement(BaseModel):
     """ChatEngagement type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -179,6 +172,13 @@ class ChatEngagement(BaseModel):
     response_time: Any | None = Field(default=None)
     skills_requested: list[int] | None = Field(default=None)
     skills_fulfilled: bool | None = Field(default=None)
+
+class WebpathItem(BaseModel):
+    """WebpathItem type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    from_: str | None = Field(default=None, alias="from")
+    timestamp: str | None = Field(default=None)
 
 class ChatHistoryItem(BaseModel):
     """ChatHistoryItem type definition"""

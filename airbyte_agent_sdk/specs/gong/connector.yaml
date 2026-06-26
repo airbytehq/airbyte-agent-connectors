@@ -575,6 +575,15 @@ info:
                 - { name: topic, path: "topic", type: string }
                 - { name: callId, path: "/callId", type: string }
                 - { name: started, path: "/started", type: string }
+        x-airbyte-enrichment:
+          - target: calls_extensive
+            match:
+              - { local: "/callId", foreign: id }
+              - { local: speakerId, foreign: "parties[].speakerId" }
+            project:
+              - { name: speakerName, from: "parties[].name" }
+              - { name: speakerTitle, from: "parties[].title" }
+              - { name: speakerAffiliation, from: "parties[].affiliation" }
 
   x-airbyte-entity-relationships:
     - source_entity: library_folders

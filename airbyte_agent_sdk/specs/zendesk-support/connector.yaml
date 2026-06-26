@@ -502,6 +502,13 @@ info:
         - "null"
         - "integer"
         description: Reference identifier for the channel through which the comment was created
+      x-airbyte-enrichment:
+        - target: users
+          match:
+            - { local: author_id, foreign: id }
+          project:
+            - { name: authorName, from: name }
+            - { name: authorRole, from: role }
     - entity: ticket_fields
       x-airbyte-name: ticket_fields
       suggested: true
@@ -1410,6 +1417,13 @@ info:
         - "null"
         - "integer"
         description: Position of the article in the section
+      x-airbyte-enrichment:
+        - target: users
+          match:
+            - { local: author_id, foreign: id }
+          project:
+            - { name: authorName, from: name }
+            - { name: authorRole, from: role }
     - entity: article_attachments
       x-airbyte-name: article_attachments
       suggested: true

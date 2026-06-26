@@ -406,6 +406,13 @@ info:
               - "null"
               - "string"
             description: "Team ID."
+        x-airbyte-enrichment:
+          - target: users
+            match:
+              - { local: user, foreign: id }
+            project:
+              - { name: authorName, from: real_name }
+              - { name: authorDisplayName, from: "profile.display_name" }
       - entity: threads
         x-airbyte-name: threads
         suggested: true
@@ -490,6 +497,13 @@ info:
               - "null"
               - "string"
             description: "Team ID."
+        x-airbyte-enrichment:
+          - target: users
+            match:
+              - { local: user, foreign: id }
+            project:
+              - { name: authorName, from: real_name }
+              - { name: authorDisplayName, from: "profile.display_name" }
       - entity: users
         x-airbyte-name: users
         suggested: true

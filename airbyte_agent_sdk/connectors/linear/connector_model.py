@@ -24,6 +24,9 @@ from airbyte_agent_sdk.schema.extensions import (
     CacheConfig,
     CacheEntityConfig,
     CacheFieldConfig,
+    EnrichmentConfig,
+    EnrichmentMatch,
+    EnrichmentProjection,
     EntityRelationshipConfig,
 )
 from airbyte_agent_sdk.schema.base import (
@@ -2659,6 +2662,23 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
                         description='',
                     ),
                 ],
+                x_airbyte_enrichment=[
+                    EnrichmentConfig(
+                        target='users',
+                        match=[
+                            EnrichmentMatch(
+                                local='userId',
+                                foreign='id',
+                            ),
+                        ],
+                        project=[
+                            EnrichmentProjection(
+                                name='authorName',
+                                from_='displayName',
+                            ),
+                        ],
+                    ),
+                ],
             ),
             CacheEntityConfig(
                 entity='issues',
@@ -2929,6 +2949,38 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
                         name='url',
                         type=['string', 'null'],
                         description='',
+                    ),
+                ],
+                x_airbyte_enrichment=[
+                    EnrichmentConfig(
+                        target='users',
+                        match=[
+                            EnrichmentMatch(
+                                local='creatorId',
+                                foreign='id',
+                            ),
+                        ],
+                        project=[
+                            EnrichmentProjection(
+                                name='creatorName',
+                                from_='displayName',
+                            ),
+                        ],
+                    ),
+                    EnrichmentConfig(
+                        target='users',
+                        match=[
+                            EnrichmentMatch(
+                                local='assigneeId',
+                                foreign='id',
+                            ),
+                        ],
+                        project=[
+                            EnrichmentProjection(
+                                name='assigneeName',
+                                from_='displayName',
+                            ),
+                        ],
                     ),
                 ],
             ),
@@ -3721,6 +3773,57 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
             'teamId',
             'type',
             'updatedAt',
+        ],
+    },
+    enrichment_configs={
+        'comments': [
+            EnrichmentConfig(
+                target='users',
+                match=[
+                    EnrichmentMatch(
+                        local='userId',
+                        foreign='id',
+                    ),
+                ],
+                project=[
+                    EnrichmentProjection(
+                        name='authorName',
+                        from_='displayName',
+                    ),
+                ],
+            ),
+        ],
+        'issues': [
+            EnrichmentConfig(
+                target='users',
+                match=[
+                    EnrichmentMatch(
+                        local='creatorId',
+                        foreign='id',
+                    ),
+                ],
+                project=[
+                    EnrichmentProjection(
+                        name='creatorName',
+                        from_='displayName',
+                    ),
+                ],
+            ),
+            EnrichmentConfig(
+                target='users',
+                match=[
+                    EnrichmentMatch(
+                        local='assigneeId',
+                        foreign='id',
+                    ),
+                ],
+                project=[
+                    EnrichmentProjection(
+                        name='assigneeName',
+                        from_='displayName',
+                    ),
+                ],
+            ),
         ],
     },
     example_questions=ExampleQuestions(

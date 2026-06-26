@@ -305,6 +305,31 @@ def _extract_semantic_search_fields(spec: OpenAPIConnector) -> dict[str, dict[st
     return semantic_fields
 
 
+def _extract_enrichment_configs(spec: OpenAPIConnector) -> dict[str, list[Any]]:
+    """Propagate x-airbyte-enrichment annotations into the runtime model.
+
+    Parse-through only: returns a mapping of user-facing entity name -> list of
+    EnrichmentConfig. ``spec`` is always a parsed ``OpenAPIConnector``, so
+    entities are Pydantic models -- model-only ``getattr`` access is sufficient.
+    """
+    cache_config = getattr(spec.info, "x_airbyte_context_store", None)
+    entities = getattr(cache_config, "entities", None)
+    if not isinstance(entities, list):
+        return {}
+
+    enrichment_configs: dict[str, list[Any]] = {}
+    for entity in entities:
+        entity_name = getattr(entity, "entity", None)
+        if not isinstance(entity_name, str) or not entity_name:
+            continue
+
+        enrichments = getattr(entity, "x_airbyte_enrichment", None)
+        if enrichments:
+            enrichment_configs[entity_name] = list(enrichments)
+
+    return enrichment_configs
+
+
 def parse_openapi_spec(raw_config: dict) -> OpenAPIConnector:
     """Parse OpenAPI specification from YAML.
 
@@ -707,6 +732,7 @@ def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel
 
     search_field_paths = _extract_search_field_paths(spec)
     semantic_search_fields = _extract_semantic_search_fields(spec)
+    enrichment_configs = _extract_enrichment_configs(spec)
 
     # Extract example questions from spec (serialized separately from openapi_spec)
     example_questions = getattr(spec.info, "x_airbyte_example_questions", None)
@@ -724,6 +750,7 @@ def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel
         context_store=spec.info.x_airbyte_context_store,
         search_field_paths=search_field_paths,
         semantic_search_fields=semantic_search_fields,
+        enrichment_configs=enrichment_configs,
         example_questions=example_questions,
         server_variable_defaults=server_variable_defaults,
         scoping=scoping,

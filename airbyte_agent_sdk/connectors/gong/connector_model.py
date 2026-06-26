@@ -25,6 +25,9 @@ from airbyte_agent_sdk.schema.extensions import (
     CacheEntityConfig,
     CacheFieldConfig,
     CacheFieldProperty,
+    EnrichmentConfig,
+    EnrichmentMatch,
+    EnrichmentProjection,
     EntityRelationshipConfig,
     SemanticEmbedding,
     SemanticMetadataField,
@@ -3971,6 +3974,35 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                         ),
                     ),
                 ],
+                x_airbyte_enrichment=[
+                    EnrichmentConfig(
+                        target='calls_extensive',
+                        match=[
+                            EnrichmentMatch(
+                                local='/callId',
+                                foreign='id',
+                            ),
+                            EnrichmentMatch(
+                                local='speakerId',
+                                foreign='parties[].speakerId',
+                            ),
+                        ],
+                        project=[
+                            EnrichmentProjection(
+                                name='speakerName',
+                                from_='parties[].name',
+                            ),
+                            EnrichmentProjection(
+                                name='speakerTitle',
+                                from_='parties[].title',
+                            ),
+                            EnrichmentProjection(
+                                name='speakerAffiliation',
+                                from_='parties[].affiliation',
+                            ),
+                        ],
+                    ),
+                ],
             ),
         ],
         disable_compaction=True,
@@ -4147,6 +4179,37 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                 ],
             ),
         },
+    },
+    enrichment_configs={
+        'call_transcripts': [
+            EnrichmentConfig(
+                target='calls_extensive',
+                match=[
+                    EnrichmentMatch(
+                        local='/callId',
+                        foreign='id',
+                    ),
+                    EnrichmentMatch(
+                        local='speakerId',
+                        foreign='parties[].speakerId',
+                    ),
+                ],
+                project=[
+                    EnrichmentProjection(
+                        name='speakerName',
+                        from_='parties[].name',
+                    ),
+                    EnrichmentProjection(
+                        name='speakerTitle',
+                        from_='parties[].title',
+                    ),
+                    EnrichmentProjection(
+                        name='speakerAffiliation',
+                        from_='parties[].affiliation',
+                    ),
+                ],
+            ),
+        ],
     },
     example_questions=ExampleQuestions(
         direct=[

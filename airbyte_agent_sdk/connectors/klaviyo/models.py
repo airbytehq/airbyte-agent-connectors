@@ -138,12 +138,6 @@ class ListsList(BaseModel):
     data: list[List] | None = Field(default=None)
     links: ListsListLinks | None = Field(default=None)
 
-class CampaignLinks(BaseModel):
-    """Related links"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    self: str | None | None = Field(default=None)
-
 class CampaignAttributes(BaseModel):
     """Campaign attributes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -171,6 +165,12 @@ class CampaignAttributes(BaseModel):
     send_time: str | None | None = Field(default=None, description="Actual send time")
     """Actual send time"""
 
+class CampaignLinks(BaseModel):
+    """Related links"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    self: str | None | None = Field(default=None)
+
 class Campaign(BaseModel):
     """A Klaviyo campaign"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -195,19 +195,6 @@ class CampaignsList(BaseModel):
     data: list[Campaign] | None = Field(default=None)
     links: CampaignsListLinks | None = Field(default=None)
 
-class EventRelationshipsMetricData(BaseModel):
-    """Nested schema for EventRelationshipsMetric.data"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    type_: str | None | None = Field(default=None, alias="type")
-    id: str | None | None = Field(default=None)
-
-class EventRelationshipsMetric(BaseModel):
-    """Nested schema for EventRelationships.metric"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    data: EventRelationshipsMetricData | None | None = Field(default=None)
-
 class EventRelationshipsProfileData(BaseModel):
     """Nested schema for EventRelationshipsProfile.data"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -220,6 +207,19 @@ class EventRelationshipsProfile(BaseModel):
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     data: EventRelationshipsProfileData | None | None = Field(default=None)
+
+class EventRelationshipsMetricData(BaseModel):
+    """Nested schema for EventRelationshipsMetric.data"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    type_: str | None | None = Field(default=None, alias="type")
+    id: str | None | None = Field(default=None)
+
+class EventRelationshipsMetric(BaseModel):
+    """Nested schema for EventRelationships.metric"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: EventRelationshipsMetricData | None | None = Field(default=None)
 
 class EventRelationships(BaseModel):
     """Related resources"""

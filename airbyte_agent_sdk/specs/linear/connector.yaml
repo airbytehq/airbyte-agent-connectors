@@ -169,6 +169,12 @@ info:
               - 'string'
               - 'null'
             description: ''
+        x-airbyte-enrichment:
+          - target: users
+            match:
+              - { local: userId, foreign: id }
+            project:
+              - { name: authorName, from: displayName }
       - entity: issues
         x-airbyte-name: issues
         suggested: true
@@ -438,6 +444,17 @@ info:
               - 'string'
               - 'null'
             description: ''
+        x-airbyte-enrichment:
+          - target: users
+            match:
+              - { local: creatorId, foreign: id }
+            project:
+              - { name: creatorName, from: displayName }
+          - target: users
+            match:
+              - { local: assigneeId, foreign: id }
+            project:
+              - { name: assigneeName, from: displayName }
       - entity: projects
         x-airbyte-name: projects
         suggested: true

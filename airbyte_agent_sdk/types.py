@@ -14,6 +14,7 @@ from airbyte_agent_sdk.schema.base import ResponseErrorCheck
 from airbyte_agent_sdk.schema.components import PathOverrideConfig
 from airbyte_agent_sdk.schema.extensions import (
     CacheConfig,
+    EnrichmentConfig,
     EntityRelationshipConfig,
     RetryConfig,
     ScopingParamConfig,
@@ -406,6 +407,12 @@ class ConnectorModel(BaseModel):
         default_factory=dict,
         description="Parsed x-airbyte-semantic-search annotations, keyed by user-facing "
         "entity name then field name. Dormant in Phase 1; no engine consumes it yet.",
+    )
+    enrichment_configs: dict[str, list[EnrichmentConfig]] = Field(
+        default_factory=dict,
+        description="Parsed x-airbyte-enrichment annotations, keyed by user-facing "
+        "entity name. Each entry declares a query-time join used by the read-path "
+        "enrichment engine.",
     )
     example_questions: Any | None = None  # ExampleQuestions from x-airbyte-example-questions
     scoping: list[ScopingParamConfig] = Field(

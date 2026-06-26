@@ -148,6 +148,13 @@ info:
           - name: updated_at
             type: ["string", "null"]
             description: Ticket last update timestamp
+        x-airbyte-enrichment:
+          - target: contacts
+            match:
+              - { local: requester_id, foreign: id }
+            project:
+              - { name: requesterName, from: name }
+              - { name: requesterEmail, from: email }
       - entity: agents
         x-airbyte-name: agents
         suggested: true

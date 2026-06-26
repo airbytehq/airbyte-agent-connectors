@@ -24,6 +24,9 @@ from airbyte_agent_sdk.schema.extensions import (
     CacheConfig,
     CacheEntityConfig,
     CacheFieldConfig,
+    EnrichmentConfig,
+    EnrichmentMatch,
+    EnrichmentProjection,
     EntityRelationshipConfig,
 )
 from airbyte_agent_sdk.schema.base import (
@@ -6944,6 +6947,27 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                         description='Reference identifier for the channel through which the comment was created',
                     ),
                 ],
+                x_airbyte_enrichment=[
+                    EnrichmentConfig(
+                        target='users',
+                        match=[
+                            EnrichmentMatch(
+                                local='author_id',
+                                foreign='id',
+                            ),
+                        ],
+                        project=[
+                            EnrichmentProjection(
+                                name='authorName',
+                                from_='name',
+                            ),
+                            EnrichmentProjection(
+                                name='authorRole',
+                                from_='role',
+                            ),
+                        ],
+                    ),
+                ],
             ),
             CacheEntityConfig(
                 entity='ticket_fields',
@@ -7872,6 +7896,27 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                         description='Position of the article in the section',
                     ),
                 ],
+                x_airbyte_enrichment=[
+                    EnrichmentConfig(
+                        target='users',
+                        match=[
+                            EnrichmentMatch(
+                                local='author_id',
+                                foreign='id',
+                            ),
+                        ],
+                        project=[
+                            EnrichmentProjection(
+                                name='authorName',
+                                from_='name',
+                            ),
+                            EnrichmentProjection(
+                                name='authorRole',
+                                from_='role',
+                            ),
+                        ],
+                    ),
+                ],
             ),
             CacheEntityConfig(
                 entity='article_attachments',
@@ -8648,6 +8693,50 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
             'category_id',
             'created_at',
             'updated_at',
+        ],
+    },
+    enrichment_configs={
+        'ticket_comments': [
+            EnrichmentConfig(
+                target='users',
+                match=[
+                    EnrichmentMatch(
+                        local='author_id',
+                        foreign='id',
+                    ),
+                ],
+                project=[
+                    EnrichmentProjection(
+                        name='authorName',
+                        from_='name',
+                    ),
+                    EnrichmentProjection(
+                        name='authorRole',
+                        from_='role',
+                    ),
+                ],
+            ),
+        ],
+        'articles': [
+            EnrichmentConfig(
+                target='users',
+                match=[
+                    EnrichmentMatch(
+                        local='author_id',
+                        foreign='id',
+                    ),
+                ],
+                project=[
+                    EnrichmentProjection(
+                        name='authorName',
+                        from_='name',
+                    ),
+                    EnrichmentProjection(
+                        name='authorRole',
+                        from_='role',
+                    ),
+                ],
+            ),
         ],
     },
     example_questions=ExampleQuestions(

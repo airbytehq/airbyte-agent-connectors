@@ -320,6 +320,17 @@ $defs:
           in x-airbyte-context-store must either declare at least one field or set
           x-airbyte-skip-searchable-fields with a justification.
         title: X-Airbyte-Skip-Searchable-Fields
+      x-airbyte-enrichment:
+        anyOf:
+        - items:
+            $ref: '#/$defs/EnrichmentConfig'
+          type: array
+        - type: 'null'
+        default: null
+        description: 'Query-time enrichment joins for this entity: each entry looks
+          up fields from another context-store entity and projects them onto each
+          record at read time.'
+        title: X-Airbyte-Enrichment
     required:
     - entity
     title: CacheEntityConfig
@@ -544,6 +555,100 @@ $defs:
     - status_page
     title: DocUrlType
     type: string
+  EnrichmentConfig:
+    additionalProperties: false
+    description: "A single query-time enrichment join (an entry of x-airbyte-enrichment).\n\
+      \nDeclares that rows of the entity are decorated at read time by looking up\n\
+      fields from another context-store entity (``target``), joined on one or more\n\
+      ``match`` conditions, projecting ``project`` fields onto each record. The\n\
+      lookup runs over the result set at read time (never a build-time pre-join).\n\
+      \nExample YAML usage (on a context-store entity):\n    x-airbyte-enrichment:\n\
+      \      - target: calls_extensive\n        match:\n          - { local: \"/callId\"\
+      ,  foreign: \"id\" }\n          - { local: \"speakerId\", foreign: \"parties[].speakerId\"\
+      \ }\n        project:\n          - { name: speakerName, from: \"parties[].name\"\
+      \ }\n          - { name: speakerRole, from: \"parties[].title\" }"
+    properties:
+      target:
+        description: Target context-store entity to look up.
+        title: Target
+        type: string
+      match:
+        description: Join conditions (AND-ed).
+        items:
+          $ref: '#/$defs/EnrichmentMatch'
+        title: Match
+        type: array
+      project:
+        description: Fields to project onto each record.
+        items:
+          $ref: '#/$defs/EnrichmentProjection'
+        title: Project
+        type: array
+    required:
+    - target
+    - match
+    - project
+    title: EnrichmentConfig
+    type: object
+  EnrichmentMatch:
+    additionalProperties: false
+    description: 'A single join condition for an enrichment (the `match` block entries).
+
+
+      ``local`` is a path into the record being read (a leading ''/'' resolves from
+
+      the record root; otherwise relative to the record). ``foreign`` is a path
+
+      into a target-entity row; a path containing an array segment (e.g.
+
+      ``parties[].speakerId``) is matched element-wise in Python, while a top-level
+
+      scalar path (e.g. ``id``) bounds the lookup query''s ``WHERE ... IN``.
+
+
+      Used inside x-airbyte-enrichment on a context-store entity.'
+    properties:
+      local:
+        description: Path to the join key on the record being read.
+        title: Local
+        type: string
+      foreign:
+        description: Path to the join key on the target-entity row.
+        title: Foreign
+        type: string
+    required:
+    - local
+    - foreign
+    title: EnrichmentMatch
+    type: object
+  EnrichmentProjection:
+    additionalProperties: false
+    description: 'A single field projected from the target entity onto the record
+      (the
+
+      `project` block entries).
+
+
+      ``from`` resolves relative to the matched target row (or the matched array
+
+      element when it shares an array prefix with a match condition).
+
+
+      Used inside x-airbyte-enrichment on a context-store entity.'
+    properties:
+      name:
+        description: Output field name added to the record.
+        title: Name
+        type: string
+      from:
+        description: Path to the value on the target entity to project.
+        title: From
+        type: string
+    required:
+    - name
+    - from
+    title: EnrichmentProjection
+    type: object
   EntityRelationshipConfig:
     additionalProperties: false
     description: "Entity relationship declaration for cross-entity navigation.\n\n\

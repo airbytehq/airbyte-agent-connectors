@@ -23,6 +23,9 @@ from airbyte_agent_sdk.schema.extensions import (
     CacheConfig,
     CacheEntityConfig,
     CacheFieldConfig,
+    EnrichmentConfig,
+    EnrichmentMatch,
+    EnrichmentProjection,
 )
 from airbyte_agent_sdk.schema.base import (
     ExampleQuestions,
@@ -3398,6 +3401,27 @@ FreshdeskConnectorModel: ConnectorModel = ConnectorModel(
                         description='Ticket last update timestamp',
                     ),
                 ],
+                x_airbyte_enrichment=[
+                    EnrichmentConfig(
+                        target='contacts',
+                        match=[
+                            EnrichmentMatch(
+                                local='requester_id',
+                                foreign='id',
+                            ),
+                        ],
+                        project=[
+                            EnrichmentProjection(
+                                name='requesterName',
+                                from_='name',
+                            ),
+                            EnrichmentProjection(
+                                name='requesterEmail',
+                                from_='email',
+                            ),
+                        ],
+                    ),
+                ],
             ),
             CacheEntityConfig(
                 entity='agents',
@@ -4152,6 +4176,29 @@ FreshdeskConnectorModel: ConnectorModel = ConnectorModel(
             'choices',
             'created_at',
             'updated_at',
+        ],
+    },
+    enrichment_configs={
+        'tickets': [
+            EnrichmentConfig(
+                target='contacts',
+                match=[
+                    EnrichmentMatch(
+                        local='requester_id',
+                        foreign='id',
+                    ),
+                ],
+                project=[
+                    EnrichmentProjection(
+                        name='requesterName',
+                        from_='name',
+                    ),
+                    EnrichmentProjection(
+                        name='requesterEmail',
+                        from_='email',
+                    ),
+                ],
+            ),
         ],
     },
     example_questions=ExampleQuestions(
