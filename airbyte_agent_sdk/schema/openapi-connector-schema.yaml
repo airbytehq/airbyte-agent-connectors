@@ -2137,11 +2137,13 @@ $defs:
       \ to **all executor operations** — `execute()`,\n`execute_batch()`, `check_entities()`,\
       \ and download operations — not\nonly probe/check calls.\n\nWhen a path template\
       \ contains a placeholder matching `param`, the\nexecutor looks up `config_key`\
-      \ (defaulting to `param`) in\n`config_values` and injects the value automatically.\
-      \  Explicitly\nsupplied `params` always take precedence over the scoped default.\n\
-      \nUsed in `x-airbyte-scoping` extension in the Info object.\n\nExample YAML\
-      \ usage:\n\n    info:\n      title: My API\n      x-airbyte-scoping:\n     \
-      \   - param: account_id\n          config_key: account_id"
+      \ (defaulting to `param`) in\n`config_values`, optionally renders `value_template`,\
+      \ and injects the\nvalue automatically.  Explicitly supplied `params` always\
+      \ take precedence\nover the scoped default.\n\nUsed in `x-airbyte-scoping` extension\
+      \ in the Info object.\n\nExample YAML usage:\n\n    info:\n      title: My API\n\
+      \      x-airbyte-scoping:\n        - param: account_id\n          config_key:\
+      \ account_id\n        - param: owner\n          config_key: repositories\n \
+      \         value_template: \"{{ value.split('/')[0] }}\""
     properties:
       param:
         description: Path parameter name to resolve from config
@@ -2154,6 +2156,15 @@ $defs:
         default: null
         description: Config key to read. Defaults to param name if omitted.
         title: Config Key
+      value_template:
+        anyOf:
+        - type: string
+        - type: 'null'
+        default: null
+        description: Optional Jinja template rendered with `value`, `config`, and
+          `param` before injecting the scoped value. Templates that render to `none`,
+          `null`, or an empty string leave the parameter unresolved.
+        title: Value Template
     required:
     - param
     title: ScopingParamConfig

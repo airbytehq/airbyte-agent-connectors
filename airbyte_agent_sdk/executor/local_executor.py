@@ -17,6 +17,7 @@ from typing import Any, Protocol, overload
 from urllib.parse import quote
 
 from jinja2 import Environment, StrictUndefined, Template
+from jinja2.sandbox import SandboxedEnvironment
 from jsonpath_ng import parse as parse_jsonpath
 from opentelemetry import trace
 
@@ -30,7 +31,7 @@ from airbyte_agent_sdk.http.exceptions import ConnectorValidationError, HTTPClie
 from airbyte_agent_sdk.http_client import HTTPClient, TokenRefreshCallback
 from airbyte_agent_sdk.logging import NullLogger, RequestLogger
 from airbyte_agent_sdk.observability import ObservabilitySession
-from airbyte_agent_sdk.schema.extensions import EntityRelationshipConfig, RetryConfig
+from airbyte_agent_sdk.schema.extensions import EntityRelationshipConfig, RetryConfig, ScopingParamConfig
 from airbyte_agent_sdk.schema.security import AuthConfigSpec
 from airbyte_agent_sdk.secrets import SecretStr
 from airbyte_agent_sdk.telemetry import SegmentTracker
@@ -64,6 +65,8 @@ CHECK_STATUS_HEALTHY = "healthy"
 CHECK_STATUS_UNHEALTHY = "unhealthy"
 CHECK_STATUS_SKIPPED = "skipped"
 CHECK_STATUS_FAILED = "failed"
+_UNRESOLVED_SCOPING_VALUE = object()
+_SCOPING_DECLINED = object()
 
 
 class ParamResolutionError(Exception):
@@ -346,8 +349,8 @@ class LocalExecutor:
                 if endpoint:
                     self._operation_index[(entity.name, action)] = endpoint
 
-        # Build O(1) scoping index: param_name -> config_key
-        self._scoping_index: dict[str, str] = {s.param: (s.config_key or s.param) for s in self.model.scoping}
+        # Build O(1) scoping index: param_name -> scoping config
+        self._scoping_index: dict[str, ScopingParamConfig] = {s.param: s for s in self.model.scoping}
 
         # Build O(1) global foreign-key index: fk_name -> (target_entity, target_key)
         # Used as a fallback when the current entity has no relationship for a param
@@ -945,10 +948,13 @@ class LocalExecutor:
 
         resolved: dict[str, Any] = {}
         for param_name in target_params:
-            # 1. Check scoping index
-            scoping_key = self._scoping_index.get(param_name)
-            if scoping_key and scoping_key in self.config_values:
-                resolved[param_name] = self.config_values[scoping_key]
+            # 1. Check scoping index (sample=True: health-check probes pick
+            # one element from multi-value configs as a representative sample)
+            scoping_value = self._resolve_scoping_value(param_name, sample=True)
+            if scoping_value is _SCOPING_DECLINED:
+                raise ParamResolutionError(f"Cannot resolve param '{param_name}' for entity '{entity_name}'")
+            if scoping_value is not _UNRESOLVED_SCOPING_VALUE:
+                resolved[param_name] = scoping_value
                 continue
 
             # 2. Config fallback: param name matches a config_values key
@@ -1176,7 +1182,49 @@ class LocalExecutor:
 
         return extracted_results
 
-    def _merge_scoping_defaults(self, params: dict[str, Any]) -> dict[str, Any]:
+    _SCOPING_FALSY_STRINGS = frozenset({"None", "none", "null", ""})
+
+    def _resolve_scoping_value(self, param_name: str, *, sample: bool = False) -> Any:
+        """Resolve a scoping param from config.
+
+        Returns the resolved value, `_UNRESOLVED_SCOPING_VALUE` when no
+        scoping entry exists for `param_name`, or `_SCOPING_DECLINED` when
+        a scoping entry exists but its `value_template` intentionally
+        rendered to none/null/empty (the caller should NOT fall through to
+        the raw config fallback in that case).
+
+        When `sample` is True (health-check probes), list-valued configs
+        are sampled to their first element.  When False (normal execute),
+        list-valued configs are left unresolved so the caller must supply
+        an explicit param.
+        """
+        scoping = self._scoping_index.get(param_name)
+        if scoping is None:
+            return _UNRESOLVED_SCOPING_VALUE
+
+        config_key = scoping.config_key or scoping.param
+        if config_key not in self.config_values:
+            return _UNRESOLVED_SCOPING_VALUE
+
+        value = self.config_values[config_key]
+        if isinstance(value, list):
+            if len(value) == 0:
+                return _UNRESOLVED_SCOPING_VALUE
+            if not sample:
+                if len(value) > 1:
+                    return _UNRESOLVED_SCOPING_VALUE
+            value = value[0]
+
+        if scoping.value_template is None:
+            return value
+
+        template = self._SCOPING_VALUE_TEMPLATE_ENV.from_string(scoping.value_template)
+        rendered = template.render(value=value, config=self.config_values, param=scoping.param).strip()
+        if rendered in self._SCOPING_FALSY_STRINGS:
+            return _SCOPING_DECLINED
+        return rendered
+
+    def _merge_scoping_defaults(self, params: dict[str, Any], *, sample: bool = False) -> dict[str, Any]:
         """Merge declared `x-airbyte-scoping` values into `params`.
 
         For each entry in `_scoping_index`, resolves the value from
@@ -1190,13 +1238,14 @@ class LocalExecutor:
             return params
 
         merged: dict[str, Any] | None = None
-        for param_name, config_key in self._scoping_index.items():
+        for param_name in self._scoping_index:
             if param_name in params:
                 continue
-            if config_key in self.config_values:
+            scoping_value = self._resolve_scoping_value(param_name, sample=sample)
+            if scoping_value is not _UNRESOLVED_SCOPING_VALUE and scoping_value is not _SCOPING_DECLINED:
                 if merged is None:
                     merged = dict(params)
-                merged[param_name] = self.config_values[config_key]
+                merged[param_name] = scoping_value
 
         return merged if merged is not None else params
 
@@ -2017,8 +2066,9 @@ class LocalExecutor:
     # Shared Jinja environment for record_filter evaluation. `Environment` is
     # thread-safe for rendering, so a single module-level instance avoids the
     # per-record allocation cost of spinning up a new one each call.
-    _RECORD_FILTER_ENV = Environment(undefined=StrictUndefined, autoescape=False)
-    _RECORD_TRANSFORM_ENV = Environment(undefined=StrictUndefined, autoescape=False)
+    _RECORD_FILTER_ENV = SandboxedEnvironment(undefined=StrictUndefined, autoescape=False)
+    _RECORD_TRANSFORM_ENV = SandboxedEnvironment(undefined=StrictUndefined, autoescape=False)
+    _SCOPING_VALUE_TEMPLATE_ENV = SandboxedEnvironment(undefined=StrictUndefined, autoescape=False)
 
     @classmethod
     def _evaluate_compiled_record_filter(

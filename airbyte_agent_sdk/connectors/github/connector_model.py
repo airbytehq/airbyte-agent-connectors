@@ -4917,18 +4917,22 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
         ScopingParamConfig(
             param='owner',
             config_key='repositories',
+            value_template="{{ value.split('/')[0] if '/' in value and value.split('/')[0] else none }}",
         ),
         ScopingParamConfig(
             param='repo',
             config_key='repositories',
+            value_template="{{ value.split('/')[1] if '/' in value and value.split('/')[1] and value.split('/')[1] != '*' else none }}",
         ),
         ScopingParamConfig(
             param='username',
             config_key='repositories',
+            value_template="{{ value.split('/')[0] if '/' in value and value.split('/')[0] else none }}",
         ),
         ScopingParamConfig(
             param='org',
             config_key='repositories',
+            value_template="{{ value.split('/')[0] if '/' in value and value.split('/')[0] else none }}",
         ),
     ],
 )

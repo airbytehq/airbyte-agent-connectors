@@ -679,6 +679,8 @@ Description:
 
     Each entry maps a path parameter name to an optional config key. If
     config_key is omitted, the param name itself is used as the config key.
+    A value_template can derive the injected path value from the selected
+    config value.
 
 Example:
     ```yaml
@@ -687,6 +689,9 @@ Example:
       x-airbyte-scoping:
         - param: account_id
           config_key: account_id
+        - param: owner
+          config_key: repositories
+          value_template: "{{ value.split('/')[0] }}"
         - param: workspace_id
     ```
 """

@@ -1381,11 +1381,17 @@ class ProductVariantsDeleteResponse(BaseModel):
 
     data: ProductVariantsDeleteResponseData | None = Field(default=None)
 
-class OrderCreateParamsOptions(BaseModel):
-    """OrderCreateOptionsInput"""
+class OrderCreateParamsOrderShippingaddress(BaseModel):
+    """Nested schema for OrderCreateParamsOrder.shippingAddress"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    inventory_behaviour: str | None = Field(default=None, alias="inventoryBehaviour")
+    address1: str | None = Field(default=None)
+    city: str | None = Field(default=None)
+    province_code: str | None = Field(default=None, alias="provinceCode")
+    zip: str | None = Field(default=None)
+    country_code: str | None = Field(default=None, alias="countryCode")
+    first_name: str | None = Field(default=None, alias="firstName")
+    last_name: str | None = Field(default=None, alias="lastName")
 
 class OrderCreateParamsOrderLineitemsItemPricesetShopmoney(BaseModel):
     """Nested schema for OrderCreateParamsOrderLineitemsItemPriceset.shopMoney"""
@@ -1412,18 +1418,6 @@ class OrderCreateParamsOrderLineitemsItem(BaseModel):
     """Custom title (for custom line items without a variant)"""
     price_set: OrderCreateParamsOrderLineitemsItemPriceset | None = Field(default=None, alias="priceSet")
 
-class OrderCreateParamsOrderShippingaddress(BaseModel):
-    """Nested schema for OrderCreateParamsOrder.shippingAddress"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    address1: str | None = Field(default=None)
-    city: str | None = Field(default=None)
-    province_code: str | None = Field(default=None, alias="provinceCode")
-    zip: str | None = Field(default=None)
-    country_code: str | None = Field(default=None, alias="countryCode")
-    first_name: str | None = Field(default=None, alias="firstName")
-    last_name: str | None = Field(default=None, alias="lastName")
-
 class OrderCreateParamsOrder(BaseModel):
     """OrderCreateOrderInput object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -1439,6 +1433,12 @@ class OrderCreateParamsOrder(BaseModel):
     tags: list[str] | None = Field(default=None, description="Order tags")
     """Order tags"""
     shipping_address: OrderCreateParamsOrderShippingaddress | None = Field(default=None, alias="shippingAddress")
+
+class OrderCreateParamsOptions(BaseModel):
+    """OrderCreateOptionsInput"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    inventory_behaviour: str | None = Field(default=None, alias="inventoryBehaviour")
 
 class OrderCreateParams(BaseModel):
     """Parameters for creating an order.

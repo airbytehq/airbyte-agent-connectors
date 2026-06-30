@@ -88,12 +88,16 @@ info:
   x-airbyte-scoping:
     - param: owner
       config_key: repositories
+      value_template: "{{ value.split('/')[0] if '/' in value and value.split('/')[0] else none }}"
     - param: repo
       config_key: repositories
+      value_template: "{{ value.split('/')[1] if '/' in value and value.split('/')[1] and value.split('/')[1] != '*' else none }}"
     - param: username
       config_key: repositories
+      value_template: "{{ value.split('/')[0] if '/' in value and value.split('/')[0] else none }}"
     - param: org
       config_key: repositories
+      value_template: "{{ value.split('/')[0] if '/' in value and value.split('/')[0] else none }}"
   x-airbyte-entity-relationships:
     - source_entity: reviews
       target_entity: pull_requests

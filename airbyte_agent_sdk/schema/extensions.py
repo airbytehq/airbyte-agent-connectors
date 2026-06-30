@@ -660,8 +660,9 @@ class ScopingParamConfig(BaseModel):
 
     When a path template contains a placeholder matching `param`, the
     executor looks up `config_key` (defaulting to `param`) in
-    `config_values` and injects the value automatically.  Explicitly
-    supplied `params` always take precedence over the scoped default.
+    `config_values`, optionally renders `value_template`, and injects the
+    value automatically.  Explicitly supplied `params` always take precedence
+    over the scoped default.
 
     Used in `x-airbyte-scoping` extension in the Info object.
 
@@ -672,9 +673,20 @@ class ScopingParamConfig(BaseModel):
           x-airbyte-scoping:
             - param: account_id
               config_key: account_id
+            - param: owner
+              config_key: repositories
+              value_template: "{{ value.split('/')[0] }}"
     """
 
     model_config = ConfigDict(extra="forbid")
 
     param: str = Field(description="Path parameter name to resolve from config")
     config_key: str | None = Field(None, description="Config key to read. Defaults to param name if omitted.")
+    value_template: str | None = Field(
+        None,
+        description=(
+            "Optional Jinja template rendered with `value`, `config`, and `param` "
+            "before injecting the scoped value. Templates that render to `none`, "
+            "`null`, or an empty string leave the parameter unresolved."
+        ),
+    )
