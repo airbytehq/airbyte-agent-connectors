@@ -314,18 +314,16 @@ class CreativeAssetVideo(BaseModel):
     fix_task_id: str | None = Field(default=None)
     flaw_types: list[Any] | None = Field(default=None)
 
-class SparkAdAuthInfo(BaseModel):
-    """Information about the authorization"""
+class SparkAdUserInfo(BaseModel):
+    """Information about the TikTok account"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    invite_start_time: str | None | None = Field(default=None, description="The time when the authorization starts (UTC+0)")
-    """The time when the authorization starts (UTC+0)"""
-    auth_start_time: str | None | None = Field(default=None, description="The time when the authorization code becomes valid (UTC+0)")
-    """The time when the authorization code becomes valid (UTC+0)"""
-    auth_end_time: str | None | None = Field(default=None, description="The time when the authorization code expires (UTC+0)")
-    """The time when the authorization code expires (UTC+0)"""
-    ad_auth_status: str | None | None = Field(default=None, description="The authorization status (e.g. AUTHORIZED)")
-    """The authorization status (e.g. AUTHORIZED)"""
+    tiktok_name: str | None | None = Field(default=None, description="The user name of the TikTok account")
+    """The user name of the TikTok account"""
+    identity_id: str | None | None = Field(default=None, description="Identity ID")
+    """Identity ID"""
+    identity_type: str | None | None = Field(default=None, description="Identity type")
+    """Identity type"""
 
 class SparkAdItemInfo(BaseModel):
     """Information about the Spark Ads post"""
@@ -341,6 +339,19 @@ class SparkAdItemInfo(BaseModel):
     """Item status (e.g. HESITATE_RECOMMEND)"""
     item_type: str | None | None = Field(default=None, description="The type of Spark Ads post (VIDEO or CAROUSEL)")
     """The type of Spark Ads post (VIDEO or CAROUSEL)"""
+
+class SparkAdAuthInfo(BaseModel):
+    """Information about the authorization"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    invite_start_time: str | None | None = Field(default=None, description="The time when the authorization starts (UTC+0)")
+    """The time when the authorization starts (UTC+0)"""
+    auth_start_time: str | None | None = Field(default=None, description="The time when the authorization code becomes valid (UTC+0)")
+    """The time when the authorization code becomes valid (UTC+0)"""
+    auth_end_time: str | None | None = Field(default=None, description="The time when the authorization code expires (UTC+0)")
+    """The time when the authorization code expires (UTC+0)"""
+    ad_auth_status: str | None | None = Field(default=None, description="The authorization status (e.g. AUTHORIZED)")
+    """The authorization status (e.g. AUTHORIZED)"""
 
 class SparkAdVideoInfo(BaseModel):
     """Information about the video post"""
@@ -358,17 +369,6 @@ class SparkAdVideoInfo(BaseModel):
     """The width of the video"""
     size: int | None | None = Field(default=None, description="The size of the video, in bytes")
     """The size of the video, in bytes"""
-
-class SparkAdUserInfo(BaseModel):
-    """Information about the TikTok account"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    tiktok_name: str | None | None = Field(default=None, description="The user name of the TikTok account")
-    """The user name of the TikTok account"""
-    identity_id: str | None | None = Field(default=None, description="Identity ID")
-    """Identity ID"""
-    identity_type: str | None | None = Field(default=None, description="Identity type")
-    """Identity type"""
 
 class SparkAd(BaseModel):
     """TikTok Spark Ad post authorization"""
@@ -572,6 +572,117 @@ class AdsReportDaily(BaseModel):
     real_time_app_install_cost: float | None = Field(default=None)
     app_install: float | None = Field(default=None)
 
+class AdsReportHourly(BaseModel):
+    """Hourly performance report at the ad level"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    ad_id: int | None = Field(default=None)
+    stat_time_hour: str | None = Field(default=None)
+    campaign_name: str | None = Field(default=None)
+    campaign_id: int | None = Field(default=None)
+    adgroup_name: str | None = Field(default=None)
+    adgroup_id: int | None = Field(default=None)
+    ad_name: str | None = Field(default=None)
+    ad_text: str | None = Field(default=None)
+    placement_type: str | None = Field(default=None)
+    spend: str | None = Field(default=None)
+    cpc: str | None = Field(default=None)
+    cpm: str | None = Field(default=None)
+    impressions: str | None = Field(default=None)
+    clicks: str | None = Field(default=None)
+    ctr: str | None = Field(default=None)
+    reach: str | None = Field(default=None)
+    cost_per_1000_reached: str | None = Field(default=None)
+    conversion: str | None = Field(default=None)
+    cost_per_conversion: str | None = Field(default=None)
+    conversion_rate: str | None = Field(default=None)
+    real_time_conversion: str | None = Field(default=None)
+    real_time_cost_per_conversion: str | None = Field(default=None)
+    real_time_conversion_rate: str | None = Field(default=None)
+    result: str | None = Field(default=None)
+    cost_per_result: str | None = Field(default=None)
+    result_rate: str | None = Field(default=None)
+    real_time_result: str | None = Field(default=None)
+    real_time_cost_per_result: str | None = Field(default=None)
+    real_time_result_rate: str | None = Field(default=None)
+    secondary_goal_result: str | None = Field(default=None)
+    cost_per_secondary_goal_result: str | None = Field(default=None)
+    secondary_goal_result_rate: str | None = Field(default=None)
+    frequency: str | None = Field(default=None)
+    video_play_actions: float | None = Field(default=None)
+    video_watched_2s: float | None = Field(default=None)
+    video_watched_6s: float | None = Field(default=None)
+    average_video_play: float | None = Field(default=None)
+    average_video_play_per_user: float | None = Field(default=None)
+    video_views_p25: float | None = Field(default=None)
+    video_views_p50: float | None = Field(default=None)
+    video_views_p75: float | None = Field(default=None)
+    video_views_p100: float | None = Field(default=None)
+    profile_visits: float | None = Field(default=None)
+    likes: float | None = Field(default=None)
+    comments: float | None = Field(default=None)
+    shares: float | None = Field(default=None)
+    follows: float | None = Field(default=None)
+    clicks_on_music_disc: float | None = Field(default=None)
+    real_time_app_install: float | None = Field(default=None)
+    real_time_app_install_cost: float | None = Field(default=None)
+    app_install: float | None = Field(default=None)
+
+class AdsReportLifetime(BaseModel):
+    """Lifetime performance report at the ad level"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    ad_id: int | None = Field(default=None)
+    campaign_name: str | None = Field(default=None)
+    campaign_id: int | None = Field(default=None)
+    adgroup_name: str | None = Field(default=None)
+    adgroup_id: int | None = Field(default=None)
+    ad_name: str | None = Field(default=None)
+    ad_text: str | None = Field(default=None)
+    placement_type: str | None = Field(default=None)
+    spend: str | None = Field(default=None)
+    cpc: str | None = Field(default=None)
+    cpm: str | None = Field(default=None)
+    impressions: str | None = Field(default=None)
+    clicks: str | None = Field(default=None)
+    ctr: str | None = Field(default=None)
+    reach: str | None = Field(default=None)
+    cost_per_1000_reached: str | None = Field(default=None)
+    conversion: str | None = Field(default=None)
+    cost_per_conversion: str | None = Field(default=None)
+    conversion_rate: str | None = Field(default=None)
+    real_time_conversion: str | None = Field(default=None)
+    real_time_cost_per_conversion: str | None = Field(default=None)
+    real_time_conversion_rate: str | None = Field(default=None)
+    result: str | None = Field(default=None)
+    cost_per_result: str | None = Field(default=None)
+    result_rate: str | None = Field(default=None)
+    real_time_result: str | None = Field(default=None)
+    real_time_cost_per_result: str | None = Field(default=None)
+    real_time_result_rate: str | None = Field(default=None)
+    secondary_goal_result: str | None = Field(default=None)
+    cost_per_secondary_goal_result: str | None = Field(default=None)
+    secondary_goal_result_rate: str | None = Field(default=None)
+    frequency: str | None = Field(default=None)
+    video_play_actions: float | None = Field(default=None)
+    video_watched_2s: float | None = Field(default=None)
+    video_watched_6s: float | None = Field(default=None)
+    average_video_play: float | None = Field(default=None)
+    average_video_play_per_user: float | None = Field(default=None)
+    video_views_p25: float | None = Field(default=None)
+    video_views_p50: float | None = Field(default=None)
+    video_views_p75: float | None = Field(default=None)
+    video_views_p100: float | None = Field(default=None)
+    profile_visits: float | None = Field(default=None)
+    likes: float | None = Field(default=None)
+    comments: float | None = Field(default=None)
+    shares: float | None = Field(default=None)
+    follows: float | None = Field(default=None)
+    clicks_on_music_disc: float | None = Field(default=None)
+    real_time_app_install: float | None = Field(default=None)
+    real_time_app_install_cost: float | None = Field(default=None)
+    app_install: float | None = Field(default=None)
+
 # ===== METADATA TYPE DEFINITIONS (PYDANTIC) =====
 # Meta types for operations that extract metadata (e.g., pagination info)
 
@@ -649,6 +760,18 @@ class AdGroupsReportsDailyListResultMeta(BaseModel):
 
 class AdsReportsDailyListResultMeta(BaseModel):
     """Metadata for ads_reports_daily.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    page_info: dict[str, Any] | None = Field(default=None)
+
+class AdsReportsHourlyListResultMeta(BaseModel):
+    """Metadata for ads_reports_hourly.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    page_info: dict[str, Any] | None = Field(default=None)
+
+class AdsReportsLifetimeListResultMeta(BaseModel):
+    """Metadata for ads_reports_lifetime.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     page_info: dict[str, Any] | None = Field(default=None)
@@ -1316,6 +1439,220 @@ class AdsReportsDailySearchData(BaseModel):
     """Number of app installations."""
 
 
+class AdsReportsHourlySearchData(BaseModel):
+    """Search result data for ads_reports_hourly entity."""
+    model_config = ConfigDict(extra="allow")
+
+    ad_id: int | None = None
+    """The unique identifier for the ad."""
+    stat_time_hour: str | None = None
+    """The hour for which the statistical data is recorded (YYYY-MM-DD HH:MM:SS format)."""
+    campaign_name: str | None = None
+    """The name of the marketing campaign."""
+    campaign_id: int | None = None
+    """The unique identifier for the campaign."""
+    adgroup_name: str | None = None
+    """The name of the ad group."""
+    adgroup_id: int | None = None
+    """The unique identifier for the ad group."""
+    ad_name: str | None = None
+    """The name of the ad."""
+    ad_text: str | None = None
+    """The text content of the ad."""
+    placement_type: str | None = None
+    """Type of ad placement."""
+    spend: str | None = None
+    """Total amount of money spent."""
+    cpc: str | None = None
+    """Cost per click."""
+    cpm: str | None = None
+    """Cost per thousand impressions."""
+    impressions: str | None = None
+    """Number of times the ad was displayed."""
+    clicks: str | None = None
+    """Number of clicks on the ad."""
+    ctr: str | None = None
+    """Click-through rate."""
+    reach: str | None = None
+    """Total number of unique users reached."""
+    cost_per_1000_reached: str | None = None
+    """Cost per 1000 unique users reached."""
+    conversion: str | None = None
+    """Number of conversions."""
+    cost_per_conversion: str | None = None
+    """Cost per conversion."""
+    conversion_rate: str | None = None
+    """Rate of conversions."""
+    real_time_conversion: str | None = None
+    """Real-time conversions."""
+    real_time_cost_per_conversion: str | None = None
+    """Real-time cost per conversion."""
+    real_time_conversion_rate: str | None = None
+    """Real-time conversion rate."""
+    result: str | None = None
+    """Number of results."""
+    cost_per_result: str | None = None
+    """Cost per result."""
+    result_rate: str | None = None
+    """Rate of results."""
+    real_time_result: str | None = None
+    """Real-time results."""
+    real_time_cost_per_result: str | None = None
+    """Real-time cost per result."""
+    real_time_result_rate: str | None = None
+    """Real-time result rate."""
+    secondary_goal_result: str | None = None
+    """Results for secondary goals."""
+    cost_per_secondary_goal_result: str | None = None
+    """Cost per secondary goal result."""
+    secondary_goal_result_rate: str | None = None
+    """Rate of secondary goal results."""
+    frequency: str | None = None
+    """Average number of times each person saw the ad."""
+    video_play_actions: float | None = None
+    """Number of video play actions."""
+    video_watched_2s: float | None = None
+    """Number of times video was watched for at least 2 seconds."""
+    video_watched_6s: float | None = None
+    """Number of times video was watched for at least 6 seconds."""
+    average_video_play: float | None = None
+    """Average video play duration."""
+    average_video_play_per_user: float | None = None
+    """Average video play duration per user."""
+    video_views_p25: float | None = None
+    """Number of times video was watched to 25%."""
+    video_views_p50: float | None = None
+    """Number of times video was watched to 50%."""
+    video_views_p75: float | None = None
+    """Number of times video was watched to 75%."""
+    video_views_p100: float | None = None
+    """Number of times video was watched to 100%."""
+    profile_visits: float | None = None
+    """Number of profile visits."""
+    likes: float | None = None
+    """Number of likes."""
+    comments: float | None = None
+    """Number of comments."""
+    shares: float | None = None
+    """Number of shares."""
+    follows: float | None = None
+    """Number of follows."""
+    clicks_on_music_disc: float | None = None
+    """Number of clicks on the music disc."""
+    real_time_app_install: float | None = None
+    """Real-time app installations."""
+    real_time_app_install_cost: float | None = None
+    """Cost of real-time app installations."""
+    app_install: float | None = None
+    """Number of app installations."""
+
+
+class AdsReportsLifetimeSearchData(BaseModel):
+    """Search result data for ads_reports_lifetime entity."""
+    model_config = ConfigDict(extra="allow")
+
+    ad_id: int | None = None
+    """The unique identifier for the ad."""
+    campaign_name: str | None = None
+    """The name of the marketing campaign."""
+    campaign_id: int | None = None
+    """The unique identifier for the campaign."""
+    adgroup_name: str | None = None
+    """The name of the ad group."""
+    adgroup_id: int | None = None
+    """The unique identifier for the ad group."""
+    ad_name: str | None = None
+    """The name of the ad."""
+    ad_text: str | None = None
+    """The text content of the ad."""
+    placement_type: str | None = None
+    """Type of ad placement."""
+    spend: str | None = None
+    """Total amount of money spent."""
+    cpc: str | None = None
+    """Cost per click."""
+    cpm: str | None = None
+    """Cost per thousand impressions."""
+    impressions: str | None = None
+    """Number of times the ad was displayed."""
+    clicks: str | None = None
+    """Number of clicks on the ad."""
+    ctr: str | None = None
+    """Click-through rate."""
+    reach: str | None = None
+    """Total number of unique users reached."""
+    cost_per_1000_reached: str | None = None
+    """Cost per 1000 unique users reached."""
+    conversion: str | None = None
+    """Number of conversions."""
+    cost_per_conversion: str | None = None
+    """Cost per conversion."""
+    conversion_rate: str | None = None
+    """Rate of conversions."""
+    real_time_conversion: str | None = None
+    """Real-time conversions."""
+    real_time_cost_per_conversion: str | None = None
+    """Real-time cost per conversion."""
+    real_time_conversion_rate: str | None = None
+    """Real-time conversion rate."""
+    result: str | None = None
+    """Number of results."""
+    cost_per_result: str | None = None
+    """Cost per result."""
+    result_rate: str | None = None
+    """Rate of results."""
+    real_time_result: str | None = None
+    """Real-time results."""
+    real_time_cost_per_result: str | None = None
+    """Real-time cost per result."""
+    real_time_result_rate: str | None = None
+    """Real-time result rate."""
+    secondary_goal_result: str | None = None
+    """Results for secondary goals."""
+    cost_per_secondary_goal_result: str | None = None
+    """Cost per secondary goal result."""
+    secondary_goal_result_rate: str | None = None
+    """Rate of secondary goal results."""
+    frequency: str | None = None
+    """Average number of times each person saw the ad."""
+    video_play_actions: float | None = None
+    """Number of video play actions."""
+    video_watched_2s: float | None = None
+    """Number of times video was watched for at least 2 seconds."""
+    video_watched_6s: float | None = None
+    """Number of times video was watched for at least 6 seconds."""
+    average_video_play: float | None = None
+    """Average video play duration."""
+    average_video_play_per_user: float | None = None
+    """Average video play duration per user."""
+    video_views_p25: float | None = None
+    """Number of times video was watched to 25%."""
+    video_views_p50: float | None = None
+    """Number of times video was watched to 50%."""
+    video_views_p75: float | None = None
+    """Number of times video was watched to 75%."""
+    video_views_p100: float | None = None
+    """Number of times video was watched to 100%."""
+    profile_visits: float | None = None
+    """Number of profile visits."""
+    likes: float | None = None
+    """Number of likes."""
+    comments: float | None = None
+    """Number of comments."""
+    shares: float | None = None
+    """Number of shares."""
+    follows: float | None = None
+    """Number of follows."""
+    clicks_on_music_disc: float | None = None
+    """Number of clicks on the music disc."""
+    real_time_app_install: float | None = None
+    """Real-time app installations."""
+    real_time_app_install_cost: float | None = None
+    """Cost of real-time app installations."""
+    app_install: float | None = None
+    """Number of app installations."""
+
+
 # ===== GENERIC SEARCH RESULT TYPES =====
 
 class AirbyteSearchMeta(BaseModel):
@@ -1378,6 +1715,12 @@ AdGroupsReportsDailySearchResult = AirbyteSearchResult[AdGroupsReportsDailySearc
 AdsReportsDailySearchResult = AirbyteSearchResult[AdsReportsDailySearchData]
 """Search result type for ads_reports_daily entity."""
 
+AdsReportsHourlySearchResult = AirbyteSearchResult[AdsReportsHourlySearchData]
+"""Search result type for ads_reports_hourly entity."""
+
+AdsReportsLifetimeSearchResult = AirbyteSearchResult[AdsReportsLifetimeSearchData]
+"""Search result type for ads_reports_lifetime entity."""
+
 
 
 # ===== OPERATION RESULT TYPE ALIASES =====
@@ -1423,4 +1766,10 @@ AdGroupsReportsDailyListResult = TiktokMarketingExecuteResultWithMeta[list[AdGro
 
 AdsReportsDailyListResult = TiktokMarketingExecuteResultWithMeta[list[AdsReportDaily], AdsReportsDailyListResultMeta]
 """Result type for ads_reports_daily.list operation with data and metadata."""
+
+AdsReportsHourlyListResult = TiktokMarketingExecuteResultWithMeta[list[AdsReportHourly], AdsReportsHourlyListResultMeta]
+"""Result type for ads_reports_hourly.list operation with data and metadata."""
+
+AdsReportsLifetimeListResult = TiktokMarketingExecuteResultWithMeta[list[AdsReportLifetime], AdsReportsLifetimeListResultMeta]
+"""Result type for ads_reports_lifetime.list operation with data and metadata."""
 

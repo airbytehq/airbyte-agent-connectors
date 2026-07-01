@@ -4826,6 +4826,1108 @@ TiktokMarketingConnectorModel: ConnectorModel = ConnectorModel(
                 'search_strategy': 'Filter by ad and date range',
             },
         ),
+        EntityDefinition(
+            name='ads_reports_hourly',
+            stream_name='ads_reports_hourly',
+            actions=[Action.LIST],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/report/integrated/get/:ads_reports_hourly',
+                    path_override=PathOverrideConfig(
+                        path='/report/integrated/get/',
+                    ),
+                    action=Action.LIST,
+                    description='Get hourly performance reports at the ad level',
+                    query_params=[
+                        'advertiser_id',
+                        'service_type',
+                        'report_type',
+                        'data_level',
+                        'dimensions',
+                        'metrics',
+                        'start_date',
+                        'end_date',
+                        'page',
+                        'page_size',
+                    ],
+                    query_params_schema={
+                        'advertiser_id': {'type': 'string', 'required': True},
+                        'service_type': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'AUCTION',
+                        },
+                        'report_type': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'BASIC',
+                        },
+                        'data_level': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'AUCTION_AD',
+                        },
+                        'dimensions': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '["ad_id", "stat_time_hour"]',
+                        },
+                        'metrics': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '["campaign_name", "campaign_id", "adgroup_name", "adgroup_id", "ad_name", "ad_text", "placement_type", "spend", "cpc", "cpm", "impressions", "clicks", "ctr", "reach", "cost_per_1000_reached", "conversion", "cost_per_conversion", "conversion_rate", "real_time_conversion", "real_time_cost_per_conversion", "real_time_conversion_rate", "result", "cost_per_result", "result_rate", "real_time_result", "real_time_cost_per_result", "real_time_result_rate", "secondary_goal_result", "cost_per_secondary_goal_result", "secondary_goal_result_rate", "frequency", "video_play_actions", "video_watched_2s", "video_watched_6s", "average_video_play", "average_video_play_per_user", "video_views_p25", "video_views_p50", "video_views_p75", "video_views_p100", "profile_visits", "likes", "comments", "shares", "follows", "clicks_on_music_disc", "real_time_app_install", "real_time_app_install_cost", "app_install"]',
+                        },
+                        'start_date': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '2024-01-01',
+                            'format': 'date',
+                        },
+                        'end_date': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '2024-12-31',
+                            'format': 'date',
+                        },
+                        'page': {
+                            'type': 'integer',
+                            'required': False,
+                            'default': 1,
+                            'minimum': 1,
+                        },
+                        'page_size': {
+                            'type': 'integer',
+                            'required': False,
+                            'default': 1000,
+                            'minimum': 1,
+                            'maximum': 1000,
+                        },
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'code': {'type': 'integer'},
+                            'message': {'type': 'string'},
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'list': {
+                                        'type': 'array',
+                                        'items': {
+                                            'type': 'object',
+                                            'description': 'Hourly performance report at the ad level',
+                                            'properties': {
+                                                'ad_id': {
+                                                    'type': ['null', 'integer'],
+                                                    'description': 'The unique identifier for the ad',
+                                                },
+                                                'stat_time_hour': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'The hour for which the statistical data is recorded',
+                                                },
+                                                'campaign_name': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'The name of the marketing campaign',
+                                                },
+                                                'campaign_id': {
+                                                    'type': ['null', 'integer'],
+                                                    'description': 'The unique identifier for the campaign',
+                                                },
+                                                'adgroup_name': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'The name of the ad group',
+                                                },
+                                                'adgroup_id': {
+                                                    'type': ['null', 'integer'],
+                                                    'description': 'The unique identifier for the ad group',
+                                                },
+                                                'ad_name': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'The name of the ad',
+                                                },
+                                                'ad_text': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'The text content of the ad',
+                                                },
+                                                'placement_type': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Type of ad placement',
+                                                },
+                                                'spend': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Total amount of money spent',
+                                                },
+                                                'cpc': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Cost per click',
+                                                },
+                                                'cpm': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Cost per thousand impressions',
+                                                },
+                                                'impressions': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Number of times the ad was displayed',
+                                                },
+                                                'clicks': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Number of clicks on the ad',
+                                                },
+                                                'ctr': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Click-through rate',
+                                                },
+                                                'reach': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Total number of unique users reached',
+                                                },
+                                                'cost_per_1000_reached': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Cost per 1000 unique users reached',
+                                                },
+                                                'conversion': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Number of conversions',
+                                                },
+                                                'cost_per_conversion': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Cost per conversion',
+                                                },
+                                                'conversion_rate': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Rate of conversions',
+                                                },
+                                                'real_time_conversion': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Real-time conversions',
+                                                },
+                                                'real_time_cost_per_conversion': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Real-time cost per conversion',
+                                                },
+                                                'real_time_conversion_rate': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Real-time conversion rate',
+                                                },
+                                                'result': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Number of results',
+                                                },
+                                                'cost_per_result': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Cost per result',
+                                                },
+                                                'result_rate': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Rate of results',
+                                                },
+                                                'real_time_result': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Real-time results',
+                                                },
+                                                'real_time_cost_per_result': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Real-time cost per result',
+                                                },
+                                                'real_time_result_rate': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Real-time result rate',
+                                                },
+                                                'secondary_goal_result': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Results for secondary goals',
+                                                },
+                                                'cost_per_secondary_goal_result': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Cost per secondary goal result',
+                                                },
+                                                'secondary_goal_result_rate': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Rate of secondary goal results',
+                                                },
+                                                'frequency': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Average number of times each person saw the ad',
+                                                },
+                                                'video_play_actions': {
+                                                    'type': ['null', 'number'],
+                                                    'description': 'Number of video play actions',
+                                                },
+                                                'video_watched_2s': {
+                                                    'type': ['null', 'number'],
+                                                    'description': 'Number of times video was watched for at least 2 seconds',
+                                                },
+                                                'video_watched_6s': {
+                                                    'type': ['null', 'number'],
+                                                    'description': 'Number of times video was watched for at least 6 seconds',
+                                                },
+                                                'average_video_play': {
+                                                    'type': ['null', 'number'],
+                                                    'description': 'Average video play duration',
+                                                },
+                                                'average_video_play_per_user': {
+                                                    'type': ['null', 'number'],
+                                                    'description': 'Average video play duration per user',
+                                                },
+                                                'video_views_p25': {
+                                                    'type': ['null', 'number'],
+                                                    'description': 'Number of times video was watched to 25%',
+                                                },
+                                                'video_views_p50': {
+                                                    'type': ['null', 'number'],
+                                                    'description': 'Number of times video was watched to 50%',
+                                                },
+                                                'video_views_p75': {
+                                                    'type': ['null', 'number'],
+                                                    'description': 'Number of times video was watched to 75%',
+                                                },
+                                                'video_views_p100': {
+                                                    'type': ['null', 'number'],
+                                                    'description': 'Number of times video was watched to 100%',
+                                                },
+                                                'profile_visits': {
+                                                    'type': ['null', 'number'],
+                                                    'description': 'Number of profile visits',
+                                                },
+                                                'likes': {
+                                                    'type': ['null', 'number'],
+                                                    'description': 'Number of likes',
+                                                },
+                                                'comments': {
+                                                    'type': ['null', 'number'],
+                                                    'description': 'Number of comments',
+                                                },
+                                                'shares': {
+                                                    'type': ['null', 'number'],
+                                                    'description': 'Number of shares',
+                                                },
+                                                'follows': {
+                                                    'type': ['null', 'number'],
+                                                    'description': 'Number of follows',
+                                                },
+                                                'clicks_on_music_disc': {
+                                                    'type': ['null', 'number'],
+                                                    'description': 'Number of clicks on the music disc',
+                                                },
+                                                'real_time_app_install': {
+                                                    'type': ['null', 'number'],
+                                                    'description': 'Real-time app installations',
+                                                },
+                                                'real_time_app_install_cost': {
+                                                    'type': ['null', 'number'],
+                                                    'description': 'Cost of real-time app installations',
+                                                },
+                                                'app_install': {
+                                                    'type': ['null', 'number'],
+                                                    'description': 'Number of app installations',
+                                                },
+                                            },
+                                            'x-airbyte-entity-name': 'ads_reports_hourly',
+                                            'x-airbyte-stream-name': 'ads_reports_hourly',
+                                            'x-airbyte-ai-hints': {
+                                                'summary': 'Hourly performance reports at the individual ad level',
+                                                'when_to_use': 'Questions about individual ad hourly performance',
+                                                'trigger_phrases': ['ad hourly report', 'ad hourly stats', 'hourly ad performance'],
+                                                'freshness': 'live',
+                                                'example_questions': ['Show hourly performance for an ad'],
+                                                'search_strategy': 'Filter by ad and date range',
+                                            },
+                                        },
+                                    },
+                                    'page_info': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'total_number': {'type': 'integer'},
+                                            'page': {'type': 'integer'},
+                                            'page_size': {'type': 'integer'},
+                                            'total_page': {'type': 'integer'},
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    record_extractor='$.data.list',
+                    meta_extractor={'page_info': '$.data.page_info'},
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'Hourly performance report at the ad level',
+                'properties': {
+                    'ad_id': {
+                        'type': ['null', 'integer'],
+                        'description': 'The unique identifier for the ad',
+                    },
+                    'stat_time_hour': {
+                        'type': ['null', 'string'],
+                        'description': 'The hour for which the statistical data is recorded',
+                    },
+                    'campaign_name': {
+                        'type': ['null', 'string'],
+                        'description': 'The name of the marketing campaign',
+                    },
+                    'campaign_id': {
+                        'type': ['null', 'integer'],
+                        'description': 'The unique identifier for the campaign',
+                    },
+                    'adgroup_name': {
+                        'type': ['null', 'string'],
+                        'description': 'The name of the ad group',
+                    },
+                    'adgroup_id': {
+                        'type': ['null', 'integer'],
+                        'description': 'The unique identifier for the ad group',
+                    },
+                    'ad_name': {
+                        'type': ['null', 'string'],
+                        'description': 'The name of the ad',
+                    },
+                    'ad_text': {
+                        'type': ['null', 'string'],
+                        'description': 'The text content of the ad',
+                    },
+                    'placement_type': {
+                        'type': ['null', 'string'],
+                        'description': 'Type of ad placement',
+                    },
+                    'spend': {
+                        'type': ['null', 'string'],
+                        'description': 'Total amount of money spent',
+                    },
+                    'cpc': {
+                        'type': ['null', 'string'],
+                        'description': 'Cost per click',
+                    },
+                    'cpm': {
+                        'type': ['null', 'string'],
+                        'description': 'Cost per thousand impressions',
+                    },
+                    'impressions': {
+                        'type': ['null', 'string'],
+                        'description': 'Number of times the ad was displayed',
+                    },
+                    'clicks': {
+                        'type': ['null', 'string'],
+                        'description': 'Number of clicks on the ad',
+                    },
+                    'ctr': {
+                        'type': ['null', 'string'],
+                        'description': 'Click-through rate',
+                    },
+                    'reach': {
+                        'type': ['null', 'string'],
+                        'description': 'Total number of unique users reached',
+                    },
+                    'cost_per_1000_reached': {
+                        'type': ['null', 'string'],
+                        'description': 'Cost per 1000 unique users reached',
+                    },
+                    'conversion': {
+                        'type': ['null', 'string'],
+                        'description': 'Number of conversions',
+                    },
+                    'cost_per_conversion': {
+                        'type': ['null', 'string'],
+                        'description': 'Cost per conversion',
+                    },
+                    'conversion_rate': {
+                        'type': ['null', 'string'],
+                        'description': 'Rate of conversions',
+                    },
+                    'real_time_conversion': {
+                        'type': ['null', 'string'],
+                        'description': 'Real-time conversions',
+                    },
+                    'real_time_cost_per_conversion': {
+                        'type': ['null', 'string'],
+                        'description': 'Real-time cost per conversion',
+                    },
+                    'real_time_conversion_rate': {
+                        'type': ['null', 'string'],
+                        'description': 'Real-time conversion rate',
+                    },
+                    'result': {
+                        'type': ['null', 'string'],
+                        'description': 'Number of results',
+                    },
+                    'cost_per_result': {
+                        'type': ['null', 'string'],
+                        'description': 'Cost per result',
+                    },
+                    'result_rate': {
+                        'type': ['null', 'string'],
+                        'description': 'Rate of results',
+                    },
+                    'real_time_result': {
+                        'type': ['null', 'string'],
+                        'description': 'Real-time results',
+                    },
+                    'real_time_cost_per_result': {
+                        'type': ['null', 'string'],
+                        'description': 'Real-time cost per result',
+                    },
+                    'real_time_result_rate': {
+                        'type': ['null', 'string'],
+                        'description': 'Real-time result rate',
+                    },
+                    'secondary_goal_result': {
+                        'type': ['null', 'string'],
+                        'description': 'Results for secondary goals',
+                    },
+                    'cost_per_secondary_goal_result': {
+                        'type': ['null', 'string'],
+                        'description': 'Cost per secondary goal result',
+                    },
+                    'secondary_goal_result_rate': {
+                        'type': ['null', 'string'],
+                        'description': 'Rate of secondary goal results',
+                    },
+                    'frequency': {
+                        'type': ['null', 'string'],
+                        'description': 'Average number of times each person saw the ad',
+                    },
+                    'video_play_actions': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of video play actions',
+                    },
+                    'video_watched_2s': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of times video was watched for at least 2 seconds',
+                    },
+                    'video_watched_6s': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of times video was watched for at least 6 seconds',
+                    },
+                    'average_video_play': {
+                        'type': ['null', 'number'],
+                        'description': 'Average video play duration',
+                    },
+                    'average_video_play_per_user': {
+                        'type': ['null', 'number'],
+                        'description': 'Average video play duration per user',
+                    },
+                    'video_views_p25': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of times video was watched to 25%',
+                    },
+                    'video_views_p50': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of times video was watched to 50%',
+                    },
+                    'video_views_p75': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of times video was watched to 75%',
+                    },
+                    'video_views_p100': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of times video was watched to 100%',
+                    },
+                    'profile_visits': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of profile visits',
+                    },
+                    'likes': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of likes',
+                    },
+                    'comments': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of comments',
+                    },
+                    'shares': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of shares',
+                    },
+                    'follows': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of follows',
+                    },
+                    'clicks_on_music_disc': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of clicks on the music disc',
+                    },
+                    'real_time_app_install': {
+                        'type': ['null', 'number'],
+                        'description': 'Real-time app installations',
+                    },
+                    'real_time_app_install_cost': {
+                        'type': ['null', 'number'],
+                        'description': 'Cost of real-time app installations',
+                    },
+                    'app_install': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of app installations',
+                    },
+                },
+                'x-airbyte-entity-name': 'ads_reports_hourly',
+                'x-airbyte-stream-name': 'ads_reports_hourly',
+                'x-airbyte-ai-hints': {
+                    'summary': 'Hourly performance reports at the individual ad level',
+                    'when_to_use': 'Questions about individual ad hourly performance',
+                    'trigger_phrases': ['ad hourly report', 'ad hourly stats', 'hourly ad performance'],
+                    'freshness': 'live',
+                    'example_questions': ['Show hourly performance for an ad'],
+                    'search_strategy': 'Filter by ad and date range',
+                },
+            },
+            ai_hints={
+                'summary': 'Hourly performance reports at the individual ad level',
+                'when_to_use': 'Questions about individual ad hourly performance',
+                'trigger_phrases': ['ad hourly report', 'ad hourly stats', 'hourly ad performance'],
+                'freshness': 'live',
+                'example_questions': ['Show hourly performance for an ad'],
+                'search_strategy': 'Filter by ad and date range',
+            },
+        ),
+        EntityDefinition(
+            name='ads_reports_lifetime',
+            stream_name='ads_reports_lifetime',
+            actions=[Action.LIST],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/report/integrated/get/:ads_reports_lifetime',
+                    path_override=PathOverrideConfig(
+                        path='/report/integrated/get/',
+                    ),
+                    action=Action.LIST,
+                    description='Get lifetime performance reports at the ad level',
+                    query_params=[
+                        'advertiser_id',
+                        'service_type',
+                        'report_type',
+                        'data_level',
+                        'dimensions',
+                        'metrics',
+                        'start_date',
+                        'end_date',
+                        'page',
+                        'page_size',
+                    ],
+                    query_params_schema={
+                        'advertiser_id': {'type': 'string', 'required': True},
+                        'service_type': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'AUCTION',
+                        },
+                        'report_type': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'BASIC',
+                        },
+                        'data_level': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'AUCTION_AD',
+                        },
+                        'dimensions': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '["ad_id"]',
+                        },
+                        'metrics': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '["campaign_name", "campaign_id", "adgroup_name", "adgroup_id", "ad_name", "ad_text", "placement_type", "spend", "cpc", "cpm", "impressions", "clicks", "ctr", "reach", "cost_per_1000_reached", "conversion", "cost_per_conversion", "conversion_rate", "real_time_conversion", "real_time_cost_per_conversion", "real_time_conversion_rate", "result", "cost_per_result", "result_rate", "real_time_result", "real_time_cost_per_result", "real_time_result_rate", "secondary_goal_result", "cost_per_secondary_goal_result", "secondary_goal_result_rate", "frequency", "video_play_actions", "video_watched_2s", "video_watched_6s", "average_video_play", "average_video_play_per_user", "video_views_p25", "video_views_p50", "video_views_p75", "video_views_p100", "profile_visits", "likes", "comments", "shares", "follows", "clicks_on_music_disc", "real_time_app_install", "real_time_app_install_cost", "app_install"]',
+                        },
+                        'start_date': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '2024-01-01',
+                            'format': 'date',
+                        },
+                        'end_date': {
+                            'type': 'string',
+                            'required': True,
+                            'default': '2024-12-31',
+                            'format': 'date',
+                        },
+                        'page': {
+                            'type': 'integer',
+                            'required': False,
+                            'default': 1,
+                            'minimum': 1,
+                        },
+                        'page_size': {
+                            'type': 'integer',
+                            'required': False,
+                            'default': 1000,
+                            'minimum': 1,
+                            'maximum': 1000,
+                        },
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'code': {'type': 'integer'},
+                            'message': {'type': 'string'},
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'list': {
+                                        'type': 'array',
+                                        'items': {
+                                            'type': 'object',
+                                            'description': 'Lifetime performance report at the ad level',
+                                            'properties': {
+                                                'ad_id': {
+                                                    'type': ['null', 'integer'],
+                                                    'description': 'The unique identifier for the ad',
+                                                },
+                                                'campaign_name': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'The name of the marketing campaign',
+                                                },
+                                                'campaign_id': {
+                                                    'type': ['null', 'integer'],
+                                                    'description': 'The unique identifier for the campaign',
+                                                },
+                                                'adgroup_name': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'The name of the ad group',
+                                                },
+                                                'adgroup_id': {
+                                                    'type': ['null', 'integer'],
+                                                    'description': 'The unique identifier for the ad group',
+                                                },
+                                                'ad_name': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'The name of the ad',
+                                                },
+                                                'ad_text': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'The text content of the ad',
+                                                },
+                                                'placement_type': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Type of ad placement',
+                                                },
+                                                'spend': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Total amount of money spent',
+                                                },
+                                                'cpc': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Cost per click',
+                                                },
+                                                'cpm': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Cost per thousand impressions',
+                                                },
+                                                'impressions': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Number of times the ad was displayed',
+                                                },
+                                                'clicks': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Number of clicks on the ad',
+                                                },
+                                                'ctr': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Click-through rate',
+                                                },
+                                                'reach': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Total number of unique users reached',
+                                                },
+                                                'cost_per_1000_reached': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Cost per 1000 unique users reached',
+                                                },
+                                                'conversion': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Number of conversions',
+                                                },
+                                                'cost_per_conversion': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Cost per conversion',
+                                                },
+                                                'conversion_rate': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Rate of conversions',
+                                                },
+                                                'real_time_conversion': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Real-time conversions',
+                                                },
+                                                'real_time_cost_per_conversion': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Real-time cost per conversion',
+                                                },
+                                                'real_time_conversion_rate': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Real-time conversion rate',
+                                                },
+                                                'result': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Number of results',
+                                                },
+                                                'cost_per_result': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Cost per result',
+                                                },
+                                                'result_rate': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Rate of results',
+                                                },
+                                                'real_time_result': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Real-time results',
+                                                },
+                                                'real_time_cost_per_result': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Real-time cost per result',
+                                                },
+                                                'real_time_result_rate': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Real-time result rate',
+                                                },
+                                                'secondary_goal_result': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Results for secondary goals',
+                                                },
+                                                'cost_per_secondary_goal_result': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Cost per secondary goal result',
+                                                },
+                                                'secondary_goal_result_rate': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Rate of secondary goal results',
+                                                },
+                                                'frequency': {
+                                                    'type': ['null', 'string'],
+                                                    'description': 'Average number of times each person saw the ad',
+                                                },
+                                                'video_play_actions': {
+                                                    'type': ['null', 'number'],
+                                                    'description': 'Number of video play actions',
+                                                },
+                                                'video_watched_2s': {
+                                                    'type': ['null', 'number'],
+                                                    'description': 'Number of times video was watched for at least 2 seconds',
+                                                },
+                                                'video_watched_6s': {
+                                                    'type': ['null', 'number'],
+                                                    'description': 'Number of times video was watched for at least 6 seconds',
+                                                },
+                                                'average_video_play': {
+                                                    'type': ['null', 'number'],
+                                                    'description': 'Average video play duration',
+                                                },
+                                                'average_video_play_per_user': {
+                                                    'type': ['null', 'number'],
+                                                    'description': 'Average video play duration per user',
+                                                },
+                                                'video_views_p25': {
+                                                    'type': ['null', 'number'],
+                                                    'description': 'Number of times video was watched to 25%',
+                                                },
+                                                'video_views_p50': {
+                                                    'type': ['null', 'number'],
+                                                    'description': 'Number of times video was watched to 50%',
+                                                },
+                                                'video_views_p75': {
+                                                    'type': ['null', 'number'],
+                                                    'description': 'Number of times video was watched to 75%',
+                                                },
+                                                'video_views_p100': {
+                                                    'type': ['null', 'number'],
+                                                    'description': 'Number of times video was watched to 100%',
+                                                },
+                                                'profile_visits': {
+                                                    'type': ['null', 'number'],
+                                                    'description': 'Number of profile visits',
+                                                },
+                                                'likes': {
+                                                    'type': ['null', 'number'],
+                                                    'description': 'Number of likes',
+                                                },
+                                                'comments': {
+                                                    'type': ['null', 'number'],
+                                                    'description': 'Number of comments',
+                                                },
+                                                'shares': {
+                                                    'type': ['null', 'number'],
+                                                    'description': 'Number of shares',
+                                                },
+                                                'follows': {
+                                                    'type': ['null', 'number'],
+                                                    'description': 'Number of follows',
+                                                },
+                                                'clicks_on_music_disc': {
+                                                    'type': ['null', 'number'],
+                                                    'description': 'Number of clicks on the music disc',
+                                                },
+                                                'real_time_app_install': {
+                                                    'type': ['null', 'number'],
+                                                    'description': 'Real-time app installations',
+                                                },
+                                                'real_time_app_install_cost': {
+                                                    'type': ['null', 'number'],
+                                                    'description': 'Cost of real-time app installations',
+                                                },
+                                                'app_install': {
+                                                    'type': ['null', 'number'],
+                                                    'description': 'Number of app installations',
+                                                },
+                                            },
+                                            'x-airbyte-entity-name': 'ads_reports_lifetime',
+                                            'x-airbyte-stream-name': 'ads_reports_lifetime',
+                                            'x-airbyte-ai-hints': {
+                                                'summary': 'Lifetime performance reports at the individual ad level',
+                                                'when_to_use': 'Questions about individual ad lifetime/all-time performance',
+                                                'trigger_phrases': ['ad lifetime report', 'ad lifetime stats', 'all-time ad performance'],
+                                                'freshness': 'live',
+                                                'example_questions': ['Show lifetime performance for an ad'],
+                                                'search_strategy': 'Filter by ad',
+                                            },
+                                        },
+                                    },
+                                    'page_info': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'total_number': {'type': 'integer'},
+                                            'page': {'type': 'integer'},
+                                            'page_size': {'type': 'integer'},
+                                            'total_page': {'type': 'integer'},
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    record_extractor='$.data.list',
+                    meta_extractor={'page_info': '$.data.page_info'},
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'Lifetime performance report at the ad level',
+                'properties': {
+                    'ad_id': {
+                        'type': ['null', 'integer'],
+                        'description': 'The unique identifier for the ad',
+                    },
+                    'campaign_name': {
+                        'type': ['null', 'string'],
+                        'description': 'The name of the marketing campaign',
+                    },
+                    'campaign_id': {
+                        'type': ['null', 'integer'],
+                        'description': 'The unique identifier for the campaign',
+                    },
+                    'adgroup_name': {
+                        'type': ['null', 'string'],
+                        'description': 'The name of the ad group',
+                    },
+                    'adgroup_id': {
+                        'type': ['null', 'integer'],
+                        'description': 'The unique identifier for the ad group',
+                    },
+                    'ad_name': {
+                        'type': ['null', 'string'],
+                        'description': 'The name of the ad',
+                    },
+                    'ad_text': {
+                        'type': ['null', 'string'],
+                        'description': 'The text content of the ad',
+                    },
+                    'placement_type': {
+                        'type': ['null', 'string'],
+                        'description': 'Type of ad placement',
+                    },
+                    'spend': {
+                        'type': ['null', 'string'],
+                        'description': 'Total amount of money spent',
+                    },
+                    'cpc': {
+                        'type': ['null', 'string'],
+                        'description': 'Cost per click',
+                    },
+                    'cpm': {
+                        'type': ['null', 'string'],
+                        'description': 'Cost per thousand impressions',
+                    },
+                    'impressions': {
+                        'type': ['null', 'string'],
+                        'description': 'Number of times the ad was displayed',
+                    },
+                    'clicks': {
+                        'type': ['null', 'string'],
+                        'description': 'Number of clicks on the ad',
+                    },
+                    'ctr': {
+                        'type': ['null', 'string'],
+                        'description': 'Click-through rate',
+                    },
+                    'reach': {
+                        'type': ['null', 'string'],
+                        'description': 'Total number of unique users reached',
+                    },
+                    'cost_per_1000_reached': {
+                        'type': ['null', 'string'],
+                        'description': 'Cost per 1000 unique users reached',
+                    },
+                    'conversion': {
+                        'type': ['null', 'string'],
+                        'description': 'Number of conversions',
+                    },
+                    'cost_per_conversion': {
+                        'type': ['null', 'string'],
+                        'description': 'Cost per conversion',
+                    },
+                    'conversion_rate': {
+                        'type': ['null', 'string'],
+                        'description': 'Rate of conversions',
+                    },
+                    'real_time_conversion': {
+                        'type': ['null', 'string'],
+                        'description': 'Real-time conversions',
+                    },
+                    'real_time_cost_per_conversion': {
+                        'type': ['null', 'string'],
+                        'description': 'Real-time cost per conversion',
+                    },
+                    'real_time_conversion_rate': {
+                        'type': ['null', 'string'],
+                        'description': 'Real-time conversion rate',
+                    },
+                    'result': {
+                        'type': ['null', 'string'],
+                        'description': 'Number of results',
+                    },
+                    'cost_per_result': {
+                        'type': ['null', 'string'],
+                        'description': 'Cost per result',
+                    },
+                    'result_rate': {
+                        'type': ['null', 'string'],
+                        'description': 'Rate of results',
+                    },
+                    'real_time_result': {
+                        'type': ['null', 'string'],
+                        'description': 'Real-time results',
+                    },
+                    'real_time_cost_per_result': {
+                        'type': ['null', 'string'],
+                        'description': 'Real-time cost per result',
+                    },
+                    'real_time_result_rate': {
+                        'type': ['null', 'string'],
+                        'description': 'Real-time result rate',
+                    },
+                    'secondary_goal_result': {
+                        'type': ['null', 'string'],
+                        'description': 'Results for secondary goals',
+                    },
+                    'cost_per_secondary_goal_result': {
+                        'type': ['null', 'string'],
+                        'description': 'Cost per secondary goal result',
+                    },
+                    'secondary_goal_result_rate': {
+                        'type': ['null', 'string'],
+                        'description': 'Rate of secondary goal results',
+                    },
+                    'frequency': {
+                        'type': ['null', 'string'],
+                        'description': 'Average number of times each person saw the ad',
+                    },
+                    'video_play_actions': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of video play actions',
+                    },
+                    'video_watched_2s': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of times video was watched for at least 2 seconds',
+                    },
+                    'video_watched_6s': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of times video was watched for at least 6 seconds',
+                    },
+                    'average_video_play': {
+                        'type': ['null', 'number'],
+                        'description': 'Average video play duration',
+                    },
+                    'average_video_play_per_user': {
+                        'type': ['null', 'number'],
+                        'description': 'Average video play duration per user',
+                    },
+                    'video_views_p25': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of times video was watched to 25%',
+                    },
+                    'video_views_p50': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of times video was watched to 50%',
+                    },
+                    'video_views_p75': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of times video was watched to 75%',
+                    },
+                    'video_views_p100': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of times video was watched to 100%',
+                    },
+                    'profile_visits': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of profile visits',
+                    },
+                    'likes': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of likes',
+                    },
+                    'comments': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of comments',
+                    },
+                    'shares': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of shares',
+                    },
+                    'follows': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of follows',
+                    },
+                    'clicks_on_music_disc': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of clicks on the music disc',
+                    },
+                    'real_time_app_install': {
+                        'type': ['null', 'number'],
+                        'description': 'Real-time app installations',
+                    },
+                    'real_time_app_install_cost': {
+                        'type': ['null', 'number'],
+                        'description': 'Cost of real-time app installations',
+                    },
+                    'app_install': {
+                        'type': ['null', 'number'],
+                        'description': 'Number of app installations',
+                    },
+                },
+                'x-airbyte-entity-name': 'ads_reports_lifetime',
+                'x-airbyte-stream-name': 'ads_reports_lifetime',
+                'x-airbyte-ai-hints': {
+                    'summary': 'Lifetime performance reports at the individual ad level',
+                    'when_to_use': 'Questions about individual ad lifetime/all-time performance',
+                    'trigger_phrases': ['ad lifetime report', 'ad lifetime stats', 'all-time ad performance'],
+                    'freshness': 'live',
+                    'example_questions': ['Show lifetime performance for an ad'],
+                    'search_strategy': 'Filter by ad',
+                },
+            },
+            ai_hints={
+                'summary': 'Lifetime performance reports at the individual ad level',
+                'when_to_use': 'Questions about individual ad lifetime/all-time performance',
+                'trigger_phrases': ['ad lifetime report', 'ad lifetime stats', 'all-time ad performance'],
+                'freshness': 'live',
+                'example_questions': ['Show lifetime performance for an ad'],
+                'search_strategy': 'Filter by ad',
+            },
+        ),
     ],
     context_store=CacheConfig(
         entities=[
@@ -6259,6 +7361,525 @@ TiktokMarketingConnectorModel: ConnectorModel = ConnectorModel(
                     ),
                 ],
             ),
+            CacheEntityConfig(
+                entity='ads_reports_hourly',
+                suggested=True,
+                x_airbyte_name='ads_reports_hourly',
+                fields=[
+                    CacheFieldConfig(
+                        name='ad_id',
+                        type=['null', 'integer'],
+                        description='The unique identifier for the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='stat_time_hour',
+                        type=['null', 'string'],
+                        description='The hour for which the statistical data is recorded (YYYY-MM-DD HH:MM:SS format).',
+                    ),
+                    CacheFieldConfig(
+                        name='campaign_name',
+                        type=['null', 'string'],
+                        description='The name of the marketing campaign.',
+                    ),
+                    CacheFieldConfig(
+                        name='campaign_id',
+                        type=['null', 'integer'],
+                        description='The unique identifier for the campaign.',
+                    ),
+                    CacheFieldConfig(
+                        name='adgroup_name',
+                        type=['null', 'string'],
+                        description='The name of the ad group.',
+                    ),
+                    CacheFieldConfig(
+                        name='adgroup_id',
+                        type=['null', 'integer'],
+                        description='The unique identifier for the ad group.',
+                    ),
+                    CacheFieldConfig(
+                        name='ad_name',
+                        type=['null', 'string'],
+                        description='The name of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='ad_text',
+                        type=['null', 'string'],
+                        description='The text content of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='placement_type',
+                        type=['null', 'string'],
+                        description='Type of ad placement.',
+                    ),
+                    CacheFieldConfig(
+                        name='spend',
+                        type=['null', 'string'],
+                        description='Total amount of money spent.',
+                    ),
+                    CacheFieldConfig(
+                        name='cpc',
+                        type=['null', 'string'],
+                        description='Cost per click.',
+                    ),
+                    CacheFieldConfig(
+                        name='cpm',
+                        type=['null', 'string'],
+                        description='Cost per thousand impressions.',
+                    ),
+                    CacheFieldConfig(
+                        name='impressions',
+                        type=['null', 'string'],
+                        description='Number of times the ad was displayed.',
+                    ),
+                    CacheFieldConfig(
+                        name='clicks',
+                        type=['null', 'string'],
+                        description='Number of clicks on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='ctr',
+                        type=['null', 'string'],
+                        description='Click-through rate.',
+                    ),
+                    CacheFieldConfig(
+                        name='reach',
+                        type=['null', 'string'],
+                        description='Total number of unique users reached.',
+                    ),
+                    CacheFieldConfig(
+                        name='cost_per_1000_reached',
+                        type=['null', 'string'],
+                        description='Cost per 1000 unique users reached.',
+                    ),
+                    CacheFieldConfig(
+                        name='conversion',
+                        type=['null', 'string'],
+                        description='Number of conversions.',
+                    ),
+                    CacheFieldConfig(
+                        name='cost_per_conversion',
+                        type=['null', 'string'],
+                        description='Cost per conversion.',
+                    ),
+                    CacheFieldConfig(
+                        name='conversion_rate',
+                        type=['null', 'string'],
+                        description='Rate of conversions.',
+                    ),
+                    CacheFieldConfig(
+                        name='real_time_conversion',
+                        type=['null', 'string'],
+                        description='Real-time conversions.',
+                    ),
+                    CacheFieldConfig(
+                        name='real_time_cost_per_conversion',
+                        type=['null', 'string'],
+                        description='Real-time cost per conversion.',
+                    ),
+                    CacheFieldConfig(
+                        name='real_time_conversion_rate',
+                        type=['null', 'string'],
+                        description='Real-time conversion rate.',
+                    ),
+                    CacheFieldConfig(
+                        name='result',
+                        type=['null', 'string'],
+                        description='Number of results.',
+                    ),
+                    CacheFieldConfig(
+                        name='cost_per_result',
+                        type=['null', 'string'],
+                        description='Cost per result.',
+                    ),
+                    CacheFieldConfig(
+                        name='result_rate',
+                        type=['null', 'string'],
+                        description='Rate of results.',
+                    ),
+                    CacheFieldConfig(
+                        name='real_time_result',
+                        type=['null', 'string'],
+                        description='Real-time results.',
+                    ),
+                    CacheFieldConfig(
+                        name='real_time_cost_per_result',
+                        type=['null', 'string'],
+                        description='Real-time cost per result.',
+                    ),
+                    CacheFieldConfig(
+                        name='real_time_result_rate',
+                        type=['null', 'string'],
+                        description='Real-time result rate.',
+                    ),
+                    CacheFieldConfig(
+                        name='secondary_goal_result',
+                        type=['null', 'string'],
+                        description='Results for secondary goals.',
+                    ),
+                    CacheFieldConfig(
+                        name='cost_per_secondary_goal_result',
+                        type=['null', 'string'],
+                        description='Cost per secondary goal result.',
+                    ),
+                    CacheFieldConfig(
+                        name='secondary_goal_result_rate',
+                        type=['null', 'string'],
+                        description='Rate of secondary goal results.',
+                    ),
+                    CacheFieldConfig(
+                        name='frequency',
+                        type=['null', 'string'],
+                        description='Average number of times each person saw the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='video_play_actions',
+                        type=['null', 'number'],
+                        description='Number of video play actions.',
+                    ),
+                    CacheFieldConfig(
+                        name='video_watched_2s',
+                        type=['null', 'number'],
+                        description='Number of times video was watched for at least 2 seconds.',
+                    ),
+                    CacheFieldConfig(
+                        name='video_watched_6s',
+                        type=['null', 'number'],
+                        description='Number of times video was watched for at least 6 seconds.',
+                    ),
+                    CacheFieldConfig(
+                        name='average_video_play',
+                        type=['null', 'number'],
+                        description='Average video play duration.',
+                    ),
+                    CacheFieldConfig(
+                        name='average_video_play_per_user',
+                        type=['null', 'number'],
+                        description='Average video play duration per user.',
+                    ),
+                    CacheFieldConfig(
+                        name='video_views_p25',
+                        type=['null', 'number'],
+                        description='Number of times video was watched to 25%.',
+                    ),
+                    CacheFieldConfig(
+                        name='video_views_p50',
+                        type=['null', 'number'],
+                        description='Number of times video was watched to 50%.',
+                    ),
+                    CacheFieldConfig(
+                        name='video_views_p75',
+                        type=['null', 'number'],
+                        description='Number of times video was watched to 75%.',
+                    ),
+                    CacheFieldConfig(
+                        name='video_views_p100',
+                        type=['null', 'number'],
+                        description='Number of times video was watched to 100%.',
+                    ),
+                    CacheFieldConfig(
+                        name='profile_visits',
+                        type=['null', 'number'],
+                        description='Number of profile visits.',
+                    ),
+                    CacheFieldConfig(
+                        name='likes',
+                        type=['null', 'number'],
+                        description='Number of likes.',
+                    ),
+                    CacheFieldConfig(
+                        name='comments',
+                        type=['null', 'number'],
+                        description='Number of comments.',
+                    ),
+                    CacheFieldConfig(
+                        name='shares',
+                        type=['null', 'number'],
+                        description='Number of shares.',
+                    ),
+                    CacheFieldConfig(
+                        name='follows',
+                        type=['null', 'number'],
+                        description='Number of follows.',
+                    ),
+                    CacheFieldConfig(
+                        name='clicks_on_music_disc',
+                        type=['null', 'number'],
+                        description='Number of clicks on the music disc.',
+                    ),
+                    CacheFieldConfig(
+                        name='real_time_app_install',
+                        type=['null', 'number'],
+                        description='Real-time app installations.',
+                    ),
+                    CacheFieldConfig(
+                        name='real_time_app_install_cost',
+                        type=['null', 'number'],
+                        description='Cost of real-time app installations.',
+                    ),
+                    CacheFieldConfig(
+                        name='app_install',
+                        type=['null', 'number'],
+                        description='Number of app installations.',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='ads_reports_lifetime',
+                suggested=True,
+                x_airbyte_name='ads_reports_lifetime',
+                fields=[
+                    CacheFieldConfig(
+                        name='ad_id',
+                        type=['null', 'integer'],
+                        description='The unique identifier for the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='campaign_name',
+                        type=['null', 'string'],
+                        description='The name of the marketing campaign.',
+                    ),
+                    CacheFieldConfig(
+                        name='campaign_id',
+                        type=['null', 'integer'],
+                        description='The unique identifier for the campaign.',
+                    ),
+                    CacheFieldConfig(
+                        name='adgroup_name',
+                        type=['null', 'string'],
+                        description='The name of the ad group.',
+                    ),
+                    CacheFieldConfig(
+                        name='adgroup_id',
+                        type=['null', 'integer'],
+                        description='The unique identifier for the ad group.',
+                    ),
+                    CacheFieldConfig(
+                        name='ad_name',
+                        type=['null', 'string'],
+                        description='The name of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='ad_text',
+                        type=['null', 'string'],
+                        description='The text content of the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='placement_type',
+                        type=['null', 'string'],
+                        description='Type of ad placement.',
+                    ),
+                    CacheFieldConfig(
+                        name='spend',
+                        type=['null', 'string'],
+                        description='Total amount of money spent.',
+                    ),
+                    CacheFieldConfig(
+                        name='cpc',
+                        type=['null', 'string'],
+                        description='Cost per click.',
+                    ),
+                    CacheFieldConfig(
+                        name='cpm',
+                        type=['null', 'string'],
+                        description='Cost per thousand impressions.',
+                    ),
+                    CacheFieldConfig(
+                        name='impressions',
+                        type=['null', 'string'],
+                        description='Number of times the ad was displayed.',
+                    ),
+                    CacheFieldConfig(
+                        name='clicks',
+                        type=['null', 'string'],
+                        description='Number of clicks on the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='ctr',
+                        type=['null', 'string'],
+                        description='Click-through rate.',
+                    ),
+                    CacheFieldConfig(
+                        name='reach',
+                        type=['null', 'string'],
+                        description='Total number of unique users reached.',
+                    ),
+                    CacheFieldConfig(
+                        name='cost_per_1000_reached',
+                        type=['null', 'string'],
+                        description='Cost per 1000 unique users reached.',
+                    ),
+                    CacheFieldConfig(
+                        name='conversion',
+                        type=['null', 'string'],
+                        description='Number of conversions.',
+                    ),
+                    CacheFieldConfig(
+                        name='cost_per_conversion',
+                        type=['null', 'string'],
+                        description='Cost per conversion.',
+                    ),
+                    CacheFieldConfig(
+                        name='conversion_rate',
+                        type=['null', 'string'],
+                        description='Rate of conversions.',
+                    ),
+                    CacheFieldConfig(
+                        name='real_time_conversion',
+                        type=['null', 'string'],
+                        description='Real-time conversions.',
+                    ),
+                    CacheFieldConfig(
+                        name='real_time_cost_per_conversion',
+                        type=['null', 'string'],
+                        description='Real-time cost per conversion.',
+                    ),
+                    CacheFieldConfig(
+                        name='real_time_conversion_rate',
+                        type=['null', 'string'],
+                        description='Real-time conversion rate.',
+                    ),
+                    CacheFieldConfig(
+                        name='result',
+                        type=['null', 'string'],
+                        description='Number of results.',
+                    ),
+                    CacheFieldConfig(
+                        name='cost_per_result',
+                        type=['null', 'string'],
+                        description='Cost per result.',
+                    ),
+                    CacheFieldConfig(
+                        name='result_rate',
+                        type=['null', 'string'],
+                        description='Rate of results.',
+                    ),
+                    CacheFieldConfig(
+                        name='real_time_result',
+                        type=['null', 'string'],
+                        description='Real-time results.',
+                    ),
+                    CacheFieldConfig(
+                        name='real_time_cost_per_result',
+                        type=['null', 'string'],
+                        description='Real-time cost per result.',
+                    ),
+                    CacheFieldConfig(
+                        name='real_time_result_rate',
+                        type=['null', 'string'],
+                        description='Real-time result rate.',
+                    ),
+                    CacheFieldConfig(
+                        name='secondary_goal_result',
+                        type=['null', 'string'],
+                        description='Results for secondary goals.',
+                    ),
+                    CacheFieldConfig(
+                        name='cost_per_secondary_goal_result',
+                        type=['null', 'string'],
+                        description='Cost per secondary goal result.',
+                    ),
+                    CacheFieldConfig(
+                        name='secondary_goal_result_rate',
+                        type=['null', 'string'],
+                        description='Rate of secondary goal results.',
+                    ),
+                    CacheFieldConfig(
+                        name='frequency',
+                        type=['null', 'string'],
+                        description='Average number of times each person saw the ad.',
+                    ),
+                    CacheFieldConfig(
+                        name='video_play_actions',
+                        type=['null', 'number'],
+                        description='Number of video play actions.',
+                    ),
+                    CacheFieldConfig(
+                        name='video_watched_2s',
+                        type=['null', 'number'],
+                        description='Number of times video was watched for at least 2 seconds.',
+                    ),
+                    CacheFieldConfig(
+                        name='video_watched_6s',
+                        type=['null', 'number'],
+                        description='Number of times video was watched for at least 6 seconds.',
+                    ),
+                    CacheFieldConfig(
+                        name='average_video_play',
+                        type=['null', 'number'],
+                        description='Average video play duration.',
+                    ),
+                    CacheFieldConfig(
+                        name='average_video_play_per_user',
+                        type=['null', 'number'],
+                        description='Average video play duration per user.',
+                    ),
+                    CacheFieldConfig(
+                        name='video_views_p25',
+                        type=['null', 'number'],
+                        description='Number of times video was watched to 25%.',
+                    ),
+                    CacheFieldConfig(
+                        name='video_views_p50',
+                        type=['null', 'number'],
+                        description='Number of times video was watched to 50%.',
+                    ),
+                    CacheFieldConfig(
+                        name='video_views_p75',
+                        type=['null', 'number'],
+                        description='Number of times video was watched to 75%.',
+                    ),
+                    CacheFieldConfig(
+                        name='video_views_p100',
+                        type=['null', 'number'],
+                        description='Number of times video was watched to 100%.',
+                    ),
+                    CacheFieldConfig(
+                        name='profile_visits',
+                        type=['null', 'number'],
+                        description='Number of profile visits.',
+                    ),
+                    CacheFieldConfig(
+                        name='likes',
+                        type=['null', 'number'],
+                        description='Number of likes.',
+                    ),
+                    CacheFieldConfig(
+                        name='comments',
+                        type=['null', 'number'],
+                        description='Number of comments.',
+                    ),
+                    CacheFieldConfig(
+                        name='shares',
+                        type=['null', 'number'],
+                        description='Number of shares.',
+                    ),
+                    CacheFieldConfig(
+                        name='follows',
+                        type=['null', 'number'],
+                        description='Number of follows.',
+                    ),
+                    CacheFieldConfig(
+                        name='clicks_on_music_disc',
+                        type=['null', 'number'],
+                        description='Number of clicks on the music disc.',
+                    ),
+                    CacheFieldConfig(
+                        name='real_time_app_install',
+                        type=['null', 'number'],
+                        description='Real-time app installations.',
+                    ),
+                    CacheFieldConfig(
+                        name='real_time_app_install_cost',
+                        type=['null', 'number'],
+                        description='Cost of real-time app installations.',
+                    ),
+                    CacheFieldConfig(
+                        name='app_install',
+                        type=['null', 'number'],
+                        description='Number of app installations.',
+                    ),
+                ],
+            ),
         ],
     ),
     search_field_paths={
@@ -6556,6 +8177,111 @@ TiktokMarketingConnectorModel: ConnectorModel = ConnectorModel(
             'real_time_app_install_cost',
             'app_install',
         ],
+        'ads_reports_hourly': [
+            'ad_id',
+            'stat_time_hour',
+            'campaign_name',
+            'campaign_id',
+            'adgroup_name',
+            'adgroup_id',
+            'ad_name',
+            'ad_text',
+            'placement_type',
+            'spend',
+            'cpc',
+            'cpm',
+            'impressions',
+            'clicks',
+            'ctr',
+            'reach',
+            'cost_per_1000_reached',
+            'conversion',
+            'cost_per_conversion',
+            'conversion_rate',
+            'real_time_conversion',
+            'real_time_cost_per_conversion',
+            'real_time_conversion_rate',
+            'result',
+            'cost_per_result',
+            'result_rate',
+            'real_time_result',
+            'real_time_cost_per_result',
+            'real_time_result_rate',
+            'secondary_goal_result',
+            'cost_per_secondary_goal_result',
+            'secondary_goal_result_rate',
+            'frequency',
+            'video_play_actions',
+            'video_watched_2s',
+            'video_watched_6s',
+            'average_video_play',
+            'average_video_play_per_user',
+            'video_views_p25',
+            'video_views_p50',
+            'video_views_p75',
+            'video_views_p100',
+            'profile_visits',
+            'likes',
+            'comments',
+            'shares',
+            'follows',
+            'clicks_on_music_disc',
+            'real_time_app_install',
+            'real_time_app_install_cost',
+            'app_install',
+        ],
+        'ads_reports_lifetime': [
+            'ad_id',
+            'campaign_name',
+            'campaign_id',
+            'adgroup_name',
+            'adgroup_id',
+            'ad_name',
+            'ad_text',
+            'placement_type',
+            'spend',
+            'cpc',
+            'cpm',
+            'impressions',
+            'clicks',
+            'ctr',
+            'reach',
+            'cost_per_1000_reached',
+            'conversion',
+            'cost_per_conversion',
+            'conversion_rate',
+            'real_time_conversion',
+            'real_time_cost_per_conversion',
+            'real_time_conversion_rate',
+            'result',
+            'cost_per_result',
+            'result_rate',
+            'real_time_result',
+            'real_time_cost_per_result',
+            'real_time_result_rate',
+            'secondary_goal_result',
+            'cost_per_secondary_goal_result',
+            'secondary_goal_result_rate',
+            'frequency',
+            'video_play_actions',
+            'video_watched_2s',
+            'video_watched_6s',
+            'average_video_play',
+            'average_video_play_per_user',
+            'video_views_p25',
+            'video_views_p50',
+            'video_views_p75',
+            'video_views_p100',
+            'profile_visits',
+            'likes',
+            'comments',
+            'shares',
+            'follows',
+            'clicks_on_music_disc',
+            'real_time_app_install',
+            'real_time_app_install_cost',
+            'app_install',
+        ],
     },
     example_questions=ExampleQuestions(
         direct=[
@@ -6569,6 +8295,8 @@ TiktokMarketingConnectorModel: ConnectorModel = ConnectorModel(
             'Show me daily ad performance reports',
             'Get campaign performance metrics for the last 30 days',
             'Show me advertiser spend reports',
+            'Show me hourly ad performance reports',
+            'Get lifetime ad performance metrics',
             'List all Spark Ad posts',
             'Show me my product catalogs',
         ],

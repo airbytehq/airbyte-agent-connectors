@@ -896,6 +896,317 @@ info:
           - name: app_install
             type: ["null", "number"]
             description: Number of app installations.
+      - entity: ads_reports_hourly
+        x-airbyte-name: ads_reports_hourly
+        suggested: true
+        fields:
+          - name: ad_id
+            type: ["null", "integer"]
+            description: The unique identifier for the ad.
+          - name: stat_time_hour
+            type: ["null", "string"]
+            description: The hour for which the statistical data is recorded (YYYY-MM-DD HH:MM:SS format).
+          - name: campaign_name
+            type: ["null", "string"]
+            description: The name of the marketing campaign.
+          - name: campaign_id
+            type: ["null", "integer"]
+            description: The unique identifier for the campaign.
+          - name: adgroup_name
+            type: ["null", "string"]
+            description: The name of the ad group.
+          - name: adgroup_id
+            type: ["null", "integer"]
+            description: The unique identifier for the ad group.
+          - name: ad_name
+            type: ["null", "string"]
+            description: The name of the ad.
+          - name: ad_text
+            type: ["null", "string"]
+            description: The text content of the ad.
+          - name: placement_type
+            type: ["null", "string"]
+            description: Type of ad placement.
+          - name: spend
+            type: ["null", "string"]
+            description: Total amount of money spent.
+          - name: cpc
+            type: ["null", "string"]
+            description: Cost per click.
+          - name: cpm
+            type: ["null", "string"]
+            description: Cost per thousand impressions.
+          - name: impressions
+            type: ["null", "string"]
+            description: Number of times the ad was displayed.
+          - name: clicks
+            type: ["null", "string"]
+            description: Number of clicks on the ad.
+          - name: ctr
+            type: ["null", "string"]
+            description: Click-through rate.
+          - name: reach
+            type: ["null", "string"]
+            description: Total number of unique users reached.
+          - name: cost_per_1000_reached
+            type: ["null", "string"]
+            description: Cost per 1000 unique users reached.
+          - name: conversion
+            type: ["null", "string"]
+            description: Number of conversions.
+          - name: cost_per_conversion
+            type: ["null", "string"]
+            description: Cost per conversion.
+          - name: conversion_rate
+            type: ["null", "string"]
+            description: Rate of conversions.
+          - name: real_time_conversion
+            type: ["null", "string"]
+            description: Real-time conversions.
+          - name: real_time_cost_per_conversion
+            type: ["null", "string"]
+            description: Real-time cost per conversion.
+          - name: real_time_conversion_rate
+            type: ["null", "string"]
+            description: Real-time conversion rate.
+          - name: result
+            type: ["null", "string"]
+            description: Number of results.
+          - name: cost_per_result
+            type: ["null", "string"]
+            description: Cost per result.
+          - name: result_rate
+            type: ["null", "string"]
+            description: Rate of results.
+          - name: real_time_result
+            type: ["null", "string"]
+            description: Real-time results.
+          - name: real_time_cost_per_result
+            type: ["null", "string"]
+            description: Real-time cost per result.
+          - name: real_time_result_rate
+            type: ["null", "string"]
+            description: Real-time result rate.
+          - name: secondary_goal_result
+            type: ["null", "string"]
+            description: Results for secondary goals.
+          - name: cost_per_secondary_goal_result
+            type: ["null", "string"]
+            description: Cost per secondary goal result.
+          - name: secondary_goal_result_rate
+            type: ["null", "string"]
+            description: Rate of secondary goal results.
+          - name: frequency
+            type: ["null", "string"]
+            description: Average number of times each person saw the ad.
+          - name: video_play_actions
+            type: ["null", "number"]
+            description: Number of video play actions.
+          - name: video_watched_2s
+            type: ["null", "number"]
+            description: Number of times video was watched for at least 2 seconds.
+          - name: video_watched_6s
+            type: ["null", "number"]
+            description: Number of times video was watched for at least 6 seconds.
+          - name: average_video_play
+            type: ["null", "number"]
+            description: Average video play duration.
+          - name: average_video_play_per_user
+            type: ["null", "number"]
+            description: Average video play duration per user.
+          - name: video_views_p25
+            type: ["null", "number"]
+            description: Number of times video was watched to 25%.
+          - name: video_views_p50
+            type: ["null", "number"]
+            description: Number of times video was watched to 50%.
+          - name: video_views_p75
+            type: ["null", "number"]
+            description: Number of times video was watched to 75%.
+          - name: video_views_p100
+            type: ["null", "number"]
+            description: Number of times video was watched to 100%.
+          - name: profile_visits
+            type: ["null", "number"]
+            description: Number of profile visits.
+          - name: likes
+            type: ["null", "number"]
+            description: Number of likes.
+          - name: comments
+            type: ["null", "number"]
+            description: Number of comments.
+          - name: shares
+            type: ["null", "number"]
+            description: Number of shares.
+          - name: follows
+            type: ["null", "number"]
+            description: Number of follows.
+          - name: clicks_on_music_disc
+            type: ["null", "number"]
+            description: Number of clicks on the music disc.
+          - name: real_time_app_install
+            type: ["null", "number"]
+            description: Real-time app installations.
+          - name: real_time_app_install_cost
+            type: ["null", "number"]
+            description: Cost of real-time app installations.
+          - name: app_install
+            type: ["null", "number"]
+            description: Number of app installations.
+      - entity: ads_reports_lifetime
+        x-airbyte-name: ads_reports_lifetime
+        suggested: true
+        fields:
+          - name: ad_id
+            type: ["null", "integer"]
+            description: The unique identifier for the ad.
+          - name: campaign_name
+            type: ["null", "string"]
+            description: The name of the marketing campaign.
+          - name: campaign_id
+            type: ["null", "integer"]
+            description: The unique identifier for the campaign.
+          - name: adgroup_name
+            type: ["null", "string"]
+            description: The name of the ad group.
+          - name: adgroup_id
+            type: ["null", "integer"]
+            description: The unique identifier for the ad group.
+          - name: ad_name
+            type: ["null", "string"]
+            description: The name of the ad.
+          - name: ad_text
+            type: ["null", "string"]
+            description: The text content of the ad.
+          - name: placement_type
+            type: ["null", "string"]
+            description: Type of ad placement.
+          - name: spend
+            type: ["null", "string"]
+            description: Total amount of money spent.
+          - name: cpc
+            type: ["null", "string"]
+            description: Cost per click.
+          - name: cpm
+            type: ["null", "string"]
+            description: Cost per thousand impressions.
+          - name: impressions
+            type: ["null", "string"]
+            description: Number of times the ad was displayed.
+          - name: clicks
+            type: ["null", "string"]
+            description: Number of clicks on the ad.
+          - name: ctr
+            type: ["null", "string"]
+            description: Click-through rate.
+          - name: reach
+            type: ["null", "string"]
+            description: Total number of unique users reached.
+          - name: cost_per_1000_reached
+            type: ["null", "string"]
+            description: Cost per 1000 unique users reached.
+          - name: conversion
+            type: ["null", "string"]
+            description: Number of conversions.
+          - name: cost_per_conversion
+            type: ["null", "string"]
+            description: Cost per conversion.
+          - name: conversion_rate
+            type: ["null", "string"]
+            description: Rate of conversions.
+          - name: real_time_conversion
+            type: ["null", "string"]
+            description: Real-time conversions.
+          - name: real_time_cost_per_conversion
+            type: ["null", "string"]
+            description: Real-time cost per conversion.
+          - name: real_time_conversion_rate
+            type: ["null", "string"]
+            description: Real-time conversion rate.
+          - name: result
+            type: ["null", "string"]
+            description: Number of results.
+          - name: cost_per_result
+            type: ["null", "string"]
+            description: Cost per result.
+          - name: result_rate
+            type: ["null", "string"]
+            description: Rate of results.
+          - name: real_time_result
+            type: ["null", "string"]
+            description: Real-time results.
+          - name: real_time_cost_per_result
+            type: ["null", "string"]
+            description: Real-time cost per result.
+          - name: real_time_result_rate
+            type: ["null", "string"]
+            description: Real-time result rate.
+          - name: secondary_goal_result
+            type: ["null", "string"]
+            description: Results for secondary goals.
+          - name: cost_per_secondary_goal_result
+            type: ["null", "string"]
+            description: Cost per secondary goal result.
+          - name: secondary_goal_result_rate
+            type: ["null", "string"]
+            description: Rate of secondary goal results.
+          - name: frequency
+            type: ["null", "string"]
+            description: Average number of times each person saw the ad.
+          - name: video_play_actions
+            type: ["null", "number"]
+            description: Number of video play actions.
+          - name: video_watched_2s
+            type: ["null", "number"]
+            description: Number of times video was watched for at least 2 seconds.
+          - name: video_watched_6s
+            type: ["null", "number"]
+            description: Number of times video was watched for at least 6 seconds.
+          - name: average_video_play
+            type: ["null", "number"]
+            description: Average video play duration.
+          - name: average_video_play_per_user
+            type: ["null", "number"]
+            description: Average video play duration per user.
+          - name: video_views_p25
+            type: ["null", "number"]
+            description: Number of times video was watched to 25%.
+          - name: video_views_p50
+            type: ["null", "number"]
+            description: Number of times video was watched to 50%.
+          - name: video_views_p75
+            type: ["null", "number"]
+            description: Number of times video was watched to 75%.
+          - name: video_views_p100
+            type: ["null", "number"]
+            description: Number of times video was watched to 100%.
+          - name: profile_visits
+            type: ["null", "number"]
+            description: Number of profile visits.
+          - name: likes
+            type: ["null", "number"]
+            description: Number of likes.
+          - name: comments
+            type: ["null", "number"]
+            description: Number of comments.
+          - name: shares
+            type: ["null", "number"]
+            description: Number of shares.
+          - name: follows
+            type: ["null", "number"]
+            description: Number of follows.
+          - name: clicks_on_music_disc
+            type: ["null", "number"]
+            description: Number of clicks on the music disc.
+          - name: real_time_app_install
+            type: ["null", "number"]
+            description: Real-time app installations.
+          - name: real_time_app_install_cost
+            type: ["null", "number"]
+            description: Cost of real-time app installations.
+          - name: app_install
+            type: ["null", "number"]
+            description: Number of app installations.
   x-airbyte-example-questions:
     direct:
       - "List all my TikTok advertisers"
@@ -908,6 +1219,8 @@ info:
       - "Show me daily ad performance reports"
       - "Get campaign performance metrics for the last 30 days"
       - "Show me advertiser spend reports"
+      - "Show me hourly ad performance reports"
+      - "Get lifetime ad performance metrics"
       - "List all Spark Ad posts"
       - "Show me my product catalogs"
     search:
@@ -2496,6 +2809,339 @@ components:
           type: ["null", "number"]
           description: Number of app installations
 
+    AdsReportHourly:
+      type: object
+      x-airbyte-entity-name: ads_reports_hourly
+      x-airbyte-stream-name: ads_reports_hourly
+      x-airbyte-ai-hints:
+        summary: "Hourly performance reports at the individual ad level"
+        when_to_use: "Questions about individual ad hourly performance"
+        trigger_phrases: ["ad hourly report", "ad hourly stats", "hourly ad performance"]
+        freshness: live
+        search_strategy: "Filter by ad and date range"
+        example_questions:
+          - "Show hourly performance for an ad"
+      description: Hourly performance report at the ad level
+      properties:
+        ad_id:
+          type: ["null", "integer"]
+          description: The unique identifier for the ad
+        stat_time_hour:
+          type: ["null", "string"]
+          description: The hour for which the statistical data is recorded
+        campaign_name:
+          type: ["null", "string"]
+          description: The name of the marketing campaign
+        campaign_id:
+          type: ["null", "integer"]
+          description: The unique identifier for the campaign
+        adgroup_name:
+          type: ["null", "string"]
+          description: The name of the ad group
+        adgroup_id:
+          type: ["null", "integer"]
+          description: The unique identifier for the ad group
+        ad_name:
+          type: ["null", "string"]
+          description: The name of the ad
+        ad_text:
+          type: ["null", "string"]
+          description: The text content of the ad
+        placement_type:
+          type: ["null", "string"]
+          description: Type of ad placement
+        spend:
+          type: ["null", "string"]
+          description: Total amount of money spent
+        cpc:
+          type: ["null", "string"]
+          description: Cost per click
+        cpm:
+          type: ["null", "string"]
+          description: Cost per thousand impressions
+        impressions:
+          type: ["null", "string"]
+          description: Number of times the ad was displayed
+        clicks:
+          type: ["null", "string"]
+          description: Number of clicks on the ad
+        ctr:
+          type: ["null", "string"]
+          description: Click-through rate
+        reach:
+          type: ["null", "string"]
+          description: Total number of unique users reached
+        cost_per_1000_reached:
+          type: ["null", "string"]
+          description: Cost per 1000 unique users reached
+        conversion:
+          type: ["null", "string"]
+          description: Number of conversions
+        cost_per_conversion:
+          type: ["null", "string"]
+          description: Cost per conversion
+        conversion_rate:
+          type: ["null", "string"]
+          description: Rate of conversions
+        real_time_conversion:
+          type: ["null", "string"]
+          description: Real-time conversions
+        real_time_cost_per_conversion:
+          type: ["null", "string"]
+          description: Real-time cost per conversion
+        real_time_conversion_rate:
+          type: ["null", "string"]
+          description: Real-time conversion rate
+        result:
+          type: ["null", "string"]
+          description: Number of results
+        cost_per_result:
+          type: ["null", "string"]
+          description: Cost per result
+        result_rate:
+          type: ["null", "string"]
+          description: Rate of results
+        real_time_result:
+          type: ["null", "string"]
+          description: Real-time results
+        real_time_cost_per_result:
+          type: ["null", "string"]
+          description: Real-time cost per result
+        real_time_result_rate:
+          type: ["null", "string"]
+          description: Real-time result rate
+        secondary_goal_result:
+          type: ["null", "string"]
+          description: Results for secondary goals
+        cost_per_secondary_goal_result:
+          type: ["null", "string"]
+          description: Cost per secondary goal result
+        secondary_goal_result_rate:
+          type: ["null", "string"]
+          description: Rate of secondary goal results
+        frequency:
+          type: ["null", "string"]
+          description: Average number of times each person saw the ad
+        video_play_actions:
+          type: ["null", "number"]
+          description: Number of video play actions
+        video_watched_2s:
+          type: ["null", "number"]
+          description: Number of times video was watched for at least 2 seconds
+        video_watched_6s:
+          type: ["null", "number"]
+          description: Number of times video was watched for at least 6 seconds
+        average_video_play:
+          type: ["null", "number"]
+          description: Average video play duration
+        average_video_play_per_user:
+          type: ["null", "number"]
+          description: Average video play duration per user
+        video_views_p25:
+          type: ["null", "number"]
+          description: Number of times video was watched to 25%
+        video_views_p50:
+          type: ["null", "number"]
+          description: Number of times video was watched to 50%
+        video_views_p75:
+          type: ["null", "number"]
+          description: Number of times video was watched to 75%
+        video_views_p100:
+          type: ["null", "number"]
+          description: Number of times video was watched to 100%
+        profile_visits:
+          type: ["null", "number"]
+          description: Number of profile visits
+        likes:
+          type: ["null", "number"]
+          description: Number of likes
+        comments:
+          type: ["null", "number"]
+          description: Number of comments
+        shares:
+          type: ["null", "number"]
+          description: Number of shares
+        follows:
+          type: ["null", "number"]
+          description: Number of follows
+        clicks_on_music_disc:
+          type: ["null", "number"]
+          description: Number of clicks on the music disc
+        real_time_app_install:
+          type: ["null", "number"]
+          description: Real-time app installations
+        real_time_app_install_cost:
+          type: ["null", "number"]
+          description: Cost of real-time app installations
+        app_install:
+          type: ["null", "number"]
+          description: Number of app installations
+
+    AdsReportLifetime:
+      type: object
+      x-airbyte-entity-name: ads_reports_lifetime
+      x-airbyte-stream-name: ads_reports_lifetime
+      x-airbyte-ai-hints:
+        summary: "Lifetime performance reports at the individual ad level"
+        when_to_use: "Questions about individual ad lifetime/all-time performance"
+        trigger_phrases: ["ad lifetime report", "ad lifetime stats", "all-time ad performance"]
+        freshness: live
+        search_strategy: "Filter by ad"
+        example_questions:
+          - "Show lifetime performance for an ad"
+      description: Lifetime performance report at the ad level
+      properties:
+        ad_id:
+          type: ["null", "integer"]
+          description: The unique identifier for the ad
+        campaign_name:
+          type: ["null", "string"]
+          description: The name of the marketing campaign
+        campaign_id:
+          type: ["null", "integer"]
+          description: The unique identifier for the campaign
+        adgroup_name:
+          type: ["null", "string"]
+          description: The name of the ad group
+        adgroup_id:
+          type: ["null", "integer"]
+          description: The unique identifier for the ad group
+        ad_name:
+          type: ["null", "string"]
+          description: The name of the ad
+        ad_text:
+          type: ["null", "string"]
+          description: The text content of the ad
+        placement_type:
+          type: ["null", "string"]
+          description: Type of ad placement
+        spend:
+          type: ["null", "string"]
+          description: Total amount of money spent
+        cpc:
+          type: ["null", "string"]
+          description: Cost per click
+        cpm:
+          type: ["null", "string"]
+          description: Cost per thousand impressions
+        impressions:
+          type: ["null", "string"]
+          description: Number of times the ad was displayed
+        clicks:
+          type: ["null", "string"]
+          description: Number of clicks on the ad
+        ctr:
+          type: ["null", "string"]
+          description: Click-through rate
+        reach:
+          type: ["null", "string"]
+          description: Total number of unique users reached
+        cost_per_1000_reached:
+          type: ["null", "string"]
+          description: Cost per 1000 unique users reached
+        conversion:
+          type: ["null", "string"]
+          description: Number of conversions
+        cost_per_conversion:
+          type: ["null", "string"]
+          description: Cost per conversion
+        conversion_rate:
+          type: ["null", "string"]
+          description: Rate of conversions
+        real_time_conversion:
+          type: ["null", "string"]
+          description: Real-time conversions
+        real_time_cost_per_conversion:
+          type: ["null", "string"]
+          description: Real-time cost per conversion
+        real_time_conversion_rate:
+          type: ["null", "string"]
+          description: Real-time conversion rate
+        result:
+          type: ["null", "string"]
+          description: Number of results
+        cost_per_result:
+          type: ["null", "string"]
+          description: Cost per result
+        result_rate:
+          type: ["null", "string"]
+          description: Rate of results
+        real_time_result:
+          type: ["null", "string"]
+          description: Real-time results
+        real_time_cost_per_result:
+          type: ["null", "string"]
+          description: Real-time cost per result
+        real_time_result_rate:
+          type: ["null", "string"]
+          description: Real-time result rate
+        secondary_goal_result:
+          type: ["null", "string"]
+          description: Results for secondary goals
+        cost_per_secondary_goal_result:
+          type: ["null", "string"]
+          description: Cost per secondary goal result
+        secondary_goal_result_rate:
+          type: ["null", "string"]
+          description: Rate of secondary goal results
+        frequency:
+          type: ["null", "string"]
+          description: Average number of times each person saw the ad
+        video_play_actions:
+          type: ["null", "number"]
+          description: Number of video play actions
+        video_watched_2s:
+          type: ["null", "number"]
+          description: Number of times video was watched for at least 2 seconds
+        video_watched_6s:
+          type: ["null", "number"]
+          description: Number of times video was watched for at least 6 seconds
+        average_video_play:
+          type: ["null", "number"]
+          description: Average video play duration
+        average_video_play_per_user:
+          type: ["null", "number"]
+          description: Average video play duration per user
+        video_views_p25:
+          type: ["null", "number"]
+          description: Number of times video was watched to 25%
+        video_views_p50:
+          type: ["null", "number"]
+          description: Number of times video was watched to 50%
+        video_views_p75:
+          type: ["null", "number"]
+          description: Number of times video was watched to 75%
+        video_views_p100:
+          type: ["null", "number"]
+          description: Number of times video was watched to 100%
+        profile_visits:
+          type: ["null", "number"]
+          description: Number of profile visits
+        likes:
+          type: ["null", "number"]
+          description: Number of likes
+        comments:
+          type: ["null", "number"]
+          description: Number of comments
+        shares:
+          type: ["null", "number"]
+          description: Number of shares
+        follows:
+          type: ["null", "number"]
+          description: Number of follows
+        clicks_on_music_disc:
+          type: ["null", "number"]
+          description: Number of clicks on the music disc
+        real_time_app_install:
+          type: ["null", "number"]
+          description: Real-time app installations
+        real_time_app_install_cost:
+          type: ["null", "number"]
+          description: Cost of real-time app installations
+        app_install:
+          type: ["null", "number"]
+          description: Number of app installations
+
 security:
   - oauth: []
 
@@ -3525,6 +4171,238 @@ paths:
                         type: array
                         items:
                           $ref: "#/components/schemas/AdsReportDaily"
+                      page_info:
+                        type: object
+                        properties:
+                          total_number:
+                            type: integer
+                          page:
+                            type: integer
+                          page_size:
+                            type: integer
+                          total_page:
+                            type: integer
+
+  /report/integrated/get/:ads_reports_hourly:
+    get:
+      summary: List ad hourly reports
+      description: Get hourly performance reports at the ad level
+      operationId: listAdsReportsHourly
+      x-airbyte-entity: ads_reports_hourly
+      x-airbyte-action: list
+      x-airbyte-path-override:
+        path: /report/integrated/get/
+      x-airbyte-record-extractor: $.data.list
+      x-airbyte-meta-extractor:
+        page_info: $.data.page_info
+      parameters:
+        - name: advertiser_id
+          in: query
+          required: true
+          description: Advertiser ID
+          schema:
+            type: string
+        - name: service_type
+          in: query
+          required: true
+          description: Service type
+          schema:
+            type: string
+            default: AUCTION
+        - name: report_type
+          in: query
+          required: true
+          description: Report type
+          schema:
+            type: string
+            default: BASIC
+        - name: data_level
+          in: query
+          required: true
+          description: Data level for the report
+          schema:
+            type: string
+            default: AUCTION_AD
+        - name: dimensions
+          in: query
+          required: true
+          description: Dimensions for the report (JSON array)
+          schema:
+            type: string
+            default: '["ad_id", "stat_time_hour"]'
+        - name: metrics
+          in: query
+          required: true
+          description: Metrics to retrieve (JSON array)
+          schema:
+            type: string
+            default: '["campaign_name", "campaign_id", "adgroup_name", "adgroup_id", "ad_name", "ad_text", "placement_type", "spend", "cpc", "cpm", "impressions", "clicks", "ctr", "reach", "cost_per_1000_reached", "conversion", "cost_per_conversion", "conversion_rate", "real_time_conversion", "real_time_cost_per_conversion", "real_time_conversion_rate", "result", "cost_per_result", "result_rate", "real_time_result", "real_time_cost_per_result", "real_time_result_rate", "secondary_goal_result", "cost_per_secondary_goal_result", "secondary_goal_result_rate", "frequency", "video_play_actions", "video_watched_2s", "video_watched_6s", "average_video_play", "average_video_play_per_user", "video_views_p25", "video_views_p50", "video_views_p75", "video_views_p100", "profile_visits", "likes", "comments", "shares", "follows", "clicks_on_music_disc", "real_time_app_install", "real_time_app_install_cost", "app_install"]'
+        - name: start_date
+          in: query
+          required: true
+          description: Report start date (YYYY-MM-DD)
+          schema:
+            type: string
+            format: date
+            default: "2024-01-01"
+        - name: end_date
+          in: query
+          required: true
+          description: Report end date (YYYY-MM-DD)
+          schema:
+            type: string
+            format: date
+            default: "2024-12-31"
+        - name: page
+          in: query
+          description: Page number
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: page_size
+          in: query
+          description: Number of items per page
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 1000
+            default: 1000
+      responses:
+        "200":
+          description: List of ad hourly reports
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      list:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/AdsReportHourly"
+                      page_info:
+                        type: object
+                        properties:
+                          total_number:
+                            type: integer
+                          page:
+                            type: integer
+                          page_size:
+                            type: integer
+                          total_page:
+                            type: integer
+
+  /report/integrated/get/:ads_reports_lifetime:
+    get:
+      summary: List ad lifetime reports
+      description: Get lifetime performance reports at the ad level
+      operationId: listAdsReportsLifetime
+      x-airbyte-entity: ads_reports_lifetime
+      x-airbyte-action: list
+      x-airbyte-path-override:
+        path: /report/integrated/get/
+      x-airbyte-record-extractor: $.data.list
+      x-airbyte-meta-extractor:
+        page_info: $.data.page_info
+      parameters:
+        - name: advertiser_id
+          in: query
+          required: true
+          description: Advertiser ID
+          schema:
+            type: string
+        - name: service_type
+          in: query
+          required: true
+          description: Service type
+          schema:
+            type: string
+            default: AUCTION
+        - name: report_type
+          in: query
+          required: true
+          description: Report type
+          schema:
+            type: string
+            default: BASIC
+        - name: data_level
+          in: query
+          required: true
+          description: Data level for the report
+          schema:
+            type: string
+            default: AUCTION_AD
+        - name: dimensions
+          in: query
+          required: true
+          description: Dimensions for the report (JSON array)
+          schema:
+            type: string
+            default: '["ad_id"]'
+        - name: metrics
+          in: query
+          required: true
+          description: Metrics to retrieve (JSON array)
+          schema:
+            type: string
+            default: '["campaign_name", "campaign_id", "adgroup_name", "adgroup_id", "ad_name", "ad_text", "placement_type", "spend", "cpc", "cpm", "impressions", "clicks", "ctr", "reach", "cost_per_1000_reached", "conversion", "cost_per_conversion", "conversion_rate", "real_time_conversion", "real_time_cost_per_conversion", "real_time_conversion_rate", "result", "cost_per_result", "result_rate", "real_time_result", "real_time_cost_per_result", "real_time_result_rate", "secondary_goal_result", "cost_per_secondary_goal_result", "secondary_goal_result_rate", "frequency", "video_play_actions", "video_watched_2s", "video_watched_6s", "average_video_play", "average_video_play_per_user", "video_views_p25", "video_views_p50", "video_views_p75", "video_views_p100", "profile_visits", "likes", "comments", "shares", "follows", "clicks_on_music_disc", "real_time_app_install", "real_time_app_install_cost", "app_install"]'
+        - name: start_date
+          in: query
+          required: true
+          description: Report start date (YYYY-MM-DD)
+          schema:
+            type: string
+            format: date
+            default: "2024-01-01"
+        - name: end_date
+          in: query
+          required: true
+          description: Report end date (YYYY-MM-DD)
+          schema:
+            type: string
+            format: date
+            default: "2024-12-31"
+        - name: page
+          in: query
+          description: Page number
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: page_size
+          in: query
+          description: Number of items per page
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 1000
+            default: 1000
+      responses:
+        "200":
+          description: List of ad lifetime reports
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      list:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/AdsReportLifetime"
                       page_info:
                         type: object
                         properties:

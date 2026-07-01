@@ -268,6 +268,13 @@ class EventMetadata(BaseModel):
 
     title: str | None | None = Field(default=None)
 
+class EventTagsItem(BaseModel):
+    """Nested schema for Event.tags_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    key: str | None | None = Field(default=None)
+    value: str | None | None = Field(default=None)
+
 class EventUser(BaseModel):
     """User associated with the event."""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -284,13 +291,6 @@ class EventGroupingconfig(BaseModel):
 
     id: str | None | None = Field(default=None)
     enhancements: str | None | None = Field(default=None)
-
-class EventTagsItem(BaseModel):
-    """Nested schema for Event.tags_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    key: str | None | None = Field(default=None)
-    value: str | None | None = Field(default=None)
 
 class Event(BaseModel):
     """A Sentry event (individual error occurrence)."""

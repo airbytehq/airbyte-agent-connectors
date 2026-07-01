@@ -34,6 +34,10 @@ from .models import (
     AdGroupsReportsDailySearchResult,
     AdsReportsDailySearchData,
     AdsReportsDailySearchResult,
+    AdsReportsHourlySearchData,
+    AdsReportsHourlySearchResult,
+    AdsReportsLifetimeSearchData,
+    AdsReportsLifetimeSearchResult,
 )
 from airbyte_agent_sdk.types import AirbyteAuthConfig
 
@@ -68,4 +72,8 @@ __all__ = [
     "AdGroupsReportsDailySearchResult",
     "AdsReportsDailySearchData",
     "AdsReportsDailySearchResult",
+    "AdsReportsHourlySearchData",
+    "AdsReportsHourlySearchResult",
+    "AdsReportsLifetimeSearchData",
+    "AdsReportsLifetimeSearchResult",
 ]
