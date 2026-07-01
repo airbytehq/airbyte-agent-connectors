@@ -24,6 +24,7 @@ from airbyte_agent_sdk.schema.extensions import (
     CacheEntityConfig,
     CacheFieldConfig,
     CacheFieldProperty,
+    EntityRelationshipConfig,
 )
 from airbyte_agent_sdk.schema.base import (
     ExampleQuestions,
@@ -63,6 +64,7 @@ IntercomConnectorModel: ConnectorModel = ConnectorModel(
                 Action.CREATE,
                 Action.GET,
                 Action.UPDATE,
+                Action.DELETE,
             ],
             endpoints={
                 Action.LIST: EndpointDefinition(
@@ -1679,6 +1681,37 @@ IntercomConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                 ),
+                Action.DELETE: EndpointDefinition(
+                    method='DELETE',
+                    path='/contacts/{id}',
+                    action=Action.DELETE,
+                    description='Permanently delete a contact by ID',
+                    path_params=['id'],
+                    path_params_schema={
+                        'id': {'type': 'string', 'required': True},
+                    },
+                    header_params=['Intercom-Version'],
+                    header_params_schema={
+                        'Intercom-Version': {
+                            'type': 'string',
+                            'required': False,
+                            'default': '2.11',
+                        },
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Response from deleting a contact',
+                        'properties': {
+                            'type': {'type': 'string', 'description': 'Type of object (contact)'},
+                            'id': {'type': 'string', 'description': 'The ID of the deleted contact'},
+                            'external_id': {
+                                'type': ['string', 'null'],
+                                'description': 'External ID of the deleted contact',
+                            },
+                            'deleted': {'type': 'boolean', 'description': 'Whether the contact was successfully deleted'},
+                        },
+                    },
+                ),
             },
             entity_schema={
                 'type': 'object',
@@ -1902,7 +1935,13 @@ IntercomConnectorModel: ConnectorModel = ConnectorModel(
         EntityDefinition(
             name='conversations',
             stream_name='conversations',
-            actions=[Action.LIST, Action.GET],
+            actions=[
+                Action.LIST,
+                Action.CREATE,
+                Action.GET,
+                Action.UPDATE,
+                Action.DELETE,
+            ],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
@@ -2640,6 +2679,85 @@ IntercomConnectorModel: ConnectorModel = ConnectorModel(
                     record_extractor='$.conversations',
                     meta_extractor={'next_page': '$.pages.next.starting_after'},
                 ),
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/conversations',
+                    action=Action.CREATE,
+                    description='Create a new conversation initiated by a contact (user or lead)',
+                    body_fields=[
+                        'from',
+                        'body',
+                        'subject',
+                        'attachment_urls',
+                        'created_at',
+                    ],
+                    header_params=['Intercom-Version'],
+                    header_params_schema={
+                        'Intercom-Version': {
+                            'type': 'string',
+                            'required': False,
+                            'default': '2.11',
+                        },
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'properties': {
+                            'from': {
+                                'type': 'object',
+                                'description': 'The contact (user or lead) initiating the conversation',
+                                'required': ['type', 'id'],
+                                'properties': {
+                                    'type': {
+                                        'type': 'string',
+                                        'description': 'The type of the contact (lead, user, or contact)',
+                                        'enum': ['lead', 'user', 'contact'],
+                                    },
+                                    'id': {'type': 'string', 'description': 'The identifier for the contact as given by Intercom (a 24 character UUID)'},
+                                },
+                            },
+                            'body': {'type': 'string', 'description': 'The content of the initial message in the conversation'},
+                            'subject': {'type': 'string', 'description': 'The subject line of the conversation (optional)'},
+                            'attachment_urls': {
+                                'type': 'array',
+                                'description': 'A list of URLs of attached files (max 10)',
+                                'items': {'type': 'string'},
+                            },
+                            'created_at': {'type': 'integer', 'description': 'Optional timestamp for the conversation creation (Unix)'},
+                        },
+                        'required': ['from', 'body'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Message object returned when creating a conversation',
+                        'properties': {
+                            'type': {
+                                'type': ['string', 'null'],
+                                'description': 'Type of object',
+                            },
+                            'id': {'type': 'string', 'description': 'Unique message identifier'},
+                            'created_at': {
+                                'type': ['integer', 'null'],
+                                'description': 'Creation timestamp (Unix)',
+                            },
+                            'subject': {
+                                'type': ['string', 'null'],
+                                'description': 'Subject of the message',
+                            },
+                            'body': {
+                                'type': ['string', 'null'],
+                                'description': 'Body of the message',
+                            },
+                            'message_type': {
+                                'type': ['string', 'null'],
+                                'description': 'Type of message (email, inapp, facebook, twitter)',
+                            },
+                            'conversation_id': {
+                                'type': ['string', 'null'],
+                                'description': 'The ID of the conversation created',
+                            },
+                        },
+                    },
+                ),
                 Action.GET: EndpointDefinition(
                     method='GET',
                     path='/conversations/{id}',
@@ -3314,6 +3432,719 @@ IntercomConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                 ),
+                Action.UPDATE: EndpointDefinition(
+                    method='PUT',
+                    path='/conversations/{id}',
+                    action=Action.UPDATE,
+                    description='Update conversation attributes such as custom_attributes or read status',
+                    body_fields=['read', 'custom_attributes'],
+                    path_params=['id'],
+                    path_params_schema={
+                        'id': {'type': 'string', 'required': True},
+                    },
+                    header_params=['Intercom-Version'],
+                    header_params_schema={
+                        'Intercom-Version': {
+                            'type': 'string',
+                            'required': False,
+                            'default': '2.11',
+                        },
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'properties': {
+                            'read': {'type': 'boolean', 'description': 'Mark the conversation as read or unread'},
+                            'custom_attributes': {
+                                'type': 'object',
+                                'description': 'Custom attributes to set on the conversation',
+                                'additionalProperties': True,
+                            },
+                        },
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Conversation object',
+                        'properties': {
+                            'type': {
+                                'type': ['string', 'null'],
+                                'description': 'Type of object (conversation)',
+                            },
+                            'id': {'type': 'string', 'description': 'Unique conversation identifier'},
+                            'title': {
+                                'type': ['string', 'null'],
+                                'description': 'Conversation title',
+                            },
+                            'created_at': {
+                                'type': ['integer', 'null'],
+                                'description': 'Creation timestamp (Unix)',
+                            },
+                            'updated_at': {
+                                'type': ['integer', 'null'],
+                                'description': 'Last update timestamp (Unix)',
+                            },
+                            'waiting_since': {
+                                'type': ['integer', 'null'],
+                                'description': 'Waiting since timestamp (Unix)',
+                            },
+                            'snoozed_until': {
+                                'type': ['integer', 'null'],
+                                'description': 'Snoozed until timestamp (Unix)',
+                            },
+                            'open': {
+                                'type': ['boolean', 'null'],
+                                'description': 'Whether conversation is open',
+                            },
+                            'state': {
+                                'type': ['string', 'null'],
+                                'description': 'Conversation state (open, closed, snoozed)',
+                            },
+                            'read': {
+                                'type': ['boolean', 'null'],
+                                'description': 'Whether conversation has been read',
+                            },
+                            'priority': {
+                                'type': ['string', 'null'],
+                                'description': 'Conversation priority',
+                            },
+                            'admin_assignee_id': {
+                                'type': ['integer', 'null'],
+                                'description': 'Assigned admin ID',
+                            },
+                            'team_assignee_id': {
+                                'type': ['string', 'null'],
+                                'description': 'Assigned team ID',
+                            },
+                            'tags': {
+                                'oneOf': [
+                                    {
+                                        'type': 'object',
+                                        'description': 'Tags on conversation',
+                                        'properties': {
+                                            'type': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Type of list',
+                                            },
+                                            'tags': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'description': 'Tag object',
+                                                    'properties': {
+                                                        'type': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Type of object (tag)',
+                                                        },
+                                                        'id': {'type': 'string', 'description': 'Unique tag identifier'},
+                                                        'name': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Tag name',
+                                                        },
+                                                        'applied_at': {
+                                                            'type': ['integer', 'null'],
+                                                            'description': 'Applied timestamp (Unix)',
+                                                        },
+                                                        'applied_by': {
+                                                            'oneOf': [
+                                                                {
+                                                                    'type': 'object',
+                                                                    'description': 'Admin reference',
+                                                                    'properties': {
+                                                                        'type': {
+                                                                            'type': ['string', 'null'],
+                                                                            'description': 'Type of object',
+                                                                        },
+                                                                        'id': {
+                                                                            'type': ['string', 'null'],
+                                                                            'description': 'Admin ID',
+                                                                        },
+                                                                    },
+                                                                },
+                                                                {'type': 'null'},
+                                                            ],
+                                                        },
+                                                    },
+                                                    'x-airbyte-entity-name': 'tags',
+                                                    'x-airbyte-stream-name': 'tags',
+                                                    'x-airbyte-ai-hints': {
+                                                        'summary': 'Tags for categorizing contacts, companies, and conversations',
+                                                        'when_to_use': 'Questions about available tags or contact categorization',
+                                                        'trigger_phrases': ['intercom tag', 'contact tag'],
+                                                        'freshness': 'live',
+                                                        'example_questions': ['What tags exist in Intercom?'],
+                                                        'search_strategy': 'Search by name',
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                    {'type': 'null'},
+                                ],
+                            },
+                            'conversation_rating': {
+                                'oneOf': [
+                                    {
+                                        'type': 'object',
+                                        'description': 'Conversation rating',
+                                        'properties': {
+                                            'rating': {
+                                                'type': ['integer', 'null'],
+                                                'description': 'Rating value',
+                                            },
+                                            'remark': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Rating remark',
+                                            },
+                                            'created_at': {
+                                                'type': ['integer', 'null'],
+                                                'description': 'Rating timestamp',
+                                            },
+                                            'contact': {
+                                                'oneOf': [
+                                                    {
+                                                        'type': 'object',
+                                                        'description': 'Contact reference',
+                                                        'properties': {
+                                                            'type': {
+                                                                'type': ['string', 'null'],
+                                                                'description': 'Type of object',
+                                                            },
+                                                            'id': {
+                                                                'type': ['string', 'null'],
+                                                                'description': 'Contact ID',
+                                                            },
+                                                        },
+                                                    },
+                                                    {'type': 'null'},
+                                                ],
+                                            },
+                                            'teammate': {
+                                                'oneOf': [
+                                                    {
+                                                        'type': 'object',
+                                                        'description': 'Admin reference',
+                                                        'properties': {
+                                                            'type': {
+                                                                'type': ['string', 'null'],
+                                                                'description': 'Type of object',
+                                                            },
+                                                            'id': {
+                                                                'type': ['string', 'null'],
+                                                                'description': 'Admin ID',
+                                                            },
+                                                        },
+                                                    },
+                                                    {'type': 'null'},
+                                                ],
+                                            },
+                                        },
+                                    },
+                                    {'type': 'null'},
+                                ],
+                            },
+                            'source': {
+                                'oneOf': [
+                                    {
+                                        'type': 'object',
+                                        'description': 'Conversation source',
+                                        'properties': {
+                                            'type': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Source type',
+                                            },
+                                            'id': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Source ID',
+                                            },
+                                            'delivered_as': {
+                                                'type': ['string', 'null'],
+                                                'description': 'How it was delivered',
+                                            },
+                                            'subject': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Subject line',
+                                            },
+                                            'body': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Message body',
+                                            },
+                                            'author': {
+                                                'oneOf': [
+                                                    {
+                                                        'type': 'object',
+                                                        'description': 'Message author',
+                                                        'properties': {
+                                                            'type': {
+                                                                'type': ['string', 'null'],
+                                                                'description': 'Author type (admin, user, bot)',
+                                                            },
+                                                            'id': {
+                                                                'type': ['string', 'null'],
+                                                                'description': 'Author ID',
+                                                            },
+                                                            'name': {
+                                                                'type': ['string', 'null'],
+                                                                'description': 'Author name',
+                                                            },
+                                                            'email': {
+                                                                'type': ['string', 'null'],
+                                                                'description': 'Author email',
+                                                            },
+                                                        },
+                                                    },
+                                                    {'type': 'null'},
+                                                ],
+                                            },
+                                            'attachments': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'description': 'Message attachment',
+                                                    'properties': {
+                                                        'type': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Attachment type',
+                                                        },
+                                                        'name': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'File name',
+                                                        },
+                                                        'url': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'File URL',
+                                                        },
+                                                        'content_type': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'MIME type',
+                                                        },
+                                                        'filesize': {
+                                                            'type': ['integer', 'null'],
+                                                            'description': 'File size in bytes',
+                                                        },
+                                                        'width': {
+                                                            'type': ['integer', 'null'],
+                                                            'description': 'Image width',
+                                                        },
+                                                        'height': {
+                                                            'type': ['integer', 'null'],
+                                                            'description': 'Image height',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            'url': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Source URL',
+                                            },
+                                            'redacted': {
+                                                'type': ['boolean', 'null'],
+                                                'description': 'Whether content is redacted',
+                                            },
+                                        },
+                                    },
+                                    {'type': 'null'},
+                                ],
+                            },
+                            'contacts': {
+                                'oneOf': [
+                                    {
+                                        'type': 'object',
+                                        'description': 'Contacts in conversation',
+                                        'properties': {
+                                            'type': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Type of list',
+                                            },
+                                            'contacts': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'description': 'Contact reference',
+                                                    'properties': {
+                                                        'type': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Type of object',
+                                                        },
+                                                        'id': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Contact ID',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                    {'type': 'null'},
+                                ],
+                            },
+                            'teammates': {
+                                'oneOf': [
+                                    {
+                                        'type': 'object',
+                                        'description': 'Teammates in conversation',
+                                        'properties': {
+                                            'type': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Type of list',
+                                            },
+                                            'admins': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'description': 'Admin reference',
+                                                    'properties': {
+                                                        'type': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Type of object',
+                                                        },
+                                                        'id': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Admin ID',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                    {'type': 'null'},
+                                ],
+                            },
+                            'first_contact_reply': {
+                                'oneOf': [
+                                    {
+                                        'type': 'object',
+                                        'description': 'First contact reply info',
+                                        'properties': {
+                                            'created_at': {
+                                                'type': ['integer', 'null'],
+                                                'description': 'Reply timestamp',
+                                            },
+                                            'type': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Reply type',
+                                            },
+                                            'url': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Reply URL',
+                                            },
+                                        },
+                                    },
+                                    {'type': 'null'},
+                                ],
+                            },
+                            'sla_applied': {
+                                'oneOf': [
+                                    {
+                                        'type': 'object',
+                                        'description': 'SLA applied to conversation',
+                                        'properties': {
+                                            'type': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Type of object',
+                                            },
+                                            'sla_name': {
+                                                'type': ['string', 'null'],
+                                                'description': 'SLA name',
+                                            },
+                                            'sla_status': {
+                                                'type': ['string', 'null'],
+                                                'description': 'SLA status',
+                                            },
+                                        },
+                                    },
+                                    {'type': 'null'},
+                                ],
+                            },
+                            'statistics': {
+                                'oneOf': [
+                                    {
+                                        'type': 'object',
+                                        'description': 'Conversation statistics',
+                                        'properties': {
+                                            'type': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Type of object',
+                                            },
+                                            'time_to_assignment': {
+                                                'type': ['integer', 'null'],
+                                                'description': 'Time to assignment in seconds',
+                                            },
+                                            'time_to_admin_reply': {
+                                                'type': ['integer', 'null'],
+                                                'description': 'Time to admin reply in seconds',
+                                            },
+                                            'time_to_first_close': {
+                                                'type': ['integer', 'null'],
+                                                'description': 'Time to first close in seconds',
+                                            },
+                                            'time_to_last_close': {
+                                                'type': ['integer', 'null'],
+                                                'description': 'Time to last close in seconds',
+                                            },
+                                            'median_time_to_reply': {
+                                                'type': ['integer', 'null'],
+                                                'description': 'Median time to reply in seconds',
+                                            },
+                                            'first_contact_reply_at': {
+                                                'type': ['integer', 'null'],
+                                                'description': 'First contact reply timestamp',
+                                            },
+                                            'first_assignment_at': {
+                                                'type': ['integer', 'null'],
+                                                'description': 'First assignment timestamp',
+                                            },
+                                            'first_admin_reply_at': {
+                                                'type': ['integer', 'null'],
+                                                'description': 'First admin reply timestamp',
+                                            },
+                                            'first_close_at': {
+                                                'type': ['integer', 'null'],
+                                                'description': 'First close timestamp',
+                                            },
+                                            'last_assignment_at': {
+                                                'type': ['integer', 'null'],
+                                                'description': 'Last assignment timestamp',
+                                            },
+                                            'last_assignment_admin_reply_at': {
+                                                'type': ['integer', 'null'],
+                                                'description': 'Last assignment admin reply timestamp',
+                                            },
+                                            'last_contact_reply_at': {
+                                                'type': ['integer', 'null'],
+                                                'description': 'Last contact reply timestamp',
+                                            },
+                                            'last_admin_reply_at': {
+                                                'type': ['integer', 'null'],
+                                                'description': 'Last admin reply timestamp',
+                                            },
+                                            'last_close_at': {
+                                                'type': ['integer', 'null'],
+                                                'description': 'Last close timestamp',
+                                            },
+                                            'last_closed_by_id': {
+                                                'type': ['string', 'null'],
+                                                'description': 'ID of admin who last closed',
+                                            },
+                                            'count_reopens': {
+                                                'type': ['integer', 'null'],
+                                                'description': 'Number of reopens',
+                                            },
+                                            'count_assignments': {
+                                                'type': ['integer', 'null'],
+                                                'description': 'Number of assignments',
+                                            },
+                                            'count_conversation_parts': {
+                                                'type': ['integer', 'null'],
+                                                'description': 'Number of conversation parts',
+                                            },
+                                        },
+                                    },
+                                    {'type': 'null'},
+                                ],
+                            },
+                            'conversation_parts': {
+                                'oneOf': [
+                                    {
+                                        'type': 'object',
+                                        'description': 'Reference to conversation parts',
+                                        'properties': {
+                                            'type': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Type of list',
+                                            },
+                                            'conversation_parts': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'description': 'Conversation part (message, note, action)',
+                                                    'properties': {
+                                                        'type': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Type of object',
+                                                        },
+                                                        'id': {'type': 'string', 'description': 'Unique part identifier'},
+                                                        'part_type': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Type of part (comment, note, assignment, etc.)',
+                                                        },
+                                                        'body': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Part body content',
+                                                        },
+                                                        'created_at': {
+                                                            'type': ['integer', 'null'],
+                                                            'description': 'Creation timestamp (Unix)',
+                                                        },
+                                                        'updated_at': {
+                                                            'type': ['integer', 'null'],
+                                                            'description': 'Update timestamp (Unix)',
+                                                        },
+                                                        'notified_at': {
+                                                            'type': ['integer', 'null'],
+                                                            'description': 'Notification timestamp (Unix)',
+                                                        },
+                                                        'assigned_to': {
+                                                            'oneOf': [
+                                                                {
+                                                                    'type': 'object',
+                                                                    'description': 'Admin reference',
+                                                                    'properties': {
+                                                                        'type': {
+                                                                            'type': ['string', 'null'],
+                                                                            'description': 'Type of object',
+                                                                        },
+                                                                        'id': {
+                                                                            'type': ['string', 'null'],
+                                                                            'description': 'Admin ID',
+                                                                        },
+                                                                    },
+                                                                },
+                                                                {'type': 'null'},
+                                                            ],
+                                                        },
+                                                        'author': {
+                                                            'oneOf': [
+                                                                {
+                                                                    'type': 'object',
+                                                                    'description': 'Message author',
+                                                                    'properties': {
+                                                                        'type': {
+                                                                            'type': ['string', 'null'],
+                                                                            'description': 'Author type (admin, user, bot)',
+                                                                        },
+                                                                        'id': {
+                                                                            'type': ['string', 'null'],
+                                                                            'description': 'Author ID',
+                                                                        },
+                                                                        'name': {
+                                                                            'type': ['string', 'null'],
+                                                                            'description': 'Author name',
+                                                                        },
+                                                                        'email': {
+                                                                            'type': ['string', 'null'],
+                                                                            'description': 'Author email',
+                                                                        },
+                                                                    },
+                                                                },
+                                                                {'type': 'null'},
+                                                            ],
+                                                        },
+                                                        'attachments': {
+                                                            'type': 'array',
+                                                            'items': {
+                                                                'type': 'object',
+                                                                'description': 'Message attachment',
+                                                                'properties': {
+                                                                    'type': {
+                                                                        'type': ['string', 'null'],
+                                                                        'description': 'Attachment type',
+                                                                    },
+                                                                    'name': {
+                                                                        'type': ['string', 'null'],
+                                                                        'description': 'File name',
+                                                                    },
+                                                                    'url': {
+                                                                        'type': ['string', 'null'],
+                                                                        'description': 'File URL',
+                                                                    },
+                                                                    'content_type': {
+                                                                        'type': ['string', 'null'],
+                                                                        'description': 'MIME type',
+                                                                    },
+                                                                    'filesize': {
+                                                                        'type': ['integer', 'null'],
+                                                                        'description': 'File size in bytes',
+                                                                    },
+                                                                    'width': {
+                                                                        'type': ['integer', 'null'],
+                                                                        'description': 'Image width',
+                                                                    },
+                                                                    'height': {
+                                                                        'type': ['integer', 'null'],
+                                                                        'description': 'Image height',
+                                                                    },
+                                                                },
+                                                            },
+                                                        },
+                                                        'external_id': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'External ID',
+                                                        },
+                                                        'redacted': {
+                                                            'type': ['boolean', 'null'],
+                                                            'description': 'Whether content is redacted',
+                                                        },
+                                                    },
+                                                    'x-airbyte-entity-name': 'conversation_parts',
+                                                    'x-airbyte-stream-name': 'conversation_parts',
+                                                    'x-airbyte-ai-hints': {
+                                                        'summary': 'Individual messages within Intercom conversations',
+                                                        'when_to_use': 'Looking at specific messages in a conversation thread',
+                                                        'trigger_phrases': ['conversation part', 'message', 'reply'],
+                                                        'freshness': 'live',
+                                                        'example_questions': ['Show messages in a conversation'],
+                                                        'search_strategy': 'Filter by conversation',
+                                                    },
+                                                },
+                                            },
+                                            'total_count': {
+                                                'type': ['integer', 'null'],
+                                                'description': 'Total number of parts',
+                                            },
+                                        },
+                                    },
+                                    {'type': 'null'},
+                                ],
+                            },
+                            'custom_attributes': {
+                                'type': ['object', 'null'],
+                                'description': 'Custom attributes',
+                                'additionalProperties': True,
+                            },
+                        },
+                        'x-airbyte-entity-name': 'conversations',
+                        'x-airbyte-stream-name': 'conversations',
+                        'x-airbyte-ai-hints': {
+                            'summary': 'Intercom conversations (chat threads) with customers',
+                            'when_to_use': 'Questions about customer conversations or support chat history',
+                            'trigger_phrases': [
+                                'intercom conversation',
+                                'chat',
+                                'customer message',
+                                'support thread',
+                            ],
+                            'freshness': 'live',
+                            'example_questions': ['Show open Intercom conversations', 'Find chats with a customer'],
+                            'search_strategy': 'Search by contact or filter by status and assignee',
+                        },
+                    },
+                ),
+                Action.DELETE: EndpointDefinition(
+                    method='DELETE',
+                    path='/conversations/{id}',
+                    action=Action.DELETE,
+                    description='Permanently delete a conversation by ID',
+                    path_params=['id'],
+                    path_params_schema={
+                        'id': {'type': 'string', 'required': True},
+                    },
+                    header_params=['Intercom-Version'],
+                    header_params_schema={
+                        'Intercom-Version': {
+                            'type': 'string',
+                            'required': False,
+                            'default': '2.14',
+                        },
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Response from deleting a conversation',
+                        'properties': {
+                            'id': {'type': 'string', 'description': 'The ID of the deleted conversation'},
+                            'object': {'type': 'string', 'description': 'Type of object (conversation)'},
+                            'deleted': {'type': 'boolean', 'description': 'Whether the conversation was successfully deleted'},
+                        },
+                    },
+                ),
             },
             entity_schema={
                 'type': 'object',
@@ -3466,6 +4297,7 @@ IntercomConnectorModel: ConnectorModel = ConnectorModel(
                 Action.CREATE,
                 Action.GET,
                 Action.UPDATE,
+                Action.DELETE,
             ],
             endpoints={
                 Action.LIST: EndpointDefinition(
@@ -4555,6 +5387,33 @@ IntercomConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                 ),
+                Action.DELETE: EndpointDefinition(
+                    method='DELETE',
+                    path='/companies/{id}',
+                    action=Action.DELETE,
+                    description='Permanently delete a company by ID',
+                    path_params=['id'],
+                    path_params_schema={
+                        'id': {'type': 'string', 'required': True},
+                    },
+                    header_params=['Intercom-Version'],
+                    header_params_schema={
+                        'Intercom-Version': {
+                            'type': 'string',
+                            'required': False,
+                            'default': '2.11',
+                        },
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Response from deleting a company',
+                        'properties': {
+                            'id': {'type': 'string', 'description': 'The ID of the deleted company'},
+                            'object': {'type': 'string', 'description': 'Type of object (company)'},
+                            'deleted': {'type': 'boolean', 'description': 'Whether the company was successfully deleted'},
+                        },
+                    },
+                ),
             },
             entity_schema={
                 'type': 'object',
@@ -5132,7 +5991,12 @@ IntercomConnectorModel: ConnectorModel = ConnectorModel(
         EntityDefinition(
             name='tags',
             stream_name='tags',
-            actions=[Action.LIST, Action.CREATE, Action.GET],
+            actions=[
+                Action.LIST,
+                Action.CREATE,
+                Action.GET,
+                Action.DELETE,
+            ],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
@@ -5347,6 +6211,25 @@ IntercomConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                 ),
+                Action.DELETE: EndpointDefinition(
+                    method='DELETE',
+                    path='/tags/{id}',
+                    action=Action.DELETE,
+                    description='Permanently delete a tag by ID. This removes the tag from all contacts, companies, and conversations.',
+                    path_params=['id'],
+                    path_params_schema={
+                        'id': {'type': 'string', 'required': True},
+                    },
+                    header_params=['Intercom-Version'],
+                    header_params_schema={
+                        'Intercom-Version': {
+                            'type': 'string',
+                            'required': False,
+                            'default': '2.11',
+                        },
+                    },
+                    response_schema={'type': 'object', 'description': 'Response from deleting a tag (Intercom returns an empty body)'},
+                ),
             },
             entity_schema={
                 'type': 'object',
@@ -5546,6 +6429,14 @@ IntercomConnectorModel: ConnectorModel = ConnectorModel(
                 'example_questions': ['What notes are on a contact?'],
                 'search_strategy': 'Filter by contact',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='notes',
+                    target_entity='contacts',
+                    foreign_key='contact_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='segments',
@@ -5742,7 +6633,7 @@ IntercomConnectorModel: ConnectorModel = ConnectorModel(
         ),
         EntityDefinition(
             name='internal_articles',
-            actions=[Action.CREATE],
+            actions=[Action.CREATE, Action.UPDATE, Action.DELETE],
             endpoints={
                 Action.CREATE: EndpointDefinition(
                     method='POST',
@@ -5818,6 +6709,113 @@ IntercomConnectorModel: ConnectorModel = ConnectorModel(
                             'freshness': 'live',
                             'example_questions': ['Find an internal help article about a topic'],
                             'search_strategy': 'Search by title or content',
+                        },
+                    },
+                ),
+                Action.UPDATE: EndpointDefinition(
+                    method='PUT',
+                    path='/internal_articles/{id}',
+                    action=Action.UPDATE,
+                    description='Update an existing internal article by ID',
+                    body_fields=[
+                        'title',
+                        'body',
+                        'author_id',
+                        'owner_id',
+                    ],
+                    path_params=['id'],
+                    path_params_schema={
+                        'id': {'type': 'string', 'required': True},
+                    },
+                    header_params=['Intercom-Version'],
+                    header_params_schema={
+                        'Intercom-Version': {
+                            'type': 'string',
+                            'required': False,
+                            'default': 'Unstable',
+                        },
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'properties': {
+                            'title': {'type': 'string', 'description': 'The title of the article'},
+                            'body': {'type': 'string', 'description': 'The content of the article in HTML'},
+                            'author_id': {'type': 'integer', 'description': 'The ID of the author of the article'},
+                            'owner_id': {'type': 'integer', 'description': 'The ID of the owner of the article'},
+                        },
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Internal article object',
+                        'properties': {
+                            'id': {
+                                'type': ['integer', 'string'],
+                                'description': 'The unique identifier for the article',
+                            },
+                            'title': {
+                                'type': ['string', 'null'],
+                                'description': 'The title of the article',
+                            },
+                            'body': {
+                                'type': ['string', 'null'],
+                                'description': 'The body of the article in HTML',
+                            },
+                            'owner_id': {
+                                'type': ['integer', 'null'],
+                                'description': 'The ID of the owner of the article',
+                            },
+                            'author_id': {
+                                'type': ['integer', 'null'],
+                                'description': 'The ID of the author of the article',
+                            },
+                            'created_at': {
+                                'type': ['integer', 'null'],
+                                'description': 'Creation timestamp (Unix)',
+                            },
+                            'updated_at': {
+                                'type': ['integer', 'null'],
+                                'description': 'Last update timestamp (Unix)',
+                            },
+                            'locale': {
+                                'type': ['string', 'null'],
+                                'description': 'The default locale of the article',
+                            },
+                        },
+                        'x-airbyte-entity-name': 'internal_articles',
+                        'x-airbyte-ai-hints': {
+                            'summary': 'Internal help center articles for the support team',
+                            'when_to_use': 'Looking for internal knowledge base content',
+                            'trigger_phrases': ['help article', 'knowledge base', 'internal article'],
+                            'freshness': 'live',
+                            'example_questions': ['Find an internal help article about a topic'],
+                            'search_strategy': 'Search by title or content',
+                        },
+                    },
+                ),
+                Action.DELETE: EndpointDefinition(
+                    method='DELETE',
+                    path='/internal_articles/{id}',
+                    action=Action.DELETE,
+                    description='Permanently delete an internal article by ID',
+                    path_params=['id'],
+                    path_params_schema={
+                        'id': {'type': 'string', 'required': True},
+                    },
+                    header_params=['Intercom-Version'],
+                    header_params_schema={
+                        'Intercom-Version': {
+                            'type': 'string',
+                            'required': False,
+                            'default': 'Unstable',
+                        },
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Response from deleting an internal article',
+                        'properties': {
+                            'id': {'type': 'string', 'description': 'The ID of the deleted internal article'},
+                            'object': {'type': 'string', 'description': 'Type of object (internal_article)'},
+                            'deleted': {'type': 'boolean', 'description': 'Whether the internal article was successfully deleted'},
                         },
                     },
                 ),
@@ -7233,25 +8231,35 @@ IntercomConnectorModel: ConnectorModel = ConnectorModel(
             "Create a tag named 'VIP Customer'",
         ],
         context_store_search=[
+            "Create a conversation from contact {id} saying 'I need help with my account'",
             "Update the name of contact {id} to 'John Updated'",
             "Add a note to contact {id} saying 'Followed up on support request'",
             'Show me conversations from the last week',
             'List conversations assigned to team {team_id}',
             'Show me open conversations',
+            'Delete contact {id}',
+            'Delete company {id}',
+            'Delete tag {id}',
+            'Delete conversation {id}',
+            'Delete internal article {id}',
+            'Update conversation {id} to mark it as read',
+            'Update internal article {id} with a new title',
         ],
         search=[
+            "Create a conversation from contact {id} saying 'I need help with my account'",
             "Update the name of contact {id} to 'John Updated'",
             "Add a note to contact {id} saying 'Followed up on support request'",
             'Show me conversations from the last week',
             'List conversations assigned to team {team_id}',
             'Show me open conversations',
+            'Delete contact {id}',
+            'Delete company {id}',
+            'Delete tag {id}',
+            'Delete conversation {id}',
+            'Delete internal article {id}',
+            'Update conversation {id} to mark it as read',
+            'Update internal article {id} with a new title',
         ],
-        unsupported=[
-            'Send a message to a customer',
-            'Delete a conversation',
-            'Delete a contact',
-            'Delete a company',
-            'Assign a conversation to an admin',
-        ],
+        unsupported=['Send a message to a customer', 'Assign a conversation to an admin'],
     ),
 )

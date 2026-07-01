@@ -579,6 +579,57 @@ class SegmentsList(BaseModel):
     type_: str | None = Field(default=None, alias="type")
     segments: list[Segment] | None = Field(default=None)
 
+class ContactDeletedResponse(BaseModel):
+    """Response from deleting a contact"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    type_: str | None = Field(default=None, alias="type")
+    id: str | None = Field(default=None)
+    external_id: str | None = Field(default=None)
+    deleted: bool | None = Field(default=None)
+
+class CompanyDeletedResponse(BaseModel):
+    """Response from deleting a company"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None)
+    object_: str | None = Field(default=None, alias="object")
+    deleted: bool | None = Field(default=None)
+
+class ConversationDeletedResponse(BaseModel):
+    """Response from deleting a conversation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None)
+    object_: str | None = Field(default=None, alias="object")
+    deleted: bool | None = Field(default=None)
+
+class InternalArticleDeletedResponse(BaseModel):
+    """Response from deleting an internal article"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None)
+    object_: str | None = Field(default=None, alias="object")
+    deleted: bool | None = Field(default=None)
+
+class TagDeletedResponse(BaseModel):
+    """Response from deleting a tag (Intercom returns an empty body)"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    pass
+
+class Message(BaseModel):
+    """Message object returned when creating a conversation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    type_: str | None = Field(default=None, alias="type")
+    id: str | None = Field(default=None)
+    created_at: int | None = Field(default=None)
+    subject: str | None = Field(default=None)
+    body: str | None = Field(default=None)
+    message_type: str | None = Field(default=None)
+    conversation_id: str | None = Field(default=None)
+
 class ContactCreateParams(BaseModel):
     """ContactCreateParams type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -636,6 +687,32 @@ class CompanyUpdateParams(BaseModel):
     industry: str | None = Field(default=None)
     custom_attributes: dict[str, Any] | None = Field(default=None)
 
+class ConversationCreateParamsFrom(BaseModel):
+    """The contact (user or lead) initiating the conversation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    type_: str = Field(alias="type", description="The type of the contact (lead, user, or contact)")
+    """The type of the contact (lead, user, or contact)"""
+    id: str = Field(description="The identifier for the contact as given by Intercom (a 24 character UUID)")
+    """The identifier for the contact as given by Intercom (a 24 character UUID)"""
+
+class ConversationCreateParams(BaseModel):
+    """ConversationCreateParams type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    from_: ConversationCreateParamsFrom = Field(alias="from")
+    body: str
+    subject: str | None = Field(default=None)
+    attachment_urls: list[str] | None = Field(default=None)
+    created_at: int | None = Field(default=None)
+
+class ConversationUpdateParams(BaseModel):
+    """ConversationUpdateParams type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    read: bool | None = Field(default=None)
+    custom_attributes: dict[str, Any] | None = Field(default=None)
+
 class TagCreateParams(BaseModel):
     """TagCreateParams type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -668,6 +745,15 @@ class InternalArticleCreateParams(BaseModel):
     body: str | None = Field(default=None)
     owner_id: int
     author_id: int
+
+class InternalArticleUpdateParams(BaseModel):
+    """InternalArticleUpdateParams type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    title: str | None = Field(default=None)
+    body: str | None = Field(default=None)
+    author_id: int | None = Field(default=None)
+    owner_id: int | None = Field(default=None)
 
 class InternalArticle(BaseModel):
     """Internal article object"""

@@ -17,6 +17,11 @@ from typing import Any, Literal
 # ===== NESTED PARAM TYPE DEFINITIONS =====
 # Nested parameter schemas discovered during parameter extraction
 
+class ConversationsCreateParamsFrom(TypedDict):
+    """The contact (user or lead) initiating the conversation"""
+    type: str
+    id: str
+
 # ===== OPERATION PARAMS TYPE DEFINITIONS =====
 
 class ContactsListParams(TypedDict):
@@ -57,13 +62,35 @@ class ContactsUpdateParams(TypedDict):
     custom_attributes: NotRequired[dict[str, Any]]
     id: str
 
+class ContactsDeleteParams(TypedDict):
+    """Parameters for contacts.delete operation"""
+    id: str
+
 class ConversationsListParams(TypedDict):
     """Parameters for conversations.list operation"""
     per_page: NotRequired[int]
     starting_after: NotRequired[str]
 
+class ConversationsCreateParams(TypedDict):
+    """Parameters for conversations.create operation"""
+    from_: ConversationsCreateParamsFrom
+    body: str
+    subject: NotRequired[str]
+    attachment_urls: NotRequired[list[str]]
+    created_at: NotRequired[int]
+
 class ConversationsGetParams(TypedDict):
     """Parameters for conversations.get operation"""
+    id: str
+
+class ConversationsUpdateParams(TypedDict):
+    """Parameters for conversations.update operation"""
+    read: NotRequired[bool]
+    custom_attributes: NotRequired[dict[str, Any]]
+    id: str
+
+class ConversationsDeleteParams(TypedDict):
+    """Parameters for conversations.delete operation"""
     id: str
 
 class CompaniesListParams(TypedDict):
@@ -97,6 +124,10 @@ class CompaniesUpdateParams(TypedDict):
     custom_attributes: NotRequired[dict[str, Any]]
     id: str
 
+class CompaniesDeleteParams(TypedDict):
+    """Parameters for companies.delete operation"""
+    id: str
+
 class TeamsListParams(TypedDict):
     """Parameters for teams.list operation"""
     pass
@@ -125,6 +156,10 @@ class TagsGetParams(TypedDict):
     """Parameters for tags.get operation"""
     id: str
 
+class TagsDeleteParams(TypedDict):
+    """Parameters for tags.delete operation"""
+    id: str
+
 class NotesCreateParams(TypedDict):
     """Parameters for notes.create operation"""
     body: str
@@ -145,6 +180,18 @@ class InternalArticlesCreateParams(TypedDict):
     body: NotRequired[str]
     owner_id: int
     author_id: int
+
+class InternalArticlesUpdateParams(TypedDict):
+    """Parameters for internal_articles.update operation"""
+    title: NotRequired[str]
+    body: NotRequired[str]
+    author_id: NotRequired[int]
+    owner_id: NotRequired[int]
+    id: str
+
+class InternalArticlesDeleteParams(TypedDict):
+    """Parameters for internal_articles.delete operation"""
+    id: str
 
 # ===== SEARCH TYPES =====
 

@@ -195,6 +195,14 @@ class ChannelResponse(BaseModel):
     ok: bool | None = Field(default=None)
     channel: Channel | None = Field(default=None)
 
+class Reaction(BaseModel):
+    """Message reaction"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: str | None = Field(default=None)
+    users: list[str] | None = Field(default=None)
+    count: int | None = Field(default=None)
+
 class File(BaseModel):
     """File object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -218,14 +226,6 @@ class File(BaseModel):
     permalink_public: str | None = Field(default=None)
     created: int | None = Field(default=None)
     timestamp: int | None = Field(default=None)
-
-class Reaction(BaseModel):
-    """Message reaction"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: str | None = Field(default=None)
-    users: list[str] | None = Field(default=None)
-    count: int | None = Field(default=None)
 
 class Attachment(BaseModel):
     """Message attachment"""

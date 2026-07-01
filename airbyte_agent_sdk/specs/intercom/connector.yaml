@@ -10,9 +10,10 @@ info:
     Intercom is a customer messaging platform that enables businesses to communicate with
     customers through chat, email, and in-app messaging. This connector provides access
     to core Intercom entities including contacts, conversations, companies, teams,
-    admins, tags, and segments for customer support analytics and insights. It also supports
-    creating and updating contacts, creating notes, creating internal articles, creating
-    and updating companies, and creating tags.
+    admins, tags, and segments for customer support analytics and insights. It supports
+    creating, updating, and deleting contacts and companies; creating and deleting tags;
+    creating, updating, and deleting conversations; creating notes; and creating, updating,
+    and deleting internal articles.
   x-airbyte-connector-name: intercom
   x-airbyte-connector-definition-id: d8313939-3782-41b0-be29-b3ca20d8dd3a
   x-airbyte-replication-version: "0.13.24"
@@ -33,17 +34,28 @@ info:
       - "Create a company named 'Acme Corp' with company_id 'acme-001'"
       - "Create a tag named 'VIP Customer'"
     search:
+      - "Create a conversation from contact {id} saying 'I need help with my account'"
       - "Update the name of contact {id} to 'John Updated'"
       - "Add a note to contact {id} saying 'Followed up on support request'"
       - "Show me conversations from the last week"
       - "List conversations assigned to team {team_id}"
       - "Show me open conversations"
+      - "Delete contact {id}"
+      - "Delete company {id}"
+      - "Delete tag {id}"
+      - "Delete conversation {id}"
+      - "Delete internal article {id}"
+      - "Update conversation {id} to mark it as read"
+      - "Update internal article {id} with a new title"
     unsupported:
       - "Send a message to a customer"
-      - "Delete a conversation"
-      - "Delete a contact"
-      - "Delete a company"
       - "Assign a conversation to an admin"
+  x-airbyte-entity-relationships:
+    - source_entity: notes
+      target_entity: contacts
+      foreign_key: contact_id
+      target_key: id
+      cardinality: many_to_one
   x-airbyte-skip-suggested-streams:
     - conversation_parts
   x-airbyte-external-documentation-urls:
@@ -1369,11 +1381,73 @@ paths:
           description: Contact not found
         "401":
           description: Unauthorized
+    delete:
+      summary: Delete a contact
+      description: Permanently delete a contact by ID
+      operationId: DeleteContact
+      x-airbyte-entity: contacts
+      x-airbyte-action: delete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The unique identifier of the contact to delete
+          schema:
+            type: string
+        - name: Intercom-Version
+          in: header
+          description: API version
+          required: false
+          schema:
+            type: string
+            default: "2.11"
+      responses:
+        "200":
+          description: Contact deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContactDeletedResponse"
+        "404":
+          description: Contact not found
+        "401":
+          description: Unauthorized
 
   # ============================================
   # CONVERSATIONS ENTITY
   # ============================================
   "/conversations":
+    post:
+      summary: Create a conversation
+      description: Create a new conversation initiated by a contact (user or lead)
+      operationId: createConversation
+      x-airbyte-entity: conversations
+      x-airbyte-action: create
+      parameters:
+        - name: Intercom-Version
+          in: header
+          description: API version
+          required: false
+          schema:
+            type: string
+            default: "2.11"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ConversationCreateParams"
+      responses:
+        "200":
+          description: Conversation created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Message"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
     get:
       summary: List conversations
       description: Returns a paginated list of conversations
@@ -1444,6 +1518,74 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Conversation"
+        "404":
+          description: Conversation not found
+        "401":
+          description: Unauthorized
+    put:
+      summary: Update a conversation
+      description: Update conversation attributes such as custom_attributes or read status
+      operationId: updateConversation
+      x-airbyte-entity: conversations
+      x-airbyte-action: update
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Conversation ID
+          schema:
+            type: string
+        - name: Intercom-Version
+          in: header
+          description: API version
+          required: false
+          schema:
+            type: string
+            default: "2.11"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ConversationUpdateParams"
+      responses:
+        "200":
+          description: Conversation updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Conversation"
+        "404":
+          description: Conversation not found
+        "401":
+          description: Unauthorized
+    delete:
+      summary: Delete a conversation
+      description: Permanently delete a conversation by ID
+      operationId: deleteConversation
+      x-airbyte-entity: conversations
+      x-airbyte-action: delete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Conversation ID
+          schema:
+            type: string
+        - name: Intercom-Version
+          in: header
+          description: API version
+          required: false
+          schema:
+            type: string
+            default: "2.14"
+      responses:
+        "200":
+          description: Conversation deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConversationDeletedResponse"
         "404":
           description: Conversation not found
         "401":
@@ -1589,6 +1731,37 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Company"
+        "404":
+          description: Company not found
+        "401":
+          description: Unauthorized
+    delete:
+      summary: Delete a company
+      description: Permanently delete a company by ID
+      operationId: deleteCompany
+      x-airbyte-entity: companies
+      x-airbyte-action: delete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The unique identifier of the company to delete
+          schema:
+            type: string
+        - name: Intercom-Version
+          in: header
+          description: API version
+          required: false
+          schema:
+            type: string
+            default: "2.11"
+      responses:
+        "200":
+          description: Company deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompanyDeletedResponse"
         "404":
           description: Company not found
         "401":
@@ -1811,6 +1984,37 @@ paths:
           description: Tag not found
         "401":
           description: Unauthorized
+    delete:
+      summary: Delete a tag
+      description: Permanently delete a tag by ID. This removes the tag from all contacts, companies, and conversations.
+      operationId: deleteTag
+      x-airbyte-entity: tags
+      x-airbyte-action: delete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The unique identifier of the tag to delete
+          schema:
+            type: string
+        - name: Intercom-Version
+          in: header
+          description: API version
+          required: false
+          schema:
+            type: string
+            default: "2.11"
+      responses:
+        "200":
+          description: Tag deleted (empty response)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TagDeletedResponse"
+        "404":
+          description: Tag not found
+        "401":
+          description: Unauthorized
 
   # ============================================
   # NOTES ENTITY (Write-only)
@@ -1958,6 +2162,76 @@ paths:
         "401":
           description: Unauthorized
 
+  "/internal_articles/{id}":
+    put:
+      summary: Update an internal article
+      description: Update an existing internal article by ID
+      operationId: updateInternalArticle
+      x-airbyte-entity: internal_articles
+      x-airbyte-action: update
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Internal article ID
+          schema:
+            type: string
+        - name: Intercom-Version
+          in: header
+          description: API version
+          required: false
+          schema:
+            type: string
+            default: "Unstable"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InternalArticleUpdateParams"
+      responses:
+        "200":
+          description: Internal article updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalArticle"
+        "404":
+          description: Internal article not found
+        "401":
+          description: Unauthorized
+    delete:
+      summary: Delete an internal article
+      description: Permanently delete an internal article by ID
+      operationId: deleteInternalArticle
+      x-airbyte-entity: internal_articles
+      x-airbyte-action: delete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Internal article ID
+          schema:
+            type: string
+        - name: Intercom-Version
+          in: header
+          description: API version
+          required: false
+          schema:
+            type: string
+            default: "Unstable"
+      responses:
+        "200":
+          description: Internal article deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalArticleDeletedResponse"
+        "404":
+          description: Internal article not found
+        "401":
+          description: Unauthorized
+
 components:
   securitySchemes:
     bearerAuth:
@@ -1996,6 +2270,13 @@ components:
             - notes
             - internal_articles
             - tags
+        - mode: delete
+          entities:
+            - contacts
+            - companies
+            - conversations
+            - tags
+            - internal_articles
 
   schemas:
     # ============================================
@@ -3207,6 +3488,101 @@ components:
             $ref: "#/components/schemas/Segment"
 
     # ============================================
+    # DELETE RESPONSE SCHEMAS
+    # ============================================
+    ContactDeletedResponse:
+      type: object
+      description: Response from deleting a contact
+      properties:
+        type:
+          type: string
+          description: Type of object (contact)
+        id:
+          type: string
+          description: The ID of the deleted contact
+        external_id:
+          type: [string, "null"]
+          description: External ID of the deleted contact
+        deleted:
+          type: boolean
+          description: Whether the contact was successfully deleted
+
+    CompanyDeletedResponse:
+      type: object
+      description: Response from deleting a company
+      properties:
+        id:
+          type: string
+          description: The ID of the deleted company
+        object:
+          type: string
+          description: Type of object (company)
+        deleted:
+          type: boolean
+          description: Whether the company was successfully deleted
+
+    ConversationDeletedResponse:
+      type: object
+      description: Response from deleting a conversation
+      properties:
+        id:
+          type: string
+          description: The ID of the deleted conversation
+        object:
+          type: string
+          description: Type of object (conversation)
+        deleted:
+          type: boolean
+          description: Whether the conversation was successfully deleted
+
+    InternalArticleDeletedResponse:
+      type: object
+      description: Response from deleting an internal article
+      properties:
+        id:
+          type: string
+          description: The ID of the deleted internal article
+        object:
+          type: string
+          description: Type of object (internal_article)
+        deleted:
+          type: boolean
+          description: Whether the internal article was successfully deleted
+
+    TagDeletedResponse:
+      type: object
+      description: Response from deleting a tag (Intercom returns an empty body)
+
+    # ============================================
+    # CONVERSATION MESSAGE RESPONSE SCHEMA
+    # ============================================
+    Message:
+      type: object
+      description: Message object returned when creating a conversation
+      properties:
+        type:
+          type: [string, "null"]
+          description: Type of object
+        id:
+          type: string
+          description: Unique message identifier
+        created_at:
+          type: [integer, "null"]
+          description: Creation timestamp (Unix)
+        subject:
+          type: [string, "null"]
+          description: Subject of the message
+        body:
+          type: [string, "null"]
+          description: Body of the message
+        message_type:
+          type: [string, "null"]
+          description: Type of message (email, inapp, facebook, twitter)
+        conversation_id:
+          type: [string, "null"]
+          description: The ID of the conversation created
+
+    # ============================================
     # WRITE OPERATION REQUEST SCHEMAS
     # ============================================
     ContactCreateParams:
@@ -3344,6 +3720,55 @@ components:
           description: Custom attributes for the company
           additionalProperties: true
 
+    ConversationCreateParams:
+      type: object
+      required:
+        - from
+        - body
+      properties:
+        from:
+          type: object
+          description: The contact (user or lead) initiating the conversation
+          required:
+            - type
+            - id
+          properties:
+            type:
+              type: string
+              description: The type of the contact (lead, user, or contact)
+              enum:
+                - lead
+                - user
+                - contact
+            id:
+              type: string
+              description: The identifier for the contact as given by Intercom (a 24 character UUID)
+        body:
+          type: string
+          description: The content of the initial message in the conversation
+        subject:
+          type: string
+          description: The subject line of the conversation (optional)
+        attachment_urls:
+          type: array
+          description: A list of URLs of attached files (max 10)
+          items:
+            type: string
+        created_at:
+          type: integer
+          description: Optional timestamp for the conversation creation (Unix)
+
+    ConversationUpdateParams:
+      type: object
+      properties:
+        read:
+          type: boolean
+          description: Mark the conversation as read or unread
+        custom_attributes:
+          type: object
+          description: Custom attributes to set on the conversation
+          additionalProperties: true
+
     TagCreateParams:
       type: object
       required:
@@ -3424,6 +3849,22 @@ components:
         author_id:
           type: integer
           description: The ID of the author of the article
+
+    InternalArticleUpdateParams:
+      type: object
+      properties:
+        title:
+          type: string
+          description: The title of the article
+        body:
+          type: string
+          description: The content of the article in HTML
+        author_id:
+          type: integer
+          description: The ID of the author of the article
+        owner_id:
+          type: integer
+          description: The ID of the owner of the article
 
     # ============================================
     # INTERNAL ARTICLE RESPONSE SCHEMA

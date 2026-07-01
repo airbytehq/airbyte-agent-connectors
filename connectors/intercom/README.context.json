@@ -44,9 +44,9 @@
       }
     ]
   },
-  "custom_description": "Intercom is a customer messaging platform that enables businesses to communicate with\ncustomers through chat, email, and in-app messaging. This connector provides access\nto core Intercom entities including contacts, conversations, companies, teams,\nadmins, tags, and segments for customer support analytics and insights. It also supports\ncreating and updating contacts, creating notes, creating internal articles, creating\nand updating companies, and creating tags.\n",
-  "supported_questions": "- List all contacts in my Intercom workspace\n- List all companies in Intercom\n- What teams are configured in my workspace?\n- Show me all admins in my Intercom account\n- List all tags used in Intercom\n- Show me all customer segments\n- Show me details for a recent contact\n- Show me details for a recent company\n- Show me details for a recent conversation\n- Create a new lead contact named 'Jane Smith' with email jane@example.com\n- Create an internal article titled 'Onboarding Guide' with instructions for new team members\n- Create a company named 'Acme Corp' with company_id 'acme-001'\n- Create a tag named 'VIP Customer'\n- Update the name of contact {id} to 'John Updated'\n- Add a note to contact {id} saying 'Followed up on support request'\n- Show me conversations from the last week\n- List conversations assigned to team {team_id}\n- Show me open conversations",
-  "unsupported_questions": "- Send a message to a customer\n- Delete a conversation\n- Delete a contact\n- Delete a company\n- Assign a conversation to an admin",
+  "custom_description": "Intercom is a customer messaging platform that enables businesses to communicate with\ncustomers through chat, email, and in-app messaging. This connector provides access\nto core Intercom entities including contacts, conversations, companies, teams,\nadmins, tags, and segments for customer support analytics and insights. It supports\ncreating, updating, and deleting contacts and companies; creating and deleting tags;\ncreating, updating, and deleting conversations; creating notes; and creating, updating,\nand deleting internal articles.\n",
+  "supported_questions": "- List all contacts in my Intercom workspace\n- List all companies in Intercom\n- What teams are configured in my workspace?\n- Show me all admins in my Intercom account\n- List all tags used in Intercom\n- Show me all customer segments\n- Show me details for a recent contact\n- Show me details for a recent company\n- Show me details for a recent conversation\n- Create a new lead contact named 'Jane Smith' with email jane@example.com\n- Create an internal article titled 'Onboarding Guide' with instructions for new team members\n- Create a company named 'Acme Corp' with company_id 'acme-001'\n- Create a tag named 'VIP Customer'\n- Create a conversation from contact {id} saying 'I need help with my account'\n- Update the name of contact {id} to 'John Updated'\n- Add a note to contact {id} saying 'Followed up on support request'\n- Show me conversations from the last week\n- List conversations assigned to team {team_id}\n- Show me open conversations\n- Delete contact {id}\n- Delete company {id}\n- Delete tag {id}\n- Delete conversation {id}\n- Delete internal article {id}\n- Update conversation {id} to mark it as read\n- Update internal article {id} with a new title",
+  "unsupported_questions": "- Send a message to a customer\n- Assign a conversation to an admin",
   "first_operation": {
     "method_name": "list_contacts",
     "http_method": "get",
@@ -482,6 +482,34 @@
         "record_type": "Contact",
         "meta_fields": null,
         "is_download": false
+      },
+      {
+        "method_name": "delete_contact",
+        "http_method": "delete",
+        "path": "/contacts/{id}",
+        "entity": "contacts",
+        "action": "delete",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The unique identifier of the contact to delete"
+          }
+        ],
+        "params_type_name": "ContactsDeleteParams",
+        "response_type": "ContactDeletedResponse",
+        "description": "Permanently delete a contact by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "ContactDeletedResponse",
+        "meta_fields": null,
+        "is_download": false
       }
     ],
     "conversations": [
@@ -544,6 +572,101 @@
         "is_download": false
       },
       {
+        "method_name": "create_conversation",
+        "http_method": "post",
+        "path": "/conversations",
+        "entity": "conversations",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "from",
+            "python_name": "from_",
+            "type": "ConversationsCreateParamsFrom",
+            "schema": {
+              "type": "object",
+              "description": "The contact (user or lead) initiating the conversation",
+              "required": [
+                "type",
+                "id"
+              ],
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "description": "The type of the contact (lead, user, or contact)",
+                  "enum": [
+                    "lead",
+                    "user",
+                    "contact"
+                  ]
+                },
+                "id": {
+                  "type": "string",
+                  "description": "The identifier for the contact as given by Intercom (a 24 character UUID)"
+                }
+              }
+            },
+            "required": true,
+            "description": "The contact (user or lead) initiating the conversation"
+          },
+          {
+            "name": "body",
+            "python_name": "body",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The content of the initial message in the conversation"
+            },
+            "required": true,
+            "description": "The content of the initial message in the conversation"
+          },
+          {
+            "name": "subject",
+            "python_name": "subject",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The subject line of the conversation (optional)"
+            },
+            "required": false,
+            "description": "The subject line of the conversation (optional)"
+          },
+          {
+            "name": "attachment_urls",
+            "python_name": "attachment_urls",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "description": "A list of URLs of attached files (max 10)",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "A list of URLs of attached files (max 10)"
+          },
+          {
+            "name": "created_at",
+            "python_name": "created_at",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Optional timestamp for the conversation creation (Unix)"
+            },
+            "required": false,
+            "description": "Optional timestamp for the conversation creation (Unix)"
+          }
+        ],
+        "params_type_name": "ConversationsCreateParams",
+        "response_type": "Message",
+        "description": "Create a new conversation initiated by a contact (user or lead)",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Message",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
         "method_name": "get_conversation",
         "http_method": "get",
         "path": "/conversations/{id}",
@@ -568,6 +691,85 @@
         "meta_extractor": null,
         "needs_envelope": null,
         "record_type": "Conversation",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "update_conversation",
+        "http_method": "put",
+        "path": "/conversations/{id}",
+        "entity": "conversations",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "read",
+            "python_name": "read",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Mark the conversation as read or unread"
+            },
+            "required": false,
+            "description": "Mark the conversation as read or unread"
+          },
+          {
+            "name": "custom_attributes",
+            "python_name": "custom_attributes",
+            "type": "dict[str, Any]",
+            "schema": {
+              "type": "object",
+              "description": "Custom attributes to set on the conversation",
+              "additionalProperties": true
+            },
+            "required": false,
+            "description": "Custom attributes to set on the conversation"
+          },
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Conversation ID"
+          }
+        ],
+        "params_type_name": "ConversationsUpdateParams",
+        "response_type": "Conversation",
+        "description": "Update conversation attributes such as custom_attributes or read status",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Conversation",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "delete_conversation",
+        "http_method": "delete",
+        "path": "/conversations/{id}",
+        "entity": "conversations",
+        "action": "delete",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Conversation ID"
+          }
+        ],
+        "params_type_name": "ConversationsDeleteParams",
+        "response_type": "ConversationDeletedResponse",
+        "description": "Permanently delete a conversation by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "ConversationDeletedResponse",
         "meta_fields": null,
         "is_download": false
       }
@@ -871,6 +1073,34 @@
         "record_type": "Company",
         "meta_fields": null,
         "is_download": false
+      },
+      {
+        "method_name": "delete_company",
+        "http_method": "delete",
+        "path": "/companies/{id}",
+        "entity": "companies",
+        "action": "delete",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The unique identifier of the company to delete"
+          }
+        ],
+        "params_type_name": "CompaniesDeleteParams",
+        "response_type": "CompanyDeletedResponse",
+        "description": "Permanently delete a company by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "CompanyDeletedResponse",
+        "meta_fields": null,
+        "is_download": false
       }
     ],
     "teams": [
@@ -1039,6 +1269,34 @@
         "meta_extractor": null,
         "needs_envelope": null,
         "record_type": "Tag",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "delete_tag",
+        "http_method": "delete",
+        "path": "/tags/{id}",
+        "entity": "tags",
+        "action": "delete",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The unique identifier of the tag to delete"
+          }
+        ],
+        "params_type_name": "TagsDeleteParams",
+        "response_type": "TagDeletedResponse",
+        "description": "Permanently delete a tag by ID. This removes the tag from all contacts, companies, and conversations.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "TagDeletedResponse",
         "meta_fields": null,
         "is_download": false
       }
@@ -1215,6 +1473,106 @@
         "meta_extractor": null,
         "needs_envelope": null,
         "record_type": "InternalArticle",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "update_internal_article",
+        "http_method": "put",
+        "path": "/internal_articles/{id}",
+        "entity": "internal_articles",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "title",
+            "python_name": "title",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The title of the article"
+            },
+            "required": false,
+            "description": "The title of the article"
+          },
+          {
+            "name": "body",
+            "python_name": "body",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The content of the article in HTML"
+            },
+            "required": false,
+            "description": "The content of the article in HTML"
+          },
+          {
+            "name": "author_id",
+            "python_name": "author_id",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "The ID of the author of the article"
+            },
+            "required": false,
+            "description": "The ID of the author of the article"
+          },
+          {
+            "name": "owner_id",
+            "python_name": "owner_id",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "The ID of the owner of the article"
+            },
+            "required": false,
+            "description": "The ID of the owner of the article"
+          },
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Internal article ID"
+          }
+        ],
+        "params_type_name": "InternalArticlesUpdateParams",
+        "response_type": "InternalArticle",
+        "description": "Update an existing internal article by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "InternalArticle",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "delete_internal_article",
+        "http_method": "delete",
+        "path": "/internal_articles/{id}",
+        "entity": "internal_articles",
+        "action": "delete",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Internal article ID"
+          }
+        ],
+        "params_type_name": "InternalArticlesDeleteParams",
+        "response_type": "InternalArticleDeletedResponse",
+        "description": "Permanently delete an internal article by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "InternalArticleDeletedResponse",
         "meta_fields": null,
         "is_download": false
       }

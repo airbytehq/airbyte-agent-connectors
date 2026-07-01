@@ -21,20 +21,29 @@ from .types import (
     AdminsGetParams,
     AdminsListParams,
     CompaniesCreateParams,
+    CompaniesDeleteParams,
     CompaniesGetParams,
     CompaniesListParams,
     CompaniesUpdateParams,
     ContactsCreateParams,
+    ContactsDeleteParams,
     ContactsGetParams,
     ContactsListParams,
     ContactsUpdateParams,
+    ConversationsCreateParams,
+    ConversationsCreateParamsFrom,
+    ConversationsDeleteParams,
     ConversationsGetParams,
     ConversationsListParams,
+    ConversationsUpdateParams,
     InternalArticlesCreateParams,
+    InternalArticlesDeleteParams,
+    InternalArticlesUpdateParams,
     NotesCreateParams,
     SegmentsGetParams,
     SegmentsListParams,
     TagsCreateParams,
+    TagsDeleteParams,
     TagsGetParams,
     TagsListParams,
     TeamsGetParams,
@@ -67,12 +76,18 @@ from .models import (
     SegmentsListResult,
     Admin,
     Company,
+    CompanyDeletedResponse,
     Contact,
+    ContactDeletedResponse,
     Conversation,
+    ConversationDeletedResponse,
     InternalArticle,
+    InternalArticleDeletedResponse,
+    Message,
     Note,
     Segment,
     Tag,
+    TagDeletedResponse,
     Team,
     AirbyteSearchMeta,
     AirbyteSearchResult,
@@ -101,7 +116,7 @@ class IntercomConnector:
 
     connector_name = "intercom"
     connector_version = "0.1.10"
-    sdk_version = "0.1.272"
+    sdk_version = "0.1.273"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -109,12 +124,17 @@ class IntercomConnector:
         ("contacts", "create"): None,
         ("contacts", "get"): None,
         ("contacts", "update"): None,
+        ("contacts", "delete"): None,
         ("conversations", "list"): True,
+        ("conversations", "create"): None,
         ("conversations", "get"): None,
+        ("conversations", "update"): None,
+        ("conversations", "delete"): None,
         ("companies", "list"): True,
         ("companies", "create"): None,
         ("companies", "get"): None,
         ("companies", "update"): None,
+        ("companies", "delete"): None,
         ("teams", "list"): True,
         ("teams", "get"): None,
         ("admins", "list"): True,
@@ -122,10 +142,13 @@ class IntercomConnector:
         ("tags", "list"): True,
         ("tags", "create"): None,
         ("tags", "get"): None,
+        ("tags", "delete"): None,
         ("notes", "create"): None,
         ("segments", "list"): True,
         ("segments", "get"): None,
         ("internal_articles", "create"): None,
+        ("internal_articles", "update"): None,
+        ("internal_articles", "delete"): None,
     }
 
     # Map of (entity, action) -> {python_param_name: api_param_name}
@@ -135,20 +158,28 @@ class IntercomConnector:
         ('contacts', 'create'): {'role': 'role', 'external_id': 'external_id', 'email': 'email', 'phone': 'phone', 'name': 'name', 'avatar': 'avatar', 'signed_up_at': 'signed_up_at', 'last_seen_at': 'last_seen_at', 'owner_id': 'owner_id', 'unsubscribed_from_emails': 'unsubscribed_from_emails', 'custom_attributes': 'custom_attributes'},
         ('contacts', 'get'): {'id': 'id'},
         ('contacts', 'update'): {'role': 'role', 'external_id': 'external_id', 'email': 'email', 'phone': 'phone', 'name': 'name', 'avatar': 'avatar', 'signed_up_at': 'signed_up_at', 'last_seen_at': 'last_seen_at', 'owner_id': 'owner_id', 'unsubscribed_from_emails': 'unsubscribed_from_emails', 'custom_attributes': 'custom_attributes', 'id': 'id'},
+        ('contacts', 'delete'): {'id': 'id'},
         ('conversations', 'list'): {'per_page': 'per_page', 'starting_after': 'starting_after'},
+        ('conversations', 'create'): {'from_': 'from', 'body': 'body', 'subject': 'subject', 'attachment_urls': 'attachment_urls', 'created_at': 'created_at'},
         ('conversations', 'get'): {'id': 'id'},
+        ('conversations', 'update'): {'read': 'read', 'custom_attributes': 'custom_attributes', 'id': 'id'},
+        ('conversations', 'delete'): {'id': 'id'},
         ('companies', 'list'): {'per_page': 'per_page', 'starting_after': 'starting_after'},
         ('companies', 'create'): {'company_id': 'company_id', 'name': 'name', 'plan': 'plan', 'monthly_spend': 'monthly_spend', 'size': 'size', 'website': 'website', 'industry': 'industry', 'custom_attributes': 'custom_attributes'},
         ('companies', 'get'): {'id': 'id'},
         ('companies', 'update'): {'name': 'name', 'plan': 'plan', 'monthly_spend': 'monthly_spend', 'size': 'size', 'website': 'website', 'industry': 'industry', 'custom_attributes': 'custom_attributes', 'id': 'id'},
+        ('companies', 'delete'): {'id': 'id'},
         ('teams', 'get'): {'id': 'id'},
         ('admins', 'get'): {'id': 'id'},
         ('tags', 'create'): {'name': 'name'},
         ('tags', 'get'): {'id': 'id'},
+        ('tags', 'delete'): {'id': 'id'},
         ('notes', 'create'): {'body': 'body', 'admin_id': 'admin_id', 'contact_id': 'contact_id'},
         ('segments', 'list'): {'include_count': 'include_count'},
         ('segments', 'get'): {'id': 'id'},
         ('internal_articles', 'create'): {'title': 'title', 'body': 'body', 'owner_id': 'owner_id', 'author_id': 'author_id'},
+        ('internal_articles', 'update'): {'title': 'title', 'body': 'body', 'author_id': 'author_id', 'owner_id': 'owner_id', 'id': 'id'},
+        ('internal_articles', 'delete'): {'id': 'id'},
     }
 
     # Accepted auth_config types for isinstance validation
@@ -307,6 +338,18 @@ class IntercomConnector:
     @overload
     async def execute(
         self,
+        entity: Literal["contacts"],
+        action: Literal["delete"],
+        params: "ContactsDeleteParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "ContactDeletedResponse": ...
+
+    @overload
+    async def execute(
+        self,
         entity: Literal["conversations"],
         action: Literal["list"],
         params: "ConversationsListParams",
@@ -320,6 +363,18 @@ class IntercomConnector:
     async def execute(
         self,
         entity: Literal["conversations"],
+        action: Literal["create"],
+        params: "ConversationsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "Message": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["conversations"],
         action: Literal["get"],
         params: "ConversationsGetParams",
         *,
@@ -327,6 +382,30 @@ class IntercomConnector:
         exclude_fields: list[str] | None = ...,
         skip_truncation: bool = ...
     ) -> "Conversation": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["conversations"],
+        action: Literal["update"],
+        params: "ConversationsUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "Conversation": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["conversations"],
+        action: Literal["delete"],
+        params: "ConversationsDeleteParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "ConversationDeletedResponse": ...
 
     @overload
     async def execute(
@@ -375,6 +454,18 @@ class IntercomConnector:
         exclude_fields: list[str] | None = ...,
         skip_truncation: bool = ...
     ) -> "Company": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["companies"],
+        action: Literal["delete"],
+        params: "CompaniesDeleteParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "CompanyDeletedResponse": ...
 
     @overload
     async def execute(
@@ -463,6 +554,18 @@ class IntercomConnector:
     @overload
     async def execute(
         self,
+        entity: Literal["tags"],
+        action: Literal["delete"],
+        params: "TagsDeleteParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "TagDeletedResponse": ...
+
+    @overload
+    async def execute(
+        self,
         entity: Literal["notes"],
         action: Literal["create"],
         params: "NotesCreateParams",
@@ -508,12 +611,36 @@ class IntercomConnector:
         skip_truncation: bool = ...
     ) -> "InternalArticle": ...
 
+    @overload
+    async def execute(
+        self,
+        entity: Literal["internal_articles"],
+        action: Literal["update"],
+        params: "InternalArticlesUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "InternalArticle": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["internal_articles"],
+        action: Literal["delete"],
+        params: "InternalArticlesDeleteParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "InternalArticleDeletedResponse": ...
+
 
     @overload
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "create", "get", "update", "context_store_search"],
+        action: Literal["list", "create", "get", "update", "delete", "context_store_search"],
         params: Mapping[str, Any],
         *,
         select_fields: list[str] | None = ...,
@@ -524,7 +651,7 @@ class IntercomConnector:
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "create", "get", "update", "context_store_search"],
+        action: Literal["list", "create", "get", "update", "delete", "context_store_search"],
         params: Mapping[str, Any] | None = None,
         *,
         select_fields: list[str] | None = None,
@@ -968,6 +1095,31 @@ class ContactsQuery:
 
 
 
+    async def delete(
+        self,
+        id: str | None = None,
+        **kwargs
+    ) -> ContactDeletedResponse:
+        """
+        Permanently delete a contact by ID
+
+        Args:
+            id: The unique identifier of the contact to delete
+            **kwargs: Additional parameters
+
+        Returns:
+            ContactDeletedResponse
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("contacts", "delete", params)
+        return result
+
+
+
     async def context_store_search(
         self,
         query: ContactsSearchQuery,
@@ -1117,6 +1269,43 @@ class ConversationsQuery:
 
 
 
+    async def create(
+        self,
+        from_: ConversationsCreateParamsFrom,
+        body: str,
+        subject: str | None = None,
+        attachment_urls: list[str] | None = None,
+        created_at: int | None = None,
+        **kwargs
+    ) -> Message:
+        """
+        Create a new conversation initiated by a contact (user or lead)
+
+        Args:
+            from_: The contact (user or lead) initiating the conversation
+            body: The content of the initial message in the conversation
+            subject: The subject line of the conversation (optional)
+            attachment_urls: A list of URLs of attached files (max 10)
+            created_at: Optional timestamp for the conversation creation (Unix)
+            **kwargs: Additional parameters
+
+        Returns:
+            Message
+        """
+        params = {k: v for k, v in {
+            "from": from_,
+            "body": body,
+            "subject": subject,
+            "attachment_urls": attachment_urls,
+            "created_at": created_at,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("conversations", "create", params)
+        return result
+
+
+
     async def get(
         self,
         id: str | None = None,
@@ -1138,6 +1327,62 @@ class ConversationsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("conversations", "get", params)
+        return result
+
+
+
+    async def update(
+        self,
+        read: bool | None = None,
+        custom_attributes: dict[str, Any] | None = None,
+        id: str | None = None,
+        **kwargs
+    ) -> Conversation:
+        """
+        Update conversation attributes such as custom_attributes or read status
+
+        Args:
+            read: Mark the conversation as read or unread
+            custom_attributes: Custom attributes to set on the conversation
+            id: Conversation ID
+            **kwargs: Additional parameters
+
+        Returns:
+            Conversation
+        """
+        params = {k: v for k, v in {
+            "read": read,
+            "custom_attributes": custom_attributes,
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("conversations", "update", params)
+        return result
+
+
+
+    async def delete(
+        self,
+        id: str | None = None,
+        **kwargs
+    ) -> ConversationDeletedResponse:
+        """
+        Permanently delete a conversation by ID
+
+        Args:
+            id: Conversation ID
+            **kwargs: Additional parameters
+
+        Returns:
+            ConversationDeletedResponse
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("conversations", "delete", params)
         return result
 
 
@@ -1383,6 +1628,31 @@ class CompaniesQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("companies", "update", params)
+        return result
+
+
+
+    async def delete(
+        self,
+        id: str | None = None,
+        **kwargs
+    ) -> CompanyDeletedResponse:
+        """
+        Permanently delete a company by ID
+
+        Args:
+            id: The unique identifier of the company to delete
+            **kwargs: Additional parameters
+
+        Returns:
+            CompanyDeletedResponse
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("companies", "delete", params)
         return result
 
 
@@ -1710,6 +1980,31 @@ class TagsQuery:
 
 
 
+    async def delete(
+        self,
+        id: str | None = None,
+        **kwargs
+    ) -> TagDeletedResponse:
+        """
+        Permanently delete a tag by ID. This removes the tag from all contacts, companies, and conversations.
+
+        Args:
+            id: The unique identifier of the tag to delete
+            **kwargs: Additional parameters
+
+        Returns:
+            TagDeletedResponse
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("tags", "delete", params)
+        return result
+
+
+
 class NotesQuery:
     """
     Query class for Notes entity operations.
@@ -1851,6 +2146,68 @@ class InternalArticlesQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("internal_articles", "create", params)
+        return result
+
+
+
+    async def update(
+        self,
+        title: str | None = None,
+        body: str | None = None,
+        author_id: int | None = None,
+        owner_id: int | None = None,
+        id: str | None = None,
+        **kwargs
+    ) -> InternalArticle:
+        """
+        Update an existing internal article by ID
+
+        Args:
+            title: The title of the article
+            body: The content of the article in HTML
+            author_id: The ID of the author of the article
+            owner_id: The ID of the owner of the article
+            id: Internal article ID
+            **kwargs: Additional parameters
+
+        Returns:
+            InternalArticle
+        """
+        params = {k: v for k, v in {
+            "title": title,
+            "body": body,
+            "author_id": author_id,
+            "owner_id": owner_id,
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("internal_articles", "update", params)
+        return result
+
+
+
+    async def delete(
+        self,
+        id: str | None = None,
+        **kwargs
+    ) -> InternalArticleDeletedResponse:
+        """
+        Permanently delete an internal article by ID
+
+        Args:
+            id: Internal article ID
+            **kwargs: Additional parameters
+
+        Returns:
+            InternalArticleDeletedResponse
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("internal_articles", "delete", params)
         return result
 
 
