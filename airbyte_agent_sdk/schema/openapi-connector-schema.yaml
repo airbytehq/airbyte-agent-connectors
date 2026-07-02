@@ -2314,6 +2314,16 @@ $defs:
         description: Embedding model identifier (e.g. 'text-embedding-3-small').
         title: Model
         type: string
+      template:
+        anyOf:
+        - type: string
+        - type: 'null'
+        default: null
+        description: Template for the embedded context text. Each '{name}' placeholder
+          is replaced with the named sample's value (the windowed sample's window
+          text, or a scalar sample's resolved value). Required when there are >=2
+          samples; forbidden for a single sample (which defaults to '{<windowed name>}').
+        title: Template
     required:
     - model
     title: SemanticEmbedding
@@ -2354,6 +2364,54 @@ $defs:
     - name
     - path
     title: SemanticMetadataField
+    type: object
+  SemanticSample:
+    additionalProperties: false
+    description: 'A single sample contributing to a semantic-search field''s embedded
+      text.
+
+
+      A field declares a list of samples. Exactly one sample is ``windowed`` -- it
+
+      carries the ``sampling`` block that splits the decoded field value into the
+
+      units that get embedded and that drives table/column naming. Every other
+
+      sample is scalar: it resolves a single record-level value via ``path`` and is
+
+      rendered into the embedding template alongside the windowed text.
+
+
+      Used inside x-airbyte-semantic-search on a context-store field.'
+    properties:
+      name:
+        description: Template key for this sample; must be unique across the field's
+          samples.
+        title: Name
+        type: string
+      path:
+        anyOf:
+        - type: string
+        - type: 'null'
+        default: null
+        description: 'Scalar samples only: path to the record-level value (a leading
+          ''/'' resolves from the record root).'
+        title: Path
+      windowed:
+        default: false
+        description: Whether this sample is the windowed sample (exactly one per field).
+        title: Windowed
+        type: boolean
+      sampling:
+        anyOf:
+        - $ref: '#/$defs/SemanticSampling'
+        - type: 'null'
+        default: null
+        description: 'Windowed sample only: how the decoded field value is split into
+          units.'
+    required:
+    - name
+    title: SemanticSample
     type: object
   SemanticSampling:
     additionalProperties: false
@@ -2422,13 +2480,14 @@ $defs:
       \ into units, windowed, embedded, and what metadata travels with each\nunit.\
       \ This is the annotation contract consumed by the semantic search\nengine.\n\
       \nExample YAML usage (on a context-store field):\n    x-airbyte-semantic-search:\n\
-      \      content_type: json\n      sampling:\n        sample_type: element\n \
-      \       unit_label: speaker_turn\n        sample_path: \"[]\"\n        text_path:\
-      \ \"sentences[].text\"\n        stitch: \"\\n\"\n      windowing:\n        context_max_chars:\
-      \ 2048\n        context_boundary: whole_unit\n      embedding:\n        model:\
-      \ text-embedding-3-small\n      metadata:\n        - { name: speakerId, path:\
-      \ \"speakerId\", type: string }\n        - { name: callId, path: \"/callId\"\
-      , type: string }"
+      \      content_type: json\n      samples:\n        - name: speaker_turn\n  \
+      \        windowed: true\n          sampling:\n            sample_type: element\n\
+      \            unit_label: speaker_turn\n            sample_path: \"[]\"\n   \
+      \         text_path: \"sentences[].text\"\n            stitch: \"\\n\"\n   \
+      \   windowing:\n        context_max_chars: 2048\n        context_boundary: whole_unit\n\
+      \      embedding:\n        model: text-embedding-3-small\n      metadata:\n\
+      \        - { name: speakerId, path: \"speakerId\", type: string }\n        -\
+      \ { name: callId, path: \"/callId\", type: string }"
     properties:
       content_type:
         description: How to decode the raw field value before sampling.
@@ -2441,8 +2500,11 @@ $defs:
         - plaintext
         title: Content Type
         type: string
-      sampling:
-        $ref: '#/$defs/SemanticSampling'
+      samples:
+        items:
+          $ref: '#/$defs/SemanticSample'
+        title: Samples
+        type: array
       windowing:
         $ref: '#/$defs/SemanticWindowing'
       embedding:
@@ -2454,7 +2516,7 @@ $defs:
         type: array
     required:
     - content_type
-    - sampling
+    - samples
     - embedding
     title: SemanticSearchConfig
     type: object

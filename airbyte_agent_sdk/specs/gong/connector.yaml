@@ -567,7 +567,10 @@ info:
             description: Gong transcript speaker turns.
             x-airbyte-semantic-search:
               content_type: json
-              sampling: { sample_type: element, unit_label: speaker_turn, sample_path: "[]", text_path: "sentences[].text", stitch: "\n" }
+              samples:
+                - name: speaker_turn
+                  windowed: true
+                  sampling: { sample_type: element, unit_label: speaker_turn, sample_path: "[]", text_path: "sentences[].text", stitch: "\n" }
               windowing: { context_max_chars: 2048, context_boundary: whole_unit }
               embedding: { model: text-embedding-3-small }
               metadata:

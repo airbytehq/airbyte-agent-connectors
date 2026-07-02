@@ -9,6 +9,7 @@ Provides Pydantic models for OpenAPI x-airbyte-* extensions:
 - ScopingParamConfig: scoping parameter resolution from config
 """
 
+import re
 from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, model_validator
@@ -148,6 +149,38 @@ class SemanticSampling(BaseModel):
     )
 
 
+class SemanticSample(BaseModel):
+    """
+    A single sample contributing to a semantic-search field's embedded text.
+
+    A field declares a list of samples. Exactly one sample is ``windowed`` -- it
+    carries the ``sampling`` block that splits the decoded field value into the
+    units that get embedded and that drives table/column naming. Every other
+    sample is scalar: it resolves a single record-level value via ``path`` and is
+    rendered into the embedding template alongside the windowed text.
+
+    Used inside x-airbyte-semantic-search on a context-store field.
+    """
+
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+
+    name: str = Field(
+        description="Template key for this sample; must be unique across the field's samples.",
+    )
+    path: str | None = Field(
+        default=None,
+        description="Scalar samples only: path to the record-level value (a leading '/' resolves from the record root).",
+    )
+    windowed: bool = Field(
+        default=False,
+        description="Whether this sample is the windowed sample (exactly one per field).",
+    )
+    sampling: SemanticSampling | None = Field(
+        default=None,
+        description="Windowed sample only: how the decoded field value is split into units.",
+    )
+
+
 class SemanticWindowing(BaseModel):
     """
     Windowing configuration for semantic search (the `windowing` block).
@@ -187,6 +220,13 @@ class SemanticEmbedding(BaseModel):
     model: str = Field(
         description="Embedding model identifier (e.g. 'text-embedding-3-small').",
     )
+    template: str | None = Field(
+        default=None,
+        description="Template for the embedded context text. Each '{name}' placeholder is replaced "
+        "with the named sample's value (the windowed sample's window text, or a scalar sample's "
+        "resolved value). Required when there are >=2 samples; forbidden for a single sample "
+        "(which defaults to '{<windowed name>}').",
+    )
 
 
 class SemanticMetadataField(BaseModel):
@@ -212,6 +252,24 @@ class SemanticMetadataField(BaseModel):
     )
 
 
+# A template placeholder is a brace group wrapping a bare identifier. Sample names are constrained
+# to the same identifier grammar, so this matches the renderer's "brace group whose inner text is a
+# declared sample name" rule exactly -- any other brace group (e.g. a JSON-like literal) is left as
+# literal text by both the validator and the renderer.
+_TEMPLATE_PLACEHOLDER_RE = re.compile(r"\{([A-Za-z_][A-Za-z0-9_]*)\}")
+_SAMPLE_NAME_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
+
+
+def _reserved_window_chars(context_max_chars: int) -> int:
+    """Chars reserved for the windowed sample so template overhead cannot starve it (half the cap).
+
+    MUST stay in sync with backend ``semantic_chunking._reserved_window_chars``: this validator
+    bounds the template's fixed text against this reserve, and the runtime trims scalar values
+    against the same reserve, so together they guarantee the windowed sample is always embeddable.
+    """
+    return max(1, context_max_chars // 2)
+
+
 class SemanticSearchConfig(BaseModel):
     """
     Semantic search configuration extension (x-airbyte-semantic-search).
@@ -224,12 +282,15 @@ class SemanticSearchConfig(BaseModel):
     Example YAML usage (on a context-store field):
         x-airbyte-semantic-search:
           content_type: json
-          sampling:
-            sample_type: element
-            unit_label: speaker_turn
-            sample_path: "[]"
-            text_path: "sentences[].text"
-            stitch: "\\n"
+          samples:
+            - name: speaker_turn
+              windowed: true
+              sampling:
+                sample_type: element
+                unit_label: speaker_turn
+                sample_path: "[]"
+                text_path: "sentences[].text"
+                stitch: "\\n"
           windowing:
             context_max_chars: 2048
             context_boundary: whole_unit
@@ -245,15 +306,47 @@ class SemanticSearchConfig(BaseModel):
     content_type: Literal["json", "html", "xhtml_storage", "adf", "markdown", "plaintext"] = Field(
         description="How to decode the raw field value before sampling.",
     )
-    sampling: SemanticSampling
+    samples: list[SemanticSample]
     windowing: SemanticWindowing = Field(default_factory=SemanticWindowing)
     embedding: SemanticEmbedding
     metadata: list[SemanticMetadataField] = Field(default_factory=list)
 
     @model_validator(mode="after")
-    def validate_sampling_consistency(self) -> "SemanticSearchConfig":
-        """Validate sample_type-specific field requirements at parse time."""
-        sampling = self.sampling
+    def validate_samples_consistency(self) -> "SemanticSearchConfig":
+        """Validate the samples list, the windowed sample's sampling, and the embedding template."""
+        samples = self.samples
+        if not samples:
+            raise ValueError("x-airbyte-semantic-search: 'samples' must declare at least one sample.")
+
+        names = [sample.name for sample in samples]
+        if len(names) != len(set(names)):
+            raise ValueError("x-airbyte-semantic-search: sample 'name's must be unique.")
+        bad_names = sorted(name for name in names if not _SAMPLE_NAME_RE.match(name))
+        if bad_names:
+            raise ValueError(
+                f"x-airbyte-semantic-search: sample name(s) {bad_names} must be identifiers "
+                "([A-Za-z_][A-Za-z0-9_]*) so they are unambiguous as '{name}' template placeholders."
+            )
+
+        windowed_samples = [sample for sample in samples if sample.windowed]
+        if len(windowed_samples) != 1:
+            raise ValueError("x-airbyte-semantic-search: exactly one sample must set 'windowed: true'.")
+        windowed = windowed_samples[0]
+
+        if windowed.sampling is None:
+            raise ValueError("x-airbyte-semantic-search: the windowed sample must declare a 'sampling' block.")
+        if windowed.path is not None:
+            raise ValueError("x-airbyte-semantic-search: the windowed sample must not set 'path'.")
+
+        for sample in samples:
+            if sample is windowed:
+                continue
+            if sample.path is None:
+                raise ValueError(f"x-airbyte-semantic-search: scalar sample '{sample.name}' must set 'path'.")
+            if sample.sampling is not None:
+                raise ValueError(f"x-airbyte-semantic-search: scalar sample '{sample.name}' must not set 'sampling'.")
+
+        sampling = windowed.sampling
         sample_type = sampling.sample_type
         if sample_type == "element":
             if not sampling.sample_path or not sampling.text_path:
@@ -267,8 +360,55 @@ class SemanticSearchConfig(BaseModel):
                     "x-airbyte-semantic-search: sampling.sample_type 'whole' must not set "
                     "'sample_path' or 'split_pattern' (only an optional 'text_path' is allowed)."
                 )
+
         if self.windowing.context_boundary == "regex" and not self.windowing.context_boundary_pattern:
             raise ValueError("x-airbyte-semantic-search: windowing.context_boundary 'regex' requires 'context_boundary_pattern'.")
+
+        template = self.embedding.template
+        if len(samples) >= 2:
+            if template is None:
+                raise ValueError("x-airbyte-semantic-search: embedding.template is required when there are 2 or more samples.")
+        elif template is not None:
+            raise ValueError("x-airbyte-semantic-search: embedding.template is forbidden for a single sample (it defaults to '{<windowed name>}').")
+
+        if template is not None:
+            # Only brace groups wrapping a declared identifier are placeholders; every other brace
+            # group (JSON-like literals, etc.) is left untouched by the renderer, so it must not be
+            # flagged here -- matching the renderer keeps validation and rendering consistent.
+            references = _TEMPLATE_PLACEHOLDER_RE.findall(template)
+            declared = set(names)
+            unknown = sorted(set(references) - declared)
+            if unknown:
+                raise ValueError(f"x-airbyte-semantic-search: embedding.template references undeclared sample name(s): {unknown}.")
+            windowed_references = references.count(windowed.name)
+            if windowed_references == 0:
+                raise ValueError(f"x-airbyte-semantic-search: embedding.template must reference the windowed sample '{windowed.name}'.")
+            # The windowed sample is the only variable-length input; the window budget is derived by
+            # rendering the template once with the windowed placeholder empty. A second occurrence
+            # would be filled with the full window text again, doubling the windowed length past
+            # context_max_chars and getting hard-truncated -- so it must appear exactly once.
+            if windowed_references > 1:
+                raise ValueError(
+                    f"x-airbyte-semantic-search: embedding.template must reference the windowed sample "
+                    f"'{windowed.name}' exactly once (found {windowed_references})."
+                )
+            # Bound the template's fixed text so the windowed sample always has room. Scalar VALUES
+            # are trimmed at runtime, but the literal text (template minus its placeholders) is fixed;
+            # if it alone exceeds the non-reserved budget, no runtime trimming can keep the windowed
+            # text from being truncated away. Reject at parse time instead.
+            context_max_chars = self.windowing.context_max_chars
+            if context_max_chars > 0:
+                literal_text = template
+                for name in declared:
+                    literal_text = literal_text.replace("{" + name + "}", "")
+                max_overhead = context_max_chars - _reserved_window_chars(context_max_chars)
+                if len(literal_text) > max_overhead:
+                    raise ValueError(
+                        f"x-airbyte-semantic-search: embedding.template fixed text ({len(literal_text)} chars) leaves too "
+                        f"little of windowing.context_max_chars ({context_max_chars}) for the windowed sample "
+                        f"'{windowed.name}'; it must not exceed {max_overhead} chars."
+                    )
+
         return self
 
 

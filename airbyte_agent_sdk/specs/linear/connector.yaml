@@ -99,6 +99,20 @@ info:
               - 'string'
               - 'null'
             description: ''
+            x-airbyte-semantic-search:
+              content_type: markdown
+              samples:
+                - name: comment_paragraph
+                  windowed: true
+                  sampling: { sample_type: regex, unit_label: comment_paragraph, split_pattern: '\n\s*\n' }
+              windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+              embedding: { model: text-embedding-3-small }
+              metadata:
+                - { name: id, path: "/id", type: string }
+                - { name: url, path: "/url", type: string }
+                - { name: issueId, path: "/issueId", type: string }
+                - { name: userId, path: "/userId", type: string }
+                - { name: createdAt, path: "/createdAt", type: string }
           - name: bodyData
             type:
               - 'string'
@@ -264,6 +278,22 @@ info:
               - 'string'
               - 'null'
             description: ''
+            x-airbyte-semantic-search:
+              content_type: markdown
+              samples:
+                - name: issue_description_paragraph
+                  windowed: true
+                  sampling: { sample_type: regex, unit_label: issue_description_paragraph, split_pattern: '\n\s*\n' }
+              windowing: { context_max_chars: 2048, context_boundary: whole_unit }
+              embedding: { model: text-embedding-3-small }
+              metadata:
+                - { name: id, path: "/id", type: string }
+                - { name: url, path: "/url", type: string }
+                - { name: identifier, path: "/identifier", type: string }
+                - { name: title, path: "/title", type: string }
+                - { name: creatorId, path: "/creatorId", type: string }
+                - { name: assigneeId, path: "/assigneeId", type: string }
+                - { name: createdAt, path: "/createdAt", type: string }
           - name: descriptionState
             type:
               - 'string'

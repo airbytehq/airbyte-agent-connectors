@@ -31,6 +31,7 @@ from airbyte_agent_sdk.schema.extensions import (
     EntityRelationshipConfig,
     SemanticEmbedding,
     SemanticMetadataField,
+    SemanticSample,
     SemanticSampling,
     SemanticSearchConfig,
     SemanticWindowing,
@@ -3941,12 +3942,18 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                         description='Gong transcript speaker turns.',
                         x_airbyte_semantic_search=SemanticSearchConfig(
                             content_type='json',
-                            sampling=SemanticSampling(
-                                sample_type='element',
-                                unit_label='speaker_turn',
-                                sample_path='[]',
-                                text_path='sentences[].text',
-                            ),
+                            samples=[
+                                SemanticSample(
+                                    name='speaker_turn',
+                                    windowed=True,
+                                    sampling=SemanticSampling(
+                                        sample_type='element',
+                                        unit_label='speaker_turn',
+                                        sample_path='[]',
+                                        text_path='sentences[].text',
+                                    ),
+                                ),
+                            ],
                             windowing=SemanticWindowing(
                                 context_max_chars=2048,
                             ),
@@ -4147,12 +4154,18 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
         'call_transcripts': {
             'transcript': SemanticSearchConfig(
                 content_type='json',
-                sampling=SemanticSampling(
-                    sample_type='element',
-                    unit_label='speaker_turn',
-                    sample_path='[]',
-                    text_path='sentences[].text',
-                ),
+                samples=[
+                    SemanticSample(
+                        name='speaker_turn',
+                        windowed=True,
+                        sampling=SemanticSampling(
+                            sample_type='element',
+                            unit_label='speaker_turn',
+                            sample_path='[]',
+                            text_path='sentences[].text',
+                        ),
+                    ),
+                ],
                 windowing=SemanticWindowing(
                     context_max_chars=2048,
                 ),

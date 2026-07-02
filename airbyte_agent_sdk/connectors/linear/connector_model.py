@@ -28,6 +28,12 @@ from airbyte_agent_sdk.schema.extensions import (
     EnrichmentMatch,
     EnrichmentProjection,
     EntityRelationshipConfig,
+    SemanticEmbedding,
+    SemanticMetadataField,
+    SemanticSample,
+    SemanticSampling,
+    SemanticSearchConfig,
+    SemanticWindowing,
 )
 from airbyte_agent_sdk.schema.base import (
     ExampleQuestions,
@@ -2590,6 +2596,48 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
                         name='body',
                         type=['string', 'null'],
                         description='',
+                        x_airbyte_semantic_search=SemanticSearchConfig(
+                            content_type='markdown',
+                            samples=[
+                                SemanticSample(
+                                    name='comment_paragraph',
+                                    windowed=True,
+                                    sampling=SemanticSampling(
+                                        sample_type='regex',
+                                        unit_label='comment_paragraph',
+                                        split_pattern='\\n\\s*\\n',
+                                    ),
+                                ),
+                            ],
+                            windowing=SemanticWindowing(
+                                context_max_chars=2048,
+                            ),
+                            embedding=SemanticEmbedding(
+                                model='text-embedding-3-small',
+                            ),
+                            metadata=[
+                                SemanticMetadataField(
+                                    name='id',
+                                    path='/id',
+                                ),
+                                SemanticMetadataField(
+                                    name='url',
+                                    path='/url',
+                                ),
+                                SemanticMetadataField(
+                                    name='issueId',
+                                    path='/issueId',
+                                ),
+                                SemanticMetadataField(
+                                    name='userId',
+                                    path='/userId',
+                                ),
+                                SemanticMetadataField(
+                                    name='createdAt',
+                                    path='/createdAt',
+                                ),
+                            ],
+                        ),
                     ),
                     CacheFieldConfig(
                         name='bodyData',
@@ -2769,6 +2817,56 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
                         name='description',
                         type=['string', 'null'],
                         description='',
+                        x_airbyte_semantic_search=SemanticSearchConfig(
+                            content_type='markdown',
+                            samples=[
+                                SemanticSample(
+                                    name='issue_description_paragraph',
+                                    windowed=True,
+                                    sampling=SemanticSampling(
+                                        sample_type='regex',
+                                        unit_label='issue_description_paragraph',
+                                        split_pattern='\\n\\s*\\n',
+                                    ),
+                                ),
+                            ],
+                            windowing=SemanticWindowing(
+                                context_max_chars=2048,
+                            ),
+                            embedding=SemanticEmbedding(
+                                model='text-embedding-3-small',
+                            ),
+                            metadata=[
+                                SemanticMetadataField(
+                                    name='id',
+                                    path='/id',
+                                ),
+                                SemanticMetadataField(
+                                    name='url',
+                                    path='/url',
+                                ),
+                                SemanticMetadataField(
+                                    name='identifier',
+                                    path='/identifier',
+                                ),
+                                SemanticMetadataField(
+                                    name='title',
+                                    path='/title',
+                                ),
+                                SemanticMetadataField(
+                                    name='creatorId',
+                                    path='/creatorId',
+                                ),
+                                SemanticMetadataField(
+                                    name='assigneeId',
+                                    path='/assigneeId',
+                                ),
+                                SemanticMetadataField(
+                                    name='createdAt',
+                                    path='/createdAt',
+                                ),
+                            ],
+                        ),
                     ),
                     CacheFieldConfig(
                         name='descriptionState',
@@ -3774,6 +3872,104 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
             'type',
             'updatedAt',
         ],
+    },
+    semantic_search_fields={
+        'comments': {
+            'body': SemanticSearchConfig(
+                content_type='markdown',
+                samples=[
+                    SemanticSample(
+                        name='comment_paragraph',
+                        windowed=True,
+                        sampling=SemanticSampling(
+                            sample_type='regex',
+                            unit_label='comment_paragraph',
+                            split_pattern='\\n\\s*\\n',
+                        ),
+                    ),
+                ],
+                windowing=SemanticWindowing(
+                    context_max_chars=2048,
+                ),
+                embedding=SemanticEmbedding(
+                    model='text-embedding-3-small',
+                ),
+                metadata=[
+                    SemanticMetadataField(
+                        name='id',
+                        path='/id',
+                    ),
+                    SemanticMetadataField(
+                        name='url',
+                        path='/url',
+                    ),
+                    SemanticMetadataField(
+                        name='issueId',
+                        path='/issueId',
+                    ),
+                    SemanticMetadataField(
+                        name='userId',
+                        path='/userId',
+                    ),
+                    SemanticMetadataField(
+                        name='createdAt',
+                        path='/createdAt',
+                    ),
+                ],
+            ),
+        },
+        'issues': {
+            'description': SemanticSearchConfig(
+                content_type='markdown',
+                samples=[
+                    SemanticSample(
+                        name='issue_description_paragraph',
+                        windowed=True,
+                        sampling=SemanticSampling(
+                            sample_type='regex',
+                            unit_label='issue_description_paragraph',
+                            split_pattern='\\n\\s*\\n',
+                        ),
+                    ),
+                ],
+                windowing=SemanticWindowing(
+                    context_max_chars=2048,
+                ),
+                embedding=SemanticEmbedding(
+                    model='text-embedding-3-small',
+                ),
+                metadata=[
+                    SemanticMetadataField(
+                        name='id',
+                        path='/id',
+                    ),
+                    SemanticMetadataField(
+                        name='url',
+                        path='/url',
+                    ),
+                    SemanticMetadataField(
+                        name='identifier',
+                        path='/identifier',
+                    ),
+                    SemanticMetadataField(
+                        name='title',
+                        path='/title',
+                    ),
+                    SemanticMetadataField(
+                        name='creatorId',
+                        path='/creatorId',
+                    ),
+                    SemanticMetadataField(
+                        name='assigneeId',
+                        path='/assigneeId',
+                    ),
+                    SemanticMetadataField(
+                        name='createdAt',
+                        path='/createdAt',
+                    ),
+                ],
+            ),
+        },
     },
     enrichment_configs={
         'comments': [
