@@ -118,7 +118,11 @@ _SEMANTIC_SEARCH_GENERIC_GUIDANCE = (
     "  `query` and `semantic` are mutually exclusive — never pass both in the same request. "
     "Results are ordered by similarity, so `sort` is not supported.\n"
     "  When using `semantic`, any filter must go inside `semantic.filter` (same shape/operators as `query.filter`). "
-    "A top-level `query.filter` is ignored when `semantic` is present."
+    "A top-level `query.filter` is ignored when `semantic` is present.\n"
+    "  `dedup` controls entity deduplication: `max` (default) returns only the single best-scoring chunk per parent "
+    "record (one hit per source entity); `none` disables that collapse so multiple chunks from the same record may "
+    "appear, still ranked by similarity and capped by `limit`. Use `none` when you need more than one passage per "
+    "record, and raise `limit` if the top `limit` chunks are not enough."
 )
 
 
@@ -200,7 +204,7 @@ def build_semantic_search_note(
         )
 
     return (
-        "- context_store_search(semantic={field, prompt, filter?, context_size?}, fields?, limit?)\n"
+        "- context_store_search(semantic={field, prompt, filter?, context_size?, dedup?}, fields?, limit?)\n"
         f"  ALPHA — subject to change. Semantic (similarity) search over the '{field_name}' field of {entity_label}.\n"
         f"  Embeds `prompt` and returns relevance-ranked hits shaped as {{entity, metadata}}:{entity_clause} "
         f"`metadata` has the similarity `score`, the matched `context` text{attribution_clause}.\n"

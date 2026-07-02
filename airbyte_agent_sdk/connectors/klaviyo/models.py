@@ -95,6 +95,12 @@ class ProfilesList(BaseModel):
     data: list[Profile] | None = Field(default=None)
     links: ProfilesListLinks | None = Field(default=None)
 
+class ListLinks(BaseModel):
+    """Related links"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    self: str | None | None = Field(default=None)
+
 class ListAttributes(BaseModel):
     """List attributes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -107,12 +113,6 @@ class ListAttributes(BaseModel):
     """Last update timestamp"""
     opt_in_process: str | None | None = Field(default=None, description="Opt-in process type")
     """Opt-in process type"""
-
-class ListLinks(BaseModel):
-    """Related links"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    self: str | None | None = Field(default=None)
 
 class List(BaseModel):
     """A Klaviyo list for organizing profiles"""
@@ -195,12 +195,6 @@ class CampaignsList(BaseModel):
     data: list[Campaign] | None = Field(default=None)
     links: CampaignsListLinks | None = Field(default=None)
 
-class EventLinks(BaseModel):
-    """Related links"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    self: str | None | None = Field(default=None)
-
 class EventRelationshipsProfileData(BaseModel):
     """Nested schema for EventRelationshipsProfile.data"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -246,6 +240,12 @@ class EventAttributes(BaseModel):
     """Event UUID"""
     event_properties: dict[str, Any] | None | None = Field(default=None, description="Custom event properties")
     """Custom event properties"""
+
+class EventLinks(BaseModel):
+    """Related links"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    self: str | None | None = Field(default=None)
 
 class Event(BaseModel):
     """A Klaviyo event representing an action taken by a profile"""
