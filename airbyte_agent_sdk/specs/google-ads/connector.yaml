@@ -226,6 +226,12 @@ info:
           - name: campaign_budget.amount_micros
             type: ["null", "integer"]
             description: Campaign budget amount in micros
+          - name: campaign.start_date_time
+            type: ["null", "string"]
+            description: Campaign start date
+          - name: campaign.end_date_time
+            type: ["null", "string"]
+            description: Campaign end date
           - name: campaign.serving_status
             type: ["null", "string"]
             description: Campaign serving status
@@ -615,6 +621,8 @@ paths:
                       campaign.bidding_strategy_type,
                       campaign.campaign_budget,
                       campaign_budget.amount_micros,
+                      campaign.start_date_time,
+                      campaign.end_date_time,
                       campaign.serving_status,
                       campaign.resource_name,
                       campaign.labels,
@@ -1370,10 +1378,10 @@ components:
             campaignBudget:
               type: string
               description: Campaign budget resource name
-            startDate:
+            startDateTime:
               type: string
               description: Campaign start date
-            endDate:
+            endDateTime:
               type: string
               description: Campaign end date
             servingStatus:

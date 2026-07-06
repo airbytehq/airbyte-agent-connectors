@@ -132,40 +132,6 @@ class OrderAddress(BaseModel):
     latitude: float | None = Field(default=None)
     longitude: float | None = Field(default=None)
 
-class LineItem(BaseModel):
-    """LineItem type definition"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: int | None = Field(default=None)
-    admin_graphql_api_id: str | None = Field(default=None)
-    attributed_staffs: list[dict[str, Any]] | None = Field(default=None)
-    current_quantity: int | None = Field(default=None)
-    fulfillable_quantity: int | None = Field(default=None)
-    fulfillment_service: str | None = Field(default=None)
-    fulfillment_status: str | None = Field(default=None)
-    gift_card: bool | None = Field(default=None)
-    grams: int | None = Field(default=None)
-    name: str | None = Field(default=None)
-    price: str | None = Field(default=None)
-    price_set: dict[str, Any] | None = Field(default=None)
-    product_exists: bool | None = Field(default=None)
-    product_id: int | None = Field(default=None)
-    properties: list[dict[str, Any]] | None = Field(default=None)
-    quantity: int | None = Field(default=None)
-    requires_shipping: bool | None = Field(default=None)
-    sku: str | None = Field(default=None)
-    taxable: bool | None = Field(default=None)
-    title: str | None = Field(default=None)
-    total_discount: str | None = Field(default=None)
-    total_discount_set: dict[str, Any] | None = Field(default=None)
-    variant_id: int | None = Field(default=None)
-    variant_inventory_management: str | None = Field(default=None)
-    variant_title: str | None = Field(default=None)
-    vendor: str | None = Field(default=None)
-    tax_lines: list[dict[str, Any]] | None = Field(default=None)
-    duties: list[dict[str, Any]] | None = Field(default=None)
-    discount_allocations: list[dict[str, Any]] | None = Field(default=None)
-
 class Transaction(BaseModel):
     """An order transaction"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -214,6 +180,40 @@ class Refund(BaseModel):
     order_adjustments: list[dict[str, Any]] | None = Field(default=None)
     admin_graphql_api_id: str | None = Field(default=None)
     refund_shipping_lines: list[dict[str, Any]] | None = Field(default=None)
+
+class LineItem(BaseModel):
+    """LineItem type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int | None = Field(default=None)
+    admin_graphql_api_id: str | None = Field(default=None)
+    attributed_staffs: list[dict[str, Any]] | None = Field(default=None)
+    current_quantity: int | None = Field(default=None)
+    fulfillable_quantity: int | None = Field(default=None)
+    fulfillment_service: str | None = Field(default=None)
+    fulfillment_status: str | None = Field(default=None)
+    gift_card: bool | None = Field(default=None)
+    grams: int | None = Field(default=None)
+    name: str | None = Field(default=None)
+    price: str | None = Field(default=None)
+    price_set: dict[str, Any] | None = Field(default=None)
+    product_exists: bool | None = Field(default=None)
+    product_id: int | None = Field(default=None)
+    properties: list[dict[str, Any]] | None = Field(default=None)
+    quantity: int | None = Field(default=None)
+    requires_shipping: bool | None = Field(default=None)
+    sku: str | None = Field(default=None)
+    taxable: bool | None = Field(default=None)
+    title: str | None = Field(default=None)
+    total_discount: str | None = Field(default=None)
+    total_discount_set: dict[str, Any] | None = Field(default=None)
+    variant_id: int | None = Field(default=None)
+    variant_inventory_management: str | None = Field(default=None)
+    variant_title: str | None = Field(default=None)
+    vendor: str | None = Field(default=None)
+    tax_lines: list[dict[str, Any]] | None = Field(default=None)
+    duties: list[dict[str, Any]] | None = Field(default=None)
+    discount_allocations: list[dict[str, Any]] | None = Field(default=None)
 
 class Fulfillment(BaseModel):
     """A fulfillment"""
@@ -342,22 +342,6 @@ class OrderList(BaseModel):
 
     orders: list[Order] | None = Field(default=None)
 
-class ProductImage(BaseModel):
-    """A product image"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: int
-    product_id: int | None = Field(default=None)
-    position: int | None = Field(default=None)
-    created_at: str | None = Field(default=None)
-    updated_at: str | None = Field(default=None)
-    alt: str | None = Field(default=None)
-    width: int | None = Field(default=None)
-    height: int | None = Field(default=None)
-    src: str | None = Field(default=None)
-    variant_ids: list[int] | None = Field(default=None)
-    admin_graphql_api_id: str | None = Field(default=None)
-
 class ProductVariant(BaseModel):
     """A product variant"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -387,6 +371,22 @@ class ProductVariant(BaseModel):
     inventory_quantity: int | None = Field(default=None)
     old_inventory_quantity: int | None = Field(default=None)
     requires_shipping: bool | None = Field(default=None)
+    admin_graphql_api_id: str | None = Field(default=None)
+
+class ProductImage(BaseModel):
+    """A product image"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: int
+    product_id: int | None = Field(default=None)
+    position: int | None = Field(default=None)
+    created_at: str | None = Field(default=None)
+    updated_at: str | None = Field(default=None)
+    alt: str | None = Field(default=None)
+    width: int | None = Field(default=None)
+    height: int | None = Field(default=None)
+    src: str | None = Field(default=None)
+    variant_ids: list[int] | None = Field(default=None)
     admin_graphql_api_id: str | None = Field(default=None)
 
 class Product(BaseModel):
@@ -1387,18 +1387,6 @@ class OrderCreateParamsOptions(BaseModel):
 
     inventory_behaviour: str | None = Field(default=None, alias="inventoryBehaviour")
 
-class OrderCreateParamsOrderShippingaddress(BaseModel):
-    """Nested schema for OrderCreateParamsOrder.shippingAddress"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    address1: str | None = Field(default=None)
-    city: str | None = Field(default=None)
-    province_code: str | None = Field(default=None, alias="provinceCode")
-    zip: str | None = Field(default=None)
-    country_code: str | None = Field(default=None, alias="countryCode")
-    first_name: str | None = Field(default=None, alias="firstName")
-    last_name: str | None = Field(default=None, alias="lastName")
-
 class OrderCreateParamsOrderLineitemsItemPricesetShopmoney(BaseModel):
     """Nested schema for OrderCreateParamsOrderLineitemsItemPriceset.shopMoney"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -1423,6 +1411,18 @@ class OrderCreateParamsOrderLineitemsItem(BaseModel):
     title: str | None = Field(default=None, description="Custom title (for custom line items without a variant)")
     """Custom title (for custom line items without a variant)"""
     price_set: OrderCreateParamsOrderLineitemsItemPriceset | None = Field(default=None, alias="priceSet")
+
+class OrderCreateParamsOrderShippingaddress(BaseModel):
+    """Nested schema for OrderCreateParamsOrder.shippingAddress"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    address1: str | None = Field(default=None)
+    city: str | None = Field(default=None)
+    province_code: str | None = Field(default=None, alias="provinceCode")
+    zip: str | None = Field(default=None)
+    country_code: str | None = Field(default=None, alias="countryCode")
+    first_name: str | None = Field(default=None, alias="firstName")
+    last_name: str | None = Field(default=None, alias="lastName")
 
 class OrderCreateParamsOrder(BaseModel):
     """OrderCreateOrderInput object"""
@@ -1596,6 +1596,16 @@ class OrderCancelResponse(BaseModel):
 
     data: OrderCancelResponseData | None = Field(default=None)
 
+class DraftOrderCreateParamsInputShippingaddress(BaseModel):
+    """Nested schema for DraftOrderCreateParamsInput.shippingAddress"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    address1: str | None = Field(default=None)
+    city: str | None = Field(default=None)
+    province_code: str | None = Field(default=None, alias="provinceCode")
+    zip: str | None = Field(default=None)
+    country_code: str | None = Field(default=None, alias="countryCode")
+
 class DraftOrderCreateParamsInputLineitemsItem(BaseModel):
     """Nested schema for DraftOrderCreateParamsInput.lineItems_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -1608,16 +1618,6 @@ class DraftOrderCreateParamsInputLineitemsItem(BaseModel):
     """Custom title"""
     original_unit_price: str | None = Field(default=None, alias="originalUnitPrice", description="Unit price")
     """Unit price"""
-
-class DraftOrderCreateParamsInputShippingaddress(BaseModel):
-    """Nested schema for DraftOrderCreateParamsInput.shippingAddress"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    address1: str | None = Field(default=None)
-    city: str | None = Field(default=None)
-    province_code: str | None = Field(default=None, alias="provinceCode")
-    zip: str | None = Field(default=None)
-    country_code: str | None = Field(default=None, alias="countryCode")
 
 class DraftOrderCreateParamsInput(BaseModel):
     """DraftOrderInput object"""
@@ -1895,6 +1895,20 @@ class InventoryAdjustQuantitiesResponse(BaseModel):
 
     data: InventoryAdjustQuantitiesResponseData | None = Field(default=None)
 
+class DiscountCodeCreateParamsBasiccodediscountCustomerselection(BaseModel):
+    """Which customers can use this discount"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    all: bool | None = Field(default=None, description="Set to true for all customers")
+    """Set to true for all customers"""
+
+class DiscountCodeCreateParamsBasiccodediscountCustomergetsItems(BaseModel):
+    """Which items the discount applies to"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    all: bool | None = Field(default=None, description="Set to true for all items")
+    """Set to true for all items"""
+
 class DiscountCodeCreateParamsBasiccodediscountCustomergetsValueDiscountamount(BaseModel):
     """Nested schema for DiscountCodeCreateParamsBasiccodediscountCustomergetsValue.discountAmount"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -1910,13 +1924,6 @@ class DiscountCodeCreateParamsBasiccodediscountCustomergetsValue(BaseModel):
     """Percentage discount (e.g. 0.1 for 10%)"""
     discount_amount: DiscountCodeCreateParamsBasiccodediscountCustomergetsValueDiscountamount | None = Field(default=None, alias="discountAmount")
 
-class DiscountCodeCreateParamsBasiccodediscountCustomergetsItems(BaseModel):
-    """Which items the discount applies to"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    all: bool | None = Field(default=None, description="Set to true for all items")
-    """Set to true for all items"""
-
 class DiscountCodeCreateParamsBasiccodediscountCustomergets(BaseModel):
     """What the customer gets from this discount"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -1925,13 +1932,6 @@ class DiscountCodeCreateParamsBasiccodediscountCustomergets(BaseModel):
     """The discount value"""
     items: DiscountCodeCreateParamsBasiccodediscountCustomergetsItems | None = Field(default=None, description="Which items the discount applies to")
     """Which items the discount applies to"""
-
-class DiscountCodeCreateParamsBasiccodediscountCustomerselection(BaseModel):
-    """Which customers can use this discount"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    all: bool | None = Field(default=None, description="Set to true for all customers")
-    """Set to true for all customers"""
 
 class DiscountCodeCreateParamsBasiccodediscount(BaseModel):
     """Nested schema for DiscountCodeCreateParams.basicCodeDiscount"""

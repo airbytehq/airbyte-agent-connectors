@@ -215,7 +215,7 @@
             "schema": {
               "type": "string",
               "description": "GAQL query for campaigns",
-              "default": "SELECT\n  campaign.id,\n  campaign.name,\n  campaign.status,\n  campaign.advertising_channel_type,\n  campaign.advertising_channel_sub_type,\n  campaign.bidding_strategy,\n  campaign.bidding_strategy_type,\n  campaign.campaign_budget,\n  campaign_budget.amount_micros,\n  campaign.serving_status,\n  campaign.resource_name,\n  campaign.labels,\n  campaign.network_settings.target_google_search,\n  campaign.network_settings.target_search_network,\n  campaign.network_settings.target_content_network,\n  campaign.network_settings.target_partner_search_network\nFROM campaign"
+              "default": "SELECT\n  campaign.id,\n  campaign.name,\n  campaign.status,\n  campaign.advertising_channel_type,\n  campaign.advertising_channel_sub_type,\n  campaign.bidding_strategy,\n  campaign.bidding_strategy_type,\n  campaign.campaign_budget,\n  campaign_budget.amount_micros,\n  campaign.start_date_time,\n  campaign.end_date_time,\n  campaign.serving_status,\n  campaign.resource_name,\n  campaign.labels,\n  campaign.network_settings.target_google_search,\n  campaign.network_settings.target_search_network,\n  campaign.network_settings.target_content_network,\n  campaign.network_settings.target_partner_search_network\nFROM campaign"
             },
             "required": false,
             "description": "GAQL query for campaigns"
@@ -1311,6 +1311,24 @@
           "example_value_json": "0",
           "json_example_value": 0,
           "description": "Campaign budget amount in micros"
+        },
+        {
+          "name": "campaign.start_date_time",
+          "python_name": "campaign_start_date_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Campaign start date"
+        },
+        {
+          "name": "campaign.end_date_time",
+          "python_name": "campaign_end_date_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Campaign end date"
         },
         {
           "name": "campaign.serving_status",
