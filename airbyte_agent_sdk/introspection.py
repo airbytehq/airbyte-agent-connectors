@@ -240,6 +240,58 @@ def semantic_search_note_lines(
     return lines
 
 
+def build_semantic_sql_table_function_note(
+    config: Any,
+    *,
+    entity_name: str,
+    field_name: str,
+    enrichment_outputs: Sequence[str] = (),
+) -> str:
+    """Render SQL table-function guidance for one configured semantic field."""
+    windowing = getattr(config, "windowing", None)
+    context_max_chars = getattr(windowing, "context_max_chars", 0) or 0
+    context_clause = f" capped at {context_max_chars} chars" if context_max_chars > 0 else ""
+    enrichment_clause = (
+        f" Add `enrich => true` to expose configured enrichment columns ({', '.join(enrichment_outputs)}); "
+        "without it the relation returns only semantic metadata plus `score` and `context`."
+        if enrichment_outputs
+        else " `enrich` defaults to false."
+    )
+    return (
+        "- context_store_sql_query(sql, limit?) can compose semantic search with SQL via "
+        f"`semantic_search(entity => '{entity_name}', field => '{field_name}', prompt => '...', "
+        "filter => ..., limit => ..., context_size => ..., dedup => 'max', enrich => true)`.\n"
+        "  Use it in FROM/JOIN/CTEs when you need joins, aggregations, projections, or SQL post-filters over relevance-ranked hits. "
+        "`prompt` must be a literal string. `filter => ...` inside semantic_search is the pre-ranking filter; "
+        "outer WHERE runs after the inner top-k. "
+        "`dedup => 'max'` is the default and returns the single best-scoring chunk per parent record; "
+        "use `dedup => 'none'` to keep multiple matching chunks from the same record. "
+        f"The relation returns metadata columns plus computed `score` and `context`{context_clause}; "
+        f"embeddings table/model/vector columns are hidden.{enrichment_clause}"
+    )
+
+
+def semantic_sql_table_function_note_lines(
+    entity_semantic_fields: dict[str, Any] | None,
+    *,
+    entity_name: str,
+    indent: str = "      ",
+    enrichment_outputs: Sequence[str] = (),
+) -> list[str]:
+    if not entity_semantic_fields:
+        return []
+    lines: list[str] = []
+    for field_name, config in entity_semantic_fields.items():
+        note = build_semantic_sql_table_function_note(
+            config,
+            entity_name=entity_name,
+            field_name=field_name,
+            enrichment_outputs=enrichment_outputs,
+        )
+        lines.extend(f"{indent}{line}" for line in note.split("\n"))
+    return lines
+
+
 def build_enrichment_note(config: Any, *, entity_name: str) -> str:
     """Render a one-line note for a single x-airbyte-enrichment join.
 
@@ -756,6 +808,8 @@ def describe_entities(model: ConnectorModelProtocol) -> list[dict[str, Any]]:
 
 def generate_tool_description(
     model: ConnectorModelProtocol,
+    *,
+    enable_semantic_sql_table_function: bool | None = None,
 ) -> str:
     """Generate AI tool description from connector metadata.
 
@@ -778,6 +832,8 @@ def generate_tool_description(
     # at the first empty line and only keeps the initial section.
 
     # Entity/action parameter details (including pagination params like limit, starting_after)
+    if enable_semantic_sql_table_function is None:
+        enable_semantic_sql_table_function = bool(getattr(model, "enable_semantic_sql_table_function", False))
     semantic_search_fields = getattr(model, "semantic_search_fields", None) or {}
     search_field_paths = _collect_search_field_paths(model)
     entity_field_schemas = _collect_entity_field_schemas(model)
@@ -862,6 +918,8 @@ def generate_tool_description(
             search_sig = _format_search_param_signature()
             lines.append(f"      - context_store_search{search_sig}")
             lines.extend(semantic_search_note_lines(semantic_search_fields.get(entity.name), entity_name=entity.name))
+            if enable_semantic_sql_table_function:
+                lines.extend(semantic_sql_table_function_note_lines(semantic_search_fields.get(entity.name), entity_name=entity.name))
 
         # Searchable fields sub-section (nested paths for search queries)
         entity_search_fields = search_field_paths.get(entity.name)
