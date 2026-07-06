@@ -42,10 +42,12 @@ ID_RESOLUTION = (
     "and use it as a filter."
 )
 
+PAGINATION_PAGE_CAP = 20
+
 PAGINATION = (
-    "PAGINATION: Default limit 20-25. Don't paginate unless user asks for 'all'. "
-    "For 'how many' questions with has_more=true, say 'at least N'. "
-    "Hard stop at 3 pages — use filters to narrow instead."
+    "PAGINATION: Default limit 20-25. Don't paginate unless the user asks for 'all' or an exact count. "
+    "Stop as soon as you have enough to answer. For 'how many' questions with has_more=true, say 'at least N'. "
+    f"Hard stop at {PAGINATION_PAGE_CAP} pages — use filters to narrow, and say results are partial if you hit the cap."
 )
 
 DATE_RANGES = (

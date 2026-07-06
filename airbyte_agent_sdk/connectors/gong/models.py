@@ -50,13 +50,6 @@ class PaginationRecords(BaseModel):
     current_page_number: int | None = Field(default=None, alias="currentPageNumber")
     cursor: str | None = Field(default=None)
 
-class UserSpokenlanguagesItem(BaseModel):
-    """Nested schema for User.spokenLanguages_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    language: str | None = Field(default=None)
-    primary: bool | None = Field(default=None)
-
 class UserSettings(BaseModel):
     """User settings"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -68,6 +61,13 @@ class UserSettings(BaseModel):
     prevent_email_import: bool | None = Field(default=None, alias="preventEmailImport")
     non_recorded_meetings_imported: bool | None = Field(default=None, alias="nonRecordedMeetingsImported")
     gong_connect_enabled: bool | None = Field(default=None, alias="gongConnectEnabled")
+
+class UserSpokenlanguagesItem(BaseModel):
+    """Nested schema for User.spokenLanguages_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    language: str | None = Field(default=None)
+    primary: bool | None = Field(default=None)
 
 class User(BaseModel):
     """User object"""
@@ -197,6 +197,29 @@ class TranscriptsResponse(BaseModel):
     records: PaginationRecords | None = Field(default=None)
     request_id: str | None = Field(default=None, alias="requestId")
 
+class ExtensiveCallInteractionInteractionstatsItem(BaseModel):
+    """Nested schema for ExtensiveCallInteraction.interactionStats_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: str | None = Field(default=None, description="Stat name")
+    """Stat name"""
+    value: float | None = Field(default=None, description="Stat value")
+    """Stat value"""
+
+class ExtensiveCallInteractionQuestions(BaseModel):
+    """Nested schema for ExtensiveCallInteraction.questions"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    company_count: int | None = Field(default=None, alias="companyCount")
+    non_company_count: int | None = Field(default=None, alias="nonCompanyCount")
+
+class ExtensiveCallInteraction(BaseModel):
+    """Interaction statistics"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    interaction_stats: list[ExtensiveCallInteractionInteractionstatsItem] | None = Field(default=None, alias="interactionStats")
+    questions: ExtensiveCallInteractionQuestions | None = Field(default=None)
+
 class ExtensiveCallPartiesItemContextItemObjectsItemFieldsItem(BaseModel):
     """Nested schema for ExtensiveCallPartiesItemContextItemObjectsItem.fields_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -251,19 +274,6 @@ class ExtensiveCallPartiesItem(BaseModel):
     context: list[ExtensiveCallPartiesItemContextItem] | None = Field(default=None, description="CRM context data linked to this participant")
     """CRM context data linked to this participant"""
 
-class ExtensiveCallMedia(BaseModel):
-    """Media URLs"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    audio_url: str | None = Field(default=None, alias="audioUrl")
-    video_url: str | None = Field(default=None, alias="videoUrl")
-
-class ExtensiveCallCollaboration(BaseModel):
-    """Collaboration data"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    public_comments: list[dict[str, Any]] | None = Field(default=None, alias="publicComments")
-
 class ExtensiveCallMetadata(BaseModel):
     """Call metadata"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -309,28 +319,18 @@ class ExtensiveCallMetadata(BaseModel):
     calendar_event_id: str | None | None = Field(default=None, alias="calendarEventId", description="Calendar event ID")
     """Calendar event ID"""
 
-class ExtensiveCallInteractionQuestions(BaseModel):
-    """Nested schema for ExtensiveCallInteraction.questions"""
+class ExtensiveCallMedia(BaseModel):
+    """Media URLs"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    company_count: int | None = Field(default=None, alias="companyCount")
-    non_company_count: int | None = Field(default=None, alias="nonCompanyCount")
+    audio_url: str | None = Field(default=None, alias="audioUrl")
+    video_url: str | None = Field(default=None, alias="videoUrl")
 
-class ExtensiveCallInteractionInteractionstatsItem(BaseModel):
-    """Nested schema for ExtensiveCallInteraction.interactionStats_item"""
+class ExtensiveCallCollaboration(BaseModel):
+    """Collaboration data"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    name: str | None = Field(default=None, description="Stat name")
-    """Stat name"""
-    value: float | None = Field(default=None, description="Stat value")
-    """Stat value"""
-
-class ExtensiveCallInteraction(BaseModel):
-    """Interaction statistics"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    interaction_stats: list[ExtensiveCallInteractionInteractionstatsItem] | None = Field(default=None, alias="interactionStats")
-    questions: ExtensiveCallInteractionQuestions | None = Field(default=None)
+    public_comments: list[dict[str, Any]] | None = Field(default=None, alias="publicComments")
 
 class ExtensiveCallContentTopicsItem(BaseModel):
     """Nested schema for ExtensiveCallContent.topics_item"""
