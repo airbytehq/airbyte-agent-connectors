@@ -314,16 +314,18 @@ class CreativeAssetVideo(BaseModel):
     fix_task_id: str | None = Field(default=None)
     flaw_types: list[Any] | None = Field(default=None)
 
-class SparkAdUserInfo(BaseModel):
-    """Information about the TikTok account"""
+class SparkAdAuthInfo(BaseModel):
+    """Information about the authorization"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    tiktok_name: str | None | None = Field(default=None, description="The user name of the TikTok account")
-    """The user name of the TikTok account"""
-    identity_id: str | None | None = Field(default=None, description="Identity ID")
-    """Identity ID"""
-    identity_type: str | None | None = Field(default=None, description="Identity type")
-    """Identity type"""
+    invite_start_time: str | None | None = Field(default=None, description="The time when the authorization starts (UTC+0)")
+    """The time when the authorization starts (UTC+0)"""
+    auth_start_time: str | None | None = Field(default=None, description="The time when the authorization code becomes valid (UTC+0)")
+    """The time when the authorization code becomes valid (UTC+0)"""
+    auth_end_time: str | None | None = Field(default=None, description="The time when the authorization code expires (UTC+0)")
+    """The time when the authorization code expires (UTC+0)"""
+    ad_auth_status: str | None | None = Field(default=None, description="The authorization status (e.g. AUTHORIZED)")
+    """The authorization status (e.g. AUTHORIZED)"""
 
 class SparkAdItemInfo(BaseModel):
     """Information about the Spark Ads post"""
@@ -340,18 +342,16 @@ class SparkAdItemInfo(BaseModel):
     item_type: str | None | None = Field(default=None, description="The type of Spark Ads post (VIDEO or CAROUSEL)")
     """The type of Spark Ads post (VIDEO or CAROUSEL)"""
 
-class SparkAdAuthInfo(BaseModel):
-    """Information about the authorization"""
+class SparkAdUserInfo(BaseModel):
+    """Information about the TikTok account"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    invite_start_time: str | None | None = Field(default=None, description="The time when the authorization starts (UTC+0)")
-    """The time when the authorization starts (UTC+0)"""
-    auth_start_time: str | None | None = Field(default=None, description="The time when the authorization code becomes valid (UTC+0)")
-    """The time when the authorization code becomes valid (UTC+0)"""
-    auth_end_time: str | None | None = Field(default=None, description="The time when the authorization code expires (UTC+0)")
-    """The time when the authorization code expires (UTC+0)"""
-    ad_auth_status: str | None | None = Field(default=None, description="The authorization status (e.g. AUTHORIZED)")
-    """The authorization status (e.g. AUTHORIZED)"""
+    tiktok_name: str | None | None = Field(default=None, description="The user name of the TikTok account")
+    """The user name of the TikTok account"""
+    identity_id: str | None | None = Field(default=None, description="Identity ID")
+    """Identity ID"""
+    identity_type: str | None | None = Field(default=None, description="Identity type")
+    """Identity type"""
 
 class SparkAdVideoInfo(BaseModel):
     """Information about the video post"""

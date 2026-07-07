@@ -197,6 +197,12 @@ class TranscriptsResponse(BaseModel):
     records: PaginationRecords | None = Field(default=None)
     request_id: str | None = Field(default=None, alias="requestId")
 
+class ExtensiveCallCollaboration(BaseModel):
+    """Collaboration data"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    public_comments: list[dict[str, Any]] | None = Field(default=None, alias="publicComments")
+
 class ExtensiveCallInteractionQuestions(BaseModel):
     """Nested schema for ExtensiveCallInteraction.questions"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -219,6 +225,38 @@ class ExtensiveCallInteraction(BaseModel):
 
     interaction_stats: list[ExtensiveCallInteractionInteractionstatsItem] | None = Field(default=None, alias="interactionStats")
     questions: ExtensiveCallInteractionQuestions | None = Field(default=None)
+
+class ExtensiveCallMedia(BaseModel):
+    """Media URLs"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    audio_url: str | None = Field(default=None, alias="audioUrl")
+    video_url: str | None = Field(default=None, alias="videoUrl")
+
+class ExtensiveCallContentTrackersItem(BaseModel):
+    """Nested schema for ExtensiveCallContent.trackers_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None)
+    name: str | None = Field(default=None)
+    count: int | None = Field(default=None)
+    type_: str | None = Field(default=None, alias="type")
+    occurrences: list[dict[str, Any]] | None = Field(default=None)
+
+class ExtensiveCallContentTopicsItem(BaseModel):
+    """Nested schema for ExtensiveCallContent.topics_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: str | None = Field(default=None)
+    duration: float | None = Field(default=None)
+
+class ExtensiveCallContent(BaseModel):
+    """Content data including topics and trackers"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    topics: list[ExtensiveCallContentTopicsItem] | None = Field(default=None)
+    trackers: list[ExtensiveCallContentTrackersItem] | None = Field(default=None)
+    points_of_interest: dict[str, Any] | None = Field(default=None, alias="pointsOfInterest")
 
 class ExtensiveCallPartiesItemContextItemObjectsItemFieldsItem(BaseModel):
     """Nested schema for ExtensiveCallPartiesItemContextItemObjectsItem.fields_item"""
@@ -318,44 +356,6 @@ class ExtensiveCallMetadata(BaseModel):
     """Meeting URL"""
     calendar_event_id: str | None | None = Field(default=None, alias="calendarEventId", description="Calendar event ID")
     """Calendar event ID"""
-
-class ExtensiveCallContentTopicsItem(BaseModel):
-    """Nested schema for ExtensiveCallContent.topics_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: str | None = Field(default=None)
-    duration: float | None = Field(default=None)
-
-class ExtensiveCallContentTrackersItem(BaseModel):
-    """Nested schema for ExtensiveCallContent.trackers_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: str | None = Field(default=None)
-    name: str | None = Field(default=None)
-    count: int | None = Field(default=None)
-    type_: str | None = Field(default=None, alias="type")
-    occurrences: list[dict[str, Any]] | None = Field(default=None)
-
-class ExtensiveCallContent(BaseModel):
-    """Content data including topics and trackers"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    topics: list[ExtensiveCallContentTopicsItem] | None = Field(default=None)
-    trackers: list[ExtensiveCallContentTrackersItem] | None = Field(default=None)
-    points_of_interest: dict[str, Any] | None = Field(default=None, alias="pointsOfInterest")
-
-class ExtensiveCallMedia(BaseModel):
-    """Media URLs"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    audio_url: str | None = Field(default=None, alias="audioUrl")
-    video_url: str | None = Field(default=None, alias="videoUrl")
-
-class ExtensiveCallCollaboration(BaseModel):
-    """Collaboration data"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    public_comments: list[dict[str, Any]] | None = Field(default=None, alias="publicComments")
 
 class ExtensiveCall(BaseModel):
     """Detailed call object with extended information"""

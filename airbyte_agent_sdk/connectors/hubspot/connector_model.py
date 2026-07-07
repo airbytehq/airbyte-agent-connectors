@@ -1060,7 +1060,7 @@ HubspotConnectorModel: ConnectorModel = ConnectorModel(
                                     'domain': {'type': 'string', 'description': 'Company domain name (e.g., example.com)'},
                                     'description': {'type': 'string', 'description': 'Company description'},
                                     'phone': {'type': 'string', 'description': 'Company phone number'},
-                                    'industry': {'type': 'string', 'description': 'Company industry'},
+                                    'industry': {'type': 'string', 'description': 'Company industry (e.g., COMPUTER_SOFTWARE, INFORMATION_TECHNOLOGY_AND_SERVICES, INTERNET, FINANCIAL_SERVICES, MARKETING_AND_ADVERTISING, EDUCATION_MANAGEMENT)'},
                                     'city': {'type': 'string', 'description': 'Company city'},
                                     'state': {'type': 'string', 'description': 'Company state/region'},
                                     'country': {'type': 'string', 'description': 'Company country'},
@@ -1279,7 +1279,7 @@ HubspotConnectorModel: ConnectorModel = ConnectorModel(
                                     'domain': {'type': 'string', 'description': 'Company domain name (e.g., example.com)'},
                                     'description': {'type': 'string', 'description': 'Company description'},
                                     'phone': {'type': 'string', 'description': 'Company phone number'},
-                                    'industry': {'type': 'string', 'description': 'Company industry'},
+                                    'industry': {'type': 'string', 'description': 'Company industry (e.g., COMPUTER_SOFTWARE, INFORMATION_TECHNOLOGY_AND_SERVICES, INTERNET, FINANCIAL_SERVICES, MARKETING_AND_ADVERTISING, EDUCATION_MANAGEMENT)'},
                                     'city': {'type': 'string', 'description': 'Company city'},
                                     'state': {'type': 'string', 'description': 'Company state/region'},
                                     'country': {'type': 'string', 'description': 'Company country'},
@@ -3297,6 +3297,3568 @@ HubspotConnectorModel: ConnectorModel = ConnectorModel(
             },
         ),
         EntityDefinition(
+            name='notes',
+            stream_name='engagements_notes',
+            actions=[
+                Action.LIST,
+                Action.CREATE,
+                Action.GET,
+                Action.DELETE,
+                Action.UPDATE,
+            ],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/crm/v3/objects/notes',
+                    action=Action.LIST,
+                    description='Returns a paginated list of notes',
+                    query_params=[
+                        'limit',
+                        'after',
+                        'associations',
+                        'properties',
+                        'propertiesWithHistory',
+                        'archived',
+                    ],
+                    query_params_schema={
+                        'limit': {
+                            'type': 'integer',
+                            'required': False,
+                            'default': 25,
+                            'minimum': 1,
+                            'maximum': 100,
+                        },
+                        'after': {'type': 'string', 'required': False},
+                        'associations': {'type': 'string', 'required': False},
+                        'properties': {'type': 'string', 'required': False},
+                        'propertiesWithHistory': {'type': 'string', 'required': False},
+                        'archived': {'type': 'boolean', 'required': False},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Paginated list of notes',
+                        'properties': {
+                            'results': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'HubSpot note/engagement object',
+                                    'properties': {
+                                        'id': {'type': 'string', 'description': 'Unique note identifier'},
+                                        'properties': {
+                                            'type': 'object',
+                                            'description': 'Note properties',
+                                            'properties': {
+                                                'hs_note_body': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'The body content of the note (supports HTML)',
+                                                },
+                                                'hs_timestamp': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'Timestamp when the note activity occurred',
+                                                },
+                                                'hubspot_owner_id': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'ID of the note owner',
+                                                },
+                                                'hs_object_id': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'HubSpot object ID',
+                                                },
+                                                'hs_createdate': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'Date the note was created',
+                                                },
+                                                'hs_lastmodifieddate': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'Last modified date',
+                                                },
+                                            },
+                                            'additionalProperties': True,
+                                        },
+                                        'createdAt': {
+                                            'type': 'string',
+                                            'format': 'date-time',
+                                            'description': 'Creation timestamp',
+                                        },
+                                        'updatedAt': {
+                                            'type': 'string',
+                                            'format': 'date-time',
+                                            'description': 'Last update timestamp',
+                                        },
+                                        'archived': {'type': 'boolean', 'description': 'Whether the note is archived'},
+                                        'archivedAt': {
+                                            'type': ['string', 'null'],
+                                            'format': 'date-time',
+                                            'description': 'Timestamp when the note was archived',
+                                        },
+                                        'associations': {
+                                            'type': ['object', 'null'],
+                                            'description': 'Relationships with other CRM objects',
+                                            'additionalProperties': True,
+                                        },
+                                    },
+                                    'x-airbyte-entity-name': 'notes',
+                                    'x-airbyte-stream-name': 'engagements_notes',
+                                    'x-airbyte-ai-hints': {
+                                        'summary': 'Notes attached to CRM records (contacts, companies, deals, tickets)',
+                                        'when_to_use': 'Listing, viewing, adding, updating, or deleting notes on CRM records',
+                                        'trigger_phrases': [
+                                            'add note',
+                                            'create note',
+                                            'write note',
+                                            'note to contact',
+                                            'note on deal',
+                                            'list notes',
+                                            'get note',
+                                            'delete note',
+                                            'remove note',
+                                        ],
+                                        'freshness': 'live',
+                                    },
+                                },
+                            },
+                            'paging': {
+                                'type': 'object',
+                                'description': 'Pagination information',
+                                'properties': {
+                                    'next': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'after': {'type': 'string', 'description': 'Cursor for next page'},
+                                            'link': {'type': 'string', 'description': 'URL for next page'},
+                                        },
+                                    },
+                                },
+                            },
+                            'total': {'type': 'integer', 'description': 'Total number of results (search only)'},
+                        },
+                    },
+                    record_extractor='$.results',
+                    meta_extractor={'next_cursor': '$.paging.next.after', 'next_link': '$.paging.next.link'},
+                ),
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/crm/v3/objects/notes',
+                    action=Action.CREATE,
+                    description='Create a new note in HubSpot CRM. Notes can be associated with contacts,\ncompanies, deals, or tickets by using the associations parameter.\nThe hs_timestamp property sets when the note activity occurred.\n',
+                    body_fields=['properties', 'associations'],
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for creating a new note',
+                        'properties': {
+                            'properties': {
+                                'type': 'object',
+                                'description': 'Note properties to set',
+                                'required': ['hs_note_body', 'hs_timestamp'],
+                                'properties': {
+                                    'hs_note_body': {'type': 'string', 'description': 'The body content of the note (supports HTML)'},
+                                    'hs_timestamp': {'type': 'string', 'description': 'Required. Timestamp when the note activity occurred (ISO 8601 format, e.g. 2025-01-15T10:30:00.000Z). Use the current time if the user does not specify one.'},
+                                    'hubspot_owner_id': {'type': 'string', 'description': 'ID of the HubSpot owner to assign to this note'},
+                                },
+                                'additionalProperties': True,
+                            },
+                            'associations': {
+                                'type': 'array',
+                                'description': 'Associate the note with other CRM records (contacts, companies, deals, tickets)',
+                                'items': {
+                                    'type': 'object',
+                                    'properties': {
+                                        'to': {
+                                            'type': 'object',
+                                            'properties': {
+                                                'id': {'type': 'string', 'description': 'ID of the record to associate with'},
+                                            },
+                                        },
+                                        'types': {
+                                            'type': 'array',
+                                            'items': {
+                                                'type': 'object',
+                                                'properties': {
+                                                    'associationCategory': {'type': 'string', 'description': 'Association category (e.g., HUBSPOT_DEFINED)'},
+                                                    'associationTypeId': {'type': 'integer', 'description': 'Association type ID (e.g., 202 for note-to-contact, 190 for note-to-company, 214 for note-to-deal, 18 for note-to-ticket)'},
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                        'required': ['properties'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'HubSpot note/engagement object',
+                        'properties': {
+                            'id': {'type': 'string', 'description': 'Unique note identifier'},
+                            'properties': {
+                                'type': 'object',
+                                'description': 'Note properties',
+                                'properties': {
+                                    'hs_note_body': {
+                                        'type': ['string', 'null'],
+                                        'description': 'The body content of the note (supports HTML)',
+                                    },
+                                    'hs_timestamp': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Timestamp when the note activity occurred',
+                                    },
+                                    'hubspot_owner_id': {
+                                        'type': ['string', 'null'],
+                                        'description': 'ID of the note owner',
+                                    },
+                                    'hs_object_id': {
+                                        'type': ['string', 'null'],
+                                        'description': 'HubSpot object ID',
+                                    },
+                                    'hs_createdate': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Date the note was created',
+                                    },
+                                    'hs_lastmodifieddate': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Last modified date',
+                                    },
+                                },
+                                'additionalProperties': True,
+                            },
+                            'createdAt': {
+                                'type': 'string',
+                                'format': 'date-time',
+                                'description': 'Creation timestamp',
+                            },
+                            'updatedAt': {
+                                'type': 'string',
+                                'format': 'date-time',
+                                'description': 'Last update timestamp',
+                            },
+                            'archived': {'type': 'boolean', 'description': 'Whether the note is archived'},
+                            'archivedAt': {
+                                'type': ['string', 'null'],
+                                'format': 'date-time',
+                                'description': 'Timestamp when the note was archived',
+                            },
+                            'associations': {
+                                'type': ['object', 'null'],
+                                'description': 'Relationships with other CRM objects',
+                                'additionalProperties': True,
+                            },
+                        },
+                        'x-airbyte-entity-name': 'notes',
+                        'x-airbyte-stream-name': 'engagements_notes',
+                        'x-airbyte-ai-hints': {
+                            'summary': 'Notes attached to CRM records (contacts, companies, deals, tickets)',
+                            'when_to_use': 'Listing, viewing, adding, updating, or deleting notes on CRM records',
+                            'trigger_phrases': [
+                                'add note',
+                                'create note',
+                                'write note',
+                                'note to contact',
+                                'note on deal',
+                                'list notes',
+                                'get note',
+                                'delete note',
+                                'remove note',
+                            ],
+                            'freshness': 'live',
+                        },
+                    },
+                ),
+                Action.GET: EndpointDefinition(
+                    method='GET',
+                    path='/crm/v3/objects/notes/{noteId}',
+                    action=Action.GET,
+                    description='Get a single note by ID',
+                    query_params=[
+                        'properties',
+                        'propertiesWithHistory',
+                        'associations',
+                        'idProperty',
+                        'archived',
+                    ],
+                    query_params_schema={
+                        'properties': {'type': 'string', 'required': False},
+                        'propertiesWithHistory': {'type': 'string', 'required': False},
+                        'associations': {'type': 'string', 'required': False},
+                        'idProperty': {'type': 'string', 'required': False},
+                        'archived': {'type': 'boolean', 'required': False},
+                    },
+                    path_params=['noteId'],
+                    path_params_schema={
+                        'noteId': {'type': 'string', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'HubSpot note/engagement object',
+                        'properties': {
+                            'id': {'type': 'string', 'description': 'Unique note identifier'},
+                            'properties': {
+                                'type': 'object',
+                                'description': 'Note properties',
+                                'properties': {
+                                    'hs_note_body': {
+                                        'type': ['string', 'null'],
+                                        'description': 'The body content of the note (supports HTML)',
+                                    },
+                                    'hs_timestamp': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Timestamp when the note activity occurred',
+                                    },
+                                    'hubspot_owner_id': {
+                                        'type': ['string', 'null'],
+                                        'description': 'ID of the note owner',
+                                    },
+                                    'hs_object_id': {
+                                        'type': ['string', 'null'],
+                                        'description': 'HubSpot object ID',
+                                    },
+                                    'hs_createdate': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Date the note was created',
+                                    },
+                                    'hs_lastmodifieddate': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Last modified date',
+                                    },
+                                },
+                                'additionalProperties': True,
+                            },
+                            'createdAt': {
+                                'type': 'string',
+                                'format': 'date-time',
+                                'description': 'Creation timestamp',
+                            },
+                            'updatedAt': {
+                                'type': 'string',
+                                'format': 'date-time',
+                                'description': 'Last update timestamp',
+                            },
+                            'archived': {'type': 'boolean', 'description': 'Whether the note is archived'},
+                            'archivedAt': {
+                                'type': ['string', 'null'],
+                                'format': 'date-time',
+                                'description': 'Timestamp when the note was archived',
+                            },
+                            'associations': {
+                                'type': ['object', 'null'],
+                                'description': 'Relationships with other CRM objects',
+                                'additionalProperties': True,
+                            },
+                        },
+                        'x-airbyte-entity-name': 'notes',
+                        'x-airbyte-stream-name': 'engagements_notes',
+                        'x-airbyte-ai-hints': {
+                            'summary': 'Notes attached to CRM records (contacts, companies, deals, tickets)',
+                            'when_to_use': 'Listing, viewing, adding, updating, or deleting notes on CRM records',
+                            'trigger_phrases': [
+                                'add note',
+                                'create note',
+                                'write note',
+                                'note to contact',
+                                'note on deal',
+                                'list notes',
+                                'get note',
+                                'delete note',
+                                'remove note',
+                            ],
+                            'freshness': 'live',
+                        },
+                    },
+                ),
+                Action.DELETE: EndpointDefinition(
+                    method='DELETE',
+                    path='/crm/v3/objects/notes/{noteId}',
+                    action=Action.DELETE,
+                    description='Archive a note by ID. This is a soft delete — the note is moved to the\nrecycle bin and can be restored for approximately 90 days. No public\nhard-delete endpoint exists.\n',
+                    path_params=['noteId'],
+                    path_params_schema={
+                        'noteId': {'type': 'string', 'required': True},
+                    },
+                    no_content_response=True,
+                ),
+                Action.UPDATE: EndpointDefinition(
+                    method='PATCH',
+                    path='/crm/v3/objects/notes/{noteId}',
+                    action=Action.UPDATE,
+                    description="Update an existing note's properties by ID.",
+                    body_fields=['properties'],
+                    path_params=['noteId'],
+                    path_params_schema={
+                        'noteId': {'type': 'string', 'required': True},
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for updating an existing note. Only provided properties will be updated.',
+                        'properties': {
+                            'properties': {
+                                'type': 'object',
+                                'description': 'Note properties to update',
+                                'properties': {
+                                    'hs_note_body': {'type': 'string', 'description': 'The body content of the note (supports HTML)'},
+                                    'hs_timestamp': {'type': 'string', 'description': 'Timestamp when the note activity occurred'},
+                                    'hubspot_owner_id': {'type': 'string', 'description': 'ID of the HubSpot owner to assign to this note'},
+                                },
+                                'additionalProperties': True,
+                            },
+                        },
+                        'required': ['properties'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'HubSpot note/engagement object',
+                        'properties': {
+                            'id': {'type': 'string', 'description': 'Unique note identifier'},
+                            'properties': {
+                                'type': 'object',
+                                'description': 'Note properties',
+                                'properties': {
+                                    'hs_note_body': {
+                                        'type': ['string', 'null'],
+                                        'description': 'The body content of the note (supports HTML)',
+                                    },
+                                    'hs_timestamp': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Timestamp when the note activity occurred',
+                                    },
+                                    'hubspot_owner_id': {
+                                        'type': ['string', 'null'],
+                                        'description': 'ID of the note owner',
+                                    },
+                                    'hs_object_id': {
+                                        'type': ['string', 'null'],
+                                        'description': 'HubSpot object ID',
+                                    },
+                                    'hs_createdate': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Date the note was created',
+                                    },
+                                    'hs_lastmodifieddate': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Last modified date',
+                                    },
+                                },
+                                'additionalProperties': True,
+                            },
+                            'createdAt': {
+                                'type': 'string',
+                                'format': 'date-time',
+                                'description': 'Creation timestamp',
+                            },
+                            'updatedAt': {
+                                'type': 'string',
+                                'format': 'date-time',
+                                'description': 'Last update timestamp',
+                            },
+                            'archived': {'type': 'boolean', 'description': 'Whether the note is archived'},
+                            'archivedAt': {
+                                'type': ['string', 'null'],
+                                'format': 'date-time',
+                                'description': 'Timestamp when the note was archived',
+                            },
+                            'associations': {
+                                'type': ['object', 'null'],
+                                'description': 'Relationships with other CRM objects',
+                                'additionalProperties': True,
+                            },
+                        },
+                        'x-airbyte-entity-name': 'notes',
+                        'x-airbyte-stream-name': 'engagements_notes',
+                        'x-airbyte-ai-hints': {
+                            'summary': 'Notes attached to CRM records (contacts, companies, deals, tickets)',
+                            'when_to_use': 'Listing, viewing, adding, updating, or deleting notes on CRM records',
+                            'trigger_phrases': [
+                                'add note',
+                                'create note',
+                                'write note',
+                                'note to contact',
+                                'note on deal',
+                                'list notes',
+                                'get note',
+                                'delete note',
+                                'remove note',
+                            ],
+                            'freshness': 'live',
+                        },
+                    },
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'HubSpot note/engagement object',
+                'properties': {
+                    'id': {'type': 'string', 'description': 'Unique note identifier'},
+                    'properties': {
+                        'type': 'object',
+                        'description': 'Note properties',
+                        'properties': {
+                            'hs_note_body': {
+                                'type': ['string', 'null'],
+                                'description': 'The body content of the note (supports HTML)',
+                            },
+                            'hs_timestamp': {
+                                'type': ['string', 'null'],
+                                'description': 'Timestamp when the note activity occurred',
+                            },
+                            'hubspot_owner_id': {
+                                'type': ['string', 'null'],
+                                'description': 'ID of the note owner',
+                            },
+                            'hs_object_id': {
+                                'type': ['string', 'null'],
+                                'description': 'HubSpot object ID',
+                            },
+                            'hs_createdate': {
+                                'type': ['string', 'null'],
+                                'description': 'Date the note was created',
+                            },
+                            'hs_lastmodifieddate': {
+                                'type': ['string', 'null'],
+                                'description': 'Last modified date',
+                            },
+                        },
+                        'additionalProperties': True,
+                    },
+                    'createdAt': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'Creation timestamp',
+                    },
+                    'updatedAt': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'Last update timestamp',
+                    },
+                    'archived': {'type': 'boolean', 'description': 'Whether the note is archived'},
+                    'archivedAt': {
+                        'type': ['string', 'null'],
+                        'format': 'date-time',
+                        'description': 'Timestamp when the note was archived',
+                    },
+                    'associations': {
+                        'type': ['object', 'null'],
+                        'description': 'Relationships with other CRM objects',
+                        'additionalProperties': True,
+                    },
+                },
+                'x-airbyte-entity-name': 'notes',
+                'x-airbyte-stream-name': 'engagements_notes',
+                'x-airbyte-ai-hints': {
+                    'summary': 'Notes attached to CRM records (contacts, companies, deals, tickets)',
+                    'when_to_use': 'Listing, viewing, adding, updating, or deleting notes on CRM records',
+                    'trigger_phrases': [
+                        'add note',
+                        'create note',
+                        'write note',
+                        'note to contact',
+                        'note on deal',
+                        'list notes',
+                        'get note',
+                        'delete note',
+                        'remove note',
+                    ],
+                    'freshness': 'live',
+                },
+            },
+            ai_hints={
+                'summary': 'Notes attached to CRM records (contacts, companies, deals, tickets)',
+                'when_to_use': 'Listing, viewing, adding, updating, or deleting notes on CRM records',
+                'trigger_phrases': [
+                    'add note',
+                    'create note',
+                    'write note',
+                    'note to contact',
+                    'note on deal',
+                    'list notes',
+                    'get note',
+                    'delete note',
+                    'remove note',
+                ],
+                'freshness': 'live',
+            },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='notes',
+                    target_entity='contacts',
+                    foreign_key='associations',
+                    cardinality='many_to_many',
+                ),
+                EntityRelationshipConfig(
+                    source_entity='notes',
+                    target_entity='companies',
+                    foreign_key='associations',
+                    cardinality='many_to_many',
+                ),
+                EntityRelationshipConfig(
+                    source_entity='notes',
+                    target_entity='deals',
+                    foreign_key='associations',
+                    cardinality='many_to_many',
+                ),
+                EntityRelationshipConfig(
+                    source_entity='notes',
+                    target_entity='tickets',
+                    foreign_key='associations',
+                    cardinality='many_to_many',
+                ),
+            ],
+        ),
+        EntityDefinition(
+            name='calls',
+            stream_name='engagements_calls',
+            actions=[
+                Action.LIST,
+                Action.CREATE,
+                Action.GET,
+                Action.DELETE,
+                Action.UPDATE,
+            ],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/crm/v3/objects/calls',
+                    action=Action.LIST,
+                    description='Returns a paginated list of calls',
+                    query_params=[
+                        'limit',
+                        'after',
+                        'associations',
+                        'properties',
+                        'propertiesWithHistory',
+                        'archived',
+                    ],
+                    query_params_schema={
+                        'limit': {
+                            'type': 'integer',
+                            'required': False,
+                            'default': 25,
+                            'minimum': 1,
+                            'maximum': 100,
+                        },
+                        'after': {'type': 'string', 'required': False},
+                        'associations': {'type': 'string', 'required': False},
+                        'properties': {'type': 'string', 'required': False},
+                        'propertiesWithHistory': {'type': 'string', 'required': False},
+                        'archived': {'type': 'boolean', 'required': False},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Paginated list of calls',
+                        'properties': {
+                            'results': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'HubSpot call engagement object',
+                                    'properties': {
+                                        'id': {'type': 'string', 'description': 'Unique call identifier'},
+                                        'properties': {
+                                            'type': 'object',
+                                            'description': 'Call properties',
+                                            'properties': {
+                                                'hs_call_body': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'Description or notes about the call',
+                                                },
+                                                'hs_call_direction': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'Direction of the call (INBOUND or OUTBOUND)',
+                                                },
+                                                'hs_call_disposition': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'The outcome of the call (e.g., connected, no answer, busy, left voicemail)',
+                                                },
+                                                'hs_call_duration': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'Duration of the call in milliseconds',
+                                                },
+                                                'hs_call_from_number': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'Phone number the call was made from',
+                                                },
+                                                'hs_call_to_number': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'Phone number the call was made to',
+                                                },
+                                                'hs_call_status': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'Status of the call (e.g., COMPLETED, BUSY, NO_ANSWER, FAILED, CANCELED, CONNECTING, RINGING, IN_PROGRESS)',
+                                                },
+                                                'hs_call_title': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'Title or subject of the call',
+                                                },
+                                                'hs_timestamp': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'Timestamp when the call activity occurred',
+                                                },
+                                                'hubspot_owner_id': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'ID of the call owner',
+                                                },
+                                                'hs_object_id': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'HubSpot object ID',
+                                                },
+                                                'hs_createdate': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'Date the call was created',
+                                                },
+                                                'hs_lastmodifieddate': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'Last modified date',
+                                                },
+                                            },
+                                            'additionalProperties': True,
+                                        },
+                                        'createdAt': {
+                                            'type': 'string',
+                                            'format': 'date-time',
+                                            'description': 'Creation timestamp',
+                                        },
+                                        'updatedAt': {
+                                            'type': 'string',
+                                            'format': 'date-time',
+                                            'description': 'Last update timestamp',
+                                        },
+                                        'archived': {'type': 'boolean', 'description': 'Whether the call is archived'},
+                                        'archivedAt': {
+                                            'type': ['string', 'null'],
+                                            'format': 'date-time',
+                                            'description': 'Timestamp when the call was archived',
+                                        },
+                                        'associations': {
+                                            'type': ['object', 'null'],
+                                            'description': 'Relationships with other CRM objects',
+                                            'additionalProperties': True,
+                                        },
+                                    },
+                                    'x-airbyte-entity-name': 'calls',
+                                    'x-airbyte-stream-name': 'engagements_calls',
+                                    'x-airbyte-ai-hints': {
+                                        'summary': 'Call engagements logged in the CRM (contacts, companies, deals, tickets)',
+                                        'when_to_use': 'Listing, viewing, logging, updating, or deleting call records on CRM objects',
+                                        'trigger_phrases': [
+                                            'log call',
+                                            'create call',
+                                            'record call',
+                                            'call to contact',
+                                            'call on deal',
+                                            'list calls',
+                                            'get call',
+                                            'delete call',
+                                            'remove call',
+                                        ],
+                                        'freshness': 'live',
+                                    },
+                                },
+                            },
+                            'paging': {
+                                'type': 'object',
+                                'description': 'Pagination information',
+                                'properties': {
+                                    'next': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'after': {'type': 'string', 'description': 'Cursor for next page'},
+                                            'link': {'type': 'string', 'description': 'URL for next page'},
+                                        },
+                                    },
+                                },
+                            },
+                            'total': {'type': 'integer', 'description': 'Total number of results (search only)'},
+                        },
+                    },
+                    record_extractor='$.results',
+                    meta_extractor={'next_cursor': '$.paging.next.after', 'next_link': '$.paging.next.link'},
+                ),
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/crm/v3/objects/calls',
+                    action=Action.CREATE,
+                    description='Create a new call engagement in HubSpot CRM. Calls can be associated with contacts,\ncompanies, deals, or tickets by using the associations parameter.\nThe hs_timestamp property sets when the call activity occurred.\n',
+                    body_fields=['properties', 'associations'],
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for creating a new call',
+                        'properties': {
+                            'properties': {
+                                'type': 'object',
+                                'description': 'Call properties to set',
+                                'required': ['hs_timestamp'],
+                                'properties': {
+                                    'hs_call_body': {'type': 'string', 'description': 'Description or notes about the call'},
+                                    'hs_call_direction': {'type': 'string', 'description': 'Direction of the call (INBOUND or OUTBOUND)'},
+                                    'hs_call_disposition': {'type': 'string', 'description': 'The outcome of the call (e.g., connected, no answer, busy, left voicemail)'},
+                                    'hs_call_duration': {'type': 'string', 'description': 'Duration of the call in milliseconds'},
+                                    'hs_call_from_number': {'type': 'string', 'description': 'Phone number the call was made from'},
+                                    'hs_call_to_number': {'type': 'string', 'description': 'Phone number the call was made to'},
+                                    'hs_call_status': {'type': 'string', 'description': 'Status of the call (e.g., COMPLETED, BUSY, NO_ANSWER, FAILED, CANCELED)'},
+                                    'hs_call_title': {'type': 'string', 'description': 'Title or subject of the call'},
+                                    'hs_timestamp': {'type': 'string', 'description': 'Required. Timestamp when the call activity occurred (ISO 8601 format, e.g. 2025-01-15T10:30:00.000Z). Use the current time if the user does not specify one.'},
+                                    'hubspot_owner_id': {'type': 'string', 'description': 'ID of the HubSpot owner to assign to this call'},
+                                },
+                                'additionalProperties': True,
+                            },
+                            'associations': {
+                                'type': 'array',
+                                'description': 'Associate the call with other CRM records (contacts, companies, deals, tickets)',
+                                'items': {
+                                    'type': 'object',
+                                    'properties': {
+                                        'to': {
+                                            'type': 'object',
+                                            'properties': {
+                                                'id': {'type': 'string', 'description': 'ID of the record to associate with'},
+                                            },
+                                        },
+                                        'types': {
+                                            'type': 'array',
+                                            'items': {
+                                                'type': 'object',
+                                                'properties': {
+                                                    'associationCategory': {'type': 'string', 'description': 'Association category (e.g., HUBSPOT_DEFINED)'},
+                                                    'associationTypeId': {'type': 'integer', 'description': 'Association type ID (e.g., 194 for call-to-contact, 182 for call-to-company, 206 for call-to-deal, 220 for call-to-ticket)'},
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                        'required': ['properties'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'HubSpot call engagement object',
+                        'properties': {
+                            'id': {'type': 'string', 'description': 'Unique call identifier'},
+                            'properties': {
+                                'type': 'object',
+                                'description': 'Call properties',
+                                'properties': {
+                                    'hs_call_body': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Description or notes about the call',
+                                    },
+                                    'hs_call_direction': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Direction of the call (INBOUND or OUTBOUND)',
+                                    },
+                                    'hs_call_disposition': {
+                                        'type': ['string', 'null'],
+                                        'description': 'The outcome of the call (e.g., connected, no answer, busy, left voicemail)',
+                                    },
+                                    'hs_call_duration': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Duration of the call in milliseconds',
+                                    },
+                                    'hs_call_from_number': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Phone number the call was made from',
+                                    },
+                                    'hs_call_to_number': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Phone number the call was made to',
+                                    },
+                                    'hs_call_status': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Status of the call (e.g., COMPLETED, BUSY, NO_ANSWER, FAILED, CANCELED, CONNECTING, RINGING, IN_PROGRESS)',
+                                    },
+                                    'hs_call_title': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Title or subject of the call',
+                                    },
+                                    'hs_timestamp': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Timestamp when the call activity occurred',
+                                    },
+                                    'hubspot_owner_id': {
+                                        'type': ['string', 'null'],
+                                        'description': 'ID of the call owner',
+                                    },
+                                    'hs_object_id': {
+                                        'type': ['string', 'null'],
+                                        'description': 'HubSpot object ID',
+                                    },
+                                    'hs_createdate': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Date the call was created',
+                                    },
+                                    'hs_lastmodifieddate': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Last modified date',
+                                    },
+                                },
+                                'additionalProperties': True,
+                            },
+                            'createdAt': {
+                                'type': 'string',
+                                'format': 'date-time',
+                                'description': 'Creation timestamp',
+                            },
+                            'updatedAt': {
+                                'type': 'string',
+                                'format': 'date-time',
+                                'description': 'Last update timestamp',
+                            },
+                            'archived': {'type': 'boolean', 'description': 'Whether the call is archived'},
+                            'archivedAt': {
+                                'type': ['string', 'null'],
+                                'format': 'date-time',
+                                'description': 'Timestamp when the call was archived',
+                            },
+                            'associations': {
+                                'type': ['object', 'null'],
+                                'description': 'Relationships with other CRM objects',
+                                'additionalProperties': True,
+                            },
+                        },
+                        'x-airbyte-entity-name': 'calls',
+                        'x-airbyte-stream-name': 'engagements_calls',
+                        'x-airbyte-ai-hints': {
+                            'summary': 'Call engagements logged in the CRM (contacts, companies, deals, tickets)',
+                            'when_to_use': 'Listing, viewing, logging, updating, or deleting call records on CRM objects',
+                            'trigger_phrases': [
+                                'log call',
+                                'create call',
+                                'record call',
+                                'call to contact',
+                                'call on deal',
+                                'list calls',
+                                'get call',
+                                'delete call',
+                                'remove call',
+                            ],
+                            'freshness': 'live',
+                        },
+                    },
+                ),
+                Action.GET: EndpointDefinition(
+                    method='GET',
+                    path='/crm/v3/objects/calls/{callId}',
+                    action=Action.GET,
+                    description='Get a single call by ID',
+                    query_params=[
+                        'properties',
+                        'propertiesWithHistory',
+                        'associations',
+                        'idProperty',
+                        'archived',
+                    ],
+                    query_params_schema={
+                        'properties': {'type': 'string', 'required': False},
+                        'propertiesWithHistory': {'type': 'string', 'required': False},
+                        'associations': {'type': 'string', 'required': False},
+                        'idProperty': {'type': 'string', 'required': False},
+                        'archived': {'type': 'boolean', 'required': False},
+                    },
+                    path_params=['callId'],
+                    path_params_schema={
+                        'callId': {'type': 'string', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'HubSpot call engagement object',
+                        'properties': {
+                            'id': {'type': 'string', 'description': 'Unique call identifier'},
+                            'properties': {
+                                'type': 'object',
+                                'description': 'Call properties',
+                                'properties': {
+                                    'hs_call_body': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Description or notes about the call',
+                                    },
+                                    'hs_call_direction': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Direction of the call (INBOUND or OUTBOUND)',
+                                    },
+                                    'hs_call_disposition': {
+                                        'type': ['string', 'null'],
+                                        'description': 'The outcome of the call (e.g., connected, no answer, busy, left voicemail)',
+                                    },
+                                    'hs_call_duration': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Duration of the call in milliseconds',
+                                    },
+                                    'hs_call_from_number': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Phone number the call was made from',
+                                    },
+                                    'hs_call_to_number': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Phone number the call was made to',
+                                    },
+                                    'hs_call_status': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Status of the call (e.g., COMPLETED, BUSY, NO_ANSWER, FAILED, CANCELED, CONNECTING, RINGING, IN_PROGRESS)',
+                                    },
+                                    'hs_call_title': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Title or subject of the call',
+                                    },
+                                    'hs_timestamp': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Timestamp when the call activity occurred',
+                                    },
+                                    'hubspot_owner_id': {
+                                        'type': ['string', 'null'],
+                                        'description': 'ID of the call owner',
+                                    },
+                                    'hs_object_id': {
+                                        'type': ['string', 'null'],
+                                        'description': 'HubSpot object ID',
+                                    },
+                                    'hs_createdate': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Date the call was created',
+                                    },
+                                    'hs_lastmodifieddate': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Last modified date',
+                                    },
+                                },
+                                'additionalProperties': True,
+                            },
+                            'createdAt': {
+                                'type': 'string',
+                                'format': 'date-time',
+                                'description': 'Creation timestamp',
+                            },
+                            'updatedAt': {
+                                'type': 'string',
+                                'format': 'date-time',
+                                'description': 'Last update timestamp',
+                            },
+                            'archived': {'type': 'boolean', 'description': 'Whether the call is archived'},
+                            'archivedAt': {
+                                'type': ['string', 'null'],
+                                'format': 'date-time',
+                                'description': 'Timestamp when the call was archived',
+                            },
+                            'associations': {
+                                'type': ['object', 'null'],
+                                'description': 'Relationships with other CRM objects',
+                                'additionalProperties': True,
+                            },
+                        },
+                        'x-airbyte-entity-name': 'calls',
+                        'x-airbyte-stream-name': 'engagements_calls',
+                        'x-airbyte-ai-hints': {
+                            'summary': 'Call engagements logged in the CRM (contacts, companies, deals, tickets)',
+                            'when_to_use': 'Listing, viewing, logging, updating, or deleting call records on CRM objects',
+                            'trigger_phrases': [
+                                'log call',
+                                'create call',
+                                'record call',
+                                'call to contact',
+                                'call on deal',
+                                'list calls',
+                                'get call',
+                                'delete call',
+                                'remove call',
+                            ],
+                            'freshness': 'live',
+                        },
+                    },
+                ),
+                Action.DELETE: EndpointDefinition(
+                    method='DELETE',
+                    path='/crm/v3/objects/calls/{callId}',
+                    action=Action.DELETE,
+                    description='Archive a call by ID. This is a soft delete — the call is moved to the\nrecycle bin and can be restored for approximately 90 days. No public\nhard-delete endpoint exists.\n',
+                    path_params=['callId'],
+                    path_params_schema={
+                        'callId': {'type': 'string', 'required': True},
+                    },
+                    no_content_response=True,
+                ),
+                Action.UPDATE: EndpointDefinition(
+                    method='PATCH',
+                    path='/crm/v3/objects/calls/{callId}',
+                    action=Action.UPDATE,
+                    description="Update an existing call's properties by ID.",
+                    body_fields=['properties'],
+                    path_params=['callId'],
+                    path_params_schema={
+                        'callId': {'type': 'string', 'required': True},
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for updating an existing call. Only provided properties will be updated.',
+                        'properties': {
+                            'properties': {
+                                'type': 'object',
+                                'description': 'Call properties to update',
+                                'properties': {
+                                    'hs_call_body': {'type': 'string', 'description': 'Description or notes about the call'},
+                                    'hs_call_direction': {'type': 'string', 'description': 'Direction of the call (INBOUND or OUTBOUND)'},
+                                    'hs_call_disposition': {'type': 'string', 'description': 'The outcome of the call'},
+                                    'hs_call_duration': {'type': 'string', 'description': 'Duration of the call in milliseconds'},
+                                    'hs_call_from_number': {'type': 'string', 'description': 'Phone number the call was made from'},
+                                    'hs_call_to_number': {'type': 'string', 'description': 'Phone number the call was made to'},
+                                    'hs_call_status': {'type': 'string', 'description': 'Status of the call (e.g., COMPLETED, BUSY, NO_ANSWER)'},
+                                    'hs_call_title': {'type': 'string', 'description': 'Title or subject of the call'},
+                                    'hs_timestamp': {'type': 'string', 'description': 'Timestamp when the call activity occurred'},
+                                    'hubspot_owner_id': {'type': 'string', 'description': 'ID of the HubSpot owner to assign to this call'},
+                                },
+                                'additionalProperties': True,
+                            },
+                        },
+                        'required': ['properties'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'HubSpot call engagement object',
+                        'properties': {
+                            'id': {'type': 'string', 'description': 'Unique call identifier'},
+                            'properties': {
+                                'type': 'object',
+                                'description': 'Call properties',
+                                'properties': {
+                                    'hs_call_body': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Description or notes about the call',
+                                    },
+                                    'hs_call_direction': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Direction of the call (INBOUND or OUTBOUND)',
+                                    },
+                                    'hs_call_disposition': {
+                                        'type': ['string', 'null'],
+                                        'description': 'The outcome of the call (e.g., connected, no answer, busy, left voicemail)',
+                                    },
+                                    'hs_call_duration': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Duration of the call in milliseconds',
+                                    },
+                                    'hs_call_from_number': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Phone number the call was made from',
+                                    },
+                                    'hs_call_to_number': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Phone number the call was made to',
+                                    },
+                                    'hs_call_status': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Status of the call (e.g., COMPLETED, BUSY, NO_ANSWER, FAILED, CANCELED, CONNECTING, RINGING, IN_PROGRESS)',
+                                    },
+                                    'hs_call_title': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Title or subject of the call',
+                                    },
+                                    'hs_timestamp': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Timestamp when the call activity occurred',
+                                    },
+                                    'hubspot_owner_id': {
+                                        'type': ['string', 'null'],
+                                        'description': 'ID of the call owner',
+                                    },
+                                    'hs_object_id': {
+                                        'type': ['string', 'null'],
+                                        'description': 'HubSpot object ID',
+                                    },
+                                    'hs_createdate': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Date the call was created',
+                                    },
+                                    'hs_lastmodifieddate': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Last modified date',
+                                    },
+                                },
+                                'additionalProperties': True,
+                            },
+                            'createdAt': {
+                                'type': 'string',
+                                'format': 'date-time',
+                                'description': 'Creation timestamp',
+                            },
+                            'updatedAt': {
+                                'type': 'string',
+                                'format': 'date-time',
+                                'description': 'Last update timestamp',
+                            },
+                            'archived': {'type': 'boolean', 'description': 'Whether the call is archived'},
+                            'archivedAt': {
+                                'type': ['string', 'null'],
+                                'format': 'date-time',
+                                'description': 'Timestamp when the call was archived',
+                            },
+                            'associations': {
+                                'type': ['object', 'null'],
+                                'description': 'Relationships with other CRM objects',
+                                'additionalProperties': True,
+                            },
+                        },
+                        'x-airbyte-entity-name': 'calls',
+                        'x-airbyte-stream-name': 'engagements_calls',
+                        'x-airbyte-ai-hints': {
+                            'summary': 'Call engagements logged in the CRM (contacts, companies, deals, tickets)',
+                            'when_to_use': 'Listing, viewing, logging, updating, or deleting call records on CRM objects',
+                            'trigger_phrases': [
+                                'log call',
+                                'create call',
+                                'record call',
+                                'call to contact',
+                                'call on deal',
+                                'list calls',
+                                'get call',
+                                'delete call',
+                                'remove call',
+                            ],
+                            'freshness': 'live',
+                        },
+                    },
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'HubSpot call engagement object',
+                'properties': {
+                    'id': {'type': 'string', 'description': 'Unique call identifier'},
+                    'properties': {
+                        'type': 'object',
+                        'description': 'Call properties',
+                        'properties': {
+                            'hs_call_body': {
+                                'type': ['string', 'null'],
+                                'description': 'Description or notes about the call',
+                            },
+                            'hs_call_direction': {
+                                'type': ['string', 'null'],
+                                'description': 'Direction of the call (INBOUND or OUTBOUND)',
+                            },
+                            'hs_call_disposition': {
+                                'type': ['string', 'null'],
+                                'description': 'The outcome of the call (e.g., connected, no answer, busy, left voicemail)',
+                            },
+                            'hs_call_duration': {
+                                'type': ['string', 'null'],
+                                'description': 'Duration of the call in milliseconds',
+                            },
+                            'hs_call_from_number': {
+                                'type': ['string', 'null'],
+                                'description': 'Phone number the call was made from',
+                            },
+                            'hs_call_to_number': {
+                                'type': ['string', 'null'],
+                                'description': 'Phone number the call was made to',
+                            },
+                            'hs_call_status': {
+                                'type': ['string', 'null'],
+                                'description': 'Status of the call (e.g., COMPLETED, BUSY, NO_ANSWER, FAILED, CANCELED, CONNECTING, RINGING, IN_PROGRESS)',
+                            },
+                            'hs_call_title': {
+                                'type': ['string', 'null'],
+                                'description': 'Title or subject of the call',
+                            },
+                            'hs_timestamp': {
+                                'type': ['string', 'null'],
+                                'description': 'Timestamp when the call activity occurred',
+                            },
+                            'hubspot_owner_id': {
+                                'type': ['string', 'null'],
+                                'description': 'ID of the call owner',
+                            },
+                            'hs_object_id': {
+                                'type': ['string', 'null'],
+                                'description': 'HubSpot object ID',
+                            },
+                            'hs_createdate': {
+                                'type': ['string', 'null'],
+                                'description': 'Date the call was created',
+                            },
+                            'hs_lastmodifieddate': {
+                                'type': ['string', 'null'],
+                                'description': 'Last modified date',
+                            },
+                        },
+                        'additionalProperties': True,
+                    },
+                    'createdAt': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'Creation timestamp',
+                    },
+                    'updatedAt': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'Last update timestamp',
+                    },
+                    'archived': {'type': 'boolean', 'description': 'Whether the call is archived'},
+                    'archivedAt': {
+                        'type': ['string', 'null'],
+                        'format': 'date-time',
+                        'description': 'Timestamp when the call was archived',
+                    },
+                    'associations': {
+                        'type': ['object', 'null'],
+                        'description': 'Relationships with other CRM objects',
+                        'additionalProperties': True,
+                    },
+                },
+                'x-airbyte-entity-name': 'calls',
+                'x-airbyte-stream-name': 'engagements_calls',
+                'x-airbyte-ai-hints': {
+                    'summary': 'Call engagements logged in the CRM (contacts, companies, deals, tickets)',
+                    'when_to_use': 'Listing, viewing, logging, updating, or deleting call records on CRM objects',
+                    'trigger_phrases': [
+                        'log call',
+                        'create call',
+                        'record call',
+                        'call to contact',
+                        'call on deal',
+                        'list calls',
+                        'get call',
+                        'delete call',
+                        'remove call',
+                    ],
+                    'freshness': 'live',
+                },
+            },
+            ai_hints={
+                'summary': 'Call engagements logged in the CRM (contacts, companies, deals, tickets)',
+                'when_to_use': 'Listing, viewing, logging, updating, or deleting call records on CRM objects',
+                'trigger_phrases': [
+                    'log call',
+                    'create call',
+                    'record call',
+                    'call to contact',
+                    'call on deal',
+                    'list calls',
+                    'get call',
+                    'delete call',
+                    'remove call',
+                ],
+                'freshness': 'live',
+            },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='calls',
+                    target_entity='contacts',
+                    foreign_key='associations',
+                    cardinality='many_to_many',
+                ),
+                EntityRelationshipConfig(
+                    source_entity='calls',
+                    target_entity='companies',
+                    foreign_key='associations',
+                    cardinality='many_to_many',
+                ),
+                EntityRelationshipConfig(
+                    source_entity='calls',
+                    target_entity='deals',
+                    foreign_key='associations',
+                    cardinality='many_to_many',
+                ),
+                EntityRelationshipConfig(
+                    source_entity='calls',
+                    target_entity='tickets',
+                    foreign_key='associations',
+                    cardinality='many_to_many',
+                ),
+            ],
+        ),
+        EntityDefinition(
+            name='emails',
+            stream_name='engagements_emails',
+            actions=[
+                Action.LIST,
+                Action.CREATE,
+                Action.GET,
+                Action.DELETE,
+                Action.UPDATE,
+            ],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/crm/v3/objects/emails',
+                    action=Action.LIST,
+                    description='Returns a paginated list of emails',
+                    query_params=[
+                        'limit',
+                        'after',
+                        'associations',
+                        'properties',
+                        'propertiesWithHistory',
+                        'archived',
+                    ],
+                    query_params_schema={
+                        'limit': {
+                            'type': 'integer',
+                            'required': False,
+                            'default': 25,
+                            'minimum': 1,
+                            'maximum': 100,
+                        },
+                        'after': {'type': 'string', 'required': False},
+                        'associations': {'type': 'string', 'required': False},
+                        'properties': {'type': 'string', 'required': False},
+                        'propertiesWithHistory': {'type': 'string', 'required': False},
+                        'archived': {'type': 'boolean', 'required': False},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Paginated list of emails',
+                        'properties': {
+                            'results': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'HubSpot email engagement object',
+                                    'properties': {
+                                        'id': {'type': 'string', 'description': 'Unique email identifier'},
+                                        'properties': {
+                                            'type': 'object',
+                                            'description': 'Email properties',
+                                            'properties': {
+                                                'hs_email_subject': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'Subject line of the email',
+                                                },
+                                                'hs_email_text': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'Plain text body of the email',
+                                                },
+                                                'hs_email_html': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'HTML body of the email',
+                                                },
+                                                'hs_email_direction': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'Direction of the email (EMAIL, INCOMING_EMAIL, FORWARDED_EMAIL)',
+                                                },
+                                                'hs_email_status': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'Status of the email (e.g., BOUNCED, FAILED, SCHEDULED, SENDING, SENT, DRAFT)',
+                                                },
+                                                'hs_email_sender_email': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'Sender email address',
+                                                },
+                                                'hs_email_to_email': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'Recipient email address(es)',
+                                                },
+                                                'hs_timestamp': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'Timestamp when the email activity occurred',
+                                                },
+                                                'hubspot_owner_id': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'ID of the email owner',
+                                                },
+                                                'hs_object_id': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'HubSpot object ID',
+                                                },
+                                                'hs_createdate': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'Date the email was created',
+                                                },
+                                                'hs_lastmodifieddate': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'Last modified date',
+                                                },
+                                            },
+                                            'additionalProperties': True,
+                                        },
+                                        'createdAt': {
+                                            'type': 'string',
+                                            'format': 'date-time',
+                                            'description': 'Creation timestamp',
+                                        },
+                                        'updatedAt': {
+                                            'type': 'string',
+                                            'format': 'date-time',
+                                            'description': 'Last update timestamp',
+                                        },
+                                        'archived': {'type': 'boolean', 'description': 'Whether the email is archived'},
+                                        'archivedAt': {
+                                            'type': ['string', 'null'],
+                                            'format': 'date-time',
+                                            'description': 'Timestamp when the email was archived',
+                                        },
+                                        'associations': {
+                                            'type': ['object', 'null'],
+                                            'description': 'Relationships with other CRM objects',
+                                            'additionalProperties': True,
+                                        },
+                                    },
+                                    'x-airbyte-entity-name': 'emails',
+                                    'x-airbyte-stream-name': 'engagements_emails',
+                                    'x-airbyte-ai-hints': {
+                                        'summary': 'Email engagements logged in the CRM (contacts, companies, deals, tickets)',
+                                        'when_to_use': 'Listing, viewing, logging, updating, or deleting email records on CRM objects',
+                                        'trigger_phrases': [
+                                            'log email',
+                                            'create email',
+                                            'record email',
+                                            'email to contact',
+                                            'email on deal',
+                                            'list emails',
+                                            'get email',
+                                            'delete email',
+                                            'remove email',
+                                        ],
+                                        'freshness': 'live',
+                                    },
+                                },
+                            },
+                            'paging': {
+                                'type': 'object',
+                                'description': 'Pagination information',
+                                'properties': {
+                                    'next': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'after': {'type': 'string', 'description': 'Cursor for next page'},
+                                            'link': {'type': 'string', 'description': 'URL for next page'},
+                                        },
+                                    },
+                                },
+                            },
+                            'total': {'type': 'integer', 'description': 'Total number of results (search only)'},
+                        },
+                    },
+                    record_extractor='$.results',
+                    meta_extractor={'next_cursor': '$.paging.next.after', 'next_link': '$.paging.next.link'},
+                ),
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/crm/v3/objects/emails',
+                    action=Action.CREATE,
+                    description='Create a new email engagement in HubSpot CRM. Emails can be associated with contacts,\ncompanies, deals, or tickets by using the associations parameter.\nThe hs_timestamp property sets when the email activity occurred.\n',
+                    body_fields=['properties', 'associations'],
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for creating a new email',
+                        'properties': {
+                            'properties': {
+                                'type': 'object',
+                                'description': 'Email properties to set',
+                                'required': ['hs_timestamp', 'hs_email_direction'],
+                                'properties': {
+                                    'hs_email_subject': {'type': 'string', 'description': 'Subject line of the email'},
+                                    'hs_email_text': {'type': 'string', 'description': 'Plain text body of the email'},
+                                    'hs_email_html': {'type': 'string', 'description': 'HTML body of the email'},
+                                    'hs_email_direction': {'type': 'string', 'description': 'Required. Direction of the email (EMAIL for sent, INCOMING_EMAIL for received, FORWARDED_EMAIL for forwarded)'},
+                                    'hs_email_status': {'type': 'string', 'description': 'Status of the email (BOUNCED, FAILED, SCHEDULED, SENDING, SENT, DRAFT)'},
+                                    'hs_email_sender_email': {'type': 'string', 'description': 'Sender email address'},
+                                    'hs_email_to_email': {'type': 'string', 'description': 'Recipient email address(es)'},
+                                    'hs_timestamp': {'type': 'string', 'description': 'Required. Timestamp when the email activity occurred (ISO 8601 format, e.g. 2025-01-15T10:30:00.000Z). Use the current time if the user does not specify one.'},
+                                    'hubspot_owner_id': {'type': 'string', 'description': 'ID of the HubSpot owner to assign to this email'},
+                                },
+                                'additionalProperties': True,
+                            },
+                            'associations': {
+                                'type': 'array',
+                                'description': 'Associate the email with other CRM records (contacts, companies, deals, tickets)',
+                                'items': {
+                                    'type': 'object',
+                                    'properties': {
+                                        'to': {
+                                            'type': 'object',
+                                            'properties': {
+                                                'id': {'type': 'string', 'description': 'ID of the record to associate with'},
+                                            },
+                                        },
+                                        'types': {
+                                            'type': 'array',
+                                            'items': {
+                                                'type': 'object',
+                                                'properties': {
+                                                    'associationCategory': {'type': 'string', 'description': 'Association category (e.g., HUBSPOT_DEFINED)'},
+                                                    'associationTypeId': {'type': 'integer', 'description': 'Association type ID (e.g., 198 for email-to-contact, 186 for email-to-company, 210 for email-to-deal, 224 for email-to-ticket)'},
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                        'required': ['properties'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'HubSpot email engagement object',
+                        'properties': {
+                            'id': {'type': 'string', 'description': 'Unique email identifier'},
+                            'properties': {
+                                'type': 'object',
+                                'description': 'Email properties',
+                                'properties': {
+                                    'hs_email_subject': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Subject line of the email',
+                                    },
+                                    'hs_email_text': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Plain text body of the email',
+                                    },
+                                    'hs_email_html': {
+                                        'type': ['string', 'null'],
+                                        'description': 'HTML body of the email',
+                                    },
+                                    'hs_email_direction': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Direction of the email (EMAIL, INCOMING_EMAIL, FORWARDED_EMAIL)',
+                                    },
+                                    'hs_email_status': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Status of the email (e.g., BOUNCED, FAILED, SCHEDULED, SENDING, SENT, DRAFT)',
+                                    },
+                                    'hs_email_sender_email': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Sender email address',
+                                    },
+                                    'hs_email_to_email': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Recipient email address(es)',
+                                    },
+                                    'hs_timestamp': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Timestamp when the email activity occurred',
+                                    },
+                                    'hubspot_owner_id': {
+                                        'type': ['string', 'null'],
+                                        'description': 'ID of the email owner',
+                                    },
+                                    'hs_object_id': {
+                                        'type': ['string', 'null'],
+                                        'description': 'HubSpot object ID',
+                                    },
+                                    'hs_createdate': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Date the email was created',
+                                    },
+                                    'hs_lastmodifieddate': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Last modified date',
+                                    },
+                                },
+                                'additionalProperties': True,
+                            },
+                            'createdAt': {
+                                'type': 'string',
+                                'format': 'date-time',
+                                'description': 'Creation timestamp',
+                            },
+                            'updatedAt': {
+                                'type': 'string',
+                                'format': 'date-time',
+                                'description': 'Last update timestamp',
+                            },
+                            'archived': {'type': 'boolean', 'description': 'Whether the email is archived'},
+                            'archivedAt': {
+                                'type': ['string', 'null'],
+                                'format': 'date-time',
+                                'description': 'Timestamp when the email was archived',
+                            },
+                            'associations': {
+                                'type': ['object', 'null'],
+                                'description': 'Relationships with other CRM objects',
+                                'additionalProperties': True,
+                            },
+                        },
+                        'x-airbyte-entity-name': 'emails',
+                        'x-airbyte-stream-name': 'engagements_emails',
+                        'x-airbyte-ai-hints': {
+                            'summary': 'Email engagements logged in the CRM (contacts, companies, deals, tickets)',
+                            'when_to_use': 'Listing, viewing, logging, updating, or deleting email records on CRM objects',
+                            'trigger_phrases': [
+                                'log email',
+                                'create email',
+                                'record email',
+                                'email to contact',
+                                'email on deal',
+                                'list emails',
+                                'get email',
+                                'delete email',
+                                'remove email',
+                            ],
+                            'freshness': 'live',
+                        },
+                    },
+                ),
+                Action.GET: EndpointDefinition(
+                    method='GET',
+                    path='/crm/v3/objects/emails/{emailId}',
+                    action=Action.GET,
+                    description='Get a single email by ID',
+                    query_params=[
+                        'properties',
+                        'propertiesWithHistory',
+                        'associations',
+                        'idProperty',
+                        'archived',
+                    ],
+                    query_params_schema={
+                        'properties': {'type': 'string', 'required': False},
+                        'propertiesWithHistory': {'type': 'string', 'required': False},
+                        'associations': {'type': 'string', 'required': False},
+                        'idProperty': {'type': 'string', 'required': False},
+                        'archived': {'type': 'boolean', 'required': False},
+                    },
+                    path_params=['emailId'],
+                    path_params_schema={
+                        'emailId': {'type': 'string', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'HubSpot email engagement object',
+                        'properties': {
+                            'id': {'type': 'string', 'description': 'Unique email identifier'},
+                            'properties': {
+                                'type': 'object',
+                                'description': 'Email properties',
+                                'properties': {
+                                    'hs_email_subject': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Subject line of the email',
+                                    },
+                                    'hs_email_text': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Plain text body of the email',
+                                    },
+                                    'hs_email_html': {
+                                        'type': ['string', 'null'],
+                                        'description': 'HTML body of the email',
+                                    },
+                                    'hs_email_direction': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Direction of the email (EMAIL, INCOMING_EMAIL, FORWARDED_EMAIL)',
+                                    },
+                                    'hs_email_status': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Status of the email (e.g., BOUNCED, FAILED, SCHEDULED, SENDING, SENT, DRAFT)',
+                                    },
+                                    'hs_email_sender_email': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Sender email address',
+                                    },
+                                    'hs_email_to_email': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Recipient email address(es)',
+                                    },
+                                    'hs_timestamp': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Timestamp when the email activity occurred',
+                                    },
+                                    'hubspot_owner_id': {
+                                        'type': ['string', 'null'],
+                                        'description': 'ID of the email owner',
+                                    },
+                                    'hs_object_id': {
+                                        'type': ['string', 'null'],
+                                        'description': 'HubSpot object ID',
+                                    },
+                                    'hs_createdate': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Date the email was created',
+                                    },
+                                    'hs_lastmodifieddate': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Last modified date',
+                                    },
+                                },
+                                'additionalProperties': True,
+                            },
+                            'createdAt': {
+                                'type': 'string',
+                                'format': 'date-time',
+                                'description': 'Creation timestamp',
+                            },
+                            'updatedAt': {
+                                'type': 'string',
+                                'format': 'date-time',
+                                'description': 'Last update timestamp',
+                            },
+                            'archived': {'type': 'boolean', 'description': 'Whether the email is archived'},
+                            'archivedAt': {
+                                'type': ['string', 'null'],
+                                'format': 'date-time',
+                                'description': 'Timestamp when the email was archived',
+                            },
+                            'associations': {
+                                'type': ['object', 'null'],
+                                'description': 'Relationships with other CRM objects',
+                                'additionalProperties': True,
+                            },
+                        },
+                        'x-airbyte-entity-name': 'emails',
+                        'x-airbyte-stream-name': 'engagements_emails',
+                        'x-airbyte-ai-hints': {
+                            'summary': 'Email engagements logged in the CRM (contacts, companies, deals, tickets)',
+                            'when_to_use': 'Listing, viewing, logging, updating, or deleting email records on CRM objects',
+                            'trigger_phrases': [
+                                'log email',
+                                'create email',
+                                'record email',
+                                'email to contact',
+                                'email on deal',
+                                'list emails',
+                                'get email',
+                                'delete email',
+                                'remove email',
+                            ],
+                            'freshness': 'live',
+                        },
+                    },
+                ),
+                Action.DELETE: EndpointDefinition(
+                    method='DELETE',
+                    path='/crm/v3/objects/emails/{emailId}',
+                    action=Action.DELETE,
+                    description='Archive an email by ID. This is a soft delete — the email is moved to the\nrecycle bin and can be restored for approximately 90 days. No public\nhard-delete endpoint exists.\n',
+                    path_params=['emailId'],
+                    path_params_schema={
+                        'emailId': {'type': 'string', 'required': True},
+                    },
+                    no_content_response=True,
+                ),
+                Action.UPDATE: EndpointDefinition(
+                    method='PATCH',
+                    path='/crm/v3/objects/emails/{emailId}',
+                    action=Action.UPDATE,
+                    description="Update an existing email's properties by ID.",
+                    body_fields=['properties'],
+                    path_params=['emailId'],
+                    path_params_schema={
+                        'emailId': {'type': 'string', 'required': True},
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for updating an existing email. Only provided properties will be updated.',
+                        'properties': {
+                            'properties': {
+                                'type': 'object',
+                                'description': 'Email properties to update',
+                                'properties': {
+                                    'hs_email_subject': {'type': 'string', 'description': 'Subject line of the email'},
+                                    'hs_email_text': {'type': 'string', 'description': 'Plain text body of the email'},
+                                    'hs_email_html': {'type': 'string', 'description': 'HTML body of the email'},
+                                    'hs_email_direction': {'type': 'string', 'description': 'Direction of the email (EMAIL, INCOMING_EMAIL, FORWARDED_EMAIL)'},
+                                    'hs_email_status': {'type': 'string', 'description': 'Status of the email (BOUNCED, FAILED, SCHEDULED, SENDING, SENT, DRAFT)'},
+                                    'hs_timestamp': {'type': 'string', 'description': 'Timestamp when the email activity occurred'},
+                                    'hubspot_owner_id': {'type': 'string', 'description': 'ID of the HubSpot owner to assign to this email'},
+                                },
+                                'additionalProperties': True,
+                            },
+                        },
+                        'required': ['properties'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'HubSpot email engagement object',
+                        'properties': {
+                            'id': {'type': 'string', 'description': 'Unique email identifier'},
+                            'properties': {
+                                'type': 'object',
+                                'description': 'Email properties',
+                                'properties': {
+                                    'hs_email_subject': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Subject line of the email',
+                                    },
+                                    'hs_email_text': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Plain text body of the email',
+                                    },
+                                    'hs_email_html': {
+                                        'type': ['string', 'null'],
+                                        'description': 'HTML body of the email',
+                                    },
+                                    'hs_email_direction': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Direction of the email (EMAIL, INCOMING_EMAIL, FORWARDED_EMAIL)',
+                                    },
+                                    'hs_email_status': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Status of the email (e.g., BOUNCED, FAILED, SCHEDULED, SENDING, SENT, DRAFT)',
+                                    },
+                                    'hs_email_sender_email': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Sender email address',
+                                    },
+                                    'hs_email_to_email': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Recipient email address(es)',
+                                    },
+                                    'hs_timestamp': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Timestamp when the email activity occurred',
+                                    },
+                                    'hubspot_owner_id': {
+                                        'type': ['string', 'null'],
+                                        'description': 'ID of the email owner',
+                                    },
+                                    'hs_object_id': {
+                                        'type': ['string', 'null'],
+                                        'description': 'HubSpot object ID',
+                                    },
+                                    'hs_createdate': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Date the email was created',
+                                    },
+                                    'hs_lastmodifieddate': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Last modified date',
+                                    },
+                                },
+                                'additionalProperties': True,
+                            },
+                            'createdAt': {
+                                'type': 'string',
+                                'format': 'date-time',
+                                'description': 'Creation timestamp',
+                            },
+                            'updatedAt': {
+                                'type': 'string',
+                                'format': 'date-time',
+                                'description': 'Last update timestamp',
+                            },
+                            'archived': {'type': 'boolean', 'description': 'Whether the email is archived'},
+                            'archivedAt': {
+                                'type': ['string', 'null'],
+                                'format': 'date-time',
+                                'description': 'Timestamp when the email was archived',
+                            },
+                            'associations': {
+                                'type': ['object', 'null'],
+                                'description': 'Relationships with other CRM objects',
+                                'additionalProperties': True,
+                            },
+                        },
+                        'x-airbyte-entity-name': 'emails',
+                        'x-airbyte-stream-name': 'engagements_emails',
+                        'x-airbyte-ai-hints': {
+                            'summary': 'Email engagements logged in the CRM (contacts, companies, deals, tickets)',
+                            'when_to_use': 'Listing, viewing, logging, updating, or deleting email records on CRM objects',
+                            'trigger_phrases': [
+                                'log email',
+                                'create email',
+                                'record email',
+                                'email to contact',
+                                'email on deal',
+                                'list emails',
+                                'get email',
+                                'delete email',
+                                'remove email',
+                            ],
+                            'freshness': 'live',
+                        },
+                    },
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'HubSpot email engagement object',
+                'properties': {
+                    'id': {'type': 'string', 'description': 'Unique email identifier'},
+                    'properties': {
+                        'type': 'object',
+                        'description': 'Email properties',
+                        'properties': {
+                            'hs_email_subject': {
+                                'type': ['string', 'null'],
+                                'description': 'Subject line of the email',
+                            },
+                            'hs_email_text': {
+                                'type': ['string', 'null'],
+                                'description': 'Plain text body of the email',
+                            },
+                            'hs_email_html': {
+                                'type': ['string', 'null'],
+                                'description': 'HTML body of the email',
+                            },
+                            'hs_email_direction': {
+                                'type': ['string', 'null'],
+                                'description': 'Direction of the email (EMAIL, INCOMING_EMAIL, FORWARDED_EMAIL)',
+                            },
+                            'hs_email_status': {
+                                'type': ['string', 'null'],
+                                'description': 'Status of the email (e.g., BOUNCED, FAILED, SCHEDULED, SENDING, SENT, DRAFT)',
+                            },
+                            'hs_email_sender_email': {
+                                'type': ['string', 'null'],
+                                'description': 'Sender email address',
+                            },
+                            'hs_email_to_email': {
+                                'type': ['string', 'null'],
+                                'description': 'Recipient email address(es)',
+                            },
+                            'hs_timestamp': {
+                                'type': ['string', 'null'],
+                                'description': 'Timestamp when the email activity occurred',
+                            },
+                            'hubspot_owner_id': {
+                                'type': ['string', 'null'],
+                                'description': 'ID of the email owner',
+                            },
+                            'hs_object_id': {
+                                'type': ['string', 'null'],
+                                'description': 'HubSpot object ID',
+                            },
+                            'hs_createdate': {
+                                'type': ['string', 'null'],
+                                'description': 'Date the email was created',
+                            },
+                            'hs_lastmodifieddate': {
+                                'type': ['string', 'null'],
+                                'description': 'Last modified date',
+                            },
+                        },
+                        'additionalProperties': True,
+                    },
+                    'createdAt': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'Creation timestamp',
+                    },
+                    'updatedAt': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'Last update timestamp',
+                    },
+                    'archived': {'type': 'boolean', 'description': 'Whether the email is archived'},
+                    'archivedAt': {
+                        'type': ['string', 'null'],
+                        'format': 'date-time',
+                        'description': 'Timestamp when the email was archived',
+                    },
+                    'associations': {
+                        'type': ['object', 'null'],
+                        'description': 'Relationships with other CRM objects',
+                        'additionalProperties': True,
+                    },
+                },
+                'x-airbyte-entity-name': 'emails',
+                'x-airbyte-stream-name': 'engagements_emails',
+                'x-airbyte-ai-hints': {
+                    'summary': 'Email engagements logged in the CRM (contacts, companies, deals, tickets)',
+                    'when_to_use': 'Listing, viewing, logging, updating, or deleting email records on CRM objects',
+                    'trigger_phrases': [
+                        'log email',
+                        'create email',
+                        'record email',
+                        'email to contact',
+                        'email on deal',
+                        'list emails',
+                        'get email',
+                        'delete email',
+                        'remove email',
+                    ],
+                    'freshness': 'live',
+                },
+            },
+            ai_hints={
+                'summary': 'Email engagements logged in the CRM (contacts, companies, deals, tickets)',
+                'when_to_use': 'Listing, viewing, logging, updating, or deleting email records on CRM objects',
+                'trigger_phrases': [
+                    'log email',
+                    'create email',
+                    'record email',
+                    'email to contact',
+                    'email on deal',
+                    'list emails',
+                    'get email',
+                    'delete email',
+                    'remove email',
+                ],
+                'freshness': 'live',
+            },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='emails',
+                    target_entity='contacts',
+                    foreign_key='associations',
+                    cardinality='many_to_many',
+                ),
+                EntityRelationshipConfig(
+                    source_entity='emails',
+                    target_entity='companies',
+                    foreign_key='associations',
+                    cardinality='many_to_many',
+                ),
+                EntityRelationshipConfig(
+                    source_entity='emails',
+                    target_entity='deals',
+                    foreign_key='associations',
+                    cardinality='many_to_many',
+                ),
+                EntityRelationshipConfig(
+                    source_entity='emails',
+                    target_entity='tickets',
+                    foreign_key='associations',
+                    cardinality='many_to_many',
+                ),
+            ],
+        ),
+        EntityDefinition(
+            name='meetings',
+            stream_name='engagements_meetings',
+            actions=[
+                Action.LIST,
+                Action.CREATE,
+                Action.GET,
+                Action.DELETE,
+                Action.UPDATE,
+            ],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/crm/v3/objects/meetings',
+                    action=Action.LIST,
+                    description='Returns a paginated list of meetings',
+                    query_params=[
+                        'limit',
+                        'after',
+                        'associations',
+                        'properties',
+                        'propertiesWithHistory',
+                        'archived',
+                    ],
+                    query_params_schema={
+                        'limit': {
+                            'type': 'integer',
+                            'required': False,
+                            'default': 25,
+                            'minimum': 1,
+                            'maximum': 100,
+                        },
+                        'after': {'type': 'string', 'required': False},
+                        'associations': {'type': 'string', 'required': False},
+                        'properties': {'type': 'string', 'required': False},
+                        'propertiesWithHistory': {'type': 'string', 'required': False},
+                        'archived': {'type': 'boolean', 'required': False},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Paginated list of meetings',
+                        'properties': {
+                            'results': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'HubSpot meeting engagement object',
+                                    'properties': {
+                                        'id': {'type': 'string', 'description': 'Unique meeting identifier'},
+                                        'properties': {
+                                            'type': 'object',
+                                            'description': 'Meeting properties',
+                                            'properties': {
+                                                'hs_meeting_title': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'Title of the meeting',
+                                                },
+                                                'hs_meeting_body': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'Description or notes about the meeting',
+                                                },
+                                                'hs_meeting_start_time': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'Start time of the meeting (ISO 8601 format)',
+                                                },
+                                                'hs_meeting_end_time': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'End time of the meeting (ISO 8601 format)',
+                                                },
+                                                'hs_meeting_location': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'Location of the meeting',
+                                                },
+                                                'hs_meeting_outcome': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'Outcome of the meeting (e.g., SCHEDULED, COMPLETED, RESCHEDULED, NO_SHOW, CANCELED)',
+                                                },
+                                                'hs_internal_meeting_notes': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'Internal notes about the meeting',
+                                                },
+                                                'hs_timestamp': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'Timestamp when the meeting activity occurred',
+                                                },
+                                                'hubspot_owner_id': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'ID of the meeting owner',
+                                                },
+                                                'hs_object_id': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'HubSpot object ID',
+                                                },
+                                                'hs_createdate': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'Date the meeting was created',
+                                                },
+                                                'hs_lastmodifieddate': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'Last modified date',
+                                                },
+                                            },
+                                            'additionalProperties': True,
+                                        },
+                                        'createdAt': {
+                                            'type': 'string',
+                                            'format': 'date-time',
+                                            'description': 'Creation timestamp',
+                                        },
+                                        'updatedAt': {
+                                            'type': 'string',
+                                            'format': 'date-time',
+                                            'description': 'Last update timestamp',
+                                        },
+                                        'archived': {'type': 'boolean', 'description': 'Whether the meeting is archived'},
+                                        'archivedAt': {
+                                            'type': ['string', 'null'],
+                                            'format': 'date-time',
+                                            'description': 'Timestamp when the meeting was archived',
+                                        },
+                                        'associations': {
+                                            'type': ['object', 'null'],
+                                            'description': 'Relationships with other CRM objects',
+                                            'additionalProperties': True,
+                                        },
+                                    },
+                                    'x-airbyte-entity-name': 'meetings',
+                                    'x-airbyte-stream-name': 'engagements_meetings',
+                                    'x-airbyte-ai-hints': {
+                                        'summary': 'Meeting engagements logged in the CRM (contacts, companies, deals, tickets)',
+                                        'when_to_use': 'Listing, viewing, scheduling, updating, or deleting meeting records on CRM objects',
+                                        'trigger_phrases': [
+                                            'log meeting',
+                                            'create meeting',
+                                            'schedule meeting',
+                                            'meeting with contact',
+                                            'meeting on deal',
+                                            'list meetings',
+                                            'get meeting',
+                                            'delete meeting',
+                                            'remove meeting',
+                                        ],
+                                        'freshness': 'live',
+                                    },
+                                },
+                            },
+                            'paging': {
+                                'type': 'object',
+                                'description': 'Pagination information',
+                                'properties': {
+                                    'next': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'after': {'type': 'string', 'description': 'Cursor for next page'},
+                                            'link': {'type': 'string', 'description': 'URL for next page'},
+                                        },
+                                    },
+                                },
+                            },
+                            'total': {'type': 'integer', 'description': 'Total number of results (search only)'},
+                        },
+                    },
+                    record_extractor='$.results',
+                    meta_extractor={'next_cursor': '$.paging.next.after', 'next_link': '$.paging.next.link'},
+                ),
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/crm/v3/objects/meetings',
+                    action=Action.CREATE,
+                    description='Create a new meeting engagement in HubSpot CRM. Meetings can be associated with contacts,\ncompanies, deals, or tickets by using the associations parameter.\nThe hs_timestamp property sets when the meeting activity occurred.\n',
+                    body_fields=['properties', 'associations'],
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for creating a new meeting',
+                        'properties': {
+                            'properties': {
+                                'type': 'object',
+                                'description': 'Meeting properties to set',
+                                'required': ['hs_timestamp', 'hs_meeting_title'],
+                                'properties': {
+                                    'hs_meeting_title': {'type': 'string', 'description': 'Required. Title of the meeting'},
+                                    'hs_meeting_body': {'type': 'string', 'description': 'Description or notes about the meeting (supports HTML)'},
+                                    'hs_meeting_start_time': {'type': 'string', 'description': 'Start time of the meeting (ISO 8601 format, e.g. 2025-01-15T10:30:00.000Z)'},
+                                    'hs_meeting_end_time': {'type': 'string', 'description': 'End time of the meeting (ISO 8601 format, e.g. 2025-01-15T11:30:00.000Z)'},
+                                    'hs_meeting_location': {'type': 'string', 'description': 'Location of the meeting'},
+                                    'hs_meeting_outcome': {'type': 'string', 'description': 'Outcome of the meeting (e.g., SCHEDULED, COMPLETED, RESCHEDULED, NO_SHOW, CANCELED)'},
+                                    'hs_internal_meeting_notes': {'type': 'string', 'description': 'Internal notes about the meeting'},
+                                    'hs_timestamp': {'type': 'string', 'description': 'Required. Timestamp when the meeting activity occurred (ISO 8601 format, e.g. 2025-01-15T10:30:00.000Z). Use the current time if the user does not specify one.'},
+                                    'hubspot_owner_id': {'type': 'string', 'description': 'ID of the HubSpot owner to assign to this meeting'},
+                                },
+                                'additionalProperties': True,
+                            },
+                            'associations': {
+                                'type': 'array',
+                                'description': 'Associate the meeting with other CRM records (contacts, companies, deals, tickets)',
+                                'items': {
+                                    'type': 'object',
+                                    'properties': {
+                                        'to': {
+                                            'type': 'object',
+                                            'properties': {
+                                                'id': {'type': 'string', 'description': 'ID of the record to associate with'},
+                                            },
+                                        },
+                                        'types': {
+                                            'type': 'array',
+                                            'items': {
+                                                'type': 'object',
+                                                'properties': {
+                                                    'associationCategory': {'type': 'string', 'description': 'Association category (e.g., HUBSPOT_DEFINED)'},
+                                                    'associationTypeId': {'type': 'integer', 'description': 'Association type ID (e.g., 200 for meeting-to-contact, 188 for meeting-to-company, 212 for meeting-to-deal, 226 for meeting-to-ticket)'},
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                        'required': ['properties'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'HubSpot meeting engagement object',
+                        'properties': {
+                            'id': {'type': 'string', 'description': 'Unique meeting identifier'},
+                            'properties': {
+                                'type': 'object',
+                                'description': 'Meeting properties',
+                                'properties': {
+                                    'hs_meeting_title': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Title of the meeting',
+                                    },
+                                    'hs_meeting_body': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Description or notes about the meeting',
+                                    },
+                                    'hs_meeting_start_time': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Start time of the meeting (ISO 8601 format)',
+                                    },
+                                    'hs_meeting_end_time': {
+                                        'type': ['string', 'null'],
+                                        'description': 'End time of the meeting (ISO 8601 format)',
+                                    },
+                                    'hs_meeting_location': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Location of the meeting',
+                                    },
+                                    'hs_meeting_outcome': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Outcome of the meeting (e.g., SCHEDULED, COMPLETED, RESCHEDULED, NO_SHOW, CANCELED)',
+                                    },
+                                    'hs_internal_meeting_notes': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Internal notes about the meeting',
+                                    },
+                                    'hs_timestamp': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Timestamp when the meeting activity occurred',
+                                    },
+                                    'hubspot_owner_id': {
+                                        'type': ['string', 'null'],
+                                        'description': 'ID of the meeting owner',
+                                    },
+                                    'hs_object_id': {
+                                        'type': ['string', 'null'],
+                                        'description': 'HubSpot object ID',
+                                    },
+                                    'hs_createdate': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Date the meeting was created',
+                                    },
+                                    'hs_lastmodifieddate': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Last modified date',
+                                    },
+                                },
+                                'additionalProperties': True,
+                            },
+                            'createdAt': {
+                                'type': 'string',
+                                'format': 'date-time',
+                                'description': 'Creation timestamp',
+                            },
+                            'updatedAt': {
+                                'type': 'string',
+                                'format': 'date-time',
+                                'description': 'Last update timestamp',
+                            },
+                            'archived': {'type': 'boolean', 'description': 'Whether the meeting is archived'},
+                            'archivedAt': {
+                                'type': ['string', 'null'],
+                                'format': 'date-time',
+                                'description': 'Timestamp when the meeting was archived',
+                            },
+                            'associations': {
+                                'type': ['object', 'null'],
+                                'description': 'Relationships with other CRM objects',
+                                'additionalProperties': True,
+                            },
+                        },
+                        'x-airbyte-entity-name': 'meetings',
+                        'x-airbyte-stream-name': 'engagements_meetings',
+                        'x-airbyte-ai-hints': {
+                            'summary': 'Meeting engagements logged in the CRM (contacts, companies, deals, tickets)',
+                            'when_to_use': 'Listing, viewing, scheduling, updating, or deleting meeting records on CRM objects',
+                            'trigger_phrases': [
+                                'log meeting',
+                                'create meeting',
+                                'schedule meeting',
+                                'meeting with contact',
+                                'meeting on deal',
+                                'list meetings',
+                                'get meeting',
+                                'delete meeting',
+                                'remove meeting',
+                            ],
+                            'freshness': 'live',
+                        },
+                    },
+                ),
+                Action.GET: EndpointDefinition(
+                    method='GET',
+                    path='/crm/v3/objects/meetings/{meetingId}',
+                    action=Action.GET,
+                    description='Get a single meeting by ID',
+                    query_params=[
+                        'properties',
+                        'propertiesWithHistory',
+                        'associations',
+                        'idProperty',
+                        'archived',
+                    ],
+                    query_params_schema={
+                        'properties': {'type': 'string', 'required': False},
+                        'propertiesWithHistory': {'type': 'string', 'required': False},
+                        'associations': {'type': 'string', 'required': False},
+                        'idProperty': {'type': 'string', 'required': False},
+                        'archived': {'type': 'boolean', 'required': False},
+                    },
+                    path_params=['meetingId'],
+                    path_params_schema={
+                        'meetingId': {'type': 'string', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'HubSpot meeting engagement object',
+                        'properties': {
+                            'id': {'type': 'string', 'description': 'Unique meeting identifier'},
+                            'properties': {
+                                'type': 'object',
+                                'description': 'Meeting properties',
+                                'properties': {
+                                    'hs_meeting_title': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Title of the meeting',
+                                    },
+                                    'hs_meeting_body': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Description or notes about the meeting',
+                                    },
+                                    'hs_meeting_start_time': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Start time of the meeting (ISO 8601 format)',
+                                    },
+                                    'hs_meeting_end_time': {
+                                        'type': ['string', 'null'],
+                                        'description': 'End time of the meeting (ISO 8601 format)',
+                                    },
+                                    'hs_meeting_location': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Location of the meeting',
+                                    },
+                                    'hs_meeting_outcome': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Outcome of the meeting (e.g., SCHEDULED, COMPLETED, RESCHEDULED, NO_SHOW, CANCELED)',
+                                    },
+                                    'hs_internal_meeting_notes': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Internal notes about the meeting',
+                                    },
+                                    'hs_timestamp': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Timestamp when the meeting activity occurred',
+                                    },
+                                    'hubspot_owner_id': {
+                                        'type': ['string', 'null'],
+                                        'description': 'ID of the meeting owner',
+                                    },
+                                    'hs_object_id': {
+                                        'type': ['string', 'null'],
+                                        'description': 'HubSpot object ID',
+                                    },
+                                    'hs_createdate': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Date the meeting was created',
+                                    },
+                                    'hs_lastmodifieddate': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Last modified date',
+                                    },
+                                },
+                                'additionalProperties': True,
+                            },
+                            'createdAt': {
+                                'type': 'string',
+                                'format': 'date-time',
+                                'description': 'Creation timestamp',
+                            },
+                            'updatedAt': {
+                                'type': 'string',
+                                'format': 'date-time',
+                                'description': 'Last update timestamp',
+                            },
+                            'archived': {'type': 'boolean', 'description': 'Whether the meeting is archived'},
+                            'archivedAt': {
+                                'type': ['string', 'null'],
+                                'format': 'date-time',
+                                'description': 'Timestamp when the meeting was archived',
+                            },
+                            'associations': {
+                                'type': ['object', 'null'],
+                                'description': 'Relationships with other CRM objects',
+                                'additionalProperties': True,
+                            },
+                        },
+                        'x-airbyte-entity-name': 'meetings',
+                        'x-airbyte-stream-name': 'engagements_meetings',
+                        'x-airbyte-ai-hints': {
+                            'summary': 'Meeting engagements logged in the CRM (contacts, companies, deals, tickets)',
+                            'when_to_use': 'Listing, viewing, scheduling, updating, or deleting meeting records on CRM objects',
+                            'trigger_phrases': [
+                                'log meeting',
+                                'create meeting',
+                                'schedule meeting',
+                                'meeting with contact',
+                                'meeting on deal',
+                                'list meetings',
+                                'get meeting',
+                                'delete meeting',
+                                'remove meeting',
+                            ],
+                            'freshness': 'live',
+                        },
+                    },
+                ),
+                Action.DELETE: EndpointDefinition(
+                    method='DELETE',
+                    path='/crm/v3/objects/meetings/{meetingId}',
+                    action=Action.DELETE,
+                    description='Archive a meeting by ID. This is a soft delete — the meeting is moved to the\nrecycle bin and can be restored for approximately 90 days. No public\nhard-delete endpoint exists.\n',
+                    path_params=['meetingId'],
+                    path_params_schema={
+                        'meetingId': {'type': 'string', 'required': True},
+                    },
+                    no_content_response=True,
+                ),
+                Action.UPDATE: EndpointDefinition(
+                    method='PATCH',
+                    path='/crm/v3/objects/meetings/{meetingId}',
+                    action=Action.UPDATE,
+                    description="Update an existing meeting's properties by ID.",
+                    body_fields=['properties'],
+                    path_params=['meetingId'],
+                    path_params_schema={
+                        'meetingId': {'type': 'string', 'required': True},
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for updating an existing meeting. Only provided properties will be updated.',
+                        'properties': {
+                            'properties': {
+                                'type': 'object',
+                                'description': 'Meeting properties to update',
+                                'properties': {
+                                    'hs_meeting_title': {'type': 'string', 'description': 'Title of the meeting'},
+                                    'hs_meeting_body': {'type': 'string', 'description': 'Description or notes about the meeting (supports HTML)'},
+                                    'hs_meeting_start_time': {'type': 'string', 'description': 'Start time of the meeting (ISO 8601 format)'},
+                                    'hs_meeting_end_time': {'type': 'string', 'description': 'End time of the meeting (ISO 8601 format)'},
+                                    'hs_meeting_location': {'type': 'string', 'description': 'Location of the meeting'},
+                                    'hs_meeting_outcome': {'type': 'string', 'description': 'Outcome of the meeting (e.g., SCHEDULED, COMPLETED, RESCHEDULED, NO_SHOW, CANCELED)'},
+                                    'hs_internal_meeting_notes': {'type': 'string', 'description': 'Internal notes about the meeting'},
+                                    'hs_timestamp': {'type': 'string', 'description': 'Timestamp when the meeting activity occurred'},
+                                    'hubspot_owner_id': {'type': 'string', 'description': 'ID of the HubSpot owner to assign to this meeting'},
+                                },
+                                'additionalProperties': True,
+                            },
+                        },
+                        'required': ['properties'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'HubSpot meeting engagement object',
+                        'properties': {
+                            'id': {'type': 'string', 'description': 'Unique meeting identifier'},
+                            'properties': {
+                                'type': 'object',
+                                'description': 'Meeting properties',
+                                'properties': {
+                                    'hs_meeting_title': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Title of the meeting',
+                                    },
+                                    'hs_meeting_body': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Description or notes about the meeting',
+                                    },
+                                    'hs_meeting_start_time': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Start time of the meeting (ISO 8601 format)',
+                                    },
+                                    'hs_meeting_end_time': {
+                                        'type': ['string', 'null'],
+                                        'description': 'End time of the meeting (ISO 8601 format)',
+                                    },
+                                    'hs_meeting_location': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Location of the meeting',
+                                    },
+                                    'hs_meeting_outcome': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Outcome of the meeting (e.g., SCHEDULED, COMPLETED, RESCHEDULED, NO_SHOW, CANCELED)',
+                                    },
+                                    'hs_internal_meeting_notes': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Internal notes about the meeting',
+                                    },
+                                    'hs_timestamp': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Timestamp when the meeting activity occurred',
+                                    },
+                                    'hubspot_owner_id': {
+                                        'type': ['string', 'null'],
+                                        'description': 'ID of the meeting owner',
+                                    },
+                                    'hs_object_id': {
+                                        'type': ['string', 'null'],
+                                        'description': 'HubSpot object ID',
+                                    },
+                                    'hs_createdate': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Date the meeting was created',
+                                    },
+                                    'hs_lastmodifieddate': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Last modified date',
+                                    },
+                                },
+                                'additionalProperties': True,
+                            },
+                            'createdAt': {
+                                'type': 'string',
+                                'format': 'date-time',
+                                'description': 'Creation timestamp',
+                            },
+                            'updatedAt': {
+                                'type': 'string',
+                                'format': 'date-time',
+                                'description': 'Last update timestamp',
+                            },
+                            'archived': {'type': 'boolean', 'description': 'Whether the meeting is archived'},
+                            'archivedAt': {
+                                'type': ['string', 'null'],
+                                'format': 'date-time',
+                                'description': 'Timestamp when the meeting was archived',
+                            },
+                            'associations': {
+                                'type': ['object', 'null'],
+                                'description': 'Relationships with other CRM objects',
+                                'additionalProperties': True,
+                            },
+                        },
+                        'x-airbyte-entity-name': 'meetings',
+                        'x-airbyte-stream-name': 'engagements_meetings',
+                        'x-airbyte-ai-hints': {
+                            'summary': 'Meeting engagements logged in the CRM (contacts, companies, deals, tickets)',
+                            'when_to_use': 'Listing, viewing, scheduling, updating, or deleting meeting records on CRM objects',
+                            'trigger_phrases': [
+                                'log meeting',
+                                'create meeting',
+                                'schedule meeting',
+                                'meeting with contact',
+                                'meeting on deal',
+                                'list meetings',
+                                'get meeting',
+                                'delete meeting',
+                                'remove meeting',
+                            ],
+                            'freshness': 'live',
+                        },
+                    },
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'HubSpot meeting engagement object',
+                'properties': {
+                    'id': {'type': 'string', 'description': 'Unique meeting identifier'},
+                    'properties': {
+                        'type': 'object',
+                        'description': 'Meeting properties',
+                        'properties': {
+                            'hs_meeting_title': {
+                                'type': ['string', 'null'],
+                                'description': 'Title of the meeting',
+                            },
+                            'hs_meeting_body': {
+                                'type': ['string', 'null'],
+                                'description': 'Description or notes about the meeting',
+                            },
+                            'hs_meeting_start_time': {
+                                'type': ['string', 'null'],
+                                'description': 'Start time of the meeting (ISO 8601 format)',
+                            },
+                            'hs_meeting_end_time': {
+                                'type': ['string', 'null'],
+                                'description': 'End time of the meeting (ISO 8601 format)',
+                            },
+                            'hs_meeting_location': {
+                                'type': ['string', 'null'],
+                                'description': 'Location of the meeting',
+                            },
+                            'hs_meeting_outcome': {
+                                'type': ['string', 'null'],
+                                'description': 'Outcome of the meeting (e.g., SCHEDULED, COMPLETED, RESCHEDULED, NO_SHOW, CANCELED)',
+                            },
+                            'hs_internal_meeting_notes': {
+                                'type': ['string', 'null'],
+                                'description': 'Internal notes about the meeting',
+                            },
+                            'hs_timestamp': {
+                                'type': ['string', 'null'],
+                                'description': 'Timestamp when the meeting activity occurred',
+                            },
+                            'hubspot_owner_id': {
+                                'type': ['string', 'null'],
+                                'description': 'ID of the meeting owner',
+                            },
+                            'hs_object_id': {
+                                'type': ['string', 'null'],
+                                'description': 'HubSpot object ID',
+                            },
+                            'hs_createdate': {
+                                'type': ['string', 'null'],
+                                'description': 'Date the meeting was created',
+                            },
+                            'hs_lastmodifieddate': {
+                                'type': ['string', 'null'],
+                                'description': 'Last modified date',
+                            },
+                        },
+                        'additionalProperties': True,
+                    },
+                    'createdAt': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'Creation timestamp',
+                    },
+                    'updatedAt': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'Last update timestamp',
+                    },
+                    'archived': {'type': 'boolean', 'description': 'Whether the meeting is archived'},
+                    'archivedAt': {
+                        'type': ['string', 'null'],
+                        'format': 'date-time',
+                        'description': 'Timestamp when the meeting was archived',
+                    },
+                    'associations': {
+                        'type': ['object', 'null'],
+                        'description': 'Relationships with other CRM objects',
+                        'additionalProperties': True,
+                    },
+                },
+                'x-airbyte-entity-name': 'meetings',
+                'x-airbyte-stream-name': 'engagements_meetings',
+                'x-airbyte-ai-hints': {
+                    'summary': 'Meeting engagements logged in the CRM (contacts, companies, deals, tickets)',
+                    'when_to_use': 'Listing, viewing, scheduling, updating, or deleting meeting records on CRM objects',
+                    'trigger_phrases': [
+                        'log meeting',
+                        'create meeting',
+                        'schedule meeting',
+                        'meeting with contact',
+                        'meeting on deal',
+                        'list meetings',
+                        'get meeting',
+                        'delete meeting',
+                        'remove meeting',
+                    ],
+                    'freshness': 'live',
+                },
+            },
+            ai_hints={
+                'summary': 'Meeting engagements logged in the CRM (contacts, companies, deals, tickets)',
+                'when_to_use': 'Listing, viewing, scheduling, updating, or deleting meeting records on CRM objects',
+                'trigger_phrases': [
+                    'log meeting',
+                    'create meeting',
+                    'schedule meeting',
+                    'meeting with contact',
+                    'meeting on deal',
+                    'list meetings',
+                    'get meeting',
+                    'delete meeting',
+                    'remove meeting',
+                ],
+                'freshness': 'live',
+            },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='meetings',
+                    target_entity='contacts',
+                    foreign_key='associations',
+                    cardinality='many_to_many',
+                ),
+                EntityRelationshipConfig(
+                    source_entity='meetings',
+                    target_entity='companies',
+                    foreign_key='associations',
+                    cardinality='many_to_many',
+                ),
+                EntityRelationshipConfig(
+                    source_entity='meetings',
+                    target_entity='deals',
+                    foreign_key='associations',
+                    cardinality='many_to_many',
+                ),
+                EntityRelationshipConfig(
+                    source_entity='meetings',
+                    target_entity='tickets',
+                    foreign_key='associations',
+                    cardinality='many_to_many',
+                ),
+            ],
+        ),
+        EntityDefinition(
+            name='tasks',
+            stream_name='engagements_tasks',
+            actions=[
+                Action.LIST,
+                Action.CREATE,
+                Action.GET,
+                Action.DELETE,
+                Action.UPDATE,
+            ],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/crm/v3/objects/tasks',
+                    action=Action.LIST,
+                    description='Returns a paginated list of tasks',
+                    query_params=[
+                        'limit',
+                        'after',
+                        'associations',
+                        'properties',
+                        'propertiesWithHistory',
+                        'archived',
+                    ],
+                    query_params_schema={
+                        'limit': {
+                            'type': 'integer',
+                            'required': False,
+                            'default': 25,
+                            'minimum': 1,
+                            'maximum': 100,
+                        },
+                        'after': {'type': 'string', 'required': False},
+                        'associations': {'type': 'string', 'required': False},
+                        'properties': {'type': 'string', 'required': False},
+                        'propertiesWithHistory': {'type': 'string', 'required': False},
+                        'archived': {'type': 'boolean', 'required': False},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Paginated list of tasks',
+                        'properties': {
+                            'results': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'HubSpot task engagement object',
+                                    'properties': {
+                                        'id': {'type': 'string', 'description': 'Unique task identifier'},
+                                        'properties': {
+                                            'type': 'object',
+                                            'description': 'Task properties',
+                                            'properties': {
+                                                'hs_task_body': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'Description or notes for the task (supports HTML)',
+                                                },
+                                                'hs_task_subject': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'Subject or title of the task',
+                                                },
+                                                'hs_task_status': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'Status of the task (e.g., NOT_STARTED, IN_PROGRESS, WAITING, COMPLETED, DEFERRED)',
+                                                },
+                                                'hs_task_priority': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'Priority of the task (e.g., LOW, MEDIUM, HIGH)',
+                                                },
+                                                'hs_task_type': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'Type of the task (e.g., TODO, CALL, EMAIL)',
+                                                },
+                                                'hs_task_reminders': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'Reminder timestamp for the task (epoch milliseconds)',
+                                                },
+                                                'hs_timestamp': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'Timestamp when the task activity occurred (due date)',
+                                                },
+                                                'hubspot_owner_id': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'ID of the task owner',
+                                                },
+                                                'hs_object_id': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'HubSpot object ID',
+                                                },
+                                                'hs_createdate': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'Date the task was created',
+                                                },
+                                                'hs_lastmodifieddate': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'Last modified date',
+                                                },
+                                            },
+                                            'additionalProperties': True,
+                                        },
+                                        'createdAt': {
+                                            'type': 'string',
+                                            'format': 'date-time',
+                                            'description': 'Creation timestamp',
+                                        },
+                                        'updatedAt': {
+                                            'type': 'string',
+                                            'format': 'date-time',
+                                            'description': 'Last update timestamp',
+                                        },
+                                        'archived': {'type': 'boolean', 'description': 'Whether the task is archived'},
+                                        'archivedAt': {
+                                            'type': ['string', 'null'],
+                                            'format': 'date-time',
+                                            'description': 'Timestamp when the task was archived',
+                                        },
+                                        'associations': {
+                                            'type': ['object', 'null'],
+                                            'description': 'Relationships with other CRM objects',
+                                            'additionalProperties': True,
+                                        },
+                                    },
+                                    'x-airbyte-entity-name': 'tasks',
+                                    'x-airbyte-stream-name': 'engagements_tasks',
+                                    'x-airbyte-ai-hints': {
+                                        'summary': 'Task engagements in the CRM (contacts, companies, deals, tickets)',
+                                        'when_to_use': 'Listing, viewing, creating, updating, or deleting task records on CRM objects',
+                                        'trigger_phrases': [
+                                            'create task',
+                                            'add task',
+                                            'assign task',
+                                            'task for contact',
+                                            'task on deal',
+                                            'list tasks',
+                                            'get task',
+                                            'delete task',
+                                            'remove task',
+                                            'to-do',
+                                        ],
+                                        'freshness': 'live',
+                                    },
+                                },
+                            },
+                            'paging': {
+                                'type': 'object',
+                                'description': 'Pagination information',
+                                'properties': {
+                                    'next': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'after': {'type': 'string', 'description': 'Cursor for next page'},
+                                            'link': {'type': 'string', 'description': 'URL for next page'},
+                                        },
+                                    },
+                                },
+                            },
+                            'total': {'type': 'integer', 'description': 'Total number of results (search only)'},
+                        },
+                    },
+                    record_extractor='$.results',
+                    meta_extractor={'next_cursor': '$.paging.next.after', 'next_link': '$.paging.next.link'},
+                ),
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/crm/v3/objects/tasks',
+                    action=Action.CREATE,
+                    description='Create a new task in HubSpot CRM. Tasks can be associated with contacts,\ncompanies, deals, or tickets by using the associations parameter.\nThe hs_timestamp property sets when the task activity occurred.\n',
+                    body_fields=['properties', 'associations'],
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for creating a new task',
+                        'properties': {
+                            'properties': {
+                                'type': 'object',
+                                'description': 'Task properties to set',
+                                'required': ['hs_timestamp', 'hs_task_subject'],
+                                'properties': {
+                                    'hs_task_body': {'type': 'string', 'description': 'Description or notes for the task (supports HTML)'},
+                                    'hs_task_subject': {'type': 'string', 'description': 'Required. Subject or title of the task'},
+                                    'hs_task_status': {'type': 'string', 'description': 'Status of the task (NOT_STARTED, IN_PROGRESS, WAITING, COMPLETED, DEFERRED). Defaults to NOT_STARTED.'},
+                                    'hs_task_priority': {'type': 'string', 'description': 'Priority of the task (LOW, MEDIUM, HIGH)'},
+                                    'hs_task_type': {'type': 'string', 'description': 'Type of the task (TODO, CALL, EMAIL). Defaults to TODO.'},
+                                    'hs_task_reminders': {'type': 'string', 'description': 'Reminder timestamp for the task (epoch milliseconds)'},
+                                    'hs_timestamp': {'type': 'string', 'description': 'Required. Due date / timestamp for the task (ISO 8601 format, e.g. 2025-01-15T10:30:00.000Z). Use the current time if the user does not specify one.'},
+                                    'hubspot_owner_id': {'type': 'string', 'description': 'ID of the HubSpot owner to assign to this task'},
+                                },
+                                'additionalProperties': True,
+                            },
+                            'associations': {
+                                'type': 'array',
+                                'description': 'Associate the task with other CRM records (contacts, companies, deals, tickets)',
+                                'items': {
+                                    'type': 'object',
+                                    'properties': {
+                                        'to': {
+                                            'type': 'object',
+                                            'properties': {
+                                                'id': {'type': 'string', 'description': 'ID of the record to associate with'},
+                                            },
+                                        },
+                                        'types': {
+                                            'type': 'array',
+                                            'items': {
+                                                'type': 'object',
+                                                'properties': {
+                                                    'associationCategory': {'type': 'string', 'description': 'Association category (e.g., HUBSPOT_DEFINED)'},
+                                                    'associationTypeId': {'type': 'integer', 'description': 'Association type ID (e.g., 204 for task-to-contact, 192 for task-to-company, 216 for task-to-deal, 228 for task-to-ticket)'},
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                        'required': ['properties'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'HubSpot task engagement object',
+                        'properties': {
+                            'id': {'type': 'string', 'description': 'Unique task identifier'},
+                            'properties': {
+                                'type': 'object',
+                                'description': 'Task properties',
+                                'properties': {
+                                    'hs_task_body': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Description or notes for the task (supports HTML)',
+                                    },
+                                    'hs_task_subject': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Subject or title of the task',
+                                    },
+                                    'hs_task_status': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Status of the task (e.g., NOT_STARTED, IN_PROGRESS, WAITING, COMPLETED, DEFERRED)',
+                                    },
+                                    'hs_task_priority': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Priority of the task (e.g., LOW, MEDIUM, HIGH)',
+                                    },
+                                    'hs_task_type': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Type of the task (e.g., TODO, CALL, EMAIL)',
+                                    },
+                                    'hs_task_reminders': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Reminder timestamp for the task (epoch milliseconds)',
+                                    },
+                                    'hs_timestamp': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Timestamp when the task activity occurred (due date)',
+                                    },
+                                    'hubspot_owner_id': {
+                                        'type': ['string', 'null'],
+                                        'description': 'ID of the task owner',
+                                    },
+                                    'hs_object_id': {
+                                        'type': ['string', 'null'],
+                                        'description': 'HubSpot object ID',
+                                    },
+                                    'hs_createdate': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Date the task was created',
+                                    },
+                                    'hs_lastmodifieddate': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Last modified date',
+                                    },
+                                },
+                                'additionalProperties': True,
+                            },
+                            'createdAt': {
+                                'type': 'string',
+                                'format': 'date-time',
+                                'description': 'Creation timestamp',
+                            },
+                            'updatedAt': {
+                                'type': 'string',
+                                'format': 'date-time',
+                                'description': 'Last update timestamp',
+                            },
+                            'archived': {'type': 'boolean', 'description': 'Whether the task is archived'},
+                            'archivedAt': {
+                                'type': ['string', 'null'],
+                                'format': 'date-time',
+                                'description': 'Timestamp when the task was archived',
+                            },
+                            'associations': {
+                                'type': ['object', 'null'],
+                                'description': 'Relationships with other CRM objects',
+                                'additionalProperties': True,
+                            },
+                        },
+                        'x-airbyte-entity-name': 'tasks',
+                        'x-airbyte-stream-name': 'engagements_tasks',
+                        'x-airbyte-ai-hints': {
+                            'summary': 'Task engagements in the CRM (contacts, companies, deals, tickets)',
+                            'when_to_use': 'Listing, viewing, creating, updating, or deleting task records on CRM objects',
+                            'trigger_phrases': [
+                                'create task',
+                                'add task',
+                                'assign task',
+                                'task for contact',
+                                'task on deal',
+                                'list tasks',
+                                'get task',
+                                'delete task',
+                                'remove task',
+                                'to-do',
+                            ],
+                            'freshness': 'live',
+                        },
+                    },
+                ),
+                Action.GET: EndpointDefinition(
+                    method='GET',
+                    path='/crm/v3/objects/tasks/{taskId}',
+                    action=Action.GET,
+                    description='Get a single task by ID',
+                    query_params=[
+                        'properties',
+                        'propertiesWithHistory',
+                        'associations',
+                        'idProperty',
+                        'archived',
+                    ],
+                    query_params_schema={
+                        'properties': {'type': 'string', 'required': False},
+                        'propertiesWithHistory': {'type': 'string', 'required': False},
+                        'associations': {'type': 'string', 'required': False},
+                        'idProperty': {'type': 'string', 'required': False},
+                        'archived': {'type': 'boolean', 'required': False},
+                    },
+                    path_params=['taskId'],
+                    path_params_schema={
+                        'taskId': {'type': 'string', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'HubSpot task engagement object',
+                        'properties': {
+                            'id': {'type': 'string', 'description': 'Unique task identifier'},
+                            'properties': {
+                                'type': 'object',
+                                'description': 'Task properties',
+                                'properties': {
+                                    'hs_task_body': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Description or notes for the task (supports HTML)',
+                                    },
+                                    'hs_task_subject': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Subject or title of the task',
+                                    },
+                                    'hs_task_status': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Status of the task (e.g., NOT_STARTED, IN_PROGRESS, WAITING, COMPLETED, DEFERRED)',
+                                    },
+                                    'hs_task_priority': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Priority of the task (e.g., LOW, MEDIUM, HIGH)',
+                                    },
+                                    'hs_task_type': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Type of the task (e.g., TODO, CALL, EMAIL)',
+                                    },
+                                    'hs_task_reminders': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Reminder timestamp for the task (epoch milliseconds)',
+                                    },
+                                    'hs_timestamp': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Timestamp when the task activity occurred (due date)',
+                                    },
+                                    'hubspot_owner_id': {
+                                        'type': ['string', 'null'],
+                                        'description': 'ID of the task owner',
+                                    },
+                                    'hs_object_id': {
+                                        'type': ['string', 'null'],
+                                        'description': 'HubSpot object ID',
+                                    },
+                                    'hs_createdate': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Date the task was created',
+                                    },
+                                    'hs_lastmodifieddate': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Last modified date',
+                                    },
+                                },
+                                'additionalProperties': True,
+                            },
+                            'createdAt': {
+                                'type': 'string',
+                                'format': 'date-time',
+                                'description': 'Creation timestamp',
+                            },
+                            'updatedAt': {
+                                'type': 'string',
+                                'format': 'date-time',
+                                'description': 'Last update timestamp',
+                            },
+                            'archived': {'type': 'boolean', 'description': 'Whether the task is archived'},
+                            'archivedAt': {
+                                'type': ['string', 'null'],
+                                'format': 'date-time',
+                                'description': 'Timestamp when the task was archived',
+                            },
+                            'associations': {
+                                'type': ['object', 'null'],
+                                'description': 'Relationships with other CRM objects',
+                                'additionalProperties': True,
+                            },
+                        },
+                        'x-airbyte-entity-name': 'tasks',
+                        'x-airbyte-stream-name': 'engagements_tasks',
+                        'x-airbyte-ai-hints': {
+                            'summary': 'Task engagements in the CRM (contacts, companies, deals, tickets)',
+                            'when_to_use': 'Listing, viewing, creating, updating, or deleting task records on CRM objects',
+                            'trigger_phrases': [
+                                'create task',
+                                'add task',
+                                'assign task',
+                                'task for contact',
+                                'task on deal',
+                                'list tasks',
+                                'get task',
+                                'delete task',
+                                'remove task',
+                                'to-do',
+                            ],
+                            'freshness': 'live',
+                        },
+                    },
+                ),
+                Action.DELETE: EndpointDefinition(
+                    method='DELETE',
+                    path='/crm/v3/objects/tasks/{taskId}',
+                    action=Action.DELETE,
+                    description='Archive a task by ID. This is a soft delete — the task is moved to the\nrecycle bin and can be restored for approximately 90 days. No public\nhard-delete endpoint exists.\n',
+                    path_params=['taskId'],
+                    path_params_schema={
+                        'taskId': {'type': 'string', 'required': True},
+                    },
+                    no_content_response=True,
+                ),
+                Action.UPDATE: EndpointDefinition(
+                    method='PATCH',
+                    path='/crm/v3/objects/tasks/{taskId}',
+                    action=Action.UPDATE,
+                    description="Update an existing task's properties by ID.",
+                    body_fields=['properties'],
+                    path_params=['taskId'],
+                    path_params_schema={
+                        'taskId': {'type': 'string', 'required': True},
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for updating an existing task. Only provided properties will be updated.',
+                        'properties': {
+                            'properties': {
+                                'type': 'object',
+                                'description': 'Task properties to update',
+                                'properties': {
+                                    'hs_task_body': {'type': 'string', 'description': 'Description or notes for the task (supports HTML)'},
+                                    'hs_task_subject': {'type': 'string', 'description': 'Subject or title of the task'},
+                                    'hs_task_status': {'type': 'string', 'description': 'Status of the task (NOT_STARTED, IN_PROGRESS, WAITING, COMPLETED, DEFERRED)'},
+                                    'hs_task_priority': {'type': 'string', 'description': 'Priority of the task (LOW, MEDIUM, HIGH)'},
+                                    'hs_task_type': {'type': 'string', 'description': 'Type of the task (TODO, CALL, EMAIL)'},
+                                    'hs_task_reminders': {'type': 'string', 'description': 'Reminder timestamp for the task (epoch milliseconds)'},
+                                    'hs_timestamp': {'type': 'string', 'description': 'Due date / timestamp for the task'},
+                                    'hubspot_owner_id': {'type': 'string', 'description': 'ID of the HubSpot owner to assign to this task'},
+                                },
+                                'additionalProperties': True,
+                            },
+                        },
+                        'required': ['properties'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'HubSpot task engagement object',
+                        'properties': {
+                            'id': {'type': 'string', 'description': 'Unique task identifier'},
+                            'properties': {
+                                'type': 'object',
+                                'description': 'Task properties',
+                                'properties': {
+                                    'hs_task_body': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Description or notes for the task (supports HTML)',
+                                    },
+                                    'hs_task_subject': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Subject or title of the task',
+                                    },
+                                    'hs_task_status': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Status of the task (e.g., NOT_STARTED, IN_PROGRESS, WAITING, COMPLETED, DEFERRED)',
+                                    },
+                                    'hs_task_priority': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Priority of the task (e.g., LOW, MEDIUM, HIGH)',
+                                    },
+                                    'hs_task_type': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Type of the task (e.g., TODO, CALL, EMAIL)',
+                                    },
+                                    'hs_task_reminders': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Reminder timestamp for the task (epoch milliseconds)',
+                                    },
+                                    'hs_timestamp': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Timestamp when the task activity occurred (due date)',
+                                    },
+                                    'hubspot_owner_id': {
+                                        'type': ['string', 'null'],
+                                        'description': 'ID of the task owner',
+                                    },
+                                    'hs_object_id': {
+                                        'type': ['string', 'null'],
+                                        'description': 'HubSpot object ID',
+                                    },
+                                    'hs_createdate': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Date the task was created',
+                                    },
+                                    'hs_lastmodifieddate': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Last modified date',
+                                    },
+                                },
+                                'additionalProperties': True,
+                            },
+                            'createdAt': {
+                                'type': 'string',
+                                'format': 'date-time',
+                                'description': 'Creation timestamp',
+                            },
+                            'updatedAt': {
+                                'type': 'string',
+                                'format': 'date-time',
+                                'description': 'Last update timestamp',
+                            },
+                            'archived': {'type': 'boolean', 'description': 'Whether the task is archived'},
+                            'archivedAt': {
+                                'type': ['string', 'null'],
+                                'format': 'date-time',
+                                'description': 'Timestamp when the task was archived',
+                            },
+                            'associations': {
+                                'type': ['object', 'null'],
+                                'description': 'Relationships with other CRM objects',
+                                'additionalProperties': True,
+                            },
+                        },
+                        'x-airbyte-entity-name': 'tasks',
+                        'x-airbyte-stream-name': 'engagements_tasks',
+                        'x-airbyte-ai-hints': {
+                            'summary': 'Task engagements in the CRM (contacts, companies, deals, tickets)',
+                            'when_to_use': 'Listing, viewing, creating, updating, or deleting task records on CRM objects',
+                            'trigger_phrases': [
+                                'create task',
+                                'add task',
+                                'assign task',
+                                'task for contact',
+                                'task on deal',
+                                'list tasks',
+                                'get task',
+                                'delete task',
+                                'remove task',
+                                'to-do',
+                            ],
+                            'freshness': 'live',
+                        },
+                    },
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'HubSpot task engagement object',
+                'properties': {
+                    'id': {'type': 'string', 'description': 'Unique task identifier'},
+                    'properties': {
+                        'type': 'object',
+                        'description': 'Task properties',
+                        'properties': {
+                            'hs_task_body': {
+                                'type': ['string', 'null'],
+                                'description': 'Description or notes for the task (supports HTML)',
+                            },
+                            'hs_task_subject': {
+                                'type': ['string', 'null'],
+                                'description': 'Subject or title of the task',
+                            },
+                            'hs_task_status': {
+                                'type': ['string', 'null'],
+                                'description': 'Status of the task (e.g., NOT_STARTED, IN_PROGRESS, WAITING, COMPLETED, DEFERRED)',
+                            },
+                            'hs_task_priority': {
+                                'type': ['string', 'null'],
+                                'description': 'Priority of the task (e.g., LOW, MEDIUM, HIGH)',
+                            },
+                            'hs_task_type': {
+                                'type': ['string', 'null'],
+                                'description': 'Type of the task (e.g., TODO, CALL, EMAIL)',
+                            },
+                            'hs_task_reminders': {
+                                'type': ['string', 'null'],
+                                'description': 'Reminder timestamp for the task (epoch milliseconds)',
+                            },
+                            'hs_timestamp': {
+                                'type': ['string', 'null'],
+                                'description': 'Timestamp when the task activity occurred (due date)',
+                            },
+                            'hubspot_owner_id': {
+                                'type': ['string', 'null'],
+                                'description': 'ID of the task owner',
+                            },
+                            'hs_object_id': {
+                                'type': ['string', 'null'],
+                                'description': 'HubSpot object ID',
+                            },
+                            'hs_createdate': {
+                                'type': ['string', 'null'],
+                                'description': 'Date the task was created',
+                            },
+                            'hs_lastmodifieddate': {
+                                'type': ['string', 'null'],
+                                'description': 'Last modified date',
+                            },
+                        },
+                        'additionalProperties': True,
+                    },
+                    'createdAt': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'Creation timestamp',
+                    },
+                    'updatedAt': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'Last update timestamp',
+                    },
+                    'archived': {'type': 'boolean', 'description': 'Whether the task is archived'},
+                    'archivedAt': {
+                        'type': ['string', 'null'],
+                        'format': 'date-time',
+                        'description': 'Timestamp when the task was archived',
+                    },
+                    'associations': {
+                        'type': ['object', 'null'],
+                        'description': 'Relationships with other CRM objects',
+                        'additionalProperties': True,
+                    },
+                },
+                'x-airbyte-entity-name': 'tasks',
+                'x-airbyte-stream-name': 'engagements_tasks',
+                'x-airbyte-ai-hints': {
+                    'summary': 'Task engagements in the CRM (contacts, companies, deals, tickets)',
+                    'when_to_use': 'Listing, viewing, creating, updating, or deleting task records on CRM objects',
+                    'trigger_phrases': [
+                        'create task',
+                        'add task',
+                        'assign task',
+                        'task for contact',
+                        'task on deal',
+                        'list tasks',
+                        'get task',
+                        'delete task',
+                        'remove task',
+                        'to-do',
+                    ],
+                    'freshness': 'live',
+                },
+            },
+            ai_hints={
+                'summary': 'Task engagements in the CRM (contacts, companies, deals, tickets)',
+                'when_to_use': 'Listing, viewing, creating, updating, or deleting task records on CRM objects',
+                'trigger_phrases': [
+                    'create task',
+                    'add task',
+                    'assign task',
+                    'task for contact',
+                    'task on deal',
+                    'list tasks',
+                    'get task',
+                    'delete task',
+                    'remove task',
+                    'to-do',
+                ],
+                'freshness': 'live',
+            },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='tasks',
+                    target_entity='contacts',
+                    foreign_key='associations',
+                    cardinality='many_to_many',
+                ),
+                EntityRelationshipConfig(
+                    source_entity='tasks',
+                    target_entity='companies',
+                    foreign_key='associations',
+                    cardinality='many_to_many',
+                ),
+                EntityRelationshipConfig(
+                    source_entity='tasks',
+                    target_entity='deals',
+                    foreign_key='associations',
+                    cardinality='many_to_many',
+                ),
+                EntityRelationshipConfig(
+                    source_entity='tasks',
+                    target_entity='tickets',
+                    foreign_key='associations',
+                    cardinality='many_to_many',
+                ),
+            ],
+        ),
+        EntityDefinition(
             name='schemas',
             actions=[Action.LIST, Action.GET],
             endpoints={
@@ -4356,6 +7918,437 @@ HubspotConnectorModel: ConnectorModel = ConnectorModel(
                     ),
                 ],
             ),
+            CacheEntityConfig(
+                entity='notes',
+                x_airbyte_name='engagements_notes',
+                fields=[
+                    CacheFieldConfig(
+                        name='archived',
+                        type=['null', 'boolean'],
+                        description='Indicates whether the note has been archived',
+                    ),
+                    CacheFieldConfig(
+                        name='createdAt',
+                        type=['null', 'string'],
+                        description='Timestamp when the note was created',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique identifier for the note record',
+                    ),
+                    CacheFieldConfig(
+                        name='properties',
+                        type=['object'],
+                        description='Object containing all property values for the note',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hs_createdate',
+                        x_airbyte_name='properties_hs_createdate',
+                        type=['null', 'string'],
+                        description='Date the note was created',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hs_lastmodifieddate',
+                        x_airbyte_name='properties_hs_lastmodifieddate',
+                        type=['null', 'string'],
+                        description='Last modified date of the note',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hs_note_body',
+                        x_airbyte_name='properties_hs_note_body',
+                        type=['null', 'string'],
+                        description='The body content of the note (supports HTML)',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hs_object_id',
+                        x_airbyte_name='properties_hs_object_id',
+                        type=['null', 'string'],
+                        description='HubSpot object ID',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hs_timestamp',
+                        x_airbyte_name='properties_hs_timestamp',
+                        type=['null', 'string'],
+                        description='Timestamp when the note activity occurred',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hubspot_owner_id',
+                        x_airbyte_name='properties_hubspot_owner_id',
+                        type=['null', 'string'],
+                        description='ID of the note owner',
+                    ),
+                    CacheFieldConfig(
+                        name='updatedAt',
+                        type=['null', 'string'],
+                        description='Timestamp when the note record was last modified',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='calls',
+                x_airbyte_name='engagements_calls',
+                fields=[
+                    CacheFieldConfig(
+                        name='archived',
+                        type=['null', 'boolean'],
+                        description='Indicates whether the call has been archived',
+                    ),
+                    CacheFieldConfig(
+                        name='createdAt',
+                        type=['null', 'string'],
+                        description='Timestamp when the call was created',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique identifier for the call record',
+                    ),
+                    CacheFieldConfig(
+                        name='properties',
+                        type=['object'],
+                        description='Object containing all property values for the call',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hs_call_body',
+                        x_airbyte_name='properties_hs_call_body',
+                        type=['null', 'string'],
+                        description='Description or notes about the call',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hs_call_direction',
+                        x_airbyte_name='properties_hs_call_direction',
+                        type=['null', 'string'],
+                        description='Direction of the call (INBOUND or OUTBOUND)',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hs_call_duration',
+                        x_airbyte_name='properties_hs_call_duration',
+                        type=['null', 'string'],
+                        description='Duration of the call in milliseconds',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hs_call_status',
+                        x_airbyte_name='properties_hs_call_status',
+                        type=['null', 'string'],
+                        description='Status of the call (e.g., COMPLETED, BUSY, NO_ANSWER)',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hs_call_title',
+                        x_airbyte_name='properties_hs_call_title',
+                        type=['null', 'string'],
+                        description='Title or subject of the call',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hs_createdate',
+                        x_airbyte_name='properties_hs_createdate',
+                        type=['null', 'string'],
+                        description='Date the call was created',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hs_lastmodifieddate',
+                        x_airbyte_name='properties_hs_lastmodifieddate',
+                        type=['null', 'string'],
+                        description='Last modified date of the call',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hs_object_id',
+                        x_airbyte_name='properties_hs_object_id',
+                        type=['null', 'string'],
+                        description='HubSpot object ID',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hs_timestamp',
+                        x_airbyte_name='properties_hs_timestamp',
+                        type=['null', 'string'],
+                        description='Timestamp when the call activity occurred',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hubspot_owner_id',
+                        x_airbyte_name='properties_hubspot_owner_id',
+                        type=['null', 'string'],
+                        description='ID of the call owner',
+                    ),
+                    CacheFieldConfig(
+                        name='updatedAt',
+                        type=['null', 'string'],
+                        description='Timestamp when the call record was last modified',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='emails',
+                x_airbyte_name='engagements_emails',
+                fields=[
+                    CacheFieldConfig(
+                        name='archived',
+                        type=['null', 'boolean'],
+                        description='Indicates whether the email has been archived',
+                    ),
+                    CacheFieldConfig(
+                        name='createdAt',
+                        type=['null', 'string'],
+                        description='Timestamp when the email was created',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique identifier for the email record',
+                    ),
+                    CacheFieldConfig(
+                        name='properties',
+                        type=['object'],
+                        description='Object containing all property values for the email',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hs_createdate',
+                        x_airbyte_name='properties_hs_createdate',
+                        type=['null', 'string'],
+                        description='Date the email was created',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hs_email_direction',
+                        x_airbyte_name='properties_hs_email_direction',
+                        type=['null', 'string'],
+                        description='Direction of the email (EMAIL, INCOMING_EMAIL, FORWARDED_EMAIL)',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hs_email_status',
+                        x_airbyte_name='properties_hs_email_status',
+                        type=['null', 'string'],
+                        description='Status of the email (BOUNCED, FAILED, SCHEDULED, SENDING, SENT, DRAFT)',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hs_email_subject',
+                        x_airbyte_name='properties_hs_email_subject',
+                        type=['null', 'string'],
+                        description='Subject line of the email',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hs_email_text',
+                        x_airbyte_name='properties_hs_email_text',
+                        type=['null', 'string'],
+                        description='Plain text body of the email',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hs_lastmodifieddate',
+                        x_airbyte_name='properties_hs_lastmodifieddate',
+                        type=['null', 'string'],
+                        description='Last modified date of the email',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hs_object_id',
+                        x_airbyte_name='properties_hs_object_id',
+                        type=['null', 'string'],
+                        description='HubSpot object ID',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hs_timestamp',
+                        x_airbyte_name='properties_hs_timestamp',
+                        type=['null', 'string'],
+                        description='Timestamp when the email activity occurred',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hubspot_owner_id',
+                        x_airbyte_name='properties_hubspot_owner_id',
+                        type=['null', 'string'],
+                        description='ID of the email owner',
+                    ),
+                    CacheFieldConfig(
+                        name='updatedAt',
+                        type=['null', 'string'],
+                        description='Timestamp when the email record was last modified',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='meetings',
+                x_airbyte_name='engagements_meetings',
+                fields=[
+                    CacheFieldConfig(
+                        name='archived',
+                        type=['null', 'boolean'],
+                        description='Indicates whether the meeting has been archived',
+                    ),
+                    CacheFieldConfig(
+                        name='createdAt',
+                        type=['null', 'string'],
+                        description='Timestamp when the meeting was created',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique identifier for the meeting record',
+                    ),
+                    CacheFieldConfig(
+                        name='properties',
+                        type=['object'],
+                        description='Object containing all property values for the meeting',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hs_createdate',
+                        x_airbyte_name='properties_hs_createdate',
+                        type=['null', 'string'],
+                        description='Date the meeting was created',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hs_lastmodifieddate',
+                        x_airbyte_name='properties_hs_lastmodifieddate',
+                        type=['null', 'string'],
+                        description='Last modified date of the meeting',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hs_meeting_body',
+                        x_airbyte_name='properties_hs_meeting_body',
+                        type=['null', 'string'],
+                        description='Description or notes about the meeting',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hs_meeting_end_time',
+                        x_airbyte_name='properties_hs_meeting_end_time',
+                        type=['null', 'string'],
+                        description='End time of the meeting',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hs_meeting_location',
+                        x_airbyte_name='properties_hs_meeting_location',
+                        type=['null', 'string'],
+                        description='Location of the meeting',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hs_meeting_outcome',
+                        x_airbyte_name='properties_hs_meeting_outcome',
+                        type=['null', 'string'],
+                        description='Outcome of the meeting (e.g., SCHEDULED, COMPLETED, NO_SHOW, CANCELED)',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hs_meeting_start_time',
+                        x_airbyte_name='properties_hs_meeting_start_time',
+                        type=['null', 'string'],
+                        description='Start time of the meeting',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hs_meeting_title',
+                        x_airbyte_name='properties_hs_meeting_title',
+                        type=['null', 'string'],
+                        description='Title of the meeting',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hs_object_id',
+                        x_airbyte_name='properties_hs_object_id',
+                        type=['null', 'string'],
+                        description='HubSpot object ID',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hs_timestamp',
+                        x_airbyte_name='properties_hs_timestamp',
+                        type=['null', 'string'],
+                        description='Timestamp when the meeting activity occurred',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hubspot_owner_id',
+                        x_airbyte_name='properties_hubspot_owner_id',
+                        type=['null', 'string'],
+                        description='ID of the meeting owner',
+                    ),
+                    CacheFieldConfig(
+                        name='updatedAt',
+                        type=['null', 'string'],
+                        description='Timestamp when the meeting record was last modified',
+                    ),
+                ],
+            ),
+            CacheEntityConfig(
+                entity='tasks',
+                x_airbyte_name='engagements_tasks',
+                fields=[
+                    CacheFieldConfig(
+                        name='archived',
+                        type=['null', 'boolean'],
+                        description='Indicates whether the task has been archived',
+                    ),
+                    CacheFieldConfig(
+                        name='createdAt',
+                        type=['null', 'string'],
+                        description='Timestamp when the task was created',
+                    ),
+                    CacheFieldConfig(
+                        name='id',
+                        type=['null', 'string'],
+                        description='Unique identifier for the task record',
+                    ),
+                    CacheFieldConfig(
+                        name='properties',
+                        type=['object'],
+                        description='Object containing all property values for the task',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hs_createdate',
+                        x_airbyte_name='properties_hs_createdate',
+                        type=['null', 'string'],
+                        description='Date the task was created',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hs_lastmodifieddate',
+                        x_airbyte_name='properties_hs_lastmodifieddate',
+                        type=['null', 'string'],
+                        description='Last modified date of the task',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hs_object_id',
+                        x_airbyte_name='properties_hs_object_id',
+                        type=['null', 'string'],
+                        description='HubSpot object ID',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hs_task_body',
+                        x_airbyte_name='properties_hs_task_body',
+                        type=['null', 'string'],
+                        description='Description or notes for the task',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hs_task_priority',
+                        x_airbyte_name='properties_hs_task_priority',
+                        type=['null', 'string'],
+                        description='Priority of the task (LOW, MEDIUM, HIGH)',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hs_task_status',
+                        x_airbyte_name='properties_hs_task_status',
+                        type=['null', 'string'],
+                        description='Status of the task (NOT_STARTED, IN_PROGRESS, WAITING, COMPLETED, DEFERRED)',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hs_task_subject',
+                        x_airbyte_name='properties_hs_task_subject',
+                        type=['null', 'string'],
+                        description='Subject or title of the task',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hs_task_type',
+                        x_airbyte_name='properties_hs_task_type',
+                        type=['null', 'string'],
+                        description='Type of the task (TODO, CALL, EMAIL)',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hs_timestamp',
+                        x_airbyte_name='properties_hs_timestamp',
+                        type=['null', 'string'],
+                        description='Due date / timestamp for the task',
+                    ),
+                    CacheFieldConfig(
+                        name='properties.hubspot_owner_id',
+                        x_airbyte_name='properties_hubspot_owner_id',
+                        type=['null', 'string'],
+                        description='ID of the task owner',
+                    ),
+                    CacheFieldConfig(
+                        name='updatedAt',
+                        type=['null', 'string'],
+                        description='Timestamp when the task record was last modified',
+                    ),
+                ],
+            ),
         ],
     ),
     search_field_paths={
@@ -4433,6 +8426,87 @@ HubspotConnectorModel: ConnectorModel = ConnectorModel(
             'properties.subject',
             'updatedAt',
         ],
+        'notes': [
+            'archived',
+            'createdAt',
+            'id',
+            'properties',
+            'properties.hs_createdate',
+            'properties.hs_lastmodifieddate',
+            'properties.hs_note_body',
+            'properties.hs_object_id',
+            'properties.hs_timestamp',
+            'properties.hubspot_owner_id',
+            'updatedAt',
+        ],
+        'calls': [
+            'archived',
+            'createdAt',
+            'id',
+            'properties',
+            'properties.hs_call_body',
+            'properties.hs_call_direction',
+            'properties.hs_call_duration',
+            'properties.hs_call_status',
+            'properties.hs_call_title',
+            'properties.hs_createdate',
+            'properties.hs_lastmodifieddate',
+            'properties.hs_object_id',
+            'properties.hs_timestamp',
+            'properties.hubspot_owner_id',
+            'updatedAt',
+        ],
+        'emails': [
+            'archived',
+            'createdAt',
+            'id',
+            'properties',
+            'properties.hs_createdate',
+            'properties.hs_email_direction',
+            'properties.hs_email_status',
+            'properties.hs_email_subject',
+            'properties.hs_email_text',
+            'properties.hs_lastmodifieddate',
+            'properties.hs_object_id',
+            'properties.hs_timestamp',
+            'properties.hubspot_owner_id',
+            'updatedAt',
+        ],
+        'meetings': [
+            'archived',
+            'createdAt',
+            'id',
+            'properties',
+            'properties.hs_createdate',
+            'properties.hs_lastmodifieddate',
+            'properties.hs_meeting_body',
+            'properties.hs_meeting_end_time',
+            'properties.hs_meeting_location',
+            'properties.hs_meeting_outcome',
+            'properties.hs_meeting_start_time',
+            'properties.hs_meeting_title',
+            'properties.hs_object_id',
+            'properties.hs_timestamp',
+            'properties.hubspot_owner_id',
+            'updatedAt',
+        ],
+        'tasks': [
+            'archived',
+            'createdAt',
+            'id',
+            'properties',
+            'properties.hs_createdate',
+            'properties.hs_lastmodifieddate',
+            'properties.hs_object_id',
+            'properties.hs_task_body',
+            'properties.hs_task_priority',
+            'properties.hs_task_status',
+            'properties.hs_task_subject',
+            'properties.hs_task_type',
+            'properties.hs_timestamp',
+            'properties.hubspot_owner_id',
+            'updatedAt',
+        ],
     },
     example_questions=ExampleQuestions(
         direct=[
@@ -4446,6 +8520,18 @@ HubspotConnectorModel: ConnectorModel = ConnectorModel(
             "Create a new company called 'Acme Corp' with domain acme.com",
             "Create a support ticket with subject 'Login issue' and priority HIGH",
             'Update the contact email for a specific contact',
+            "Add a note to contact 12345 saying 'Discussed pricing options'",
+            'List recent notes in my CRM',
+            'Get the details of a specific note',
+            'Delete a note from HubSpot',
+            'Log a call with contact 12345 about pricing discussion',
+            'List recent calls in my CRM',
+            'Create an email record for outreach to a contact',
+            'List recent emails in my CRM',
+            'Schedule a meeting with a contact for next Tuesday',
+            'List recent meetings in my CRM',
+            'Create a follow-up task for a deal',
+            'List tasks in my CRM',
         ],
         context_store_search=[
             'Show me all deals from Acme Corp this quarter',
@@ -4465,11 +8551,6 @@ HubspotConnectorModel: ConnectorModel = ConnectorModel(
             'Compare the number of deals closed by different sales representatives',
             'Find all tickets related to a specific product issue and summarize their status',
         ],
-        unsupported=[
-            'Delete a contact from HubSpot',
-            'Delete a deal record',
-            'Schedule a follow-up task for this deal',
-            'Send an email to all contacts in the sales pipeline',
-        ],
+        unsupported=['Delete a contact from HubSpot', 'Delete a deal record'],
     ),
 )

@@ -18,6 +18,14 @@ from airbyte_agent_sdk.introspection import describe_entities, generate_tool_des
 from airbyte_agent_sdk.translation import DEFAULT_MAX_OUTPUT_CHARS, FrameworkName, translate_exceptions
 from airbyte_agent_sdk.types import AirbyteAuthConfig
 from .types import (
+    CallsCreateParams,
+    CallsCreateParamsAssociationsItem,
+    CallsCreateParamsProperties,
+    CallsDeleteParams,
+    CallsGetParams,
+    CallsListParams,
+    CallsUpdateParams,
+    CallsUpdateParamsProperties,
     CompaniesApiSearchParams,
     CompaniesApiSearchParamsFiltergroupsItem,
     CompaniesApiSearchParamsSortsItem,
@@ -45,10 +53,42 @@ from .types import (
     DealsListParams,
     DealsUpdateParams,
     DealsUpdateParamsProperties,
+    EmailsCreateParams,
+    EmailsCreateParamsAssociationsItem,
+    EmailsCreateParamsProperties,
+    EmailsDeleteParams,
+    EmailsGetParams,
+    EmailsListParams,
+    EmailsUpdateParams,
+    EmailsUpdateParamsProperties,
+    MeetingsCreateParams,
+    MeetingsCreateParamsAssociationsItem,
+    MeetingsCreateParamsProperties,
+    MeetingsDeleteParams,
+    MeetingsGetParams,
+    MeetingsListParams,
+    MeetingsUpdateParams,
+    MeetingsUpdateParamsProperties,
+    NotesCreateParams,
+    NotesCreateParamsAssociationsItem,
+    NotesCreateParamsProperties,
+    NotesDeleteParams,
+    NotesGetParams,
+    NotesListParams,
+    NotesUpdateParams,
+    NotesUpdateParamsProperties,
     ObjectsGetParams,
     ObjectsListParams,
     SchemasGetParams,
     SchemasListParams,
+    TasksCreateParams,
+    TasksCreateParamsAssociationsItem,
+    TasksCreateParamsProperties,
+    TasksDeleteParams,
+    TasksGetParams,
+    TasksListParams,
+    TasksUpdateParams,
+    TasksUpdateParamsProperties,
     TicketsApiSearchParams,
     TicketsApiSearchParamsFiltergroupsItem,
     TicketsApiSearchParamsSortsItem,
@@ -67,6 +107,16 @@ from .types import (
     DealsSearchQuery,
     TicketsSearchFilter,
     TicketsSearchQuery,
+    NotesSearchFilter,
+    NotesSearchQuery,
+    CallsSearchFilter,
+    CallsSearchQuery,
+    EmailsSearchFilter,
+    EmailsSearchQuery,
+    MeetingsSearchFilter,
+    MeetingsSearchQuery,
+    TasksSearchFilter,
+    TasksSearchQuery,
 )
 from .models import HubspotOauth2AuthConfig, HubspotPrivateAppAuthConfig
 from .models import HubspotAuthConfig
@@ -84,13 +134,23 @@ from .models import (
     DealsApiSearchResult,
     TicketsListResult,
     TicketsApiSearchResult,
+    NotesListResult,
+    CallsListResult,
+    EmailsListResult,
+    MeetingsListResult,
+    TasksListResult,
     SchemasListResult,
     ObjectsListResult,
     CRMObject,
+    Call,
     Company,
     Contact,
     Deal,
+    Email,
+    Meeting,
+    Note,
     Schema,
+    Task,
     Ticket,
     AirbyteSearchMeta,
     AirbyteSearchResult,
@@ -102,6 +162,16 @@ from .models import (
     DealsSearchResult,
     TicketsSearchData,
     TicketsSearchResult,
+    NotesSearchData,
+    NotesSearchResult,
+    CallsSearchData,
+    CallsSearchResult,
+    EmailsSearchData,
+    EmailsSearchResult,
+    MeetingsSearchData,
+    MeetingsSearchResult,
+    TasksSearchData,
+    TasksSearchResult,
 )
 
 # TypeVar for decorator type preservation
@@ -119,7 +189,7 @@ class HubspotConnector:
 
     connector_name = "hubspot"
     connector_version = "0.1.19"
-    sdk_version = "0.1.278"
+    sdk_version = "0.1.279"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -143,6 +213,31 @@ class HubspotConnector:
         ("tickets", "get"): None,
         ("tickets", "update"): None,
         ("tickets", "api_search"): True,
+        ("notes", "list"): True,
+        ("notes", "create"): None,
+        ("notes", "get"): None,
+        ("notes", "update"): None,
+        ("notes", "delete"): None,
+        ("calls", "list"): True,
+        ("calls", "create"): None,
+        ("calls", "get"): None,
+        ("calls", "update"): None,
+        ("calls", "delete"): None,
+        ("emails", "list"): True,
+        ("emails", "create"): None,
+        ("emails", "get"): None,
+        ("emails", "update"): None,
+        ("emails", "delete"): None,
+        ("meetings", "list"): True,
+        ("meetings", "create"): None,
+        ("meetings", "get"): None,
+        ("meetings", "update"): None,
+        ("meetings", "delete"): None,
+        ("tasks", "list"): True,
+        ("tasks", "create"): None,
+        ("tasks", "get"): None,
+        ("tasks", "update"): None,
+        ("tasks", "delete"): None,
         ("schemas", "list"): True,
         ("schemas", "get"): None,
         ("objects", "list"): True,
@@ -172,6 +267,31 @@ class HubspotConnector:
         ('tickets', 'get'): {'ticket_id': 'ticketId', 'properties': 'properties', 'properties_with_history': 'propertiesWithHistory', 'associations': 'associations', 'id_property': 'idProperty', 'archived': 'archived'},
         ('tickets', 'update'): {'properties': 'properties', 'ticket_id': 'ticketId'},
         ('tickets', 'api_search'): {'filter_groups': 'filterGroups', 'properties': 'properties', 'limit': 'limit', 'after': 'after', 'sorts': 'sorts', 'query': 'query'},
+        ('notes', 'list'): {'limit': 'limit', 'after': 'after', 'associations': 'associations', 'properties': 'properties', 'properties_with_history': 'propertiesWithHistory', 'archived': 'archived'},
+        ('notes', 'create'): {'properties': 'properties', 'associations': 'associations'},
+        ('notes', 'get'): {'note_id': 'noteId', 'properties': 'properties', 'properties_with_history': 'propertiesWithHistory', 'associations': 'associations', 'id_property': 'idProperty', 'archived': 'archived'},
+        ('notes', 'update'): {'properties': 'properties', 'note_id': 'noteId'},
+        ('notes', 'delete'): {'note_id': 'noteId'},
+        ('calls', 'list'): {'limit': 'limit', 'after': 'after', 'associations': 'associations', 'properties': 'properties', 'properties_with_history': 'propertiesWithHistory', 'archived': 'archived'},
+        ('calls', 'create'): {'properties': 'properties', 'associations': 'associations'},
+        ('calls', 'get'): {'call_id': 'callId', 'properties': 'properties', 'properties_with_history': 'propertiesWithHistory', 'associations': 'associations', 'id_property': 'idProperty', 'archived': 'archived'},
+        ('calls', 'update'): {'properties': 'properties', 'call_id': 'callId'},
+        ('calls', 'delete'): {'call_id': 'callId'},
+        ('emails', 'list'): {'limit': 'limit', 'after': 'after', 'associations': 'associations', 'properties': 'properties', 'properties_with_history': 'propertiesWithHistory', 'archived': 'archived'},
+        ('emails', 'create'): {'properties': 'properties', 'associations': 'associations'},
+        ('emails', 'get'): {'email_id': 'emailId', 'properties': 'properties', 'properties_with_history': 'propertiesWithHistory', 'associations': 'associations', 'id_property': 'idProperty', 'archived': 'archived'},
+        ('emails', 'update'): {'properties': 'properties', 'email_id': 'emailId'},
+        ('emails', 'delete'): {'email_id': 'emailId'},
+        ('meetings', 'list'): {'limit': 'limit', 'after': 'after', 'associations': 'associations', 'properties': 'properties', 'properties_with_history': 'propertiesWithHistory', 'archived': 'archived'},
+        ('meetings', 'create'): {'properties': 'properties', 'associations': 'associations'},
+        ('meetings', 'get'): {'meeting_id': 'meetingId', 'properties': 'properties', 'properties_with_history': 'propertiesWithHistory', 'associations': 'associations', 'id_property': 'idProperty', 'archived': 'archived'},
+        ('meetings', 'update'): {'properties': 'properties', 'meeting_id': 'meetingId'},
+        ('meetings', 'delete'): {'meeting_id': 'meetingId'},
+        ('tasks', 'list'): {'limit': 'limit', 'after': 'after', 'associations': 'associations', 'properties': 'properties', 'properties_with_history': 'propertiesWithHistory', 'archived': 'archived'},
+        ('tasks', 'create'): {'properties': 'properties', 'associations': 'associations'},
+        ('tasks', 'get'): {'task_id': 'taskId', 'properties': 'properties', 'properties_with_history': 'propertiesWithHistory', 'associations': 'associations', 'id_property': 'idProperty', 'archived': 'archived'},
+        ('tasks', 'update'): {'properties': 'properties', 'task_id': 'taskId'},
+        ('tasks', 'delete'): {'task_id': 'taskId'},
         ('schemas', 'list'): {'archived': 'archived'},
         ('schemas', 'get'): {'object_type': 'objectType'},
         ('objects', 'list'): {'object_type': 'objectType', 'limit': 'limit', 'after': 'after', 'properties': 'properties', 'archived': 'archived', 'associations': 'associations', 'properties_with_history': 'propertiesWithHistory'},
@@ -284,6 +404,11 @@ class HubspotConnector:
         self.companies = CompaniesQuery(self)
         self.deals = DealsQuery(self)
         self.tickets = TicketsQuery(self)
+        self.notes = NotesQuery(self)
+        self.calls = CallsQuery(self)
+        self.emails = EmailsQuery(self)
+        self.meetings = MeetingsQuery(self)
+        self.tasks = TasksQuery(self)
         self.schemas = SchemasQuery(self)
         self.objects = ObjectsQuery(self)
 
@@ -532,6 +657,306 @@ class HubspotConnector:
     @overload
     async def execute(
         self,
+        entity: Literal["notes"],
+        action: Literal["list"],
+        params: "NotesListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "NotesListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["notes"],
+        action: Literal["create"],
+        params: "NotesCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "Note": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["notes"],
+        action: Literal["get"],
+        params: "NotesGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "Note": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["notes"],
+        action: Literal["update"],
+        params: "NotesUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "Note": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["notes"],
+        action: Literal["delete"],
+        params: "NotesDeleteParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "dict[str, Any]": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["calls"],
+        action: Literal["list"],
+        params: "CallsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "CallsListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["calls"],
+        action: Literal["create"],
+        params: "CallsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "Call": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["calls"],
+        action: Literal["get"],
+        params: "CallsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "Call": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["calls"],
+        action: Literal["update"],
+        params: "CallsUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "Call": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["calls"],
+        action: Literal["delete"],
+        params: "CallsDeleteParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "dict[str, Any]": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["emails"],
+        action: Literal["list"],
+        params: "EmailsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "EmailsListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["emails"],
+        action: Literal["create"],
+        params: "EmailsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "Email": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["emails"],
+        action: Literal["get"],
+        params: "EmailsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "Email": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["emails"],
+        action: Literal["update"],
+        params: "EmailsUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "Email": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["emails"],
+        action: Literal["delete"],
+        params: "EmailsDeleteParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "dict[str, Any]": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["meetings"],
+        action: Literal["list"],
+        params: "MeetingsListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "MeetingsListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["meetings"],
+        action: Literal["create"],
+        params: "MeetingsCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "Meeting": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["meetings"],
+        action: Literal["get"],
+        params: "MeetingsGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "Meeting": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["meetings"],
+        action: Literal["update"],
+        params: "MeetingsUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "Meeting": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["meetings"],
+        action: Literal["delete"],
+        params: "MeetingsDeleteParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "dict[str, Any]": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["tasks"],
+        action: Literal["list"],
+        params: "TasksListParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "TasksListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["tasks"],
+        action: Literal["create"],
+        params: "TasksCreateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "Task": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["tasks"],
+        action: Literal["get"],
+        params: "TasksGetParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "Task": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["tasks"],
+        action: Literal["update"],
+        params: "TasksUpdateParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "Task": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["tasks"],
+        action: Literal["delete"],
+        params: "TasksDeleteParams",
+        *,
+        select_fields: list[str] | None = ...,
+        exclude_fields: list[str] | None = ...,
+        skip_truncation: bool = ...
+    ) -> "dict[str, Any]": ...
+
+    @overload
+    async def execute(
+        self,
         entity: Literal["schemas"],
         action: Literal["list"],
         params: "SchemasListParams",
@@ -582,7 +1007,7 @@ class HubspotConnector:
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "create", "get", "update", "api_search", "context_store_search"],
+        action: Literal["list", "create", "get", "update", "api_search", "delete", "context_store_search"],
         params: Mapping[str, Any],
         *,
         select_fields: list[str] | None = ...,
@@ -593,7 +1018,7 @@ class HubspotConnector:
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "create", "get", "update", "api_search", "context_store_search"],
+        action: Literal["list", "create", "get", "update", "api_search", "delete", "context_store_search"],
         params: Mapping[str, Any] | None = None,
         *,
         select_fields: list[str] | None = None,
@@ -1883,6 +2308,1247 @@ class TicketsQuery:
         return TicketsSearchResult(
             data=[
                 TicketsSearchData(**row)
+                for row in result.get("data", [])
+                if isinstance(row, dict)
+            ],
+            meta=AirbyteSearchMeta(
+                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
+                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
+                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
+            ),
+        )
+
+class NotesQuery:
+    """
+    Query class for Notes entity operations.
+    """
+
+    def __init__(self, connector: HubspotConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        limit: int | None = None,
+        after: str | None = None,
+        associations: str | None = None,
+        properties: str | None = None,
+        properties_with_history: str | None = None,
+        archived: bool | None = None,
+        **kwargs
+    ) -> NotesListResult:
+        """
+        Returns a paginated list of notes
+
+        Args:
+            limit: The maximum number of results to display per page.
+            after: The paging cursor token of the last successfully read resource will be returned as the paging.next.after JSON property of a paged response containing more results.
+            associations: A comma separated list of associated object types to include in the response. Valid values are contacts, companies, deals, tickets, and custom object type IDs or fully qualified names.
+            properties: A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.
+            properties_with_history: A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored.
+            archived: Whether to return only results that have been archived.
+            **kwargs: Additional parameters
+
+        Returns:
+            NotesListResult
+        """
+        params = {k: v for k, v in {
+            "limit": limit,
+            "after": after,
+            "associations": associations,
+            "properties": properties,
+            "propertiesWithHistory": properties_with_history,
+            "archived": archived,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("notes", "list", params)
+        # Cast generic envelope to concrete typed result
+        return NotesListResult(
+            data=result.data,
+            meta=getattr(result, "meta", None)
+        )
+
+
+
+    async def create(
+        self,
+        properties: NotesCreateParamsProperties,
+        associations: list[NotesCreateParamsAssociationsItem] | None = None,
+        **kwargs
+    ) -> Note:
+        """
+        Create a new note in HubSpot CRM. Notes can be associated with contacts,
+companies, deals, or tickets by using the associations parameter.
+The hs_timestamp property sets when the note activity occurred.
+
+
+        Args:
+            properties: Note properties to set
+            associations: Associate the note with other CRM records (contacts, companies, deals, tickets)
+            **kwargs: Additional parameters
+
+        Returns:
+            Note
+        """
+        params = {k: v for k, v in {
+            "properties": properties,
+            "associations": associations,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("notes", "create", params)
+        return result
+
+
+
+    async def get(
+        self,
+        note_id: str,
+        properties: str | None = None,
+        properties_with_history: str | None = None,
+        associations: str | None = None,
+        id_property: str | None = None,
+        archived: bool | None = None,
+        **kwargs
+    ) -> Note:
+        """
+        Get a single note by ID
+
+        Args:
+            note_id: Note ID
+            properties: A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.
+            properties_with_history: A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored.
+            associations: A comma separated list of object types to retrieve associated IDs for. If any of the specified associations do not exist, they will be ignored.
+            id_property: The name of a property whose values are unique for this object.
+            archived: Whether to return only results that have been archived.
+            **kwargs: Additional parameters
+
+        Returns:
+            Note
+        """
+        params = {k: v for k, v in {
+            "noteId": note_id,
+            "properties": properties,
+            "propertiesWithHistory": properties_with_history,
+            "associations": associations,
+            "idProperty": id_property,
+            "archived": archived,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("notes", "get", params)
+        return result
+
+
+
+    async def update(
+        self,
+        properties: NotesUpdateParamsProperties,
+        note_id: str,
+        **kwargs
+    ) -> Note:
+        """
+        Update an existing note's properties by ID.
+
+        Args:
+            properties: Note properties to update
+            note_id: Note ID
+            **kwargs: Additional parameters
+
+        Returns:
+            Note
+        """
+        params = {k: v for k, v in {
+            "properties": properties,
+            "noteId": note_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("notes", "update", params)
+        return result
+
+
+
+    async def delete(
+        self,
+        note_id: str,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Archive a note by ID. This is a soft delete — the note is moved to the
+recycle bin and can be restored for approximately 90 days. No public
+hard-delete endpoint exists.
+
+
+        Args:
+            note_id: Note ID
+            **kwargs: Additional parameters
+
+        Returns:
+            dict[str, Any]
+        """
+        params = {k: v for k, v in {
+            "noteId": note_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("notes", "delete", params)
+        return result
+
+
+
+    async def context_store_search(
+        self,
+        query: NotesSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> NotesSearchResult:
+        """
+        Search notes records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (NotesSearchFilter):
+        - archived: Indicates whether the note has been archived
+        - created_at: Timestamp when the note was created
+        - id: Unique identifier for the note record
+        - properties: Object containing all property values for the note
+        - properties_hs_createdate: Date the note was created
+        - properties_hs_lastmodifieddate: Last modified date of the note
+        - properties_hs_note_body: The body content of the note (supports HTML)
+        - properties_hs_object_id: HubSpot object ID
+        - properties_hs_timestamp: Timestamp when the note activity occurred
+        - properties_hubspot_owner_id: ID of the note owner
+        - updated_at: Timestamp when the note record was last modified
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's meta.cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            NotesSearchResult with typed records, pagination metadata, and optional search metadata
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("notes", "context_store_search", params)
+
+        # Parse response into typed result
+        meta_data = result.get("meta")
+        return NotesSearchResult(
+            data=[
+                NotesSearchData(**row)
+                for row in result.get("data", [])
+                if isinstance(row, dict)
+            ],
+            meta=AirbyteSearchMeta(
+                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
+                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
+                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
+            ),
+        )
+
+class CallsQuery:
+    """
+    Query class for Calls entity operations.
+    """
+
+    def __init__(self, connector: HubspotConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        limit: int | None = None,
+        after: str | None = None,
+        associations: str | None = None,
+        properties: str | None = None,
+        properties_with_history: str | None = None,
+        archived: bool | None = None,
+        **kwargs
+    ) -> CallsListResult:
+        """
+        Returns a paginated list of calls
+
+        Args:
+            limit: The maximum number of results to display per page.
+            after: The paging cursor token of the last successfully read resource will be returned as the paging.next.after JSON property of a paged response containing more results.
+            associations: A comma separated list of associated object types to include in the response. Valid values are contacts, companies, deals, tickets, and custom object type IDs or fully qualified names.
+            properties: A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.
+            properties_with_history: A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored.
+            archived: Whether to return only results that have been archived.
+            **kwargs: Additional parameters
+
+        Returns:
+            CallsListResult
+        """
+        params = {k: v for k, v in {
+            "limit": limit,
+            "after": after,
+            "associations": associations,
+            "properties": properties,
+            "propertiesWithHistory": properties_with_history,
+            "archived": archived,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("calls", "list", params)
+        # Cast generic envelope to concrete typed result
+        return CallsListResult(
+            data=result.data,
+            meta=getattr(result, "meta", None)
+        )
+
+
+
+    async def create(
+        self,
+        properties: CallsCreateParamsProperties,
+        associations: list[CallsCreateParamsAssociationsItem] | None = None,
+        **kwargs
+    ) -> Call:
+        """
+        Create a new call engagement in HubSpot CRM. Calls can be associated with contacts,
+companies, deals, or tickets by using the associations parameter.
+The hs_timestamp property sets when the call activity occurred.
+
+
+        Args:
+            properties: Call properties to set
+            associations: Associate the call with other CRM records (contacts, companies, deals, tickets)
+            **kwargs: Additional parameters
+
+        Returns:
+            Call
+        """
+        params = {k: v for k, v in {
+            "properties": properties,
+            "associations": associations,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("calls", "create", params)
+        return result
+
+
+
+    async def get(
+        self,
+        call_id: str,
+        properties: str | None = None,
+        properties_with_history: str | None = None,
+        associations: str | None = None,
+        id_property: str | None = None,
+        archived: bool | None = None,
+        **kwargs
+    ) -> Call:
+        """
+        Get a single call by ID
+
+        Args:
+            call_id: Call ID
+            properties: A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.
+            properties_with_history: A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored.
+            associations: A comma separated list of object types to retrieve associated IDs for. If any of the specified associations do not exist, they will be ignored.
+            id_property: The name of a property whose values are unique for this object.
+            archived: Whether to return only results that have been archived.
+            **kwargs: Additional parameters
+
+        Returns:
+            Call
+        """
+        params = {k: v for k, v in {
+            "callId": call_id,
+            "properties": properties,
+            "propertiesWithHistory": properties_with_history,
+            "associations": associations,
+            "idProperty": id_property,
+            "archived": archived,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("calls", "get", params)
+        return result
+
+
+
+    async def update(
+        self,
+        properties: CallsUpdateParamsProperties,
+        call_id: str,
+        **kwargs
+    ) -> Call:
+        """
+        Update an existing call's properties by ID.
+
+        Args:
+            properties: Call properties to update
+            call_id: Call ID
+            **kwargs: Additional parameters
+
+        Returns:
+            Call
+        """
+        params = {k: v for k, v in {
+            "properties": properties,
+            "callId": call_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("calls", "update", params)
+        return result
+
+
+
+    async def delete(
+        self,
+        call_id: str,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Archive a call by ID. This is a soft delete — the call is moved to the
+recycle bin and can be restored for approximately 90 days. No public
+hard-delete endpoint exists.
+
+
+        Args:
+            call_id: Call ID
+            **kwargs: Additional parameters
+
+        Returns:
+            dict[str, Any]
+        """
+        params = {k: v for k, v in {
+            "callId": call_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("calls", "delete", params)
+        return result
+
+
+
+    async def context_store_search(
+        self,
+        query: CallsSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> CallsSearchResult:
+        """
+        Search calls records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (CallsSearchFilter):
+        - archived: Indicates whether the call has been archived
+        - created_at: Timestamp when the call was created
+        - id: Unique identifier for the call record
+        - properties: Object containing all property values for the call
+        - properties_hs_call_body: Description or notes about the call
+        - properties_hs_call_direction: Direction of the call (INBOUND or OUTBOUND)
+        - properties_hs_call_duration: Duration of the call in milliseconds
+        - properties_hs_call_status: Status of the call (e.g., COMPLETED, BUSY, NO_ANSWER)
+        - properties_hs_call_title: Title or subject of the call
+        - properties_hs_createdate: Date the call was created
+        - properties_hs_lastmodifieddate: Last modified date of the call
+        - properties_hs_object_id: HubSpot object ID
+        - properties_hs_timestamp: Timestamp when the call activity occurred
+        - properties_hubspot_owner_id: ID of the call owner
+        - updated_at: Timestamp when the call record was last modified
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's meta.cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            CallsSearchResult with typed records, pagination metadata, and optional search metadata
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("calls", "context_store_search", params)
+
+        # Parse response into typed result
+        meta_data = result.get("meta")
+        return CallsSearchResult(
+            data=[
+                CallsSearchData(**row)
+                for row in result.get("data", [])
+                if isinstance(row, dict)
+            ],
+            meta=AirbyteSearchMeta(
+                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
+                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
+                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
+            ),
+        )
+
+class EmailsQuery:
+    """
+    Query class for Emails entity operations.
+    """
+
+    def __init__(self, connector: HubspotConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        limit: int | None = None,
+        after: str | None = None,
+        associations: str | None = None,
+        properties: str | None = None,
+        properties_with_history: str | None = None,
+        archived: bool | None = None,
+        **kwargs
+    ) -> EmailsListResult:
+        """
+        Returns a paginated list of emails
+
+        Args:
+            limit: The maximum number of results to display per page.
+            after: The paging cursor token of the last successfully read resource will be returned as the paging.next.after JSON property of a paged response containing more results.
+            associations: A comma separated list of associated object types to include in the response. Valid values are contacts, companies, deals, tickets, and custom object type IDs or fully qualified names.
+            properties: A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.
+            properties_with_history: A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored.
+            archived: Whether to return only results that have been archived.
+            **kwargs: Additional parameters
+
+        Returns:
+            EmailsListResult
+        """
+        params = {k: v for k, v in {
+            "limit": limit,
+            "after": after,
+            "associations": associations,
+            "properties": properties,
+            "propertiesWithHistory": properties_with_history,
+            "archived": archived,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("emails", "list", params)
+        # Cast generic envelope to concrete typed result
+        return EmailsListResult(
+            data=result.data,
+            meta=getattr(result, "meta", None)
+        )
+
+
+
+    async def create(
+        self,
+        properties: EmailsCreateParamsProperties,
+        associations: list[EmailsCreateParamsAssociationsItem] | None = None,
+        **kwargs
+    ) -> Email:
+        """
+        Create a new email engagement in HubSpot CRM. Emails can be associated with contacts,
+companies, deals, or tickets by using the associations parameter.
+The hs_timestamp property sets when the email activity occurred.
+
+
+        Args:
+            properties: Email properties to set
+            associations: Associate the email with other CRM records (contacts, companies, deals, tickets)
+            **kwargs: Additional parameters
+
+        Returns:
+            Email
+        """
+        params = {k: v for k, v in {
+            "properties": properties,
+            "associations": associations,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("emails", "create", params)
+        return result
+
+
+
+    async def get(
+        self,
+        email_id: str,
+        properties: str | None = None,
+        properties_with_history: str | None = None,
+        associations: str | None = None,
+        id_property: str | None = None,
+        archived: bool | None = None,
+        **kwargs
+    ) -> Email:
+        """
+        Get a single email by ID
+
+        Args:
+            email_id: Email ID
+            properties: A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.
+            properties_with_history: A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored.
+            associations: A comma separated list of object types to retrieve associated IDs for. If any of the specified associations do not exist, they will be ignored.
+            id_property: The name of a property whose values are unique for this object.
+            archived: Whether to return only results that have been archived.
+            **kwargs: Additional parameters
+
+        Returns:
+            Email
+        """
+        params = {k: v for k, v in {
+            "emailId": email_id,
+            "properties": properties,
+            "propertiesWithHistory": properties_with_history,
+            "associations": associations,
+            "idProperty": id_property,
+            "archived": archived,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("emails", "get", params)
+        return result
+
+
+
+    async def update(
+        self,
+        properties: EmailsUpdateParamsProperties,
+        email_id: str,
+        **kwargs
+    ) -> Email:
+        """
+        Update an existing email's properties by ID.
+
+        Args:
+            properties: Email properties to update
+            email_id: Email ID
+            **kwargs: Additional parameters
+
+        Returns:
+            Email
+        """
+        params = {k: v for k, v in {
+            "properties": properties,
+            "emailId": email_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("emails", "update", params)
+        return result
+
+
+
+    async def delete(
+        self,
+        email_id: str,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Archive an email by ID. This is a soft delete — the email is moved to the
+recycle bin and can be restored for approximately 90 days. No public
+hard-delete endpoint exists.
+
+
+        Args:
+            email_id: Email ID
+            **kwargs: Additional parameters
+
+        Returns:
+            dict[str, Any]
+        """
+        params = {k: v for k, v in {
+            "emailId": email_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("emails", "delete", params)
+        return result
+
+
+
+    async def context_store_search(
+        self,
+        query: EmailsSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> EmailsSearchResult:
+        """
+        Search emails records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (EmailsSearchFilter):
+        - archived: Indicates whether the email has been archived
+        - created_at: Timestamp when the email was created
+        - id: Unique identifier for the email record
+        - properties: Object containing all property values for the email
+        - properties_hs_createdate: Date the email was created
+        - properties_hs_email_direction: Direction of the email (EMAIL, INCOMING_EMAIL, FORWARDED_EMAIL)
+        - properties_hs_email_status: Status of the email (BOUNCED, FAILED, SCHEDULED, SENDING, SENT, DRAFT)
+        - properties_hs_email_subject: Subject line of the email
+        - properties_hs_email_text: Plain text body of the email
+        - properties_hs_lastmodifieddate: Last modified date of the email
+        - properties_hs_object_id: HubSpot object ID
+        - properties_hs_timestamp: Timestamp when the email activity occurred
+        - properties_hubspot_owner_id: ID of the email owner
+        - updated_at: Timestamp when the email record was last modified
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's meta.cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            EmailsSearchResult with typed records, pagination metadata, and optional search metadata
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("emails", "context_store_search", params)
+
+        # Parse response into typed result
+        meta_data = result.get("meta")
+        return EmailsSearchResult(
+            data=[
+                EmailsSearchData(**row)
+                for row in result.get("data", [])
+                if isinstance(row, dict)
+            ],
+            meta=AirbyteSearchMeta(
+                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
+                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
+                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
+            ),
+        )
+
+class MeetingsQuery:
+    """
+    Query class for Meetings entity operations.
+    """
+
+    def __init__(self, connector: HubspotConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        limit: int | None = None,
+        after: str | None = None,
+        associations: str | None = None,
+        properties: str | None = None,
+        properties_with_history: str | None = None,
+        archived: bool | None = None,
+        **kwargs
+    ) -> MeetingsListResult:
+        """
+        Returns a paginated list of meetings
+
+        Args:
+            limit: The maximum number of results to display per page.
+            after: The paging cursor token of the last successfully read resource will be returned as the paging.next.after JSON property of a paged response containing more results.
+            associations: A comma separated list of associated object types to include in the response. Valid values are contacts, companies, deals, tickets, and custom object type IDs or fully qualified names.
+            properties: A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.
+            properties_with_history: A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored.
+            archived: Whether to return only results that have been archived.
+            **kwargs: Additional parameters
+
+        Returns:
+            MeetingsListResult
+        """
+        params = {k: v for k, v in {
+            "limit": limit,
+            "after": after,
+            "associations": associations,
+            "properties": properties,
+            "propertiesWithHistory": properties_with_history,
+            "archived": archived,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("meetings", "list", params)
+        # Cast generic envelope to concrete typed result
+        return MeetingsListResult(
+            data=result.data,
+            meta=getattr(result, "meta", None)
+        )
+
+
+
+    async def create(
+        self,
+        properties: MeetingsCreateParamsProperties,
+        associations: list[MeetingsCreateParamsAssociationsItem] | None = None,
+        **kwargs
+    ) -> Meeting:
+        """
+        Create a new meeting engagement in HubSpot CRM. Meetings can be associated with contacts,
+companies, deals, or tickets by using the associations parameter.
+The hs_timestamp property sets when the meeting activity occurred.
+
+
+        Args:
+            properties: Meeting properties to set
+            associations: Associate the meeting with other CRM records (contacts, companies, deals, tickets)
+            **kwargs: Additional parameters
+
+        Returns:
+            Meeting
+        """
+        params = {k: v for k, v in {
+            "properties": properties,
+            "associations": associations,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("meetings", "create", params)
+        return result
+
+
+
+    async def get(
+        self,
+        meeting_id: str,
+        properties: str | None = None,
+        properties_with_history: str | None = None,
+        associations: str | None = None,
+        id_property: str | None = None,
+        archived: bool | None = None,
+        **kwargs
+    ) -> Meeting:
+        """
+        Get a single meeting by ID
+
+        Args:
+            meeting_id: Meeting ID
+            properties: A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.
+            properties_with_history: A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored.
+            associations: A comma separated list of object types to retrieve associated IDs for. If any of the specified associations do not exist, they will be ignored.
+            id_property: The name of a property whose values are unique for this object.
+            archived: Whether to return only results that have been archived.
+            **kwargs: Additional parameters
+
+        Returns:
+            Meeting
+        """
+        params = {k: v for k, v in {
+            "meetingId": meeting_id,
+            "properties": properties,
+            "propertiesWithHistory": properties_with_history,
+            "associations": associations,
+            "idProperty": id_property,
+            "archived": archived,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("meetings", "get", params)
+        return result
+
+
+
+    async def update(
+        self,
+        properties: MeetingsUpdateParamsProperties,
+        meeting_id: str,
+        **kwargs
+    ) -> Meeting:
+        """
+        Update an existing meeting's properties by ID.
+
+        Args:
+            properties: Meeting properties to update
+            meeting_id: Meeting ID
+            **kwargs: Additional parameters
+
+        Returns:
+            Meeting
+        """
+        params = {k: v for k, v in {
+            "properties": properties,
+            "meetingId": meeting_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("meetings", "update", params)
+        return result
+
+
+
+    async def delete(
+        self,
+        meeting_id: str,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Archive a meeting by ID. This is a soft delete — the meeting is moved to the
+recycle bin and can be restored for approximately 90 days. No public
+hard-delete endpoint exists.
+
+
+        Args:
+            meeting_id: Meeting ID
+            **kwargs: Additional parameters
+
+        Returns:
+            dict[str, Any]
+        """
+        params = {k: v for k, v in {
+            "meetingId": meeting_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("meetings", "delete", params)
+        return result
+
+
+
+    async def context_store_search(
+        self,
+        query: MeetingsSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> MeetingsSearchResult:
+        """
+        Search meetings records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (MeetingsSearchFilter):
+        - archived: Indicates whether the meeting has been archived
+        - created_at: Timestamp when the meeting was created
+        - id: Unique identifier for the meeting record
+        - properties: Object containing all property values for the meeting
+        - properties_hs_createdate: Date the meeting was created
+        - properties_hs_lastmodifieddate: Last modified date of the meeting
+        - properties_hs_meeting_body: Description or notes about the meeting
+        - properties_hs_meeting_end_time: End time of the meeting
+        - properties_hs_meeting_location: Location of the meeting
+        - properties_hs_meeting_outcome: Outcome of the meeting (e.g., SCHEDULED, COMPLETED, NO_SHOW, CANCELED)
+        - properties_hs_meeting_start_time: Start time of the meeting
+        - properties_hs_meeting_title: Title of the meeting
+        - properties_hs_object_id: HubSpot object ID
+        - properties_hs_timestamp: Timestamp when the meeting activity occurred
+        - properties_hubspot_owner_id: ID of the meeting owner
+        - updated_at: Timestamp when the meeting record was last modified
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's meta.cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            MeetingsSearchResult with typed records, pagination metadata, and optional search metadata
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("meetings", "context_store_search", params)
+
+        # Parse response into typed result
+        meta_data = result.get("meta")
+        return MeetingsSearchResult(
+            data=[
+                MeetingsSearchData(**row)
+                for row in result.get("data", [])
+                if isinstance(row, dict)
+            ],
+            meta=AirbyteSearchMeta(
+                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
+                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
+                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
+            ),
+        )
+
+class TasksQuery:
+    """
+    Query class for Tasks entity operations.
+    """
+
+    def __init__(self, connector: HubspotConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        limit: int | None = None,
+        after: str | None = None,
+        associations: str | None = None,
+        properties: str | None = None,
+        properties_with_history: str | None = None,
+        archived: bool | None = None,
+        **kwargs
+    ) -> TasksListResult:
+        """
+        Returns a paginated list of tasks
+
+        Args:
+            limit: The maximum number of results to display per page.
+            after: The paging cursor token of the last successfully read resource will be returned as the paging.next.after JSON property of a paged response containing more results.
+            associations: A comma separated list of associated object types to include in the response. Valid values are contacts, companies, deals, tickets, and custom object type IDs or fully qualified names.
+            properties: A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.
+            properties_with_history: A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored.
+            archived: Whether to return only results that have been archived.
+            **kwargs: Additional parameters
+
+        Returns:
+            TasksListResult
+        """
+        params = {k: v for k, v in {
+            "limit": limit,
+            "after": after,
+            "associations": associations,
+            "properties": properties,
+            "propertiesWithHistory": properties_with_history,
+            "archived": archived,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("tasks", "list", params)
+        # Cast generic envelope to concrete typed result
+        return TasksListResult(
+            data=result.data,
+            meta=getattr(result, "meta", None)
+        )
+
+
+
+    async def create(
+        self,
+        properties: TasksCreateParamsProperties,
+        associations: list[TasksCreateParamsAssociationsItem] | None = None,
+        **kwargs
+    ) -> Task:
+        """
+        Create a new task in HubSpot CRM. Tasks can be associated with contacts,
+companies, deals, or tickets by using the associations parameter.
+The hs_timestamp property sets when the task activity occurred.
+
+
+        Args:
+            properties: Task properties to set
+            associations: Associate the task with other CRM records (contacts, companies, deals, tickets)
+            **kwargs: Additional parameters
+
+        Returns:
+            Task
+        """
+        params = {k: v for k, v in {
+            "properties": properties,
+            "associations": associations,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("tasks", "create", params)
+        return result
+
+
+
+    async def get(
+        self,
+        task_id: str,
+        properties: str | None = None,
+        properties_with_history: str | None = None,
+        associations: str | None = None,
+        id_property: str | None = None,
+        archived: bool | None = None,
+        **kwargs
+    ) -> Task:
+        """
+        Get a single task by ID
+
+        Args:
+            task_id: Task ID
+            properties: A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.
+            properties_with_history: A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored.
+            associations: A comma separated list of object types to retrieve associated IDs for. If any of the specified associations do not exist, they will be ignored.
+            id_property: The name of a property whose values are unique for this object.
+            archived: Whether to return only results that have been archived.
+            **kwargs: Additional parameters
+
+        Returns:
+            Task
+        """
+        params = {k: v for k, v in {
+            "taskId": task_id,
+            "properties": properties,
+            "propertiesWithHistory": properties_with_history,
+            "associations": associations,
+            "idProperty": id_property,
+            "archived": archived,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("tasks", "get", params)
+        return result
+
+
+
+    async def update(
+        self,
+        properties: TasksUpdateParamsProperties,
+        task_id: str,
+        **kwargs
+    ) -> Task:
+        """
+        Update an existing task's properties by ID.
+
+        Args:
+            properties: Task properties to update
+            task_id: Task ID
+            **kwargs: Additional parameters
+
+        Returns:
+            Task
+        """
+        params = {k: v for k, v in {
+            "properties": properties,
+            "taskId": task_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("tasks", "update", params)
+        return result
+
+
+
+    async def delete(
+        self,
+        task_id: str,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Archive a task by ID. This is a soft delete — the task is moved to the
+recycle bin and can be restored for approximately 90 days. No public
+hard-delete endpoint exists.
+
+
+        Args:
+            task_id: Task ID
+            **kwargs: Additional parameters
+
+        Returns:
+            dict[str, Any]
+        """
+        params = {k: v for k, v in {
+            "taskId": task_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("tasks", "delete", params)
+        return result
+
+
+
+    async def context_store_search(
+        self,
+        query: TasksSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> TasksSearchResult:
+        """
+        Search tasks records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (TasksSearchFilter):
+        - archived: Indicates whether the task has been archived
+        - created_at: Timestamp when the task was created
+        - id: Unique identifier for the task record
+        - properties: Object containing all property values for the task
+        - properties_hs_createdate: Date the task was created
+        - properties_hs_lastmodifieddate: Last modified date of the task
+        - properties_hs_object_id: HubSpot object ID
+        - properties_hs_task_body: Description or notes for the task
+        - properties_hs_task_priority: Priority of the task (LOW, MEDIUM, HIGH)
+        - properties_hs_task_status: Status of the task (NOT_STARTED, IN_PROGRESS, WAITING, COMPLETED, DEFERRED)
+        - properties_hs_task_subject: Subject or title of the task
+        - properties_hs_task_type: Type of the task (TODO, CALL, EMAIL)
+        - properties_hs_timestamp: Due date / timestamp for the task
+        - properties_hubspot_owner_id: ID of the task owner
+        - updated_at: Timestamp when the task record was last modified
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's meta.cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            TasksSearchResult with typed records, pagination metadata, and optional search metadata
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("tasks", "context_store_search", params)
+
+        # Parse response into typed result
+        meta_data = result.get("meta")
+        return TasksSearchResult(
+            data=[
+                TasksSearchData(**row)
                 for row in result.get("data", [])
                 if isinstance(row, dict)
             ],

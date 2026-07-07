@@ -9,7 +9,7 @@ info:
   description: |
     HubSpot is a CRM platform that provides tools for marketing, sales, customer service,
     and content management. This connector provides access to contacts, companies, deals,
-    tickets, and custom objects for customer relationship management and sales analytics.
+    tickets, notes, calls, emails, meetings, tasks, and custom objects for customer relationship management and sales analytics.
   x-airbyte-connector-name: hubspot
   x-airbyte-connector-definition-id: 36c891d9-4bd9-43ac-bad2-10e12756272c
   x-airbyte-replication-version: "6.7.0"
@@ -30,6 +30,18 @@ info:
     - "Create a new company called 'Acme Corp' with domain acme.com"
     - "Create a support ticket with subject 'Login issue' and priority HIGH"
     - "Update the contact email for a specific contact"
+    - "Add a note to contact 12345 saying 'Discussed pricing options'"
+    - "List recent notes in my CRM"
+    - "Get the details of a specific note"
+    - "Delete a note from HubSpot"
+    - "Log a call with contact 12345 about pricing discussion"
+    - "List recent calls in my CRM"
+    - "Create an email record for outreach to a contact"
+    - "List recent emails in my CRM"
+    - "Schedule a meeting with a contact for next Tuesday"
+    - "List recent meetings in my CRM"
+    - "Create a follow-up task for a deal"
+    - "List tasks in my CRM"
     search:
     - "Show me all deals from Acme Corp this quarter"
     - "What are the top 5 most valuable deals in my pipeline right now?"
@@ -41,14 +53,92 @@ info:
     unsupported:
     - "Delete a contact from HubSpot"
     - "Delete a deal record"
-    - "Schedule a follow-up task for this deal"
-    - "Send an email to all contacts in the sales pipeline"
   x-airbyte-entity-relationships:
   - source_entity: objects
     target_entity: schemas
     foreign_key: objectType
     target_key: fullyQualifiedName
     cardinality: many_to_one
+  - source_entity: notes
+    target_entity: contacts
+    foreign_key: associations
+    cardinality: many_to_many
+  - source_entity: notes
+    target_entity: companies
+    foreign_key: associations
+    cardinality: many_to_many
+  - source_entity: notes
+    target_entity: deals
+    foreign_key: associations
+    cardinality: many_to_many
+  - source_entity: notes
+    target_entity: tickets
+    foreign_key: associations
+    cardinality: many_to_many
+  - source_entity: calls
+    target_entity: contacts
+    foreign_key: associations
+    cardinality: many_to_many
+  - source_entity: calls
+    target_entity: companies
+    foreign_key: associations
+    cardinality: many_to_many
+  - source_entity: calls
+    target_entity: deals
+    foreign_key: associations
+    cardinality: many_to_many
+  - source_entity: calls
+    target_entity: tickets
+    foreign_key: associations
+    cardinality: many_to_many
+  - source_entity: emails
+    target_entity: contacts
+    foreign_key: associations
+    cardinality: many_to_many
+  - source_entity: emails
+    target_entity: companies
+    foreign_key: associations
+    cardinality: many_to_many
+  - source_entity: emails
+    target_entity: deals
+    foreign_key: associations
+    cardinality: many_to_many
+  - source_entity: emails
+    target_entity: tickets
+    foreign_key: associations
+    cardinality: many_to_many
+  - source_entity: meetings
+    target_entity: contacts
+    foreign_key: associations
+    cardinality: many_to_many
+  - source_entity: meetings
+    target_entity: companies
+    foreign_key: associations
+    cardinality: many_to_many
+  - source_entity: meetings
+    target_entity: deals
+    foreign_key: associations
+    cardinality: many_to_many
+  - source_entity: meetings
+    target_entity: tickets
+    foreign_key: associations
+    cardinality: many_to_many
+  - source_entity: tasks
+    target_entity: contacts
+    foreign_key: associations
+    cardinality: many_to_many
+  - source_entity: tasks
+    target_entity: companies
+    foreign_key: associations
+    cardinality: many_to_many
+  - source_entity: tasks
+    target_entity: deals
+    foreign_key: associations
+    cardinality: many_to_many
+  - source_entity: tasks
+    target_entity: tickets
+    foreign_key: associations
+    cardinality: many_to_many
   x-airbyte-context-store:
     disable_compaction: false
     entities:
@@ -391,6 +481,422 @@ info:
         - 'null'
         - 'string'
         description: Timestamp when the ticket record was last modified
+    - entity: notes
+      x-airbyte-name: engagements_notes
+      suggested: false
+      fields:
+      - name: archived
+        type:
+        - 'null'
+        - 'boolean'
+        description: Indicates whether the note has been archived
+      - name: createdAt
+        type:
+        - 'null'
+        - 'string'
+        description: Timestamp when the note was created
+      - name: id
+        type:
+        - 'null'
+        - 'string'
+        description: Unique identifier for the note record
+      - name: properties
+        type:
+        - 'object'
+        description: Object containing all property values for the note
+      - name: properties.hs_createdate
+        x-airbyte-name: properties_hs_createdate
+        type:
+        - 'null'
+        - 'string'
+        description: Date the note was created
+      - name: properties.hs_lastmodifieddate
+        x-airbyte-name: properties_hs_lastmodifieddate
+        type:
+        - 'null'
+        - 'string'
+        description: Last modified date of the note
+      - name: properties.hs_note_body
+        x-airbyte-name: properties_hs_note_body
+        type:
+        - 'null'
+        - 'string'
+        description: The body content of the note (supports HTML)
+      - name: properties.hs_object_id
+        x-airbyte-name: properties_hs_object_id
+        type:
+        - 'null'
+        - 'string'
+        description: HubSpot object ID
+      - name: properties.hs_timestamp
+        x-airbyte-name: properties_hs_timestamp
+        type:
+        - 'null'
+        - 'string'
+        description: Timestamp when the note activity occurred
+      - name: properties.hubspot_owner_id
+        x-airbyte-name: properties_hubspot_owner_id
+        type:
+        - 'null'
+        - 'string'
+        description: ID of the note owner
+      - name: updatedAt
+        type:
+        - 'null'
+        - 'string'
+        description: Timestamp when the note record was last modified
+    - entity: calls
+      x-airbyte-name: engagements_calls
+      suggested: false
+      fields:
+      - name: archived
+        type:
+        - 'null'
+        - 'boolean'
+        description: Indicates whether the call has been archived
+      - name: createdAt
+        type:
+        - 'null'
+        - 'string'
+        description: Timestamp when the call was created
+      - name: id
+        type:
+        - 'null'
+        - 'string'
+        description: Unique identifier for the call record
+      - name: properties
+        type:
+        - 'object'
+        description: Object containing all property values for the call
+      - name: properties.hs_call_body
+        x-airbyte-name: properties_hs_call_body
+        type:
+        - 'null'
+        - 'string'
+        description: Description or notes about the call
+      - name: properties.hs_call_direction
+        x-airbyte-name: properties_hs_call_direction
+        type:
+        - 'null'
+        - 'string'
+        description: Direction of the call (INBOUND or OUTBOUND)
+      - name: properties.hs_call_duration
+        x-airbyte-name: properties_hs_call_duration
+        type:
+        - 'null'
+        - 'string'
+        description: Duration of the call in milliseconds
+      - name: properties.hs_call_status
+        x-airbyte-name: properties_hs_call_status
+        type:
+        - 'null'
+        - 'string'
+        description: Status of the call (e.g., COMPLETED, BUSY, NO_ANSWER)
+      - name: properties.hs_call_title
+        x-airbyte-name: properties_hs_call_title
+        type:
+        - 'null'
+        - 'string'
+        description: Title or subject of the call
+      - name: properties.hs_createdate
+        x-airbyte-name: properties_hs_createdate
+        type:
+        - 'null'
+        - 'string'
+        description: Date the call was created
+      - name: properties.hs_lastmodifieddate
+        x-airbyte-name: properties_hs_lastmodifieddate
+        type:
+        - 'null'
+        - 'string'
+        description: Last modified date of the call
+      - name: properties.hs_object_id
+        x-airbyte-name: properties_hs_object_id
+        type:
+        - 'null'
+        - 'string'
+        description: HubSpot object ID
+      - name: properties.hs_timestamp
+        x-airbyte-name: properties_hs_timestamp
+        type:
+        - 'null'
+        - 'string'
+        description: Timestamp when the call activity occurred
+      - name: properties.hubspot_owner_id
+        x-airbyte-name: properties_hubspot_owner_id
+        type:
+        - 'null'
+        - 'string'
+        description: ID of the call owner
+      - name: updatedAt
+        type:
+        - 'null'
+        - 'string'
+        description: Timestamp when the call record was last modified
+    - entity: emails
+      x-airbyte-name: engagements_emails
+      suggested: false
+      fields:
+      - name: archived
+        type:
+        - 'null'
+        - 'boolean'
+        description: Indicates whether the email has been archived
+      - name: createdAt
+        type:
+        - 'null'
+        - 'string'
+        description: Timestamp when the email was created
+      - name: id
+        type:
+        - 'null'
+        - 'string'
+        description: Unique identifier for the email record
+      - name: properties
+        type:
+        - 'object'
+        description: Object containing all property values for the email
+      - name: properties.hs_createdate
+        x-airbyte-name: properties_hs_createdate
+        type:
+        - 'null'
+        - 'string'
+        description: Date the email was created
+      - name: properties.hs_email_direction
+        x-airbyte-name: properties_hs_email_direction
+        type:
+        - 'null'
+        - 'string'
+        description: Direction of the email (EMAIL, INCOMING_EMAIL, FORWARDED_EMAIL)
+      - name: properties.hs_email_status
+        x-airbyte-name: properties_hs_email_status
+        type:
+        - 'null'
+        - 'string'
+        description: Status of the email (BOUNCED, FAILED, SCHEDULED, SENDING, SENT, DRAFT)
+      - name: properties.hs_email_subject
+        x-airbyte-name: properties_hs_email_subject
+        type:
+        - 'null'
+        - 'string'
+        description: Subject line of the email
+      - name: properties.hs_email_text
+        x-airbyte-name: properties_hs_email_text
+        type:
+        - 'null'
+        - 'string'
+        description: Plain text body of the email
+      - name: properties.hs_lastmodifieddate
+        x-airbyte-name: properties_hs_lastmodifieddate
+        type:
+        - 'null'
+        - 'string'
+        description: Last modified date of the email
+      - name: properties.hs_object_id
+        x-airbyte-name: properties_hs_object_id
+        type:
+        - 'null'
+        - 'string'
+        description: HubSpot object ID
+      - name: properties.hs_timestamp
+        x-airbyte-name: properties_hs_timestamp
+        type:
+        - 'null'
+        - 'string'
+        description: Timestamp when the email activity occurred
+      - name: properties.hubspot_owner_id
+        x-airbyte-name: properties_hubspot_owner_id
+        type:
+        - 'null'
+        - 'string'
+        description: ID of the email owner
+      - name: updatedAt
+        type:
+        - 'null'
+        - 'string'
+        description: Timestamp when the email record was last modified
+    - entity: meetings
+      x-airbyte-name: engagements_meetings
+      suggested: false
+      fields:
+      - name: archived
+        type:
+        - 'null'
+        - 'boolean'
+        description: Indicates whether the meeting has been archived
+      - name: createdAt
+        type:
+        - 'null'
+        - 'string'
+        description: Timestamp when the meeting was created
+      - name: id
+        type:
+        - 'null'
+        - 'string'
+        description: Unique identifier for the meeting record
+      - name: properties
+        type:
+        - 'object'
+        description: Object containing all property values for the meeting
+      - name: properties.hs_createdate
+        x-airbyte-name: properties_hs_createdate
+        type:
+        - 'null'
+        - 'string'
+        description: Date the meeting was created
+      - name: properties.hs_lastmodifieddate
+        x-airbyte-name: properties_hs_lastmodifieddate
+        type:
+        - 'null'
+        - 'string'
+        description: Last modified date of the meeting
+      - name: properties.hs_meeting_body
+        x-airbyte-name: properties_hs_meeting_body
+        type:
+        - 'null'
+        - 'string'
+        description: Description or notes about the meeting
+      - name: properties.hs_meeting_end_time
+        x-airbyte-name: properties_hs_meeting_end_time
+        type:
+        - 'null'
+        - 'string'
+        description: End time of the meeting
+      - name: properties.hs_meeting_location
+        x-airbyte-name: properties_hs_meeting_location
+        type:
+        - 'null'
+        - 'string'
+        description: Location of the meeting
+      - name: properties.hs_meeting_outcome
+        x-airbyte-name: properties_hs_meeting_outcome
+        type:
+        - 'null'
+        - 'string'
+        description: Outcome of the meeting (e.g., SCHEDULED, COMPLETED, NO_SHOW, CANCELED)
+      - name: properties.hs_meeting_start_time
+        x-airbyte-name: properties_hs_meeting_start_time
+        type:
+        - 'null'
+        - 'string'
+        description: Start time of the meeting
+      - name: properties.hs_meeting_title
+        x-airbyte-name: properties_hs_meeting_title
+        type:
+        - 'null'
+        - 'string'
+        description: Title of the meeting
+      - name: properties.hs_object_id
+        x-airbyte-name: properties_hs_object_id
+        type:
+        - 'null'
+        - 'string'
+        description: HubSpot object ID
+      - name: properties.hs_timestamp
+        x-airbyte-name: properties_hs_timestamp
+        type:
+        - 'null'
+        - 'string'
+        description: Timestamp when the meeting activity occurred
+      - name: properties.hubspot_owner_id
+        x-airbyte-name: properties_hubspot_owner_id
+        type:
+        - 'null'
+        - 'string'
+        description: ID of the meeting owner
+      - name: updatedAt
+        type:
+        - 'null'
+        - 'string'
+        description: Timestamp when the meeting record was last modified
+    - entity: tasks
+      x-airbyte-name: engagements_tasks
+      suggested: false
+      fields:
+      - name: archived
+        type:
+        - 'null'
+        - 'boolean'
+        description: Indicates whether the task has been archived
+      - name: createdAt
+        type:
+        - 'null'
+        - 'string'
+        description: Timestamp when the task was created
+      - name: id
+        type:
+        - 'null'
+        - 'string'
+        description: Unique identifier for the task record
+      - name: properties
+        type:
+        - 'object'
+        description: Object containing all property values for the task
+      - name: properties.hs_createdate
+        x-airbyte-name: properties_hs_createdate
+        type:
+        - 'null'
+        - 'string'
+        description: Date the task was created
+      - name: properties.hs_lastmodifieddate
+        x-airbyte-name: properties_hs_lastmodifieddate
+        type:
+        - 'null'
+        - 'string'
+        description: Last modified date of the task
+      - name: properties.hs_object_id
+        x-airbyte-name: properties_hs_object_id
+        type:
+        - 'null'
+        - 'string'
+        description: HubSpot object ID
+      - name: properties.hs_task_body
+        x-airbyte-name: properties_hs_task_body
+        type:
+        - 'null'
+        - 'string'
+        description: Description or notes for the task
+      - name: properties.hs_task_priority
+        x-airbyte-name: properties_hs_task_priority
+        type:
+        - 'null'
+        - 'string'
+        description: Priority of the task (LOW, MEDIUM, HIGH)
+      - name: properties.hs_task_status
+        x-airbyte-name: properties_hs_task_status
+        type:
+        - 'null'
+        - 'string'
+        description: Status of the task (NOT_STARTED, IN_PROGRESS, WAITING, COMPLETED, DEFERRED)
+      - name: properties.hs_task_subject
+        x-airbyte-name: properties_hs_task_subject
+        type:
+        - 'null'
+        - 'string'
+        description: Subject or title of the task
+      - name: properties.hs_task_type
+        x-airbyte-name: properties_hs_task_type
+        type:
+        - 'null'
+        - 'string'
+        description: Type of the task (TODO, CALL, EMAIL)
+      - name: properties.hs_timestamp
+        x-airbyte-name: properties_hs_timestamp
+        type:
+        - 'null'
+        - 'string'
+        description: Due date / timestamp for the task
+      - name: properties.hubspot_owner_id
+        x-airbyte-name: properties_hubspot_owner_id
+        type:
+        - 'null'
+        - 'string'
+        description: ID of the task owner
+      - name: updatedAt
+        type:
+        - 'null'
+        - 'string'
+        description: Timestamp when the task record was last modified
 
 servers:
 - url: https://api.hubapi.com
@@ -1418,6 +1924,946 @@ paths:
         "400":
           description: Bad request
 
+  # Notes Entity
+  "/crm/v3/objects/notes":
+    post:
+      summary: Create a note
+      description: |
+        Create a new note in HubSpot CRM. Notes can be associated with contacts,
+        companies, deals, or tickets by using the associations parameter.
+        The hs_timestamp property sets when the note activity occurred.
+      operationId: createNote
+      x-airbyte-entity: notes
+      x-airbyte-action: create
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NoteCreateParams"
+      responses:
+        "201":
+          description: Note created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Note"
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+    get:
+      summary: List notes
+      description: Returns a paginated list of notes
+      operationId: listNotes
+      x-airbyte-entity: notes
+      x-airbyte-action: list
+      x-airbyte-record-extractor: $.results
+      x-airbyte-meta-extractor:
+        next_cursor: $.paging.next.after
+        next_link: $.paging.next.link
+      parameters:
+      - name: limit
+        in: query
+        description: The maximum number of results to display per page.
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 25
+      - name: after
+        in: query
+        description: The paging cursor token of the last successfully read resource will be returned as the paging.next.after JSON property of a paged response containing more results.
+        schema:
+          type: string
+      - name: associations
+        in: query
+        description: A comma separated list of associated object types to include in the response. Valid values are contacts, companies, deals, tickets, and custom object type IDs or fully qualified names.
+        schema:
+          type: string
+      - name: properties
+        in: query
+        description: A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.
+        schema:
+          type: string
+      - name: propertiesWithHistory
+        in: query
+        description: A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored.
+        schema:
+          type: string
+      - name: archived
+        in: query
+        description: Whether to return only results that have been archived.
+        schema:
+          type: boolean
+      responses:
+        "200":
+          description: List of notes
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotesList"
+        "401":
+          description: Unauthorized
+
+  "/crm/v3/objects/notes/{noteId}":
+    patch:
+      summary: Update a note
+      description: Update an existing note's properties by ID.
+      operationId: updateNote
+      x-airbyte-entity: notes
+      x-airbyte-action: update
+      parameters:
+      - name: noteId
+        in: path
+        required: true
+        description: Note ID
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NoteUpdateParams"
+      responses:
+        "200":
+          description: Note updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Note"
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+        "404":
+          description: Note not found
+    get:
+      summary: Get a note
+      description: Get a single note by ID
+      operationId: getNote
+      x-airbyte-entity: notes
+      x-airbyte-action: get
+      parameters:
+      - name: noteId
+        in: path
+        required: true
+        description: Note ID
+        schema:
+          type: string
+      - name: properties
+        in: query
+        description: A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.
+        schema:
+          type: string
+      - name: propertiesWithHistory
+        in: query
+        description: A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored.
+        schema:
+          type: string
+      - name: associations
+        in: query
+        description: A comma separated list of object types to retrieve associated IDs for. If any of the specified associations do not exist, they will be ignored.
+        schema:
+          type: string
+      - name: idProperty
+        in: query
+        description: The name of a property whose values are unique for this object.
+        schema:
+          type: string
+      - name: archived
+        in: query
+        description: Whether to return only results that have been archived.
+        schema:
+          type: boolean
+      responses:
+        "200":
+          description: Note object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Note"
+        "404":
+          description: Note not found
+        "401":
+          description: Unauthorized
+    delete:
+      summary: Delete (archive) a note
+      description: |
+        Archive a note by ID. This is a soft delete — the note is moved to the
+        recycle bin and can be restored for approximately 90 days. No public
+        hard-delete endpoint exists.
+      operationId: deleteNote
+      x-airbyte-entity: notes
+      x-airbyte-action: delete
+      parameters:
+      - name: noteId
+        in: path
+        required: true
+        description: Note ID
+        schema:
+          type: string
+      responses:
+        "204":
+          description: Note archived
+        "404":
+          description: Note not found
+        "401":
+          description: Unauthorized
+
+  # Calls Entity
+  "/crm/v3/objects/calls":
+    post:
+      summary: Create a call
+      description: |
+        Create a new call engagement in HubSpot CRM. Calls can be associated with contacts,
+        companies, deals, or tickets by using the associations parameter.
+        The hs_timestamp property sets when the call activity occurred.
+      operationId: createCall
+      x-airbyte-entity: calls
+      x-airbyte-action: create
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CallCreateParams"
+      responses:
+        "201":
+          description: Call created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Call"
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+    get:
+      summary: List calls
+      description: Returns a paginated list of calls
+      operationId: listCalls
+      x-airbyte-entity: calls
+      x-airbyte-action: list
+      x-airbyte-record-extractor: $.results
+      x-airbyte-meta-extractor:
+        next_cursor: $.paging.next.after
+        next_link: $.paging.next.link
+      parameters:
+      - name: limit
+        in: query
+        description: The maximum number of results to display per page.
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 25
+      - name: after
+        in: query
+        description: The paging cursor token of the last successfully read resource will be returned as the paging.next.after JSON property of a paged response containing more results.
+        schema:
+          type: string
+      - name: associations
+        in: query
+        description: A comma separated list of associated object types to include in the response. Valid values are contacts, companies, deals, tickets, and custom object type IDs or fully qualified names.
+        schema:
+          type: string
+      - name: properties
+        in: query
+        description: A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.
+        schema:
+          type: string
+      - name: propertiesWithHistory
+        in: query
+        description: A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored.
+        schema:
+          type: string
+      - name: archived
+        in: query
+        description: Whether to return only results that have been archived.
+        schema:
+          type: boolean
+      responses:
+        "200":
+          description: List of calls
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CallsList"
+        "401":
+          description: Unauthorized
+
+  "/crm/v3/objects/calls/{callId}":
+    patch:
+      summary: Update a call
+      description: Update an existing call's properties by ID.
+      operationId: updateCall
+      x-airbyte-entity: calls
+      x-airbyte-action: update
+      parameters:
+      - name: callId
+        in: path
+        required: true
+        description: Call ID
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CallUpdateParams"
+      responses:
+        "200":
+          description: Call updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Call"
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+        "404":
+          description: Call not found
+    get:
+      summary: Get a call
+      description: Get a single call by ID
+      operationId: getCall
+      x-airbyte-entity: calls
+      x-airbyte-action: get
+      parameters:
+      - name: callId
+        in: path
+        required: true
+        description: Call ID
+        schema:
+          type: string
+      - name: properties
+        in: query
+        description: A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.
+        schema:
+          type: string
+      - name: propertiesWithHistory
+        in: query
+        description: A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored.
+        schema:
+          type: string
+      - name: associations
+        in: query
+        description: A comma separated list of object types to retrieve associated IDs for. If any of the specified associations do not exist, they will be ignored.
+        schema:
+          type: string
+      - name: idProperty
+        in: query
+        description: The name of a property whose values are unique for this object.
+        schema:
+          type: string
+      - name: archived
+        in: query
+        description: Whether to return only results that have been archived.
+        schema:
+          type: boolean
+      responses:
+        "200":
+          description: Call object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Call"
+        "404":
+          description: Call not found
+        "401":
+          description: Unauthorized
+    delete:
+      summary: Delete (archive) a call
+      description: |
+        Archive a call by ID. This is a soft delete — the call is moved to the
+        recycle bin and can be restored for approximately 90 days. No public
+        hard-delete endpoint exists.
+      operationId: deleteCall
+      x-airbyte-entity: calls
+      x-airbyte-action: delete
+      parameters:
+      - name: callId
+        in: path
+        required: true
+        description: Call ID
+        schema:
+          type: string
+      responses:
+        "204":
+          description: Call archived
+        "404":
+          description: Call not found
+        "401":
+          description: Unauthorized
+
+  # Emails Entity
+  "/crm/v3/objects/emails":
+    post:
+      summary: Create an email
+      description: |
+        Create a new email engagement in HubSpot CRM. Emails can be associated with contacts,
+        companies, deals, or tickets by using the associations parameter.
+        The hs_timestamp property sets when the email activity occurred.
+      operationId: createEmail
+      x-airbyte-entity: emails
+      x-airbyte-action: create
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EmailCreateParams"
+      responses:
+        "201":
+          description: Email created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Email"
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+    get:
+      summary: List emails
+      description: Returns a paginated list of emails
+      operationId: listEmails
+      x-airbyte-entity: emails
+      x-airbyte-action: list
+      x-airbyte-record-extractor: $.results
+      x-airbyte-meta-extractor:
+        next_cursor: $.paging.next.after
+        next_link: $.paging.next.link
+      parameters:
+      - name: limit
+        in: query
+        description: The maximum number of results to display per page.
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 25
+      - name: after
+        in: query
+        description: The paging cursor token of the last successfully read resource will be returned as the paging.next.after JSON property of a paged response containing more results.
+        schema:
+          type: string
+      - name: associations
+        in: query
+        description: A comma separated list of associated object types to include in the response. Valid values are contacts, companies, deals, tickets, and custom object type IDs or fully qualified names.
+        schema:
+          type: string
+      - name: properties
+        in: query
+        description: A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.
+        schema:
+          type: string
+      - name: propertiesWithHistory
+        in: query
+        description: A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored.
+        schema:
+          type: string
+      - name: archived
+        in: query
+        description: Whether to return only results that have been archived.
+        schema:
+          type: boolean
+      responses:
+        "200":
+          description: List of emails
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmailsList"
+        "401":
+          description: Unauthorized
+
+  "/crm/v3/objects/emails/{emailId}":
+    patch:
+      summary: Update an email
+      description: Update an existing email's properties by ID.
+      operationId: updateEmail
+      x-airbyte-entity: emails
+      x-airbyte-action: update
+      parameters:
+      - name: emailId
+        in: path
+        required: true
+        description: Email ID
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EmailUpdateParams"
+      responses:
+        "200":
+          description: Email updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Email"
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+        "404":
+          description: Email not found
+    get:
+      summary: Get an email
+      description: Get a single email by ID
+      operationId: getEmail
+      x-airbyte-entity: emails
+      x-airbyte-action: get
+      parameters:
+      - name: emailId
+        in: path
+        required: true
+        description: Email ID
+        schema:
+          type: string
+      - name: properties
+        in: query
+        description: A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.
+        schema:
+          type: string
+      - name: propertiesWithHistory
+        in: query
+        description: A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored.
+        schema:
+          type: string
+      - name: associations
+        in: query
+        description: A comma separated list of object types to retrieve associated IDs for. If any of the specified associations do not exist, they will be ignored.
+        schema:
+          type: string
+      - name: idProperty
+        in: query
+        description: The name of a property whose values are unique for this object.
+        schema:
+          type: string
+      - name: archived
+        in: query
+        description: Whether to return only results that have been archived.
+        schema:
+          type: boolean
+      responses:
+        "200":
+          description: Email object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Email"
+        "404":
+          description: Email not found
+        "401":
+          description: Unauthorized
+    delete:
+      summary: Delete (archive) an email
+      description: |
+        Archive an email by ID. This is a soft delete — the email is moved to the
+        recycle bin and can be restored for approximately 90 days. No public
+        hard-delete endpoint exists.
+      operationId: deleteEmail
+      x-airbyte-entity: emails
+      x-airbyte-action: delete
+      parameters:
+      - name: emailId
+        in: path
+        required: true
+        description: Email ID
+        schema:
+          type: string
+      responses:
+        "204":
+          description: Email archived
+        "404":
+          description: Email not found
+        "401":
+          description: Unauthorized
+
+  # Meetings Entity
+  "/crm/v3/objects/meetings":
+    post:
+      summary: Create a meeting
+      description: |
+        Create a new meeting engagement in HubSpot CRM. Meetings can be associated with contacts,
+        companies, deals, or tickets by using the associations parameter.
+        The hs_timestamp property sets when the meeting activity occurred.
+      operationId: createMeeting
+      x-airbyte-entity: meetings
+      x-airbyte-action: create
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MeetingCreateParams"
+      responses:
+        "201":
+          description: Meeting created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Meeting"
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+    get:
+      summary: List meetings
+      description: Returns a paginated list of meetings
+      operationId: listMeetings
+      x-airbyte-entity: meetings
+      x-airbyte-action: list
+      x-airbyte-record-extractor: $.results
+      x-airbyte-meta-extractor:
+        next_cursor: $.paging.next.after
+        next_link: $.paging.next.link
+      parameters:
+      - name: limit
+        in: query
+        description: The maximum number of results to display per page.
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 25
+      - name: after
+        in: query
+        description: The paging cursor token of the last successfully read resource will be returned as the paging.next.after JSON property of a paged response containing more results.
+        schema:
+          type: string
+      - name: associations
+        in: query
+        description: A comma separated list of associated object types to include in the response. Valid values are contacts, companies, deals, tickets, and custom object type IDs or fully qualified names.
+        schema:
+          type: string
+      - name: properties
+        in: query
+        description: A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.
+        schema:
+          type: string
+      - name: propertiesWithHistory
+        in: query
+        description: A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored.
+        schema:
+          type: string
+      - name: archived
+        in: query
+        description: Whether to return only results that have been archived.
+        schema:
+          type: boolean
+      responses:
+        "200":
+          description: List of meetings
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MeetingsList"
+        "401":
+          description: Unauthorized
+
+  "/crm/v3/objects/meetings/{meetingId}":
+    patch:
+      summary: Update a meeting
+      description: Update an existing meeting's properties by ID.
+      operationId: updateMeeting
+      x-airbyte-entity: meetings
+      x-airbyte-action: update
+      parameters:
+      - name: meetingId
+        in: path
+        required: true
+        description: Meeting ID
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MeetingUpdateParams"
+      responses:
+        "200":
+          description: Meeting updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Meeting"
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+        "404":
+          description: Meeting not found
+    get:
+      summary: Get a meeting
+      description: Get a single meeting by ID
+      operationId: getMeeting
+      x-airbyte-entity: meetings
+      x-airbyte-action: get
+      parameters:
+      - name: meetingId
+        in: path
+        required: true
+        description: Meeting ID
+        schema:
+          type: string
+      - name: properties
+        in: query
+        description: A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.
+        schema:
+          type: string
+      - name: propertiesWithHistory
+        in: query
+        description: A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored.
+        schema:
+          type: string
+      - name: associations
+        in: query
+        description: A comma separated list of object types to retrieve associated IDs for. If any of the specified associations do not exist, they will be ignored.
+        schema:
+          type: string
+      - name: idProperty
+        in: query
+        description: The name of a property whose values are unique for this object.
+        schema:
+          type: string
+      - name: archived
+        in: query
+        description: Whether to return only results that have been archived.
+        schema:
+          type: boolean
+      responses:
+        "200":
+          description: Meeting object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Meeting"
+        "404":
+          description: Meeting not found
+        "401":
+          description: Unauthorized
+    delete:
+      summary: Delete (archive) a meeting
+      description: |
+        Archive a meeting by ID. This is a soft delete — the meeting is moved to the
+        recycle bin and can be restored for approximately 90 days. No public
+        hard-delete endpoint exists.
+      operationId: deleteMeeting
+      x-airbyte-entity: meetings
+      x-airbyte-action: delete
+      parameters:
+      - name: meetingId
+        in: path
+        required: true
+        description: Meeting ID
+        schema:
+          type: string
+      responses:
+        "204":
+          description: Meeting archived
+        "404":
+          description: Meeting not found
+        "401":
+          description: Unauthorized
+
+  # Tasks Entity
+  "/crm/v3/objects/tasks":
+    post:
+      summary: Create a task
+      description: |
+        Create a new task in HubSpot CRM. Tasks can be associated with contacts,
+        companies, deals, or tickets by using the associations parameter.
+        The hs_timestamp property sets when the task activity occurred.
+      operationId: createTask
+      x-airbyte-entity: tasks
+      x-airbyte-action: create
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TaskCreateParams"
+      responses:
+        "201":
+          description: Task created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+    get:
+      summary: List tasks
+      description: Returns a paginated list of tasks
+      operationId: listTasks
+      x-airbyte-entity: tasks
+      x-airbyte-action: list
+      x-airbyte-record-extractor: $.results
+      x-airbyte-meta-extractor:
+        next_cursor: $.paging.next.after
+        next_link: $.paging.next.link
+      parameters:
+      - name: limit
+        in: query
+        description: The maximum number of results to display per page.
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 25
+      - name: after
+        in: query
+        description: The paging cursor token of the last successfully read resource will be returned as the paging.next.after JSON property of a paged response containing more results.
+        schema:
+          type: string
+      - name: associations
+        in: query
+        description: A comma separated list of associated object types to include in the response. Valid values are contacts, companies, deals, tickets, and custom object type IDs or fully qualified names.
+        schema:
+          type: string
+      - name: properties
+        in: query
+        description: A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.
+        schema:
+          type: string
+      - name: propertiesWithHistory
+        in: query
+        description: A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored.
+        schema:
+          type: string
+      - name: archived
+        in: query
+        description: Whether to return only results that have been archived.
+        schema:
+          type: boolean
+      responses:
+        "200":
+          description: List of tasks
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TasksList"
+        "401":
+          description: Unauthorized
+
+  "/crm/v3/objects/tasks/{taskId}":
+    patch:
+      summary: Update a task
+      description: Update an existing task's properties by ID.
+      operationId: updateTask
+      x-airbyte-entity: tasks
+      x-airbyte-action: update
+      parameters:
+      - name: taskId
+        in: path
+        required: true
+        description: Task ID
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TaskUpdateParams"
+      responses:
+        "200":
+          description: Task updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+        "404":
+          description: Task not found
+    get:
+      summary: Get a task
+      description: Get a single task by ID
+      operationId: getTask
+      x-airbyte-entity: tasks
+      x-airbyte-action: get
+      parameters:
+      - name: taskId
+        in: path
+        required: true
+        description: Task ID
+        schema:
+          type: string
+      - name: properties
+        in: query
+        description: A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.
+        schema:
+          type: string
+      - name: propertiesWithHistory
+        in: query
+        description: A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored.
+        schema:
+          type: string
+      - name: associations
+        in: query
+        description: A comma separated list of object types to retrieve associated IDs for. If any of the specified associations do not exist, they will be ignored.
+        schema:
+          type: string
+      - name: idProperty
+        in: query
+        description: The name of a property whose values are unique for this object.
+        schema:
+          type: string
+      - name: archived
+        in: query
+        description: Whether to return only results that have been archived.
+        schema:
+          type: boolean
+      responses:
+        "200":
+          description: Task object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+        "404":
+          description: Task not found
+        "401":
+          description: Unauthorized
+    delete:
+      summary: Delete (archive) a task
+      description: |
+        Archive a task by ID. This is a soft delete — the task is moved to the
+        recycle bin and can be restored for approximately 90 days. No public
+        hard-delete endpoint exists.
+      operationId: deleteTask
+      x-airbyte-entity: tasks
+      x-airbyte-action: delete
+      parameters:
+      - name: taskId
+        in: path
+        required: true
+        description: Task ID
+        schema:
+          type: string
+      responses:
+        "204":
+          description: Task archived
+        "404":
+          description: Task not found
+        "401":
+          description: Unauthorized
+
   # Schemas Entities (for discovering custom objects)
   "/crm-object-schemas/v3/schemas":
     get:
@@ -1640,6 +3086,11 @@ components:
             - tickets
             - schemas
             - objects
+            - notes
+            - calls
+            - emails
+            - meetings
+            - tasks
         - scope: "crm.objects.contacts.read"
           mode: read
           entities:
@@ -1647,6 +3098,11 @@ components:
             - companies
             - deals
             - tickets
+            - notes
+            - calls
+            - emails
+            - meetings
+            - tasks
         - scope: "crm.schemas.contacts.read"
           mode: read
           entities:
@@ -1655,6 +3111,11 @@ components:
           mode: write
           entities:
             - contacts
+            - notes
+            - calls
+            - emails
+            - meetings
+            - tasks
         - scope: "crm.objects.companies.write"
           mode: write
           entities:
@@ -2411,7 +3872,7 @@ components:
               description: Company phone number
             industry:
               type: string
-              description: Company industry
+              description: "Company industry (e.g., COMPUTER_SOFTWARE, INFORMATION_TECHNOLOGY_AND_SERVICES, INTERNET, FINANCIAL_SERVICES, MARKETING_AND_ADVERTISING, EDUCATION_MANAGEMENT)"
             city:
               type: string
               description: Company city
@@ -2465,7 +3926,7 @@ components:
               description: Company phone number
             industry:
               type: string
-              description: Company industry
+              description: "Company industry (e.g., COMPUTER_SOFTWARE, INFORMATION_TECHNOLOGY_AND_SERVICES, INTERNET, FINANCIAL_SERVICES, MARKETING_AND_ADVERTISING, EDUCATION_MANAGEMENT)"
             city:
               type: string
               description: Company city
@@ -2640,6 +4101,915 @@ components:
               type: string
               description: ID of the HubSpot owner to assign to this ticket
           additionalProperties: true
+
+    # Note schemas (write-only entity)
+    Note:
+      type: object
+      x-airbyte-entity-name: notes
+      x-airbyte-stream-name: engagements_notes
+      x-airbyte-ai-hints:
+        summary: "Notes attached to CRM records (contacts, companies, deals, tickets)"
+        when_to_use: "Listing, viewing, adding, updating, or deleting notes on CRM records"
+        trigger_phrases: ["add note", "create note", "write note", "note to contact", "note on deal", "list notes", "get note", "delete note", "remove note"]
+        freshness: live
+      description: HubSpot note/engagement object
+      properties:
+        id:
+          type: string
+          description: Unique note identifier
+        properties:
+          type: object
+          description: Note properties
+          properties:
+            hs_note_body:
+              type: [string, "null"]
+              description: The body content of the note (supports HTML)
+            hs_timestamp:
+              type: [string, "null"]
+              description: Timestamp when the note activity occurred
+            hubspot_owner_id:
+              type: [string, "null"]
+              description: ID of the note owner
+            hs_object_id:
+              type: [string, "null"]
+              description: HubSpot object ID
+            hs_createdate:
+              type: [string, "null"]
+              description: Date the note was created
+            hs_lastmodifieddate:
+              type: [string, "null"]
+              description: Last modified date
+          additionalProperties: true
+        createdAt:
+          type: string
+          format: date-time
+          description: Creation timestamp
+        updatedAt:
+          type: string
+          format: date-time
+          description: Last update timestamp
+        archived:
+          type: boolean
+          description: Whether the note is archived
+        archivedAt:
+          type: [string, "null"]
+          format: date-time
+          description: Timestamp when the note was archived
+        associations:
+          type: [object, "null"]
+          description: Relationships with other CRM objects
+          additionalProperties: true
+
+    NoteCreateParams:
+      type: object
+      description: Parameters for creating a new note
+      required:
+        - properties
+      properties:
+        properties:
+          type: object
+          description: Note properties to set
+          required:
+            - hs_note_body
+            - hs_timestamp
+          properties:
+            hs_note_body:
+              type: string
+              description: The body content of the note (supports HTML)
+            hs_timestamp:
+              type: string
+              description: Required. Timestamp when the note activity occurred (ISO 8601 format, e.g. 2025-01-15T10:30:00.000Z). Use the current time if the user does not specify one.
+            hubspot_owner_id:
+              type: string
+              description: ID of the HubSpot owner to assign to this note
+          additionalProperties: true
+        associations:
+          type: array
+          description: Associate the note with other CRM records (contacts, companies, deals, tickets)
+          items:
+            type: object
+            properties:
+              to:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: ID of the record to associate with
+              types:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    associationCategory:
+                      type: string
+                      description: "Association category (e.g., HUBSPOT_DEFINED)"
+                    associationTypeId:
+                      type: integer
+                      description: "Association type ID (e.g., 202 for note-to-contact, 190 for note-to-company, 214 for note-to-deal, 18 for note-to-ticket)"
+
+    NoteUpdateParams:
+      type: object
+      description: Parameters for updating an existing note. Only provided properties will be updated.
+      required:
+        - properties
+      properties:
+        properties:
+          type: object
+          description: Note properties to update
+          properties:
+            hs_note_body:
+              type: string
+              description: The body content of the note (supports HTML)
+            hs_timestamp:
+              type: string
+              description: Timestamp when the note activity occurred
+            hubspot_owner_id:
+              type: string
+              description: ID of the HubSpot owner to assign to this note
+          additionalProperties: true
+
+    NotesList:
+      type: object
+      description: Paginated list of notes
+      properties:
+        results:
+          type: array
+          items:
+            $ref: "#/components/schemas/Note"
+        paging:
+          $ref: "#/components/schemas/Paging"
+        total:
+          type: integer
+          description: Total number of results (search only)
+
+    # Call schemas
+    Call:
+      type: object
+      x-airbyte-entity-name: calls
+      x-airbyte-stream-name: engagements_calls
+      x-airbyte-ai-hints:
+        summary: "Call engagements logged in the CRM (contacts, companies, deals, tickets)"
+        when_to_use: "Listing, viewing, logging, updating, or deleting call records on CRM objects"
+        trigger_phrases: ["log call", "create call", "record call", "call to contact", "call on deal", "list calls", "get call", "delete call", "remove call"]
+        freshness: live
+      description: HubSpot call engagement object
+      properties:
+        id:
+          type: string
+          description: Unique call identifier
+        properties:
+          type: object
+          description: Call properties
+          properties:
+            hs_call_body:
+              type: [string, "null"]
+              description: Description or notes about the call
+            hs_call_direction:
+              type: [string, "null"]
+              description: "Direction of the call (INBOUND or OUTBOUND)"
+            hs_call_disposition:
+              type: [string, "null"]
+              description: The outcome of the call (e.g., connected, no answer, busy, left voicemail)
+            hs_call_duration:
+              type: [string, "null"]
+              description: Duration of the call in milliseconds
+            hs_call_from_number:
+              type: [string, "null"]
+              description: Phone number the call was made from
+            hs_call_to_number:
+              type: [string, "null"]
+              description: Phone number the call was made to
+            hs_call_status:
+              type: [string, "null"]
+              description: "Status of the call (e.g., COMPLETED, BUSY, NO_ANSWER, FAILED, CANCELED, CONNECTING, RINGING, IN_PROGRESS)"
+            hs_call_title:
+              type: [string, "null"]
+              description: Title or subject of the call
+            hs_timestamp:
+              type: [string, "null"]
+              description: Timestamp when the call activity occurred
+            hubspot_owner_id:
+              type: [string, "null"]
+              description: ID of the call owner
+            hs_object_id:
+              type: [string, "null"]
+              description: HubSpot object ID
+            hs_createdate:
+              type: [string, "null"]
+              description: Date the call was created
+            hs_lastmodifieddate:
+              type: [string, "null"]
+              description: Last modified date
+          additionalProperties: true
+        createdAt:
+          type: string
+          format: date-time
+          description: Creation timestamp
+        updatedAt:
+          type: string
+          format: date-time
+          description: Last update timestamp
+        archived:
+          type: boolean
+          description: Whether the call is archived
+        archivedAt:
+          type: [string, "null"]
+          format: date-time
+          description: Timestamp when the call was archived
+        associations:
+          type: [object, "null"]
+          description: Relationships with other CRM objects
+          additionalProperties: true
+
+    CallCreateParams:
+      type: object
+      description: Parameters for creating a new call
+      required:
+        - properties
+      properties:
+        properties:
+          type: object
+          description: Call properties to set
+          required:
+            - hs_timestamp
+          properties:
+            hs_call_body:
+              type: string
+              description: Description or notes about the call
+            hs_call_direction:
+              type: string
+              description: "Direction of the call (INBOUND or OUTBOUND)"
+            hs_call_disposition:
+              type: string
+              description: The outcome of the call (e.g., connected, no answer, busy, left voicemail)
+            hs_call_duration:
+              type: string
+              description: Duration of the call in milliseconds
+            hs_call_from_number:
+              type: string
+              description: Phone number the call was made from
+            hs_call_to_number:
+              type: string
+              description: Phone number the call was made to
+            hs_call_status:
+              type: string
+              description: "Status of the call (e.g., COMPLETED, BUSY, NO_ANSWER, FAILED, CANCELED)"
+            hs_call_title:
+              type: string
+              description: Title or subject of the call
+            hs_timestamp:
+              type: string
+              description: Required. Timestamp when the call activity occurred (ISO 8601 format, e.g. 2025-01-15T10:30:00.000Z). Use the current time if the user does not specify one.
+            hubspot_owner_id:
+              type: string
+              description: ID of the HubSpot owner to assign to this call
+          additionalProperties: true
+        associations:
+          type: array
+          description: Associate the call with other CRM records (contacts, companies, deals, tickets)
+          items:
+            type: object
+            properties:
+              to:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: ID of the record to associate with
+              types:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    associationCategory:
+                      type: string
+                      description: "Association category (e.g., HUBSPOT_DEFINED)"
+                    associationTypeId:
+                      type: integer
+                      description: "Association type ID (e.g., 194 for call-to-contact, 182 for call-to-company, 206 for call-to-deal, 220 for call-to-ticket)"
+
+    CallUpdateParams:
+      type: object
+      description: Parameters for updating an existing call. Only provided properties will be updated.
+      required:
+        - properties
+      properties:
+        properties:
+          type: object
+          description: Call properties to update
+          properties:
+            hs_call_body:
+              type: string
+              description: Description or notes about the call
+            hs_call_direction:
+              type: string
+              description: "Direction of the call (INBOUND or OUTBOUND)"
+            hs_call_disposition:
+              type: string
+              description: The outcome of the call
+            hs_call_duration:
+              type: string
+              description: Duration of the call in milliseconds
+            hs_call_from_number:
+              type: string
+              description: Phone number the call was made from
+            hs_call_to_number:
+              type: string
+              description: Phone number the call was made to
+            hs_call_status:
+              type: string
+              description: "Status of the call (e.g., COMPLETED, BUSY, NO_ANSWER)"
+            hs_call_title:
+              type: string
+              description: Title or subject of the call
+            hs_timestamp:
+              type: string
+              description: Timestamp when the call activity occurred
+            hubspot_owner_id:
+              type: string
+              description: ID of the HubSpot owner to assign to this call
+          additionalProperties: true
+
+    CallsList:
+      type: object
+      description: Paginated list of calls
+      properties:
+        results:
+          type: array
+          items:
+            $ref: "#/components/schemas/Call"
+        paging:
+          $ref: "#/components/schemas/Paging"
+        total:
+          type: integer
+          description: Total number of results (search only)
+
+    # Email schemas
+    Email:
+      type: object
+      x-airbyte-entity-name: emails
+      x-airbyte-stream-name: engagements_emails
+      x-airbyte-ai-hints:
+        summary: "Email engagements logged in the CRM (contacts, companies, deals, tickets)"
+        when_to_use: "Listing, viewing, logging, updating, or deleting email records on CRM objects"
+        trigger_phrases: ["log email", "create email", "record email", "email to contact", "email on deal", "list emails", "get email", "delete email", "remove email"]
+        freshness: live
+      description: HubSpot email engagement object
+      properties:
+        id:
+          type: string
+          description: Unique email identifier
+        properties:
+          type: object
+          description: Email properties
+          properties:
+            hs_email_subject:
+              type: [string, "null"]
+              description: Subject line of the email
+            hs_email_text:
+              type: [string, "null"]
+              description: Plain text body of the email
+            hs_email_html:
+              type: [string, "null"]
+              description: HTML body of the email
+            hs_email_direction:
+              type: [string, "null"]
+              description: "Direction of the email (EMAIL, INCOMING_EMAIL, FORWARDED_EMAIL)"
+            hs_email_status:
+              type: [string, "null"]
+              description: "Status of the email (e.g., BOUNCED, FAILED, SCHEDULED, SENDING, SENT, DRAFT)"
+            hs_email_sender_email:
+              type: [string, "null"]
+              description: Sender email address
+            hs_email_to_email:
+              type: [string, "null"]
+              description: Recipient email address(es)
+            hs_timestamp:
+              type: [string, "null"]
+              description: Timestamp when the email activity occurred
+            hubspot_owner_id:
+              type: [string, "null"]
+              description: ID of the email owner
+            hs_object_id:
+              type: [string, "null"]
+              description: HubSpot object ID
+            hs_createdate:
+              type: [string, "null"]
+              description: Date the email was created
+            hs_lastmodifieddate:
+              type: [string, "null"]
+              description: Last modified date
+          additionalProperties: true
+        createdAt:
+          type: string
+          format: date-time
+          description: Creation timestamp
+        updatedAt:
+          type: string
+          format: date-time
+          description: Last update timestamp
+        archived:
+          type: boolean
+          description: Whether the email is archived
+        archivedAt:
+          type: [string, "null"]
+          format: date-time
+          description: Timestamp when the email was archived
+        associations:
+          type: [object, "null"]
+          description: Relationships with other CRM objects
+          additionalProperties: true
+
+    EmailCreateParams:
+      type: object
+      description: Parameters for creating a new email
+      required:
+        - properties
+      properties:
+        properties:
+          type: object
+          description: Email properties to set
+          required:
+            - hs_timestamp
+            - hs_email_direction
+          properties:
+            hs_email_subject:
+              type: string
+              description: Subject line of the email
+            hs_email_text:
+              type: string
+              description: Plain text body of the email
+            hs_email_html:
+              type: string
+              description: HTML body of the email
+            hs_email_direction:
+              type: string
+              description: "Required. Direction of the email (EMAIL for sent, INCOMING_EMAIL for received, FORWARDED_EMAIL for forwarded)"
+            hs_email_status:
+              type: string
+              description: "Status of the email (BOUNCED, FAILED, SCHEDULED, SENDING, SENT, DRAFT)"
+            hs_email_sender_email:
+              type: string
+              description: Sender email address
+            hs_email_to_email:
+              type: string
+              description: Recipient email address(es)
+            hs_timestamp:
+              type: string
+              description: Required. Timestamp when the email activity occurred (ISO 8601 format, e.g. 2025-01-15T10:30:00.000Z). Use the current time if the user does not specify one.
+            hubspot_owner_id:
+              type: string
+              description: ID of the HubSpot owner to assign to this email
+          additionalProperties: true
+        associations:
+          type: array
+          description: Associate the email with other CRM records (contacts, companies, deals, tickets)
+          items:
+            type: object
+            properties:
+              to:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: ID of the record to associate with
+              types:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    associationCategory:
+                      type: string
+                      description: "Association category (e.g., HUBSPOT_DEFINED)"
+                    associationTypeId:
+                      type: integer
+                      description: "Association type ID (e.g., 198 for email-to-contact, 186 for email-to-company, 210 for email-to-deal, 224 for email-to-ticket)"
+
+    EmailUpdateParams:
+      type: object
+      description: Parameters for updating an existing email. Only provided properties will be updated.
+      required:
+        - properties
+      properties:
+        properties:
+          type: object
+          description: Email properties to update
+          properties:
+            hs_email_subject:
+              type: string
+              description: Subject line of the email
+            hs_email_text:
+              type: string
+              description: Plain text body of the email
+            hs_email_html:
+              type: string
+              description: HTML body of the email
+            hs_email_direction:
+              type: string
+              description: "Direction of the email (EMAIL, INCOMING_EMAIL, FORWARDED_EMAIL)"
+            hs_email_status:
+              type: string
+              description: "Status of the email (BOUNCED, FAILED, SCHEDULED, SENDING, SENT, DRAFT)"
+            hs_timestamp:
+              type: string
+              description: Timestamp when the email activity occurred
+            hubspot_owner_id:
+              type: string
+              description: ID of the HubSpot owner to assign to this email
+          additionalProperties: true
+
+    EmailsList:
+      type: object
+      description: Paginated list of emails
+      properties:
+        results:
+          type: array
+          items:
+            $ref: "#/components/schemas/Email"
+        paging:
+          $ref: "#/components/schemas/Paging"
+        total:
+          type: integer
+          description: Total number of results (search only)
+
+    # Meeting schemas
+    Meeting:
+      type: object
+      x-airbyte-entity-name: meetings
+      x-airbyte-stream-name: engagements_meetings
+      x-airbyte-ai-hints:
+        summary: "Meeting engagements logged in the CRM (contacts, companies, deals, tickets)"
+        when_to_use: "Listing, viewing, scheduling, updating, or deleting meeting records on CRM objects"
+        trigger_phrases: ["log meeting", "create meeting", "schedule meeting", "meeting with contact", "meeting on deal", "list meetings", "get meeting", "delete meeting", "remove meeting"]
+        freshness: live
+      description: HubSpot meeting engagement object
+      properties:
+        id:
+          type: string
+          description: Unique meeting identifier
+        properties:
+          type: object
+          description: Meeting properties
+          properties:
+            hs_meeting_title:
+              type: [string, "null"]
+              description: Title of the meeting
+            hs_meeting_body:
+              type: [string, "null"]
+              description: Description or notes about the meeting
+            hs_meeting_start_time:
+              type: [string, "null"]
+              description: Start time of the meeting (ISO 8601 format)
+            hs_meeting_end_time:
+              type: [string, "null"]
+              description: End time of the meeting (ISO 8601 format)
+            hs_meeting_location:
+              type: [string, "null"]
+              description: Location of the meeting
+            hs_meeting_outcome:
+              type: [string, "null"]
+              description: "Outcome of the meeting (e.g., SCHEDULED, COMPLETED, RESCHEDULED, NO_SHOW, CANCELED)"
+            hs_internal_meeting_notes:
+              type: [string, "null"]
+              description: Internal notes about the meeting
+            hs_timestamp:
+              type: [string, "null"]
+              description: Timestamp when the meeting activity occurred
+            hubspot_owner_id:
+              type: [string, "null"]
+              description: ID of the meeting owner
+            hs_object_id:
+              type: [string, "null"]
+              description: HubSpot object ID
+            hs_createdate:
+              type: [string, "null"]
+              description: Date the meeting was created
+            hs_lastmodifieddate:
+              type: [string, "null"]
+              description: Last modified date
+          additionalProperties: true
+        createdAt:
+          type: string
+          format: date-time
+          description: Creation timestamp
+        updatedAt:
+          type: string
+          format: date-time
+          description: Last update timestamp
+        archived:
+          type: boolean
+          description: Whether the meeting is archived
+        archivedAt:
+          type: [string, "null"]
+          format: date-time
+          description: Timestamp when the meeting was archived
+        associations:
+          type: [object, "null"]
+          description: Relationships with other CRM objects
+          additionalProperties: true
+
+    MeetingCreateParams:
+      type: object
+      description: Parameters for creating a new meeting
+      required:
+        - properties
+      properties:
+        properties:
+          type: object
+          description: Meeting properties to set
+          required:
+            - hs_timestamp
+            - hs_meeting_title
+          properties:
+            hs_meeting_title:
+              type: string
+              description: Required. Title of the meeting
+            hs_meeting_body:
+              type: string
+              description: Description or notes about the meeting (supports HTML)
+            hs_meeting_start_time:
+              type: string
+              description: Start time of the meeting (ISO 8601 format, e.g. 2025-01-15T10:30:00.000Z)
+            hs_meeting_end_time:
+              type: string
+              description: End time of the meeting (ISO 8601 format, e.g. 2025-01-15T11:30:00.000Z)
+            hs_meeting_location:
+              type: string
+              description: Location of the meeting
+            hs_meeting_outcome:
+              type: string
+              description: "Outcome of the meeting (e.g., SCHEDULED, COMPLETED, RESCHEDULED, NO_SHOW, CANCELED)"
+            hs_internal_meeting_notes:
+              type: string
+              description: Internal notes about the meeting
+            hs_timestamp:
+              type: string
+              description: Required. Timestamp when the meeting activity occurred (ISO 8601 format, e.g. 2025-01-15T10:30:00.000Z). Use the current time if the user does not specify one.
+            hubspot_owner_id:
+              type: string
+              description: ID of the HubSpot owner to assign to this meeting
+          additionalProperties: true
+        associations:
+          type: array
+          description: Associate the meeting with other CRM records (contacts, companies, deals, tickets)
+          items:
+            type: object
+            properties:
+              to:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: ID of the record to associate with
+              types:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    associationCategory:
+                      type: string
+                      description: "Association category (e.g., HUBSPOT_DEFINED)"
+                    associationTypeId:
+                      type: integer
+                      description: "Association type ID (e.g., 200 for meeting-to-contact, 188 for meeting-to-company, 212 for meeting-to-deal, 226 for meeting-to-ticket)"
+
+    MeetingUpdateParams:
+      type: object
+      description: Parameters for updating an existing meeting. Only provided properties will be updated.
+      required:
+        - properties
+      properties:
+        properties:
+          type: object
+          description: Meeting properties to update
+          properties:
+            hs_meeting_title:
+              type: string
+              description: Title of the meeting
+            hs_meeting_body:
+              type: string
+              description: Description or notes about the meeting (supports HTML)
+            hs_meeting_start_time:
+              type: string
+              description: Start time of the meeting (ISO 8601 format)
+            hs_meeting_end_time:
+              type: string
+              description: End time of the meeting (ISO 8601 format)
+            hs_meeting_location:
+              type: string
+              description: Location of the meeting
+            hs_meeting_outcome:
+              type: string
+              description: "Outcome of the meeting (e.g., SCHEDULED, COMPLETED, RESCHEDULED, NO_SHOW, CANCELED)"
+            hs_internal_meeting_notes:
+              type: string
+              description: Internal notes about the meeting
+            hs_timestamp:
+              type: string
+              description: Timestamp when the meeting activity occurred
+            hubspot_owner_id:
+              type: string
+              description: ID of the HubSpot owner to assign to this meeting
+          additionalProperties: true
+
+    MeetingsList:
+      type: object
+      description: Paginated list of meetings
+      properties:
+        results:
+          type: array
+          items:
+            $ref: "#/components/schemas/Meeting"
+        paging:
+          $ref: "#/components/schemas/Paging"
+        total:
+          type: integer
+          description: Total number of results (search only)
+
+    # Task schemas
+    Task:
+      type: object
+      x-airbyte-entity-name: tasks
+      x-airbyte-stream-name: engagements_tasks
+      x-airbyte-ai-hints:
+        summary: "Task engagements in the CRM (contacts, companies, deals, tickets)"
+        when_to_use: "Listing, viewing, creating, updating, or deleting task records on CRM objects"
+        trigger_phrases: ["create task", "add task", "assign task", "task for contact", "task on deal", "list tasks", "get task", "delete task", "remove task", "to-do"]
+        freshness: live
+      description: HubSpot task engagement object
+      properties:
+        id:
+          type: string
+          description: Unique task identifier
+        properties:
+          type: object
+          description: Task properties
+          properties:
+            hs_task_body:
+              type: [string, "null"]
+              description: Description or notes for the task (supports HTML)
+            hs_task_subject:
+              type: [string, "null"]
+              description: Subject or title of the task
+            hs_task_status:
+              type: [string, "null"]
+              description: "Status of the task (e.g., NOT_STARTED, IN_PROGRESS, WAITING, COMPLETED, DEFERRED)"
+            hs_task_priority:
+              type: [string, "null"]
+              description: "Priority of the task (e.g., LOW, MEDIUM, HIGH)"
+            hs_task_type:
+              type: [string, "null"]
+              description: "Type of the task (e.g., TODO, CALL, EMAIL)"
+            hs_task_reminders:
+              type: [string, "null"]
+              description: Reminder timestamp for the task (epoch milliseconds)
+            hs_timestamp:
+              type: [string, "null"]
+              description: Timestamp when the task activity occurred (due date)
+            hubspot_owner_id:
+              type: [string, "null"]
+              description: ID of the task owner
+            hs_object_id:
+              type: [string, "null"]
+              description: HubSpot object ID
+            hs_createdate:
+              type: [string, "null"]
+              description: Date the task was created
+            hs_lastmodifieddate:
+              type: [string, "null"]
+              description: Last modified date
+          additionalProperties: true
+        createdAt:
+          type: string
+          format: date-time
+          description: Creation timestamp
+        updatedAt:
+          type: string
+          format: date-time
+          description: Last update timestamp
+        archived:
+          type: boolean
+          description: Whether the task is archived
+        archivedAt:
+          type: [string, "null"]
+          format: date-time
+          description: Timestamp when the task was archived
+        associations:
+          type: [object, "null"]
+          description: Relationships with other CRM objects
+          additionalProperties: true
+
+    TaskCreateParams:
+      type: object
+      description: Parameters for creating a new task
+      required:
+        - properties
+      properties:
+        properties:
+          type: object
+          description: Task properties to set
+          required:
+            - hs_timestamp
+            - hs_task_subject
+          properties:
+            hs_task_body:
+              type: string
+              description: Description or notes for the task (supports HTML)
+            hs_task_subject:
+              type: string
+              description: Required. Subject or title of the task
+            hs_task_status:
+              type: string
+              description: "Status of the task (NOT_STARTED, IN_PROGRESS, WAITING, COMPLETED, DEFERRED). Defaults to NOT_STARTED."
+            hs_task_priority:
+              type: string
+              description: "Priority of the task (LOW, MEDIUM, HIGH)"
+            hs_task_type:
+              type: string
+              description: "Type of the task (TODO, CALL, EMAIL). Defaults to TODO."
+            hs_task_reminders:
+              type: string
+              description: Reminder timestamp for the task (epoch milliseconds)
+            hs_timestamp:
+              type: string
+              description: Required. Due date / timestamp for the task (ISO 8601 format, e.g. 2025-01-15T10:30:00.000Z). Use the current time if the user does not specify one.
+            hubspot_owner_id:
+              type: string
+              description: ID of the HubSpot owner to assign to this task
+          additionalProperties: true
+        associations:
+          type: array
+          description: Associate the task with other CRM records (contacts, companies, deals, tickets)
+          items:
+            type: object
+            properties:
+              to:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: ID of the record to associate with
+              types:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    associationCategory:
+                      type: string
+                      description: "Association category (e.g., HUBSPOT_DEFINED)"
+                    associationTypeId:
+                      type: integer
+                      description: "Association type ID (e.g., 204 for task-to-contact, 192 for task-to-company, 216 for task-to-deal, 228 for task-to-ticket)"
+
+    TaskUpdateParams:
+      type: object
+      description: Parameters for updating an existing task. Only provided properties will be updated.
+      required:
+        - properties
+      properties:
+        properties:
+          type: object
+          description: Task properties to update
+          properties:
+            hs_task_body:
+              type: string
+              description: Description or notes for the task (supports HTML)
+            hs_task_subject:
+              type: string
+              description: Subject or title of the task
+            hs_task_status:
+              type: string
+              description: "Status of the task (NOT_STARTED, IN_PROGRESS, WAITING, COMPLETED, DEFERRED)"
+            hs_task_priority:
+              type: string
+              description: "Priority of the task (LOW, MEDIUM, HIGH)"
+            hs_task_type:
+              type: string
+              description: "Type of the task (TODO, CALL, EMAIL)"
+            hs_task_reminders:
+              type: string
+              description: Reminder timestamp for the task (epoch milliseconds)
+            hs_timestamp:
+              type: string
+              description: Due date / timestamp for the task
+            hubspot_owner_id:
+              type: string
+              description: ID of the HubSpot owner to assign to this task
+          additionalProperties: true
+
+    TasksList:
+      type: object
+      description: Paginated list of tasks
+      properties:
+        results:
+          type: array
+          items:
+            $ref: "#/components/schemas/Task"
+        paging:
+          $ref: "#/components/schemas/Paging"
+        total:
+          type: integer
+          description: Total number of results (search only)
 
     # Shared pagination schema
     Paging:

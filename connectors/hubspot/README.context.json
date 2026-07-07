@@ -66,9 +66,9 @@
     "is_multi_auth": true
   },
   "replication_config": null,
-  "custom_description": "HubSpot is a CRM platform that provides tools for marketing, sales, customer service,\nand content management. This connector provides access to contacts, companies, deals,\ntickets, and custom objects for customer relationship management and sales analytics.\n",
-  "supported_questions": "- List recent deals\n- List recent tickets\n- List companies in my CRM\n- List contacts in my CRM\n- Create a new contact with email john@example.com and name John Smith\n- Create a new deal called 'Enterprise License' with amount 50000\n- Update the deal stage to 'closedwon' for a specific deal\n- Create a new company called 'Acme Corp' with domain acme.com\n- Create a support ticket with subject 'Login issue' and priority HIGH\n- Update the contact email for a specific contact\n- Show me all deals from Acme Corp this quarter\n- What are the top 5 most valuable deals in my pipeline right now?\n- Search for contacts in the marketing department at HubSpot\n- Give me an overview of my sales team's deals in the last 30 days\n- Identify the most active companies in our CRM this month\n- Compare the number of deals closed by different sales representatives\n- Find all tickets related to a specific product issue and summarize their status",
-  "unsupported_questions": "- Delete a contact from HubSpot\n- Delete a deal record\n- Schedule a follow-up task for this deal\n- Send an email to all contacts in the sales pipeline",
+  "custom_description": "HubSpot is a CRM platform that provides tools for marketing, sales, customer service,\nand content management. This connector provides access to contacts, companies, deals,\ntickets, notes, calls, emails, meetings, tasks, and custom objects for customer relationship management and sales analytics.\n",
+  "supported_questions": "- List recent deals\n- List recent tickets\n- List companies in my CRM\n- List contacts in my CRM\n- Create a new contact with email john@example.com and name John Smith\n- Create a new deal called 'Enterprise License' with amount 50000\n- Update the deal stage to 'closedwon' for a specific deal\n- Create a new company called 'Acme Corp' with domain acme.com\n- Create a support ticket with subject 'Login issue' and priority HIGH\n- Update the contact email for a specific contact\n- Add a note to contact 12345 saying 'Discussed pricing options'\n- List recent notes in my CRM\n- Get the details of a specific note\n- Delete a note from HubSpot\n- Log a call with contact 12345 about pricing discussion\n- List recent calls in my CRM\n- Create an email record for outreach to a contact\n- List recent emails in my CRM\n- Schedule a meeting with a contact for next Tuesday\n- List recent meetings in my CRM\n- Create a follow-up task for a deal\n- List tasks in my CRM\n- Show me all deals from Acme Corp this quarter\n- What are the top 5 most valuable deals in my pipeline right now?\n- Search for contacts in the marketing department at HubSpot\n- Give me an overview of my sales team's deals in the last 30 days\n- Identify the most active companies in our CRM this month\n- Compare the number of deals closed by different sales representatives\n- Find all tickets related to a specific product issue and summarize their status",
+  "unsupported_questions": "- Delete a contact from HubSpot\n- Delete a deal record",
   "first_operation": {
     "method_name": "list_contacts",
     "http_method": "get",
@@ -858,7 +858,7 @@
                 },
                 "industry": {
                   "type": "string",
-                  "description": "Company industry"
+                  "description": "Company industry (e.g., COMPUTER_SOFTWARE, INFORMATION_TECHNOLOGY_AND_SERVICES, INTERNET, FINANCIAL_SERVICES, MARKETING_AND_ADVERTISING, EDUCATION_MANAGEMENT)"
                 },
                 "city": {
                   "type": "string",
@@ -1029,7 +1029,7 @@
                 },
                 "industry": {
                   "type": "string",
-                  "description": "Company industry"
+                  "description": "Company industry (e.g., COMPUTER_SOFTWARE, INFORMATION_TECHNOLOGY_AND_SERVICES, INTERNET, FINANCIAL_SERVICES, MARKETING_AND_ADVERTISING, EDUCATION_MANAGEMENT)"
                 },
                 "city": {
                   "type": "string",
@@ -2329,6 +2329,2014 @@
         "is_download": false
       }
     ],
+    "notes": [
+      {
+        "method_name": "list_notes",
+        "http_method": "get",
+        "path": "/crm/v3/objects/notes",
+        "entity": "notes",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 25
+            },
+            "required": null,
+            "description": "The maximum number of results to display per page.",
+            "is_deep_object": false
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "The paging cursor token of the last successfully read resource will be returned as the paging.next.after JSON property of a paged response containing more results.",
+            "is_deep_object": false
+          },
+          {
+            "name": "associations",
+            "python_name": "associations",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of associated object types to include in the response. Valid values are contacts, companies, deals, tickets, and custom object type IDs or fully qualified names.",
+            "is_deep_object": false
+          },
+          {
+            "name": "properties",
+            "python_name": "properties",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.",
+            "is_deep_object": false
+          },
+          {
+            "name": "propertiesWithHistory",
+            "python_name": "properties_with_history",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored.",
+            "is_deep_object": false
+          },
+          {
+            "name": "archived",
+            "python_name": "archived",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": null,
+            "description": "Whether to return only results that have been archived.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "NotesListParams",
+        "response_type": "NotesListResult",
+        "description": "Returns a paginated list of notes",
+        "record_extractor": "$.results",
+        "meta_extractor": {
+          "next_cursor": "$.paging.next.after",
+          "next_link": "$.paging.next.link"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Note]",
+        "meta_fields": [
+          {
+            "name": "next_cursor",
+            "python_name": "next_cursor",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Cursor for next page"
+            }
+          },
+          {
+            "name": "next_link",
+            "python_name": "next_link",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "URL for next page"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "create_note",
+        "http_method": "post",
+        "path": "/crm/v3/objects/notes",
+        "entity": "notes",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "properties",
+            "python_name": "properties",
+            "type": "NotesCreateParamsProperties",
+            "schema": {
+              "type": "object",
+              "description": "Note properties to set",
+              "required": [
+                "hs_note_body",
+                "hs_timestamp"
+              ],
+              "properties": {
+                "hs_note_body": {
+                  "type": "string",
+                  "description": "The body content of the note (supports HTML)"
+                },
+                "hs_timestamp": {
+                  "type": "string",
+                  "description": "Required. Timestamp when the note activity occurred (ISO 8601 format, e.g. 2025-01-15T10:30:00.000Z). Use the current time if the user does not specify one."
+                },
+                "hubspot_owner_id": {
+                  "type": "string",
+                  "description": "ID of the HubSpot owner to assign to this note"
+                }
+              },
+              "additionalProperties": true
+            },
+            "required": true,
+            "description": "Note properties to set"
+          },
+          {
+            "name": "associations",
+            "python_name": "associations",
+            "type": "list[NotesCreateParamsAssociationsItem]",
+            "schema": {
+              "type": "array",
+              "description": "Associate the note with other CRM records (contacts, companies, deals, tickets)",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "to": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "ID of the record to associate with"
+                      }
+                    }
+                  },
+                  "types": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "associationCategory": {
+                          "type": "string",
+                          "description": "Association category (e.g., HUBSPOT_DEFINED)"
+                        },
+                        "associationTypeId": {
+                          "type": "integer",
+                          "description": "Association type ID (e.g., 202 for note-to-contact, 190 for note-to-company, 214 for note-to-deal, 18 for note-to-ticket)"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "required": false,
+            "description": "Associate the note with other CRM records (contacts, companies, deals, tickets)"
+          }
+        ],
+        "params_type_name": "NotesCreateParams",
+        "response_type": "Note",
+        "description": "Create a new note in HubSpot CRM. Notes can be associated with contacts,\ncompanies, deals, or tickets by using the associations parameter.\nThe hs_timestamp property sets when the note activity occurred.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Note",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_note",
+        "http_method": "get",
+        "path": "/crm/v3/objects/notes/{noteId}",
+        "entity": "notes",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "noteId",
+            "python_name": "note_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Note ID"
+          },
+          {
+            "name": "properties",
+            "python_name": "properties",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.",
+            "is_deep_object": false
+          },
+          {
+            "name": "propertiesWithHistory",
+            "python_name": "properties_with_history",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored.",
+            "is_deep_object": false
+          },
+          {
+            "name": "associations",
+            "python_name": "associations",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of object types to retrieve associated IDs for. If any of the specified associations do not exist, they will be ignored.",
+            "is_deep_object": false
+          },
+          {
+            "name": "idProperty",
+            "python_name": "id_property",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "The name of a property whose values are unique for this object.",
+            "is_deep_object": false
+          },
+          {
+            "name": "archived",
+            "python_name": "archived",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": null,
+            "description": "Whether to return only results that have been archived.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "NotesGetParams",
+        "response_type": "Note",
+        "description": "Get a single note by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Note",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "update_note",
+        "http_method": "patch",
+        "path": "/crm/v3/objects/notes/{noteId}",
+        "entity": "notes",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "properties",
+            "python_name": "properties",
+            "type": "NotesUpdateParamsProperties",
+            "schema": {
+              "type": "object",
+              "description": "Note properties to update",
+              "properties": {
+                "hs_note_body": {
+                  "type": "string",
+                  "description": "The body content of the note (supports HTML)"
+                },
+                "hs_timestamp": {
+                  "type": "string",
+                  "description": "Timestamp when the note activity occurred"
+                },
+                "hubspot_owner_id": {
+                  "type": "string",
+                  "description": "ID of the HubSpot owner to assign to this note"
+                }
+              },
+              "additionalProperties": true
+            },
+            "required": true,
+            "description": "Note properties to update"
+          },
+          {
+            "name": "noteId",
+            "python_name": "note_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Note ID"
+          }
+        ],
+        "params_type_name": "NotesUpdateParams",
+        "response_type": "Note",
+        "description": "Update an existing note's properties by ID.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Note",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "delete_note",
+        "http_method": "delete",
+        "path": "/crm/v3/objects/notes/{noteId}",
+        "entity": "notes",
+        "action": "delete",
+        "parameters": [
+          {
+            "name": "noteId",
+            "python_name": "note_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Note ID"
+          }
+        ],
+        "params_type_name": "NotesDeleteParams",
+        "response_type": "dict[str, Any]",
+        "description": "Archive a note by ID. This is a soft delete \u2014 the note is moved to the\nrecycle bin and can be restored for approximately 90 days. No public\nhard-delete endpoint exists.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": null,
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "calls": [
+      {
+        "method_name": "list_calls",
+        "http_method": "get",
+        "path": "/crm/v3/objects/calls",
+        "entity": "calls",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 25
+            },
+            "required": null,
+            "description": "The maximum number of results to display per page.",
+            "is_deep_object": false
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "The paging cursor token of the last successfully read resource will be returned as the paging.next.after JSON property of a paged response containing more results.",
+            "is_deep_object": false
+          },
+          {
+            "name": "associations",
+            "python_name": "associations",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of associated object types to include in the response. Valid values are contacts, companies, deals, tickets, and custom object type IDs or fully qualified names.",
+            "is_deep_object": false
+          },
+          {
+            "name": "properties",
+            "python_name": "properties",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.",
+            "is_deep_object": false
+          },
+          {
+            "name": "propertiesWithHistory",
+            "python_name": "properties_with_history",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored.",
+            "is_deep_object": false
+          },
+          {
+            "name": "archived",
+            "python_name": "archived",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": null,
+            "description": "Whether to return only results that have been archived.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CallsListParams",
+        "response_type": "CallsListResult",
+        "description": "Returns a paginated list of calls",
+        "record_extractor": "$.results",
+        "meta_extractor": {
+          "next_cursor": "$.paging.next.after",
+          "next_link": "$.paging.next.link"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Call]",
+        "meta_fields": [
+          {
+            "name": "next_cursor",
+            "python_name": "next_cursor",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Cursor for next page"
+            }
+          },
+          {
+            "name": "next_link",
+            "python_name": "next_link",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "URL for next page"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "create_call",
+        "http_method": "post",
+        "path": "/crm/v3/objects/calls",
+        "entity": "calls",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "properties",
+            "python_name": "properties",
+            "type": "CallsCreateParamsProperties",
+            "schema": {
+              "type": "object",
+              "description": "Call properties to set",
+              "required": [
+                "hs_timestamp"
+              ],
+              "properties": {
+                "hs_call_body": {
+                  "type": "string",
+                  "description": "Description or notes about the call"
+                },
+                "hs_call_direction": {
+                  "type": "string",
+                  "description": "Direction of the call (INBOUND or OUTBOUND)"
+                },
+                "hs_call_disposition": {
+                  "type": "string",
+                  "description": "The outcome of the call (e.g., connected, no answer, busy, left voicemail)"
+                },
+                "hs_call_duration": {
+                  "type": "string",
+                  "description": "Duration of the call in milliseconds"
+                },
+                "hs_call_from_number": {
+                  "type": "string",
+                  "description": "Phone number the call was made from"
+                },
+                "hs_call_to_number": {
+                  "type": "string",
+                  "description": "Phone number the call was made to"
+                },
+                "hs_call_status": {
+                  "type": "string",
+                  "description": "Status of the call (e.g., COMPLETED, BUSY, NO_ANSWER, FAILED, CANCELED)"
+                },
+                "hs_call_title": {
+                  "type": "string",
+                  "description": "Title or subject of the call"
+                },
+                "hs_timestamp": {
+                  "type": "string",
+                  "description": "Required. Timestamp when the call activity occurred (ISO 8601 format, e.g. 2025-01-15T10:30:00.000Z). Use the current time if the user does not specify one."
+                },
+                "hubspot_owner_id": {
+                  "type": "string",
+                  "description": "ID of the HubSpot owner to assign to this call"
+                }
+              },
+              "additionalProperties": true
+            },
+            "required": true,
+            "description": "Call properties to set"
+          },
+          {
+            "name": "associations",
+            "python_name": "associations",
+            "type": "list[CallsCreateParamsAssociationsItem]",
+            "schema": {
+              "type": "array",
+              "description": "Associate the call with other CRM records (contacts, companies, deals, tickets)",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "to": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "ID of the record to associate with"
+                      }
+                    }
+                  },
+                  "types": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "associationCategory": {
+                          "type": "string",
+                          "description": "Association category (e.g., HUBSPOT_DEFINED)"
+                        },
+                        "associationTypeId": {
+                          "type": "integer",
+                          "description": "Association type ID (e.g., 194 for call-to-contact, 182 for call-to-company, 206 for call-to-deal, 220 for call-to-ticket)"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "required": false,
+            "description": "Associate the call with other CRM records (contacts, companies, deals, tickets)"
+          }
+        ],
+        "params_type_name": "CallsCreateParams",
+        "response_type": "Call",
+        "description": "Create a new call engagement in HubSpot CRM. Calls can be associated with contacts,\ncompanies, deals, or tickets by using the associations parameter.\nThe hs_timestamp property sets when the call activity occurred.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Call",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_call",
+        "http_method": "get",
+        "path": "/crm/v3/objects/calls/{callId}",
+        "entity": "calls",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "callId",
+            "python_name": "call_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Call ID"
+          },
+          {
+            "name": "properties",
+            "python_name": "properties",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.",
+            "is_deep_object": false
+          },
+          {
+            "name": "propertiesWithHistory",
+            "python_name": "properties_with_history",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored.",
+            "is_deep_object": false
+          },
+          {
+            "name": "associations",
+            "python_name": "associations",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of object types to retrieve associated IDs for. If any of the specified associations do not exist, they will be ignored.",
+            "is_deep_object": false
+          },
+          {
+            "name": "idProperty",
+            "python_name": "id_property",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "The name of a property whose values are unique for this object.",
+            "is_deep_object": false
+          },
+          {
+            "name": "archived",
+            "python_name": "archived",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": null,
+            "description": "Whether to return only results that have been archived.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CallsGetParams",
+        "response_type": "Call",
+        "description": "Get a single call by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Call",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "update_call",
+        "http_method": "patch",
+        "path": "/crm/v3/objects/calls/{callId}",
+        "entity": "calls",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "properties",
+            "python_name": "properties",
+            "type": "CallsUpdateParamsProperties",
+            "schema": {
+              "type": "object",
+              "description": "Call properties to update",
+              "properties": {
+                "hs_call_body": {
+                  "type": "string",
+                  "description": "Description or notes about the call"
+                },
+                "hs_call_direction": {
+                  "type": "string",
+                  "description": "Direction of the call (INBOUND or OUTBOUND)"
+                },
+                "hs_call_disposition": {
+                  "type": "string",
+                  "description": "The outcome of the call"
+                },
+                "hs_call_duration": {
+                  "type": "string",
+                  "description": "Duration of the call in milliseconds"
+                },
+                "hs_call_from_number": {
+                  "type": "string",
+                  "description": "Phone number the call was made from"
+                },
+                "hs_call_to_number": {
+                  "type": "string",
+                  "description": "Phone number the call was made to"
+                },
+                "hs_call_status": {
+                  "type": "string",
+                  "description": "Status of the call (e.g., COMPLETED, BUSY, NO_ANSWER)"
+                },
+                "hs_call_title": {
+                  "type": "string",
+                  "description": "Title or subject of the call"
+                },
+                "hs_timestamp": {
+                  "type": "string",
+                  "description": "Timestamp when the call activity occurred"
+                },
+                "hubspot_owner_id": {
+                  "type": "string",
+                  "description": "ID of the HubSpot owner to assign to this call"
+                }
+              },
+              "additionalProperties": true
+            },
+            "required": true,
+            "description": "Call properties to update"
+          },
+          {
+            "name": "callId",
+            "python_name": "call_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Call ID"
+          }
+        ],
+        "params_type_name": "CallsUpdateParams",
+        "response_type": "Call",
+        "description": "Update an existing call's properties by ID.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Call",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "delete_call",
+        "http_method": "delete",
+        "path": "/crm/v3/objects/calls/{callId}",
+        "entity": "calls",
+        "action": "delete",
+        "parameters": [
+          {
+            "name": "callId",
+            "python_name": "call_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Call ID"
+          }
+        ],
+        "params_type_name": "CallsDeleteParams",
+        "response_type": "dict[str, Any]",
+        "description": "Archive a call by ID. This is a soft delete \u2014 the call is moved to the\nrecycle bin and can be restored for approximately 90 days. No public\nhard-delete endpoint exists.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": null,
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "emails": [
+      {
+        "method_name": "list_emails",
+        "http_method": "get",
+        "path": "/crm/v3/objects/emails",
+        "entity": "emails",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 25
+            },
+            "required": null,
+            "description": "The maximum number of results to display per page.",
+            "is_deep_object": false
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "The paging cursor token of the last successfully read resource will be returned as the paging.next.after JSON property of a paged response containing more results.",
+            "is_deep_object": false
+          },
+          {
+            "name": "associations",
+            "python_name": "associations",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of associated object types to include in the response. Valid values are contacts, companies, deals, tickets, and custom object type IDs or fully qualified names.",
+            "is_deep_object": false
+          },
+          {
+            "name": "properties",
+            "python_name": "properties",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.",
+            "is_deep_object": false
+          },
+          {
+            "name": "propertiesWithHistory",
+            "python_name": "properties_with_history",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored.",
+            "is_deep_object": false
+          },
+          {
+            "name": "archived",
+            "python_name": "archived",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": null,
+            "description": "Whether to return only results that have been archived.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "EmailsListParams",
+        "response_type": "EmailsListResult",
+        "description": "Returns a paginated list of emails",
+        "record_extractor": "$.results",
+        "meta_extractor": {
+          "next_cursor": "$.paging.next.after",
+          "next_link": "$.paging.next.link"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Email]",
+        "meta_fields": [
+          {
+            "name": "next_cursor",
+            "python_name": "next_cursor",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Cursor for next page"
+            }
+          },
+          {
+            "name": "next_link",
+            "python_name": "next_link",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "URL for next page"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "create_email",
+        "http_method": "post",
+        "path": "/crm/v3/objects/emails",
+        "entity": "emails",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "properties",
+            "python_name": "properties",
+            "type": "EmailsCreateParamsProperties",
+            "schema": {
+              "type": "object",
+              "description": "Email properties to set",
+              "required": [
+                "hs_timestamp",
+                "hs_email_direction"
+              ],
+              "properties": {
+                "hs_email_subject": {
+                  "type": "string",
+                  "description": "Subject line of the email"
+                },
+                "hs_email_text": {
+                  "type": "string",
+                  "description": "Plain text body of the email"
+                },
+                "hs_email_html": {
+                  "type": "string",
+                  "description": "HTML body of the email"
+                },
+                "hs_email_direction": {
+                  "type": "string",
+                  "description": "Required. Direction of the email (EMAIL for sent, INCOMING_EMAIL for received, FORWARDED_EMAIL for forwarded)"
+                },
+                "hs_email_status": {
+                  "type": "string",
+                  "description": "Status of the email (BOUNCED, FAILED, SCHEDULED, SENDING, SENT, DRAFT)"
+                },
+                "hs_email_sender_email": {
+                  "type": "string",
+                  "description": "Sender email address"
+                },
+                "hs_email_to_email": {
+                  "type": "string",
+                  "description": "Recipient email address(es)"
+                },
+                "hs_timestamp": {
+                  "type": "string",
+                  "description": "Required. Timestamp when the email activity occurred (ISO 8601 format, e.g. 2025-01-15T10:30:00.000Z). Use the current time if the user does not specify one."
+                },
+                "hubspot_owner_id": {
+                  "type": "string",
+                  "description": "ID of the HubSpot owner to assign to this email"
+                }
+              },
+              "additionalProperties": true
+            },
+            "required": true,
+            "description": "Email properties to set"
+          },
+          {
+            "name": "associations",
+            "python_name": "associations",
+            "type": "list[EmailsCreateParamsAssociationsItem]",
+            "schema": {
+              "type": "array",
+              "description": "Associate the email with other CRM records (contacts, companies, deals, tickets)",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "to": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "ID of the record to associate with"
+                      }
+                    }
+                  },
+                  "types": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "associationCategory": {
+                          "type": "string",
+                          "description": "Association category (e.g., HUBSPOT_DEFINED)"
+                        },
+                        "associationTypeId": {
+                          "type": "integer",
+                          "description": "Association type ID (e.g., 198 for email-to-contact, 186 for email-to-company, 210 for email-to-deal, 224 for email-to-ticket)"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "required": false,
+            "description": "Associate the email with other CRM records (contacts, companies, deals, tickets)"
+          }
+        ],
+        "params_type_name": "EmailsCreateParams",
+        "response_type": "Email",
+        "description": "Create a new email engagement in HubSpot CRM. Emails can be associated with contacts,\ncompanies, deals, or tickets by using the associations parameter.\nThe hs_timestamp property sets when the email activity occurred.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Email",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_email",
+        "http_method": "get",
+        "path": "/crm/v3/objects/emails/{emailId}",
+        "entity": "emails",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "emailId",
+            "python_name": "email_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Email ID"
+          },
+          {
+            "name": "properties",
+            "python_name": "properties",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.",
+            "is_deep_object": false
+          },
+          {
+            "name": "propertiesWithHistory",
+            "python_name": "properties_with_history",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored.",
+            "is_deep_object": false
+          },
+          {
+            "name": "associations",
+            "python_name": "associations",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of object types to retrieve associated IDs for. If any of the specified associations do not exist, they will be ignored.",
+            "is_deep_object": false
+          },
+          {
+            "name": "idProperty",
+            "python_name": "id_property",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "The name of a property whose values are unique for this object.",
+            "is_deep_object": false
+          },
+          {
+            "name": "archived",
+            "python_name": "archived",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": null,
+            "description": "Whether to return only results that have been archived.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "EmailsGetParams",
+        "response_type": "Email",
+        "description": "Get a single email by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Email",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "update_email",
+        "http_method": "patch",
+        "path": "/crm/v3/objects/emails/{emailId}",
+        "entity": "emails",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "properties",
+            "python_name": "properties",
+            "type": "EmailsUpdateParamsProperties",
+            "schema": {
+              "type": "object",
+              "description": "Email properties to update",
+              "properties": {
+                "hs_email_subject": {
+                  "type": "string",
+                  "description": "Subject line of the email"
+                },
+                "hs_email_text": {
+                  "type": "string",
+                  "description": "Plain text body of the email"
+                },
+                "hs_email_html": {
+                  "type": "string",
+                  "description": "HTML body of the email"
+                },
+                "hs_email_direction": {
+                  "type": "string",
+                  "description": "Direction of the email (EMAIL, INCOMING_EMAIL, FORWARDED_EMAIL)"
+                },
+                "hs_email_status": {
+                  "type": "string",
+                  "description": "Status of the email (BOUNCED, FAILED, SCHEDULED, SENDING, SENT, DRAFT)"
+                },
+                "hs_timestamp": {
+                  "type": "string",
+                  "description": "Timestamp when the email activity occurred"
+                },
+                "hubspot_owner_id": {
+                  "type": "string",
+                  "description": "ID of the HubSpot owner to assign to this email"
+                }
+              },
+              "additionalProperties": true
+            },
+            "required": true,
+            "description": "Email properties to update"
+          },
+          {
+            "name": "emailId",
+            "python_name": "email_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Email ID"
+          }
+        ],
+        "params_type_name": "EmailsUpdateParams",
+        "response_type": "Email",
+        "description": "Update an existing email's properties by ID.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Email",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "delete_email",
+        "http_method": "delete",
+        "path": "/crm/v3/objects/emails/{emailId}",
+        "entity": "emails",
+        "action": "delete",
+        "parameters": [
+          {
+            "name": "emailId",
+            "python_name": "email_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Email ID"
+          }
+        ],
+        "params_type_name": "EmailsDeleteParams",
+        "response_type": "dict[str, Any]",
+        "description": "Archive an email by ID. This is a soft delete \u2014 the email is moved to the\nrecycle bin and can be restored for approximately 90 days. No public\nhard-delete endpoint exists.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": null,
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "meetings": [
+      {
+        "method_name": "list_meetings",
+        "http_method": "get",
+        "path": "/crm/v3/objects/meetings",
+        "entity": "meetings",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 25
+            },
+            "required": null,
+            "description": "The maximum number of results to display per page.",
+            "is_deep_object": false
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "The paging cursor token of the last successfully read resource will be returned as the paging.next.after JSON property of a paged response containing more results.",
+            "is_deep_object": false
+          },
+          {
+            "name": "associations",
+            "python_name": "associations",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of associated object types to include in the response. Valid values are contacts, companies, deals, tickets, and custom object type IDs or fully qualified names.",
+            "is_deep_object": false
+          },
+          {
+            "name": "properties",
+            "python_name": "properties",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.",
+            "is_deep_object": false
+          },
+          {
+            "name": "propertiesWithHistory",
+            "python_name": "properties_with_history",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored.",
+            "is_deep_object": false
+          },
+          {
+            "name": "archived",
+            "python_name": "archived",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": null,
+            "description": "Whether to return only results that have been archived.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "MeetingsListParams",
+        "response_type": "MeetingsListResult",
+        "description": "Returns a paginated list of meetings",
+        "record_extractor": "$.results",
+        "meta_extractor": {
+          "next_cursor": "$.paging.next.after",
+          "next_link": "$.paging.next.link"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Meeting]",
+        "meta_fields": [
+          {
+            "name": "next_cursor",
+            "python_name": "next_cursor",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Cursor for next page"
+            }
+          },
+          {
+            "name": "next_link",
+            "python_name": "next_link",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "URL for next page"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "create_meeting",
+        "http_method": "post",
+        "path": "/crm/v3/objects/meetings",
+        "entity": "meetings",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "properties",
+            "python_name": "properties",
+            "type": "MeetingsCreateParamsProperties",
+            "schema": {
+              "type": "object",
+              "description": "Meeting properties to set",
+              "required": [
+                "hs_timestamp",
+                "hs_meeting_title"
+              ],
+              "properties": {
+                "hs_meeting_title": {
+                  "type": "string",
+                  "description": "Required. Title of the meeting"
+                },
+                "hs_meeting_body": {
+                  "type": "string",
+                  "description": "Description or notes about the meeting (supports HTML)"
+                },
+                "hs_meeting_start_time": {
+                  "type": "string",
+                  "description": "Start time of the meeting (ISO 8601 format, e.g. 2025-01-15T10:30:00.000Z)"
+                },
+                "hs_meeting_end_time": {
+                  "type": "string",
+                  "description": "End time of the meeting (ISO 8601 format, e.g. 2025-01-15T11:30:00.000Z)"
+                },
+                "hs_meeting_location": {
+                  "type": "string",
+                  "description": "Location of the meeting"
+                },
+                "hs_meeting_outcome": {
+                  "type": "string",
+                  "description": "Outcome of the meeting (e.g., SCHEDULED, COMPLETED, RESCHEDULED, NO_SHOW, CANCELED)"
+                },
+                "hs_internal_meeting_notes": {
+                  "type": "string",
+                  "description": "Internal notes about the meeting"
+                },
+                "hs_timestamp": {
+                  "type": "string",
+                  "description": "Required. Timestamp when the meeting activity occurred (ISO 8601 format, e.g. 2025-01-15T10:30:00.000Z). Use the current time if the user does not specify one."
+                },
+                "hubspot_owner_id": {
+                  "type": "string",
+                  "description": "ID of the HubSpot owner to assign to this meeting"
+                }
+              },
+              "additionalProperties": true
+            },
+            "required": true,
+            "description": "Meeting properties to set"
+          },
+          {
+            "name": "associations",
+            "python_name": "associations",
+            "type": "list[MeetingsCreateParamsAssociationsItem]",
+            "schema": {
+              "type": "array",
+              "description": "Associate the meeting with other CRM records (contacts, companies, deals, tickets)",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "to": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "ID of the record to associate with"
+                      }
+                    }
+                  },
+                  "types": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "associationCategory": {
+                          "type": "string",
+                          "description": "Association category (e.g., HUBSPOT_DEFINED)"
+                        },
+                        "associationTypeId": {
+                          "type": "integer",
+                          "description": "Association type ID (e.g., 200 for meeting-to-contact, 188 for meeting-to-company, 212 for meeting-to-deal, 226 for meeting-to-ticket)"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "required": false,
+            "description": "Associate the meeting with other CRM records (contacts, companies, deals, tickets)"
+          }
+        ],
+        "params_type_name": "MeetingsCreateParams",
+        "response_type": "Meeting",
+        "description": "Create a new meeting engagement in HubSpot CRM. Meetings can be associated with contacts,\ncompanies, deals, or tickets by using the associations parameter.\nThe hs_timestamp property sets when the meeting activity occurred.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Meeting",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_meeting",
+        "http_method": "get",
+        "path": "/crm/v3/objects/meetings/{meetingId}",
+        "entity": "meetings",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "meetingId",
+            "python_name": "meeting_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Meeting ID"
+          },
+          {
+            "name": "properties",
+            "python_name": "properties",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.",
+            "is_deep_object": false
+          },
+          {
+            "name": "propertiesWithHistory",
+            "python_name": "properties_with_history",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored.",
+            "is_deep_object": false
+          },
+          {
+            "name": "associations",
+            "python_name": "associations",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of object types to retrieve associated IDs for. If any of the specified associations do not exist, they will be ignored.",
+            "is_deep_object": false
+          },
+          {
+            "name": "idProperty",
+            "python_name": "id_property",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "The name of a property whose values are unique for this object.",
+            "is_deep_object": false
+          },
+          {
+            "name": "archived",
+            "python_name": "archived",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": null,
+            "description": "Whether to return only results that have been archived.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "MeetingsGetParams",
+        "response_type": "Meeting",
+        "description": "Get a single meeting by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Meeting",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "update_meeting",
+        "http_method": "patch",
+        "path": "/crm/v3/objects/meetings/{meetingId}",
+        "entity": "meetings",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "properties",
+            "python_name": "properties",
+            "type": "MeetingsUpdateParamsProperties",
+            "schema": {
+              "type": "object",
+              "description": "Meeting properties to update",
+              "properties": {
+                "hs_meeting_title": {
+                  "type": "string",
+                  "description": "Title of the meeting"
+                },
+                "hs_meeting_body": {
+                  "type": "string",
+                  "description": "Description or notes about the meeting (supports HTML)"
+                },
+                "hs_meeting_start_time": {
+                  "type": "string",
+                  "description": "Start time of the meeting (ISO 8601 format)"
+                },
+                "hs_meeting_end_time": {
+                  "type": "string",
+                  "description": "End time of the meeting (ISO 8601 format)"
+                },
+                "hs_meeting_location": {
+                  "type": "string",
+                  "description": "Location of the meeting"
+                },
+                "hs_meeting_outcome": {
+                  "type": "string",
+                  "description": "Outcome of the meeting (e.g., SCHEDULED, COMPLETED, RESCHEDULED, NO_SHOW, CANCELED)"
+                },
+                "hs_internal_meeting_notes": {
+                  "type": "string",
+                  "description": "Internal notes about the meeting"
+                },
+                "hs_timestamp": {
+                  "type": "string",
+                  "description": "Timestamp when the meeting activity occurred"
+                },
+                "hubspot_owner_id": {
+                  "type": "string",
+                  "description": "ID of the HubSpot owner to assign to this meeting"
+                }
+              },
+              "additionalProperties": true
+            },
+            "required": true,
+            "description": "Meeting properties to update"
+          },
+          {
+            "name": "meetingId",
+            "python_name": "meeting_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Meeting ID"
+          }
+        ],
+        "params_type_name": "MeetingsUpdateParams",
+        "response_type": "Meeting",
+        "description": "Update an existing meeting's properties by ID.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Meeting",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "delete_meeting",
+        "http_method": "delete",
+        "path": "/crm/v3/objects/meetings/{meetingId}",
+        "entity": "meetings",
+        "action": "delete",
+        "parameters": [
+          {
+            "name": "meetingId",
+            "python_name": "meeting_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Meeting ID"
+          }
+        ],
+        "params_type_name": "MeetingsDeleteParams",
+        "response_type": "dict[str, Any]",
+        "description": "Archive a meeting by ID. This is a soft delete \u2014 the meeting is moved to the\nrecycle bin and can be restored for approximately 90 days. No public\nhard-delete endpoint exists.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": null,
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "tasks": [
+      {
+        "method_name": "list_tasks",
+        "http_method": "get",
+        "path": "/crm/v3/objects/tasks",
+        "entity": "tasks",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 25
+            },
+            "required": null,
+            "description": "The maximum number of results to display per page.",
+            "is_deep_object": false
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "The paging cursor token of the last successfully read resource will be returned as the paging.next.after JSON property of a paged response containing more results.",
+            "is_deep_object": false
+          },
+          {
+            "name": "associations",
+            "python_name": "associations",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of associated object types to include in the response. Valid values are contacts, companies, deals, tickets, and custom object type IDs or fully qualified names.",
+            "is_deep_object": false
+          },
+          {
+            "name": "properties",
+            "python_name": "properties",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.",
+            "is_deep_object": false
+          },
+          {
+            "name": "propertiesWithHistory",
+            "python_name": "properties_with_history",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored.",
+            "is_deep_object": false
+          },
+          {
+            "name": "archived",
+            "python_name": "archived",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": null,
+            "description": "Whether to return only results that have been archived.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "TasksListParams",
+        "response_type": "TasksListResult",
+        "description": "Returns a paginated list of tasks",
+        "record_extractor": "$.results",
+        "meta_extractor": {
+          "next_cursor": "$.paging.next.after",
+          "next_link": "$.paging.next.link"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Task]",
+        "meta_fields": [
+          {
+            "name": "next_cursor",
+            "python_name": "next_cursor",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Cursor for next page"
+            }
+          },
+          {
+            "name": "next_link",
+            "python_name": "next_link",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "URL for next page"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "create_task",
+        "http_method": "post",
+        "path": "/crm/v3/objects/tasks",
+        "entity": "tasks",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "properties",
+            "python_name": "properties",
+            "type": "TasksCreateParamsProperties",
+            "schema": {
+              "type": "object",
+              "description": "Task properties to set",
+              "required": [
+                "hs_timestamp",
+                "hs_task_subject"
+              ],
+              "properties": {
+                "hs_task_body": {
+                  "type": "string",
+                  "description": "Description or notes for the task (supports HTML)"
+                },
+                "hs_task_subject": {
+                  "type": "string",
+                  "description": "Required. Subject or title of the task"
+                },
+                "hs_task_status": {
+                  "type": "string",
+                  "description": "Status of the task (NOT_STARTED, IN_PROGRESS, WAITING, COMPLETED, DEFERRED). Defaults to NOT_STARTED."
+                },
+                "hs_task_priority": {
+                  "type": "string",
+                  "description": "Priority of the task (LOW, MEDIUM, HIGH)"
+                },
+                "hs_task_type": {
+                  "type": "string",
+                  "description": "Type of the task (TODO, CALL, EMAIL). Defaults to TODO."
+                },
+                "hs_task_reminders": {
+                  "type": "string",
+                  "description": "Reminder timestamp for the task (epoch milliseconds)"
+                },
+                "hs_timestamp": {
+                  "type": "string",
+                  "description": "Required. Due date / timestamp for the task (ISO 8601 format, e.g. 2025-01-15T10:30:00.000Z). Use the current time if the user does not specify one."
+                },
+                "hubspot_owner_id": {
+                  "type": "string",
+                  "description": "ID of the HubSpot owner to assign to this task"
+                }
+              },
+              "additionalProperties": true
+            },
+            "required": true,
+            "description": "Task properties to set"
+          },
+          {
+            "name": "associations",
+            "python_name": "associations",
+            "type": "list[TasksCreateParamsAssociationsItem]",
+            "schema": {
+              "type": "array",
+              "description": "Associate the task with other CRM records (contacts, companies, deals, tickets)",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "to": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "ID of the record to associate with"
+                      }
+                    }
+                  },
+                  "types": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "associationCategory": {
+                          "type": "string",
+                          "description": "Association category (e.g., HUBSPOT_DEFINED)"
+                        },
+                        "associationTypeId": {
+                          "type": "integer",
+                          "description": "Association type ID (e.g., 204 for task-to-contact, 192 for task-to-company, 216 for task-to-deal, 228 for task-to-ticket)"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "required": false,
+            "description": "Associate the task with other CRM records (contacts, companies, deals, tickets)"
+          }
+        ],
+        "params_type_name": "TasksCreateParams",
+        "response_type": "Task",
+        "description": "Create a new task in HubSpot CRM. Tasks can be associated with contacts,\ncompanies, deals, or tickets by using the associations parameter.\nThe hs_timestamp property sets when the task activity occurred.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Task",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_task",
+        "http_method": "get",
+        "path": "/crm/v3/objects/tasks/{taskId}",
+        "entity": "tasks",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "taskId",
+            "python_name": "task_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Task ID"
+          },
+          {
+            "name": "properties",
+            "python_name": "properties",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.",
+            "is_deep_object": false
+          },
+          {
+            "name": "propertiesWithHistory",
+            "python_name": "properties_with_history",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored.",
+            "is_deep_object": false
+          },
+          {
+            "name": "associations",
+            "python_name": "associations",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of object types to retrieve associated IDs for. If any of the specified associations do not exist, they will be ignored.",
+            "is_deep_object": false
+          },
+          {
+            "name": "idProperty",
+            "python_name": "id_property",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "The name of a property whose values are unique for this object.",
+            "is_deep_object": false
+          },
+          {
+            "name": "archived",
+            "python_name": "archived",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": null,
+            "description": "Whether to return only results that have been archived.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "TasksGetParams",
+        "response_type": "Task",
+        "description": "Get a single task by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Task",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "update_task",
+        "http_method": "patch",
+        "path": "/crm/v3/objects/tasks/{taskId}",
+        "entity": "tasks",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "properties",
+            "python_name": "properties",
+            "type": "TasksUpdateParamsProperties",
+            "schema": {
+              "type": "object",
+              "description": "Task properties to update",
+              "properties": {
+                "hs_task_body": {
+                  "type": "string",
+                  "description": "Description or notes for the task (supports HTML)"
+                },
+                "hs_task_subject": {
+                  "type": "string",
+                  "description": "Subject or title of the task"
+                },
+                "hs_task_status": {
+                  "type": "string",
+                  "description": "Status of the task (NOT_STARTED, IN_PROGRESS, WAITING, COMPLETED, DEFERRED)"
+                },
+                "hs_task_priority": {
+                  "type": "string",
+                  "description": "Priority of the task (LOW, MEDIUM, HIGH)"
+                },
+                "hs_task_type": {
+                  "type": "string",
+                  "description": "Type of the task (TODO, CALL, EMAIL)"
+                },
+                "hs_task_reminders": {
+                  "type": "string",
+                  "description": "Reminder timestamp for the task (epoch milliseconds)"
+                },
+                "hs_timestamp": {
+                  "type": "string",
+                  "description": "Due date / timestamp for the task"
+                },
+                "hubspot_owner_id": {
+                  "type": "string",
+                  "description": "ID of the HubSpot owner to assign to this task"
+                }
+              },
+              "additionalProperties": true
+            },
+            "required": true,
+            "description": "Task properties to update"
+          },
+          {
+            "name": "taskId",
+            "python_name": "task_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Task ID"
+          }
+        ],
+        "params_type_name": "TasksUpdateParams",
+        "response_type": "Task",
+        "description": "Update an existing task's properties by ID.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Task",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "delete_task",
+        "http_method": "delete",
+        "path": "/crm/v3/objects/tasks/{taskId}",
+        "entity": "tasks",
+        "action": "delete",
+        "parameters": [
+          {
+            "name": "taskId",
+            "python_name": "task_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Task ID"
+          }
+        ],
+        "params_type_name": "TasksDeleteParams",
+        "response_type": "dict[str, Any]",
+        "description": "Archive a task by ID. This is a soft delete \u2014 the task is moved to the\nrecycle bin and can be restored for approximately 90 days. No public\nhard-delete endpoint exists.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": null,
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
     "schemas": [
       {
         "method_name": "list_schemas",
@@ -3193,6 +5201,720 @@
           "example_value_json": "\"<str>\"",
           "json_example_value": "<str>",
           "description": "Timestamp when the ticket record was last modified"
+        }
+      ]
+    },
+    "notes": {
+      "entity": "notes",
+      "data_type_name": "NotesSearchData",
+      "filter_type_name": "NotesSearchFilter",
+      "in_filter_type_name": "NotesInFilter",
+      "any_value_filter_type_name": "NotesAnyValueFilter",
+      "string_filter_type_name": "NotesStringFilter",
+      "sort_filter_type_name": "NotesSortFilter",
+      "result_type_name": "NotesSearchResult",
+      "query_type_name": "NotesSearchQuery",
+      "condition_prefix": "Notes",
+      "condition_type_name": "NotesCondition",
+      "fields": [
+        {
+          "name": "archived",
+          "python_name": "archived",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "json_example_value": true,
+          "description": "Indicates whether the note has been archived"
+        },
+        {
+          "name": "createdAt",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Timestamp when the note was created"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Unique identifier for the note record"
+        },
+        {
+          "name": "properties",
+          "python_name": "properties",
+          "type": "dict[str, Any]",
+          "json_type": "object",
+          "example_value_json": "{}",
+          "json_example_value": {},
+          "description": "Object containing all property values for the note"
+        },
+        {
+          "name": "properties.hs_createdate",
+          "python_name": "properties_hs_createdate",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Date the note was created"
+        },
+        {
+          "name": "properties.hs_lastmodifieddate",
+          "python_name": "properties_hs_lastmodifieddate",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Last modified date of the note"
+        },
+        {
+          "name": "properties.hs_note_body",
+          "python_name": "properties_hs_note_body",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "The body content of the note (supports HTML)"
+        },
+        {
+          "name": "properties.hs_object_id",
+          "python_name": "properties_hs_object_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "HubSpot object ID"
+        },
+        {
+          "name": "properties.hs_timestamp",
+          "python_name": "properties_hs_timestamp",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Timestamp when the note activity occurred"
+        },
+        {
+          "name": "properties.hubspot_owner_id",
+          "python_name": "properties_hubspot_owner_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "ID of the note owner"
+        },
+        {
+          "name": "updatedAt",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Timestamp when the note record was last modified"
+        }
+      ]
+    },
+    "calls": {
+      "entity": "calls",
+      "data_type_name": "CallsSearchData",
+      "filter_type_name": "CallsSearchFilter",
+      "in_filter_type_name": "CallsInFilter",
+      "any_value_filter_type_name": "CallsAnyValueFilter",
+      "string_filter_type_name": "CallsStringFilter",
+      "sort_filter_type_name": "CallsSortFilter",
+      "result_type_name": "CallsSearchResult",
+      "query_type_name": "CallsSearchQuery",
+      "condition_prefix": "Calls",
+      "condition_type_name": "CallsCondition",
+      "fields": [
+        {
+          "name": "archived",
+          "python_name": "archived",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "json_example_value": true,
+          "description": "Indicates whether the call has been archived"
+        },
+        {
+          "name": "createdAt",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Timestamp when the call was created"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Unique identifier for the call record"
+        },
+        {
+          "name": "properties",
+          "python_name": "properties",
+          "type": "dict[str, Any]",
+          "json_type": "object",
+          "example_value_json": "{}",
+          "json_example_value": {},
+          "description": "Object containing all property values for the call"
+        },
+        {
+          "name": "properties.hs_call_body",
+          "python_name": "properties_hs_call_body",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Description or notes about the call"
+        },
+        {
+          "name": "properties.hs_call_direction",
+          "python_name": "properties_hs_call_direction",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Direction of the call (INBOUND or OUTBOUND)"
+        },
+        {
+          "name": "properties.hs_call_duration",
+          "python_name": "properties_hs_call_duration",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Duration of the call in milliseconds"
+        },
+        {
+          "name": "properties.hs_call_status",
+          "python_name": "properties_hs_call_status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Status of the call (e.g., COMPLETED, BUSY, NO_ANSWER)"
+        },
+        {
+          "name": "properties.hs_call_title",
+          "python_name": "properties_hs_call_title",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Title or subject of the call"
+        },
+        {
+          "name": "properties.hs_createdate",
+          "python_name": "properties_hs_createdate",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Date the call was created"
+        },
+        {
+          "name": "properties.hs_lastmodifieddate",
+          "python_name": "properties_hs_lastmodifieddate",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Last modified date of the call"
+        },
+        {
+          "name": "properties.hs_object_id",
+          "python_name": "properties_hs_object_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "HubSpot object ID"
+        },
+        {
+          "name": "properties.hs_timestamp",
+          "python_name": "properties_hs_timestamp",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Timestamp when the call activity occurred"
+        },
+        {
+          "name": "properties.hubspot_owner_id",
+          "python_name": "properties_hubspot_owner_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "ID of the call owner"
+        },
+        {
+          "name": "updatedAt",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Timestamp when the call record was last modified"
+        }
+      ]
+    },
+    "emails": {
+      "entity": "emails",
+      "data_type_name": "EmailsSearchData",
+      "filter_type_name": "EmailsSearchFilter",
+      "in_filter_type_name": "EmailsInFilter",
+      "any_value_filter_type_name": "EmailsAnyValueFilter",
+      "string_filter_type_name": "EmailsStringFilter",
+      "sort_filter_type_name": "EmailsSortFilter",
+      "result_type_name": "EmailsSearchResult",
+      "query_type_name": "EmailsSearchQuery",
+      "condition_prefix": "Emails",
+      "condition_type_name": "EmailsCondition",
+      "fields": [
+        {
+          "name": "archived",
+          "python_name": "archived",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "json_example_value": true,
+          "description": "Indicates whether the email has been archived"
+        },
+        {
+          "name": "createdAt",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Timestamp when the email was created"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Unique identifier for the email record"
+        },
+        {
+          "name": "properties",
+          "python_name": "properties",
+          "type": "dict[str, Any]",
+          "json_type": "object",
+          "example_value_json": "{}",
+          "json_example_value": {},
+          "description": "Object containing all property values for the email"
+        },
+        {
+          "name": "properties.hs_createdate",
+          "python_name": "properties_hs_createdate",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Date the email was created"
+        },
+        {
+          "name": "properties.hs_email_direction",
+          "python_name": "properties_hs_email_direction",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Direction of the email (EMAIL, INCOMING_EMAIL, FORWARDED_EMAIL)"
+        },
+        {
+          "name": "properties.hs_email_status",
+          "python_name": "properties_hs_email_status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Status of the email (BOUNCED, FAILED, SCHEDULED, SENDING, SENT, DRAFT)"
+        },
+        {
+          "name": "properties.hs_email_subject",
+          "python_name": "properties_hs_email_subject",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Subject line of the email"
+        },
+        {
+          "name": "properties.hs_email_text",
+          "python_name": "properties_hs_email_text",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Plain text body of the email"
+        },
+        {
+          "name": "properties.hs_lastmodifieddate",
+          "python_name": "properties_hs_lastmodifieddate",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Last modified date of the email"
+        },
+        {
+          "name": "properties.hs_object_id",
+          "python_name": "properties_hs_object_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "HubSpot object ID"
+        },
+        {
+          "name": "properties.hs_timestamp",
+          "python_name": "properties_hs_timestamp",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Timestamp when the email activity occurred"
+        },
+        {
+          "name": "properties.hubspot_owner_id",
+          "python_name": "properties_hubspot_owner_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "ID of the email owner"
+        },
+        {
+          "name": "updatedAt",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Timestamp when the email record was last modified"
+        }
+      ]
+    },
+    "meetings": {
+      "entity": "meetings",
+      "data_type_name": "MeetingsSearchData",
+      "filter_type_name": "MeetingsSearchFilter",
+      "in_filter_type_name": "MeetingsInFilter",
+      "any_value_filter_type_name": "MeetingsAnyValueFilter",
+      "string_filter_type_name": "MeetingsStringFilter",
+      "sort_filter_type_name": "MeetingsSortFilter",
+      "result_type_name": "MeetingsSearchResult",
+      "query_type_name": "MeetingsSearchQuery",
+      "condition_prefix": "Meetings",
+      "condition_type_name": "MeetingsCondition",
+      "fields": [
+        {
+          "name": "archived",
+          "python_name": "archived",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "json_example_value": true,
+          "description": "Indicates whether the meeting has been archived"
+        },
+        {
+          "name": "createdAt",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Timestamp when the meeting was created"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Unique identifier for the meeting record"
+        },
+        {
+          "name": "properties",
+          "python_name": "properties",
+          "type": "dict[str, Any]",
+          "json_type": "object",
+          "example_value_json": "{}",
+          "json_example_value": {},
+          "description": "Object containing all property values for the meeting"
+        },
+        {
+          "name": "properties.hs_createdate",
+          "python_name": "properties_hs_createdate",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Date the meeting was created"
+        },
+        {
+          "name": "properties.hs_lastmodifieddate",
+          "python_name": "properties_hs_lastmodifieddate",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Last modified date of the meeting"
+        },
+        {
+          "name": "properties.hs_meeting_body",
+          "python_name": "properties_hs_meeting_body",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Description or notes about the meeting"
+        },
+        {
+          "name": "properties.hs_meeting_end_time",
+          "python_name": "properties_hs_meeting_end_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "End time of the meeting"
+        },
+        {
+          "name": "properties.hs_meeting_location",
+          "python_name": "properties_hs_meeting_location",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Location of the meeting"
+        },
+        {
+          "name": "properties.hs_meeting_outcome",
+          "python_name": "properties_hs_meeting_outcome",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Outcome of the meeting (e.g., SCHEDULED, COMPLETED, NO_SHOW, CANCELED)"
+        },
+        {
+          "name": "properties.hs_meeting_start_time",
+          "python_name": "properties_hs_meeting_start_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Start time of the meeting"
+        },
+        {
+          "name": "properties.hs_meeting_title",
+          "python_name": "properties_hs_meeting_title",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Title of the meeting"
+        },
+        {
+          "name": "properties.hs_object_id",
+          "python_name": "properties_hs_object_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "HubSpot object ID"
+        },
+        {
+          "name": "properties.hs_timestamp",
+          "python_name": "properties_hs_timestamp",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Timestamp when the meeting activity occurred"
+        },
+        {
+          "name": "properties.hubspot_owner_id",
+          "python_name": "properties_hubspot_owner_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "ID of the meeting owner"
+        },
+        {
+          "name": "updatedAt",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Timestamp when the meeting record was last modified"
+        }
+      ]
+    },
+    "tasks": {
+      "entity": "tasks",
+      "data_type_name": "TasksSearchData",
+      "filter_type_name": "TasksSearchFilter",
+      "in_filter_type_name": "TasksInFilter",
+      "any_value_filter_type_name": "TasksAnyValueFilter",
+      "string_filter_type_name": "TasksStringFilter",
+      "sort_filter_type_name": "TasksSortFilter",
+      "result_type_name": "TasksSearchResult",
+      "query_type_name": "TasksSearchQuery",
+      "condition_prefix": "Tasks",
+      "condition_type_name": "TasksCondition",
+      "fields": [
+        {
+          "name": "archived",
+          "python_name": "archived",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "json_example_value": true,
+          "description": "Indicates whether the task has been archived"
+        },
+        {
+          "name": "createdAt",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Timestamp when the task was created"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Unique identifier for the task record"
+        },
+        {
+          "name": "properties",
+          "python_name": "properties",
+          "type": "dict[str, Any]",
+          "json_type": "object",
+          "example_value_json": "{}",
+          "json_example_value": {},
+          "description": "Object containing all property values for the task"
+        },
+        {
+          "name": "properties.hs_createdate",
+          "python_name": "properties_hs_createdate",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Date the task was created"
+        },
+        {
+          "name": "properties.hs_lastmodifieddate",
+          "python_name": "properties_hs_lastmodifieddate",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Last modified date of the task"
+        },
+        {
+          "name": "properties.hs_object_id",
+          "python_name": "properties_hs_object_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "HubSpot object ID"
+        },
+        {
+          "name": "properties.hs_task_body",
+          "python_name": "properties_hs_task_body",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Description or notes for the task"
+        },
+        {
+          "name": "properties.hs_task_priority",
+          "python_name": "properties_hs_task_priority",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Priority of the task (LOW, MEDIUM, HIGH)"
+        },
+        {
+          "name": "properties.hs_task_status",
+          "python_name": "properties_hs_task_status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Status of the task (NOT_STARTED, IN_PROGRESS, WAITING, COMPLETED, DEFERRED)"
+        },
+        {
+          "name": "properties.hs_task_subject",
+          "python_name": "properties_hs_task_subject",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Subject or title of the task"
+        },
+        {
+          "name": "properties.hs_task_type",
+          "python_name": "properties_hs_task_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Type of the task (TODO, CALL, EMAIL)"
+        },
+        {
+          "name": "properties.hs_timestamp",
+          "python_name": "properties_hs_timestamp",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Due date / timestamp for the task"
+        },
+        {
+          "name": "properties.hubspot_owner_id",
+          "python_name": "properties_hubspot_owner_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "ID of the task owner"
+        },
+        {
+          "name": "updatedAt",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "json_example_value": "<str>",
+          "description": "Timestamp when the task record was last modified"
         }
       ]
     }
