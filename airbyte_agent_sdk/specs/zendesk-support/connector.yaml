@@ -58,6 +58,7 @@ info:
     - "Export all tickets to a CSV file"
   x-airbyte-skip-suggested-streams:
   - ticket_metric_events
+  - ticket_events
   x-airbyte-skip-auth-methods:
   - bearer    # Legacy OAuth option "oauth2.0" uses bearer tokens - we support oauth2 refresh flow and basic auth instead
   x-airbyte-entity-relationships:
