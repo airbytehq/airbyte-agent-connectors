@@ -5,7 +5,7 @@ openapi: 3.1.0
 
 info:
   title: Gong API Connector
-  version: 0.1.23
+  version: 0.1.24
   description: |
     Gong is a revenue intelligence platform that captures and analyzes customer interactions
     across calls, emails, and web conferences. This connector provides access to users,
@@ -1530,6 +1530,7 @@ components:
         type: object
         required:
           - refresh_token
+          - access_token
         properties:
           access_token:
             type: string
@@ -1556,6 +1557,7 @@ components:
           credentials.client_id: "client_id"
           credentials.client_secret: "client_secret"
           credentials.refresh_token: "refresh_token"
+          credentials.access_token: "access_token"
         replication_auth_key_constants:
           credentials.auth_type: "OAuth2.0"
 

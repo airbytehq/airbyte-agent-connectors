@@ -160,15 +160,6 @@ class BlogPostVersion(BaseModel):
     ncs_step_version: Any | None = Field(default=None, alias="ncsStepVersion", description="NCS step version")
     """NCS step version"""
 
-class BlogPostBody(BaseModel):
-    """Blog post body content"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    storage: dict[str, Any] | None = Field(default=None, description="Storage format body")
-    """Storage format body"""
-    atlas_doc_format: dict[str, Any] | None = Field(default=None, description="Atlas doc format body")
-    """Atlas doc format body"""
-
 class BlogPostLinks(BaseModel):
     """Links related to the blog post"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -183,6 +174,15 @@ class BlogPostLinks(BaseModel):
     """Tiny UI link"""
     base: str | None = Field(default=None, description="Base URL")
     """Base URL"""
+
+class BlogPostBody(BaseModel):
+    """Blog post body content"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    storage: dict[str, Any] | None = Field(default=None, description="Storage format body")
+    """Storage format body"""
+    atlas_doc_format: dict[str, Any] | None = Field(default=None, description="Atlas doc format body")
+    """Atlas doc format body"""
 
 class BlogPost(BaseModel):
     """Confluence blog post object"""
