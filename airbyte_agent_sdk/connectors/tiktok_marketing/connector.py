@@ -149,7 +149,7 @@ class TiktokMarketingConnector:
 
     connector_name = "tiktok-marketing"
     connector_version = "1.1.6"
-    sdk_version = "0.1.279"
+    sdk_version = "0.1.280"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {

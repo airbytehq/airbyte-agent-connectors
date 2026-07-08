@@ -206,22 +206,12 @@ class TicketsList(BaseModel):
     paging: Paging | None = Field(default=None)
     total: int | None = Field(default=None)
 
-class SchemaAssociationsItem(BaseModel):
-    """Nested schema for Schema.associations_item"""
+class SchemaLabels(BaseModel):
+    """Display labels"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    from_object_type_id: str | None = Field(default=None, alias="fromObjectTypeId")
-    to_object_type_id: str | None = Field(default=None, alias="toObjectTypeId")
-    name: str | None = Field(default=None)
-    cardinality: str | None = Field(default=None)
-    id: str | None = Field(default=None)
-    inverse_cardinality: str | None = Field(default=None, alias="inverseCardinality")
-    has_user_enforced_max_to_object_ids: bool | None = Field(default=None, alias="hasUserEnforcedMaxToObjectIds")
-    has_user_enforced_max_from_object_ids: bool | None = Field(default=None, alias="hasUserEnforcedMaxFromObjectIds")
-    max_to_object_ids: int | None = Field(default=None, alias="maxToObjectIds")
-    max_from_object_ids: int | None = Field(default=None, alias="maxFromObjectIds")
-    created_at: str | None | None = Field(default=None, alias="createdAt")
-    updated_at: str | None | None = Field(default=None, alias="updatedAt")
+    singular: str | None = Field(default=None)
+    plural: str | None = Field(default=None)
 
 class SchemaPropertiesItemModificationmetadata(BaseModel):
     """Nested schema for SchemaPropertiesItem.modificationMetadata"""
@@ -259,12 +249,22 @@ class SchemaPropertiesItem(BaseModel):
     show_currency_symbol: bool | None = Field(default=None, alias="showCurrencySymbol")
     modification_metadata: SchemaPropertiesItemModificationmetadata | None = Field(default=None, alias="modificationMetadata")
 
-class SchemaLabels(BaseModel):
-    """Display labels"""
+class SchemaAssociationsItem(BaseModel):
+    """Nested schema for Schema.associations_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    singular: str | None = Field(default=None)
-    plural: str | None = Field(default=None)
+    from_object_type_id: str | None = Field(default=None, alias="fromObjectTypeId")
+    to_object_type_id: str | None = Field(default=None, alias="toObjectTypeId")
+    name: str | None = Field(default=None)
+    cardinality: str | None = Field(default=None)
+    id: str | None = Field(default=None)
+    inverse_cardinality: str | None = Field(default=None, alias="inverseCardinality")
+    has_user_enforced_max_to_object_ids: bool | None = Field(default=None, alias="hasUserEnforcedMaxToObjectIds")
+    has_user_enforced_max_from_object_ids: bool | None = Field(default=None, alias="hasUserEnforcedMaxFromObjectIds")
+    max_to_object_ids: int | None = Field(default=None, alias="maxToObjectIds")
+    max_from_object_ids: int | None = Field(default=None, alias="maxFromObjectIds")
+    created_at: str | None | None = Field(default=None, alias="createdAt")
+    updated_at: str | None | None = Field(default=None, alias="updatedAt")
 
 class Schema(BaseModel):
     """Custom object schema definition"""
@@ -596,13 +596,6 @@ class Note(BaseModel):
     archived_at: str | None = Field(default=None, alias="archivedAt")
     associations: dict[str, Any] | None = Field(default=None)
 
-class NoteCreateParamsAssociationsItemTo(BaseModel):
-    """Nested schema for NoteCreateParamsAssociationsItem.to"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: str | None = Field(default=None, description="ID of the record to associate with")
-    """ID of the record to associate with"""
-
 class NoteCreateParamsAssociationsItemTypesItem(BaseModel):
     """Nested schema for NoteCreateParamsAssociationsItem.types_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -611,6 +604,13 @@ class NoteCreateParamsAssociationsItemTypesItem(BaseModel):
     """Association category (e.g., HUBSPOT_DEFINED)"""
     association_type_id: int | None = Field(default=None, alias="associationTypeId", description="Association type ID (e.g., 202 for note-to-contact, 190 for note-to-company, 214 for note-to-deal, 18 for note-to-ticket)")
     """Association type ID (e.g., 202 for note-to-contact, 190 for note-to-company, 214 for note-to-deal, 18 for note-to-ticket)"""
+
+class NoteCreateParamsAssociationsItemTo(BaseModel):
+    """Nested schema for NoteCreateParamsAssociationsItem.to"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None, description="ID of the record to associate with")
+    """ID of the record to associate with"""
 
 class NoteCreateParamsAssociationsItem(BaseModel):
     """Nested schema for NoteCreateParams.associations_item"""
@@ -840,29 +840,6 @@ class Email(BaseModel):
     archived_at: str | None = Field(default=None, alias="archivedAt")
     associations: dict[str, Any] | None = Field(default=None)
 
-class EmailCreateParamsAssociationsItemTypesItem(BaseModel):
-    """Nested schema for EmailCreateParamsAssociationsItem.types_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    association_category: str | None = Field(default=None, alias="associationCategory", description="Association category (e.g., HUBSPOT_DEFINED)")
-    """Association category (e.g., HUBSPOT_DEFINED)"""
-    association_type_id: int | None = Field(default=None, alias="associationTypeId", description="Association type ID (e.g., 198 for email-to-contact, 186 for email-to-company, 210 for email-to-deal, 224 for email-to-ticket)")
-    """Association type ID (e.g., 198 for email-to-contact, 186 for email-to-company, 210 for email-to-deal, 224 for email-to-ticket)"""
-
-class EmailCreateParamsAssociationsItemTo(BaseModel):
-    """Nested schema for EmailCreateParamsAssociationsItem.to"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: str | None = Field(default=None, description="ID of the record to associate with")
-    """ID of the record to associate with"""
-
-class EmailCreateParamsAssociationsItem(BaseModel):
-    """Nested schema for EmailCreateParams.associations_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    to: EmailCreateParamsAssociationsItemTo | None = Field(default=None)
-    types: list[EmailCreateParamsAssociationsItemTypesItem] | None = Field(default=None)
-
 class EmailCreateParamsProperties(BaseModel):
     """Email properties to set"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -885,6 +862,29 @@ class EmailCreateParamsProperties(BaseModel):
     """Required. Timestamp when the email activity occurred (ISO 8601 format, e.g. 2025-01-15T10:30:00.000Z). Use the current time if the user does not specify one."""
     hubspot_owner_id: str | None = Field(default=None, description="ID of the HubSpot owner to assign to this email")
     """ID of the HubSpot owner to assign to this email"""
+
+class EmailCreateParamsAssociationsItemTo(BaseModel):
+    """Nested schema for EmailCreateParamsAssociationsItem.to"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None = Field(default=None, description="ID of the record to associate with")
+    """ID of the record to associate with"""
+
+class EmailCreateParamsAssociationsItemTypesItem(BaseModel):
+    """Nested schema for EmailCreateParamsAssociationsItem.types_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    association_category: str | None = Field(default=None, alias="associationCategory", description="Association category (e.g., HUBSPOT_DEFINED)")
+    """Association category (e.g., HUBSPOT_DEFINED)"""
+    association_type_id: int | None = Field(default=None, alias="associationTypeId", description="Association type ID (e.g., 198 for email-to-contact, 186 for email-to-company, 210 for email-to-deal, 224 for email-to-ticket)")
+    """Association type ID (e.g., 198 for email-to-contact, 186 for email-to-company, 210 for email-to-deal, 224 for email-to-ticket)"""
+
+class EmailCreateParamsAssociationsItem(BaseModel):
+    """Nested schema for EmailCreateParams.associations_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    to: EmailCreateParamsAssociationsItemTo | None = Field(default=None)
+    types: list[EmailCreateParamsAssociationsItemTypesItem] | None = Field(default=None)
 
 class EmailCreateParams(BaseModel):
     """Parameters for creating a new email"""

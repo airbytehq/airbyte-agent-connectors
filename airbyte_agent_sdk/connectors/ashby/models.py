@@ -32,12 +32,13 @@ class AshbyReplicationConfig(BaseModel):
 
 # ===== RESPONSE TYPE DEFINITIONS (PYDANTIC) =====
 
-class CandidateSociallinksItem(BaseModel):
-    """Nested schema for Candidate.socialLinks_item"""
+class CandidateEmailaddressesItem(BaseModel):
+    """Nested schema for Candidate.emailAddresses_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
+    value: str | None | None = Field(default=None)
     type_: str | None | None = Field(default=None, alias="type")
-    url: str | None | None = Field(default=None)
+    is_primary: bool | None | None = Field(default=None, alias="isPrimary")
 
 class CandidateTagsItem(BaseModel):
     """Nested schema for Candidate.tags_item"""
@@ -47,14 +48,6 @@ class CandidateTagsItem(BaseModel):
     title: str | None | None = Field(default=None)
     is_archived: bool | None | None = Field(default=None, alias="isArchived")
 
-class CandidateEmailaddressesItem(BaseModel):
-    """Nested schema for Candidate.emailAddresses_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    value: str | None | None = Field(default=None)
-    type_: str | None | None = Field(default=None, alias="type")
-    is_primary: bool | None | None = Field(default=None, alias="isPrimary")
-
 class CandidatePhonenumbersItem(BaseModel):
     """Nested schema for Candidate.phoneNumbers_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -62,6 +55,13 @@ class CandidatePhonenumbersItem(BaseModel):
     value: str | None | None = Field(default=None)
     type_: str | None | None = Field(default=None, alias="type")
     is_primary: bool | None | None = Field(default=None, alias="isPrimary")
+
+class CandidateSociallinksItem(BaseModel):
+    """Nested schema for Candidate.socialLinks_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    type_: str | None | None = Field(default=None, alias="type")
+    url: str | None | None = Field(default=None)
 
 class Candidate(BaseModel):
     """Candidate object"""
@@ -114,16 +114,6 @@ class Application(BaseModel):
     submitter_client_ip: str | None = Field(default=None, alias="submitterClientIp")
     submitter_user_agent: str | None = Field(default=None, alias="submitterUserAgent")
 
-class JobCustomfieldsItem(BaseModel):
-    """Nested schema for Job.customFields_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: str | None | None = Field(default=None)
-    is_private: bool | None | None = Field(default=None, alias="isPrivate")
-    title: str | None | None = Field(default=None)
-    value: str | None | None = Field(default=None)
-    value_label: str | None | None = Field(default=None, alias="valueLabel")
-
 class JobHiringteamItem(BaseModel):
     """Nested schema for Job.hiringTeam_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -133,6 +123,16 @@ class JobHiringteamItem(BaseModel):
     last_name: str | None | None = Field(default=None, alias="lastName")
     email: str | None | None = Field(default=None)
     role: str | None | None = Field(default=None)
+
+class JobCustomfieldsItem(BaseModel):
+    """Nested schema for Job.customFields_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: str | None | None = Field(default=None)
+    is_private: bool | None | None = Field(default=None, alias="isPrivate")
+    title: str | None | None = Field(default=None)
+    value: str | None | None = Field(default=None)
+    value_label: str | None | None = Field(default=None, alias="valueLabel")
 
 class Job(BaseModel):
     """Job object"""

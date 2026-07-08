@@ -5,7 +5,7 @@ openapi: 3.1.0
 
 info:
   title: Slack API Connector
-  version: 0.1.21
+  version: 0.1.22
   description: |
     Slack is a business communication platform that offers messaging, file sharing, and integrations
     with other tools. This connector provides read access to users, channels, channel members, channel
@@ -104,24 +104,27 @@ info:
         type: boolean
         title: Ignore Messages With No Replies in Threads Stream
         description: When enabled, the threads stream will skip messages that have no replies, reducing the number of API calls. Disabled by default to make the Threads stream contain unthreaded messages in its records.
+      include_private_channels:
+        type: boolean
+        title: Include Private Channels
+        description: Whether to read from private channels the bot is a member of. When disabled (default), only public channels are replicated.
     required:
       - start_date
       - lookback_window
       - join_channels
-      - include_archived_channels
-      - threads_ignore_no_replies
     replication_config_key_mapping:
       start_date: start_date
       lookback_window: lookback_window
       join_channels: join_channels
-      include_archived_channels: include_archived_channels
-      threads_ignore_no_replies: threads_ignore_no_replies
     replication_config_constants:
       start_date: "{{ day_delta(-30, '%Y-%m-%dT%H:%M:%SZ') }}"
       lookback_window: 0
-      join_channels: false
-      include_archived_channels: false
+      join_channels: true
       threads_ignore_no_replies: true
+      # Keep these false so the agent doesn't automatically join/read archived or
+      # private channels under the hood.
+      include_archived_channels: false
+      include_private_channels: false
 
   x-airbyte-context-store:
     flush_batch_size_mb: 10
@@ -1250,7 +1253,7 @@ paths:
         "400":
           description: Invalid input - missing required fields or invalid user IDs
         "403":
-          description: Permission denied - missing channels:manage or channels:write.invites scope
+          description: Permission denied - missing channels:manage or groups:write scope
         "404":
           description: Channel or user not found
 
@@ -1645,8 +1648,6 @@ components:
             channels:history: View messages and other content in public channels
             groups:read: View basic information about private channels
             groups:history: View messages and other content in private channels
-            im:read: View basic information about direct messages
-            im:history: View messages and other content in direct messages
             mpim:read: View basic information about group direct messages
             mpim:history: View messages and other content in group direct messages
             chat:write: Send messages on behalf of the authenticated user
@@ -1665,14 +1666,6 @@ components:
           mode: read
           entities:
             - channels
-        - scope: "channels:write.invites"
-          mode: write
-          entities:
-            - channel_invites
-        - scope: "groups:write.invites"
-          mode: write
-          entities:
-            - channel_invites
         - scope: "channels:history"
           mode: read
           entities:
@@ -1683,15 +1676,6 @@ components:
           entities:
             - channels
         - scope: "groups:history"
-          mode: read
-          entities:
-            - channel_messages
-            - threads
-        - scope: "im:read"
-          mode: read
-          entities:
-            - channels
-        - scope: "im:history"
           mode: read
           entities:
             - channel_messages
@@ -1719,6 +1703,7 @@ components:
             - channel_purposes
             - channel_archives
             - channel_kicks
+            - channel_invites
         - scope: "groups:write"
           mode: write
           entities:
@@ -1727,6 +1712,7 @@ components:
             - channel_purposes
             - channel_archives
             - channel_kicks
+            - channel_invites
         - scope: "reactions:write"
           mode: write
           entities:

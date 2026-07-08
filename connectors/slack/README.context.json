@@ -3,7 +3,7 @@
   "class_name": "SlackConnector",
   "package_name": "airbyte_agent_sdk.connectors.slack",
   "install_package": "airbyte-agent-sdk",
-  "yaml_version": "0.1.21",
+  "yaml_version": "0.1.22",
   "api_reference_url": "https://api.slack.com/methods",
   "auth_example": "SlackAuthConfig(bot_key=\"...\")",
   "auth_import": ", SlackAuthConfig",
@@ -93,7 +93,7 @@
       {
         "name": "include_archived_channels",
         "type": "bool",
-        "required": true,
+        "required": false,
         "title": "Include Archived Channels",
         "description": "Whether to include archived channels in the sync. When disabled (default), archived channels are excluded from the Slack API response, reducing the number of API calls for downstream streams such as channel_messages, threads, and channel_members.",
         "format": null,
@@ -102,9 +102,18 @@
       {
         "name": "threads_ignore_no_replies",
         "type": "bool",
-        "required": true,
+        "required": false,
         "title": "Ignore Messages With No Replies in Threads Stream",
         "description": "When enabled, the threads stream will skip messages that have no replies, reducing the number of API calls. Disabled by default to make the Threads stream contain unthreaded messages in its records.",
+        "format": null,
+        "default": null
+      },
+      {
+        "name": "include_private_channels",
+        "type": "bool",
+        "required": false,
+        "title": "Include Private Channels",
+        "description": "Whether to read from private channels the bot is a member of. When disabled (default), only public channels are replicated.",
         "format": null,
         "default": null
       }
