@@ -234,7 +234,13 @@ from {{ package_name }} import {{ class_name }}
 connector = connect("{{ connector_name }}", workspace_name="<your_workspace_name>")
 {%- endset %}
 
-{{ framework_usage_blocks(class_name, connector_name, package_name, connect_exec_init_lines) }}
+{{ framework_usage_blocks(
+    class_name,
+    connector_name,
+    package_name,
+    connect_exec_init_lines,
+    alternatives_heading="#### Legacy alternatives",
+) }}
 
 Or pass credentials explicitly (equivalent, useful when you're not loading them from the environment):
 
@@ -252,7 +258,14 @@ connector = {{ class_name }}(
 )
 {%- endset %}
 
-{{ framework_usage_blocks(class_name, connector_name, package_name, hosted_exec_init_lines) }}
+{{ framework_usage_blocks(
+    class_name,
+    connector_name,
+    package_name,
+    hosted_exec_init_lines,
+    include_recommendation=False,
+    include_alternatives=False,
+) }}
 
 **API**
 

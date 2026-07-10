@@ -72,15 +72,94 @@ airbyte-agent connectors execute --json '{
 
 {# Emit multi-framework usage code blocks for a connector.
    Each block gets a `title` attribute so Docusaurus remark plugin can wrap them in tabs.
-   On GitHub, all three blocks render sequentially with bold labels.
+   On GitHub, all four blocks render sequentially with bold labels.
 
    Args:
      class_name: Connector class name (e.g., "StripeConnector")
      connector_name: Snake-case connector name (e.g., "stripe")
      package_name: Full package path (e.g., "airbyte_agent_sdk.connectors.stripe")
      connector_init_lines: Pre-rendered connector initialization lines (imports + constructor)
+     include_recommendation: Whether to render the progressive-tool recommendation and flow
+     include_alternatives: Whether to render the legacy manual-wrapper examples
+     alternatives_heading: Markdown heading used for the alternatives subsection
 #}
-{% macro framework_usage_blocks(class_name, connector_name, package_name, connector_init_lines) %}
+{% macro framework_usage_blocks(
+    class_name,
+    connector_name,
+    package_name,
+    connector_init_lines,
+    include_recommendation=True,
+    include_alternatives=True,
+    alternatives_heading="###### Legacy alternatives"
+) %}
+{% if include_recommendation %}
+The recommended pattern is `build_connector_tools`, which gives the agent three tools bound to this connector: `inspect_connector`, `read_skill_docs`, and `execute`. The agent can inspect the connector, read only the skill-doc section it needs, and then execute:
+
+```text
+inspect_connector() -> read_skill_docs() -> read_skill_docs(section="...") -> execute(entity, action, params)
+```
+{% endif %}
+
+**Pydantic AI**
+
+```python title="Pydantic AI"
+from airbyte_agent_sdk import build_connector_tools
+from pydantic_ai import Agent
+{{ connector_init_lines }}
+
+tools = build_connector_tools(connector, framework="pydantic_ai")
+agent = Agent("openai:gpt-4o", tools=tools.as_list())
+```
+
+**LangChain**
+
+```python title="LangChain"
+from airbyte_agent_sdk import build_connector_tools
+from langchain_core.tools import StructuredTool
+{{ connector_init_lines }}
+
+tools = build_connector_tools(connector, framework="langchain")
+langchain_tools = [
+    StructuredTool.from_function(
+        coroutine=tool,
+        name=tool.__name__,
+        description=tool.__doc__,
+    )
+    for tool in tools.as_list()
+]
+```
+
+**OpenAI Agents**
+
+```python title="OpenAI Agents"
+from airbyte_agent_sdk import build_connector_tools
+from agents import Agent, function_tool
+{{ connector_init_lines }}
+
+tools = build_connector_tools(connector, framework="openai_agents")
+openai_tools = [function_tool(tool, strict_mode=False) for tool in tools.as_list()]
+
+agent = Agent(name="{{ connector_name | title }} Assistant", tools=openai_tools)
+```
+
+**FastMCP**
+
+```python title="FastMCP"
+from airbyte_agent_sdk import build_connector_tools
+from fastmcp import FastMCP
+{{ connector_init_lines }}
+
+mcp = FastMCP("{{ connector_name | title }} Agent")
+
+for tool in build_connector_tools(connector, framework="mcp").as_list():
+    mcp.tool(tool)
+```
+{% if include_alternatives %}
+
+{{ alternatives_heading }}
+
+These examples are kept for existing integrations. For new agents, use `build_connector_tools` above. The legacy `{{ class_name }}.tool_utils` pattern loads the connector's full generated catalog into one broad `execute` tool description instead of letting the agent read skill docs on demand.
+
 **Pydantic AI**
 
 ```python title="Pydantic AI"
@@ -143,6 +222,7 @@ async def {{ connector_name | snake_case }}_execute(entity: str, action: str, pa
     result = await connector.execute(entity, action, params or {})
     return result.model_dump(mode="json") if hasattr(result, "model_dump") else result
 ```
+{% endif %}
 {%- endmacro %}
 
 {% macro python_operation_call(connector_var, op, assign_to=None, include_download_comment=False, params=None) -%}

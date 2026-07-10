@@ -120,7 +120,14 @@ connector = {{ class_name }}(
     )
 )
 {%- endset %}
-{{ framework_usage_blocks(class_name, connector_name, package_name, hosted_init_lines) }}
+{{ framework_usage_blocks(
+    class_name,
+    connector_name,
+    package_name,
+    hosted_init_lines,
+    include_recommendation=False,
+    include_alternatives=False,
+) }}
 
 ##### Open source
 
